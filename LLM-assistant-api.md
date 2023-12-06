@@ -5,9 +5,9 @@ LLM-assistant(llm, model_file)
 - llm(string): name of the LLM to use (e.g. TheBloke/Llama-2-7B-Chat-GGUF)
 - model_file (string): which specific model file to use (e.g. llama-2-7b-chat.Q5_K_M.gguf)
 
-Now follow the public functions of class LLM-assistant:
+## Public functions of class LLM-assistant:
   
-## function suggest_attributes
+### function suggest_attributes
 suggest_attributes(class_name, count_attributes_to_suggest, existing_class_attributes, domain_description)
 
 - class_name (string): name of the class for which LLM-assistant suggests attributes
@@ -20,7 +20,7 @@ suggest_attributes(class_name, count_attributes_to_suggest, existing_class_attri
 	-  does not contain any attributes in the `class_attributes` array
 
   
-## function suggest_associations
+### function suggest_associations
 
 suggest_associations(class_name, count_associations_to_suggest , is_provided_class_source, existing_class_associations, domain_description)
 - class_name (string): name of the class for which LLM-assistant suggests associations
@@ -34,7 +34,7 @@ suggest_associations(class_name, count_associations_to_suggest , is_provided_cla
 - solely based on the `domain_description` if provided else the output is based on the learned parameters of the selected LLM
 
   
-## function suggest_associations_between_two_classes
+### function suggest_associations_between_two_classes
 
 suggest_associations_between_two_classes(class_name_1, class_name_2, count_associations_to_suggest, is_class_1_souce, existing_class_associations, domain_description)
 
@@ -51,7 +51,7 @@ suggest_associations_between_two_classes(class_name_1, class_name_2, count_assoc
 	- does not contain any associations in the `class_attributes` array
 
   
-## function summarize_conceptual_model
+### function summarize_conceptual_model
 
 summarize_conceptual_model(conceptual_model_selected)
 
@@ -60,7 +60,7 @@ summarize_conceptual_model(conceptual_model_selected)
 
   
     
-## function highlight_modeled_part
+### function highlight_modeled_part
 
 highlight_modeled_part(domain_text_description, conceptual_model_selected)
 
@@ -70,7 +70,7 @@ highlight_modeled_part(domain_text_description, conceptual_model_selected)
 
   
 
-### JSON object describing the conceptual model:
+#### JSON object describing the conceptual model:
 
 {"entities": ["entity_name": ..., "attributes": ["attribute_name": ...], "associations": ["association_name": ..., "source_entity": ..., "target_entity": ..., "cardinality": ..., "attributes": ["attribute_name": ..., ]]]}
 
