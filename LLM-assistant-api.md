@@ -1,16 +1,16 @@
 # LLM-assistant API
 
-## class LLM-assistant
-LLM-assistant(llm, model_file)
-- llm(string): name of the LLM to use (e.g. TheBloke/Llama-2-7B-Chat-GGUF)
+## class LLM_assistant
+LLM_assistant(model_id, model_file)
+- model_id (string): ID of the LLM to use (e.g. TheBloke/Llama-2-7B-Chat-GGUF)
 - model_file (string): which specific model file to use (e.g. llama-2-7b-chat.Q5_K_M.gguf)
 
-## Public methods of the class LLM-assistant:
+## Public methods of the class LLM_assistant:
   
 ### method suggest_attributes
 suggest_attributes(class_name, count_attributes_to_suggest, existing_class_attributes, domain_description)
 
-- class_name (string): name of the class for which LLM-assistant suggests attributes
+- class_name (string): name of the class for which `LLM_assistant` suggests attributes
 - count_attributes_to_suggest (int): how many attributes should be outputed, must be greater than 0
 - existing_class_attributes (array with properties `attribute`, optional): already existing attributes of the class `class_name` in the user's conceptual model
 - domain_description (string, optional): description of the domain the user is modeling
@@ -20,35 +20,35 @@ suggest_attributes(class_name, count_attributes_to_suggest, existing_class_attri
 	-  does not contain any attributes in the `class_attributes` array
 
   
-### method suggest_associations
+### method suggest_relationships
 
-suggest_associations(class_name, count_associations_to_suggest, is_provided_class_source, existing_class_associations, domain_description)
-- class_name (string): name of the class for which LLM-assistant suggests associations
-- count_associations_to_suggest (int): how many associations should be outputed, must be greater than 0
+suggest_relationships(class_name, count_relationships_to_suggest, is_provided_class_source, existing_class_relationships, domain_description)
+- class_name (string): name of the class for which `LLM_assistant` suggests relationships
+- count_relationships_to_suggest (int): how many relationships should be outputed, must be greater than 0
 - is_provided_class_source (bool): if True the class `class_name` is considered as the source class else is considered as the target class
-- existing_class_associations (array with properties `association`): array of already existing associations of the class `class_name` in the user's conceptual model
+- existing_class_relationships (array with properties `relationship`): array of already existing relationships of the class `class_name` in the user's conceptual model
 - domain_description (string, optional): description of the domain the user is modeling
-- returns (array with properties `association`, `new_class_name`): list of associations between the class `class_name` and `new_class_name`
-- with the length of `count_associations_to_suggest`
-- does not contain any associations from the `existing_class_associations` array
+- returns (array with properties `relationship`, `new_class_name`): list of relationships between the class `class_name` and `new_class_name`
+- with the length of `count_relationships_to_suggest`
+- does not contain any relationships from the `existing_class_relationships` array
 - solely based on the `domain_description` if provided else the output is based on the learned parameters of the selected LLM
 
   
-### method suggest_associations_between_two_classes
+### method suggest_relationships_between_two_classes
 
-suggest_associations_between_two_classes(class_name_1, class_name_2, count_associations_to_suggest, is_class_1_souce, existing_class_associations, domain_description)
+suggest_relationships_between_two_classes(class_name_1, class_name_2, count_relationships_to_suggest, is_class_1_souce, existing_class_relationships, domain_description)
 
 -  `class_name_1` (string): name of the first class
 -  `class_name_2` (string): name of the second class
--  `count_associations_to_suggest` (int): how many associations should be outputed, must be greater than 0
--  `is_class_1_source` (bool): if True than the class `class_name_1` is the source class and the class `class_name_2` is the target class of the associations which will be suggested else oterwise
--  `existing_class_associations` (array with properties `association`, optional): array of already existing associations in between the classes `class_name_1` and `class_name_2` where `class_name_1` is the source class if `is_class_1_souce` is set to True else `class_name_1` is the target class
+-  `count_relationships_to_suggest` (int): how many relationships should be outputed, must be greater than 0
+-  `is_class_1_source` (bool): if True than the class `class_name_1` is the source class and the class `class_name_2` is the target class of the relationships which will be suggested else oterwise
+-  `existing_class_relationships` (array with properties `relationship`, optional): array of already existing relationships in between the classes `class_name_1` and `class_name_2` where `class_name_1` is the source class if `is_class_1_souce` is set to True else `class_name_1` is the target class
 -  `domain_description` (string, optional): description of the domain the user is modeling
-- returns (array with properties `association`): suggested associations in between the class `class_name_1` and `class_name_2`
+- returns (array with properties `relationship`): suggested relationships in between the class `class_name_1` and `class_name_2`
 	- where the class `class_name_1` is the source class and `class_name_2` is the target class if `is_class_1_souce` is set to True else otherwise
-	- with the length of `count_associations_to_suggest `
-	- these associations are solely bases on the `domain_description` if provided else is based on the learned parameters of the selected LLM
-	- does not contain any associations in the `class_attributes` array
+	- with the length of `count_relationship_to_suggest `
+	- these relationships are solely bases on the `domain_description` if provided else is based on the learned parameters of the selected LLM
+	- does not contain any relationships in the `class_attributes` array
 
   
 ### method summarize_conceptual_model
@@ -72,10 +72,10 @@ highlight_modeled_part(domain_text_description, conceptual_model_selected)
 
 #### JSON object describing the conceptual model:
 
-{"entities": ["entity_name": ..., "attributes": ["attribute_name": ...], "associations": ["association_name": ..., "source_entity": ..., "target_entity": ..., "cardinality": ..., "attributes": ["attribute_name": ..., ]]]}
+{"entities": ["entity_name": ..., "attributes": ["attribute_name": ...], "relationships": ["relationship_name": ..., "source_entity": ..., "target_entity": ..., "cardinality": ..., "attributes": ["attribute_name": ..., ]]]}
 
 
 ### TODO:
-- for example in the function `suggest_associations` instead of the class name should user provide the whole conceptual model?
+- for example in the function `suggest_relationships` instead of the class name should user provide the whole conceptual model?
 - how to represent ISA-hierarchy in JSON format?
-- can user provide some additional instruction for the LLM-assistant?
+- can user provide some additional instruction for the `LLM_assistant`?
