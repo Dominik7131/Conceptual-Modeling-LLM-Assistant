@@ -5,9 +5,9 @@ LLM-assistant(llm, model_file)
 - llm(string): name of the LLM to use (e.g. TheBloke/Llama-2-7B-Chat-GGUF)
 - model_file (string): which specific model file to use (e.g. llama-2-7b-chat.Q5_K_M.gguf)
 
-## Public functions of class LLM-assistant:
+## Public methods of the class LLM-assistant:
   
-### function suggest_attributes
+### method suggest_attributes
 suggest_attributes(class_name, count_attributes_to_suggest, existing_class_attributes, domain_description)
 
 - class_name (string): name of the class for which LLM-assistant suggests attributes
@@ -20,9 +20,9 @@ suggest_attributes(class_name, count_attributes_to_suggest, existing_class_attri
 	-  does not contain any attributes in the `class_attributes` array
 
   
-### function suggest_associations
+### method suggest_associations
 
-suggest_associations(class_name, count_associations_to_suggest , is_provided_class_source, existing_class_associations, domain_description)
+suggest_associations(class_name, count_associations_to_suggest, is_provided_class_source, existing_class_associations, domain_description)
 - class_name (string): name of the class for which LLM-assistant suggests associations
 - count_associations_to_suggest (int): how many associations should be outputed, must be greater than 0
 - is_provided_class_source (bool): if True the class `class_name` is considered as the source class else is considered as the target class
@@ -34,7 +34,7 @@ suggest_associations(class_name, count_associations_to_suggest , is_provided_cla
 - solely based on the `domain_description` if provided else the output is based on the learned parameters of the selected LLM
 
   
-### function suggest_associations_between_two_classes
+### method suggest_associations_between_two_classes
 
 suggest_associations_between_two_classes(class_name_1, class_name_2, count_associations_to_suggest, is_class_1_souce, existing_class_associations, domain_description)
 
@@ -51,7 +51,7 @@ suggest_associations_between_two_classes(class_name_1, class_name_2, count_assoc
 	- does not contain any associations in the `class_attributes` array
 
   
-### function summarize_conceptual_model
+### method summarize_conceptual_model
 
 summarize_conceptual_model(conceptual_model_selected)
 
@@ -60,7 +60,7 @@ summarize_conceptual_model(conceptual_model_selected)
 
   
     
-### function highlight_modeled_part
+### method highlight_modeled_part
 
 highlight_modeled_part(domain_text_description, conceptual_model_selected)
 
@@ -76,5 +76,6 @@ highlight_modeled_part(domain_text_description, conceptual_model_selected)
 
 
 ### TODO:
+- for example in the function `suggest_associations` instead of the class name should user provide the whole conceptual model?
 - how to represent ISA-hierarchy in JSON format?
 - can user provide some additional instruction for the LLM-assistant?
