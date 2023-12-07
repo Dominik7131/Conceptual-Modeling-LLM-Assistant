@@ -10,6 +10,7 @@ IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
+RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
 
 class LLMAssistant:
     def __init__(self, model_path_or_repo_id, model_file, model_type):
@@ -24,10 +25,21 @@ class LLMAssistant:
         system = ""
         if user_choice == ATTRIBUTES_STRING:
             system = "\nYou are an expert at listing attributes for a given entity."
+
         elif user_choice == RELATIONSHIPS_STRING:
             #system = "\nYou are an expert at listing relationships for a given entity."
             #system = "\nYou are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name which can be either a single verb or a verb and preposition such that when you insert this name in between the source entity and the target entity in this order a short meaningful sentence is created."
             system = "\nYou are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name which is represented as single verb in singular such that when you insert this name in between the source entity and the target entity in this order a short meaningful sentence is created."
+
+        elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
+            system = "\nYou are creating a conceptual model which consists of entities and their relationships. "
+            system += "Each relationship is between exactly two entities, we will describe them as the source entity and the target entity. "
+            system += "Each relationship has a name in a verb form such that when you insert this verb in between the source entity and the target entity in this order a short meaningful sentence is created. "
+            system += "Always make sure that the short meaningful sentence indeed makes sense. Be very careful when creating the short meaningful sentence: the source entity must come first then follows the relationship name and then follows the target entity name which ends the sentence. Always check that this order holds."
+
+
+        else:
+            raise ValueError(f"Error: Unknown user choice: {user_choice}")
 
         if IS_SYSTEM_MSG:
             self.messages.append({"role": "system", "content": system})
@@ -56,8 +68,8 @@ class LLMAssistant:
         if user_choice == ATTRIBUTES_STRING:
             print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
             print(f"- Description: {completed_item['description']}")
-        elif user_choice == RELATIONSHIPS_STRING:
 
+        elif user_choice == RELATIONSHIPS_STRING:
             if is_provided_class_source and completed_item['source'] != user_input_entity_name:
                 print(f"Warning: source entity is: {completed_item['source']}")
             elif not is_provided_class_source and completed_item['target'] != user_input_entity_name:
@@ -67,6 +79,11 @@ class LLMAssistant:
             #print(f"- Description: {completed_item['description']}")
             print(f"- Source: {completed_item['source']}")
             print(f"- Target: {completed_item['target']}")
+            print()
+        
+        elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
+            print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
+            print(f"- Sentence: {completed_item['sentence']}")
             print()
 
         return completed_item
@@ -152,12 +169,42 @@ class LLMAssistant:
         return
 
 
+    def suggest_relationships_between_two_classes(self, class_name_1, class_name_2, count_relationships_to_suggest, is_class_1_souce, conceptual_model, domain_description):
+        
+        class_name_1 = class_name_1.strip()
+        class_name_2 = class_name_2.strip()
+        if not self._are_default_messages_appended:
+            self.append_default_messages(user_choice=RELATIONSHIPS_STRING_TWO_ENTITIES)
+
+        if is_class_1_souce:
+            prompt = 'What relationships could be between source entity "' + class_name_1 + '" and target entity "' + class_name_2 + '"? '
+            #prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + class_name_1 + '" is the source entity and "' + class_name_2 + '" is the target entity, "sentence": short meaningful sentence where you put the first relationship name in between the source entity and the target entity in this order}, {"name": second relationship name where "' + class_name_1 + '" is the source entity and "' + class_name_2 + '" is the target entity, "sentence": short meaningful sentence where you put the first relationship name in between the source entity and the target entity in this order}, ...]. '
+            #prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + class_name_1 + '" is the source entity and "' + class_name_2 + '" is the target entity, "sentence": the short meaningful sentence for the first relationship}, {"name": second relationship name where "' + class_name_1 + '" is the source entity and "' + class_name_2 + '" is the target entity, "sentence": the short meaningful sentence for the first relationship}, ...]. '
+            prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + class_name_1 + '" is the source entity and "' + class_name_2 + '" is the target entity, "sentence": the short meaningful sentence for the first relationship where the source entity "' + class_name_1 + '" comes first then follows the relationship name and then follows the target entity "' + class_name_2 + '"}, {"name": second relationship name where "' + class_name_1 + '" is the source entity and "' + class_name_2 + '" is the target entity, "sentence": the short meaningful sentence for the first relationship where the source entity "' + class_name_1 + '" comes first then follows the relationship name and then follows the target entity "' + class_name_2 + '"}, ...]. '
+            
+
+            #prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + class_name_1 + '" is the source entity and "' + class_name_2 + '" is the target entity}, {"name": second relationship name where "' + class_name_1 + '" is the source entity and "' + class_name_2 + '" is the target entity}, ...]. '
+
+            prompt += 'Do not output anything else.'
+
+        else:
+            prompt = ""
+
+        new_messages = self.messages.copy()
+        new_messages.append({"role": "user", "content": prompt})
+
+        llama2_prompt = Utility.build_llama2_prompt(new_messages)
+        print(f"Sending this prompt to llm:\n{llama2_prompt}\n")
+        self.parse_streamed_output(llama2_prompt, user_choice=RELATIONSHIPS_STRING_TWO_ENTITIES, is_provided_class_source=is_class_1_souce, user_input_entity_name=class_name_1)
+
+        return
+
+
 class UserInputProcessor():
     def __init__(self):
         self.messages = []
 
     def handle_user_input(self):
-
         self.entity_name = input("Insert entity name: ").lower()
         print()
         user_message = self.entity_name
@@ -165,15 +212,21 @@ class UserInputProcessor():
         if user_message.lower() == "exit" or user_message.lower() == "quit" or user_message.lower() == "q":
             return False
         
-        self.user_choice = "r" #input("Input 'a' for attributes or 'r' for relationships: ").lower()
+        self.user_choice = "x" #input("Input 'a' for attributes or 'r' for relationships: ").lower()
 
         if self.user_choice == "a":
             self.user_choice = ATTRIBUTES_STRING
 
         elif self.user_choice == "r":
             self.user_choice = RELATIONSHIPS_STRING
+
+        elif self.user_choice == "x":
+            self.user_choice = RELATIONSHIPS_STRING_TWO_ENTITIES
+            entities = self.entity_name.split(',')
+            self.entity_name = entities[0]
+            self.entity_name_2 = entities[1]
         else:
-            raise ValueError(f"Error: User choice not supported: {self.user_choice}.")
+            raise ValueError(f"Error: Unknown user choice: {self.user_choice}.")
 
         return True
 
@@ -216,8 +269,11 @@ def main():
 
         if user_input_processor.user_choice == ATTRIBUTES_STRING:
             llm_assistant.suggest_attributes(user_input_processor.entity_name, ITEMS_COUNT, conceptual_model=[], domain_description="")
-        else:
+        elif user_input_processor.user_choice == RELATIONSHIPS_STRING:
             llm_assistant.suggest_relationships(user_input_processor.entity_name, ITEMS_COUNT, is_provided_class_source=True, conceptual_model=[], domain_description="")
+        elif user_input_processor.user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
+            llm_assistant.suggest_relationships_between_two_classes(user_input_processor.entity_name, user_input_processor.entity_name_2, ITEMS_COUNT, is_class_1_souce=True, conceptual_model=[], domain_description="")
+
         
         time_end = time.time()
         print(f"\nTime: {time_end - time_start:.2f} seconds")
