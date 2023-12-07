@@ -14,19 +14,20 @@ RELATIONSHIPS_STRING = "relationships"
 class LLMAssistant:
     def __init__(self, model_path_or_repo_id, model_file, model_type):
         self.messages = []
+        self._are_default_messages_appended = False
         self.llm = AutoModelForCausalLM.from_pretrained(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type, local_files_only=True,
                                                         gpu_layers=200, temperature=0.0, context_length=4096, max_new_tokens=4096,
                                                         batch_size=1024, threads=1)
         #print(f"Config: Context length: {str(llm.context_length)}, Temperature: {str(llm.config.temperature)}, Max new tokens: {str(llm.config.max_new_tokens)}")
 
-    def append_default_messages(self, user_choice):
+    def append_default_messages(self, user_choice):        
         system = ""
         if user_choice == ATTRIBUTES_STRING:
             system = "\nYou are an expert at listing attributes for a given entity."
         elif user_choice == RELATIONSHIPS_STRING:
-            system = "\nYou are an expert at listing relationships for a given entity."
-        else:
-            system = "\nYou are an expert at listing attributes and relationships for a given entity."
+            #system = "\nYou are an expert at listing relationships for a given entity."
+            #system = "\nYou are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name which can be either a single verb or a verb and preposition such that when you insert this name in between the source entity and the target entity in this order a short meaningful sentence is created."
+            system = "\nYou are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name which is represented as single verb in singular such that when you insert this name in between the source entity and the target entity in this order a short meaningful sentence is created."
 
         if IS_SYSTEM_MSG:
             self.messages.append({"role": "system", "content": system})
@@ -41,6 +42,8 @@ class LLMAssistant:
         if IS_CONCEPTUAL_MODEL_DEFINITION:
             self.messages.append({"role": "user", "content": user_first_msg})
             self.messages.append({"role": "assistant", "content": assistent_first_msg})
+
+        self._are_default_messages_appended = True
         return
 
     def parse_item(self, item, items, user_choice, is_provided_class_source, user_input_entity_name):
@@ -61,7 +64,7 @@ class LLMAssistant:
                 print(f"Warning: target entity is: {completed_item['target']}")
 
             print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
-            print(f"- Description: {completed_item['description']}")
+            #print(f"- Description: {completed_item['description']}")
             print(f"- Source: {completed_item['source']}")
             print(f"- Target: {completed_item['target']}")
             print()
@@ -73,9 +76,12 @@ class LLMAssistant:
         items = []
         item = ""
         is_item_start = False
+        is_skip_parsing = False
 
         for text in self.llm(prompt, stream=True):
             assistant_message += text
+            if is_skip_parsing:
+                continue
 
             text = text.replace("'", "") # Edit apostrophes for now by deleting them
             for char in text:
@@ -100,11 +106,17 @@ class LLMAssistant:
 
             #print(f"\nFull message: {assistant_message}")
     
+        if is_skip_parsing:
+            print(f"\nFull message: {assistant_message}")
     
-    def suggest_attributes(self, class_name, count_attributes_to_suggest, existing_class_attributes, domain_description):
+    def suggest_attributes(self, class_name, count_attributes_to_suggest, conceptual_model, domain_description):
 
-        self.append_default_messages(user_choice=ATTRIBUTES_STRING)
+        class_name = class_name.strip()
+        if not self._are_default_messages_appended:
+            self.append_default_messages(user_choice=ATTRIBUTES_STRING)
+
         prompt = 'What attributes does this entity have: \"' + class_name.strip() + '\"? Output exactly ' + str(count_attributes_to_suggest) + ' attributes with their description in JSON format like this: [{"name": first attribute name, "description": first attribute description}, {"name": second attribute name, "description": second attribute description}, {"name": third attribute name, "description": third attribute description}, ...]. Do not put quotation marks or escape character \ in the output fields. Do not output anything else.'
+        
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
 
@@ -114,17 +126,21 @@ class LLMAssistant:
         return
 
 
-    def suggest_relationships(self, class_name, count_relationships_to_suggest, is_provided_class_source, existing_class_relationships, domain_description):
+    def suggest_relationships(self, class_name, count_relationships_to_suggest, is_provided_class_source, conceptual_model, domain_description):
 
         class_name = class_name.strip()
-        self.append_default_messages(user_choice=RELATIONSHIPS_STRING)
-        #prompt = 'What relationships does this source entity have: \"' + class_name.strip() + '\"? Output exactly ' + str(ITEMS_COUNT) + ' relationships with their description in JSON format like this: [{"name": first relationship name, "description": first relationship description, "source": first relationship source entity, "target": first relationship target entity}, {"name": second relationship name, "description": second relationship description, "source": second relationship source entity, "target": second relationship target entity}, ...]. Do not put quotation marks or escape character \ in the output fields. Do not output anything else.'
-        #prompt = 'What relationships does this source entity have: \"' + class_name.strip() + '\"? Output exactly ' + str(ITEMS_COUNT) + ' relationships with their description in JSON format like this: [{"name": first relationship name in form of a verb, "description": first relationship description, "source": first relationship source entity, "target": first relationship target entity}, {"name": second relationship name in form of a verb, "description": second relationship description, "source": second relationship source entity, "target": second relationship target entity}, ...]. Do not put quotation marks or escape character \ in the output fields. Do not output anything else.'
+        if not self._are_default_messages_appended:
+            self.append_default_messages(user_choice=RELATIONSHIPS_STRING)
 
         if is_provided_class_source:
-            prompt = 'What relationships does this source entity have: \"' + class_name + '\"? Output exactly ' + str(count_relationships_to_suggest) + ' relationships with their description in JSON format like this: [{"name": first relationship name in form of a verb, "description": first relationship description, "source": "' + class_name + '", "target": first relationship target entity}, {"name": second relationship name in form of a verb, "description": second relationship description, "source": "' + class_name + '", "target": second relationship target entity}, ...]. Do not put quotation marks or escape character \ in the output fields. Do not output anything else.'
+            #prompt = 'What relationships does this source entity have: \"' + class_name + '\"? Output exactly ' + str(count_relationships_to_suggest) + ' relationships with their description in JSON format like this: [{"name": first relationship name in form of a verb, "description": first relationship description, "source": "' + class_name + '", "target": first relationship target entity}, {"name": second relationship name in form of a verb, "description": second relationship description, "source": "' + class_name + '", "target": second relationship target entity}, ...]. Do not put quotation marks or escape character \ in the output fields. Do not output anything else.'
+            #prompt = 'What relationships does this source entity have: \"' + class_name + '\"? Output exactly ' + str(count_relationships_to_suggest) + ' relationships with their description in JSON format like this: [{"name": first relationship name in form of a verb, "description": first relationship description, "source": "' + class_name + '", "target": first relationship target entity represented as noun in singular}, {"name": second relationship name in form of a verb, "description": second relationship description, "source": "' + class_name + '", "target": second relationship target entity represented as noun in singular}, ...]. Do not put quotation marks or escape character \ in the output fields. Do not output anything else.'
+            prompt = 'What relationships does this source entity: "' + class_name + '" have? Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name in form of a verb, "source": "' + class_name + '", "target": first relationship target entity represented as noun in singular}, {"name": second relationship name in form of a verb, "source": "' + class_name + '", "target": second relationship target entity represented as noun in singular}, ...]. Do not put quotation marks or escape character \ in the output fields. Do not output anything else.'
+
+
         else:
-            prompt = 'What relationships does this target entity have: \"' + class_name + '\"? Output exactly ' + str(count_relationships_to_suggest) + ' relationships with their description in JSON format like this: [{"name": first relationship name in form of a verb, "description": first relationship description, "source": "first relationship source entity", "target": "' + class_name + '"}, {"name": second relationship name in form of a verb, "description": second relationship description, "source": "second relationship source entity", "target": "' + class_name + '"}, ...]. Do not put quotation marks or escape character \ in the output fields. Do not output anything else.'
+            #prompt = 'What relationships does this target entity have: \"' + class_name + '\"? Output exactly ' + str(count_relationships_to_suggest) + ' relationships with their description in JSON format like this: [{"name": first relationship name in form of a verb, "description": first relationship description, "source": "first relationship source entity", "target": "' + class_name + '"}, {"name": second relationship name in form of a verb, "description": second relationship description, "source": "second relationship source entity", "target": "' + class_name + '"}, ...]. Do not put quotation marks or escape character \ in the output fields. Do not output anything else.'
+            prompt = 'What relationships does this target entity: \"' + class_name + '\" have? Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name in form of a verb, "source": first relationship source entity, "target": "' + class_name + '"}, {"name": second relationship name in form of a verb, "source": second relationship source entity, "target": "' + class_name + '"}, ...]. Do not output anything else.'
 
 
         new_messages = self.messages.copy()
@@ -142,7 +158,7 @@ class UserInputProcessor():
 
     def handle_user_input(self):
 
-        self.entity_name = "school" #input("Insert entity name: ")
+        self.entity_name = input("Insert entity name: ").lower()
         print()
         user_message = self.entity_name
 
@@ -199,13 +215,13 @@ def main():
         time_start = time.time()
 
         if user_input_processor.user_choice == ATTRIBUTES_STRING:
-            llm_assistant.suggest_attributes(user_input_processor.entity_name, ITEMS_COUNT, existing_class_attributes=[], domain_description="")
+            llm_assistant.suggest_attributes(user_input_processor.entity_name, ITEMS_COUNT, conceptual_model=[], domain_description="")
         else:
-            llm_assistant.suggest_relationships(user_input_processor.entity_name, ITEMS_COUNT, is_provided_class_source=False, existing_class_relationships=[], domain_description="")
+            llm_assistant.suggest_relationships(user_input_processor.entity_name, ITEMS_COUNT, is_provided_class_source=True, conceptual_model=[], domain_description="")
         
         time_end = time.time()
         print(f"\nTime: {time_end - time_start:.2f} seconds")
-        break
+        #break
 
 if __name__ == "__main__":
     main()
