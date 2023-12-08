@@ -79,7 +79,7 @@ We want to design information system which contains computers. We will have avai
 
 
 ## 7) Amusement park
-We have four classes: Boss, Employee, Attraction and Visitor. Each employee has exactly one boss and a boss manages at least one employee. Each employee manages at least one attraction and likewise each attraction is managed by at least one employee. Each visitor visits at least one attraction and each attraction is visited by 0 to N visitors. For each boss we know his ID and a name. For each employee we know ther ID, ID of their boss, name and salary. For each attraction we know their ID and a name. For each visitor we know their name, sex and age.
+We have four classes: Boss, Employee, Attraction and Visitor. Each employee has exactly one boss and a boss manages at least one employee. Each employee is monitoring at least one attraction and likewise each attraction is monitored by at least one employee. Each visitor is visiting at least one attraction and each attraction is visited by arbitrary number of visitors. For each boss we know their ID and a name. For each employee we know their ID, ID of their boss, name and salary. For each attraction we know their ID and a name. For each visitor we know their name, gender and age.
 
 ![amusement_park](images/AmusementPark.png)
 
