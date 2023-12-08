@@ -1,5 +1,7 @@
 # Dataset
 
+Some examples consist of more than one description. This is denoted by letters a), b), c) etc.
+
 ## 1) Car
 
 ### 1a)
@@ -68,12 +70,23 @@ Please build diagram that represents file system elements, which can be files or
 ![file_system](images/FileSystem.png)
 
 
-## 6) Theatre
+## 6) Computer information system
+We want to design information system which contains computers. We will have available three entities: Computer, Producer and Service. At each computer we are interested in it's ID, memory size in gigabytes, number of threads and ID of his producer. Producer has ID and a name. Service has a name. Each computer has exactly one producer and one producer could have made a multiple computers. Each computer executes arbitrary number of services and each service can run on multiple computers.
 
-### 6a)
-Make model of a Theater. Theaters have a location, and they can play any play, which can be musicals or operas. Plays have a name and can be played either at day or night. Plays are written by one or more authors, who have a name. There are many participants who act in a play,  participants also have a name. A particular participant acts in a particular session of a play, where each session begins and ends at a specific time. Both authors and participants are persons.
+(Original text in Czech: Chceme navrhnout informační systém, který obsahuje počítače. K dispozici budeme mít 3 třídy: Computer (počítač), Producer (výrobce) a Service (služba). U Každého počítače nás zajímá ID, velikost RAM v gigabytech, počet vláken a ID jeho výrobce. U výrobce si chceme pamatovat jeho ID a název, u služeb nám postačí název. Každý počítač má právě jednoho výrobce a jeden výrobce mohl vyrobit několik počítačů. Každý počítač provozuje libovolný počet služeb a každá služba může běžet na více počítačích.)
 
-### 6b)
-Please build a diagram that represents theaters that play musicals and operas. Each play (musical and opera) has a name and the time of the performance, which can be either "Day" or "Night". Each theater has a location. Each play is written by one or more authors, who are persons. Each play has a set of participants, who are also persons. Finally "sessions" model the relationship between the play and its participants. Each session has a starting and finishing time. Please include in the diagram the multiplicities of all associations.
+![computer_information_system](images/ComputerIS.jpg)
 
-![theatre](images/Theatre.png)
+
+## 7) Amusement park
+We have four classes: Boss, Employee, Attraction and Visitor. Each employee has exactly one boss and a boss manages at least one employee. Each employee manages at least one attraction and likewise each attraction is managed by at least one employee. Each visitor visits at least one attraction and each attraction is visited by 0 to N visitors. For each boss we know his ID and a name. For each employee we know ther ID, ID of their boss, name and salary. For each attraction we know their ID and a name. For each visitor we know their name, sex and age.
+
+![amusement_park](images/AmusementPark.png)
+
+
+## 8) IT database
+Model an IT database. We mostly want to model computers and software equipment. Computers can be either real or virtual running on a real computer. On one real computer can run multiple virtual computers. Eeach computer has it's name, size of memory and number of threads. Computers can offer services (email, DNS, WWW, ...). On each computer runs one given operating system and there can be installed another software.
+
+(Original text in Czech: Evidují se především počítače a softwarové vybavení. Počítače mohou být buďto skutečné, nebo virtuální, běžící na skutečném počítači. Na jednom skutečném počítači může běžet několik počítačů virtuálních. Každý počítač má své jméno, velikost paměti a počet jader. Počítače mohou poskytovat služby (email, DNS, WWW, ...). Na každém počítači běží jeden daný operační systém, a může na něm být nainstalovaný další software.U software je důležité znát název, výrobce a verzi.)
+
+![IT_database](images/IT-DatabaseEN.jpg)
