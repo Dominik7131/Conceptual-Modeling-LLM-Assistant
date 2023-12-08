@@ -8,40 +8,40 @@ LLM_assistant(model_path_or_repo_id, model_file)
 ## Public methods of the class LLM_assistant:
   
 ### method suggest_attributes
-suggest_attributes(class_name, count_attributes_to_suggest, conceptual_model, domain_description)
+suggest_attributes(entity_name, count_attributes_to_suggest, conceptual_model, domain_description)
 
-- class_name (string): name of the class for which `LLM_assistant` suggests attributes
+- entity_name (string): name of the entity for which `LLM_assistant` suggests attributes
 - count_attributes_to_suggest (int): how many attributes should be outputed, must be greater than 0
 - conceptual_model (JSON object describing conceptual model, optional): whole user's conceptual model or some part of it
 - domain_description (string, optional): description of the domain the user is modeling
-- returns (JSON array with properties `attribute`): new suggested attributes for the class `class_name`
+- returns (JSON array with properties `attribute`): new suggested attributes for the entity `entity_name`
 	- with the length of `count_attributes_to_suggest` 
 	- solely based on the `domain_description` and the context of `conceptual_model` if provided else the output is based on the learned parameters of the selected LLM
 
   
 ### method suggest_relationships
 
-suggest_relationships(class_name, count_relationships_to_suggest, is_provided_class_source, conceptual_model, domain_description)
-- class_name (string): name of the class for which `LLM_assistant` suggests relationships
+suggest_relationships(entity_name, count_relationships_to_suggest, is_provided_entity_source, conceptual_model, domain_description)
+- entity_name (string): name of the entity for which `LLM_assistant` suggests relationships
 - count_relationships_to_suggest (int): how many relationships should be outputed, must be greater than 0
-- is_provided_class_source (bool): if True the class `class_name` is considered as the source class else is considered as the target class
+- is_provided_entity_source (bool): if True the entity `entity_name` is considered as the source entity else is considered as the target entity
 - conceptual_model (JSON object describing conceptual model, optional): whole user's conceptual model or some part of it
 - domain_description (string, optional): description of the domain the user is modeling
-- returns (JSON array with properties `relationship`, `new_class_name`): new suggested relationships between the class `class_name` and `new_class_name`
+- returns (JSON array with properties `relationship`, `new_entity_name`): new suggested relationships between the entity `entity_name` and `new_entity_name`
 - with the length of `count_relationships_to_suggest`
 - solely based on the `domain_description` and the context of `conceptual_model` if provided else the output is based on the learned parameters of the selected LLM
 
   
-### method suggest_relationships_between_two_classes
+### method suggest_relationships_between_two_entities
 
-suggest_relationships_between_two_classes(source_class, target_class, count_relationships_to_suggest, conceptual_model, domain_description)
+suggest_relationships_between_two_entities(source_entity, target_entity, count_relationships_to_suggest, conceptual_model, domain_description)
 
--  `source_class` (string): name of the source class for the suggested relationships
--  `target_class` (string): name of the target class for the suggested relationships
+-  `source_entity` (string): name of the source entity for the suggested relationships
+-  `target_entity` (string): name of the target entity for the suggested relationships
 -  `count_relationships_to_suggest` (int): how many relationships should be outputed, must be greater than 0
 -  `conceptual_model` (JSON object describing conceptual model, optional): whole user's conceptual model or some part of it
 -  `domain_description` (string, optional): description of the domain the user is modeling
-- returns (JSON array with properties `relationship`): new suggested relationships in between the source class `source_class` and the target class `target_class`
+- returns (JSON array with properties `relationship`): new suggested relationships in between the source entity `source_entity` and the target entity `target_entity`
 	- with the length of `count_relationship_to_suggest `
 	- these relationships are solely bases on the `domain_description` and the context of `conceptual_model` if provided else is based on the learned parameters of the selected LLM
 
