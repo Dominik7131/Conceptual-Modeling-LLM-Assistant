@@ -4,12 +4,13 @@
 from ctransformers import AutoModelForCausalLM
 import json
 import time
-import embeddings
+from embeddings import Embeddings
 
 ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
-TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
+IS_IGNORE_DOMAIN_DESCRIPTION = False
+TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
 
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
@@ -22,7 +23,10 @@ class LLMAssistant:
         self.llm = AutoModelForCausalLM.from_pretrained(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type, local_files_only=True,
                                                         gpu_layers=200, temperature=0.0, context_length=4096, max_new_tokens=4096,
                                                         batch_size=1024, threads=1)
-        #print(f"Config: Context length: {str(llm.context_length)}, Temperature: {str(llm.config.temperature)}, Max new tokens: {str(llm.config.max_new_tokens)}")
+        #print(f"Config: Context length: {str(self.llm.context_length)}, Temperature: {str(self.llm.config.temperature)}, Max new tokens: {str(self.llm.config.max_new_tokens)}")
+
+        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
+            self.embeddings = Embeddings()
 
     def append_default_messages(self, user_choice, is_source_entity=True, is_domain_description=False):
         system = ""
@@ -34,13 +38,17 @@ class LLMAssistant:
                 system = "You are an expert at extracting attributes for a given entity solely based on a given text in context of creating conceptual model in software engineering."
 
         elif user_choice == RELATIONSHIPS_STRING:
-            #system = "You are an expert at listing relationships for a given entity."
-            #system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name which can be either a single verb or a verb and preposition such that when you insert this name in between the source entity and the target entity in this order a short meaningful sentence is created."
-            #system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name which is represented as single verb in singular such that when you insert this relationship name in between the source entity and the target entity in this order a short meaningful sentence is created."
-            #if is_source_entity:
-            system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name always make sure that the described short meaningful sentence can be created."
-            #else:
-                #system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. You will be given a target entity and your goal is to come up with a source entity and a new relationship name. Always make sure that the described short meaningful sentence can be created."
+            if not is_domain_description:
+                #system = "You are an expert at listing relationships for a given entity."
+                #system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name which can be either a single verb or a verb and preposition such that when you insert this name in between the source entity and the target entity in this order a short meaningful sentence is created."
+                #system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name which is represented as single verb in singular such that when you insert this relationship name in between the source entity and the target entity in this order a short meaningful sentence is created."
+                #if is_source_entity:
+                system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name always make sure that the described short meaningful sentence can be created."
+                #else:
+                    #system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. You will be given a target entity and your goal is to come up with a source entity and a new relationship name. Always make sure that the described short meaningful sentence can be created."
+            else:
+                system = "You are an expert at extracting relationships for a given entity solely based on a given text in context of creating conceptual model in software engineering."
+
 
 
 
@@ -128,8 +136,13 @@ class LLMAssistant:
 
             text = text.replace("'", "") # Edit apostrophes for now by deleting them
             for char in text:
-                if char == "{":
+                if char == '{':
                     is_item_start = True
+                
+                # We already got the last object of the JSON output
+                # If something weird starts happening with the LLM this premature return might be the cause
+                if char == ']':
+                    return
                 
                 if is_item_start:
                     item += char
@@ -158,18 +171,24 @@ class LLMAssistant:
     def suggest_attributes(self, entity_name, count_attributes_to_suggest, conceptual_model, domain_description):
 
         entity_name = entity_name.strip()
+
+        if IS_IGNORE_DOMAIN_DESCRIPTION:
+            domain_description = ""
+
         is_domain_description = domain_description != ""
 
         if not self._are_default_messages_appended:
             self.append_default_messages(user_choice=ATTRIBUTES_STRING, is_domain_description=is_domain_description)        
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
-            e = embeddings.Embeddings()
             queries = [f"Info about {entity_name}"]
-            domain_description = e.remove_unsimilar_text(queries, domain_description)
+            domain_description = self.embeddings.remove_unsimilar_text(queries, domain_description)
 
         if is_domain_description:
             prompt = f'Solely based on the following text which attributes does the entity: "{entity_name}" have? '
+            #prompt = f'Solely based on the text in triple quotation marks which attributes does the entity: "{entity_name}" have? '
+
+            #prompt += "If you find an attribute which looks more like a relationship then it is not an attribute. "
             prompt += f'Output only those attributes which you are certain about in JSON format like this: '
         else:
             prompt = f'What attributes does this entity: "{entity_name}" have? '
@@ -185,13 +204,18 @@ class LLMAssistant:
         is_description = False
         if is_description:
             # With description
-            prompt += JSONBuilder.build_attributes(attribute_names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+            prompt += JSONBuilder.build(names=["name", "description"], descriptions=["attribute name", "attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
         else:
             # Without description
-            prompt += JSONBuilder.build_attributes(attribute_names=["name"], descriptions=["* attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+            prompt += JSONBuilder.build(names=["name"], descriptions=["attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
         if is_domain_description:
-            prompt += f'. This is the following text: {domain_description}'
+            prompt += f'. And provide detailed explanation. This is the following text: {domain_description}'
+            #prompt += f'. And provide detailed explanation. \n """{domain_description}"""'
+
+
+            # Maybe slightly worse output
+            #prompt += f'. Do not output any explanation. This is the following text: {domain_description}'
         else:
             prompt += '. Do not output anything else.'
         
@@ -207,27 +231,53 @@ class LLMAssistant:
     def suggest_relationships(self, entity_name, count_relationships_to_suggest, is_provided_entity_source, conceptual_model, domain_description):
 
         entity_name = entity_name.strip()
+
+        if IS_IGNORE_DOMAIN_DESCRIPTION:
+            domain_description = ""
+        
+        is_domain_description = domain_description != ""
+
         if not self._are_default_messages_appended:
             self.append_default_messages(user_choice=RELATIONSHIPS_STRING, is_source_entity=is_provided_entity_source)
         
+        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
+            queries = [f"Info about {entity_name}"]
+            domain_description = self.embeddings.remove_unsimilar_text(queries, domain_description)
+        
+        times_to_repeat = count_relationships_to_suggest
+        is_elipsis = False
+        if is_domain_description:
+            times_to_repeat = 2
+            is_elipsis = True
+        
         entity_type = "source" if is_provided_entity_source else "target"
-        prompt = f'Which relationships does this {entity_type} entity: "{entity_name}" have? Output exactly {str(count_relationships_to_suggest)} relationships in JSON format like this: '
+
+        if is_domain_description:
+            prompt = f'Solely based on the following text which relationships does this {entity_type} entity: "{entity_name}" have? '
+            prompt += f'Output only those relationships which you are certain about in JSON format like this: '
+        else:
+            prompt = f'Which relationships does this {entity_type} entity: "{entity_name}" have? Output exactly {str(count_relationships_to_suggest)} relationships in JSON format like this: '
 
         if is_provided_entity_source:
             #prompt = '[{"name": first relationship name in form of a verb, "description": first relationship description, "source": "' + entity_name + '", "target": first relationship target entity}, {"name": second relationship name in form of a verb, "description": second relationship description, "source": "' + entity_name + '", "target": second relationship target entity}, ...].'
             #prompt = '[{"name": first relationship name in form of a verb, "description": first relationship description, "source": "' + entity_name + '", "target": first relationship target entity represented as noun in singular}, {"name": second relationship name in form of a verb, "description": second relationship description, "source": "' + entity_name + '", "target": second relationship target entity represented as noun in singular}, ...].'
-            prompt = '[{"name": first relationship name in form of a verb, "source": "' + entity_name + '", "target": first relationship target entity represented as noun in singular}, {"name": second relationship name in form of a verb, "source": "' + entity_name + '", "target": second relationship target entity represented as noun in singular}, ...].'
+            #prompt = '[{"name": first relationship name in form of a verb, "source": "' + entity_name + '", "target": first relationship target entity represented as noun in singular}, {"name": second relationship name in form of a verb, "source": "' + entity_name + '", "target": second relationship target entity represented as noun in singular}, ...].'
 
+            prompt += JSONBuilder.build(
+                names=["name", "source", "target", "sentence"],
+                descriptions=["* relationship name in form of a verb", f'"{entity_name}"', f"* relationship target entity", "the short meaningful sentence for the * relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
         else:
             #prompt = '[{"name": first relationship name in form of a verb, "description": first relationship description, "source": "first relationship source entity", "target": "' + entity_name + '"}, {"name": second relationship name in form of a verb, "description": second relationship description, "source": "second relationship source entity", "target": "' + entity_name + '"}, ...]. Do not put quotation marks or escape character \ in the output fields. Do not output anything else.'
             #prompt += '[{"name": first relationship name in form of a verb, "source": first relationship source entity, "target": "' + entity_name + '"}, {"name": second relationship name in form of a verb, "source": second relationship source entity, "target": "' + entity_name + '"}, ...]. '
-            prompt += JSONBuilder.build_relationships(
-                attribute_names=["name", "source", "target", "sentence"],
-                descriptions=["* relationship name in form of a verb", "* relationship source entity", f"\"{entity_name}\"", "the short meaningful sentence for the * relationship"], times_to_repeat=count_relationships_to_suggest
-                )
+            prompt += JSONBuilder.build(
+                names=["name", "source", "target", "sentence"],
+                descriptions=["* relationship name in form of a verb", "* relationship source entity", f"\"{entity_name}\"", "the short meaningful sentence for the * relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
         
-        prompt += '. Do not output anything else.'
+        #prompt += '. Do not output anything else.'
+        
+        if is_domain_description:
+            prompt += f". This is the following text: {domain_description}"
 
 
         new_messages = self.messages.copy()
@@ -243,18 +293,42 @@ class LLMAssistant:
         
         source_entity = source_entity.strip()
         target_entity = target_entity.strip()
+
+        if IS_IGNORE_DOMAIN_DESCRIPTION:
+            domain_description = ""
+        
+        is_domain_description = domain_description != ""
+
         if not self._are_default_messages_appended:
             self.append_default_messages(user_choice=RELATIONSHIPS_STRING_TWO_ENTITIES)
-
-        prompt = 'What relationships could be between source entity "' + source_entity + '" and target entity "' + target_entity + '"? '
-        #prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": short meaningful sentence where you put the first relationship name in between the source entity and the target entity in this order}, {"name": second relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": short meaningful sentence where you put the first relationship name in between the source entity and the target entity in this order}, ...]. '
-        #prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": the short meaningful sentence for the first relationship}, {"name": second relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": the short meaningful sentence for the first relationship}, ...]. '
-        prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": the short meaningful sentence for the first relationship where the source entity "' + source_entity + '" comes first then follows the relationship name and then follows the target entity "' + target_entity + '"}, {"name": second relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": the short meaningful sentence for the first relationship where the source entity "' + source_entity + '" comes first then follows the relationship name and then follows the target entity "' + target_entity + '"}, ...]. '
         
+        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
+            queries = [f"Info about {source_entity}"]
+            domain_description = self.embeddings.remove_unsimilar_text(queries, domain_description)
+        
+        times_to_repeat = count_relationships_to_suggest
+        is_elipsis = False
+        if is_domain_description:
+            times_to_repeat = 2
+            is_elipsis = True
 
-        #prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity}, {"name": second relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity}, ...]. '
+        if not is_domain_description:
+            prompt = 'What relationships could be between source entity "' + source_entity + '" and target entity "' + target_entity + '"? '
+            #prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": short meaningful sentence where you put the first relationship name in between the source entity and the target entity in this order}, {"name": second relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": short meaningful sentence where you put the first relationship name in between the source entity and the target entity in this order}, ...]. '
+            #prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": the short meaningful sentence for the first relationship}, {"name": second relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": the short meaningful sentence for the first relationship}, ...]. '
+            prompt += 'Output exactly ' + str(count_relationships_to_suggest) + ' relationships in JSON format like this: '
 
-        prompt += 'Do not output anything else.'
+        else:
+            prompt = f'Solely based on the following text which relationships could be between the source entity "{source_entity}" and the target entity "{target_entity}"? '
+            prompt += f'Output only those relationships which you are certain about in JSON format like this: '
+
+        prompt += JSONBuilder.build(names=["name", "sentence"], descriptions=[f'* relationship name where "{source_entity}" is the source entity and "{target_entity}" is the target entity', f'the short meaningful sentence for the first relationship where the source entity "{source_entity}" comes first then follows the relationship name and then follows the target entity "{target_entity}"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+        #prompt += 'Do not output anything else.'
+
+        if is_domain_description:
+            prompt += f". This is the following text: {domain_description}"
+
+        
 
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
@@ -278,7 +352,7 @@ class UserInputProcessor():
         if user_message.lower() == "exit" or user_message.lower() == "quit" or user_message.lower() == "q":
             return False
         
-        self.user_choice = "a" #input("Input 'a' for attributes, 'r' for relationships, 'x' for relationships between two classes: ").lower()
+        self.user_choice = "x" #input("Input 'a' for attributes, 'r' for relationships, 'x' for relationships between two classes: ").lower()
 
         if self.user_choice == "a":
             self.user_choice = ATTRIBUTES_STRING
@@ -318,17 +392,17 @@ class Utility:
 
 class JSONBuilder:
 
-    def build_attributes(attribute_names, descriptions, times_to_repeat, is_elipsis=False):
+    def build(names, descriptions, times_to_repeat, is_elipsis=False):
 
         positions = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
 
         result = "["
         for i in range(times_to_repeat):
             result += '{'
-            for j in range(len(attribute_names)):
+            for j in range(len(names)):
                 current_description = descriptions[j].replace('*', positions[i])
-                result += '"' + attribute_names[j] + '": ' + current_description
-                if j + 1 < len(attribute_names):
+                result += '"' + names[j] + '": ' + current_description
+                if j + 1 < len(names):
                     result += ', '
             result += '}'
             if i + 1 < times_to_repeat:
@@ -336,25 +410,6 @@ class JSONBuilder:
         
         if is_elipsis:
             result += ", ..."
-        result += "]"
-        return result
-    
-    def build_relationships(attribute_names, descriptions, times_to_repeat):
-
-        positions = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
-
-        result = "["
-        for i in range(times_to_repeat):
-            result += '{'
-            for j in range(len(attribute_names)):
-                current_description = descriptions[j].replace('*', positions[i])
-                result += '"' + attribute_names[j] + '": ' + current_description
-                if j + 1 < len(attribute_names):
-                    result += ', '
-            result += '}'
-            if i + 1 < times_to_repeat:
-                result += ', '
-        
         result += "]"
         return result
 
@@ -382,9 +437,9 @@ def main():
         if user_input_processor.user_choice == ATTRIBUTES_STRING:
             llm_assistant.suggest_attributes(user_input_processor.entity_name, ITEMS_COUNT, conceptual_model=[], domain_description=domain_description)
         elif user_input_processor.user_choice == RELATIONSHIPS_STRING:
-            llm_assistant.suggest_relationships(user_input_processor.entity_name, ITEMS_COUNT, is_provided_entity_source=False, conceptual_model=[], domain_description="")
+            llm_assistant.suggest_relationships(user_input_processor.entity_name, ITEMS_COUNT, is_provided_entity_source=True, conceptual_model=[], domain_description=domain_description)
         elif user_input_processor.user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
-            llm_assistant.suggest_relationships_between_two_classes(user_input_processor.entity_name, user_input_processor.entity_name_2, ITEMS_COUNT, conceptual_model=[], domain_description="")
+            llm_assistant.suggest_relationships_between_two_classes(user_input_processor.entity_name, user_input_processor.entity_name_2, ITEMS_COUNT, conceptual_model=[], domain_description=domain_description)
 
         
         time_end = time.time()
