@@ -8,6 +8,7 @@ LLM_assistant(model_path_or_repo_id, model_file)
 ## Public methods of the class LLM_assistant:
   
 ### method suggest_attributes
+
 suggest_attributes(entity_name, count_attributes_to_suggest, conceptual_model, domain_description)
 
 - entity_name (string): name of the entity for which `LLM_assistant` suggests attributes
