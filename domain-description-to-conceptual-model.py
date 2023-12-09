@@ -5,11 +5,10 @@ import graph_drawer
 
 IS_ALL = False
 IS_ENTITIES_ONLY = True
-IS_ENTITIES_CHECK = True
 IS_ATTRIBUTES_ONLY = False
 IS_RELATIONSHIPS_ONLY = False
 
-IS_SAVE_TO_FILE = False
+IS_SAVE_TO_FILE = True
 
 TEXT_CAR = ["A road vehicle is a motorized or non-motorized vehicle that is manufactured for the purpose of operating on roads for the transport of persons, animals or goods.",
 "A special vehicle is a vehicle manufactured for purposes other than road traffic, which may be operated on road roads if the conditions set forth in this Act are met.",
@@ -46,12 +45,12 @@ Finally, Dormitory Units can host between 1 and 4 students.
 Each Dormitory Unit has a price.
 """
 
-#TEXT = TEXT_SCHOOL
+TEXT = TEXT_SCHOOL2
 
 
 # Define the model
 model_id = "TheBloke/Llama-2-7B-Chat-GGUF"
-model_file = "llama-2-7b-chat.q4_K_M.gguf"
+model_file = "llama-2-7b-chat.Q5_K_M.gguf"
 llm = AutoModelForCausalLM.from_pretrained(model_id, model_file=model_file, model_type="llama", local_files_only=True, gpu_layers=100,
                                            temperature=0.0, context_length=4096, max_new_tokens=4096, batch_size=1024, threads=1)
 #print(f"Config: Context length: {str(llm.context_length)}, Temperature: {str(llm.config.temperature)}, Max new tokens: {str(llm.config.max_new_tokens)}")
@@ -96,7 +95,7 @@ def print_conceptual_model(entities):
     return
     
 
-system = "You are an expert at creating conceptual models in software engineering from a given text. Precisely follow the user's instructions."
+system = "\nYou are an expert at creating conceptual models in software engineering from a given text. Precisely follow the user's instructions."
 messages = [{"role": "system", "content": system}]
 
 user_first_msg = "What is the definition of conceptual model in software engineering?"
@@ -114,8 +113,6 @@ collected_info = {}
 entities = {}
 current_entity = ""
 current_key = 0
-
-is_entities_check = False
 
 while True:
     # All at the same time
