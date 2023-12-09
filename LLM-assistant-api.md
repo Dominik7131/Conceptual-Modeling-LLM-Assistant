@@ -7,44 +7,23 @@ LLM_assistant(model_path_or_repo_id, model_file)
 
 ## Public methods of the class LLM_assistant:
   
-### method suggest_attributes
+### method suggest
 
-suggest_attributes(entity_name, count_attributes_to_suggest, conceptual_model, domain_description)
+suggest(entity_name, entity_name2, user_choice, count_items_to_suggest, conceptual_model, domain_description)
 
-- entity_name (string): name of the entity for which `LLM_assistant` suggests attributes
-- count_attributes_to_suggest (int): how many attributes should be outputed, must be greater than 0
-- conceptual_model (JSON object describing conceptual model, optional): whole user's conceptual model or some part of it
+- entity_name (string): name of the entity for which `LLM_assistant` suggests items based on the `user_choice`
+- entity_name2 (string, optional): name of the second entity if the user wants to suggest relationships in between two entities
+- user_choice (enum): one of these 3 options of what user wants to suggest: ATTRIBUTES for attributes, RELATIONSHIPS_ENTITIES for relationships with new possible entites, RELATIONSHIPS for relationships in between two entities
+- count_items_to_suggest (int): how many items should be suggested, must be greater than 0
+- conceptual_model (JSON object describing conceptual model, optional): selected part of the conceptual model by user
 - domain_description (string, optional): description of the domain the user is modeling
-- returns (JSON array with properties `attribute`): new suggested attributes for the entity `entity_name`
-	- with the length of `count_attributes_to_suggest` 
+- returns new suggested items based on the `user_choice` for the entity `entity_name` and optionally the entity `entity_name2`
+	- with the length of `count_items_to_suggest`
 	- solely based on the `domain_description` and the context of `conceptual_model` if provided else the output is based on the learned parameters of the selected LLM
-
-  
-### method suggest_relationships
-
-suggest_relationships(entity_name, count_relationships_to_suggest, is_provided_entity_source, conceptual_model, domain_description)
-- entity_name (string): name of the entity for which `LLM_assistant` suggests relationships
-- count_relationships_to_suggest (int): how many relationships should be outputed, must be greater than 0
-- is_provided_entity_source (bool): if True the entity `entity_name` is considered as the source entity else is considered as the target entity
-- conceptual_model (JSON object describing conceptual model, optional): whole user's conceptual model or some part of it
-- domain_description (string, optional): description of the domain the user is modeling
-- returns (JSON array with properties `relationship`, `new_entity_name`): new suggested relationships between the entity `entity_name` and `new_entity_name`
-- with the length of `count_relationships_to_suggest`
-- solely based on the `domain_description` and the context of `conceptual_model` if provided else the output is based on the learned parameters of the selected LLM
-
-  
-### method suggest_relationships_between_two_entities
-
-suggest_relationships_between_two_entities(source_entity, target_entity, count_relationships_to_suggest, conceptual_model, domain_description)
-
--  `source_entity` (string): name of the source entity for the suggested relationships
--  `target_entity` (string): name of the target entity for the suggested relationships
--  `count_relationships_to_suggest` (int): how many relationships should be outputed, must be greater than 0
--  `conceptual_model` (JSON object describing conceptual model, optional): whole user's conceptual model or some part of it
--  `domain_description` (string, optional): description of the domain the user is modeling
-- returns (JSON array with properties `relationship`): new suggested relationships in between the source entity `source_entity` and the target entity `target_entity`
-	- with the length of `count_relationship_to_suggest `
-	- these relationships are solely bases on the `domain_description` and the context of `conceptual_model` if provided else is based on the learned parameters of the selected LLM
+	- output is in JSON array:
+	 	- with properties `attribute` if `user_choice` == ATTRIBUTES
+		- with properties `relationship`, `new_entity_name` if `user_choice` == RELATIONSHIPS_ENTITIES
+		- with properties `relationship` if `user_choice` == RELATIONSHIPS
 
   
 ### method summarize_conceptual_model
@@ -85,3 +64,6 @@ highlight_modeled_domain_description(domain_text_description, conceptual_model)
 ### Notes
 - in JSON object "parent_entity" is used for representing the ISA-hierarchy
 - for possible future extension every method can have an additional argument `user_instruction` allowing user to specify his request more specifically
+
+### TODO:
+- in the method `suggest` how should the output look like?
