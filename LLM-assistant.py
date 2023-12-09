@@ -4,10 +4,13 @@
 from ctransformers import AutoModelForCausalLM
 import json
 import time
+import embeddings
 
 ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
+TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
+
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
 RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
@@ -27,7 +30,8 @@ class LLMAssistant:
             if not is_domain_description:
                 system = "You are an expert at generating attributes for a given entity."
             else:
-                system = "You are creating a conceptual model which consists of entities, their attributes and relationships in between the entities. You will be given an entity, text and description of JSON format. Your task is to output attributes of the given entity solely based on the given text in the described JSON format. Be careful that some relationships can look like an attributes. Do not output any explanation. Do not ouput anything else."
+                #system = "You are creating a conceptual model which consists of entities, their attributes and relationships in between the entities. You will be given an entity, text and description of JSON format. Your task is to output attributes of the given entity solely based on the given text in the described JSON format. Be careful that some relationships can look like an attributes. Do not output any explanation. Do not ouput anything else."
+                system = "You are an expert at extracting attributes for a given entity solely based on a given text in context of creating conceptual model in software engineering."
 
         elif user_choice == RELATIONSHIPS_STRING:
             #system = "You are an expert at listing relationships for a given entity."
@@ -53,6 +57,8 @@ class LLMAssistant:
 
         if IS_SYSTEM_MSG:
             self.messages.append({"role": "system", "content": system})
+        else:
+            self.messages.append({"role": "system", "content": ""})
 
         user_first_msg = "What is the definition of conceptual model in software engineering?"
         assistent_first_msg = "In software engineering, a conceptual model is a high-level representation of a system or problem domain that helps to organize and understand the key concepts, relationships, and constraints involved. It provides a framework for thinking about the problem space and can be used as a starting point for further analysis, design, and development. \
@@ -77,7 +83,8 @@ class LLMAssistant:
 
         if user_choice == ATTRIBUTES_STRING:
             print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
-            print(f"- Description: {completed_item['description']}")
+            if "description" in completed_item:
+                print(f"- Description: {completed_item['description']}")
 
         elif user_choice == RELATIONSHIPS_STRING:
             if is_provided_class_source and completed_item['source'] != user_input_entity_name:
@@ -86,18 +93,26 @@ class LLMAssistant:
                 print(f"Warning: target entity is: {completed_item['target']}")
 
             print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
-            #print(f"- Description: {completed_item['description']}")
+
+            if "description" in completed_item:
+                print(f"- Description: {completed_item['description']}")
+
             print(f"- Source: {completed_item['source']}")
             print(f"- Target: {completed_item['target']}")
-            print(f"- Sentence: {completed_item['sentence']}")
+
+            if "sentence" in completed_item:
+                print(f"- Sentence: {completed_item['sentence']}")
             print()
         
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
             print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
-            print(f"- Sentence: {completed_item['sentence']}")
+
+            if "sentence" in completed_item: 
+                print(f"- Sentence: {completed_item['sentence']}")
             print()
 
         return completed_item
+
 
     def parse_streamed_output(self, prompt, user_choice, is_provided_class_source=True, user_input_entity_name=""):
         assistant_message = ""
@@ -136,7 +151,10 @@ class LLMAssistant:
     
         if is_skip_parsing:
             print(f"\nFull message: {assistant_message}")
+        
+        print(f"\nFull message: {assistant_message}")
     
+
     def suggest_attributes(self, entity_name, count_attributes_to_suggest, conceptual_model, domain_description):
 
         entity_name = entity_name.strip()
@@ -145,8 +163,13 @@ class LLMAssistant:
         if not self._are_default_messages_appended:
             self.append_default_messages(user_choice=ATTRIBUTES_STRING, is_domain_description=is_domain_description)        
 
+        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
+            e = embeddings.Embeddings()
+            queries = [f"Info about {entity_name}"]
+            domain_description = e.remove_unsimilar_text(queries, domain_description)
+
         if is_domain_description:
-            prompt = f'What attributes does this entity: "{entity_name}" have solely based on the following text? '
+            prompt = f'Solely based on the following text which attributes does the entity: "{entity_name}" have? '
             prompt += f'Output only those attributes which you are certain about in JSON format like this: '
         else:
             prompt = f'What attributes does this entity: "{entity_name}" have? '
@@ -334,7 +357,8 @@ class JSONBuilder:
         
         result += "]"
         return result
-    
+
+
 def main():
 
     # Define the model
