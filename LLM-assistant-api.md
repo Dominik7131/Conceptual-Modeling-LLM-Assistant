@@ -7,7 +7,7 @@ LLM_assistant(model_path_or_repo_id, model_file)
 
 ## Public methods of the class LLM_assistant:
   
-### method suggest
+### 1) method suggest
 
 suggest(entity_name, entity_name2, user_choice, count_items_to_suggest, conceptual_model, domain_description)
 
@@ -26,7 +26,7 @@ suggest(entity_name, entity_name2, user_choice, count_items_to_suggest, conceptu
 		- with properties `relationship` if `user_choice` == RELATIONSHIPS
 
   
-### method summarize_conceptual_model
+### 2) method summarize_conceptual_model
 
 summarize_conceptual_model(conceptual_model)
 
@@ -35,7 +35,7 @@ summarize_conceptual_model(conceptual_model)
 
   
     
-### method highlight_modeled_part
+### 3) method highlight_modeled_part
 
 highlight_modeled_domain_description(domain_text_description, conceptual_model)
 
