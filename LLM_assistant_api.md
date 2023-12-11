@@ -48,19 +48,19 @@
 
 #### JSON object describing the conceptual model:
 
-{
-	"entity_1":
-	{
-		"attributes": ["name": ...],
-	  	"relationships": ["name": ..., "source_entity": ..., "target_entity": ..., "cardinality": ... "attributes": ["name": ..., ...]]
-		"parent_entity": ...
-	},
-	"entity_2":
-	{
-		...
-	},
-	...
-}
+{ \
+	"entity_1": \
+	{ \
+		"attributes": ["name": ...], \
+	  	"relationships": ["name": ..., "source_entity": ..., "target_entity": ..., "cardinality": ... "attributes": ["name": ..., ...]] \
+		"parent_entity": ... \
+	}, \
+	"entity_2": \
+	{ \
+		... \
+	}, \
+	... \
+} \
 
 <br />
 <br />
