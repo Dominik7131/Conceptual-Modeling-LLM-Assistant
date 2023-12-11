@@ -2,7 +2,7 @@ from ctransformers import AutoModelForCausalLM
 import time
 
 model_id = "TheBloke/Llama-2-7B-Chat-GGUF"
-model_file = "llama-2-7b-chat.q4_K_M.gguf"
+model_file = "llama-2-7b-chat.Q5_K_M.gguf"
 llm = AutoModelForCausalLM.from_pretrained(model_id, model_file=model_file, model_type="llama", local_files_only=True, gpu_layers=100,
                                            temperature=0.0, context_length=4096, max_new_tokens=4096, batch_size=1024, threads=1)
 

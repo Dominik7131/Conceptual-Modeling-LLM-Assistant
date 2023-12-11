@@ -46,7 +46,7 @@ class Embeddings:
         self.passage_embeddings = None
         self.model = FlagModel('BAAI/bge-large-en-v1.5',
                   query_instruction_for_retrieval="Represent this sentence for searching relevant passages: ",
-                  use_fp16=True) # Setting use_fp16 to True speeds up computation with a slight performance degradation
+                  use_fp16=False) # Setting use_fp16 to True speeds up computation with a slight performance degradation
 
     # for s2p(short query to long passage) retrieval task, suggest to use encode_queries() which will automatically add the instruction to each query
     # corpus in retrieval task can still use encode() or encode_corpus(), since they don't need instruction
@@ -61,22 +61,20 @@ class Embeddings:
 
         queries_embeddings = self.encode_queries(queries)
 
-        is_caching = False
+        is_caching = True
         if is_caching:
-            if os.path.isfile('embeddings.npy'):
-                print("File found")
-                self.passage_embeddings = np.load('embeddings.npy')
+            if os.path.isfile('cached_embeddings.npy'):
+                self.passage_embeddings = np.load('cached_embeddings.npy')
             else:
                 self.passage_embeddings = self.encode(sentences)
-                np.save('embeddings.npy', self.passage_embeddings)
+                np.save('cached_embeddings.npy', self.passage_embeddings)
         else:
             if self.passage_embeddings == None:
                 self.passage_embeddings = self.encode(sentences)
-            else:
-                print("Passage embeddings found")
         
         scores = queries_embeddings @ self.passage_embeddings.T
         scores = scores.flatten()
+        scores_min_threshold = 0.52
 
         if is_debug:
             print(f"Input: {INPUT_TEXT}")
@@ -84,7 +82,7 @@ class Embeddings:
                 msg = f"Score: {scores[i]} | {sentences[i]}"
                 if scores[i] >= 0.6:
                     print_green_on_black(msg)
-                elif scores[i] >= 0.52:
+                elif scores[i] >= scores_min_threshold:
                     print_yellow_on_black(msg)
                 else:
                     print(msg)
@@ -92,7 +90,7 @@ class Embeddings:
 
         result = ""
         for i in range(len(sentences)):
-            if scores[i] >= 0.53:
+            if scores[i] >= scores_min_threshold:
                 result += sentences[i] + ' '
         
         return result[:-1]

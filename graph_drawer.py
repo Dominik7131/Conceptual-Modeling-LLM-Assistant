@@ -198,7 +198,7 @@ def draw(entities):
         text = ""
 
         for k, v in edge_attributes.items():
-            if k == 'color' or k == 'edge' or k == 'source' or k == 'target':
+            if k == 'color' or k == 'edge':
                 continue
             text += f"{k}: {v}\n"
 
