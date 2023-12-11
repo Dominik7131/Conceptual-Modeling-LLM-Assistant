@@ -1,9 +1,13 @@
 # LLM assistant API
 
 ## class LLM_assistant
-LLM_assistant(model_path_or_repo_id, model_file)
-- model_path_or_repo_id (string): model path or repo ID of the LLM to use (e.g. TheBloke/Llama-2-7B-Chat-GGUF)
-- model_file (string): which specific model file to use (e.g. llama-2-7b-chat.Q5_K_M.gguf)
+
+### LLM_assistant(model_path_or_repo_id, model_file)
+- **model_path_or_repo_id** (string): model path or repo ID of the LLM to use (e.g. TheBloke/Llama-2-7B-Chat-GGUF)
+- **model_file (string)**: which specific model file to use (e.g. llama-2-7b-chat.Q5_K_M.gguf)
+
+<br />
+<br />
 
 ## Public methods of the class LLM_assistant:
 
@@ -59,9 +63,15 @@ LLM_assistant(model_path_or_repo_id, model_file)
 	...
 }
 
+<br />
+<br />
+
 ### Notes
 - in JSON object "parent_entity" is used for representing the ISA-hierarchy
 - for possible future extension every method can have an additional argument `user_instruction` allowing user to specify his request more specifically
+
+<br />
+<br />
 
 ### TODO:
 - in the method `suggest` how should the output look like?
