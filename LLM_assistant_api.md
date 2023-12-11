@@ -4,7 +4,7 @@
 
 ### LLM_assistant(model_path_or_repo_id, model_file)
 - **model_path_or_repo_id** (string): model path or repo ID of the LLM to use (e.g. TheBloke/Llama-2-7B-Chat-GGUF)
-- **model_file (string)**: which specific model file to use (e.g. llama-2-7b-chat.Q5_K_M.gguf)
+- **model_file** (string): which specific model file to use (e.g. llama-2-7b-chat.Q5_K_M.gguf)
 
 <br />
 <br />
@@ -29,9 +29,9 @@
 <br />
 <br />
 
-## 2) summarize_conceptual_model(conceptual_model)
 
-- **conceptual_model** (JSON object describing conceptual model): whole user's conceptual model or some part of it
+## 2) summarize_conceptual_model(conceptual_model)
+- **conceptual_model** (JSON object describing conceptual model): selected part of user's conceptual model
 - returns (string): description of the selected conceptual model `conceptual_model_selected`
 
   
@@ -39,9 +39,8 @@
 <br />
 
 ## 3) highlight_modeled_domain_description(domain_description, conceptual_model)
-
-- **domain_description**` (string): description of the domain the user is modeling
-- **conceptual_model** (JSON object describing conceptual model): whole user's conceptual model or some part of it
+- **domain_description** (string): description of the domain the user is modeling
+- **conceptual_model** (JSON object describing conceptual model): selected part of user's conceptual model
 - returns (string): the part of the text from the `domain_description` which is represented in the selected conceptul model `conceptual_model_selected`
 
 <br />
