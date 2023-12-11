@@ -7,8 +7,8 @@ LLM_assistant(model_path_or_repo_id, model_file)
 
 ## Public methods of the class LLM_assistant:
 
-### 1)
-suggest(entity_name, entity_name2, user_choice, count_items_to_suggest, conceptual_model, domain_description)
+### 1) suggest(entity_name, entity_name2, user_choice, count_items_to_suggest, conceptual_model, domain_description)
+
 
 - entity_name (string): name of the entity for which `LLM_assistant` suggests items based on the `user_choice`
 - entity_name2 (string, optional): name of the second entity if the user wants to suggest relationships in between two entities
@@ -27,8 +27,7 @@ suggest(entity_name, entity_name2, user_choice, count_items_to_suggest, conceptu
 <br />
 <br />
 
-## 2)
-summarize_conceptual_model(conceptual_model)
+## 2) summarize_conceptual_model(conceptual_model)
 
 - conceptual_model (JSON object describing conceptual model): whole user's conceptual model or some part of it
 - returns (string): description of the selected conceptual model `conceptual_model_selected`
@@ -37,8 +36,7 @@ summarize_conceptual_model(conceptual_model)
 <br />
 <br />
 
-## 3)
-highlight_modeled_domain_description(domain_text_description, conceptual_model)
+## 3) highlight_modeled_domain_description(domain_text_description, conceptual_model)
 
 - `domain_description` (string): description of the domain the user is modeling
 - conceptual_model (JSON object describing conceptual model): whole user's conceptual model or some part of it
