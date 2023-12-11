@@ -30,7 +30,7 @@
 <br />
 
 
-## 2) summarize_conceptual_model(conceptual_model)
+### 2) summarize_conceptual_model(conceptual_model)
 - **conceptual_model** (JSON object describing conceptual model): selected part of user's conceptual model
 - returns (string): description of the selected conceptual model `conceptual_model_selected`
 
@@ -38,7 +38,7 @@
 <br />
 <br />
 
-## 3) highlight_modeled_domain_description(domain_description, conceptual_model)
+### 3) highlight_modeled_domain_description(domain_description, conceptual_model)
 - **domain_description** (string): description of the domain the user is modeling
 - **conceptual_model** (JSON object describing conceptual model): selected part of user's conceptual model
 - returns (string): the part of the text from the `domain_description` which is represented in the selected conceptul model `conceptual_model_selected`
