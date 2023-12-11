@@ -24,6 +24,8 @@ LLM_assistant(model_path_or_repo_id, model_file)
 		- with properties `relationship` if `user_choice` == RELATIONSHIPS
 
 <br />
+<br />
+<br />
 
 2) summarize_conceptual_model(conceptual_model)
 
@@ -32,6 +34,8 @@ LLM_assistant(model_path_or_repo_id, model_file)
 
   
 <br />
+<br />
+<br />
 
 3) highlight_modeled_domain_description(domain_text_description, conceptual_model)
 
@@ -39,7 +43,9 @@ LLM_assistant(model_path_or_repo_id, model_file)
 - conceptual_model (JSON object describing conceptual model): whole user's conceptual model or some part of it
 - returns (string): the part of the text from the `domain_description` which is represented in the selected conceptul model `conceptual_model_selected`
 
-
+<br />
+<br />
+<br />
 
 #### JSON object describing the conceptual model:
 
