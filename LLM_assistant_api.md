@@ -67,3 +67,4 @@ highlight_modeled_domain_description(domain_text_description, conceptual_model)
 
 ### TODO:
 - in the method `suggest` how should the output look like?
+- in the method `suggest` do we want to let user choose `count_items_to_suggest`?

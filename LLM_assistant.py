@@ -18,8 +18,6 @@ RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
 
 class LLMAssistant:
     def __init__(self, model_path_or_repo_id, model_file, model_type):
-        self.messages = []
-        self._are_default_messages_appended = False
         self.llm = AutoModelForCausalLM.from_pretrained(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type, local_files_only=True,
                                                         gpu_layers=200, temperature=0.0, context_length=4096, max_new_tokens=4096,
                                                         batch_size=1024, threads=1)
@@ -28,7 +26,7 @@ class LLMAssistant:
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             self.embeddings = Embeddings()
 
-    def append_default_messages(self, user_choice, is_source_entity=True, is_domain_description=False):
+    def append_default_messages(self, user_choice, is_domain_description=False):
         system = ""
         if user_choice == ATTRIBUTES_STRING:
             if not is_domain_description:
@@ -87,7 +85,8 @@ class LLMAssistant:
             completed_item = json.loads(item)
         except ValueError:
             print("Error: Cannot decode JSON: " + item)
-            exit(1)
+            completed_item = {"name": "Error: " + item} # For debugging return this as a valid item
+            return completed_item
 
         if user_choice == ATTRIBUTES_STRING:
             print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
@@ -128,6 +127,8 @@ class LLMAssistant:
         item = ""
         is_item_start = False
         is_skip_parsing = False
+        new_lines_in_a_row = 0
+        last_char = ''
 
         for text in self.llm(prompt, stream=True):
             assistant_message += text
@@ -138,11 +139,21 @@ class LLMAssistant:
             for char in text:
                 if char == '{':
                     is_item_start = True
+
+                if char == '\n' and last_char == '\n':
+                    new_lines_in_a_row += 1
+                else:
+                    new_lines_in_a_row = 0
                 
                 # We already got the last object of the JSON output
                 # If something weird starts happening with the LLM this premature return might be the cause
                 if char == ']':
-                    return
+                    return items
+                
+                # Return when LLM gets stuck in printing only new lines
+                if new_lines_in_a_row > 3:
+                    print("Warning: too many new lines")
+                    return items
                 
                 if is_item_start:
                     item += char
@@ -152,9 +163,12 @@ class LLMAssistant:
                     completed_item = self.parse_item(item, items, user_choice, is_provided_class_source, user_input_entity_name)
                     items.append(completed_item)
                     item = ""
+                
+                last_char = char
         
         if len(items) != ITEMS_COUNT:
-            # Try to finish the object by appending the last curly bracket
+            # LLM sometimes does not properly finish the JSON object
+            # So try to finish the object by appending the last curly bracket
             if is_item_start:
                 item += '}'
                 completed_item = self.parse_item(item, items, user_choice, is_provided_class_source, user_input_entity_name)
@@ -166,6 +180,7 @@ class LLMAssistant:
             print(f"\nFull message: {assistant_message}")
         
         print(f"\nFull message: {assistant_message}")
+        return items
     
 
     def suggest(self, entity_name, entity_name_2, user_choice, count_items_to_suggest, conceptual_model, domain_description):
@@ -177,8 +192,8 @@ class LLMAssistant:
 
         is_domain_description = domain_description != ""
 
-        if not self._are_default_messages_appended:
-            self.append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
+        self.messages = []
+        self.append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             queries = [f"Info about {entity_name}"]
@@ -253,8 +268,9 @@ class LLMAssistant:
 
         llama2_prompt = Utility.build_llama2_prompt(new_messages)
         print(f"Sending this prompt to llm:\n{llama2_prompt}\n")
-        self.parse_streamed_output(llama2_prompt, user_choice=user_choice, user_input_entity_name=entity_name)
-        return
+        items = self.parse_streamed_output(llama2_prompt, user_choice=user_choice, user_input_entity_name=entity_name)
+        items.insert(0, {"prompt": llama2_prompt}) # For testing prepend the prompt
+        return items
 
 
 class UserInputProcessor():
@@ -271,7 +287,7 @@ class UserInputProcessor():
         if user_message.lower() == "exit" or user_message.lower() == "quit" or user_message.lower() == "q":
             return False
         
-        self.user_choice = "r" #input("Input 'a' for attributes, 'r' for relationships, 'x' for relationships between two classes: ").lower()
+        self.user_choice = "a" #input("Input 'a' for attributes, 'r' for relationships, 'x' for relationships between two classes: ").lower()
 
         if self.user_choice == "a":
             self.user_choice = ATTRIBUTES_STRING
@@ -331,32 +347,3 @@ class JSONBuilder:
             result += ", ..."
         result += "]"
         return result
-
-
-def main():
-
-    # Define the model
-    model_path_or_repo_id = "TheBloke/Llama-2-7B-Chat-GGUF"
-    model_file = "llama-2-7b-chat.Q5_K_M.gguf"
-    model_type = "llama"
-
-    llm_assistant = LLMAssistant(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type)
-    
-    user_input_processor = UserInputProcessor()
-
-    while True:
-        is_continue = user_input_processor.handle_user_input()
-        if not is_continue:
-            break
-
-        time_start = time.time()
-
-        domain_description = "We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."
-        llm_assistant.suggest(user_input_processor.entity_name, user_input_processor.entity_name_2, user_input_processor.user_choice, ITEMS_COUNT, conceptual_model=[], domain_description=domain_description)
-        
-        time_end = time.time()
-        print(f"\nTime: {time_end - time_start:.2f} seconds")
-        #break
-
-if __name__ == "__main__":
-    main()

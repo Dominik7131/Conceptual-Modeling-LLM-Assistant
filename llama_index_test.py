@@ -1,6 +1,5 @@
 from llama_index import SimpleDirectoryReader, VectorStoreIndex, get_response_synthesizer
 from llama_index import ServiceContext
-from llama_index.embeddings import HuggingFaceEmbedding
 from llama_index.retrievers import VectorIndexRetriever
 from llama_index.query_engine import RetrieverQueryEngine
 from llama_index.postprocessor import SimilarityPostprocessor
@@ -52,7 +51,8 @@ response_synthesizer = get_response_synthesizer(service_context=service_context)
 query_engine = RetrieverQueryEngine(retriever=retriever, response_synthesizer=response_synthesizer,
                                     node_postprocessors=[SimilarityPostprocessor(similarity_cutoff=0.3)])
 
-input_text = "All information about courses"
+instruction = "Represent this sentence for searching relevant passages: "
+input_text = "Courses attributes"
 # Expected answer: Each course has a name and a number of credits.
 response = query_engine.query(input_text)
 

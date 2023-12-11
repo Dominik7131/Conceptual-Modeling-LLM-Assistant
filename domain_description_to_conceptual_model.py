@@ -8,7 +8,7 @@ IS_ENTITIES_ONLY = True
 IS_ATTRIBUTES_ONLY = False
 IS_RELATIONSHIPS_ONLY = False
 
-IS_SAVE_TO_FILE = True
+IS_SAVE_TO_FILE = False
 
 TEXT_CAR = ["A road vehicle is a motorized or non-motorized vehicle that is manufactured for the purpose of operating on roads for the transport of persons, animals or goods.",
 "A special vehicle is a vehicle manufactured for purposes other than road traffic, which may be operated on road roads if the conditions set forth in this Act are met.",
