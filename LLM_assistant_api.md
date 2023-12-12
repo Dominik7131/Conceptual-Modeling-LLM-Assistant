@@ -52,8 +52,8 @@
 {
 	"entity_1":
 	{
-		"attributes": ["name": ...],
-	  	"relationships": ["name": ..., "source_entity": ..., "target_entity": ..., "cardinality": ... "attributes": ["name": ..., ...]]
+		"attributes": ["attribute_1", "attribute_2", ...],
+	  	"relationships": [{"name": ..., "source_entity": ..., "target_entity": ..., "cardinality": ... "attributes":["attribute_1", ...]}, ...]
 		"parent_entity": ...
 	},
 	"entity_2":
