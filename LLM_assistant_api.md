@@ -16,7 +16,7 @@
 - **entity2** (string, optional): name of the second entity if the user wants to suggest relationships in between two entities
 - **user_choice** (enum): one of these 3 options of what user wants to suggest: ATTRIBUTES for attributes, RELATIONSHIPS_ENTITIES for relationships with new possible entites, RELATIONSHIPS for relationships in between two entities
 - **count_items_to_suggest** (int): how many items should be suggested, must be greater than 0
-- **conceptual_model** (JSON object describing conceptual model, optional): selected part of the conceptual model by user
+- **conceptual_model** (JSON object describing conceptual model, optional): current user's conceptual model
 - **domain_description** (string, optional): description of the domain the user is modeling
 - returns new suggested items based on the `user_choice` for the entity `entity1` and optionally the entity `entity2`
 	- solely based on the `domain_description` and the context of `conceptual_model` if provided else the output is based on the parameters of the selected LLM
@@ -48,6 +48,7 @@
 
 #### JSON object describing the conceptual model:
 
+```
 {
 	"entity_1":
 	{
@@ -61,6 +62,7 @@
 	},
 	...
 }
+```
 
 <br />
 <br />
