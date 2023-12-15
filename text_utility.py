@@ -11,6 +11,44 @@ multiple_dots = r'\.{2,}'
 
 class TextUtility:
 
+    def build_llama2_prompt(messages):
+        start_prompt = "<s>[INST] "
+        end_prompt = " [/INST]"
+        conversation = []
+        for index, message in enumerate(messages):
+            if message["role"] == "system" and index == 0:
+                conversation.append(f"<<SYS>>\n{message['content']}\n<</SYS>>\n\n")
+            elif message["role"] == "user":
+                conversation.append(message["content"].strip())
+            else:
+                conversation.append(f" [/INST] {message['content'].strip()} </s><s>[INST] ")
+
+        return start_prompt + "".join(conversation) + end_prompt
+    
+    def build_openchat_prompt(messages):
+        user_start = "GPT4 Correct User: "
+        assistant_start = "GPT4 Correct Assistant:"
+        end_of_turn = "<|end_of_turn|>"
+
+        result = ""
+        for index, message in enumerate(messages):
+            if message["role"] == "system":
+                if index != 0:
+                    raise ValueError("Error: Non-first system message not implemented")
+                result += message["content"]
+                result += end_of_turn
+    
+            elif message["role"] == "user":
+                result += user_start
+                result += message["content"].strip()
+                result += end_of_turn
+                result += assistant_start
+            else:
+                result += message["content"].strip()
+                result += end_of_turn
+        
+        return result
+
     def split_into_sentences(text: str) -> list[str]:
         # https://stackoverflow.com/a/31505798
         """
