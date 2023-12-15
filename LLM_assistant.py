@@ -5,12 +5,14 @@ from ctransformers import AutoModelForCausalLM
 import json
 import time
 from embeddings import Embeddings
+from text_utility import TextUtility
+
 
 ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
-TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
+TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
 
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
@@ -18,9 +20,12 @@ RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
 
 class LLMAssistant:
     def __init__(self, model_path_or_repo_id, model_file, model_type):
+        # Larger batch_size will process the prompt faster but will require more memory.
+        # If you have enough GPU memory to fit the model, setting threads=1 can improve performance.
+        self.model_type = model_type
         self.llm = AutoModelForCausalLM.from_pretrained(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type, local_files_only=True,
                                                         gpu_layers=200, temperature=0.0, context_length=4096, max_new_tokens=4096,
-                                                        batch_size=1024, threads=1)
+                                                        batch_size=1024, threads=1, reset=True)
         #print(f"Config: Context length: {str(self.llm.context_length)}, Temperature: {str(self.llm.config.temperature)}, Max new tokens: {str(self.llm.config.max_new_tokens)}")
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
@@ -34,6 +39,7 @@ class LLMAssistant:
             else:
                 #system = "You are creating a conceptual model which consists of entities, their attributes and relationships in between the entities. You will be given an entity, text and description of JSON format. Your task is to output attributes of the given entity solely based on the given text in the described JSON format. Be careful that some relationships can look like an attributes. Do not output any explanation. Do not ouput anything else."
                 system = "You are an expert at extracting attributes for a given entity solely based on a given text in context of creating conceptual model in software engineering."
+
 
         elif user_choice == RELATIONSHIPS_STRING:
             if not is_domain_description:
@@ -50,10 +56,12 @@ class LLMAssistant:
                 #system += "Each relationship is between exactly two entities, we will describe them as the source entity and the target entity. "
                 #system += "Each relationship has a name in a verb form such that when you insert this verb in between the source entity and the target entity in this order a short meaningful sentence is created. "
                 #system += "Always make sure that the short meaningful sentence indeed makes sense. Be very careful when creating the short meaningful sentence: the source entity must come first then follows the relationship name and then follows the target entity name which ends the sentence. Always check that this order holds."
+                #system += " You will be given a source entity and your goal is to solely based on the given text to find a relationships between this source entity and some new target entity."
 
                 system = "You are an expert creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
+                #system = "You are an expert creating a conceptual model which consists of entities and their relationships solely based on a given text. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
 
-                #system += " You will be given a source entity and your goal is to solely based on the given text to find a relationships between this source entity and some new target entity."
+
 
 
 
@@ -65,8 +73,6 @@ class LLMAssistant:
 
         else:
             raise ValueError(f"Error: Unknown user choice: {user_choice}")
-        
-        system = '\n' + system
 
         if IS_SYSTEM_MSG:
             self.messages.append({"role": "system", "content": system})
@@ -87,7 +93,20 @@ class LLMAssistant:
         self._are_default_messages_appended = True
         return
 
-    def parse_item(self, item, items, user_choice, is_provided_class_source, user_input_entity_name):
+    def construct_relationship_name_from_sentence(self, sentence, source, target):
+        words = sentence.split()
+        result = ""
+        for word in words:
+            if word == "a" or word == "an" or word == source or word == target:
+                continue
+            else:
+                result += word + '_'
+        
+        if len(result) > 0:
+            result = result[:-1]
+        return result
+
+    def parse_item(self, item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
         try:
             completed_item = json.loads(item)
         except ValueError:
@@ -99,6 +118,8 @@ class LLMAssistant:
             print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
             if "description" in completed_item:
                 print(f"- Description: {completed_item['description']}")
+            if "inference" in completed_item:
+                print(f"- Inference: {completed_item['inference']}")
 
         elif user_choice == RELATIONSHIPS_STRING:
             #if is_provided_class_source and completed_item['source'] != user_input_entity_name:
@@ -106,9 +127,12 @@ class LLMAssistant:
             #elif not is_provided_class_source and completed_item['target'] != user_input_entity_name:
             #    print(f"Warning: target entity is: {completed_item['target']}")
 
-            if user_input_entity_name != completed_item['source'] and user_input_entity_name != completed_item['target']:
-                self.end_parsing_prematurely = True
-                return completed_item
+            if user_input_entity1 != completed_item['source'] and user_input_entity1 != completed_item['target']:
+                # For debugging purpuses do not end the parsing but otherwise we would probably end
+                #self.end_parsing_prematurely = True
+                #return completed_item
+                completed_item['name'] = "(DELETED) " + completed_item['name']
+
 
             print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
 
@@ -120,9 +144,17 @@ class LLMAssistant:
 
             if "sentence" in completed_item:
                 print(f"- Sentence: {completed_item['sentence']}")
+                #constructed_relationship_name = self.construct_relationship_name_from_sentence(completed_item['sentence'], completed_item['source'], completed_item['target'])
+                #if constructed_relationship_name != "":
+                #    print(f"- Constructed name: {constructed_relationship_name}")
             print()
         
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
+
+            is_match = user_input_entity1 == completed_item['source'] and user_input_entity2 == completed_item['target'] or user_input_entity2 == completed_item['source'] and user_input_entity1 == completed_item['target']
+            if not is_match:
+                completed_item['name'] = "(DELETED) " + completed_item['name']
+
             print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
 
             if "sentence" in completed_item: 
@@ -132,7 +164,7 @@ class LLMAssistant:
         return completed_item
 
 
-    def parse_streamed_output(self, prompt, user_choice, is_provided_class_source=True, user_input_entity_name=""):
+    def parse_streamed_output(self, prompt, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
         assistant_message = ""
         items = []
         item = ""
@@ -172,7 +204,7 @@ class LLMAssistant:
                 
                 if char == "}" and item != '':
                     is_item_start = False
-                    completed_item = self.parse_item(item, items, user_choice, is_provided_class_source, user_input_entity_name)
+                    completed_item = self.parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
 
                     if self.end_parsing_prematurely:
                         print(f"Ending parsing prematurely: {completed_item}")
@@ -188,7 +220,7 @@ class LLMAssistant:
             # So try to finish the object by appending the last curly bracket
             if is_item_start:
                 item += '}'
-                completed_item = self.parse_item(item, items, user_choice, is_provided_class_source, user_input_entity_name)
+                completed_item = self.parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
                 items.append(completed_item)
 
             #print(f"\nFull message: {assistant_message}")
@@ -200,9 +232,9 @@ class LLMAssistant:
         return items
     
 
-    def suggest(self, entity_name, entity_name_2, user_choice, count_items_to_suggest, conceptual_model, domain_description):
+    def suggest(self, entity1, entity2, user_choice, count_items_to_suggest, conceptual_model, domain_description):
 
-        entity_name = entity_name.strip()
+        entity1 = entity1.strip()
 
         if IS_IGNORE_DOMAIN_DESCRIPTION:
             domain_description = ""
@@ -213,7 +245,7 @@ class LLMAssistant:
         self.append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
-            queries = [f"Info about {entity_name}"]
+            queries = [f"Info about {entity1}"]
             domain_description = self.embeddings.remove_unsimilar_text(queries, domain_description)
 
         times_to_repeat = count_items_to_suggest
@@ -226,29 +258,32 @@ class LLMAssistant:
         if user_choice == ATTRIBUTES_STRING:
 
             if not is_domain_description:
-                prompt = f'What attributes does this entity: "{entity_name}" have? '
+                prompt = f'What attributes does this entity: "{entity1}" have? '
                 prompt += f'Output exactly {str(count_items_to_suggest)} attributes in JSON format like this: '  
             
             else:
-                prompt = f'Solely based on the following text which attributes does the entity: "{entity_name}" have? '
-                #prompt = f'Solely based on the text in triple quotation marks which attributes does the entity: "{entity_name}" have? '
+                prompt = f'Solely based on the following text which attributes does the entity: "{entity1}" have? '
 
                 #prompt += "If you find an attribute which looks more like a relationship then it is not an attribute. "
                 prompt += f'Output only those attributes which you are certain about in JSON format like this: '
 
-            is_description = False
+            is_description = True
             if is_description:
-                prompt += JSONBuilder.build(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                if not is_domain_description:
+                    prompt += JSONBuilder.build(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                else:
+                    prompt += JSONBuilder.build(names=["name", "inference"], descriptions=["* attribute name", "* attribute inference from which exact text in the following text was it inferred"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
             else:
                 prompt += JSONBuilder.build(names=["name"], descriptions=["* attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
         
         elif user_choice == RELATIONSHIPS_STRING:
 
             if not is_domain_description:
-                prompt = f'Which relationships does the source entity: "{entity_name}" have? Output exactly {str(count_items_to_suggest)} relationships in JSON format like this: '
+                prompt = f'Which relationships does the source entity: "{entity1}" have? Output exactly {str(count_items_to_suggest)} relationships in JSON format like this: '
 
             else:
-                prompt = f'Solely based on the following text which relationships does this entity: "{entity_name}" have? '
+                prompt = f'Solely based on the following text which relationships does this entity: "{entity1}" have? '
+
                 #prompt += f'Always make sure that the entity: "{entity_name}" is the source entity in all the relationships. '
                 #prompt += f'Output only those relationships which you are certain about in JSON format like this: '
                 prompt += f'Output it in JSON format like this: '
@@ -259,23 +294,26 @@ class LLMAssistant:
 
             prompt += JSONBuilder.build(
                 names=names,
-                descriptions=["* relationship name in form of a verb", f'"{entity_name}"', f"* relationship target entity", "the short meaningful sentence for the * relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
                 #descriptions=["relationship name in form of a verb", f'"{entity_name}"', f"relationship target entity", "the short meaningful sentence for the relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
     
         
 
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
             if not is_domain_description:
-                prompt = 'What relationships are between source entity "' + entity_name + '" and target entity "' + entity_name_2 + '"? '
+                prompt = 'What relationships are between source entity "' + entity1 + '" and target entity "' + entity2 + '"? '
                 #prompt += 'Output exactly ' + str(count_items_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": short meaningful sentence where you put the first relationship name in between the source entity and the target entity in this order}, {"name": second relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": short meaningful sentence where you put the first relationship name in between the source entity and the target entity in this order}, ...]. '
                 #prompt += 'Output exactly ' + str(count_items_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": the short meaningful sentence for the first relationship}, {"name": second relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": the short meaningful sentence for the first relationship}, ...]. '
                 prompt += 'Output exactly ' + str(count_items_to_suggest) + ' relationships in JSON format like this: '
 
             else:
-                prompt = f'Solely based on the following text which relationships are between the entity "{entity_name}" and the entity "{entity_name_2}"? '
+                prompt = f'Solely based on the following text which relationships are between the entity "{entity1}" and the entity "{entity2}"? '
+
                 prompt += f'Output only those relationships which you are certain about in JSON format like this: '
 
-            prompt += JSONBuilder.build(names=["name", "source", "target", "sentence"], descriptions=[f'* relationship name where "{entity_name}" is the source entity and "{entity_name_2}" is the target entity', f'"{entity_name}"', f'"{entity_name_2}"', f'the short meaningful sentence for the first relationship where the source entity "{entity_name}" comes first then follows the relationship name and then follows the target entity "{entity_name_2}"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+            #prompt += JSONBuilder.build(names=["name", "source", "target", "sentence"], descriptions=[f'* relationship name where "{entity1}" is the source entity and "{entity2}" is the target entity', f'"{entity1}"', f'"{entity2}"', f'the short meaningful sentence for the first relationship where the source entity "{entity1}" comes first then follows the relationship name and then follows the target entity "{entity2}"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+            prompt += JSONBuilder.build(names=["name", "source", "target", "sentence"], descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+
         
         else:
             raise ValueError(f"Error: Undefined user choice: {user_choice}")
@@ -288,10 +326,17 @@ class LLMAssistant:
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
 
-        llama2_prompt = Utility.build_llama2_prompt(new_messages)
-        print(f"Sending this prompt to llm:\n{llama2_prompt}\n")
-        items = self.parse_streamed_output(llama2_prompt, user_choice=user_choice, user_input_entity_name=entity_name)
-        items.insert(0, {"prompt": llama2_prompt}) # For testing prepend the prompt
+        llm_prompt = ""
+        if self.model_type == "llama":
+            llm_prompt = TextUtility.build_llama2_prompt(new_messages)
+        elif self.model_type == "openchat":
+            llm_prompt = TextUtility.build_openchat_prompt(new_messages)
+        else:
+            raise ValueError(f"Error: Unknown model type '{self.model_type}'")
+
+        print(f"Sending this prompt to llm:\n{llm_prompt}\n")
+        items = self.parse_streamed_output(llm_prompt, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+        items.insert(0, {"prompt": llm_prompt}) # For testing prepend the prompt
         return items
 
 
@@ -327,24 +372,8 @@ class UserInputProcessor():
 
         return True
 
-def print_help_message():
-    print("Options: \"q\" to exit, \"print\" to print the current conceptual model")
-
-
-class Utility:
-    def build_llama2_prompt(messages):
-        startPrompt = "<s>[INST] "
-        endPrompt = " [/INST]"
-        conversation = []
-        for index, message in enumerate(messages):
-            if message["role"] == "system" and index == 0:
-                conversation.append(f"<<SYS>>{message['content']}\n<</SYS>>\n\n")
-            elif message["role"] == "user":
-                conversation.append(message["content"].strip())
-            else:
-                conversation.append(f" [/INST] {message['content'].strip()} </s><s>[INST] ")
-
-        return startPrompt + "".join(conversation) + endPrompt
+    def print_help_message():
+        print("Options: \"q\" to exit, \"print\" to print the current conceptual model")
 
 
 class JSONBuilder:
