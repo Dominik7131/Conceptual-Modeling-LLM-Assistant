@@ -92,3 +92,7 @@ Model an IT database. We mostly want to model computers and software equipment. 
 (Original text in Czech: Evidují se především počítače a softwarové vybavení. Počítače mohou být buďto skutečné, nebo virtuální, běžící na skutečném počítači. Na jednom skutečném počítači může běžet několik počítačů virtuálních. Každý počítač má své jméno, velikost paměti a počet jader. Počítače mohou poskytovat služby (email, DNS, WWW, ...). Na každém počítači běží jeden daný operační systém, a může na něm být nainstalovaný další software. U softwaru je důležité znát název, výrobce a verzi.)
 
 ![IT_database](images/IT-DatabaseEN.jpg)
+
+
+## Sources
+- https://github.com/atenearesearchgroup/chatgpt-uml
