@@ -77,7 +77,7 @@ class Embeddings:
         scores_min_threshold = 0.52
 
         if is_debug:
-            print(f"Input: {INPUT_TEXT}")
+            print(f"Input: {queries[0]}")
             for i in range(len(sentences)):
                 msg = f"Score: {scores[i]} | {sentences[i]}"
                 if scores[i] >= 0.6:
