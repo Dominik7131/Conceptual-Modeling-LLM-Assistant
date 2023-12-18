@@ -1,4 +1,5 @@
 import re
+
 alphabets= "([A-Za-z])"
 prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
 suffixes = "(Inc|Ltd|Jr|Sr|Co)"
@@ -24,10 +25,13 @@ class TextUtility:
                 conversation.append(f" [/INST] {message['content'].strip()} </s><s>[INST] ")
 
         return start_prompt + "".join(conversation) + end_prompt
-    
+
+
     def build_openchat_prompt(messages):
         user_start = "GPT4 Correct User: "
+        #user_start = "GPT4 User: "
         assistant_start = "GPT4 Correct Assistant:"
+        #assistant_start = "GPT4 Assistant:"
         end_of_turn = "<|end_of_turn|>"
 
         result = ""
@@ -48,6 +52,36 @@ class TextUtility:
                 result += end_of_turn
         
         return result
+    
+    def json_to_pretty_text(json_item, index, user_choice, ATTRIBUTES_STRING):
+
+        result = ""
+        result += f"{index - 1}: {json_item['name'].capitalize()}\n"
+
+        if "description" in json_item:
+            result += f"- Description: {json_item['description']}\n"
+
+
+        if user_choice == ATTRIBUTES_STRING:
+            if "inference" in json_item:
+                result += f"- Inference: {json_item['inference']}\n"
+            if "data_type" in json_item:
+                result += f"- Data type: {json_item['data_type']}\n"
+
+        else:
+            if "source" in json_item:
+                result += f"- Source: {json_item['source']}\n"
+            if "target" in json_item:
+                result += f"- Target: {json_item['target']}\n"
+            if "sentence" in json_item:
+                result += f"- Sentence: {json_item['sentence']}\n"
+            if "inference" in json_item:
+                result += f"- Inference: {json_item['inference']}\n"
+            if "cardinality" in json_item:
+                result += f"- Cardinality: {json_item['cardinality']}\n"
+        
+        return result
+
 
     def split_into_sentences(text: str) -> list[str]:
         # https://stackoverflow.com/a/31505798
