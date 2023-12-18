@@ -58,8 +58,8 @@ class LLMAssistant:
                 #system += "Always make sure that the short meaningful sentence indeed makes sense. Be very careful when creating the short meaningful sentence: the source entity must come first then follows the relationship name and then follows the target entity name which ends the sentence. Always check that this order holds."
                 #system += " You will be given a source entity and your goal is to solely based on the given text to find a relationships between this source entity and some new target entity."
 
-                system = "You are an expert creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
-                #system = "You are an expert creating a conceptual model which consists of entities and their relationships solely based on a given text. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
+                system = "You are an expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
+                #system = "You are an expert at creating a conceptual model which consists of entities and their relationships solely based on a given text. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
 
 
 
@@ -93,6 +93,7 @@ class LLMAssistant:
         self._are_default_messages_appended = True
         return
 
+
     def construct_relationship_name_from_sentence(self, sentence, source, target):
         words = sentence.split()
         result = ""
@@ -106,6 +107,7 @@ class LLMAssistant:
             result = result[:-1]
         return result
 
+
     def parse_item(self, item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
         try:
             completed_item = json.loads(item)
@@ -113,54 +115,59 @@ class LLMAssistant:
             print("Error: Cannot decode JSON: " + item)
             completed_item = {"name": "Error: " + item} # For debugging return this as a valid item
             return completed_item
+        
+        user_input_entity1 = user_input_entity1.lower()
+        user_input_entity2 = user_input_entity2.lower()
 
         if user_choice == ATTRIBUTES_STRING:
-            print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
-            if "description" in completed_item:
-                print(f"- Description: {completed_item['description']}")
-            if "inference" in completed_item:
-                print(f"- Inference: {completed_item['inference']}")
+            # Remove attributes in which their inferred text does not contain the given entity
+            is_inference = "inference" in completed_item
+            if is_inference and user_input_entity1 not in completed_item['inference'].lower():
+                completed_item['name'] = "(DELETED) " + completed_item['name']
+
 
         elif user_choice == RELATIONSHIPS_STRING:
-            #if is_provided_class_source and completed_item['source'] != user_input_entity_name:
-            #    print(f"Warning: source entity is: {completed_item['source']}")
-            #elif not is_provided_class_source and completed_item['target'] != user_input_entity_name:
-            #    print(f"Warning: target entity is: {completed_item['target']}")
 
-            if user_input_entity1 != completed_item['source'] and user_input_entity1 != completed_item['target']:
-                # For debugging purpuses do not end the parsing but otherwise we would probably end
+            is_entity1_source_or_target = user_input_entity1 == completed_item['source'] or user_input_entity1 == completed_item['target']
+
+            is_entity1_in_sentence = True
+            if "sentence" in completed_item:
+                is_entity1_in_sentence = user_input_entity1 in completed_item['sentence']
+            
+            if not is_entity1_source_or_target or not is_entity1_in_sentence:
+                # For debugging purpuses do not end parsing but otherwise we would probably end
                 #self.end_parsing_prematurely = True
                 #return completed_item
                 completed_item['name'] = "(DELETED) " + completed_item['name']
 
 
-            print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
-
-            if "description" in completed_item:
-                print(f"- Description: {completed_item['description']}")
-
-            print(f"- Source: {completed_item['source']}")
-            print(f"- Target: {completed_item['target']}")
-
-            if "sentence" in completed_item:
-                print(f"- Sentence: {completed_item['sentence']}")
-                #constructed_relationship_name = self.construct_relationship_name_from_sentence(completed_item['sentence'], completed_item['source'], completed_item['target'])
-                #if constructed_relationship_name != "":
-                #    print(f"- Constructed name: {constructed_relationship_name}")
-            print()
-        
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
+            source_lower = completed_item['source'].lower()
+            target_lower = completed_item['target'].lower()
 
-            is_match = user_input_entity1 == completed_item['source'] and user_input_entity2 == completed_item['target'] or user_input_entity2 == completed_item['source'] and user_input_entity1 == completed_item['target']
+            is_match = (user_input_entity1 == source_lower and user_input_entity2 == target_lower) or (user_input_entity2 == source_lower and user_input_entity1 == target_lower)
             if not is_match:
                 completed_item['name'] = "(DELETED) " + completed_item['name']
 
-            print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
 
-            if "sentence" in completed_item: 
-                print(f"- Sentence: {completed_item['sentence']}")
-            print()
+        print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
 
+        if "description" in completed_item:
+            print(f"- Description: {completed_item['description']}")
+        if "source" in completed_item:
+            print(f"- Source: {completed_item['source']}")
+        if "target" in completed_item:
+            print(f"- Target: {completed_item['target']}")
+        if "sentence" in completed_item:
+            print(f"- Sentence: {completed_item['sentence']}")
+        if "inference" in completed_item:
+            print(f"- Inference: {completed_item['inference']}")
+        if "cardinality" in completed_item:
+            print(f"- Cardinality: {completed_item['cardinality']}")
+        if "data_type" in completed_item:
+            print(f"- Data type: {completed_item['data_type']}")
+
+        print()
         return completed_item
 
 
@@ -173,6 +180,7 @@ class LLMAssistant:
         new_lines_in_a_row = 0
         last_char = ''
         self.end_parsing_prematurely = False
+        opened_square_brackets = 0
 
         for text in self.llm(prompt, stream=True):
             assistant_message += text
@@ -183,21 +191,26 @@ class LLMAssistant:
             for char in text:
                 if char == '{':
                     is_item_start = True
+                if char == '[':
+                    opened_square_brackets += 1
 
                 if char == '\n' and last_char == '\n':
                     new_lines_in_a_row += 1
                 else:
                     new_lines_in_a_row = 0
                 
-                # We already got the last object of the JSON output
-                # If something weird starts happening with the LLM this premature return might be the cause
                 if char == ']':
-                    return items
+                    opened_square_brackets -= 1
+
+                    # We already got the last object of the JSON output
+                    # If something weird starts happening with the LLM this premature return might be the cause
+                    if opened_square_brackets == 0:
+                        return (items, assistant_message)
                 
                 # Return when LLM gets stuck in printing only new lines
                 if new_lines_in_a_row > 3:
                     print("Warning: too many new lines")
-                    return items
+                    return (items, assistant_message)
                 
                 if is_item_start:
                     item += char
@@ -208,7 +221,7 @@ class LLMAssistant:
 
                     if self.end_parsing_prematurely:
                         print(f"Ending parsing prematurely: {completed_item}")
-                        return items
+                        return (items, assistant_message)
                         
                     items.append(completed_item)
                     item = ""
@@ -229,7 +242,9 @@ class LLMAssistant:
             print(f"\nFull message: {assistant_message}")
         
         print(f"\nFull message: {assistant_message}")
-        return items
+
+        # For debugging return also the raw assistant message
+        return (items, assistant_message)
     
 
     def suggest(self, entity1, entity2, user_choice, count_items_to_suggest, conceptual_model, domain_description):
@@ -272,7 +287,9 @@ class LLMAssistant:
                 if not is_domain_description:
                     prompt += JSONBuilder.build(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
                 else:
-                    prompt += JSONBuilder.build(names=["name", "inference"], descriptions=["* attribute name", "* attribute inference from which exact text in the following text was it inferred"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    #prompt += JSONBuilder.build(names=["name", "inference"], descriptions=["* attribute name", "* attribute inference from which exact text in the following text was it inferred"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    prompt += JSONBuilder.build(names=["name", "inference", "data_type"], descriptions=["* attribute name", "* attribute inference from which exact text in the following text was it inferred", "* attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+
             else:
                 prompt += JSONBuilder.build(names=["name"], descriptions=["* attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
         
@@ -288,14 +305,13 @@ class LLMAssistant:
                 #prompt += f'Output only those relationships which you are certain about in JSON format like this: '
                 prompt += f'Output it in JSON format like this: '
             
-            names = ["name", "source", "target"]
-            if True: #not is_domain_description:
-                names.append("sentence")
+            names = ["name", "source", "target", "sentence", "inference", "cardinality"]
 
             prompt += JSONBuilder.build(
                 names=names,
-                descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                #descriptions=["relationship name in form of a verb", f'"{entity_name}"', f"relationship target entity", "the short meaningful sentence for the relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                #descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship", "* relationship inference from which exact text in the following text was it inferred", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+
     
         
 
@@ -311,8 +327,14 @@ class LLMAssistant:
 
                 prompt += f'Output only those relationships which you are certain about in JSON format like this: '
 
+
+            names = ["name", "source", "target", "sentence", "inference", "cardinality"]
             #prompt += JSONBuilder.build(names=["name", "source", "target", "sentence"], descriptions=[f'* relationship name where "{entity1}" is the source entity and "{entity2}" is the target entity', f'"{entity1}"', f'"{entity2}"', f'the short meaningful sentence for the first relationship where the source entity "{entity1}" comes first then follows the relationship name and then follows the target entity "{entity2}"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-            prompt += JSONBuilder.build(names=["name", "source", "target", "sentence"], descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+            #prompt += JSONBuilder.build(names=["name", "source", "target", "sentence"], descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+            prompt += JSONBuilder.build(
+                names=names,
+                descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity', "* relationship inference from which exact text in the following text was it inferred", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+
 
         
         else:
@@ -335,8 +357,9 @@ class LLMAssistant:
             raise ValueError(f"Error: Unknown model type '{self.model_type}'")
 
         print(f"Sending this prompt to llm:\n{llm_prompt}\n")
-        items = self.parse_streamed_output(llm_prompt, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+        items, assistant_msg = self.parse_streamed_output(llm_prompt, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
         items.insert(0, {"prompt": llm_prompt}) # For testing prepend the prompt
+        items.insert(1, {"raw_assistant_msg": assistant_msg})
         return items
 
 
