@@ -17,8 +17,9 @@ def main():
 
     #entities = ["vehicle", "student", "gpu", "employee", "earth", "zoo", "amusement park", "thing"]
     #entities = [("professor", "student")]
-    entities = ["course", "professor", "dormitory", "student"]
-    user_choice = ATTRIBUTES_STRING
+    #entities = ["course", "professor", "dormitory", "student"]
+    entities = [("dormitory", "student")]
+    user_choice = RELATIONSHIPS_STRING_TWO_ENTITIES
 
     for entity in entities:
         time_start = time.time()

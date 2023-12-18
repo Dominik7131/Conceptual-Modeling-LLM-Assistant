@@ -1,7 +1,9 @@
 from LLM_assistant import LLMAssistant, ITEMS_COUNT, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION
 import time
+from text_utility import TextUtility
 
 IS_SAVE_TO_FILE = True
+IS_SHOW_RAW_ASSISTANT_MSG = False
 
 def main():
 
@@ -48,12 +50,15 @@ def main():
                 
                 if (IS_SAVE_TO_FILE):
                     with open(file_name, 'a') as file:
-                        #for item in items:
                         for i in range(len(items)):
-                            if i == 0:
-                                item = str(items[0]).replace('\\n', '\n') + '\n'
+                            if i == 0 or i == 1:
+                                item = str(items[i]).replace('\\n', '\n') + '\n'
+
+                                if i == 1 and not IS_SHOW_RAW_ASSISTANT_MSG:
+                                    continue
                             else:
-                                item = str(items[i])
+                                item = TextUtility.json_to_pretty_text(items[i], i, user_choice, ATTRIBUTES_STRING)
+                            
                             file.write(item + '\n')
                         
                         file.write("\n\n")
