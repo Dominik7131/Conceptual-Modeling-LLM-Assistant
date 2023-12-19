@@ -1,5 +1,10 @@
 import re
 
+
+ATTRIBUTES_STRING = "attributes"
+RELATIONSHIPS_STRING = "relationships"
+RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
+
 alphabets= "([A-Za-z])"
 prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
 suffixes = "(Inc|Ltd|Jr|Sr|Co)"
@@ -80,6 +85,55 @@ class TextUtility:
             if "cardinality" in json_item:
                 result += f"- Cardinality: {json_item['cardinality']}\n"
         
+        return result
+
+    def build_json(names, descriptions, times_to_repeat, is_elipsis=False):
+
+        positions = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
+
+        result = "["
+        for i in range(times_to_repeat):
+            result += '{'
+            for j in range(len(names)):
+                current_description = descriptions[j].replace('*', positions[i])
+                result += '"' + names[j] + '": ' + current_description
+                if j + 1 < len(names):
+                    result += ', '
+            result += '}'
+            if i + 1 < times_to_repeat:
+                result += ', '
+        
+        if is_elipsis:
+            result += ", ..."
+        result += "]"
+        return result
+    
+
+    def build_json2(names, descriptions, times_to_repeat, is_elipsis=False):
+        # like `build` but as an example show first JSON object, elipsis, last JSON object
+        positions = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
+
+        result = "["
+        for i in range(times_to_repeat):
+            result += '{'
+            for j in range(len(names)):
+                current_description = descriptions[j].replace('*', positions[i])
+                result += '"' + names[j] + '": ' + current_description
+                if j + 1 < len(names):
+                    result += ', '
+            result += '}'
+            if i + 1 < times_to_repeat:
+                result += ', '
+        
+        if is_elipsis:
+            result += ", ... , {"
+            for j in range(len(names)):
+                    current_description = descriptions[j]
+                    result += '"' + names[j] + '": ' + current_description
+                    if j + 1 < len(names):
+                        result += ', '
+
+        result += "}]"
         return result
 
 

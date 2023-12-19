@@ -1,4 +1,5 @@
-from LLM_assistant import LLMAssistant, UserInputProcessor, ITEMS_COUNT
+from LLM_assistant import LLMAssistant, ITEMS_COUNT
+from user_input_processor import UserInputProcessor
 import time
 
 

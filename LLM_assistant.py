@@ -3,9 +3,8 @@
 
 from ctransformers import AutoModelForCausalLM
 import json
-import time
 from embeddings import Embeddings
-from text_utility import TextUtility
+from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES
 
 
 ITEMS_COUNT = 5
@@ -14,9 +13,6 @@ IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
 
-ATTRIBUTES_STRING = "attributes"
-RELATIONSHIPS_STRING = "relationships"
-RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
 
 class LLMAssistant:
     def __init__(self, model_path_or_repo_id, model_file, model_type):
@@ -31,7 +27,7 @@ class LLMAssistant:
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             self.embeddings = Embeddings()
 
-    def append_default_messages(self, user_choice, is_domain_description=False):
+    def __append_default_messages(self, user_choice, is_domain_description=False):
         system = ""
         if user_choice == ATTRIBUTES_STRING:
             if not is_domain_description:
@@ -94,7 +90,7 @@ class LLMAssistant:
         return
 
 
-    def construct_relationship_name_from_sentence(self, sentence, source, target):
+    def __construct_relationship_name_from_sentence(self, sentence, source, target):
         words = sentence.split()
         result = ""
         for word in words:
@@ -108,7 +104,7 @@ class LLMAssistant:
         return result
 
 
-    def parse_item(self, item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
+    def __parse_item(self, item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
         try:
             completed_item = json.loads(item)
         except ValueError:
@@ -134,7 +130,9 @@ class LLMAssistant:
             if "sentence" in completed_item:
                 is_entity1_in_sentence = user_input_entity1 in completed_item['sentence']
             
-            if not is_entity1_source_or_target or not is_entity1_in_sentence:
+            is_none = (completed_item['source'].lower() == "none") or (completed_item['target'].lower() == "none")
+            
+            if not is_entity1_source_or_target or not is_entity1_in_sentence or is_none:
                 # For debugging purpuses do not end parsing but otherwise we would probably end
                 #self.end_parsing_prematurely = True
                 #return completed_item
@@ -146,7 +144,9 @@ class LLMAssistant:
             target_lower = completed_item['target'].lower()
 
             is_match = (user_input_entity1 == source_lower and user_input_entity2 == target_lower) or (user_input_entity2 == source_lower and user_input_entity1 == target_lower)
-            if not is_match:
+            is_none = (source_lower == "none") or (target_lower == "none")
+
+            if not is_match or is_none:
                 completed_item['name'] = "(DELETED) " + completed_item['name']
 
 
@@ -171,7 +171,7 @@ class LLMAssistant:
         return completed_item
 
 
-    def parse_streamed_output(self, prompt, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
+    def __parse_streamed_output(self, prompt, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
         assistant_message = ""
         items = []
         item = ""
@@ -217,7 +217,7 @@ class LLMAssistant:
                 
                 if char == "}" and item != '':
                     is_item_start = False
-                    completed_item = self.parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
+                    completed_item = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
 
                     if self.end_parsing_prematurely:
                         print(f"Ending parsing prematurely: {completed_item}")
@@ -233,7 +233,7 @@ class LLMAssistant:
             # So try to finish the object by appending the last curly bracket
             if is_item_start:
                 item += '}'
-                completed_item = self.parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
+                completed_item = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
                 items.append(completed_item)
 
             #print(f"\nFull message: {assistant_message}")
@@ -257,7 +257,7 @@ class LLMAssistant:
         is_domain_description = domain_description != ""
 
         self.messages = []
-        self.append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
+        self.__append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             queries = [f"Info about {entity1}"]
@@ -268,6 +268,10 @@ class LLMAssistant:
         if is_domain_description:
             times_to_repeat = 2
             is_elipsis = True
+
+        inference_prompt = "inference from which exact text in the following text was it inferred"
+        #inference_prompt = "inference by copying the following text and inserting the symbol < to the start of the part from which it was inferred and inserting the symbol > to the end of the part from which it was inferred"
+        #inference_prompt = "inference by copying the following text and leaving only the part from which it was inferred"
 
 
         if user_choice == ATTRIBUTES_STRING:
@@ -285,13 +289,13 @@ class LLMAssistant:
             is_description = True
             if is_description:
                 if not is_domain_description:
-                    prompt += JSONBuilder.build(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    prompt += TextUtility.build_json(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
                 else:
-                    #prompt += JSONBuilder.build(names=["name", "inference"], descriptions=["* attribute name", "* attribute inference from which exact text in the following text was it inferred"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                    prompt += JSONBuilder.build(names=["name", "inference", "data_type"], descriptions=["* attribute name", "* attribute inference from which exact text in the following text was it inferred", "* attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    #prompt += TextUtility.build_json(names=["name", "inference"], descriptions=["* attribute name", "* attribute inference from which exact text in the following text was it inferred"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    prompt += TextUtility.build_json(names=["name", "inference", "data_type"], descriptions=["* attribute name", f"* attribute {inference_prompt}", "* attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
             else:
-                prompt += JSONBuilder.build(names=["name"], descriptions=["* attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                prompt += TextUtility.build_json(names=["name"], descriptions=["* attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
         
         elif user_choice == RELATIONSHIPS_STRING:
 
@@ -307,10 +311,10 @@ class LLMAssistant:
             
             names = ["name", "source", "target", "sentence", "inference", "cardinality"]
 
-            prompt += JSONBuilder.build(
+            prompt += TextUtility.build_json(
                 names=names,
                 #descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship", "* relationship inference from which exact text in the following text was it inferred", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship", f"* relationship {inference_prompt}", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
     
         
@@ -331,12 +335,11 @@ class LLMAssistant:
             names = ["name", "source", "target", "sentence", "inference", "cardinality"]
             #prompt += JSONBuilder.build(names=["name", "source", "target", "sentence"], descriptions=[f'* relationship name where "{entity1}" is the source entity and "{entity2}" is the target entity', f'"{entity1}"', f'"{entity2}"', f'the short meaningful sentence for the first relationship where the source entity "{entity1}" comes first then follows the relationship name and then follows the target entity "{entity2}"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
             #prompt += JSONBuilder.build(names=["name", "source", "target", "sentence"], descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-            prompt += JSONBuilder.build(
+            prompt += TextUtility.build_json(
                 names=names,
-                descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity', "* relationship inference from which exact text in the following text was it inferred", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity', f"* relationship {inference_prompt}", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
 
-        
         else:
             raise ValueError(f"Error: Undefined user choice: {user_choice}")
         
@@ -357,95 +360,9 @@ class LLMAssistant:
             raise ValueError(f"Error: Unknown model type '{self.model_type}'")
 
         print(f"Sending this prompt to llm:\n{llm_prompt}\n")
-        items, assistant_msg = self.parse_streamed_output(llm_prompt, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
-        items.insert(0, {"prompt": llm_prompt}) # For testing prepend the prompt
+        items, assistant_msg = self.__parse_streamed_output(llm_prompt, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+
+        # For debugging prepend the prompt and the assistant msg
+        items.insert(0, {"prompt": llm_prompt})
         items.insert(1, {"raw_assistant_msg": assistant_msg})
         return items
-
-
-class UserInputProcessor():
-    def __init__(self):
-        self.messages = []
-        self.entity_name = ""
-        self.entity_name_2 = ""
-
-    def handle_user_input(self):
-        self.entity_name = input("Insert entity name: ").lower()
-        print()
-        user_message = self.entity_name
-
-        if user_message.lower() == "exit" or user_message.lower() == "quit" or user_message.lower() == "q":
-            return False
-        
-        self.user_choice = input("Input 'a' for attributes, 'r' for relationships, 'x' for relationships between two classes: ").lower()
-
-        if self.user_choice == "a":
-            self.user_choice = ATTRIBUTES_STRING
-
-        elif self.user_choice == "r":
-            self.user_choice = RELATIONSHIPS_STRING
-
-        elif self.user_choice == "x":
-            self.user_choice = RELATIONSHIPS_STRING_TWO_ENTITIES
-            entities = self.entity_name.split(',')
-            self.entity_name = entities[0]
-            self.entity_name_2 = entities[1]
-        else:
-            raise ValueError(f"Error: Unknown user choice: {self.user_choice}.")
-
-        return True
-
-    def print_help_message():
-        print("Options: \"q\" to exit, \"print\" to print the current conceptual model")
-
-
-class JSONBuilder:
-
-    def build(names, descriptions, times_to_repeat, is_elipsis=False):
-
-        positions = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
-
-        result = "["
-        for i in range(times_to_repeat):
-            result += '{'
-            for j in range(len(names)):
-                current_description = descriptions[j].replace('*', positions[i])
-                result += '"' + names[j] + '": ' + current_description
-                if j + 1 < len(names):
-                    result += ', '
-            result += '}'
-            if i + 1 < times_to_repeat:
-                result += ', '
-        
-        if is_elipsis:
-            result += ", ..."
-        result += "]"
-        return result
-    
-
-    def build2(names, descriptions, times_to_repeat, is_elipsis=False):
-        # like `build` but as an example show first JSON object, elipsis, last JSON object
-        positions = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
-
-        result = "["
-        for i in range(times_to_repeat):
-            result += '{'
-            for j in range(len(names)):
-                current_description = descriptions[j].replace('*', positions[i])
-                result += '"' + names[j] + '": ' + current_description
-                if j + 1 < len(names):
-                    result += ', '
-            result += '}'
-            if i + 1 < times_to_repeat:
-                result += ', '
-        
-        if is_elipsis:
-            result += ", ... , {"
-            for j in range(len(names)):
-                    current_description = descriptions[j]
-                    result += '"' + names[j] + '": ' + current_description
-                    if j + 1 < len(names):
-                        result += ', '
-
-        result += "}]"
-        return result
