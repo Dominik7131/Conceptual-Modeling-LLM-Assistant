@@ -1,10 +1,7 @@
-# Input: entity, a (attributes) / r (relationships)
-# Output: list of attributes or relationships for the given entity
-
 from ctransformers import AutoModelForCausalLM
 import json
 from embeddings import Embeddings
-from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES
+from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, PROPERTIES_STRING
 
 
 ITEMS_COUNT = 5
@@ -58,14 +55,20 @@ class LLMAssistant:
                 #system = "You are an expert at creating a conceptual model which consists of entities and their relationships solely based on a given text. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
 
 
-
-
-
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
             system = "You are an expert at creating a conceptual model which consists of entities and their relationships. "
             system += "Each relationship is between exactly two entities, we will describe them as the source entity and the target entity. "
             system += "Each relationship has a name in a verb form such that when you insert this verb in between the source entity and the target entity in this order a short meaningful sentence is created. "
             system += "Always make sure that the short meaningful sentence indeed makes sense. Be very careful when creating the short meaningful sentence: the source entity must come first then follows the relationship name and then follows the target entity name which ends the sentence. Always check that this order holds."
+
+        elif user_choice == PROPERTIES_STRING:
+
+            if not is_domain_description:
+                system = "You are an expert at generating properties for a given entity in context of creating conceptual model in software engineering."
+            else:
+                system = "You are an expert at extracting properties for a given entity solely based on a given text in context of creating conceptual model in software engineering."
+
+
 
         else:
             raise ValueError(f"Error: Unknown user choice: {user_choice}")
@@ -101,20 +104,6 @@ class LLMAssistant:
         self.messages.append({"role": "system", "content": system})
 
 
-    def __construct_relationship_name_from_sentence(self, sentence, source, target):
-        words = sentence.split()
-        result = ""
-        for word in words:
-            if word == "a" or word == "an" or word == source or word == target:
-                continue
-            else:
-                result += word + '_'
-        
-        if len(result) > 0:
-            result = result[:-1]
-        return result
-
-
     def __parse_item(self, item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
         try:
             completed_item = json.loads(item)
@@ -125,6 +114,9 @@ class LLMAssistant:
         
         user_input_entity1 = user_input_entity1.lower()
         user_input_entity2 = user_input_entity2.lower()
+
+        if "name" not in completed_item:
+            completed_item["name"] = "error: no name"
 
         if user_choice == ATTRIBUTES_STRING:
             # Remove attributes in which their inferred text does not contain the given entity
@@ -351,10 +343,27 @@ class LLMAssistant:
                 descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity', f"* relationship {inference_prompt}", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
 
+        elif user_choice == PROPERTIES_STRING:
+            if not is_domain_description:
+                #prompt = f'What properties does this entity: "{entity1}" have? '
+                prompt = f'What properties could be relevant for a conceptual model of a "{entity1}"? '
+                prompt += f'Output exactly {str(count_items_to_suggest)} of those properties in JSON format exactly like this: '
+            
+            else:
+                prompt = f'Solely based on the following text which properties does the entity: "{entity1}" have? '
+                prompt += f'Output only those properties which you are certain about in JSON format like this: '
+
+            if not is_domain_description:
+                prompt += TextUtility.build_json(names=["name", "description"], descriptions=["* property name", "* property description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+            else:
+                prompt += TextUtility.build_json(names=["name", "inference", "data_type"], descriptions=["* property name", f"* property {inference_prompt}", "* property data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+
         else:
             raise ValueError(f"Error: Undefined user choice: {user_choice}")
         
-        if is_domain_description:
+        if not is_domain_description:
+            pass
+        else:
             prompt += f". This is the following text: {domain_description}"
             #prompt += f'. And provide detailed explanation. This is the following text: {domain_description}'
             #prompt += f'. And provide detailed explanation. \n """{domain_description}"""'
