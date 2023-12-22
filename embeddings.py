@@ -44,17 +44,28 @@ TEXT3 = "We know that courses have a name and a specific number of credits. Each
 class Embeddings:
     def __init__(self):
         self.passage_embeddings = None
-        self.model = FlagModel('BAAI/bge-large-en-v1.5',
-                  query_instruction_for_retrieval="Represent this sentence for searching relevant passages: ",
+        query_instruction_for_retrieval = "Represent this sentence for searching relevant passages: "
+        self.model = FlagModel('BAAI/bge-large-en-v1.5', query_instruction_for_retrieval=query_instruction_for_retrieval,
                   use_fp16=False) # Setting use_fp16 to True speeds up computation with a slight performance degradation
 
     # for s2p(short query to long passage) retrieval task, suggest to use encode_queries() which will automatically add the instruction to each query
     # corpus in retrieval task can still use encode() or encode_corpus(), since they don't need instruction
     def encode_queries(self, queries):
         return self.model.encode_queries(queries)
-    
+
+
     def encode(self, chunks_of_text):
         return self.model.encode(chunks_of_text)
+
+
+    def compare_two_names(self, name1, name2):
+        name1_encoded = self.encode(name1)
+        name2_encoded = self.encode(name2)
+
+        scores = name1_encoded @ name2_encoded.T
+        scores = scores.flatten()
+        return scores[0]
+
     
     def remove_unsimilar_text(self, queries, plain_text, is_debug=True):
         sentences = TextUtility.split_into_sentences(plain_text)
