@@ -27,7 +27,7 @@ class LLMAssistant:
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             self.embeddings = Embeddings()
 
-    def __append_default_messages(self, user_choice, is_domain_description=False):
+    def __append_default_messages_for_suggestions(self, user_choice, is_domain_description=False):
         system = ""
         if user_choice == ATTRIBUTES_STRING:
             if not is_domain_description:
@@ -70,10 +70,10 @@ class LLMAssistant:
         else:
             raise ValueError(f"Error: Unknown user choice: {user_choice}")
 
-        if IS_SYSTEM_MSG:
-            self.messages.append({"role": "system", "content": system})
-        else:
-            self.messages.append({"role": "system", "content": ""})
+        if not IS_SYSTEM_MSG:
+            system = ""
+
+        self.messages.append({"role": "system", "content": system})
 
         user_first_msg = "What is the definition of conceptual model in software engineering?"
         assistent_first_msg = "In software engineering, a conceptual model is a high-level representation of a system or problem domain that helps to organize and understand the key concepts, relationships, and constraints involved. It provides a framework for thinking about the problem space and can be used as a starting point for further analysis, design, and development. \
@@ -88,6 +88,17 @@ class LLMAssistant:
 
         self._are_default_messages_appended = True
         return
+    
+
+    def __append_default_messages_for_summaries(self):
+
+        #system = "You are an expert at describing conceptual models which are in JSON format."
+        system = "You are an expert at generating domain description solely based on given conceptual model which is in JSON format."
+
+        if not IS_SYSTEM_MSG:
+            system = ""
+
+        self.messages.append({"role": "system", "content": system})
 
 
     def __construct_relationship_name_from_sentence(self, sentence, source, target):
@@ -257,7 +268,7 @@ class LLMAssistant:
         is_domain_description = domain_description != ""
 
         self.messages = []
-        self.__append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
+        self.__append_default_messages_for_suggestions(user_choice=user_choice, is_domain_description=is_domain_description)        
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             queries = [f"Info about {entity1}"]
@@ -351,18 +362,44 @@ class LLMAssistant:
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
 
-        llm_prompt = ""
-        if self.model_type == "llama":
-            llm_prompt = TextUtility.build_llama2_prompt(new_messages)
-        elif self.model_type == "openchat":
-            llm_prompt = TextUtility.build_openchat_prompt(new_messages)
-        else:
-            raise ValueError(f"Error: Unknown model type '{self.model_type}'")
-
+        llm_prompt = TextUtility.create_llm_prompt(self.model_type, new_messages)
         print(f"Sending this prompt to llm:\n{llm_prompt}\n")
+
         items, assistant_msg = self.__parse_streamed_output(llm_prompt, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
 
         # For debugging prepend the prompt and the assistant msg
         items.insert(0, {"prompt": llm_prompt})
         items.insert(1, {"raw_assistant_msg": assistant_msg})
         return items
+
+
+    def summarize_conceptual_model(self, conceptual_model):
+
+        # TODO: Possible improvement: convert `conceptual_model` in JSON format into simple model description
+
+        conceptual_model = {
+            "student" : { "attributes": [ {"attribute_name" : "name", "data_type": "string"}], "relationships" : [{"relationship_name": "is accomodated", "source_entity": "student", "target_entity": "dormitory" }, {"relationship_name": "enrolls", "source_entity": "student", "target_entity": "course" }] },
+            "course" : { "attributes": [ {"attribute_name": "name", "data_type": "string"}, {"attribute_name": "number of credits", "data_type": "integer"}], "relationships" : [{"relationship_name": "have", "source_entity": "course", "target_entity": "professor" }, {"relationship_name": "aggregates", "source_entity": "course", "target_entity": "student" }], },
+            "professor" : { "attributes": [ {"attribute_name": "name", "data_type": "string"}], "relationships" : [{"relationship_name": "participates in", "source_entity": "professor", "target_entity": "course" }], },
+            "dormitory" : { "attributes": [ {"attribute_name": "price", "data_type": "real"}], "relationships" : [{"relationship_name": "accomodates", "source_entity": "dormitory", "target_entity": "student" }], },
+
+        }
+        #prompt = f"Create a human description of this conceptual model: {json.dumps(conceptual_model)}?"
+        #prompt = f"The following conceptual model was created from some domain description. Create this domain description based on the following conceptual model: "
+        prompt = f"Create domain description like human in simple sentences solely based on this conceptual model: "
+
+        prompt += f"{json.dumps(conceptual_model)}"
+
+
+        self.messages = []
+        self.__append_default_messages_for_summaries()
+        new_messages = self.messages.copy()
+        new_messages.append({"role": "user", "content": prompt})
+
+        llm_prompt = TextUtility.create_llm_prompt(self.model_type, new_messages)
+        print(f"Sending this prompt to llm:\n{llm_prompt}\n")
+
+        for text in self.llm(prompt, stream=True):
+            print(text, end="", flush=True)
+
+        return ""
