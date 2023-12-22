@@ -17,6 +17,17 @@ multiple_dots = r'\.{2,}'
 
 class TextUtility:
 
+    def create_llm_prompt(model_type, messages):
+        llm_prompt = ""
+        if model_type == "llama":
+            llm_prompt = TextUtility.build_llama2_prompt(messages)
+        elif model_type == "openchat":
+            llm_prompt = TextUtility.build_openchat_prompt(messages)
+        else:
+            raise ValueError(f"Error: Unknown model type '{model_type}'")
+        return llm_prompt
+    
+
     def build_llama2_prompt(messages):
         start_prompt = "<s>[INST] "
         end_prompt = " [/INST]"
