@@ -4,6 +4,7 @@ import re
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
 RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
+PROPERTIES_STRING = "properties"
 
 alphabets= "([A-Za-z])"
 prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"

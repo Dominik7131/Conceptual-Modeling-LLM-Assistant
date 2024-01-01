@@ -6,10 +6,10 @@ import 'reactflow/dist/style.css';
 
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: <p> <strong>School</strong></p>, title: "School", attributes: [{ name: "a1", data_type: "string"}, { name: "a2", data_type: "int"}] } },
-  { id: '2', position: { x: 0, y: 200 }, data: { label: <p> <strong>Course</strong></p>, title: "Course", attributes: [{ name: "b1", data_type: "string"}, { name: "b2", data_type: "int"}] } },
-  //{ id: '3', position: { x: 0, y: 400 }, data: { label: <p> <strong>Professor</strong></p>, title: "Professor", attributes: [{ name: "c1", data_type: "string"}, { name: "c2", data_type: "int"}] } },
+  { id: '2', position: { x: 0, y: 200 }, data: { label: <p> <strong>Coursesss</strong></p>, title: "Course", attributes: [{ name: "b1", data_type: "string"}, { name: "b2", data_type: "int"}] } },
+  { id: '3', position: { x: 0, y: 400 }, data: { label: <p> <strong>Professor</strong></p>, title: "Professor", attributes: [{ name: "c1", data_type: "string"}, { name: "c2", data_type: "int"}] } },
 ];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }, {id: 'e2-3', source: '2', target: '3'}];
 
 function App()
 {
