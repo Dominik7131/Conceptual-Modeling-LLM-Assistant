@@ -2,7 +2,9 @@ import { useState } from 'react';
 
 export default function SideBar({
     attributes,
+    relationships,
     addAttributesToNode,
+    addRelationshipsToNodes,
     isMultiSelection,
     selectedNodes
 })
@@ -24,6 +26,12 @@ export default function SideBar({
                     {showAttribute(a, index)}
                     </span>
                 )}
+
+                {relationships.map((r, index) => 
+                    <span key={index}>
+                    {showRelationship(r, index)}
+                    </span>
+                )}
             </div>
         )
     }
@@ -33,6 +41,15 @@ export default function SideBar({
         return (
             <p>Name: {attribute.name} <br /> Inference: {attribute.inference} <br /> Data type: {attribute.data_type} <br />
                 <button className="btn" id={`button${index}`} onClick={(event) => addAttributesToNode(event)}>Add</button>
+            </p>
+        )
+    }
+
+    const showRelationship = (relationship, index) =>
+    {
+        return (
+            <p>Name: {relationship.name} <br /> Inference: {relationship.inference} <br /> Source: {relationship.source} <br /> Target: {relationship.target} <br />
+                <button className="btn" id={`button${index}`} onClick={(event) => addRelationshipsToNodes(event)}>Add</button>
             </p>
         )
     }

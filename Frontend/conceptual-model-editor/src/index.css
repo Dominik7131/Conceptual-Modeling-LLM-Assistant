@@ -56,3 +56,24 @@
   padding: 0px 10px;
 }
 
+.domainDescriptionLabel {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+textarea {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+label {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 14px;
+}
+
+input {
+  height: 10px;
+}
+
+.node {
+  font-size: 18px;
+}
