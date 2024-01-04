@@ -49,7 +49,7 @@ export default function SideBar({
     {
         return (
             <p>Name: {relationship.name} <br /> Inference: {relationship.inference} <br /> Source: {relationship.source} <br /> Target: {relationship.target} <br />
-                <button className="btn" id={`button${index}`} onClick={(event) => addRelationshipsToNodes(event)}>Add</button>
+                <button className="btn" id={`button${index}`} onClick={(event) => addRelationshipsToNodes(event, relationship)}>Add</button>
             </p>
         )
     }

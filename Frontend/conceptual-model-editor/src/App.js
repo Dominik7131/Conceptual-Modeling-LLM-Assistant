@@ -1,15 +1,16 @@
 import SideBar from './SideBar';
 import { useCallback, useEffect, useState } from 'react';
-import ReactFlow, { useNodesState, useEdgesState, addEdge, MiniMap, ReactFlowProvider, useOnSelectionChange } from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, addEdge, MiniMap, Background, ReactFlowProvider, useOnSelectionChange } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 
+
 const initialNodes = [
-  { id: '1', position: { x: 0, y: 100 }, data: { label: <p> <strong>Student</strong></p>, title: "Student", attributes: [] } },
-  { id: '2', position: { x: 0, y: 300 }, data: { label: <p> <strong>Coursesss</strong></p>, title: "Course", attributes: [] } },
-  //{ id: '3', position: { x: 0, y: 400 }, data: { label: <p> <strong>Professor</strong></p>, title: "Professor", attributes: [] } },
+  { id: '0', position: { x: 0, y: 100 }, data: { label: "", title: "Student", attributes: [], relationships: [] } },
+  //{ id: '1', position: { x: 0, y: 300 }, data: { label: "", title: "Course", attributes: [], relationships: [] } },
+  //{ id: '2', position: { x: 0, y: 400 }, data: { label: "", title: "Professor", attributes: [] } },
 ];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }, {id: 'e2-3', source: '2', target: '3'}];
+const initialEdges = [] //{ id: 'e0-1', source: '0', target: '1' }]; //, {id: 'e1-2', source: '1', target: '2'}];
 
 function App()
 {
@@ -25,6 +26,8 @@ function App()
 
   const [isUseBackend, setIsUseBackend] = useState(true);
 
+  let uniqueID = nodes.length
+
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
@@ -32,11 +35,12 @@ function App()
 
   const onChange = useCallback(({ nodes, edges }) =>
   {
+    setSelectedNodes(nodes)
+
     if (nodes[1] !== undefined)
     {
       console.log("Selected more than 1 node")
       setIsMultiSelection(true)
-      setSelectedNodes(nodes)
     }
     else
     {
@@ -52,11 +56,26 @@ function App()
 
   const onPlusButtonClick = (event) =>
   {
+    console.log("On plus button nodes: " + nodes)
     const buttonInnerHTML = event.target.innerHTML
 
     let entityName = ""
-    const targetNodeID = event.target.id.slice(1)
-    entityName = nodes[targetNodeID - 1].data.title
+
+    if (!selectedNodes[0])
+    {
+      console.log("Zero nodes selected")
+      return
+    }
+
+    const targetNodeID = selectedNodes[0].id
+    console.log("Target node ID: " + targetNodeID)
+
+    if (nodes.length <= targetNodeID)
+    {
+      console.log("Error: Nodes length: " + nodes.length + " but target node ID: " + targetNodeID)
+      return
+    }
+    entityName = nodes[targetNodeID].data.title
 
     if (buttonInnerHTML === "+Relationships")
     {
@@ -65,34 +84,48 @@ function App()
 
       if (isUseBackend)
       {
-        console.log(entityName)
         fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}`)
         .then(response => response.json())
         .then(data => 
             {
               for (let i = 0; i < data.length; i++)
               {
+                let relationship = JSON.parse(data[i])
+                relationship.node_ID = targetNodeID
                 setSuggestedRelationships(previousSuggestedRelationships => {
-                  return [...previousSuggestedRelationships, JSON.parse(data[i])]
+                  return [...previousSuggestedRelationships, relationship]
                 })
               }
             })
         .catch(error => console.log(error))
         return
       }
-      else
-      {
-
-      }
-
     }
     else if (buttonInnerHTML === "+Attributes")
     {
-      console.log(`Suggesting attributes for: ${entityName}`)
-      const attributesToSuggest = 3
-
       setSuggestedAttributes(_ => {return []})
       setSuggestedRelationships(_ => {return []})
+
+      if (isUseBackend)
+      {
+        fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=a`)
+        .then(response => response.json())
+        .then(data => 
+            {
+              for (let i = 0; i < data.length; i++)
+              {
+                let attribute = JSON.parse(data[i])
+                attribute.node_ID = targetNodeID
+                setSuggestedAttributes(previousSuggestedAttributes => {
+                  return [...previousSuggestedAttributes, attribute]
+                })
+              }
+            })
+        .catch(error => console.log(error))
+        return
+      }
+
+      const attributesToSuggest = 3
 
       for (let i = 0; i < attributesToSuggest; i++)
       {
@@ -108,41 +141,58 @@ function App()
     }
   }
 
+  const capitalizeString = (string) =>
+  {
+    return string.charAt(0).toUpperCase() + string.slice(1)
+  }
+
   const updateNodes = () =>
   {
     console.log("Updating nodes")
     setNodes((nodes) => nodes.map((node) =>
     {
-        const title = node.data.title
-        const nodeID = node.id
-        node.data =
-        {
-          ...node.data,
-          label: <div className="node">
-                      <div>
-                        <button id={"a" + nodeID} onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
-                        <button id={"r" + nodeID} onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
-                        <br />
-                      </div>
+      return updateNode(node)
+    }));
+  }
 
-                      <p><strong>{title}</strong></p>
-                      <p>
-                      {node.data.attributes.map((attribute, index) =>
-                      (
-                          <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.data_type} <br /> </span>
-                      ))}
-                      </p>
-                  </div>
-        };
-        return node;
-      }));
+  const updateNode = (node) =>
+  {
+    const title = node.data.title
+    node.data =
+    {
+      ...node.data,
+      label: <div className="node">
+                  {/* Issue: onPlusButtonClick function is snapshotting the current nodes variable and it usually does not get updated
+                    Possible solution: probably React Context (https://github.com/xyflow/xyflow/issues/1535)
+                    Or do not use buttons inside node.
+
+                  <div>
+                    <button id={"a" + nodeID} onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
+                    <button id={"r" + nodeID} onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
+                    <br />
+                  </div> */}
+
+                  <p className="nodeTitle"><strong>{capitalizeString(title)}</strong></p>
+                  <p>
+                  {node.data.attributes.map((attribute, index) =>
+                  (
+                      <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.data_type} <br /> </span>
+                  ))}
+                  </p>
+              </div>
+    };
+    return node;
   }
 
   useEffect(() =>
   {
     updateNodes()
   }, []);
-  
+
+
+  /*useEffect(() =>
+  {
+  }, [nodes]);*/
 
   const addAttributesToNode = (event) =>
   {
@@ -177,17 +227,81 @@ function App()
         }
 
         node.data.attributes.push(newAttributeObject)
+        return updateNode(node)
       }
       return node;
     })
     );
-
-    updateNodes()
   }
 
-  const addRelationshipsToNodes = () =>
+  const addRelationshipsToNodes = (event, relationshipObject) =>
   {
     console.log("Adding relationships to nodes")
+    const relationshipIndex = event.target.id.slice(6)
+
+    const addedRelationship = suggestedRelationships[relationshipIndex]
+    const sourceNodeID = addedRelationship.node_ID
+    console.log("Source node ID: " + sourceNodeID)
+
+    let targetNodeID = 0
+    let isTargetNodeID = false
+    
+    // Get target node id
+    for (let i = 0; i < nodes.length; i++)
+    {
+      if (nodes[i].data.title.toLowerCase() === relationshipObject.target)
+      {
+        isTargetNodeID = true
+        targetNodeID = i
+        break
+      }
+    }
+
+    if (isTargetNodeID)
+    {
+      console.log("Target node ID: " + targetNodeID)
+    }
+    else
+    {
+      console.log("Unknown target node ID, creating a new node")
+    }
+
+
+    if (!isTargetNodeID)
+    {
+      // Target node does not exist -> add a new node
+      console.log("Adding a new node")
+      targetNodeID = uniqueID.toString();
+      uniqueID++;
+      console.log("Unique ID: " + uniqueID)
+      const newNode = { id: targetNodeID, position: { x: 300, y: 100 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
+      const newEdge = { id: `e${sourceNodeID}-${targetNodeID}`, source: sourceNodeID, target: targetNodeID, label: relationshipObject.name}
+
+      setNodes(previousNodes => 
+        {
+          return [...previousNodes, newNode]
+        })
+      
+      setNodes((nodes) => nodes.map((node) =>
+      {
+        /*if (node.id === sourceNodeID)
+        {
+          const newRelationshipObject = { name: "r", data_type: "unknown"}
+          node.data.attributes.push(newRelationshipObject)
+          return updateNode(node)
+        }*/
+        if (node.id === targetNodeID)
+        {
+          return updateNode(node)
+        }
+        return node
+      }));
+      
+      setEdges(previousEdges =>
+        {
+          return [...previousEdges, newEdge]
+        })
+    }
   }
 
   const handleCheckboxChange = () =>
@@ -197,15 +311,18 @@ function App()
 
   return (
     <div >
-      {/* <p><label>Review of W3Schools:</label></p>
-      <textarea id="w3review"></textarea> */}
       <label className="domainDescriptionLabel" htmlFor="story">Domain description: <br /></label>
 
       <textarea id="story" name="story" rows="8" cols="70" defaultValue={"We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."}></textarea>
 
-      <div>
+      {/* <div>
         <label htmlFor="isBackend">Use backend: </label>
         <input type="checkbox" id="isBackend" defaultChecked onClick={() => handleCheckboxChange()}></input>
+      </div> */}
+
+      <div>
+        <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
+        <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
       </div>
 
       <SideBar
@@ -225,6 +342,7 @@ function App()
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}>
             <MiniMap nodeStrokeWidth={3} zoomable pannable />
+            <Background color="black" variant="dots" />
         </ReactFlow>
 
       </div>
@@ -232,8 +350,10 @@ function App()
   );
 }
 
-export default () => (
+const application = () => (
   <ReactFlowProvider>
     <App />
   </ReactFlowProvider>
 );
+
+export default application

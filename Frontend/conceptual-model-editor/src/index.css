@@ -74,6 +74,37 @@ input {
   height: 10px;
 }
 
-.node {
+.plusButton {
+  font-size: 20px;
+}
+
+.nodeTitle {
   font-size: 18px;
+}
+
+/*div.react-flow__node {
+  padding: 20px;
+}*/
+
+text.react-flow__edge-text {
+  font-size: 14px;
+}
+
+.react-flow__edge {
+  font-size: 30px;
+  color: red;
+  border-width: 20px;
+  width: 200px;
+}
+
+.react-flow__edge-textbg {
+  padding: 20px;
+  width: 200px;
+}
+
+
+.react-flow__node-default.selectable.selected
+{
+  border-width: 4px;
+  border-color: blue;
 }
