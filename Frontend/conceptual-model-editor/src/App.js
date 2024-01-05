@@ -1,12 +1,13 @@
+import TopBar from './TopBar'
 import SideBar from './SideBar';
 import { useCallback, useEffect, useState } from 'react';
-import ReactFlow, { useNodesState, useEdgesState, addEdge, MiniMap, Background, ReactFlowProvider, useOnSelectionChange } from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, addEdge, MiniMap, Controls, Background, ReactFlowProvider, useOnSelectionChange } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 
 
 const initialNodes = [
-  { id: '0', position: { x: 0, y: 100 }, data: { label: "", title: "Student", attributes: [], relationships: [] } },
+  { id: '0', position: { x: 100, y: 300 }, data: { label: "", title: "Student", attributes: [], relationships: [] } },
   //{ id: '1', position: { x: 0, y: 300 }, data: { label: "", title: "Course", attributes: [], relationships: [] } },
   //{ id: '2', position: { x: 0, y: 400 }, data: { label: "", title: "Professor", attributes: [] } },
 ];
@@ -202,14 +203,8 @@ function App()
   }, [isIgnoreDomainDescription]);
 
 
-  /*useEffect(() =>
-  {
-  }, [nodes]);*/
-
   const addAttributesToNode = (event) =>
   {
-    // console.log("Event target: ")
-    // console.log(event.target)
     const attributeTargetID = event.target.id.slice(6)
     // console.log(`Target attribute ID: ${attributeTargetID}`)
     const newAttribute = suggestedAttributes[attributeTargetID]
@@ -238,6 +233,7 @@ function App()
           return node;
         }
 
+        console.log("Pushing new attributes")
         node.data.attributes.push(newAttributeObject)
         return updateNode(node)
       }
@@ -286,7 +282,7 @@ function App()
       targetNodeID = uniqueID.toString();
       uniqueID++;
       console.log("Unique ID: " + uniqueID)
-      const newNode = { id: targetNodeID, position: { x: 300, y: 100 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
+      const newNode = { id: targetNodeID, position: { x: 500, y: 300 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
       const newEdge = { id: `e${sourceNodeID}-${targetNodeID}`, source: sourceNodeID, target: targetNodeID, label: relationshipObject.name}
 
       setNodes(previousNodes => 
@@ -316,40 +312,17 @@ function App()
     }
   }
 
-  /*const handleCheckboxChange = () =>
-  {
-    setIsUseBackend(previousValue => !previousValue)
-  }*/
-
   const handleIgnoreDomainDescriptionChange = () =>
   {
     setIsIgnoreDomainDescription(previousValue => !previousValue)
   }
 
   return (
-    <div >
-      <label className="domainDescriptionLabel" htmlFor="story">Domain description: </label>
-      <input type="checkbox" id="isIgnoreDomainDescription" defaultChecked onClick={() => handleIgnoreDomainDescriptionChange()}></input>
-      <br />
-      <br />
-      <textarea id="domainDescriptionText" name="story" rows="8" cols="70" defaultValue={"We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."}></textarea>
-
-      <div>
-        {/* <label className="ignoreDomainDescriptionLabel" htmlFor="isIgnoreDomainDescription">Ignore domain description: </label> */}
-        {/* <input type="checkbox" id="isIgnoreDomainDescription" onClick={() => handleIgnoreDomainDescriptionChange()}></input> */}
-      </div>
-
-      <div> <p></p></div>
-
-      {/* <div>
-        <label htmlFor="isBackend">Use backend: </label>
-        <input type="checkbox" id="isBackend" defaultChecked onClick={() => handleCheckboxChange()}></input>
-      </div> */}
-
-      <div>
-        <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
-        <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
-      </div>
+    <div>
+      <TopBar
+        handleIgnoreDomainDescriptionChange={handleIgnoreDomainDescriptionChange}
+        onPlusButtonClick={onPlusButtonClick}
+      />
 
       <SideBar
         attributes={suggestedAttributes}
@@ -360,7 +333,7 @@ function App()
         selectedNodes={selectedNodes}
       />
 
-      <div style={{ width: '100vw', height: '100vh' }}>
+      <div style={{ width: '84.6vw', height: '99vh' }}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -368,6 +341,7 @@ function App()
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}>
             <MiniMap nodeStrokeWidth={3} zoomable pannable />
+            <Controls />
             <Background color="black" variant="dots" />
         </ReactFlow>
 

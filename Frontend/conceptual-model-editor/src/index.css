@@ -22,20 +22,11 @@
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   right: 0;
-  background-color: #111; /* Black */
+  background-color: #111;
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 0px;
   color: white;
   font-family: Arial;
-}
-
-/* The navigation menu links */
-.sidebar a {
-  padding: 6px 8px 6px 16px;
-  text-decoration: none;
-  font-size: 12px;
-  color: #818181;
-  display: block;
 }
 
 .sidebar p {
@@ -45,10 +36,23 @@
 }
 
 /* When you mouse over the navigation links, change their color */
-.sidebar a:hover {
+.sidebar p:hover {
   color: #f1f1f1;
 }
 
+.topBar {
+  height: 220px; /* Full-height: remove this if you want "auto" height */
+  width: 100%; /* Set the width of the sidebar */
+  position: absolute; /* Fixed Sidebar (stay in place on scroll) */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: white;
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 10px;
+  color: black;
+  font-family: Arial;
+}
 
 /* Style page content */
 .main {
@@ -61,6 +65,7 @@
   font-size: 14px;
 }
 
+/* Ignore domain description checkbox */
 #isIgnoreDomainDescription {
   width: 18px;
   height: 18px;
@@ -71,15 +76,6 @@
 
 textarea {
   font-family: Arial, Helvetica, sans-serif;
-}
-
-label {
-  font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
-}
-
-input {
-  height: 10px;
 }
 
 .plusButton {
