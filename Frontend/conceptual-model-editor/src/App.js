@@ -24,7 +24,7 @@ function App()
   const [isMultiSelection, setIsMultiSelection] = useState(false);
   const [selectedNodes, setSelectedNodes] = useState([]);
 
-  const [isUseBackend, setIsUseBackend] = useState(true);
+  const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState(false)
 
   let uniqueID = nodes.length
 
@@ -66,6 +66,11 @@ function App()
       console.log("Zero nodes selected")
       return
     }
+    if (selectedNodes.length >= 2)
+    {
+      console.log("More than one node selected")
+      return
+    }
 
     const targetNodeID = selectedNodes[0].id
     console.log("Target node ID: " + targetNodeID)
@@ -76,64 +81,59 @@ function App()
       return
     }
     entityName = nodes[targetNodeID].data.title
+    const domainDesciption = isIgnoreDomainDescription ? "" : "x"
 
     if (buttonInnerHTML === "+Relationships")
     {
       setSuggestedAttributes(_ => {return []})
       setSuggestedRelationships(_ => {return []})
 
-      if (isUseBackend)
-      {
-        fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}`)
-        .then(response => response.json())
-        .then(data => 
+      fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=r&domain_description=${domainDesciption}`)
+      .then(response => response.json())
+      .then(data => 
+          {
+            for (let i = 0; i < data.length; i++)
             {
-              for (let i = 0; i < data.length; i++)
-              {
-                let relationship = JSON.parse(data[i])
-                relationship.node_ID = targetNodeID
-                setSuggestedRelationships(previousSuggestedRelationships => {
-                  return [...previousSuggestedRelationships, relationship]
-                })
-              }
-            })
-        .catch(error => console.log(error))
-        return
-      }
+              let relationship = JSON.parse(data[i])
+              relationship.node_ID = targetNodeID
+              setSuggestedRelationships(previousSuggestedRelationships => {
+                return [...previousSuggestedRelationships, relationship]
+              })
+            }
+          })
+      .catch(error => console.log(error))
+      return
     }
     else if (buttonInnerHTML === "+Attributes")
     {
       setSuggestedAttributes(_ => {return []})
       setSuggestedRelationships(_ => {return []})
 
-      if (isUseBackend)
-      {
-        fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=a`)
-        .then(response => response.json())
-        .then(data => 
+      fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=a&domain_description=${domainDesciption}`)
+      .then(response => response.json())
+      .then(data => 
+          {
+            for (let i = 0; i < data.length; i++)
             {
-              for (let i = 0; i < data.length; i++)
-              {
-                let attribute = JSON.parse(data[i])
-                attribute.node_ID = targetNodeID
-                setSuggestedAttributes(previousSuggestedAttributes => {
-                  return [...previousSuggestedAttributes, attribute]
-                })
-              }
-            })
-        .catch(error => console.log(error))
-        return
-      }
+              let attribute = JSON.parse(data[i])
+              attribute.node_ID = targetNodeID
+              setSuggestedAttributes(previousSuggestedAttributes => {
+                return [...previousSuggestedAttributes, attribute]
+              })
+            }
+          })
+      .catch(error => console.log(error))
+      return
 
-      const attributesToSuggest = 3
+      // const attributesToSuggest = 3
 
-      for (let i = 0; i < attributesToSuggest; i++)
-      {
-        const newSuggestedAttribute = {name: `${entityName}-attribute-${i}`, inference: "lorem ipsum", data_type: "string", node_ID: targetNodeID}
-        setSuggestedAttributes(previousSuggestedAttributes => {
-          return [...previousSuggestedAttributes, newSuggestedAttribute]
-        })
-      }
+      // for (let i = 0; i < attributesToSuggest; i++)
+      // {
+      //   const newSuggestedAttribute = {name: `${entityName}-attribute-${i}`, inference: "lorem ipsum", data_type: "string", node_ID: targetNodeID}
+      //   setSuggestedAttributes(previousSuggestedAttributes => {
+      //     return [...previousSuggestedAttributes, newSuggestedAttribute]
+      //   })
+      // }
     }
     else
     {
@@ -188,6 +188,18 @@ function App()
   {
     updateNodes()
   }, []);
+
+  useEffect(() =>
+  {
+    if (isIgnoreDomainDescription)
+    {
+      document.getElementById("domainDescriptionText").style.color = '#D3D3D3';
+    }
+    else
+    {
+      document.getElementById("domainDescriptionText").style.color = 'black';
+    }
+  }, [isIgnoreDomainDescription]);
 
 
   /*useEffect(() =>
@@ -304,16 +316,30 @@ function App()
     }
   }
 
-  const handleCheckboxChange = () =>
+  /*const handleCheckboxChange = () =>
   {
     setIsUseBackend(previousValue => !previousValue)
+  }*/
+
+  const handleIgnoreDomainDescriptionChange = () =>
+  {
+    setIsIgnoreDomainDescription(previousValue => !previousValue)
   }
 
   return (
     <div >
-      <label className="domainDescriptionLabel" htmlFor="story">Domain description: <br /></label>
+      <label className="domainDescriptionLabel" htmlFor="story">Domain description: </label>
+      <input type="checkbox" id="isIgnoreDomainDescription" defaultChecked onClick={() => handleIgnoreDomainDescriptionChange()}></input>
+      <br />
+      <br />
+      <textarea id="domainDescriptionText" name="story" rows="8" cols="70" defaultValue={"We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."}></textarea>
 
-      <textarea id="story" name="story" rows="8" cols="70" defaultValue={"We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."}></textarea>
+      <div>
+        {/* <label className="ignoreDomainDescriptionLabel" htmlFor="isIgnoreDomainDescription">Ignore domain description: </label> */}
+        {/* <input type="checkbox" id="isIgnoreDomainDescription" onClick={() => handleIgnoreDomainDescriptionChange()}></input> */}
+      </div>
+
+      <div> <p></p></div>
 
       {/* <div>
         <label htmlFor="isBackend">Use backend: </label>
