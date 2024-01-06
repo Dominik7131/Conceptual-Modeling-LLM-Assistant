@@ -28,7 +28,10 @@ function App()
   const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState(false)
 
   const [summaryData, setSummaryData] = useState([])
-  const [isSummaryCreated, setIsSummaryCreated] = useState(false);
+
+  const [domainDescription, setDomainDescription] = useState("")
+  const [inferenceIndexes, setInferenceIndexes] = useState([])
+
 
   let uniqueID = nodes.length
 
@@ -128,16 +131,6 @@ function App()
           })
       .catch(error => console.log(error))
       return
-
-      // const attributesToSuggest = 3
-
-      // for (let i = 0; i < attributesToSuggest; i++)
-      // {
-      //   const newSuggestedAttribute = {name: `${entityName}-attribute-${i}`, inference: "lorem ipsum", data_type: "string", node_ID: targetNodeID}
-      //   setSuggestedAttributes(previousSuggestedAttributes => {
-      //     return [...previousSuggestedAttributes, newSuggestedAttribute]
-      //   })
-      // }
     }
     else
     {
@@ -169,10 +162,60 @@ function App()
                 return [...previousData, summaryObject]
               })
           }
-          setIsSummaryCreated(true)
         })
     .catch(error => console.log(error))
     return
+  }
+
+  const onHighlightButtonClick = () =>
+  {
+    // Get all selected inferences
+    let inferences = []
+
+    for (let i = 0; i < selectedNodes.length; i++)
+    {
+      for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
+      {
+        inferences.push(selectedNodes[i].data.attributes[j].inference)
+      }
+    }
+
+    console.log("Inferences")
+    console.log(inferences)
+
+    const indexes = getInferenceIndexes(inferences)
+    console.log("Indexes: ")
+    console.log(indexes)
+    setInferenceIndexes(indexes)
+  }
+
+  const getInferenceIndexes = (inferences) =>
+  {
+    //const inferences = ["courses have a name", "Students can be enrolled"]
+    let result = []
+
+    // Naive implementation
+    for (let i = 0; i < inferences.length; i++)
+    {
+      for (let j = 0; j < domainDescription.length; j++)
+      {
+        if (inferences[i].length + j > domainDescription.length)
+        {
+          console.log("Nothing found")
+          result.concat([-1])
+          break
+        }
+
+        const text = domainDescription.slice(j, inferences[i].length + j)
+
+        if (inferences[i] === text)
+        {
+          result.push([j, inferences[i].length + j])
+        }
+      }
+    }
+
+    return result
   }
 
   const capitalizeString = (string) =>
@@ -221,6 +264,10 @@ function App()
   useEffect(() =>
   {
     updateNodes()
+
+    const domainDescriptionTextArea = document.getElementById("domainDescriptionText")
+    setDomainDescription(domainDescriptionTextArea.innerHTML)
+    
   }, []);
 
   useEffect(() =>
@@ -235,10 +282,11 @@ function App()
     }
   }, [isIgnoreDomainDescription]);
 
-  // useEffect(() =>
-  // {
-  //   console.log(nodes)
-  // }, [nodes]);
+  useEffect(() =>
+  {
+    //console.log(nodes)
+    onHighlightButtonClick()
+  }, [nodes]);
 
   // useEffect(() =>
   // {
@@ -259,7 +307,7 @@ function App()
       //console.log(`Iteration: NodeID-${node.id}, TargetNodeID-${nodeID}`)
       if (node.id === nodeID)
       {
-        const newAttributeObject = { name: newAttribute.name, data_type: newAttribute.data_type}
+        const newAttributeObject = { name: newAttribute.name, inference: newAttribute.inference, data_type: newAttribute.data_type}
 
         // If the node already contains the selected attribute do not add anything
         let isAttributePresent = false
@@ -333,6 +381,7 @@ function App()
       
       setNodes((nodes) => nodes.map((node) =>
       {
+        // TODO: Add info about the relationship into the node with sourceNodeID
         /*if (node.id === sourceNodeID)
         {
           const newRelationshipObject = { name: "r", data_type: "unknown"}
@@ -369,6 +418,11 @@ function App()
       })
   }
 
+  const onDomainDescriptionChange = (event) =>
+  {
+    setDomainDescription(event.target.innerHTML)
+  }
+
   const handleIgnoreDomainDescriptionChange = () =>
   {
     setIsIgnoreDomainDescription(previousValue => !previousValue)
@@ -379,11 +433,13 @@ function App()
       <TopBar
         handleIgnoreDomainDescriptionChange={handleIgnoreDomainDescriptionChange}
         onPlusButtonClick={onPlusButtonClick}
-        isMultiSelection={isMultiSelection}
-        isSummaryCreated={isSummaryCreated}
         onSummaryButtonClick={onSummaryButtonClick}
         summaryData={summaryData}
         capitalizeString={capitalizeString}
+        onHighlightButtonClick={onHighlightButtonClick}
+        onDomainDescriptionChange={onDomainDescriptionChange}
+        domainDescription={domainDescription}
+        inferenceIndexes={inferenceIndexes}
       />
 
       <SideBar
