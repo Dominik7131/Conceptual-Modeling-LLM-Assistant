@@ -1,10 +1,62 @@
 
 
-export default function SideBar({
+export default function TopBar({
     handleIgnoreDomainDescriptionChange,
-    onPlusButtonClick
+    onPlusButtonClick,
+    isMultiSelection,
+    isSummaryCreated,
+    onSummaryButtonClick,
+    summaryData,
+    capitalizeString
 })
 {
+    const FormateSummaryObject = (entityObject) =>
+    {
+        return (
+            <li>
+                <p><strong>{capitalizeString(entityObject.entity)}</strong></p>
+                <ul>
+                    <li>
+                        <strong>Attributes</strong>
+                        <ul>
+                            {entityObject.attributes.map((attribute, index) =>
+                                <li key={`${attribute.name}-${index}`}>
+                                    <strong>{attribute.name}</strong>: {attribute.description}
+                                </li>
+                                )
+                            }
+                        </ul>
+                    </li>
+
+                    <li>
+                        <strong>Relationships</strong>
+                        <ul>
+                            {entityObject.relationships.map((relationship, index) =>
+                                <li key={`${relationship.name}-${index}`}>
+                                    <strong>{relationship.name}</strong>: {relationship.description}
+                                </li>
+                                )
+                            }
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        )
+    }
+
+    const FormatSummary = () =>
+    {
+        return (
+            <ol>
+                    {summaryData.map((object, index) =>
+                        (   <span key={`${object.name}-${index}`}>
+                                {FormateSummaryObject(object)}
+                            </span>
+                        ))
+                    }
+            </ol>
+        )
+    }
     return (
         <div className="topBar">
             <label className="domainDescriptionLabel" htmlFor="story">Domain description: </label>
@@ -16,6 +68,8 @@ export default function SideBar({
             <br />
             <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
             <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
+            <button className="plusButton" onClick={() => onSummaryButtonClick()}>Summary</button>
+            {FormatSummary()}
         </div>
     )
 }

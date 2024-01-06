@@ -1,35 +1,26 @@
-import { useState } from 'react';
+
 
 export default function SideBar({
     attributes,
     relationships,
     addAttributesToNode,
     addRelationshipsToNodes,
-    isMultiSelection,
-    selectedNodes
 })
 {
-
-    const [isSummaryCreated, setIsSummaryCreated] = useState(false);
-    const [summary, setSummary] = useState("")
 
     const showTextOnSidebar = () =>
     {
         return (
             <div>
-                {isMultiSelection && <p><button onClick={() => createSummary()}>Get summary</button></p>}
-
-                {isSummaryCreated && <p>{summary}</p>}
-
                 {attributes.map((a, index) => 
                     <span key={a.name}>
-                    {showAttribute(a, index)}
+                        {showAttribute(a, index)}
                     </span>
                 )}
 
                 {relationships.map((r, index) => 
                     <span key={index}>
-                    {showRelationship(r, index)}
+                        {showRelationship(r, index)}
                     </span>
                 )}
             </div>
@@ -64,22 +55,6 @@ export default function SideBar({
     const editSuggestion = (event, isAttributes) =>
     {
         // In a new window show form in which user can change the corresponding fields
-    }
-
-    const createSummary = () =>
-    {
-        console.log(selectedNodes)
-        console.log(selectedNodes.length)
-        setIsSummaryCreated(true)
-        let names = "Summary of: "
-
-        for (let i = 0; i < selectedNodes.length; i++)
-        {
-            names += selectedNodes[i].data.title + ", "
-        }
-
-        names = names.slice(0, -2)
-        setSummary(names)
     }
 
     return (

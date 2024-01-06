@@ -41,12 +41,13 @@
 }
 
 .topBar {
-  height: 220px; /* Full-height: remove this if you want "auto" height */
-  width: 100%; /* Set the width of the sidebar */
+  /* height: 220px; */
+  height: 300px;
+  width: 50%; /* Set the width of the sidebar */
   position: absolute; /* Fixed Sidebar (stay in place on scroll) */
-  z-index: 1; /* Stay on top */
+  z-index: 2; /* Stay on top */
   top: 0; /* Stay at the top */
-  left: 0;
+  left: 10px;
   background-color: white;
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 10px;

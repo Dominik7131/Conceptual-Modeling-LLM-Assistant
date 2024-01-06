@@ -7,15 +7,15 @@ import 'reactflow/dist/style.css';
 
 
 const initialNodes = [
-  { id: '0', position: { x: 100, y: 300 }, data: { label: "", title: "Student", attributes: [], relationships: [] } },
-  //{ id: '1', position: { x: 0, y: 300 }, data: { label: "", title: "Course", attributes: [], relationships: [] } },
-  //{ id: '2', position: { x: 0, y: 400 }, data: { label: "", title: "Professor", attributes: [] } },
+  { id: '0', position: { x: 100, y: 400 }, data: { label: "", title: "student", attributes: [], relationships: [] } },
+  { id: '1', position: { x: 300, y: 400 }, data: { label: "", title: "course", attributes: [], relationships: [] } },
+  //{ id: '2', position: { x: 0, y: 400 }, data: { label: "", title: "professor", attributes: [] } },
 ];
 const initialEdges = [] //{ id: 'e0-1', source: '0', target: '1' }]; //, {id: 'e1-2', source: '1', target: '2'}];
 
 function App()
 {
-  // What is happening: https://reactflow.dev/learn/concepts/core-concepts
+  // Documentation: https://reactflow.dev/learn/concepts/core-concepts
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
@@ -26,6 +26,9 @@ function App()
   const [selectedNodes, setSelectedNodes] = useState([]);
 
   const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState(false)
+
+  const [summaryData, setSummaryData] = useState([])
+  const [isSummaryCreated, setIsSummaryCreated] = useState(false);
 
   let uniqueID = nodes.length
 
@@ -57,7 +60,7 @@ function App()
 
   const onPlusButtonClick = (event) =>
   {
-    console.log("On plus button nodes: " + nodes)
+    //console.log("On plus button nodes: " + nodes)
     const buttonInnerHTML = event.target.innerHTML
 
     let entityName = ""
@@ -142,6 +145,36 @@ function App()
     }
   }
 
+  const onSummaryButtonClick = (event) =>
+  {
+    // Get titles of all selected entites
+    let selectedEntites = ""
+    for (let i = 0; i < selectedNodes.length; i++)
+    {
+      selectedEntites += `${selectedNodes[i].data.title},`
+    }
+    selectedEntites = selectedEntites.slice(0, -1)
+
+    fetch(`http://127.0.0.1:5000/summary?entities=${selectedEntites}`)
+    .then(response => response.json())
+    .then(data => 
+        {
+          setSummaryData([]) // Clear summary data
+
+          for (let i = 0; i < data.length; i++)
+          {
+            let summaryObject = JSON.parse(data[i])
+            setSummaryData(previousData => 
+              {
+                return [...previousData, summaryObject]
+              })
+          }
+          setIsSummaryCreated(true)
+        })
+    .catch(error => console.log(error))
+    return
+  }
+
   const capitalizeString = (string) =>
   {
     return string.charAt(0).toUpperCase() + string.slice(1)
@@ -201,6 +234,16 @@ function App()
       document.getElementById("domainDescriptionText").style.color = 'black';
     }
   }, [isIgnoreDomainDescription]);
+
+  // useEffect(() =>
+  // {
+  //   console.log(nodes)
+  // }, [nodes]);
+
+  // useEffect(() =>
+  // {
+  //   console.log(edges)
+  // }, [edges]);
 
 
   const addAttributesToNode = (event) =>
@@ -281,9 +324,7 @@ function App()
       console.log("Adding a new node")
       targetNodeID = uniqueID.toString();
       uniqueID++;
-      console.log("Unique ID: " + uniqueID)
-      const newNode = { id: targetNodeID, position: { x: 500, y: 300 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
-      const newEdge = { id: `e${sourceNodeID}-${targetNodeID}`, source: sourceNodeID, target: targetNodeID, label: relationshipObject.name}
+      const newNode = { id: targetNodeID, position: { x: 500, y: 400 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
 
       setNodes(previousNodes => 
         {
@@ -304,12 +345,28 @@ function App()
         }
         return node
       }));
-      
-      setEdges(previousEdges =>
-        {
-          return [...previousEdges, newEdge]
-        })
     }
+
+    console.log("Adding a new edge")
+    const newEdge = { id: `e${sourceNodeID}-${targetNodeID}`, source: sourceNodeID, target: targetNodeID.toString(), label: relationshipObject.name}
+
+    // Check if edge is not contained in the edges
+    // TODO: Do not add a new edge but still add info about this relationship into the nodes
+    for (let i = 0; i < edges.length; i++)
+    {
+      const isEdge = edges[i].source === newEdge.source && edges[i].target === newEdge.target
+      const isReverseEdge = edges[i].source === newEdge.target && edges[i].target === newEdge.source
+      if (isEdge || isReverseEdge)
+      {
+        console.log("Edge already exists")
+        return
+      }
+    }
+
+    setEdges(previousEdges =>
+      {
+        return [...previousEdges, newEdge]
+      })
   }
 
   const handleIgnoreDomainDescriptionChange = () =>
@@ -322,6 +379,11 @@ function App()
       <TopBar
         handleIgnoreDomainDescriptionChange={handleIgnoreDomainDescriptionChange}
         onPlusButtonClick={onPlusButtonClick}
+        isMultiSelection={isMultiSelection}
+        isSummaryCreated={isSummaryCreated}
+        onSummaryButtonClick={onSummaryButtonClick}
+        summaryData={summaryData}
+        capitalizeString={capitalizeString}
       />
 
       <SideBar
@@ -329,8 +391,6 @@ function App()
         relationships={suggestedRelationships}
         addAttributesToNode={addAttributesToNode}
         addRelationshipsToNodes={addRelationshipsToNodes}
-        isMultiSelection={isMultiSelection}
-        selectedNodes={selectedNodes}
       />
 
       <div style={{ width: '84.6vw', height: '99vh' }}>
