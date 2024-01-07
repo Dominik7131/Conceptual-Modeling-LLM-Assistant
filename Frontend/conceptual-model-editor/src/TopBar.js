@@ -6,9 +6,9 @@ export default function TopBar({
     onSummaryButtonClick,
     summaryData,
     capitalizeString,
-    onDomainDescriptionChange,
     domainDescription,
-    nodes
+    setDomainDescription,
+    inferenceIndexes
 })
 {
     const FormateSummaryObject = (entityObject) =>
@@ -60,24 +60,22 @@ export default function TopBar({
         )
     }
 
+    // Function made by ChatGPT-3 -- probably very ineffective
+    function removeDuplicates(arr)
+    {
+        const uniqueSet = new Set(arr.map(JSON.stringify));
+        const uniqueArray = Array.from(uniqueSet).map(JSON.parse);
+      
+        return uniqueArray;
+      }
 
     const FormatHighlights = () =>
     {
-        let inferenceIndexes = []
-
-        for (let i = 0; i < nodes.length; i++)
-        {
-            for (let j = 0; j < nodes[i].data.attributes.length; j++)
-            {
-                inferenceIndexes.push(nodes[i].data.attributes[j].inference_indexes)
-            }
-        }
-
-        // console.log("Inference indexes: ")
-        // console.log(inferenceIndexes)
-
-        const sortedInferenceIndexes = inferenceIndexes.sort(([a, b], [c, d]) => a - c)
+        let sortedInferenceIndexes = inferenceIndexes.sort(([a, b], [c, d]) => a - c)
         // console.log("Sorted inference indexes: ")
+        // console.log(sortedInferenceIndexes)
+
+        sortedInferenceIndexes = removeDuplicates(sortedInferenceIndexes);
         // console.log(sortedInferenceIndexes)
 
         let texts = []
@@ -121,8 +119,9 @@ export default function TopBar({
             <br />
             <br />
             <textarea id="domainDescriptionText" name="story" rows="8" cols="70"
-                onKeyUp={(event) => onDomainDescriptionChange(event)}
-                defaultValue={"We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."}></textarea>
+                // https://react.dev/reference/react-dom/components/textarea
+                onChange={e => setDomainDescription(e.target.value)}
+                value={domainDescription}></textarea>
             <br />
             <br />
             <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>

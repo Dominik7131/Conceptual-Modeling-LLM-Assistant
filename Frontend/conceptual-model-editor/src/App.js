@@ -29,7 +29,9 @@ function App()
 
   const [summaryData, setSummaryData] = useState([])
 
-  const [domainDescription, setDomainDescription] = useState("")
+  const [domainDescription, setDomainDescription] = useState("We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price.")
+
+  const [inferenceIndexes, setInferenceIndexes] = useState([])
 
 
   let uniqueID = nodes.length
@@ -79,7 +81,7 @@ function App()
     }
 
     const targetNodeID = selectedNodes[0].id
-    console.log("Target node ID: " + targetNodeID)
+    // console.log("Target node ID: " + targetNodeID)
 
     if (nodes.length <= targetNodeID)
     {
@@ -301,6 +303,34 @@ function App()
     }
   }, [isIgnoreDomainDescription]);
 
+  useEffect(() =>
+  {
+    // Recompute inference indexes
+    // console.log("Recomputing inference indexes")
+    console.log("Domain description changed")
+    setInferenceIndexes([])
+
+    setNodes((nodes) => nodes.map((node) =>
+    {
+      for (let i = 0; i < node.data.attributes.length; i++)
+      {
+        const newInferenceIndexes = getIndexesForOneInference(node.data.attributes[i].inference)
+        if (newInferenceIndexes.length === 0)
+        {
+          continue
+        }
+
+        node.data.attributes.inference_indexes = newInferenceIndexes
+
+        setInferenceIndexes(previousInferenceIndexes => 
+          {
+            return [...previousInferenceIndexes, newInferenceIndexes]
+          })
+      }
+      return node;
+    }));
+  }, [domainDescription])
+
   // useEffect(() =>
   // {
   //   console.log(nodes)
@@ -325,8 +355,16 @@ function App()
       //console.log(`Iteration: NodeID-${node.id}, TargetNodeID-${nodeID}`)
       if (node.id === nodeID)
       {
-        const inference_indexes = getIndexesForOneInference(newAttribute.inference)
-        const newAttributeObject = { name: newAttribute.name, inference: newAttribute.inference, inference_indexes: inference_indexes, data_type: newAttribute.data_type}
+        const newInferenceIndexes = getIndexesForOneInference(newAttribute.inference)
+        if (newInferenceIndexes.length !== 0)
+        {
+          setInferenceIndexes(previousInferenceIndexes =>
+            {
+              return [...previousInferenceIndexes, newInferenceIndexes]
+            })
+        }
+
+        const newAttributeObject = { name: newAttribute.name, inference: newAttribute.inference, inference_indexes: newInferenceIndexes, data_type: newAttribute.data_type}
 
         // If the node already contains the selected attribute do not add anything
         let isAttributePresent = false
@@ -388,7 +426,7 @@ function App()
     if (!isTargetNodeID)
     {
       // Target node does not exist -> add a new node
-      console.log("Adding a new node")
+      // console.log("Adding a new node")
       targetNodeID = uniqueID.toString();
       uniqueID++;
       const newNode = { id: targetNodeID, position: { x: 500, y: 400 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
@@ -401,12 +439,12 @@ function App()
       setNodes((nodes) => nodes.map((node) =>
       {
         // TODO: Add info about the relationship into the node with sourceNodeID
-        /*if (node.id === sourceNodeID)
+        if (node.id === sourceNodeID)
         {
-          const newRelationshipObject = { name: "r", data_type: "unknown"}
-          node.data.attributes.push(newRelationshipObject)
-          return updateNode(node)
-        }*/
+          // const newRelationshipObject = { name: relationshipObject.name, source: relationshipObject.source, target: relationshipObject.target}
+          // node.data.attributes.push(newRelationshipObject)
+          // return updateNode(node)
+        }
         if (node.id === targetNodeID)
         {
           return updateNode(node)
@@ -437,11 +475,6 @@ function App()
       })
   }
 
-  const onDomainDescriptionChange = (event) =>
-  {
-    setDomainDescription(event.target.innerHTML)
-  }
-
   const handleIgnoreDomainDescriptionChange = () =>
   {
     setIsIgnoreDomainDescription(previousValue => !previousValue)
@@ -455,9 +488,9 @@ function App()
         onSummaryButtonClick={onSummaryButtonClick}
         summaryData={summaryData}
         capitalizeString={capitalizeString}
-        onDomainDescriptionChange={onDomainDescriptionChange}
         domainDescription={domainDescription}
-        nodes={nodes}
+        setDomainDescription={setDomainDescription}
+        inferenceIndexes={inferenceIndexes}
       />
 
       <SideBar
