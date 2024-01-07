@@ -6,10 +6,9 @@ export default function TopBar({
     onSummaryButtonClick,
     summaryData,
     capitalizeString,
-    onHighlightButtonClick,
     onDomainDescriptionChange,
     domainDescription,
-    inferenceIndexes
+    nodes
 })
 {
     const FormateSummaryObject = (entityObject) =>
@@ -64,12 +63,22 @@ export default function TopBar({
 
     const FormatHighlights = () =>
     {
-        // Sort indexes
-        //console.log("Inference indexes: ")
-        //console.log(inferenceIndexes)
+        let inferenceIndexes = []
+
+        for (let i = 0; i < nodes.length; i++)
+        {
+            for (let j = 0; j < nodes[i].data.attributes.length; j++)
+            {
+                inferenceIndexes.push(nodes[i].data.attributes[j].inference_indexes)
+            }
+        }
+
+        // console.log("Inference indexes: ")
+        // console.log(inferenceIndexes)
+
         const sortedInferenceIndexes = inferenceIndexes.sort(([a, b], [c, d]) => a - c)
-        //console.log("Sorted inference indexes: ")
-        //console.log(sortedInferenceIndexes)
+        // console.log("Sorted inference indexes: ")
+        // console.log(sortedInferenceIndexes)
 
         let texts = []
         let lastIndex = 0
@@ -77,6 +86,7 @@ export default function TopBar({
         for (let i = 0; i < sortedInferenceIndexes.length; i++)
         {
             const start = domainDescription.slice(lastIndex, sortedInferenceIndexes[i][0])
+            // console.log("Start: from: " + lastIndex + " to: " + sortedInferenceIndexes[i][0])
             texts.push(start)
             const mid = domainDescription.slice(sortedInferenceIndexes[i][0], sortedInferenceIndexes[i][1])
             texts.push(mid)
@@ -89,15 +99,15 @@ export default function TopBar({
             texts.push(end)
         }
 
-        //console.log("Texts: ")
-        //console.log(texts)
+        // console.log("Texts: ")
+        // console.log(texts)
 
         return (
             <div>
                 {
                     texts.map((text, index) =>
                     (
-                        index % 2 === 0 ? <span key={index}>{text}</span> : <span className="red" key={index}>{text}</span>
+                        index % 2 === 0 ? <span key={index}>{text}</span> : <span className="green" key={index}>{text}</span>
                     ))
                 }
             </div>

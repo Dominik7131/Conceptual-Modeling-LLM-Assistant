@@ -30,7 +30,6 @@ function App()
   const [summaryData, setSummaryData] = useState([])
 
   const [domainDescription, setDomainDescription] = useState("")
-  const [inferenceIndexes, setInferenceIndexes] = useState([])
 
 
   let uniqueID = nodes.length
@@ -186,7 +185,27 @@ function App()
     const indexes = getInferenceIndexes(inferences)
     console.log("Indexes: ")
     console.log(indexes)
-    setInferenceIndexes(indexes)
+    //setInferenceIndexes(indexes)
+  }
+
+  const getIndexesForOneInference = (inference) =>
+  {
+    for (let j = 0; j < domainDescription.length; j++)
+    {
+      if (inference.length + j > domainDescription.length)
+      {
+        console.log("Nothing found")
+        return []
+      }
+
+      const text = domainDescription.slice(j, inference.length + j)
+
+      if (inference === text)
+      {
+        return [j, inference.length + j]
+      }
+    }
+    return []
   }
 
   const getInferenceIndexes = (inferences) =>
@@ -282,11 +301,10 @@ function App()
     }
   }, [isIgnoreDomainDescription]);
 
-  useEffect(() =>
-  {
-    //console.log(nodes)
-    onHighlightButtonClick()
-  }, [nodes]);
+  // useEffect(() =>
+  // {
+  //   console.log(nodes)
+  // }, [nodes]);
 
   // useEffect(() =>
   // {
@@ -307,7 +325,8 @@ function App()
       //console.log(`Iteration: NodeID-${node.id}, TargetNodeID-${nodeID}`)
       if (node.id === nodeID)
       {
-        const newAttributeObject = { name: newAttribute.name, inference: newAttribute.inference, data_type: newAttribute.data_type}
+        const inference_indexes = getIndexesForOneInference(newAttribute.inference)
+        const newAttributeObject = { name: newAttribute.name, inference: newAttribute.inference, inference_indexes: inference_indexes, data_type: newAttribute.data_type}
 
         // If the node already contains the selected attribute do not add anything
         let isAttributePresent = false
@@ -436,10 +455,9 @@ function App()
         onSummaryButtonClick={onSummaryButtonClick}
         summaryData={summaryData}
         capitalizeString={capitalizeString}
-        onHighlightButtonClick={onHighlightButtonClick}
         onDomainDescriptionChange={onDomainDescriptionChange}
         domainDescription={domainDescription}
-        inferenceIndexes={inferenceIndexes}
+        nodes={nodes}
       />
 
       <SideBar
