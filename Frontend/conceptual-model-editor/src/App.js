@@ -168,26 +168,83 @@ function App()
     return
   }
 
-  const onHighlightButtonClick = () =>
-  {
-    // Get all selected inferences
-    let inferences = []
+  // const onHighlightButtonClick = () =>
+  // {
+  //   // Get all selected inferences
+  //   let inferences = []
 
-    for (let i = 0; i < selectedNodes.length; i++)
+  //   for (let i = 0; i < selectedNodes.length; i++)
+  //   {
+  //     for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
+  //     {
+  //       inferences.push(selectedNodes[i].data.attributes[j].inference)
+  //     }
+  //   }
+
+  //   console.log("Inferences")
+  //   console.log(inferences)
+
+  //   const indexes = getInferenceIndexes(inferences)
+  //   console.log("Indexes: ")
+  //   console.log(indexes)
+  //   setInferenceIndexes(indexes)
+  // }
+
+  const getDiscontinuousInferenceIndexes = (inference) =>
+  {
+    const sentenceEndMarkers = ['.', '!', '?']
+    const wordsArray = inference.split(' ')
+    let result = []
+    let isContinuous = false
+    let nextPositionToCheck = 0
+    let currentWordIndex = 0
+    console.log(wordsArray[currentWordIndex])
+
+    for (let i = 0; i < domainDescription.length; i++)
     {
-      for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
+      if (domainDescription.slice(i, i + wordsArray[currentWordIndex].length) === wordsArray[currentWordIndex])
       {
-        inferences.push(selectedNodes[i].data.attributes[j].inference)
+        // console.log("Match: " + wordsArray[currentWordIndex])
+        if (!isContinuous)
+        {
+          result.push(i)
+        }
+        isContinuous = true
+
+        // Whole sequence found
+        if (currentWordIndex === wordsArray.length - 1)
+        {
+          result.push(i + wordsArray[currentWordIndex].length)
+          // console.log("Returning: ")
+          // console.log(result)
+          return result
+        }
+
+        i += wordsArray[currentWordIndex].length
+        nextPositionToCheck = i
+        currentWordIndex += 1
+        continue
+      }
+
+      // Found hole
+      if (currentWordIndex > 0 && isContinuous)
+      {
+        // console.log("Found hole: " + domainDescription[i - 1] + domainDescription[i] + domainDescription[i + 1])
+        result.push(i + wordsArray[currentWordIndex - 1].length - 2)
+        isContinuous = false
+      }
+
+      // End of sentence interrupts current sequence -> start again
+      if (sentenceEndMarkers.includes(domainDescription[i]) && currentWordIndex > 0)
+      {
+        console.log("End of sentence")
+        result = []
+        i = nextPositionToCheck + 1
+        currentWordIndex = 0
       }
     }
 
-    console.log("Inferences")
-    console.log(inferences)
-
-    const indexes = getInferenceIndexes(inferences)
-    console.log("Indexes: ")
-    console.log(indexes)
-    //setInferenceIndexes(indexes)
+    return []
   }
 
   const getIndexesForOneInference = (inference) =>
@@ -196,8 +253,8 @@ function App()
     {
       if (inference.length + j > domainDescription.length)
       {
-        console.log("Nothing found")
-        return []
+        const discontinuousInferenceIndex = getDiscontinuousInferenceIndexes(inference)
+        return discontinuousInferenceIndex
       }
 
       const text = domainDescription.slice(j, inference.length + j)
@@ -210,34 +267,36 @@ function App()
     return []
   }
 
-  const getInferenceIndexes = (inferences) =>
-  {
-    //const inferences = ["courses have a name", "Students can be enrolled"]
-    let result = []
+  // const getInferenceIndexes = (inferences) =>
+  // {
+  //   //const inferences = ["courses have a name", "Students can be enrolled"]
+  //   let result = []
 
-    // Naive implementation
-    for (let i = 0; i < inferences.length; i++)
-    {
-      for (let j = 0; j < domainDescription.length; j++)
-      {
-        if (inferences[i].length + j > domainDescription.length)
-        {
-          console.log("Nothing found")
-          result.concat([-1])
-          break
-        }
+  //   // Naive implementation
+  //   for (let i = 0; i < inferences.length; i++)
+  //   {
+  //     for (let j = 0; j < domainDescription.length; j++)
+  //     {
+  //       // Nothing found -> inference is probably discontinuous
+  //       if (inferences[i].length + j > domainDescription.length)
+  //       {
+  //         const discontinuousInferenceIndex = getDiscontinuousInferenceIndexes(inferences[i])
+  //         console.log(discontinuousInferenceIndex)
+  //         break
+  //       }
 
-        const text = domainDescription.slice(j, inferences[i].length + j)
+  //       const text = domainDescription.slice(j, inferences[i].length + j)
 
-        if (inferences[i] === text)
-        {
-          result.push([j, inferences[i].length + j])
-        }
-      }
-    }
+  //       if (inferences[i] === text)
+  //       {
+  //         result.push([j, inferences[i].length + j])
+  //         break
+  //       }
+  //     }
+  //   }
 
-    return result
-  }
+  //   return result
+  // }
 
   const capitalizeString = (string) =>
   {
@@ -331,10 +390,10 @@ function App()
     }));
   }, [domainDescription])
 
-  // useEffect(() =>
-  // {
-  //   console.log(nodes)
-  // }, [nodes]);
+  useEffect(() =>
+  {
+    console.log(nodes)
+  }, [nodes]);
 
   // useEffect(() =>
   // {
@@ -438,11 +497,14 @@ function App()
       
       setNodes((nodes) => nodes.map((node) =>
       {
-        // TODO: Add info about the relationship into the node with sourceNodeID
+        // TODO: Check if relationships is not already present same as in attributes
+        // TODO: Put this logic outside the "if (!isTargetNodeID)" so it gets applied even when new node is not added
+        // TODO: Add inferences (wait for feedback on them)
         if (node.id === sourceNodeID)
         {
+          // console.log("Pushing new relationship")
           // const newRelationshipObject = { name: relationshipObject.name, source: relationshipObject.source, target: relationshipObject.target}
-          // node.data.attributes.push(newRelationshipObject)
+          // node.data.relationships.push(newRelationshipObject)
           // return updateNode(node)
         }
         if (node.id === targetNodeID)

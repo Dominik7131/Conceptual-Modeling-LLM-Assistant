@@ -55,8 +55,8 @@
   font-family: Arial;
 }
 
-.green {
-  color: rgb(0, 34, 255);
+.highlight {
+  background-color: orange;
 }
 
 /* Style page content */

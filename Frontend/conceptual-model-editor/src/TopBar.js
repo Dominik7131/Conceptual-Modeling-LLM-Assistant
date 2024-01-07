@@ -69,14 +69,31 @@ export default function TopBar({
         return uniqueArray;
       }
 
-    const FormatHighlights = () =>
+    const formatHighlights = () =>
     {
-        let sortedInferenceIndexes = inferenceIndexes.sort(([a, b], [c, d]) => a - c)
-        // console.log("Sorted inference indexes: ")
-        // console.log(sortedInferenceIndexes)
+        inferenceIndexes = removeDuplicates(inferenceIndexes);
 
-        sortedInferenceIndexes = removeDuplicates(sortedInferenceIndexes);
-        // console.log(sortedInferenceIndexes)
+        // For simplicity make every inference index of length 2
+        let newInferenceIndexes = []
+        for (let i = 0; i < inferenceIndexes.length; i++)
+        {
+            if (inferenceIndexes[i].length === 2)
+            {
+                newInferenceIndexes.push(inferenceIndexes[i])
+            }
+            else if (inferenceIndexes[i].length > 2)
+            {
+                for (let j = 0; j < inferenceIndexes[i].length; j += 2)
+                {
+                    const firstInferenceIndex = inferenceIndexes[i][j]
+                    const secondInferenceIndex = inferenceIndexes[i][j + 1]
+                    const newInferenceIndex = [firstInferenceIndex, secondInferenceIndex]
+                    newInferenceIndexes.push(newInferenceIndex)
+                }
+            }
+        }
+
+        let sortedInferenceIndexes = newInferenceIndexes.sort(([a, b], [c, d]) => a - c)
 
         let texts = []
         let lastIndex = 0
@@ -105,7 +122,7 @@ export default function TopBar({
                 {
                     texts.map((text, index) =>
                     (
-                        index % 2 === 0 ? <span key={index}>{text}</span> : <span className="green" key={index}>{text}</span>
+                        index % 2 === 0 ? <span key={index}>{text}</span> : <span className="highlight" key={index}>{text}</span>
                     ))
                 }
             </div>
@@ -129,7 +146,7 @@ export default function TopBar({
             <button className="plusButton" onClick={() => onSummaryButtonClick()}>Summary</button>
             {/* <button className="plusButton" onClick={() => onHighlightButtonClick()}>Highlight</button> */}
             {FormatSummary()}
-            {FormatHighlights()}
+            {formatHighlights()}
         </div>
     )
 }
