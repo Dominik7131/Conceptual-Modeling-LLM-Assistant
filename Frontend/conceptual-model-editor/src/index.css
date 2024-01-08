@@ -119,6 +119,12 @@ text.react-flow__edge-text {
   font-size: 14px;
 }
 
+.reactFlowDiv {
+  display: inline-block;
+  width: 84.6vw;
+  height: 97.9vh;
+}
+
 .react-flow__edge {
   font-size: 30px;
   color: red;

@@ -541,7 +541,7 @@ function App()
   }
 
   return (
-    <div>
+    <div className="appDiv">
       <TopBar
         handleIgnoreDomainDescriptionChange={handleIgnoreDomainDescriptionChange}
         onPlusButtonClick={onPlusButtonClick}
@@ -560,7 +560,7 @@ function App()
         addRelationshipsToNodes={addRelationshipsToNodes}
       />
 
-      <div style={{ width: '84.6vw', height: '99vh' }}>
+      <div className="reactFlowDiv">
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -571,7 +571,6 @@ function App()
             <Controls />
             <Background color="black" variant="dots" />
         </ReactFlow>
-
       </div>
     </div>
   );
