@@ -11,7 +11,7 @@ export default function SideBar({
     const showTextOnSidebar = () =>
     {
         return (
-            <div>
+            <span>
                 {attributes.map((a, index) => 
                     <span key={a.name}>
                         {showAttribute(a, index)}
@@ -23,7 +23,7 @@ export default function SideBar({
                         {showRelationship(r, index)}
                     </span>
                 )}
-            </div>
+            </span>
         )
     }
 
@@ -58,6 +58,6 @@ export default function SideBar({
     }
 
     return (
-        <div className="sidebar">{showTextOnSidebar()}</div>
+        <div className="sideBar">{showTextOnSidebar()}</div>
     )
 }

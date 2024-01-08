@@ -7,9 +7,9 @@ import 'reactflow/dist/style.css';
 
 
 const initialNodes = [
-  { id: '0', position: { x: 100, y: 400 }, data: { label: "", title: "student", attributes: [], relationships: [] } },
-  { id: '1', position: { x: 300, y: 400 }, data: { label: "", title: "course", attributes: [], relationships: [] } },
-  //{ id: '2', position: { x: 0, y: 400 }, data: { label: "", title: "professor", attributes: [] } },
+  { id: '0', position: { x: 100, y: 100 }, data: { label: "", title: "student", attributes: [], relationships: [] } },
+  //{ id: '1', position: { x: 300, y: 100 }, data: { label: "", title: "course", attributes: [], relationships: [] } },
+  //{ id: '2', position: { x: 0, y: 100 }, data: { label: "", title: "professor", attributes: [] } },
 ];
 const initialEdges = [] //{ id: 'e0-1', source: '0', target: '1' }]; //, {id: 'e1-2', source: '1', target: '2'}];
 
@@ -168,28 +168,6 @@ function App()
     return
   }
 
-  // const onHighlightButtonClick = () =>
-  // {
-  //   // Get all selected inferences
-  //   let inferences = []
-
-  //   for (let i = 0; i < selectedNodes.length; i++)
-  //   {
-  //     for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
-  //     {
-  //       inferences.push(selectedNodes[i].data.attributes[j].inference)
-  //     }
-  //   }
-
-  //   console.log("Inferences")
-  //   console.log(inferences)
-
-  //   const indexes = getInferenceIndexes(inferences)
-  //   console.log("Indexes: ")
-  //   console.log(indexes)
-  //   setInferenceIndexes(indexes)
-  // }
-
   const getDiscontinuousInferenceIndexes = (inference) =>
   {
     const sentenceEndMarkers = ['.', '!', '?']
@@ -198,7 +176,6 @@ function App()
     let isContinuous = false
     let nextPositionToCheck = 0
     let currentWordIndex = 0
-    console.log(wordsArray[currentWordIndex])
 
     for (let i = 0; i < domainDescription.length; i++)
     {
@@ -249,6 +226,11 @@ function App()
 
   const getIndexesForOneInference = (inference) =>
   {
+    if (!inference)
+    {
+      return []
+    }
+
     for (let j = 0; j < domainDescription.length; j++)
     {
       if (inference.length + j > domainDescription.length)
@@ -266,37 +248,6 @@ function App()
     }
     return []
   }
-
-  // const getInferenceIndexes = (inferences) =>
-  // {
-  //   //const inferences = ["courses have a name", "Students can be enrolled"]
-  //   let result = []
-
-  //   // Naive implementation
-  //   for (let i = 0; i < inferences.length; i++)
-  //   {
-  //     for (let j = 0; j < domainDescription.length; j++)
-  //     {
-  //       // Nothing found -> inference is probably discontinuous
-  //       if (inferences[i].length + j > domainDescription.length)
-  //       {
-  //         const discontinuousInferenceIndex = getDiscontinuousInferenceIndexes(inferences[i])
-  //         console.log(discontinuousInferenceIndex)
-  //         break
-  //       }
-
-  //       const text = domainDescription.slice(j, inferences[i].length + j)
-
-  //       if (inferences[i] === text)
-  //       {
-  //         result.push([j, inferences[i].length + j])
-  //         break
-  //       }
-  //     }
-  //   }
-
-  //   return result
-  // }
 
   const capitalizeString = (string) =>
   {
@@ -486,7 +437,7 @@ function App()
       // console.log("Adding a new node")
       targetNodeID = uniqueID.toString();
       uniqueID++;
-      const newNode = { id: targetNodeID, position: { x: 500, y: 400 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
+      const newNode = { id: targetNodeID, position: { x: 500, y: 100 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
 
       setNodes(previousNodes => 
         {
