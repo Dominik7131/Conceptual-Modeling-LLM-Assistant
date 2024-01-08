@@ -14,7 +14,6 @@
 
 
 /* Source: https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp */
-/* The sidebar menu */
 .sidebar {
   height: 100%; /* Full-height: remove this if you want "auto" height */
   width: 270px; /* Set the width of the sidebar */
@@ -23,6 +22,11 @@
   top: 0; /* Stay at the top */
   right: 0;
   background-color: #111;
+
+  /* border-color: black;
+  border-width: 4px;
+  border-style: solid; */
+
   overflow-x: hidden; /* Disable horizontal scroll */
   padding-top: 0px;
   color: white;
@@ -32,18 +36,17 @@
 .sidebar p {
   color : white;
   padding: 6px 8px 6px 16px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
-/* When you mouse over the navigation links, change their color */
 .sidebar p:hover {
-  color: #f1f1f1;
+  /* color: #f1f1f1; */
+  color: rgb(121, 121, 121);
 }
 
 .topBar {
-  /* height: 220px; */
   height: 300px;
-  width: 50%; /* Set the width of the sidebar */
+  width: 60%; /* Set the width of the sidebar */
   position: absolute; /* Fixed Sidebar (stay in place on scroll) */
   z-index: 2; /* Stay on top */
   top: 0; /* Stay at the top */
@@ -57,7 +60,23 @@
 
 .highlight {
   background-color: orange;
+  position: relative;
+  display: inline-block;
+  /* border-bottom: 1px dotted black; */
 }
+
+.highlight .tooltip {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -60px;
+}
+
+/* .highlight:hover .tooltip {
+  visibility: visible;
+} */
 
 /* Style page content */
 .main {
@@ -67,7 +86,7 @@
 
 .domainDescriptionLabel {
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 /* Ignore domain description checkbox */
@@ -81,6 +100,7 @@
 
 textarea {
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
 }
 
 .plusButton {

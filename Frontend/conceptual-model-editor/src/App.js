@@ -305,7 +305,7 @@ function App()
 
   const updateNodes = () =>
   {
-    console.log("Updating nodes")
+    // console.log("Updating nodes")
     setNodes((nodes) => nodes.map((node) =>
     {
       return updateNode(node)
@@ -365,8 +365,6 @@ function App()
   useEffect(() =>
   {
     // Recompute inference indexes
-    // console.log("Recomputing inference indexes")
-    console.log("Domain description changed")
     setInferenceIndexes([])
 
     setNodes((nodes) => nodes.map((node) =>
@@ -390,10 +388,10 @@ function App()
     }));
   }, [domainDescription])
 
-  useEffect(() =>
-  {
-    console.log(nodes)
-  }, [nodes]);
+  // useEffect(() =>
+  // {
+  //   console.log(nodes)
+  // }, [nodes]);
 
   // useEffect(() =>
   // {

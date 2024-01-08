@@ -122,7 +122,11 @@ export default function TopBar({
                 {
                     texts.map((text, index) =>
                     (
-                        index % 2 === 0 ? <span key={index}>{text}</span> : <span className="highlight" key={index}>{text}</span>
+                        index % 2 === 0 ? <span key={index}>{text}</span> :
+                        <span className="highlight" key={index}>{text}
+                            {/* How to create a tooltip: https://www.w3schools.com/css/css_tooltip.asp */}
+                            <span className="tooltip">Course +name</span>
+                        </span>
                     ))
                 }
             </div>

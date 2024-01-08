@@ -30,9 +30,9 @@ export default function SideBar({
     const showAttribute = (attribute, index) =>
     {
         return (
-            <p>Name: {attribute.name} <br />
-               Inference: {attribute.inference} <br />
-               Data type: {attribute.data_type} <br />
+            <p><strong>Name:</strong> {attribute.name} <br />
+               <strong>Inference:</strong> {attribute.inference} <br />
+               <strong>Data type:</strong> {attribute.data_type} <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addAttributesToNode(event)}>Add</button>
                <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, true)}>Edit</button>
             </p>
@@ -42,10 +42,10 @@ export default function SideBar({
     const showRelationship = (relationship, index) =>
     {
         return (
-            <p>Name: {relationship.name} <br />
-               Inference: {relationship.inference} <br />
-               Source: {relationship.source} <br />
-               Target: {relationship.target} <br />
+            <p><strong>Name:</strong> {relationship.name} <br />
+               <strong>Inference:</strong> {relationship.inference} <br />
+               <strong>Source:</strong> {relationship.source} <br />
+               <strong>Target:</strong> {relationship.target} <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addRelationshipsToNodes(event, relationship)}>Add</button>
                <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, false)}>Edit</button>
             </p>
