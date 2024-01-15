@@ -159,6 +159,35 @@ export default function TopBar({
         )
     }
 
+    const showDemoHighlightSuggestions = () =>
+    {
+
+        // Directly show in domain description
+        return <span>We know that <span className="highlightAttributes">courses have a name</span> and a <span className="highlightAttributes">specific number of credits</span>. <span className="highlightRelationships">Each course can have one or more </span><span className="highlightAttributes highlightRelationships">professors</span><span className="highlightAttributes">, who have a name</span>. <span className="highlightRelationships">Professors could participate in any number of courses</span>. <span className="highlightRelationships">For a course to exist, it must aggregate, at least, five students</span>, where <span className="highlightAttributes">each student has a name</span>. <span className="highlightRelationships">Students can be enrolled in any number of courses</span>. Finally, <span className="highlightRelationships">students can be accommodated in dormitories</span>, where <span className="highlightRelationships">each dormitory can have from one to four students</span>. Besides, <span className="highlightAttributes">each dormitory has a price</span>.</span>
+
+        // Show references
+        // return <span> Attributes:
+        //     <ul>
+        //         <li>courses have a name</li>
+        //         <li>courses have a specific number of credits</li>
+        //         <li>professors, who have a name</li>
+        //         <li>each student has a name</li>
+        //         <li>each dormitory has a price</li>
+        //     </ul>
+        //     Relationships:
+        //     <ul>
+        //         <li>Each course can have one or more professors</li>
+        //         <li>Professors could participate in any number of courses</li>
+        //         <li>For a course to exist, it must aggregate, at least, five students</li>
+        //         <li>Students can be accommodated in dormitories</li>
+        //         <li>Students can be enrolled in any number of courses</li>
+        //         <li>each dormitory can have from one to four students</li>
+        //     </ul>
+        //     </span>
+
+    }
+
+
     return (
         <div className="topBar">
             <label className="domainDescriptionLabel" htmlFor="story">Domain description: </label>
@@ -173,10 +202,12 @@ export default function TopBar({
             <br />
             <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
             <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
-            <button className="plusButton" onClick={() => onSummaryButtonClick()}>Summary</button>
+            <button className="plusButton" onClick={() => onSummaryButtonClick()}>Document</button>
+            <button className="plusButton">Summary</button>
             {/* <button className="plusButton" onClick={() => onHighlightButtonClick()}>Highlight</button> */}
             {FormatSummary()}
-            {formatHighlights()}
+            {/* {formatHighlights()} */}
+            {showDemoHighlightSuggestions()}
         </div>
     )
 }
