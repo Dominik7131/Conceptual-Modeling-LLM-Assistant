@@ -1,11 +1,12 @@
 
+interface props {
+    attributes : Attribute[],
+    relationships : Relationship[],
+    addAttributesToNode : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+    addRelationshipsToNodes : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationship : Relationship) => void,
+}
 
-export default function SideBar({
-    attributes,
-    relationships,
-    addAttributesToNode,
-    addRelationshipsToNodes,
-})
+const Sidebar: React.FC<props> = ({attributes, relationships, addAttributesToNode, addRelationshipsToNodes}) =>
 {
 
     const showTextOnSidebar = () =>
@@ -27,7 +28,7 @@ export default function SideBar({
         )
     }
 
-    const showAttribute = (attribute, index) =>
+    const showAttribute = (attribute : Attribute, index : number) =>
     {
         return (
             <p><strong>Name:</strong> {attribute.name} <br />
@@ -39,7 +40,7 @@ export default function SideBar({
         )
     }
 
-    const showRelationship = (relationship, index) =>
+    const showRelationship = (relationship : Relationship, index : number) =>
     {
         return (
             <p><strong>Name:</strong> {relationship.name} <br />
@@ -52,7 +53,7 @@ export default function SideBar({
         )
     }
 
-    const editSuggestion = (event, isAttributes) =>
+    const editSuggestion = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, isAttributes : boolean) =>
     {
         // In a new window show form in which user can change the corresponding fields
     }
@@ -61,3 +62,5 @@ export default function SideBar({
         <div className="sideBar">{showTextOnSidebar()}</div>
     )
 }
+
+export default Sidebar

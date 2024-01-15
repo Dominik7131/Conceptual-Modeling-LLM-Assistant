@@ -1,17 +1,44 @@
-import TopBar from './TopBar'
-import SideBar from './SideBar';
+import Topbar from './Topbar'
+import SideBar from './Sidebar';
 import { useCallback, useEffect, useState } from 'react';
-import ReactFlow, { useNodesState, useEdgesState, addEdge, MiniMap, Controls, Background, ReactFlowProvider, useOnSelectionChange } from 'reactflow';
+import ReactFlow, { useNodesState, useEdgesState, addEdge, Node, Edge, MiniMap, Controls, Background, ReactFlowProvider, useOnSelectionChange, OnConnect } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 
-
-const initialNodes = [
+const initialNodes : Node[] = [
   { id: '0', position: { x: 100, y: 100 }, data: { label: "", title: "student", attributes: [], relationships: [] } },
   //{ id: '1', position: { x: 300, y: 100 }, data: { label: "", title: "course", attributes: [], relationships: [] } },
   //{ id: '2', position: { x: 0, y: 100 }, data: { label: "", title: "professor", attributes: [] } },
 ];
-const initialEdges = [] //{ id: 'e0-1', source: '0', target: '1' }]; //, {id: 'e1-2', source: '1', target: '2'}];
+const initialEdges : Edge[] = [] //[{ id: 'e0-1', source: '0', target: '1' }]; //, {id: 'e1-2', source: '1', target: '2'}];
+
+
+declare global
+{
+  type Attribute = {
+    name: string
+    description: string
+    inference: string
+    data_type: string
+    node_ID : number
+  }
+  
+  type Relationship = {
+    name: string
+    description: string
+    inference: string
+    source: string
+    target: string
+    node_ID : number
+  }
+
+  type SummaryObject = {
+    entity: string
+    attributes: Attribute[]
+    relationships: Relationship[]
+  }
+}
+
 
 function App()
 {
@@ -19,29 +46,28 @@ function App()
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
-  const [suggestedAttributes, setSuggestedAttributes] = useState([])
-  const [suggestedRelationships, setSuggestedRelationships] = useState([])
+  const [suggestedAttributes, setSuggestedAttributes] = useState<Attribute[]>([])
+  const [suggestedRelationships, setSuggestedRelationships] = useState<Relationship[]>([])
 
-  const [isMultiSelection, setIsMultiSelection] = useState(false);
-  const [selectedNodes, setSelectedNodes] = useState([]);
+  const [isMultiSelection, setIsMultiSelection] = useState<boolean>(false);
+  const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
 
-  const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState(false)
+  const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState<boolean>(false)
 
-  const [summaryData, setSummaryData] = useState([])
+  const [summaryData, setSummaryData] = useState<SummaryObject[]>([])
 
-  const [domainDescription, setDomainDescription] = useState("We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price.")
+  const [domainDescription, setDomainDescription] = useState<string>("We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price.")
 
-  const [inferenceIndexes, setInferenceIndexes] = useState([])
-
+  const [inferenceIndexes, setInferenceIndexes] = useState<number[][]>([])
 
   let uniqueID = nodes.length
 
-  const onConnect = useCallback(
+  const onConnect : OnConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     [setEdges],
   );
 
-  const onChange = useCallback(({ nodes, edges }) =>
+  const onChange = useCallback(({ nodes, edges } : { nodes : Node[], edges : Edge[]}) =>
   {
     setSelectedNodes(nodes)
 
@@ -54,7 +80,7 @@ function App()
     {
       setIsMultiSelection(false)
     }
-    //console.log(nodes, edges);
+    // console.log(nodes, edges);
   }, []);
 
   // On nodes/edges selection: https://codesandbox.io/p/sandbox/elegant-silence-gtg683?file=%2Fsrc%2FFlow.tsx%3A81%2C1
@@ -62,10 +88,11 @@ function App()
     onChange
   });
 
-  const onPlusButtonClick = (event) =>
+  const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
   {
     //console.log("On plus button nodes: " + nodes)
-    const buttonInnerHTML = event.target.innerHTML
+    // const buttonInnerHTML = event.target.innerHTML
+    const buttonInnerHTML = event.currentTarget.innerHTML
 
     let entityName = ""
 
@@ -83,12 +110,12 @@ function App()
     const targetNodeID = selectedNodes[0].id
     // console.log("Target node ID: " + targetNodeID)
 
-    if (nodes.length <= targetNodeID)
+    if (nodes.length.toString() <= targetNodeID)
     {
       console.log("Error: Nodes length: " + nodes.length + " but target node ID: " + targetNodeID)
       return
     }
-    entityName = nodes[targetNodeID].data.title
+    entityName = nodes[Number(targetNodeID)].data.title
     const domainDesciption = isIgnoreDomainDescription ? "" : "x"
 
     if (buttonInnerHTML === "+Relationships")
@@ -139,7 +166,7 @@ function App()
     }
   }
 
-  const onSummaryButtonClick = (event) =>
+  const onSummaryButtonClick = () =>
   {
     // Get titles of all selected entites
     let selectedEntites = ""
@@ -168,7 +195,7 @@ function App()
     return
   }
 
-  const getDiscontinuousInferenceIndexes = (inference) =>
+  const getDiscontinuousInferenceIndexes = (inference : string) =>
   {
     const sentenceEndMarkers = ['.', '!', '?']
     const wordsArray = inference.split(' ')
@@ -224,7 +251,7 @@ function App()
     return []
   }
 
-  const getIndexesForOneInference = (inference) =>
+  const getIndexesForOneInference = (inference : string) =>
   {
     if (!inference)
     {
@@ -249,7 +276,7 @@ function App()
     return []
   }
 
-  const capitalizeString = (string) =>
+  const capitalizeString = (string : string) =>
   {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
@@ -263,31 +290,21 @@ function App()
     }));
   }
 
-  const updateNode = (node) =>
+  const updateNode = (node : Node) =>
   {
     const title = node.data.title
     node.data =
     {
       ...node.data,
       label: <div className="node">
-                  {/* Issue: onPlusButtonClick function is snapshotting the current nodes variable and it usually does not get updated
-                    Possible solution: probably React Context (https://github.com/xyflow/xyflow/issues/1535)
-                    Or do not use buttons inside node.
-
-                  <div>
-                    <button id={"a" + nodeID} onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
-                    <button id={"r" + nodeID} onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
-                    <br />
-                  </div> */}
-
-                  <p className="nodeTitle"><strong>{capitalizeString(title)}</strong></p>
-                  <p>
-                  {node.data.attributes.map((attribute, index) =>
-                  (
-                      <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.data_type} <br /> </span>
-                  ))}
-                  </p>
-              </div>
+                <p className="nodeTitle"><strong>{capitalizeString(title)}</strong></p>
+                <p>
+                {node.data.attributes.map((attribute : Attribute, index : number) =>
+                (
+                    <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.data_type} <br /> </span>
+                ))}
+                </p>
+             </div>
     };
     return node;
   }
@@ -297,19 +314,28 @@ function App()
     updateNodes()
 
     const domainDescriptionTextArea = document.getElementById("domainDescriptionText")
-    setDomainDescription(domainDescriptionTextArea.innerHTML)
-    
+    if (domainDescriptionTextArea)
+    {
+      setDomainDescription(domainDescriptionTextArea.innerHTML)
+    }
   }, []);
 
   useEffect(() =>
   {
+    let domainDescriptionText = document.getElementById("domainDescriptionText")
+
+    if (!domainDescriptionText)
+    {
+      return
+    }
+
     if (isIgnoreDomainDescription)
     {
-      document.getElementById("domainDescriptionText").style.color = '#D3D3D3';
+      domainDescriptionText.style.color = '#D3D3D3'
     }
     else
     {
-      document.getElementById("domainDescriptionText").style.color = 'black';
+      domainDescriptionText.style.color = 'black';
     }
   }, [isIgnoreDomainDescription]);
 
@@ -341,6 +367,11 @@ function App()
 
   // useEffect(() =>
   // {
+  //   console.log(inferenceIndexes)
+  // }, [inferenceIndexes])
+
+  // useEffect(() =>
+  // {
   //   console.log(nodes)
   // }, [nodes]);
 
@@ -350,18 +381,21 @@ function App()
   // }, [edges]);
 
 
-  const addAttributesToNode = (event) =>
+  const addAttributesToNode = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
   {
-    const attributeTargetID = event.target.id.slice(6)
+    const attributeTargetID = event.currentTarget.id.slice(6)
     // console.log(`Target attribute ID: ${attributeTargetID}`)
-    const newAttribute = suggestedAttributes[attributeTargetID]
-    const nodeID = newAttribute.node_ID
+    const newAttribute = suggestedAttributes[Number(attributeTargetID)]
+    const nodeID = Number(newAttribute.node_ID)
     // console.log(`Target node ID: ${nodeID}`)
     
     setNodes((nodes) => nodes.map((node) =>
     {
-      //console.log(`Iteration: NodeID-${node.id}, TargetNodeID-${nodeID}`)
-      if (node.id === nodeID)
+      // console.log(`Iteration: NodeID-${node.id}, TargetNodeID-${nodeID}`)
+
+      const currentNodeID = Number(node.id)
+
+      if (currentNodeID === nodeID)
       {
         const newInferenceIndexes = getIndexesForOneInference(newAttribute.inference)
         if (newInferenceIndexes.length !== 0)
@@ -376,7 +410,7 @@ function App()
 
         // If the node already contains the selected attribute do not add anything
         let isAttributePresent = false
-        node.data.attributes.forEach(attribute => {
+        node.data.attributes.forEach((attribute : Attribute) => {
           if (attribute.name === newAttributeObject.name)
           {
             isAttributePresent = true
@@ -398,12 +432,12 @@ function App()
     );
   }
 
-  const addRelationshipsToNodes = (event, relationshipObject) =>
+  const addRelationshipsToNodes = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationshipObject : Relationship) =>
   {
     console.log("Adding relationships to nodes")
-    const relationshipIndex = event.target.id.slice(6)
+    const relationshipIndex = event.currentTarget.id.slice(6)
 
-    const addedRelationship = suggestedRelationships[relationshipIndex]
+    const addedRelationship = suggestedRelationships[Number(relationshipIndex)]
     const sourceNodeID = addedRelationship.node_ID
     console.log("Source node ID: " + sourceNodeID)
 
@@ -421,6 +455,8 @@ function App()
       }
     }
 
+    console.log("Target node ID: " + targetNodeID)
+
     if (isTargetNodeID)
     {
       console.log("Target node ID: " + targetNodeID)
@@ -435,9 +471,10 @@ function App()
     {
       // Target node does not exist -> add a new node
       // console.log("Adding a new node")
-      targetNodeID = uniqueID.toString();
+      let targetNodeStringID = uniqueID.toString();
+      targetNodeID = uniqueID
       uniqueID++;
-      const newNode = { id: targetNodeID, position: { x: 500, y: 100 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
+      const newNode = { id: targetNodeStringID, position: { x: 500, y: 100 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
 
       setNodes(previousNodes => 
         {
@@ -449,14 +486,14 @@ function App()
         // TODO: Check if relationships is not already present same as in attributes
         // TODO: Put this logic outside the "if (!isTargetNodeID)" so it gets applied even when new node is not added
         // TODO: Add inferences (wait for feedback on them)
-        if (node.id === sourceNodeID)
+        if (Number(node.id) === sourceNodeID)
         {
           // console.log("Pushing new relationship")
           // const newRelationshipObject = { name: relationshipObject.name, source: relationshipObject.source, target: relationshipObject.target}
           // node.data.relationships.push(newRelationshipObject)
           // return updateNode(node)
         }
-        if (node.id === targetNodeID)
+        if (Number(node.id) === targetNodeID)
         {
           return updateNode(node)
         }
@@ -465,7 +502,7 @@ function App()
     }
 
     console.log("Adding a new edge")
-    const newEdge = { id: `e${sourceNodeID}-${targetNodeID}`, source: sourceNodeID, target: targetNodeID.toString(), label: relationshipObject.name}
+    const newEdge = { id: `e${sourceNodeID}-${targetNodeID}`, source: sourceNodeID.toString(), target: targetNodeID.toString(), label: relationshipObject.name}
 
     // Check if edge is not contained in the edges
     // TODO: Do not add a new edge but still add info about this relationship into the nodes
@@ -493,7 +530,7 @@ function App()
 
   return (
     <div className="appDiv">
-      <TopBar
+      <Topbar
         handleIgnoreDomainDescriptionChange={handleIgnoreDomainDescriptionChange}
         onPlusButtonClick={onPlusButtonClick}
         onSummaryButtonClick={onSummaryButtonClick}
@@ -520,7 +557,7 @@ function App()
           onConnect={onConnect}>
             <MiniMap nodeStrokeWidth={3} zoomable pannable />
             <Controls />
-            <Background color="black" variant="dots" />
+            <Background color="black" />
         </ReactFlow>
       </div>
     </div>
