@@ -46,7 +46,7 @@
 <br />
 <br />
 
-Frontend:
+#### Frontend
 - každý návrh atributu/asociace/entity lze:
 	- I) přidat do uživatelova konceptuálního modelu (pokud je návrh složitější, tak provést sloučení s již existujícím uživatelovým konceptuálním modelem)
 	- II) upravit (lze změnit každou navrhovanou část)
@@ -96,7 +96,7 @@ Frontend:
 <br />
 <br />
 
-### Frontend:
+#### Frontend
 - možnost zapnout automatické zvýrazňování v popisu domény všech atributů a asociací:
 	I) které mají inferenci
 	II) které mají inferenci a zároveň je má uživatel označené
