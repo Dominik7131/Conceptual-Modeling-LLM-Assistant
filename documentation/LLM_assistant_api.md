@@ -87,7 +87,3 @@
 ### Notes
 - in JSON object "parent_entity" is used for representing the ISA-hierarchy
 - for possible future extension every method can have an additional argument `user_instruction` allowing user to specify his request more specifically
-
-
-### TODO
-- can 
