@@ -8,12 +8,18 @@
 	- datový typ
 	- popis, pokud nemá na vstupu popis domény
 	- inferenci, pokud má na vstupu popis domény
-- pro každoud asociaci LLM navrhne:
+
+<br />
+
+- pro každou asociaci LLM navrhne:
 	- název
 	- zdrojovou entitu
 	- cílovou entitu
 	- popis, pokud nemá na vstupu popis domény
 	- inferenci, pokud má na vstupu popis domény
+
+<br />
+
 - pro každou entitu LLM navrhne:
 	- název
 
@@ -128,5 +134,5 @@ Jak reagovat na editování popisu domény:
 - a) nijak
 - b) zkusit automaticky aktualizovat inference (ale to by mohlo trvat dlouho)
 - c) možná zkontrolovat, jestli ten popis domény není víceznačný, nebo jestli si některé části neprotiřečí
-- d) zkusit zdetekovat části textu, které nepopisují tu doménu
+- d) zkusit detekovat části textu, které nepopisují tu doménu
 - e) nějaký jiný způsob?
