@@ -16,7 +16,6 @@
 	- inferenci, pokud má na vstupu popis domény
 - pro každou entitu LLM navrhne:
 	- název
-	- popis pokud nemá na vstupu popis domény
 
 <br />
 <br />
@@ -99,8 +98,8 @@
 
 #### Frontend
 - možnost zapnout automatické zvýrazňování v popisu domény všech atributů a asociací:
-	I) které mají inferenci
-	II) které mají inferenci a zároveň je má uživatel označené
+	- I) které mají inferenci
+	- II) které mají inferenci a zároveň je má uživatel označené
 
 - když myší najedeme na libovolnou zvýrazněnou část, tak ukázat tooltip obsahující název entity a název příslušného atributu/asociace
 
