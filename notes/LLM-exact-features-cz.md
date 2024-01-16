@@ -78,9 +78,10 @@
 - b) LLM umí provést nestrukturované shrnutí
 	- pokud je používán popis domény, tak ve výchozím nastavení je výstup v míře detailů odpovídající popisu domény
 	- pokud není používán popis domény, tak výstup bude podle nějakého výchozího nastavení
-	- možnost nechat uživatele nastavit parametry:
-		- I) formalita: neformální, neutrální, formální
-		- II) doména: akademická, obecná, casual, atd.
+
+- pro libovolný automaticky generovaný text možnost nechat uživatele nastavit některé parametry:
+	- I) formalita: neformální, neutrální, formální
+	- II) doména: akademická, obecná, casual, atd.
 
 
 <br />
@@ -117,14 +118,16 @@ Jaký typ vstupu budeme zvládat:
 <br />
 
 Jaký formát popisu domény bude zvládat:
-- a) jenom text ve větách
-- b) + navíc seznam bodů (Př.: školní řád)
-- c) + navíc nějaký jiný formát?
+- a) text ve větách
+- b) seznam bodů (Př.: školní řád)
+- c) obrázky, nebo jiné formáty?
 
 <br />
 <br />
 
 Jak reagovat na editování popisu domény:
 - a) nijak
-- b) možná zkontrolovat, jestli ten popis domény není víceznačný, nebo jestli si některé části neprotiřečí
-- c) nějaký jiný způsob?
+- b) zkusit automaticky aktualizovat inference (ale to by mohlo trvat dlouho)
+- c) možná zkontrolovat, jestli ten popis domény není víceznačný, nebo jestli si některé části neprotiřečí
+- d) zkusit zdetekovat části textu, které nepopisují tu doménu
+- e) nějaký jiný způsob?
