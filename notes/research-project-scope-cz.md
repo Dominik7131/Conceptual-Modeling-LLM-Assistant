@@ -1,6 +1,6 @@
 # Co udělat v rámci výzkumného projektu
 
-- výcházíme ze souboru `LLM-exact-features-cz.md`
+- výcházíme ze souboru [LLM-exact-features-cz.md](LLM-exact-features-cz.md)
 
 ## Featury LLM asistenta
 
