@@ -1,5 +1,15 @@
 # Přesné vymezení zadání
 
+## Použivané pojmy
+- inference = přesná část textu z popisu domény odkud například daný atribut/asociace vyplývá
+- popis = text zahrnující veškeré okolí popisované věci (Př.: pro entitu souhrn všech jejích atributů a vztahů)
+- definice = přesné vymezení daného pojmu zahrnující pouze některé věci z okolí (Př.: "student je osoba zapsaná do studijního programu vysoké školy", ale už součástí definice není například, že student má jméno, což by vyplývalo z jeho atributů)
+
+
+## Cílový stav
+- cílový stavem je vytvořit konceptuální model, kde každý atribut, asociace a každá entita má název a charakterizující text
+
+
 ## Všechny doteď zmiňované featury LLM asistenta
 
 ### 1. Navrhování atributů/asociací/entit
@@ -8,20 +18,34 @@
 	- datový typ
 	- popis, pokud nemá na vstupu popis domény
 	- inferenci, pokud má na vstupu popis domény
+	- kardinalitu
+	- (poznámka: každý atribut pak nějakým způsobem musí obsahovat i zdrojovou entitu, abychom věděli, ke které entitě patří)
 
 <br />
 
 - pro každou asociaci LLM navrhne:
 	- název
-	- zdrojovou entitu
-	- cílovou entitu
+	- právě jednu zdrojovou entitu
+	- právě jednu cílovou entitu
+		- poznámka: nebudeme pracovat s vícenásobnými asociacemi
 	- popis, pokud nemá na vstupu popis domény
 	- inferenci, pokud má na vstupu popis domény
+	- kardinalitu
 
 <br />
 
 - pro každou entitu LLM navrhne:
 	- název
+	- popis, pokud nemá na vstupu popis domény
+		- poznámka: popis si pak budeme moct nechat vytvořit nový pomocí 2. featury
+	- inferenci, pokud má na vstupu popis domény
+		- poznámka: tady ale nejspíš ta inference nebude přesně z popisu domény, ale bude to něco volněji odvozeného
+
+<br />
+
+- možná v některých situacích bude dávat smysl místo jednoho názvu atributu/asociace/entity navrhnout více názvů, proto uživateli můžeme dát možnost nastavit parametr pro počet názvů
+	- nebo pokud se uživateli nebude líbit ten aktuální název atributu/asociace/entity, tak si bude moct nechat vygenerovat jiné názvy
+	- podobně uživatele necháme nastavit i kolik atributů/asociací chce navrhnout, když není zadán popis domény
 
 <br />
 <br />
@@ -40,10 +64,16 @@
 
 	- d) označí část popisu domény
 		- LLM umí v této vyznačené části najít atributy/asociace/entity
+		- případně lze omezit, jak moc velkou část popisu domény uživatel může označit
 
 	- e) nic neoznačí, ale zadá instrukci do odděleného textového pole od popisu domény
 		- Př.: Studenti pracují na diplomkách
 		- LLM umí navrhnout takový seznam atributů, asociací a entit, které čistě na základě popisu domény povedou k vykonání požadované instrukce
+		- pokud to pomůže, tak nejdřív uživatel bude muset označit entitu, pro kterou chce provést příslušnou instrukci
+        - jak by to mohlo být uskutečněno:
+            - v prvním kroce LLM se pokusí najít zdrojovou entitu pro tuto instrukci (Př.: "můžeme pokračovat, protože už studenta máme namodelovaného")
+            - druhý krok: identifikuj entity, které ještě nemáme namodelované (Př.: LLM asistent se uživatele zeptá, jestli chce přidat entitu "diplomka")
+            - další kroky: LLM zkusí pro nalezenou zdrojovou entitu najít atributy jako v b) a potom mezi nalezenými entitami může zkusit najít asociace jako v c)
 
 	- f) nic neoznačí, ale zvolí možnost autopilota
 		- LLM navrhne konceptuální model pro zadaný popis domény bez uživatelovy pomoci
@@ -64,8 +94,9 @@
 		- potom bude otázka, jestli nepřidat nějakou možnost filtrování těch označených částí (Př.: možnost nechat ukázat zvýrazněné části pouze pro návrhy atributů), abychom nezahlcovali uživatele hodně různými návrhy
 
 - pokud LLM bude umět generovat složitější návrhy (= návrhy obsahující více než právě jeden atribut, nebo právě jednu asociaci, nebo právě jednu entitu), tak jakým způsobem je zobrazit:
-	- jako pro jednoduchý návrh, jenom v nějakém boxu pod sebou bude vyjmenováno více věcí, kde ten box bude vyznačovat, co patří k jednomu příslušnému návrhu
-	- konceptuální model zachycující změny
+	- I) jako pro jednoduchý návrh, jenom v nějakém boxu pod sebou bude vyjmenováno více věcí, kde ten box bude vyznačovat, co patří k jednomu příslušnému návrhu
+	- II) konceptuální model zachycující změny
+	- nechat si uživatele vybrat z I) a II), která varianta mu nejvíc vyhovuje
 
 <br />
 <br />
@@ -74,7 +105,7 @@
 
 - předpoklad: uživatel označí část konceptuálního modelu
 
-- a) LLM umí vytvořit dokumentační popisky ke každému atributu/asociaci
+- a) LLM umí vytvořit popisek ke každému atributu/asociaci
 	- každý popisek nejdřív uživatel bude muset potvrdit, že je v pořádku
 		- jinak bude mít možnost popisek buď odebrat, nebo zeditovat
 	- I) LLM nebude mít na vstupu popis domény
@@ -94,9 +125,9 @@
 
 ### 3. Zvýraznění již namodelované části v popisu domény
 
-- a) když uživatel označí část konceptuálního modelu
-	- tak atributy/asociace, které mají inferenci, jsou zvýrazněny v popisu domény
-	- ostatní části jsou poslány LLM s popisem domény pro pokus o zisk inference
+- když uživatel označí část konceptuálního modelu:
+	- a) tak atributy/asociace, které mají inferenci, jsou zvýrazněny v popisu domény
+	- b) ostatní části jsou poslány LLM s popisem domény pro pokus o zisk inference
 		- pokud v popisu domény nejsou, tak uživatel bude mít možnost si nechat tu část popisu domény vygenerovat přes featuru 2b)
 
 <br />
