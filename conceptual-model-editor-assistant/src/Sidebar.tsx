@@ -8,7 +8,6 @@ interface props {
 
 const Sidebar: React.FC<props> = ({attributes, relationships, addAttributesToNode, addRelationshipsToNodes}) =>
 {
-
     const showTextOnSidebar = () =>
     {
         return (
@@ -45,8 +44,8 @@ const Sidebar: React.FC<props> = ({attributes, relationships, addAttributesToNod
         return (
             <p><strong>Name:</strong> {relationship.name} <br />
                <strong>Inference:</strong> {relationship.inference} <br />
-               <strong>Source:</strong> {relationship.source} <br />
-               <strong>Target:</strong> {relationship.target} <br />
+               <strong>Source:</strong> {relationship.source_entity} <br />
+               <strong>Target:</strong> {relationship.target_entity} <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addRelationshipsToNodes(event, relationship)}>Add</button>
                <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, false)}>Edit</button>
             </p>

@@ -205,10 +205,10 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onPlusBut
             <br />
             <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
             <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
-            <button className="plusButton" onClick={() => onSummaryButtonClick()}>Document</button>
+            {/* <button className="plusButton" onClick={() => onSummaryButtonClick()}>Document</button>
             <button className="plusButton">Summary</button>
-            {FormatSummary()}
-            {formatHighlights()}
+            {FormatSummary()} */}
+            {/* {formatHighlights()} */}
             {/* {showDemoHighlightSuggestions()} */}
         </div>
     )

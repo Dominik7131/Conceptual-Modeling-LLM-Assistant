@@ -6,9 +6,9 @@ import ReactFlow, { useNodesState, useEdgesState, addEdge, Node, Edge, MiniMap, 
 import 'reactflow/dist/style.css';
 
 const initialNodes : Node[] = [
-  { id: '0', position: { x: 100, y: 100 }, data: { label: "", title: "student", attributes: [], relationships: [] } },
-  //{ id: '1', position: { x: 300, y: 100 }, data: { label: "", title: "course", attributes: [], relationships: [] } },
-  //{ id: '2', position: { x: 0, y: 100 }, data: { label: "", title: "professor", attributes: [] } },
+  { id: 'student', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } },
+  //{ id: 'course', position: { x: 300, y: 100 }, data: { label: "", attributes: [] } },
+  //{ id: 'professor', position: { x: 0, y: 100 }, data: { label: "", attributes: [] } },
 ];
 const initialEdges : Edge[] = [] //[{ id: 'e0-1', source: '0', target: '1' }]; //, {id: 'e1-2', source: '1', target: '2'}];
 
@@ -20,16 +20,14 @@ declare global
     description: string
     inference: string
     data_type: string
-    node_ID : number
   }
   
   type Relationship = {
     name: string
     description: string
     inference: string
-    source: string
-    target: string
-    node_ID : number
+    source_entity: string
+    target_entity: string
   }
 
   type SummaryObject = {
@@ -49,6 +47,8 @@ function App()
   const [suggestedAttributes, setSuggestedAttributes] = useState<Attribute[]>([])
   const [suggestedRelationships, setSuggestedRelationships] = useState<Relationship[]>([])
 
+  const [sourceEntity, setSourceEntity] = useState<string>("")
+
   const [isMultiSelection, setIsMultiSelection] = useState<boolean>(false);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
 
@@ -59,8 +59,6 @@ function App()
   const [domainDescription, setDomainDescription] = useState<string>("We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price.")
 
   const [inferenceIndexes, setInferenceIndexes] = useState<number[][]>([])
-
-  let uniqueID = nodes.length
 
   const onConnect : OnConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -94,8 +92,6 @@ function App()
     // const buttonInnerHTML = event.target.innerHTML
     const buttonInnerHTML = event.currentTarget.innerHTML
 
-    let entityName = ""
-
     if (!selectedNodes[0])
     {
       console.log("Zero nodes selected")
@@ -107,15 +103,9 @@ function App()
       return
     }
 
-    const targetNodeID = selectedNodes[0].id
-    // console.log("Target node ID: " + targetNodeID)
+    setSourceEntity(_ => {return selectedNodes[0].id.toLowerCase() })
 
-    if (nodes.length.toString() <= targetNodeID)
-    {
-      console.log("Error: Nodes length: " + nodes.length + " but target node ID: " + targetNodeID)
-      return
-    }
-    entityName = nodes[Number(targetNodeID)].data.title
+    const entityName = selectedNodes[0].id.toLowerCase()
     const domainDesciption = isIgnoreDomainDescription ? "" : "x"
 
     if (buttonInnerHTML === "+Relationships")
@@ -130,7 +120,6 @@ function App()
             for (let i = 0; i < data.length; i++)
             {
               let relationship = JSON.parse(data[i])
-              relationship.node_ID = targetNodeID
               setSuggestedRelationships(previousSuggestedRelationships => {
                 return [...previousSuggestedRelationships, relationship]
               })
@@ -151,7 +140,6 @@ function App()
             for (let i = 0; i < data.length; i++)
             {
               let attribute = JSON.parse(data[i])
-              attribute.node_ID = targetNodeID
               setSuggestedAttributes(previousSuggestedAttributes => {
                 return [...previousSuggestedAttributes, attribute]
               })
@@ -172,7 +160,7 @@ function App()
     let selectedEntites = ""
     for (let i = 0; i < selectedNodes.length; i++)
     {
-      selectedEntites += `${selectedNodes[i].data.title},`
+      selectedEntites += `${selectedNodes[i].id},`
     }
     selectedEntites = selectedEntites.slice(0, -1)
 
@@ -292,12 +280,11 @@ function App()
 
   const updateNode = (node : Node) =>
   {
-    const title = node.data.title
     node.data =
     {
       ...node.data,
       label: <div className="node">
-                <p className="nodeTitle"><strong>{capitalizeString(title)}</strong></p>
+                <p className="nodeTitle"><strong>{capitalizeString(node.id)}</strong></p>
                 <p>
                 {node.data.attributes.map((attribute : Attribute, index : number) =>
                 (
@@ -384,97 +371,84 @@ function App()
   const addAttributesToNode = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
   {
     const attributeTargetID = event.currentTarget.id.slice(6)
-    // console.log(`Target attribute ID: ${attributeTargetID}`)
-    const newAttribute = suggestedAttributes[Number(attributeTargetID)]
-    const nodeID = Number(newAttribute.node_ID)
-    // console.log(`Target node ID: ${nodeID}`)
+    const attributeToAdd = suggestedAttributes[Number(attributeTargetID)]
+
+    const nodeID = sourceEntity.toLowerCase()
     
-    setNodes((nodes) => nodes.map((node) =>
+    setNodes((nodes) => nodes.map((currentNode) =>
     {
-      // console.log(`Iteration: NodeID-${node.id}, TargetNodeID-${nodeID}`)
-
-      const currentNodeID = Number(node.id)
-
-      if (currentNodeID === nodeID)
+      // Skip nodes which are not getting a new attribute
+      if (currentNode.id !== nodeID)
       {
-        const newInferenceIndexes = getIndexesForOneInference(newAttribute.inference)
-        if (newInferenceIndexes.length !== 0)
-        {
-          setInferenceIndexes(previousInferenceIndexes =>
-            {
-              return [...previousInferenceIndexes, newInferenceIndexes]
-            })
-        }
-
-        const newAttributeObject = { name: newAttribute.name, inference: newAttribute.inference, inference_indexes: newInferenceIndexes, data_type: newAttribute.data_type}
-
-        // If the node already contains the selected attribute do not add anything
-        let isAttributePresent = false
-        node.data.attributes.forEach((attribute : Attribute) => {
-          if (attribute.name === newAttributeObject.name)
-          {
-            isAttributePresent = true
-          }
-        })
-
-        if (isAttributePresent)
-        {
-          console.log("Attribute is already present")
-          return node;
-        }
-
-        console.log("Pushing new attributes")
-        node.data.attributes.push(newAttributeObject)
-        return updateNode(node)
+        return currentNode;
       }
-      return node;
+
+      const newInferenceIndexes = getIndexesForOneInference(attributeToAdd.inference)
+      if (newInferenceIndexes.length !== 0)
+      {
+        setInferenceIndexes(previousInferenceIndexes =>
+          {
+            return [...previousInferenceIndexes, newInferenceIndexes]
+          })
+      }
+
+      const newAttributeObject = { name: attributeToAdd.name, inference: attributeToAdd.inference, inference_indexes: newInferenceIndexes, data_type: attributeToAdd.data_type}
+
+      // If the node already contains the selected attribute do not add anything
+      let isAttributePresent = false
+      currentNode.data.attributes.forEach((attribute : Attribute) => {
+        if (attribute.name === newAttributeObject.name)
+        {
+          isAttributePresent = true
+        }
+      })
+
+      if (isAttributePresent)
+      {
+        console.log("Attribute is already present")
+        return currentNode;
+      }
+
+      console.log("Pushing new attributes")
+      currentNode.data.attributes.push(newAttributeObject)
+      return updateNode(currentNode)
     })
     );
   }
 
   const addRelationshipsToNodes = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationshipObject : Relationship) =>
   {
-    console.log("Adding relationships to nodes")
     const relationshipIndex = event.currentTarget.id.slice(6)
+    const relationshipToAdd = suggestedRelationships[Number(relationshipIndex)]
+    const sourceNodeID = sourceEntity.toLowerCase()
+    const targetNodeID = relationshipToAdd.target_entity.toLowerCase()
 
-    const addedRelationship = suggestedRelationships[Number(relationshipIndex)]
-    const sourceNodeID = addedRelationship.node_ID
-    console.log("Source node ID: " + sourceNodeID)
-
-    let targetNodeID = 0
-    let isTargetNodeID = false
+    // Return if the edge is already existing
+    const newEdgeID = `${sourceNodeID},${targetNodeID}`
+    for (let i = 0; i < edges.length; i++)
+    {
+      if (edges[i].id.toLowerCase() === newEdgeID)
+      {
+        console.log("Edge is already existing")
+        return
+      }
+    }
     
-    // Get target node id
+    // Check if the target node is already existing
+    let isTargetNodeCreated = false
     for (let i = 0; i < nodes.length; i++)
     {
-      if (nodes[i].data.title.toLowerCase() === relationshipObject.target)
+      if (targetNodeID === nodes[i].id.toLowerCase())
       {
-        isTargetNodeID = true
-        targetNodeID = i
+        isTargetNodeCreated = true
         break
       }
     }
 
-    console.log("Target node ID: " + targetNodeID)
-
-    if (isTargetNodeID)
+    if (!isTargetNodeCreated)
     {
-      console.log("Target node ID: " + targetNodeID)
-    }
-    else
-    {
-      console.log("Unknown target node ID, creating a new node")
-    }
-
-
-    if (!isTargetNodeID)
-    {
-      // Target node does not exist -> add a new node
-      // console.log("Adding a new node")
-      let targetNodeStringID = uniqueID.toString();
-      targetNodeID = uniqueID
-      uniqueID++;
-      const newNode = { id: targetNodeStringID, position: { x: 500, y: 100 }, data: { label: "", title: relationshipObject.target, attributes: [], relationships: [] } }
+      // Create a new node
+      const newNode = { id: targetNodeID, position: { x: 500, y: 100 }, data: { label: "", attributes: []} }
 
       setNodes(previousNodes => 
         {
@@ -483,18 +457,9 @@ function App()
       
       setNodes((nodes) => nodes.map((node) =>
       {
-        // TODO: Check if relationships is not already present same as in attributes
-        // TODO: Put this logic outside the "if (!isTargetNodeID)" so it gets applied even when new node is not added
-        // TODO: Add inferences (wait for feedback on them)
-        if (Number(node.id) === sourceNodeID)
+        if (node.id === targetNodeID)
         {
-          // console.log("Pushing new relationship")
-          // const newRelationshipObject = { name: relationshipObject.name, source: relationshipObject.source, target: relationshipObject.target}
-          // node.data.relationships.push(newRelationshipObject)
-          // return updateNode(node)
-        }
-        if (Number(node.id) === targetNodeID)
-        {
+          console.log("Adding a new node")
           return updateNode(node)
         }
         return node
@@ -502,20 +467,7 @@ function App()
     }
 
     console.log("Adding a new edge")
-    const newEdge = { id: `e${sourceNodeID}-${targetNodeID}`, source: sourceNodeID.toString(), target: targetNodeID.toString(), label: relationshipObject.name}
-
-    // Check if edge is not contained in the edges
-    // TODO: Do not add a new edge but still add info about this relationship into the nodes
-    for (let i = 0; i < edges.length; i++)
-    {
-      const isEdge = edges[i].source === newEdge.source && edges[i].target === newEdge.target
-      const isReverseEdge = edges[i].source === newEdge.target && edges[i].target === newEdge.source
-      if (isEdge || isReverseEdge)
-      {
-        console.log("Edge already exists")
-        return
-      }
-    }
+    const newEdge = { id: newEdgeID, source: sourceNodeID, target: targetNodeID, label: relationshipObject.name, name: relationshipObject.name, description: relationshipObject.description, inference: relationshipObject.inference}
 
     setEdges(previousEdges =>
       {
