@@ -54,6 +54,59 @@ const useConceptualModel = () =>
       useOnSelectionChange({
         onChange
       });
+
+      const parseSerializedConceptualModel = () =>
+      {
+        const input = { "entities": [ {"name": "Person", "attributes": []},
+                                      {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}], "parent_entity": "Person"},
+                                      {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
+                                      {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
+                                      {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
+                        "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
+                                          {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
+                                          {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"}
+                                        ]}
+
+        let positionX = 100
+        let positionY = 100
+        let newNodes : Node[] = []
+        let newEdges : Edge[] = []
+
+        for (const [key, entity] of Object.entries(input["entities"]))
+        {
+          // console.log(entity.name);
+          const entityNameLowerCase = entity.name.toLowerCase()
+          const newNode = { id: entityNameLowerCase, position: { x: positionX, y: positionY }, data: { label: "", attributes: entity.attributes } }
+          newNodes.push(newNode)
+
+          if (entity.parent_entity)
+          {
+            const parentLowerCase = entity.parent_entity.toLowerCase()
+            const newEdge = { id: `${entityNameLowerCase},${parentLowerCase}`, source: entityNameLowerCase, target: parentLowerCase, label: "is-a", description: "", inference: "", type: 'straight'}
+            newEdges.push(newEdge)
+          }
+
+          if (positionX === 100 || positionX === 350)
+          {
+            positionX += 250
+          }
+          else
+          {
+            positionX = 100
+            positionY += 250
+          }
+        }
+
+        for (const [key, relationship] of Object.entries(input["relationships"]))
+        {
+          const newEdge = { id: `${relationship.source_entity},${relationship.target_entity}`, source: relationship.source_entity, target: relationship.target_entity, label: relationship.name, description: "", inference: relationship.inference, type: 'straight'}
+          newEdges.push(newEdge)
+        }
+        
+        setNodes(() => { return newNodes })
+        setEdges(() => { return newEdges })
+        updateNodes()
+      }
     
       const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
@@ -182,6 +235,8 @@ const useConceptualModel = () =>
       useEffect(() =>
       {
         updateNodes()
+
+        parseSerializedConceptualModel()
     
         const domainDescriptionTextArea = document.getElementById("domainDescriptionText")
         if (domainDescriptionTextArea)
@@ -242,6 +297,7 @@ const useConceptualModel = () =>
     
       // useEffect(() =>
       // {
+      //   console.log("Nodes: ")
       //   console.log(nodes)
       // }, [nodes]);
     

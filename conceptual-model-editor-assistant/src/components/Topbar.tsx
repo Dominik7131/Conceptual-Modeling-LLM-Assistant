@@ -167,7 +167,7 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onPlusBut
             {/* <button className="plusButton" onClick={() => onSummaryButtonClick()}>Document</button>
             <button className="plusButton">Summary</button>
             {FormatSummary()} */}
-            {formatHighlights()}
+            {/* {formatHighlights()} */}
             {/* {showDemoHighlightSuggestions()} */}
         </div>
     )
