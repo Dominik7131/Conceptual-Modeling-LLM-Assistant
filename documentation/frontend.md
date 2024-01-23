@@ -21,9 +21,9 @@
 
 	"relationships": [
 		{
-			"name": "relationship_name",
-			"source": "source_entity",
-			"target": "target_entity",
+            "name": "relationship_name",
+            "source": "source_entity",
+            "target": "target_entity",
             "cardinality": "..."
 		},
 		...
