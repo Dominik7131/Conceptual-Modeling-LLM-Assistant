@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect } from 'reactflow';
 
 import 'reactflow/dist/style.css';
+import useInferenceIndexes from './useInferenceIndexes';
+import useUtility from './useUtility';
 
 const initialNodes : Node[] = [{ id: 'student', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
 
@@ -22,9 +24,10 @@ const useConceptualModel = () =>
   
     const [domainDescription, setDomainDescription] = useState<string>("We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price.")
   
-    const [inferenceIndexes, setInferenceIndexes] = useState<number[][]>([])
-
     const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState<boolean>(false)
+
+    const { inferenceIndexes, setInferenceIndexes, getIndexesForOneInference } = useInferenceIndexes()
+    const { capitalizeString } = useUtility()
 
     const onConnect : OnConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
@@ -149,92 +152,6 @@ const useConceptualModel = () =>
         return
       }
     
-      const getDiscontinuousInferenceIndexes = (inference : string) =>
-      {
-        const sentenceEndMarkers = ['.', '!', '?']
-        const wordsArray = inference.split(' ')
-        let result = []
-        let isContinuous = false
-        let nextPositionToCheck = 0
-        let currentWordIndex = 0
-    
-        for (let i = 0; i < domainDescription.length; i++)
-        {
-          if (domainDescription.slice(i, i + wordsArray[currentWordIndex].length) === wordsArray[currentWordIndex])
-          {
-            // console.log("Match: " + wordsArray[currentWordIndex])
-            if (!isContinuous)
-            {
-              result.push(i)
-            }
-            isContinuous = true
-    
-            // Whole sequence found
-            if (currentWordIndex === wordsArray.length - 1)
-            {
-              result.push(i + wordsArray[currentWordIndex].length)
-              // console.log("Returning: ")
-              // console.log(result)
-              return result
-            }
-    
-            i += wordsArray[currentWordIndex].length
-            nextPositionToCheck = i
-            currentWordIndex += 1
-            continue
-          }
-    
-          // Found hole
-          if (currentWordIndex > 0 && isContinuous)
-          {
-            // console.log("Found hole: " + domainDescription[i - 1] + domainDescription[i] + domainDescription[i + 1])
-            result.push(i + wordsArray[currentWordIndex - 1].length - 2)
-            isContinuous = false
-          }
-    
-          // End of sentence interrupts current sequence -> start again
-          if (sentenceEndMarkers.includes(domainDescription[i]) && currentWordIndex > 0)
-          {
-            console.log("End of sentence")
-            result = []
-            i = nextPositionToCheck + 1
-            currentWordIndex = 0
-          }
-        }
-    
-        return []
-      }
-    
-      const getIndexesForOneInference = (inference : string) =>
-      {
-        if (!inference)
-        {
-          return []
-        }
-    
-        for (let j = 0; j < domainDescription.length; j++)
-        {
-          if (inference.length + j > domainDescription.length)
-          {
-            const discontinuousInferenceIndex = getDiscontinuousInferenceIndexes(inference)
-            return discontinuousInferenceIndex
-          }
-    
-          const text = domainDescription.slice(j, inference.length + j)
-    
-          if (inference === text)
-          {
-            return [j, inference.length + j]
-          }
-        }
-        return []
-      }
-    
-      const capitalizeString = (string : string) =>
-      {
-        return string.charAt(0).toUpperCase() + string.slice(1)
-      }
-    
       const updateNodes = () =>
       {
         // console.log("Updating nodes")
@@ -301,7 +218,7 @@ const useConceptualModel = () =>
         {
           for (let i = 0; i < node.data.attributes.length; i++)
           {
-            const newInferenceIndexes = getIndexesForOneInference(node.data.attributes[i].inference)
+            const newInferenceIndexes = getIndexesForOneInference(node.data.attributes[i].inference, domainDescription)
             if (newInferenceIndexes.length === 0)
             {
               continue
@@ -349,7 +266,7 @@ const useConceptualModel = () =>
             return currentNode;
           }
     
-          const newInferenceIndexes = getIndexesForOneInference(attributeToAdd.inference)
+          const newInferenceIndexes = getIndexesForOneInference(attributeToAdd.inference, domainDescription)
           if (newInferenceIndexes.length !== 0)
           {
             setInferenceIndexes(previousInferenceIndexes =>

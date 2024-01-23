@@ -1,3 +1,4 @@
+import useInferenceIndexes from "../hooks/useInferenceIndexes"
 
 interface props {
     handleIgnoreDomainDescriptionChange : () => void,
@@ -13,6 +14,8 @@ interface props {
 const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onPlusButtonClick, onSummaryButtonClick, summaryData, capitalizeString,
     domainDescription, setDomainDescription, inferenceIndexes}) =>
 {
+    const { removeOverlappingInferenceIndexes, simplifyInferenceIndexes } = useInferenceIndexes()
+
     const FormateSummaryObject = (entityObject : SummaryObject) =>
     {
         return (
@@ -72,55 +75,11 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onPlusBut
         });
     };
 
-    function removeOverlappingInferenceIndexes(inferenceIndexes : number[][])
-    {
-        let indexesToRemove : number[] = []
-
-        for (let i = 0; i < inferenceIndexes.length; i++)
-        {
-            for (let j = 0; j < inferenceIndexes.length; j++)
-            {
-                if (i === j)
-                {
-                    continue
-                }
-
-                if (inferenceIndexes[i][0] <= inferenceIndexes[j][0] && inferenceIndexes[i][1] >= inferenceIndexes[j][1])
-                {
-                    indexesToRemove.push(j)
-                }
-            }
-        }
-
-        const result = inferenceIndexes.filter((_ : any, index : number) => !indexesToRemove.includes(index))
-        return result
-    }
-
     const formatHighlights = () =>
     {
         inferenceIndexes = removeDuplicates(inferenceIndexes);
-
-        // For simplicity make every inference index of length 2
-        let newInferenceIndexes = []
-        for (let i = 0; i < inferenceIndexes.length; i++)
-        {
-            if (inferenceIndexes[i].length === 2)
-            {
-                newInferenceIndexes.push(inferenceIndexes[i])
-            }
-            else if (inferenceIndexes[i].length > 2)
-            {
-                for (let j = 0; j < inferenceIndexes[i].length; j += 2)
-                {
-                    const firstInferenceIndex = inferenceIndexes[i][j]
-                    const secondInferenceIndex = inferenceIndexes[i][j + 1]
-                    const newInferenceIndex = [firstInferenceIndex, secondInferenceIndex]
-                    newInferenceIndexes.push(newInferenceIndex)
-                }
-            }
-        }
-
-        newInferenceIndexes = removeOverlappingInferenceIndexes(newInferenceIndexes)
+        const simplifiedIferenceIndexes = simplifyInferenceIndexes(inferenceIndexes)
+        const newInferenceIndexes = removeOverlappingInferenceIndexes(simplifiedIferenceIndexes)
 
         let sortedInferenceIndexes = newInferenceIndexes.sort(([a, b], [c, d]) => a - c)
 
@@ -208,7 +167,7 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onPlusBut
             {/* <button className="plusButton" onClick={() => onSummaryButtonClick()}>Document</button>
             <button className="plusButton">Summary</button>
             {FormatSummary()} */}
-            {/* {formatHighlights()} */}
+            {formatHighlights()}
             {/* {showDemoHighlightSuggestions()} */}
         </div>
     )
