@@ -13,8 +13,7 @@
 					"data_type" : "..."
 				}, 
 				...
-						], 
-			"parent_entity": "parent_entity_name"
+						],
 		},
 		...
 				],
@@ -22,8 +21,8 @@
 	"relationships": [
 		{
 			"name": "relationship_name",
-			"source": "source_entity",
-			"target": "target_entity",
+			"source_entity": "source_entity_name",
+			"target_entity": "target_entity_name",
 			"cardinality": "..."
 		},
 		...

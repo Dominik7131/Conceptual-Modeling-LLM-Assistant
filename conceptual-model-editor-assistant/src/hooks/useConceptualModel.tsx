@@ -58,13 +58,14 @@ const useConceptualModel = () =>
       const parseSerializedConceptualModel = () =>
       {
         const input = { "entities": [ {"name": "Person", "attributes": []},
-                                      {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}], "parent_entity": "Person"},
+                                      {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
                                       {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
                                       {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
                                       {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
                         "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
                                           {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
-                                          {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"}
+                                          {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
+                                          {"name": "is-a", "source_entity": "student", "target_entity": "person"}
                                         ]}
 
         let positionX = 100
@@ -79,12 +80,12 @@ const useConceptualModel = () =>
           const newNode = { id: entityNameLowerCase, position: { x: positionX, y: positionY }, data: { label: "", attributes: entity.attributes } }
           newNodes.push(newNode)
 
-          if (entity.parent_entity)
-          {
-            const parentLowerCase = entity.parent_entity.toLowerCase()
-            const newEdge = { id: `${entityNameLowerCase},${parentLowerCase}`, source: entityNameLowerCase, target: parentLowerCase, label: "is-a", description: "", inference: "", type: 'straight'}
-            newEdges.push(newEdge)
-          }
+          // if (entity.parent_entity)
+          // {
+          //   const parentLowerCase = entity.parent_entity.toLowerCase()
+          //   const newEdge = { id: `${entityNameLowerCase},${parentLowerCase}`, source: entityNameLowerCase, target: parentLowerCase, label: "is-a", description: "", inference: "", type: 'straight'}
+          //   newEdges.push(newEdge)
+          // }
 
           if (positionX === 100 || positionX === 350)
           {
@@ -128,22 +129,30 @@ const useConceptualModel = () =>
         setSourceEntity(_ => {return selectedNodes[0].id.toLowerCase() })
     
         const entityName = selectedNodes[0].id.toLowerCase()
-        const domainDesciption = isIgnoreDomainDescription ? "" : "x"
+        const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
     
         if (buttonInnerHTML === "+Relationships")
         {
           setSuggestedAttributes(_ => {return []})
           setSuggestedRelationships(_ => {return []})
+          const userChoice = "relationships"
     
-          fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=r&domain_description=${domainDesciption}`)
+          fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=${userChoice}&domain_description=${currentDomainDesciption}`)
           .then(response => response.json())
           .then(data => 
               {
+                console.log("Data: ")
+                console.log(data)
+                console.log("----")
+
                 for (let i = 0; i < data.length; i++)
                 {
-                  let relationship = JSON.parse(data[i])
+                  // let relationship = JSON.parse(data[i])
+                  const relationship = data[i]
+                  const editedRelationship : Relationship = { "name": relationship.name, "source_entity": relationship.source, "target_entity": relationship.target, "inference": relationship.inference, "description": "", "cardinality": relationship.cardinality}
+
                   setSuggestedRelationships(previousSuggestedRelationships => {
-                    return [...previousSuggestedRelationships, relationship]
+                    return [...previousSuggestedRelationships, editedRelationship]
                   })
                 }
               })
@@ -154,14 +163,19 @@ const useConceptualModel = () =>
         {
           setSuggestedAttributes(_ => {return []})
           setSuggestedRelationships(_ => {return []})
+          const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
+          const userChoice = "attributes"
     
-          fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=a&domain_description=${domainDesciption}`)
+          fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=${userChoice}&domain_description=${currentDomainDesciption}`)
           .then(response => response.json())
           .then(data => 
               {
                 for (let i = 0; i < data.length; i++)
                 {
-                  let attribute = JSON.parse(data[i])
+                  // let attribute = JSON.parse(data[i])
+                  let attribute : Attribute = data[i]
+                  console.log("Attribute: ")
+                  console.log(attribute)
                   setSuggestedAttributes(previousSuggestedAttributes => {
                     return [...previousSuggestedAttributes, attribute]
                   })

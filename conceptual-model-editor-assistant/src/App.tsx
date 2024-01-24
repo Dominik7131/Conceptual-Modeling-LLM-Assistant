@@ -21,6 +21,7 @@ declare global
     inference: string
     source_entity: string
     target_entity: string
+    cardinality: string
   }
 
   type SummaryObject = {
