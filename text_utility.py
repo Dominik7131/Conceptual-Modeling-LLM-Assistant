@@ -189,3 +189,13 @@ class TextUtility:
         sentences = [s.strip() for s in sentences]
         if sentences and not sentences[-1]: sentences = sentences[:-1]
         return sentences
+
+
+    def split_file_into_chunks(file_name):
+        with open(file_name) as file:
+            lines = [line.rstrip() for line in file]
+
+        # Divide the text into: sentences and bullets
+        sentences = [TextUtility.split_into_sentences(line) for line in lines]
+        sentences = [x for xs in sentences for x in xs] # flatten sentences
+        return sentences
