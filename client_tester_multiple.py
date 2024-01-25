@@ -12,16 +12,19 @@ def main():
     model_file = "llama-2-7b-chat.Q5_K_M.gguf"
     model_type = "llama"
 
-    model_path_or_repo_id = "TheBloke/Starling-LM-7B-alpha-GGUF"
-    model_file = "starling-lm-7b-alpha.Q5_K_M.gguf"
-    model_type ="openchat"
+    # model_path_or_repo_id = "TheBloke/Starling-LM-7B-alpha-GGUF"
+    # model_file = "starling-lm-7b-alpha.Q5_K_M.gguf"
+    # model_type ="openchat"
 
     llm_assistant = LLMAssistant(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type)
 
     entities = {
-        ATTRIBUTES_STRING: ["course", "professor", "dormitory", "student"],
-        RELATIONSHIPS_STRING: ["course", "professor", "dormitory", "student"],
-        RELATIONSHIPS_STRING_TWO_ENTITIES: [("course", "professor"), ("professor", "student"), ("student", "dormitory")]
+        ATTRIBUTES_STRING: ["course", "professor"],
+        # ATTRIBUTES_STRING: ["course", "professor", "dormitory", "student"],
+        RELATIONSHIPS_STRING: [],
+        # RELATIONSHIPS_STRING: ["course", "professor", "dormitory", "student"],
+        RELATIONSHIPS_STRING_TWO_ENTITIES: []
+        # RELATIONSHIPS_STRING_TWO_ENTITIES: [("course", "professor"), ("professor", "student"), ("student", "dormitory")]
         }
 
 
@@ -50,16 +53,20 @@ def main():
                 
                 if (IS_SAVE_TO_FILE):
                     with open(file_name, 'a') as file:
-                        for i in range(len(items)):
-                            if i == 0 or i == 1:
-                                item = str(items[i]).replace('\\n', '\n') + '\n'
+                        file.write(f"Prompt: {llm_assistant.debug_info.prompt}\n\n")
+                        file.write(f"Assistant message: {llm_assistant.debug_info.assistant_message}\n\n")
 
-                                if i == 1 and not IS_SHOW_RAW_ASSISTANT_MSG:
-                                    continue
-                            else:
-                                item = TextUtility.json_to_pretty_text(items[i], i, user_choice, ATTRIBUTES_STRING)
-                            
-                            file.write(item + '\n')
+                        item_index = 0
+
+                        for item in items:
+                            parsed_item = TextUtility.json_to_pretty_text(item, item_index, user_choice, ATTRIBUTES_STRING)
+                            item_index += 1
+                            file.write(parsed_item + '\n')
+                        
+                        for item in llm_assistant.debug_info.deleted_items:
+                            parsed_item = TextUtility.json_to_pretty_text(item, item_index, user_choice, ATTRIBUTES_STRING)
+                            item_index += 1
+                            file.write(parsed_item + '\n')
                         
                         file.write("\n\n")
 

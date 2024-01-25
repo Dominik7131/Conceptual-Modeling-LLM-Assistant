@@ -23,6 +23,15 @@ class LLMAssistant:
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             self.embeddings = Embeddings()
+        
+        self.debug_info = self.DebugInfo()
+    
+    class DebugInfo:
+        def __init__(self):
+            self.prompt = ""
+            self.assistant_message = ""
+            self.deleted_items = []
+
 
     def __append_default_messages_for_suggestions(self, user_choice, is_domain_description=False):
         system = ""
@@ -104,25 +113,30 @@ class LLMAssistant:
         self.messages.append({"role": "system", "content": system})
 
 
+    # Returns (parsed_item, is_item_ok)
+    # is_item_ok: False if there is any issue while parsing otherwise True
     def __parse_item(self, item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
         try:
             completed_item = json.loads(item)
         except ValueError:
             print("Error: Cannot decode JSON: " + item)
-            completed_item = {"name": "Error: " + item} # For debugging return this as a valid item
-            return completed_item
+            completed_item = {"name": "Error: " + item}
+            return completed_item, False
         
+        is_item_ok = True
         user_input_entity1 = user_input_entity1.lower()
         user_input_entity2 = user_input_entity2.lower()
 
         if "name" not in completed_item:
             completed_item["name"] = "error: no name"
+            is_item_ok = False
 
         if user_choice == ATTRIBUTES_STRING:
             # Remove attributes in which their inferred text does not contain the given entity
             is_inference = "inference" in completed_item
             if is_inference and user_input_entity1 not in completed_item['inference'].lower():
-                completed_item['name'] = "(DELETED) " + completed_item['name']
+                completed_item['name'] = "(Deleted: Source entity is not contained in the inference) " + completed_item['name']
+                is_item_ok = False
 
 
         elif user_choice == RELATIONSHIPS_STRING:
@@ -139,7 +153,8 @@ class LLMAssistant:
                 # For debugging purpuses do not end parsing but otherwise we would probably end
                 #self.end_parsing_prematurely = True
                 #return completed_item
-                completed_item['name'] = "(DELETED) " + completed_item['name']
+                completed_item['name'] = "(Deleted: Inputed entity is not source/target entity) " + completed_item['name']
+                is_item_ok = False
 
 
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
@@ -150,7 +165,8 @@ class LLMAssistant:
             is_none = (source_lower == "none") or (target_lower == "none")
 
             if not is_match or is_none:
-                completed_item['name'] = "(DELETED) " + completed_item['name']
+                completed_item['name'] = "(Deleted: Inputed entites are not contained in source and target entities) " + completed_item['name']
+                is_item_ok = False
 
 
         print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
@@ -171,11 +187,12 @@ class LLMAssistant:
             print(f"- Data type: {completed_item['data_type']}")
 
         print()
-        return completed_item
+        return completed_item, is_item_ok
 
 
     def __parse_streamed_output(self, prompt, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
-        assistant_message = ""
+        self.debug_info = self.DebugInfo() # Reset debug info
+
         items = []
         item = ""
         is_item_start = False
@@ -186,7 +203,7 @@ class LLMAssistant:
         opened_square_brackets = 0
 
         for text in self.llm(prompt, stream=True):
-            assistant_message += text
+            self.debug_info.assistant_message += text
             if is_skip_parsing:
                 continue
 
@@ -208,25 +225,29 @@ class LLMAssistant:
                     # We already got the last object of the JSON output
                     # If something weird starts happening with the LLM this premature return might be the cause
                     if opened_square_brackets == 0:
-                        return (items, assistant_message)
+                        return items
                 
                 # Return when LLM gets stuck in printing only new lines
                 if new_lines_in_a_row > 3:
                     print("Warning: too many new lines")
-                    return (items, assistant_message)
+                    return items
                 
                 if is_item_start:
                     item += char
                 
                 if char == "}" and item != '':
                     is_item_start = False
-                    completed_item = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
+                    completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
 
+                    # TODO: Add comment what this code is doing
                     if self.end_parsing_prematurely:
                         print(f"Ending parsing prematurely: {completed_item}")
-                        return (items, assistant_message)
+                        return items
                         
-                    items.append(completed_item)
+                    if is_item_ok:
+                        items.append(completed_item)
+                    else:
+                        self.debug_info.deleted_items.append(completed_item)
                     item = ""
                 
                 last_char = char
@@ -236,18 +257,21 @@ class LLMAssistant:
             # So try to finish the object by appending the last curly bracket
             if is_item_start:
                 item += '}'
-                completed_item = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
-                items.append(completed_item)
+                completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
+
+                if is_item_ok:
+                    items.append(completed_item)
+                else:
+                    self.debug_info.deleted_items.append(completed_item)
 
             #print(f"\nFull message: {assistant_message}")
     
         if is_skip_parsing:
-            print(f"\nFull message: {assistant_message}")
+            print(f"\nFull message: {self.debug_info.assistant_message}")
         
-        print(f"\nFull message: {assistant_message}")
+        print(f"\nFull message: {self.debug_info.assistant_message}")
 
-        # For debugging return also the raw assistant message
-        return (items, assistant_message)
+        return items
     
 
     def suggest(self, entity1, entity2, user_choice, count_items_to_suggest, conceptual_model, domain_description):
@@ -276,7 +300,7 @@ class LLMAssistant:
         #inference_prompt = "inference by copying the following text and inserting the symbol < to the start of the part from which it was inferred and inserting the symbol > to the end of the part from which it was inferred"
         #inference_prompt = "inference by copying the following text and leaving only the part from which it was inferred"
 
-
+        # TODO: Always let LLM to generate an inference first so it first creates some reason before creating an attribute/association/entity
         if user_choice == ATTRIBUTES_STRING:
 
             if not is_domain_description:
@@ -294,7 +318,6 @@ class LLMAssistant:
                 if not is_domain_description:
                     prompt += TextUtility.build_json(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
                 else:
-                    #prompt += TextUtility.build_json(names=["name", "inference"], descriptions=["* attribute name", "* attribute inference from which exact text in the following text was it inferred"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
                     prompt += TextUtility.build_json(names=["name", "inference", "data_type"], descriptions=["* attribute name", f"* attribute {inference_prompt}", "* attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
             else:
@@ -374,11 +397,8 @@ class LLMAssistant:
         llm_prompt = TextUtility.create_llm_prompt(self.model_type, new_messages)
         print(f"Sending this prompt to llm:\n{llm_prompt}\n")
 
-        items, assistant_msg = self.__parse_streamed_output(llm_prompt, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
-
-        # For debugging prepend the prompt and the assistant msg
-        items.insert(0, {"prompt": llm_prompt})
-        items.insert(1, {"raw_assistant_msg": assistant_msg})
+        items = self.__parse_streamed_output(llm_prompt, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+        self.debug_info.prompt = llm_prompt
         return items
 
 

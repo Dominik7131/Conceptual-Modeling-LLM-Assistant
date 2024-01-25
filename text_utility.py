@@ -73,7 +73,7 @@ class TextUtility:
     def json_to_pretty_text(json_item, index, user_choice, ATTRIBUTES_STRING):
 
         result = ""
-        result += f"{index - 1}: {json_item['name'].capitalize()}\n"
+        result += f"{index + 1}: {json_item['name'].capitalize()}\n"
 
         if "description" in json_item:
             result += f"- Description: {json_item['description']}\n"
