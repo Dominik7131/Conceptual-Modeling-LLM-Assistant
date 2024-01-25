@@ -7,11 +7,17 @@ import os
 import time
 from text_utility import TextUtility
 
+
 #INPUT_TEXT = "What do you know about Dormitory Units?"
 #INPUT_TEXT = "Which part of the text contains info about courses?"
 #INPUT_TEXT = "Course mentions"
-INPUT_TEXT = "Info about courses"
+#INPUT_TEXT = "Info about courses"
 #INPUT_TEXT = "What do you know about professors?"
+# INPUT_TEXT = "Information about motorcycles"
+INPUT_TEXT = "bodywork"
+
+SCORE_MIN_THRESHOLD = 0.5
+SCORE_POSITIVE_THRESHOLD = 0.6
 
 
 def print_green_on_black(x):
@@ -19,27 +25,6 @@ def print_green_on_black(x):
 
 def print_yellow_on_black(x):
     return cprint(x, 'yellow', 'on_black')
-
-TEXT = """
-Represent Professors and Students.
-They both have a name.
-Then there are also courses, which are taught by one or more professors, and are taken by five or more students.
-Each course has a name and a number of credits.
-Finally, Dormitory Units can host between 1 and 4 students.
-Each Dormitory Unit has a price.
-"""
-
-TEXT2 = """
-"We know that courses have a name and a specific number of credits.
-Each course can have one or more professors, who have a name.
-Professors could participate in any number of courses.
-For a course to exist, it must aggregate, at least, five students, where each student has a name.
-Students can be enrolled in any number of courses.
-Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students.
-Besides, each dormitory has a price."
-"""
-
-TEXT3 = "We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."
 
 class Embeddings:
     def __init__(self):
@@ -65,54 +50,91 @@ class Embeddings:
         scores = name1_encoded @ name2_encoded.T
         scores = scores.flatten()
         return scores[0]
-
     
-    def remove_unsimilar_text(self, queries, plain_text, is_debug=True):
-        sentences = TextUtility.split_into_sentences(plain_text)
 
-        queries_embeddings = self.encode_queries(queries)
-
-        is_caching = True
-        if is_caching:
-            if os.path.isfile('cached_embeddings.npy'):
-                self.passage_embeddings = np.load('cached_embeddings.npy')
-            else:
-                self.passage_embeddings = self.encode(sentences)
-                np.save('cached_embeddings.npy', self.passage_embeddings)
-        else:
-            if self.passage_embeddings == None:
-                self.passage_embeddings = self.encode(sentences)
-        
-        scores = queries_embeddings @ self.passage_embeddings.T
-        scores = scores.flatten()
-        scores_min_threshold = 0.52
+    def __parse_result(self, scores, text_chunks, min_threshold, is_debug):
 
         if is_debug:
-            print(f"Input: {queries[0]}")
-            for i in range(len(sentences)):
-                msg = f"Score: {scores[i]} | {sentences[i]}"
-                if scores[i] >= 0.6:
+            # print(f"Input: {queries[0]}")
+            for i in range(len(text_chunks)):
+                msg = f"Score: {scores[i]} | {text_chunks[i]}"
+                if scores[i] >= SCORE_POSITIVE_THRESHOLD:
                     print_green_on_black(msg)
-                elif scores[i] >= scores_min_threshold:
+                elif scores[i] >= min_threshold:
                     print_yellow_on_black(msg)
                 else:
                     print(msg)
         print()
 
         result = ""
-        for i in range(len(sentences)):
-            if scores[i] >= scores_min_threshold:
-                result += sentences[i] + ' '
+        for i in range(len(text_chunks)):
+            if scores[i] >= min_threshold:
+                is_bullet_point = not text_chunks[i][0].isupper()
+                # print(f"Is bullet point: {is_bullet_point}; letter: {text_chunks[i][0]}")
+
+                # TODO: if is_bullet_point: prepend the first sentence before this bullet point only if it is not already contained in the result
+                # It is in the result if:
+                #   I) This sentence has >= score than min_threshold
+                #   II) This sentence was already prepended because of some previous bullet point
+
+                # TODO: if text_chunks[i] contains a sentence and the previous sentence does not have score >= min_threshold then
+                # add a new line for separation to make it clear that these part of texts probably does not follow the same context
+
+                if result == "":
+                    result += text_chunks[i]
+                else:
+                    result += f"\n{text_chunks[i]}" if is_bullet_point else f" {text_chunks[i]}"
         
-        return result[:-1]
+        # If result is empty try again the same thing but with a lower min threshold
+        if result == "":
+            for _ in range(3):
+                result = self.__parse_result(scores, text_chunks, min_threshold - 0.05, is_debug)
+                if result != "":
+                    return result
+        
+        return result
+
+    
+    def remove_unsimilar_text(self, queries, plain_text="", text_chunks=[], is_debug=True):
+
+        if len(text_chunks) == 0:
+            text_chunks = TextUtility.split_into_sentences(plain_text)
+
+        queries_embeddings = self.encode_queries(queries)
+
+        is_caching = True
+        if is_caching:
+            cached_file_name = "cached_embeddings.npy"
+            if os.path.isfile(cached_file_name):
+                print("Using cached embeddings")
+                self.passage_embeddings = np.load(cached_file_name)
+            else:
+                self.passage_embeddings = self.encode(text_chunks)
+                np.save('cached_embeddings.npy', self.passage_embeddings)
+        else:
+            if self.passage_embeddings == None:
+                print("Encoding text chunks")
+                self.passage_embeddings = self.encode(text_chunks)
+                print("Text chunks encoded")
+        
+        print("Computing score")
+        scores = queries_embeddings @ self.passage_embeddings.T
+        scores = scores.flatten()
+        print("Score computed")
+
+        return self.__parse_result(scores, text_chunks, SCORE_MIN_THRESHOLD, is_debug)
+
 
 def main():
 
     time_start = time.time()
 
+    file_name = "input.txt"
+    chunks = TextUtility.split_file_into_chunks(file_name)
+
     embeddings = Embeddings()
-    result = embeddings.remove_unsimilar_text(queries=[INPUT_TEXT], plain_text=TEXT3)
-    print(result)
+    result = embeddings.remove_unsimilar_text(queries=[INPUT_TEXT], text_chunks=chunks)
+    print(f"Result:\n{result}")
 
     time_end = time.time()
     print(f"\nTime: {time_end - time_start:.2f} seconds")
