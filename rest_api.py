@@ -106,14 +106,27 @@ def suggest():
     print("User choice: " + user_choice)
     domain_description = request.args.get("domain_description")
 
-    is_mock_up = False
+    is_mock_up = True
+    is_stream_output = False
     if is_mock_up:
-        return create_suggest_mock_up(entity1, user_choice, domain_description)
-    
-    suggestions = llm_assistant.suggest(entity1, "", user_choice, 5, conceptual_model=[], domain_description=domain_description)
-    print("Suggestions:")
-    print(suggestions[2:])
-    return suggestions[2:]
+        if not is_stream_output:
+            return create_suggest_mock_up(entity1, user_choice, domain_description)
+
+        # TODO: read the Request Context documentation: https://flask.palletsprojects.com/en/3.0.x/reqcontext/
+        def generate():
+            yield {"name": "name1", "inference": "courses have a name1", "data_type": "string"}
+            yield {"name": "name2", "inference": "courses have a name2", "data_type": "string"}
+            yield {"name": "name3", "inference": "courses have a name3", "data_type": "string"}
+        return generate()
+    else:
+        suggestions = llm_assistant.suggest(entity1, "", user_choice, 5, conceptual_model=[], domain_description=domain_description)
+        print("Suggestions:")
+        print(suggestions)
+        return suggestions
+        # suggestions_iterator = llm_assistant.suggest(entity1, "", user_choice, 5, conceptual_model=[], domain_description=domain_description)
+        # for suggestion in suggestions_iterator:
+        #     print(suggestion)
+        #     yield suggestion
 
 
 def create_summary_mock_up(entities : list[str]) -> list[dict]:
@@ -178,9 +191,9 @@ def test():
 if __name__ == '__main__':
 
     # Define the model
-    model_path_or_repo_id = "TheBloke/Llama-2-7B-Chat-GGUF"
-    model_file = "llama-2-7b-chat.Q5_K_M.gguf"
-    model_type = "llama"
-    llm_assistant = LLMAssistant(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type)
+    # model_path_or_repo_id = "TheBloke/Llama-2-7B-Chat-GGUF"
+    # model_file = "llama-2-7b-chat.Q5_K_M.gguf"
+    # model_type = "llama"
+    # llm_assistant = LLMAssistant(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type)
 
     app.run(port=5000) # host="0.0.0.0"
