@@ -1,7 +1,8 @@
 from llama_cpp import Llama
-import json
 from embeddings import Embeddings
 from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, PROPERTIES_STRING
+import json
+import logging
 
 
 ITEMS_COUNT = 5
@@ -11,6 +12,8 @@ IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
 
 CONFIG_FILE_PATH = "config.json"
+
+logging.basicConfig(level=logging.DEBUG, format="%(message)s")
 
 
 class LLMAssistant:
@@ -126,8 +129,8 @@ class LLMAssistant:
         try:
             completed_item = json.loads(item)
         except ValueError:
-            print("Error: Cannot decode JSON: " + item)
-            completed_item = {"name": "Error: " + item}
+            logging.error(f"Cannot decode JSON: {item}\n")
+            completed_item = {f"name": "Error: {item}"}
             return completed_item, False
         
         is_item_ok = True
@@ -179,24 +182,24 @@ class LLMAssistant:
                 completed_item['name'] = "(Deleted: Inputed entites are not contained in source and target entities) " + completed_item['name']
                 is_item_ok = False
 
-        print(f"{len(items) + 1}: {completed_item['name']}")
+        logging.info(f"{len(items) + 1}) {completed_item['name']}")
 
         if "description" in completed_item:
-            print(f"- Description: {completed_item['description']}")
+            logging.info(f"- Description: {completed_item['description']}")
         if "source" in completed_item:
-            print(f"- Source: {completed_item['source']}")
+            logging.info(f"- Source: {completed_item['source']}")
         if "target" in completed_item:
-            print(f"- Target: {completed_item['target']}")
+            logging.info(f"- Target: {completed_item['target']}")
         if "sentence" in completed_item:
-            print(f"- Sentence: {completed_item['sentence']}")
+            logging.info(f"- Sentence: {completed_item['sentence']}")
         if "inference" in completed_item:
-            print(f"- Inference: {completed_item['inference']}")
+            logging.info(f"- Inference: {completed_item['inference']}")
         if "cardinality" in completed_item:
-            print(f"- Cardinality: {completed_item['cardinality']}")
+            logging.info(f"- Cardinality: {completed_item['cardinality']}")
         if "data_type" in completed_item:
-            print(f"- Data type: {completed_item['data_type']}")
+            logging.info(f"- Data type: {completed_item['data_type']}")
 
-        print()
+        logging.info("\n")
         return completed_item, is_item_ok
 
 
@@ -246,7 +249,7 @@ class LLMAssistant:
                 
                 # Return when LLM gets stuck in printing only new lines
                 if new_lines_in_a_row > 3:
-                    print("Warning: too many new lines")
+                    logging.warning("Warning: too many new lines")
                     return items
                 
                 if is_item_start:
@@ -258,7 +261,7 @@ class LLMAssistant:
 
                     # TODO: Add comment what this code is doing
                     if self.end_parsing_prematurely:
-                        print(f"Ending parsing prematurely: {completed_item}")
+                        logging.info(f"Ending parsing prematurely: {completed_item}")
                         return items
                         
                     if is_item_ok:
@@ -280,13 +283,11 @@ class LLMAssistant:
                     items.append(completed_item)
                 else:
                     self.debug_info.deleted_items.append(completed_item)
-
-            #print(f"\nFull message: {assistant_message}")
     
         if is_skip_parsing:
-            print(f"\nFull message: {self.debug_info.assistant_message}")
+            logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
         
-        print(f"\nFull message: {self.debug_info.assistant_message}")
+        logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
 
         return items
 
@@ -297,9 +298,9 @@ class LLMAssistant:
         output = self.llm.create_chat_completion(messages=messages, temperature=0, repeat_penalty=1.05)
         content = output['choices'][0]['message']['content']
 
-        print("Output:")
-        print(output)
-        print("\n\n\n")
+        logging.debug("Output:")
+        logging.debug(output)
+        logging.debug("\n\n\n")
 
         self.debug_info = self.DebugInfo() # Reset debug info
 
@@ -339,7 +340,7 @@ class LLMAssistant:
                 
                 # Return when LLM gets stuck in printing only new lines
                 if new_lines_in_a_row > 3:
-                    print("Warning: too many new lines")
+                    logging.warning("Warning: too many new lines")
                     return items
                 
                 if is_item_start:
@@ -351,7 +352,7 @@ class LLMAssistant:
 
                     # TODO: Add comment what this code is doing
                     if self.end_parsing_prematurely:
-                        print(f"Ending parsing prematurely: {completed_item}")
+                        logging.info(f"Ending parsing prematurely: {completed_item}")
                         return items
                         
                     if is_item_ok:
@@ -373,13 +374,11 @@ class LLMAssistant:
                     items.append(completed_item)
                 else:
                     self.debug_info.deleted_items.append(completed_item)
-
-            #print(f"\nFull message: {assistant_message}")
     
         if is_skip_parsing:
-            print(f"\nFull message: {self.debug_info.assistant_message}")
+            logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
         
-        print(f"\nFull message: {self.debug_info.assistant_message}")
+        logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
 
         return items
 
@@ -417,17 +416,17 @@ class LLMAssistant:
                 prompt += f'Output exactly {str(count_items_to_suggest)} attributes in JSON format like this: '  
             
             else:
-                prompt = f'Solely based on the following text which attributes does the entity: "{entity1}" have? '
-
-                #prompt += "If you find an attribute which looks more like a relationship then it is not an attribute. "
-                prompt += f'Output only those attributes which you are certain about in JSON format like this: '
+                prompt = f'Solely based on the following context which attributes does the class: "{entity1}" have? '
+                prompt += 'First for each attribute provide detailed reasoning. '
+                prompt += f'Then output only those attributes which you are certain about in JSON format like this: '
 
             is_description = True
             if is_description:
                 if not is_domain_description:
                     prompt += TextUtility.build_json(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
                 else:
-                    prompt += TextUtility.build_json(names=["name", "inference", "data_type"], descriptions=["* attribute name", f"* attribute {inference_prompt}", "* attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    # prompt += TextUtility.build_json(names=["name", "inference", "data_type"], descriptions=["* attribute name", f"* attribute {inference_prompt}", "* attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    prompt += TextUtility.build_json(names=["inference", "name", "data_type"], descriptions=["text from the following context containing this attribute", "attribute name", "attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
             else:
                 prompt += TextUtility.build_json(names=["name"], descriptions=["* attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
@@ -496,13 +495,16 @@ class LLMAssistant:
         if not is_domain_description:
             pass
         else:
-            prompt += f". This is the following text: {domain_description}"
+            if user_choice == ATTRIBUTES_STRING:
+                prompt += f'.This is the following context:\n"{domain_description}"'
+            else:
+                prompt += f". This is the following text: {domain_description}"
         
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
 
         messages_prettified = TextUtility.messages_prettify(new_messages)
-        print(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items = self.__parse_non_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
         self.debug_info.prompt = messages_prettified
@@ -533,9 +535,9 @@ class LLMAssistant:
         new_messages.append({"role": "user", "content": prompt})
 
         llm_prompt = TextUtility.create_llm_prompt(self.model_type, new_messages)
-        print(f"Sending this prompt to llm:\n{llm_prompt}\n")
+        logging.debug(f"Sending this prompt to llm:\n{llm_prompt}\n")
 
         for text in self.llm(prompt, stream=True):
-            print(text, end="", flush=True)
+            logging.info(text, end="", flush=True)
 
         return ""
