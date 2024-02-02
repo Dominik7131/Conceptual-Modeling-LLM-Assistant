@@ -1,16 +1,12 @@
 from LLM_assistant import LLMAssistant, ITEMS_COUNT
 from user_input_processor import UserInputProcessor
 import time
+import json
 
 
 def main():
-    
-    # Define the model
-    model_path_or_repo_id = "TheBloke/Llama-2-7B-Chat-GGUF"
-    model_file = "llama-2-7b-chat.Q5_K_M.gguf"
-    model_type = "llama"
 
-    llm_assistant = LLMAssistant(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type)
+    llm_assistant = LLMAssistant()
     
     user_input_processor = UserInputProcessor()
 

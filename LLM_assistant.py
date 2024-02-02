@@ -1,4 +1,4 @@
-from ctransformers import AutoModelForCausalLM
+from llama_cpp import Llama
 import json
 from embeddings import Embeddings
 from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, PROPERTIES_STRING
@@ -10,16 +10,22 @@ IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
 
+CONFIG_FILE_PATH = "config.json"
+
 
 class LLMAssistant:
-    def __init__(self, model_path_or_repo_id, model_file, model_type):
+    def __init__(self):
         # Larger batch_size will process the prompt faster but will require more memory.
         # If you have enough GPU memory to fit the model, setting threads=1 can improve performance.
-        self.model_type = model_type
-        self.llm = AutoModelForCausalLM.from_pretrained(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type, local_files_only=True,
-                                                        gpu_layers=200, temperature=0.0, context_length=4096, max_new_tokens=4096,
-                                                        batch_size=1024, threads=1, reset=True)
-        #print(f"Config: Context length: {str(self.llm.context_length)}, Temperature: {str(self.llm.config.temperature)}, Max new tokens: {str(self.llm.config.max_new_tokens)}")
+
+        with open(CONFIG_FILE_PATH, 'r') as file:
+            config = json.load(file)
+    
+        model_path = config['model_path']
+        model_type = config['model_type']
+        context_size = config['context_size']
+
+        self.llm = Llama(model_path=model_path, chat_format=model_type, n_gpu_layers=-1, main_gpu=1, n_ctx=context_size, verbose=True)
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             self.embeddings = Embeddings()
@@ -40,7 +46,8 @@ class LLMAssistant:
                 system = "You are an expert at generating attributes for a given entity."
             else:
                 #system = "You are creating a conceptual model which consists of entities, their attributes and relationships in between the entities. You will be given an entity, text and description of JSON format. Your task is to output attributes of the given entity solely based on the given text in the described JSON format. Be careful that some relationships can look like an attributes. Do not output any explanation. Do not ouput anything else."
-                system = "You are an expert at extracting attributes for a given entity solely based on a given text in context of creating conceptual model in software engineering."
+                # system = "You are an expert at extracting attributes for a given entity solely based on a given text in context of creating conceptual model in software engineering."
+                system = "You are an expert at extracting attributes in JSON format for a given class solely based on a given context."
 
 
         elif user_choice == RELATIONSHIPS_STRING:
@@ -130,6 +137,10 @@ class LLMAssistant:
         if "name" not in completed_item:
             completed_item["name"] = "error: no name"
             is_item_ok = False
+        
+        if not isinstance(completed_item['name'], str):
+            completed_item["name"] = "error: name is not a string"
+            is_item_ok = False
 
         if user_choice == ATTRIBUTES_STRING:
             # Remove attributes in which their inferred text does not contain the given entity
@@ -168,8 +179,7 @@ class LLMAssistant:
                 completed_item['name'] = "(Deleted: Inputed entites are not contained in source and target entities) " + completed_item['name']
                 is_item_ok = False
 
-
-        print(f"{len(items) + 1}: {completed_item['name'].capitalize()}")
+        print(f"{len(items) + 1}: {completed_item['name']}")
 
         if "description" in completed_item:
             print(f"- Description: {completed_item['description']}")
@@ -190,7 +200,7 @@ class LLMAssistant:
         return completed_item, is_item_ok
 
 
-    def __parse_streamed_output(self, prompt, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
+    def __parse_streamed_output(self, messages, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
         self.debug_info = self.DebugInfo() # Reset debug info
 
         items = []
@@ -202,7 +212,14 @@ class LLMAssistant:
         self.end_parsing_prematurely = False
         opened_square_brackets = 0
 
-        for text in self.llm(prompt, stream=True):
+        output = self.llm.create_chat_completion(messages=messages, temperature=0, stream=True)
+
+        for text in output:
+            if not 'content' in text['choices'][0]['delta']:
+                continue
+
+            text = text['choices'][0]['delta']['content']
+
             self.debug_info.assistant_message += text
             if is_skip_parsing:
                 continue
@@ -272,7 +289,100 @@ class LLMAssistant:
         print(f"\nFull message: {self.debug_info.assistant_message}")
 
         return items
+
+
+    def __parse_non_streamed_output(self, messages, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
+        self.debug_info = self.DebugInfo()
+
+        output = self.llm.create_chat_completion(messages=messages, temperature=0, repeat_penalty=1.05)
+        content = output['choices'][0]['message']['content']
+
+        print("Output:")
+        print(output)
+        print("\n\n\n")
+
+        self.debug_info = self.DebugInfo() # Reset debug info
+
+        items = []
+        item = ""
+        is_item_start = False
+        is_skip_parsing = False
+        new_lines_in_a_row = 0
+        last_char = ''
+        self.end_parsing_prematurely = False
+        opened_square_brackets = 0
+
+        for text in content:
+            self.debug_info.assistant_message += text
+            if is_skip_parsing:
+                continue
+
+            text = text.replace("'", "") # Edit apostrophes for now by deleting them
+            for char in text:
+                if char == '{':
+                    is_item_start = True
+                if char == '[':
+                    opened_square_brackets += 1
+
+                if char == '\n' and last_char == '\n':
+                    new_lines_in_a_row += 1
+                else:
+                    new_lines_in_a_row = 0
+                
+                if char == ']':
+                    opened_square_brackets -= 1
+
+                    # We already got the last object of the JSON output
+                    # If something weird starts happening with the LLM this premature return might be the cause
+                    if opened_square_brackets == 0:
+                        return items
+                
+                # Return when LLM gets stuck in printing only new lines
+                if new_lines_in_a_row > 3:
+                    print("Warning: too many new lines")
+                    return items
+                
+                if is_item_start:
+                    item += char
+                
+                if char == "}" and item != '':
+                    is_item_start = False
+                    completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
+
+                    # TODO: Add comment what this code is doing
+                    if self.end_parsing_prematurely:
+                        print(f"Ending parsing prematurely: {completed_item}")
+                        return items
+                        
+                    if is_item_ok:
+                        items.append(completed_item)
+                    else:
+                        self.debug_info.deleted_items.append(completed_item)
+                    item = ""
+                
+                last_char = char
+        
+        if len(items) != ITEMS_COUNT:
+            # LLM sometimes does not properly finish the JSON object
+            # So try to finish the object by appending the last curly bracket
+            if is_item_start:
+                item += '}'
+                completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
+
+                if is_item_ok:
+                    items.append(completed_item)
+                else:
+                    self.debug_info.deleted_items.append(completed_item)
+
+            #print(f"\nFull message: {assistant_message}")
     
+        if is_skip_parsing:
+            print(f"\nFull message: {self.debug_info.assistant_message}")
+        
+        print(f"\nFull message: {self.debug_info.assistant_message}")
+
+        return items
+
 
     def suggest(self, entity1, entity2, user_choice, count_items_to_suggest, conceptual_model, domain_description):
 
@@ -300,7 +410,6 @@ class LLMAssistant:
         #inference_prompt = "inference by copying the following text and inserting the symbol < to the start of the part from which it was inferred and inserting the symbol > to the end of the part from which it was inferred"
         #inference_prompt = "inference by copying the following text and leaving only the part from which it was inferred"
 
-        # TODO: Always let LLM to generate an inference first so it first creates some reason before creating an attribute/association/entity
         if user_choice == ATTRIBUTES_STRING:
 
             if not is_domain_description:
@@ -388,17 +497,15 @@ class LLMAssistant:
             pass
         else:
             prompt += f". This is the following text: {domain_description}"
-            #prompt += f'. And provide detailed explanation. This is the following text: {domain_description}'
-            #prompt += f'. And provide detailed explanation. \n """{domain_description}"""'
         
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
 
-        llm_prompt = TextUtility.create_llm_prompt(self.model_type, new_messages)
-        print(f"Sending this prompt to llm:\n{llm_prompt}\n")
+        messages_prettified = TextUtility.messages_prettify(new_messages)
+        print(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
-        items = self.__parse_streamed_output(llm_prompt, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
-        self.debug_info.prompt = llm_prompt
+        items = self.__parse_non_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+        self.debug_info.prompt = messages_prettified
         return items
 
 

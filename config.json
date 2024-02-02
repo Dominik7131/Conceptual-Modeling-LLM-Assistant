@@ -1,0 +1,5 @@
+{
+    "model_path": "C:/Users/dommo/.cache/huggingface/hub/models--TheBloke--Llama-2-7B-Chat-GGUF/snapshots/191239b3e26b2882fb562ffccdd1cf0f65402adb/llama-2-7b-chat.Q5_K_M.gguf",
+    "model_type": "llama-2",
+    "context_size": 4096
+}

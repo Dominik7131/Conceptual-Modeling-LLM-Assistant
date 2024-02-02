@@ -69,7 +69,16 @@ class TextUtility:
                 result += end_of_turn
         
         return result
-    
+
+
+    def messages_prettify(messages):
+        result = ""
+        for message in messages:
+            result += f"{message['role']}: {message['content']}\n"
+        
+        return result
+
+
     def json_to_pretty_text(json_item, index, user_choice, ATTRIBUTES_STRING):
 
         result = ""

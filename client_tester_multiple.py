@@ -1,22 +1,14 @@
 from LLM_assistant import LLMAssistant, ITEMS_COUNT, TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION
-import time
 from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES
+import time
+import json
 
 IS_SAVE_TO_FILE = True
 IS_SHOW_RAW_ASSISTANT_MSG = False
 
 def main():
 
-    # Define the model
-    model_path_or_repo_id = "TheBloke/Llama-2-7B-Chat-GGUF"
-    model_file = "llama-2-7b-chat.Q5_K_M.gguf"
-    model_type = "llama"
-
-    # model_path_or_repo_id = "TheBloke/Starling-LM-7B-alpha-GGUF"
-    # model_file = "starling-lm-7b-alpha.Q5_K_M.gguf"
-    # model_type ="openchat"
-
-    llm_assistant = LLMAssistant(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type)
+    llm_assistant = LLMAssistant()
 
     entities = {
         ATTRIBUTES_STRING: ["course", "professor"],
@@ -35,7 +27,9 @@ def main():
 
     if (IS_SAVE_TO_FILE):
         with open(file_name, 'w') as file:
-            file.write(f"LLM ID: {model_path_or_repo_id}\nLLM file: {model_file}\nTake only relevant info from domain description: {str(TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION)}\n\n")
+            # TODO: write into the `file` all config from config.json
+            #file.write(f"LLM file: {model_path}\nTake only relevant info from domain description: {str(TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION)}\n\n")
+            pass
 
     time_start = time.time()
 
