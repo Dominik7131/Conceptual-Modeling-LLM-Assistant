@@ -200,7 +200,24 @@ class TextUtility:
         return sentences
 
 
+    def create_query(entity):
+        #query = f'What attributes does \"{entity}\" have?'
+        query = f"Information about {entity}"
+        return query
+
+
     def split_file_into_chunks(file_name):
+        with open(file_name) as file:
+            lines = [line.rstrip() for line in file]
+
+        # Divide the text into: sentences and bullets
+        sentences = [TextUtility.split_into_sentences(line) for line in lines]
+        sentences = [x for xs in sentences for x in xs] # flatten sentences
+        return sentences
+
+
+    # TODO: Add sliding window to each sentence
+    def split_file_into_chunks2(file_name):
         with open(file_name) as file:
             lines = [line.rstrip() for line in file]
 

@@ -16,4 +16,9 @@ output/
 requirements.txt
 t.py
 test.py
+test_llama_cpp.py
 cached_embeddings.npy
+data/56-2001-extract-llm-assistant-test-case/56-2001-extract-llm-assistant-test-case.txt_embeddings.npy
+data/56-2001-extract-llm-assistant-test-case/actual_output.txt
+data/56-2001-extract-llm-assistant-test-case/manual_evaluation.txt
+out.txt

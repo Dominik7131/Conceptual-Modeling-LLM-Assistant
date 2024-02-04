@@ -3,10 +3,10 @@ from text_utility import ATTRIBUTES_STRING
 import time
 import json
 
-PATH_TO_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case/"
-ATTRIBUTES_TEST_FILE_PATH = f"{PATH_TO_DIRECTORY}/attributes.json"
-EXPECTED_OUTPUT_FILE_PATH = f"{PATH_TO_DIRECTORY}/expected_output.txt"
-ACTUAL_OUTPUT_FILE_PATH = f"{PATH_TO_DIRECTORY}/actual_output.txt"
+PATH_TO_DATA_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case/"
+ATTRIBUTES_TEST_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/attributes.json"
+EXPECTED_OUTPUT_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/expected_output.txt"
+ACTUAL_OUTPUT_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/actual_output.txt"
 INPUT_DOMAIN_DESCRIPTION_FILE_PATH = "input_truncated.txt"
 IS_GENERATE_EXPECTED_OUTPUT = False
 

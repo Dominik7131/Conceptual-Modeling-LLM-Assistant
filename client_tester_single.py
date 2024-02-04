@@ -41,8 +41,7 @@ def main():
             print(f"\nTime: {time_end - time_start:.2f} seconds")
 
             if IS_SHOW_RAW_ASSISTANT_MSG:
-                #raw_assistant_message = str(items[1]).replace('\\n', '\n') + '\n'
-                print(f"Raw assistant message: {llm_assistant.debug_info.assistant_message}")
+                print(f"Raw assistant message: {llm_assistant.debug_info.assistant_message}\n")
 
     elif LLM_FEATURE == LLM_Feature.IS_SUMMARY:
         result = llm_assistant.summarize_conceptual_model(conceptual_model={})

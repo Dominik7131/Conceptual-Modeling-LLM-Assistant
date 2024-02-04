@@ -127,6 +127,7 @@ class LLMAssistant:
     # is_item_ok: False if there is any issue while parsing otherwise True
     def __parse_item(self, item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
         try:
+            item = item.replace('\\', '')
             completed_item = json.loads(item)
         except ValueError:
             logging.error(f"Cannot decode JSON: {item}\n")
