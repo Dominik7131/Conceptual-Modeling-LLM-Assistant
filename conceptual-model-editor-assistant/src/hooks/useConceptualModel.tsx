@@ -165,24 +165,55 @@ const useConceptualModel = () =>
           setSuggestedRelationships(_ => {return []})
           const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
           const userChoice = "attributes"
+          const url = `http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=${userChoice}&domain_description=${currentDomainDesciption}`
     
-          fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=${userChoice}&domain_description=${currentDomainDesciption}`)
-          .then(response => response.json())
-          .then(data => 
+          // fetch(url)
+          // .then(response => response.json())
+          // .then(data => 
+          //     {
+          //       for (let i = 0; i < data.length; i++)
+          //       {
+          //         // let attribute = JSON.parse(data[i])
+          //         let attribute : Attribute = data[i]
+          //         console.log("Attribute: ")
+          //         console.log(attribute)
+          //         setSuggestedAttributes(previousSuggestedAttributes => {
+          //           return [...previousSuggestedAttributes, attribute]
+          //         })
+          //       }
+          //     })
+          // .catch(error => console.log(error))
+          // return
+
+          const fetchData = async () =>
+          {
+            const response = await fetch(url);
+            if (!response.ok || !response.body)
+            {
+              throw response.statusText;
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+     
+            while (true)
+            {
+              const { value, done } = await reader.read();
+              console.log("Value: ")
+              console.log(value)
+              if (done)
               {
-                for (let i = 0; i < data.length; i++)
-                {
-                  // let attribute = JSON.parse(data[i])
-                  let attribute : Attribute = data[i]
-                  console.log("Attribute: ")
-                  console.log(attribute)
-                  setSuggestedAttributes(previousSuggestedAttributes => {
-                    return [...previousSuggestedAttributes, attribute]
-                  })
-                }
-              })
-          .catch(error => console.log(error))
-          return
+                console.log("Done")
+                break;
+              }
+     
+              const decodedChunk = decoder.decode(value, { stream: true });
+              console.log("Data: ")
+              console.log(decodedChunk)
+            }
+          }
+
+          fetchData()
         }
         else
         {

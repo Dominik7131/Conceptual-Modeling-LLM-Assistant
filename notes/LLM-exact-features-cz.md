@@ -2,6 +2,7 @@
 
 ## Použivané pojmy
 - inference = přesná část textu z popisu domény odkud například daný atribut/asociace vyplývá
+	- pokud je přítomná informace o kardinalitě, tak součástí inference je i text pro určení kardinality daného atributu/asociace
 - popis = text zahrnující veškeré okolí popisované věci (Př.: pro entitu souhrn všech jejích atributů a vztahů)
 - definice = přesné vymezení daného pojmu zahrnující pouze některé věci z okolí (Př.: "student je osoba zapsaná do studijního programu vysoké školy", ale už součástí definice není například, že student má jméno, což by vyplývalo z jeho atributů)
 
