@@ -11,7 +11,7 @@ IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
 
-CONFIG_FILE_PATH = "config.json"
+CONFIG_FILE_PATH = "llm-config.json"
 
 logging.basicConfig(level=logging.DEBUG, format="%(message)s")
 
