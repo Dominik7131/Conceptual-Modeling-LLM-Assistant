@@ -3,18 +3,12 @@ from text_utility import ATTRIBUTES_STRING, RELATIONSHIPS_STRING
 import json
 
 PATH_TO_DATA_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case/"
-ATTRIBUTES_TEST_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/attributes.json"
-IS_A_RELATIONSHIPS_TEST_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/is-a-relationships.json"
-RELATIONSHIPS_TEST_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/is-a-relationships.json"
-ATTRIBUTES_EXPECTED_OUTPUT_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/attributes-expected-output.txt"
-IS_A_RELATIONSHIPS_EXPECTED_OUTPUT_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/is-a-relationships_expected_output.txt"
-RELATIONSHIPS_EXPECTED_OUTPUT_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/relationships-expected_output.txt"
-ACTUAL_OUTPUT_ATTRIBUTES_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/attributes-actual-output.txt"
-ACTUAL_OUTPUT_IS_A_RELATIONSHIPS_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/is-a-relationships-actual-output.txt"
-ACTUAL_OUTPUT_RELATIONSHIPS_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/relationships-actual_output.txt"
 INPUT_DOMAIN_DESCRIPTION_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/56-2001-extract-llm-assistant-test-case-truncated.txt"
 IS_A_RELATIONSHIPS_STRING = "is_a_relationships"
+ACTUAL_OUTPUT = "actual_output"
+EXPECTED_OUTPUT = "expected_output"
 
+# Settings
 IS_GENERATE_EXPECTED_OUTPUT = False
 USER_CHOICE = IS_A_RELATIONSHIPS_STRING
 
@@ -42,23 +36,9 @@ def write_output_to_file(file, outputs):
 
 def main():
 
-    test_file_path = ""
-    output_file_path = ""
-    actual_output_file_path = ""
-
-    if USER_CHOICE == ATTRIBUTES_STRING:
-        test_file_path = ATTRIBUTES_TEST_FILE_PATH
-        output_file_path = ATTRIBUTES_EXPECTED_OUTPUT_FILE_PATH
-        actual_output_file_path = ACTUAL_OUTPUT_ATTRIBUTES_FILE_PATH
-    elif USER_CHOICE == IS_A_RELATIONSHIPS_STRING:
-        test_file_path = IS_A_RELATIONSHIPS_TEST_FILE_PATH
-        output_file_path = IS_A_RELATIONSHIPS_EXPECTED_OUTPUT_FILE_PATH
-        actual_output_file_path = ACTUAL_OUTPUT_IS_A_RELATIONSHIPS_FILE_PATH
-    elif USER_CHOICE == RELATIONSHIPS_STRING:
-        test_file_path = RELATIONSHIPS_TEST_FILE_PATH
-        output_file_path = RELATIONSHIPS_EXPECTED_OUTPUT_FILE_PATH
-        actual_output_file_path = ACTUAL_OUTPUT_RELATIONSHIPS_FILE_PATH
-
+    test_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}.json"
+    output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}_{ACTUAL_OUTPUT}.txt"
+    actual_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}_{ACTUAL_OUTPUT}.txt"
  
     if IS_GENERATE_EXPECTED_OUTPUT:
         generate_expected_output(test_file_path, output_file_path)
