@@ -17,10 +17,11 @@ IS_SAVE_OUTPUT_TO_FILE = True
 class RelevantTextFinderManual:
 
     def load_chunks():
-        chunks = TextUtility.split_file_into_chunks(INPUT_DOMAIN_DESCRIPTION_FILE_PATH)
+        # Edited chunks contain more text than chunks for more context
+        edited_chunks, chunks = TextUtility.split_file_into_chunks(INPUT_DOMAIN_DESCRIPTION_FILE_PATH)
 
         if IS_CHUNKS_CACHING:
-            RelevantTextFinderManual.cache_chunks(chunks)
+            RelevantTextFinderManual.cache_chunks(edited_chunks)
         
         return chunks
 
@@ -46,10 +47,16 @@ class RelevantTextFinderManual:
         text_parts = text.split()
         lemmas = []
         for text_part in text_parts:
-            response = requests.get(f"{BASE_URL}model={MODEL}&data={text_part}&output=json")
+
+            try:
+                response = requests.get(f"{BASE_URL}model={MODEL}&data={text_part}&output=json")
+            except:
+                print("Error: Invalid response")
+
             json_text = json.loads(response.text)
             lemmas.append(json_text['result'][0][0]['lemma'])
         
+        print(f"Aquired lemmas: {lemmas}")
         return lemmas
 
 

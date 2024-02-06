@@ -202,8 +202,13 @@ class TextUtility:
 
     def create_query(entity):
         #query = f'What attributes does \"{entity}\" have?'
-        query = f"Information about {entity}"
+        #query = f"Information about {entity}"
+        query = f"What are the information about {entity}?"
         return query
+    
+    def is_bullet_point(text):
+        # TODO: Implement for all possible bullet points -- e.g. I), a), 15), *, ...
+        return text[0] == '-'
 
 
     def split_file_into_chunks(file_name):
@@ -213,7 +218,43 @@ class TextUtility:
         # Divide the text into: sentences and bullets
         sentences = [TextUtility.split_into_sentences(line) for line in lines]
         sentences = [x for xs in sentences for x in xs] # flatten sentences
-        return sentences
+
+
+        edited_sentences = []
+        text_before_bullet_points = ""
+        is_bullet_point_processing = False
+
+        is_bullet_point_enhancement = True
+        if not is_bullet_point_enhancement:
+            return sentences, sentences
+
+        # For each bullet point prepend text from row before these bullet points
+        for index, sentence in enumerate(sentences):
+
+            if index == 0:
+                edited_sentences.append(sentence)
+                continue
+
+            if is_bullet_point_processing:
+                if TextUtility.is_bullet_point(sentence):
+                    edited_sentences.append(f"{sentence[:2]}{text_before_bullet_points} {sentence[2:]}")
+                else:
+                    is_bullet_point_processing = False
+                    edited_sentences.append(sentence)
+
+                continue
+
+            if TextUtility.is_bullet_point(sentence) and index > 0:
+                text_before_bullet_points = sentences[index - 1]
+                # TODO: if `text_before_bullet_points` is a bullet point then skip the current group of bullet points
+                #   - for example this can happen when the file starts with I), II), III), ...
+                edited_sentences.append(f"{sentence[:2]}{text_before_bullet_points} {sentence[2:]}")
+                is_bullet_point_processing = True
+                continue
+
+            edited_sentences.append(sentence)
+
+        return edited_sentences, sentences
 
 
     # TODO: Add sliding window to each sentence

@@ -406,8 +406,8 @@ class LLMAssistant:
             result = ""
             for text in relevant_texts:
                 result += f"{text}\n"
-
-            domain_description = result
+            
+            domain_description = result.rstrip() # Remove trailing new line
 
         times_to_repeat = count_items_to_suggest
         is_elipsis = False
@@ -436,7 +436,7 @@ class LLMAssistant:
                     prompt += TextUtility.build_json(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
                 else:
                     # prompt += TextUtility.build_json(names=["name", "inference", "data_type"], descriptions=["* attribute name", f"* attribute {inference_prompt}", "* attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                    prompt += TextUtility.build_json(names=["inference", "name", "data_type"], descriptions=["text from the following context containing this attribute", "attribute name", "attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    prompt += TextUtility.build_json(names=["inference", "name", "data_type"], descriptions=['"text from the following context containing this attribute"', '"attribute name"', '"attribute data type"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
             else:
                 prompt += TextUtility.build_json(names=["name"], descriptions=["* attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
@@ -506,7 +506,7 @@ class LLMAssistant:
             pass
         else:
             if user_choice == ATTRIBUTES_STRING:
-                prompt += f'.This is the following context:\n"{domain_description}"'
+                prompt += f'. This is the following context:\n"{domain_description}"'
             else:
                 prompt += f". This is the following text: {domain_description}"
         

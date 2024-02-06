@@ -127,9 +127,9 @@ class RAGTester:
 
 
 def main():
-    #RAGTester.test_lemmas_approach()
+    RAGTester.test_lemmas_approach()
 
-    RAGTester.output_relevant_text_for_given_entities()
+    #RAGTester.output_relevant_text_for_given_entities()
 
 
 if __name__ == "__main__":

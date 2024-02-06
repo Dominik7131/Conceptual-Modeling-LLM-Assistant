@@ -52,7 +52,7 @@ def main():
     with open(test_file_path) as file:
         test_data = json.load(file)
     
-    test_data_attributes = test_data[USER_CHOICE][:2]
+    test_data_attributes = test_data[USER_CHOICE][1:3]
 
     with open(actual_output_file_path, 'w') as file:
         for test_case in test_data_attributes:
