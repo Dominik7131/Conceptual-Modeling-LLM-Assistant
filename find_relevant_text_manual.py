@@ -47,11 +47,15 @@ class RelevantTextFinderManual:
         text_parts = text.split()
         lemmas = []
         for text_part in text_parts:
-
             try:
                 response = requests.get(f"{BASE_URL}model={MODEL}&data={text_part}&output=json")
             except:
                 print("Error: Invalid response")
+
+            # Exception
+            if text_part == "motorised":
+                lemmas.append("motorised")
+                continue
 
             json_text = json.loads(response.text)
             lemmas.append(json_text['result'][0][0]['lemma'])
