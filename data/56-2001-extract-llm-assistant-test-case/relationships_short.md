@@ -19,7 +19,7 @@ Output:
 
 
 ### RoadVehicle "0..*" --> "1..1" VehicleType : has type
-Text: A type of road vehicle is defined as a set of road vehicles which are identical in at least their basic characteristics. A vehicle type may include variants and versions.
+Text: A type of road vehicle is defined as a set of road vehicles which are identical in at least their basic characteristics.
 
 Output:
 - {"name": "has type", "inference": "type of road vehicle is defined as a set of road vehicles", "source_entity": "RoadVehicle", "target_entity": "VehicleType", "cardinality": "0..* --> 1..1"}
@@ -30,6 +30,7 @@ Text: For the purposes of regulating the conditions of operation of vehicles on 
 
 Output:
 - {"name": "is-a", "inference": "road vehicle is a motorised vehicle", "source_entity": "MotorisedVehicle", "target_entity": "RoadVehicle", "cardinality": ""}
+
 
 ### NonMotorisedVehicle --|> RoadVehicle
 Text: For the purposes of regulating the conditions of operation of vehicles on roads, a road vehicle is a motorised or non-motorised vehicle which is constructed for use on roads for the carriage of persons, animals or goods.
@@ -157,17 +158,17 @@ Output:
 
 
 ### VehicleType "1..1" *- "0..*" VehicleTypeVariant : includes variant
-Text: A type of road vehicle is defined as a set of road vehicles which are identical in at least their basic characteristics. A vehicle type may include variants and versions.
+Text: A vehicle type may include variants and versions.
 
 Output:
-- {"name": "includes variant", "inference": "vehicle type may include versions", "source_entity": "VehicleType", "target_entity": "VehicleTypeVariant", "cardinality": "1..1" *- "0..*"}
+- {"name": "includes variant", "inference": "vehicle type may include variants", "source_entity": "VehicleType", "target_entity": "VehicleTypeVariant", "cardinality": "1..1" *- "0..*"}
 
 
 ### VehicleType "1..1" *- "0..*" VehicleTypeVersion : includes version
-Text: A type of road vehicle is defined as a set of road vehicles which are identical in at least their basic characteristics. A vehicle type may include variants and versions.
+Text: A vehicle type may include variants and versions.
 
 Output:
-- {"name": "includes version", "inference": "vehicle type may include variants", "source_entity": "VehicleType", "target_entity": "VehicleTypeVersion", "cardinality": "1..1" *- "0..*"}
+- {"name": "includes version", "inference": "vehicle type may include versions", "source_entity": "VehicleType", "target_entity": "VehicleTypeVersion", "cardinality": "1..1" *- "0..*"}
 
 
 ### TractorTrailer --|> Trailer
