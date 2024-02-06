@@ -10,6 +10,7 @@ IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
+IS_RELATIONSHIPS_IS_A = True
 
 CONFIG_FILE_PATH = "llm-config.json"
 
@@ -51,18 +52,13 @@ class LLMAssistant:
             else:
                 #system = "You are creating a conceptual model which consists of entities, their attributes and relationships in between the entities. You will be given an entity, text and description of JSON format. Your task is to output attributes of the given entity solely based on the given text in the described JSON format. Be careful that some relationships can look like an attributes. Do not output any explanation. Do not ouput anything else."
                 # system = "You are an expert at extracting attributes for a given entity solely based on a given text in context of creating conceptual model in software engineering."
-                system = "You are an expert at extracting attributes in JSON format for a given class solely based on a given context."
+                system = "You are an expert at extracting attributes in JSON format for a given entity solely based on a given context."
 
 
         elif user_choice == RELATIONSHIPS_STRING:
+
             if not is_domain_description:
-                #system = "You are an expert at listing relationships for a given entity."
-                #system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name which can be either a single verb or a verb and preposition such that when you insert this name in between the source entity and the target entity in this order a short meaningful sentence is created."
-                #system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name which is represented as single verb in singular such that when you insert this relationship name in between the source entity and the target entity in this order a short meaningful sentence is created."
-                #if is_source_entity:
                 system = "You are an expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name always make sure that the described short meaningful sentence can be created."
-                #else:
-                    #system = "You are creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. You will be given a target entity and your goal is to come up with a source entity and a new relationship name. Always make sure that the described short meaningful sentence can be created."
             else:
                 #system = "You are an expert at extracting relationships for a given entity solely based on a given text in context of creating conceptual model in software engineering."
                 #system = "You are creating a conceptual model which consists of entities and their relationships. "
@@ -71,8 +67,13 @@ class LLMAssistant:
                 #system += "Always make sure that the short meaningful sentence indeed makes sense. Be very careful when creating the short meaningful sentence: the source entity must come first then follows the relationship name and then follows the target entity name which ends the sentence. Always check that this order holds."
                 #system += " You will be given a source entity and your goal is to solely based on the given text to find a relationships between this source entity and some new target entity."
 
-                system = "You are an expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
                 #system = "You are an expert at creating a conceptual model which consists of entities and their relationships solely based on a given text. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
+
+                if IS_RELATIONSHIPS_IS_A:
+                    system = "You are an expert at extracting is-a relationships in JSON format for a given entity solely based on a given context."
+                else:
+                    system = "You are an expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
+
 
 
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
@@ -426,7 +427,7 @@ class LLMAssistant:
                 prompt += f'Output exactly {str(count_items_to_suggest)} attributes in JSON format like this: '  
             
             else:
-                prompt = f'Solely based on the following context which attributes does the class: "{entity1}" have? '
+                prompt = f'Solely based on the following context which attributes does the entity: "{entity1}" have? '
                 prompt += 'First for each attribute provide detailed reasoning. '
                 prompt += f'Then output only those attributes which you are certain about in JSON format like this: '
 
@@ -447,18 +448,24 @@ class LLMAssistant:
                 prompt = f'Which relationships does the source entity: "{entity1}" have? Output exactly {str(count_items_to_suggest)} relationships in JSON format like this: '
 
             else:
-                prompt = f'Solely based on the following text which relationships does this entity: "{entity1}" have? '
+                if IS_RELATIONSHIPS_IS_A:
+                    prompt = f'Solely based on the following context which is-a relationships does this entity: "{entity1}" have? First output all possible is-a relationships for the entity "{entity1}". Then output only those is-a relationships which you are certain about in JSON format like this: '
+                else:
+                    prompt = f'Solely based on the following text which relationships does this entity: "{entity1}" have? '
 
-                #prompt += f'Always make sure that the entity: "{entity_name}" is the source entity in all the relationships. '
-                #prompt += f'Output only those relationships which you are certain about in JSON format like this: '
-                prompt += f'Output it in JSON format like this: '
+                    #prompt += f'Always make sure that the entity: "{entity_name}" is the source entity in all the relationships. '
+                    #prompt += f'Output only those relationships which you are certain about in JSON format like this: '
+                    prompt += f'Output it in JSON format like this: '
             
-            names = ["name", "source", "target", "sentence", "inference", "cardinality"]
+            names = ["inference", "name", "source", "target"]
 
             prompt += TextUtility.build_json(
                 names=names,
                 #descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship", f"* relationship {inference_prompt}", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                #descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship", f"* relationship {inference_prompt}", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+
+                # is-a
+                descriptions=['"text from the following context containing this relationship"', '"is-a"', '"source entity name"', '"target entity name"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
     
         
@@ -508,7 +515,7 @@ class LLMAssistant:
             if user_choice == ATTRIBUTES_STRING:
                 prompt += f'. This is the following context:\n"{domain_description}"'
             else:
-                prompt += f". This is the following text: {domain_description}"
+                prompt += f'. This is the following text:\n"{domain_description}"'
         
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
