@@ -148,11 +148,13 @@ class LLMAssistant:
             is_item_ok = False
 
         if user_choice == ATTRIBUTES_STRING:
+            pass
             # Remove attributes in which their inferred text does not contain the given entity
-            is_inference = "inference" in completed_item
-            if is_inference and user_input_entity1 not in completed_item['inference'].lower():
-                completed_item['name'] = "(Deleted: Source entity is not contained in the inference) " + completed_item['name']
-                is_item_ok = False
+            # is_inference = "inference" in completed_item
+            # if is_inference and user_input_entity1 not in completed_item['inference'].lower():
+                # completed_item['name'] = "(Deleted: Source entity is not contained in the inference) " + completed_item['name']
+                # logging.warning("Source entity is not contained in the inference")
+                # is_item_ok = True
 
 
         elif user_choice == RELATIONSHIPS_STRING:
