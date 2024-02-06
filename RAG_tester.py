@@ -1,18 +1,57 @@
 import json
 from sentence_transformers import util
 from text_utility import TextUtility
+from find_relevant_text_manual import RelevantTextFinderManual
 
 PATH_TO_DATA_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case/"
 TEST_DATA_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}relevant_texts.json"
 
 class RAGTester:
 
+    def test_lemmas_approach():
+        test_cases = RAGTester.load_test_cases()
+
+        chunks = RelevantTextFinderManual.load_chunks()
+
+        are_all_tests_passing = True
+
+        for test_case in test_cases:
+            entity = test_case['entity']
+            expected_relevant_texts = test_case['relevant_texts']
+
+            entity_lemmas = RelevantTextFinderManual.get_lemmas(entity)
+            actual_relevant_texts = RelevantTextFinderManual.get_relevant_texts(entity_lemmas, chunks)
+
+            for expected_text in expected_relevant_texts:
+                is_relevant_text_found = False
+                for actual_relevant_text in actual_relevant_texts:
+                    if expected_text in actual_relevant_text:
+                        is_relevant_text_found = True
+                        break
+
+                if not is_relevant_text_found:
+                    are_all_tests_passing = False
+                    print(f"Test failed:\n- entity: {entity}\n- relevant text not found: {expected_text}")
+            
+        if are_all_tests_passing:
+            print("All tests are passing")
+    
+
+    def output_relevant_text_for_given_entities():
+        entities = ["natural person", "legal person"]
+
+        chunks = RelevantTextFinderManual.load_chunks()
+        print()
+        
+        for entity in entities:
+            entity_lemmas = RelevantTextFinderManual.get_lemmas(entity)
+            relevant_texts = RelevantTextFinderManual.get_relevant_texts(entity_lemmas, chunks)
+            print(f"Entity: {entity}\n- relevant texts: {relevant_texts}\n\n")
+
+
     def test(model, chunks, SCORE_NECESSARY_THRESHOLD, RANGE_FROM_TOP):
 
-        with open(TEST_DATA_FILE_PATH, 'r') as file:
-            test_data = json.load(file)
-
-        test_cases = test_data['test_cases']
+        test_cases = RAGTester.load_test_cases()
         are_all_tests_passing = True
 
         # "test_cases": [{"entity1": "", "relevant_texts": []}, {"entity2": "", "relevant_texts": [] }]
@@ -77,3 +116,21 @@ class RAGTester:
         
         print(f"Minimal score in relevant texts: {scores[min_score_in_relevant_texts_query_index, min_score_in_relevant_texts_chunk_index]}\n- query: {queries[min_score_in_relevant_texts_query_index]}\n- text: {min_score_text}\n")
         print(f"Max range distance: {max_range_distance}\n- text: {max_score_text}")
+    
+
+    def load_test_cases():
+        with open(TEST_DATA_FILE_PATH, 'r') as file:
+            test_data = json.load(file)
+
+        test_cases = test_data['test_cases']
+        return test_cases
+
+
+def main():
+    #RAGTester.test_lemmas_approach()
+
+    RAGTester.output_relevant_text_for_given_entities()
+
+
+if __name__ == "__main__":
+    main()

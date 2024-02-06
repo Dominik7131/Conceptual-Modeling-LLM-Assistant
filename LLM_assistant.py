@@ -1,6 +1,6 @@
 from llama_cpp import Llama
-from embeddings import Embeddings
 from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, PROPERTIES_STRING
+from find_relevant_text_manual import RelevantTextFinderManual
 import json
 import logging
 
@@ -9,7 +9,7 @@ ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
-TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
+TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
 
 CONFIG_FILE_PATH = "llm-config.json"
 
@@ -31,7 +31,8 @@ class LLMAssistant:
         self.llm = Llama(model_path=model_path, chat_format=model_type, n_gpu_layers=-1, main_gpu=1, n_ctx=context_size, verbose=True)
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
-            self.embeddings = Embeddings()
+            # assumption: domain description never changes
+            self.chunks = RelevantTextFinderManual.load_chunks()
         
         self.debug_info = self.DebugInfo()
     
@@ -397,8 +398,14 @@ class LLMAssistant:
         self.__append_default_messages_for_suggestions(user_choice=user_choice, is_domain_description=is_domain_description)        
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
-            queries = [f"Info about {entity1}"]
-            domain_description = self.embeddings.remove_unsimilar_text(queries, domain_description)
+            entity_lemmas = RelevantTextFinderManual.get_lemmas(entity1)
+            relevant_texts = RelevantTextFinderManual.get_relevant_texts(entity_lemmas, self.chunks)
+
+            result = ""
+            for text in relevant_texts:
+                result += f"{text}\n"
+
+            domain_description = result
 
         times_to_repeat = count_items_to_suggest
         is_elipsis = False
