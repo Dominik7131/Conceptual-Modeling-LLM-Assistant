@@ -38,7 +38,7 @@ class RAGTester:
     
 
     def output_relevant_text_for_given_entities():
-        entities = ["natural person", "legal person"]
+        entities = ["vehicle", "road vehicle", "vehicle type", "motorised vehicle", "structural component", "manufacturer", "vehicle system", "owner", "operator", "natural person", "business natural person", "address", "legal person", "registration", "registration application", "third party insurance", "insurance contract", "policy holder", "insurer", "green card", "technical inspection", "technical inspection report", "defect"]
 
         chunks = RelevantTextFinderManual.load_chunks()
         print()
@@ -46,7 +46,11 @@ class RAGTester:
         for entity in entities:
             entity_lemmas = RelevantTextFinderManual.get_lemmas(entity)
             relevant_texts = RelevantTextFinderManual.get_relevant_texts(entity_lemmas, chunks)
-            print(f"Entity: {entity}\n- relevant texts: {relevant_texts}\n\n")
+            print(f"Entity: {entity}")
+            for text in relevant_texts:
+                print(text)
+            print()
+            print()
 
 
     def test(model, chunks, SCORE_NECESSARY_THRESHOLD, RANGE_FROM_TOP):
@@ -127,9 +131,9 @@ class RAGTester:
 
 
 def main():
-    RAGTester.test_lemmas_approach()
+    # RAGTester.test_lemmas_approach()
 
-    #RAGTester.output_relevant_text_for_given_entities()
+    RAGTester.output_relevant_text_for_given_entities()
 
 
 if __name__ == "__main__":

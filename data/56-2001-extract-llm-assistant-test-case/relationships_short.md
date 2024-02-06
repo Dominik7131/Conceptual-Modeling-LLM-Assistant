@@ -473,11 +473,11 @@ Output:
 - {"name": "is-a", "inference": "policyholder is the person", "source_entity": "PolicyHolder", "target_entity": "Person", "cardinality": ""}
 
 
-### InsuranceContract "0..*" --> "1..1" PolicyHolder : has policy holder
+### InsuranceContract "0..*" --> "1..1" PolicyHolder : has policyholder
 Text: The insurance contract shall always contain the designation of the insurer and the policyholder and the particulars of the vehicle, the duration of the insurance, the limit of the insurance benefit, the amount of the premium, its maturity and the method of payment and the form and place of notification of the claim.
 
 Output:
-- {"name": "has policy holder", "inference": "insurance contract shall always contain the designation of the policyholder", "source_entity": "InsuranceContract", "target_entity": "PolicyHolder", "cardinality": "0..* --> 1..1"}
+- {"name": "has policyholder", "inference": "insurance contract shall always contain the designation of the policyholder", "source_entity": "InsuranceContract", "target_entity": "PolicyHolder", "cardinality": "0..* --> 1..1"}
 
 
 ### InsuranceContract "0..*" --> "1..1" Insurer : has insurer
@@ -660,7 +660,6 @@ Output:
 
 ### RoadVehicle
 - {"name": "is-a", "inference": "It contains records of road vehicles, the owners and operators of these vehicles", "source_entity": "RoadVehicle", "target_entity": "Vehicle", "cardinality": ""}
-- {"name": "has type", "inference": "type of road vehicle is defined as a set of road vehicles", "source_entity": "RoadVehicle", "target_entity": "VehicleType", "cardinality": "0..* --> 1..1"}
 - {"name": "is-a", "inference": "road vehicle is a motorised vehicle", "source_entity": "MotorisedVehicle", "target_entity": "RoadVehicle", "cardinality": ""}
 - {"name": "is-a", "inference": "road vehicle is a non-motorised vehicle", "source_entity": "NonMotorisedVehicle", "target_entity": "RoadVehicle", "cardinality": ""}
 - {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: motorcycles", "source_entity": "Motorcycle", "target_entity": "RoadVehicle", "cardinality": ""}
@@ -669,6 +668,7 @@ Output:
 - {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: lorries", "source_entity": "Lorry", "target_entity": "RoadVehicle", "cardinality": ""}
 - {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: powered wheelchairs", "source_entity": "PoweredWheelchair", "target_entity": "RoadVehicle", "cardinality": ""}
 - {"name": "is-a", "inference": "it is not an incomplete road vehicle", "source_entity": "IncompleteRoadVehicle", "target_entity": "RoadVehicle", "cardinality": ""}
+- {"name": "has type", "inference": "type of road vehicle is defined as a set of road vehicles", "source_entity": "RoadVehicle", "target_entity": "VehicleType", "cardinality": "0..* --> 1..1"}
 - {"name": "registers", "inference": "registering a road vehicle in the register of road vehicles", "source_entity": "Registration", "target_entity": "RoadVehicle", "cardinality": "0..1 --> 1..1"}
 - {"name": "has body work", "inference": "for a road vehicle it is stated: colour of bodywork", "source_entity": "RoadVehicle", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
 - {"name": "roadworthiness inspected by", "inference": "road vehicle technical inspection is an inspection of its roadworthiness", "source_entity": "RoadVehicle", "target_entity": "TechnicalInspection", "cardinality": "1..1 --> 0..*"}
@@ -762,12 +762,6 @@ Output:
 - {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: agricultural or forestry tractors", "source_entity": "Tractor", "target_entity": "SpecialVehicle", "cardinality": ""}
 
 
-### VehicleType
-- {"name": "has type", "inference": "type of road vehicle is defined as a set of road vehicles", "source_entity": "RoadVehicle", "target_entity": "VehicleType", "cardinality": "0..* --> 1..1"}
-- {"name": "includes variant", "inference": "vehicle type may include versions", "source_entity": "VehicleType", "target_entity": "VehicleTypeVariant", "cardinality": "1..1" *- "0..*"}
-- {"name": "includes version", "inference": "vehicle type may include variants", "source_entity": "VehicleType", "target_entity": "VehicleTypeVersion", "cardinality": "1..1" *- "0..*"}
-
-
 ### Owner
 - {"name": "is-a", "inference": "owner of a road vehicle ... the person", "source_entity": "Owner", "target_entity": "Person", "cardinality": ""}
 - {"name": "owns", "inference": "information on the owner of a road vehicle", "source_entity": "Owner", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
@@ -837,14 +831,14 @@ Output:
 
 ### InsuranceContract
 - {"name": "is based on", "inference": "vehicle has been covered by a third party insurance ... insurance is based on an insurance contract", "source_entity": "ThirdPartyInsurance", "target_entity": "InsuranceContract", "cardinality": "1..1 --> 1..1"}
-- {"name": "has policy holder", "inference": "insurance contract shall always contain the designation of the policyholder", "source_entity": "InsuranceContract", "target_entity": "PolicyHolder", "cardinality": "0..* --> 1..1"}
+- {"name": "has policyholder", "inference": "insurance contract shall always contain the designation of the policyholder", "source_entity": "InsuranceContract", "target_entity": "PolicyHolder", "cardinality": "0..* --> 1..1"}
 - {"name": "has insurer", "inference": "insurance contract shall always contain the designation of the insurer", "source_entity": "InsuranceContract", "target_entity": "Insurer", "cardinality": "0..* --> 1..1"}
 - {"name": "insures vehicle", "inference": "insurance contract shall always contain the particulars of the vehicle", "source_entity": "InsuranceContract", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
 
 
-### PolicyHolder
+### Policyholder
 - {"name": "is-a", "inference": "policyholder is the person", "source_entity": "PolicyHolder", "target_entity": "Person", "cardinality": ""}
-- {"name": "has policy holder", "inference": "insurance contract shall always contain the designation of the policyholder", "source_entity": "InsuranceContract", "target_entity": "PolicyHolder", "cardinality": "0..* --> 1..1"}
+- {"name": "has policyholder", "inference": "insurance contract shall always contain the designation of the policyholder", "source_entity": "InsuranceContract", "target_entity": "Policyholder", "cardinality": "0..* --> 1..1"}
 
 
 ### Insurer

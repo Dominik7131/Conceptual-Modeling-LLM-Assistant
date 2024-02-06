@@ -14,6 +14,7 @@ OUTPUT_FILE = "out_manual.txt"
 IS_CHUNKS_CACHING = False
 IS_SAVE_OUTPUT_TO_FILE = True
 
+
 class RelevantTextFinderManual:
 
     def load_chunks():
@@ -35,7 +36,7 @@ class RelevantTextFinderManual:
                 parsed_lemmas = []
                 for result in results_json:
                     for dictionary in result:
-                        parsed_lemmas.append(dictionary['lemma'])
+                        parsed_lemmas.append(dictionary['lemma'].lower())
 
                 lemmas_json = json.dumps(parsed_lemmas)
                 lemmas_json = '{"lemmas" : ' + lemmas_json + ' }'
@@ -81,6 +82,7 @@ class RelevantTextFinderManual:
                         are_entity_lemmas_contained = False
                         break
                 
+                # TODO: If a bullet point is included then make sure that the text in front of these bullet points is included
                 if are_entity_lemmas_contained:
                     result.append(chunk)
 

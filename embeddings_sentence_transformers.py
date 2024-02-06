@@ -18,7 +18,7 @@ INPUT_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/56-2001-extract-llm-assistant-test-
 OUTPUT_FILE_NAME = "out.txt"
 IS_TESTING = False
 
-ENTITY = "natural person"
+ENTITY = "structural component"
 
 def print_green_on_black(x):
     return cprint(x, 'green', 'on_black')
@@ -44,13 +44,23 @@ def show_result(scores, chunks, min_score_threshold):
     with open(OUTPUT_FILE_NAME, "w") as output:
         max_score = scores[0].max()
 
+        previous_written_chunk_index = 0
         for i in range(len(chunks)):
             score = scores[0][i]
             msg = f"Score: {score} | {chunks[i]}"
 
 
             if score > SCORE_NECESSARY_THRESHOLD and score > max_score - RANGE_FROM_TOP:
-                output.write(f"{chunks[i]} ")
+                # Separate consecutive chunks by whitespace
+                if previous_written_chunk_index + 1 == i:
+                    output.write(f"{chunks[i]} ")
+
+                # Separate non-consecutive chunks by a new line
+                else:
+                    output.write(f"{chunks[i]}\n")
+                
+                previous_written_chunk_index = i
+
 
             if score >= min_score_threshold:
                 print_green_on_black(msg)
