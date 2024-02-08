@@ -428,8 +428,10 @@ class LLMAssistant:
             
             else:
                 prompt = f'Solely based on the following context which attributes does the entity: "{entity1}" have? '
-                prompt += 'First for each attribute provide detailed reasoning. '
-                prompt += f'Then output only those attributes which you are certain about in JSON format like this: '
+                #prompt += 'First for each attribute provide detailed reasoning. '
+                prompt += 'First for each attribute output its name and output from the given context only the exact sentence containing this class and attribute. '
+                #prompt += f'Then output only those attributes which you are certain about in JSON format like this: '
+                prompt += f'Then output those attributes in JSON format like this: '
 
             is_description = True
             if is_description:
@@ -437,7 +439,7 @@ class LLMAssistant:
                     prompt += TextUtility.build_json(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
                 else:
                     # prompt += TextUtility.build_json(names=["name", "inference", "data_type"], descriptions=["* attribute name", f"* attribute {inference_prompt}", "* attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                    prompt += TextUtility.build_json(names=["inference", "name", "data_type"], descriptions=['"text from the following context containing this attribute"', '"attribute name"', '"attribute data type"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    prompt += TextUtility.build_json(names=["inference", "name", "data_type"], descriptions=['"from the given context only the exact sentence containing this entity and attribute"', '"attribute name"', '"attribute data type"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
             else:
                 prompt += TextUtility.build_json(names=["name"], descriptions=["* attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
