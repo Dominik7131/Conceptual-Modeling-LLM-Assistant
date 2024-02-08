@@ -222,39 +222,54 @@ class TextUtility:
 
         edited_sentences = []
         text_before_bullet_points = ""
+        chunk_before_bullet_points_index = 0
         is_bullet_point_processing = False
 
         is_bullet_point_enhancement = True
         if not is_bullet_point_enhancement:
-            return sentences, sentences
+            return sentences, sentences, [], []
+        
+        is_bullet_point_list = []
+        title_references = []
 
         # For each bullet point prepend text from row before these bullet points
+        # TODO: Refactor: no need to do for example "edited_sentences.append()"
+        # TODO: Do TextUtility.is_bullet_point() testing only once not in two different parts of code
         for index, sentence in enumerate(sentences):
 
             if index == 0:
                 edited_sentences.append(sentence)
+                is_bullet_point_list.append(False)
                 continue
 
             if is_bullet_point_processing:
                 if TextUtility.is_bullet_point(sentence):
                     edited_sentences.append(f"{sentence[:2]}{text_before_bullet_points} {sentence[2:]}")
+                    is_bullet_point_list.append(True)
+                    title_references.append(chunk_before_bullet_points_index)
                 else:
                     is_bullet_point_processing = False
                     edited_sentences.append(sentence)
-
+                    is_bullet_point_list.append(False)
+                    title_references.append(-1)
                 continue
 
-            if TextUtility.is_bullet_point(sentence) and index > 0:
+            if TextUtility.is_bullet_point(sentence):
                 text_before_bullet_points = sentences[index - 1]
+                chunk_before_bullet_points_index = index - 1
                 # TODO: if `text_before_bullet_points` is a bullet point then skip the current group of bullet points
                 #   - for example this can happen when the file starts with I), II), III), ...
                 edited_sentences.append(f"{sentence[:2]}{text_before_bullet_points} {sentence[2:]}")
                 is_bullet_point_processing = True
+                is_bullet_point_list.append(True)
+                title_references.append(chunk_before_bullet_points_index)
                 continue
 
             edited_sentences.append(sentence)
+            is_bullet_point_list.append(False)
+            title_references.append(-1)
 
-        return edited_sentences, sentences
+        return edited_sentences, sentences, is_bullet_point_list, title_references
 
 
     # TODO: Add sliding window to each sentence
