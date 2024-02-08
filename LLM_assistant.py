@@ -33,7 +33,7 @@ class LLMAssistant:
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             # assumption: domain description never changes
-            self.chunks = RelevantTextFinderManual.load_chunks()
+            self.chunks, self.is_bullet_point_list, self.title_references = RelevantTextFinderManual.load_chunks()
         
         self.debug_info = self.DebugInfo()
     
@@ -402,7 +402,7 @@ class LLMAssistant:
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             entity_lemmas = RelevantTextFinderManual.get_lemmas(entity1)
-            relevant_texts = RelevantTextFinderManual.get_relevant_texts(entity_lemmas, self.chunks)
+            relevant_texts = RelevantTextFinderManual.get_relevant_texts(entity_lemmas, self.chunks, self.is_bullet_point_list, self.title_references)
 
             result = ""
             for text in relevant_texts:
