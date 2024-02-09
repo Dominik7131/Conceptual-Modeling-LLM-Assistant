@@ -240,6 +240,7 @@ class TextUtility:
             if index == 0:
                 edited_sentences.append(sentence)
                 is_bullet_point_list.append(False)
+                title_references.append(-1)
                 continue
 
             if is_bullet_point_processing:
