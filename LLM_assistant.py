@@ -434,7 +434,7 @@ class LLMAssistant:
                 #prompt += 'First for each attribute output its name and output from the given context only the exact sentence containing this class and attribute. '
                 #prompt += f'Then output only those attributes which you are certain about in JSON format like this: '
                 #prompt += f'Then output those attributes in JSON format like this: '
-                prompt += 'Be careful that some sentences contain more than one attribute. First for each attribute output its name and output only the exact part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "only the exact part of the given context containing this attribute", "name": "attribute name"}.'
+                prompt += 'Be careful that some sentences contain more than one attribute. First for each attribute output its name and output only the exact part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "only the exact part of the given context containing this attribute", "name": "attribute name"}'
 
             is_description = True
             if is_description:

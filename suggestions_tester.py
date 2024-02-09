@@ -12,7 +12,7 @@ TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 # Settings
 IS_GENERATE_EXPECTED_OUTPUT = False
-USER_CHOICE = IS_A_RELATIONSHIPS_STRING
+USER_CHOICE = ATTRIBUTES_STRING
 
 
 def generate_expected_output(test_file_path, output_file_path):
