@@ -1,5 +1,6 @@
 from LLM_assistant import LLMAssistant, ITEMS_COUNT
 from text_utility import ATTRIBUTES_STRING, RELATIONSHIPS_STRING
+import time
 import json
 
 PATH_TO_DATA_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case"
@@ -7,6 +8,7 @@ INPUT_DOMAIN_DESCRIPTION_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/56-2001-extract-
 IS_A_RELATIONSHIPS_STRING = "is_a_relationships"
 ACTUAL_OUTPUT = "actual_output"
 EXPECTED_OUTPUT = "expected_output"
+TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 # Settings
 IS_GENERATE_EXPECTED_OUTPUT = False
@@ -29,8 +31,14 @@ def generate_expected_output(test_file_path, output_file_path):
 def write_output_to_file(file, outputs):
     for index, output in enumerate(outputs):
         file.write(f"{index + 1}) {output['name']}\n")
+
         for key in output:
+            # We already outputed the name
+            if key == "name":
+                continue
+
             file.write((f"- {key}: {output[key]}\n"))
+
         file.write("\n")
 
 
@@ -38,7 +46,7 @@ def main():
 
     test_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}.json"
     output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}_{ACTUAL_OUTPUT}.txt"
-    actual_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}_{ACTUAL_OUTPUT}.txt"
+    actual_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{TIMESTAMP_PREFIX}_{USER_CHOICE}_{ACTUAL_OUTPUT}.txt"
  
     if IS_GENERATE_EXPECTED_OUTPUT:
         generate_expected_output(test_file_path, output_file_path)
