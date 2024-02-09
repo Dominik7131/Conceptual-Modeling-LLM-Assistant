@@ -413,8 +413,10 @@ class LLMAssistant:
         times_to_repeat = count_items_to_suggest
         is_elipsis = False
         if is_domain_description:
-            times_to_repeat = 2
-            is_elipsis = True
+            #times_to_repeat = 2
+            #is_elipsis = True
+            times_to_repeat = 1
+            is_elipsis = False
 
         inference_prompt = "inference from which exact text in the following text was it inferred"
         #inference_prompt = "inference by copying the following text and inserting the symbol < to the start of the part from which it was inferred and inserting the symbol > to the end of the part from which it was inferred"
@@ -429,9 +431,10 @@ class LLMAssistant:
             else:
                 prompt = f'Solely based on the following context which attributes does the entity: "{entity1}" have? '
                 #prompt += 'First for each attribute provide detailed reasoning. '
-                prompt += 'First for each attribute output its name and output from the given context only the exact sentence containing this class and attribute. '
+                #prompt += 'First for each attribute output its name and output from the given context only the exact sentence containing this class and attribute. '
                 #prompt += f'Then output only those attributes which you are certain about in JSON format like this: '
-                prompt += f'Then output those attributes in JSON format like this: '
+                #prompt += f'Then output those attributes in JSON format like this: '
+                prompt += 'Be careful that some sentences contain more than one attribute. First for each attribute output its name and output only the exact part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "only the exact part of the given context containing this attribute", "name": "attribute name"}.'
 
             is_description = True
             if is_description:
@@ -439,7 +442,8 @@ class LLMAssistant:
                     prompt += TextUtility.build_json(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
                 else:
                     # prompt += TextUtility.build_json(names=["name", "inference", "data_type"], descriptions=["* attribute name", f"* attribute {inference_prompt}", "* attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                    prompt += TextUtility.build_json(names=["inference", "name", "data_type"], descriptions=['"from the given context only the exact sentence containing this entity and attribute"', '"attribute name"', '"attribute data type"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    # prompt += TextUtility.build_json(names=["inference", "name"], descriptions=['"only the exact part of the given context containing this attribute"', '"attribute name"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                    pass
 
             else:
                 prompt += TextUtility.build_json(names=["name"], descriptions=["* attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
