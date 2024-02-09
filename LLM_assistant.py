@@ -1,8 +1,9 @@
 from llama_cpp import Llama
 from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, PROPERTIES_STRING
 from find_relevant_text_manual import RelevantTextFinderManual
-import json
+import time
 import logging
+import json
 
 
 ITEMS_COUNT = 5
@@ -13,8 +14,10 @@ TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
 IS_RELATIONSHIPS_IS_A = True
 
 CONFIG_FILE_PATH = "llm-config.json"
+TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
+LOG_FILE_PATH = f"{TIMESTAMP}-log.txt"
 
-logging.basicConfig(level=logging.DEBUG, format="%(message)s")
+logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
 
 
 class LLMAssistant:
