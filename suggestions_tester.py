@@ -45,11 +45,11 @@ def write_output_to_file(file, outputs):
 def main():
 
     test_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}.json"
-    output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}_{ACTUAL_OUTPUT}.txt"
-    actual_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{TIMESTAMP_PREFIX}_{USER_CHOICE}_{ACTUAL_OUTPUT}.txt"
+    expected_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}_{EXPECTED_OUTPUT}.txt"
+    actual_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{TIMESTAMP_PREFIX}-{USER_CHOICE}-{ACTUAL_OUTPUT}.txt"
  
     if IS_GENERATE_EXPECTED_OUTPUT:
-        generate_expected_output(test_file_path, output_file_path)
+        generate_expected_output(test_file_path, expected_output_file_path)
         return
 
     llm_assistant = LLMAssistant()
