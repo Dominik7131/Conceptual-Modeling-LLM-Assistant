@@ -146,10 +146,21 @@ class LLMAssistant:
         if "name" not in completed_item:
             completed_item["name"] = "error: no name"
             is_item_ok = False
-        
-        if not isinstance(completed_item['name'], str):
+
+        elif not isinstance(completed_item['name'], str):
             completed_item["name"] = "error: name is not a string"
             is_item_ok = False
+        
+        elif not completed_item["name"]: # is string empty
+            completed_item["name"] = "error: name is empty string"
+            is_item_ok = False
+
+        else:
+            # Lower case the first letter in the `name` to consistently have all names with the first letter in lower case
+            completed_item["name"] = completed_item["name"][0].lower() + completed_item["name"][1:]
+
+            completed_item["name"] = TextUtility.convert_name_to_standard_convention(completed_item["name"])
+        
 
         if user_choice == ATTRIBUTES_STRING:
             pass
@@ -326,7 +337,9 @@ class LLMAssistant:
             if is_skip_parsing:
                 continue
 
-            text = text.replace("'", "") # Edit apostrophes for now by deleting them
+            # Edit apostrophes for now by deleting them
+            # TODO: If apostrophes need to be replaced then remember the substituted symbol to replace them back after the parsing
+            text = text.replace("'", "")
             for char in text:
                 if char == '{':
                     is_item_start = True
@@ -346,7 +359,8 @@ class LLMAssistant:
                     if opened_square_brackets == 0:
                         return items
                 
-                # Return when LLM gets stuck in printing only new lines
+                # Return when LLM gets stuck in generating only new lines
+                # This can happened both with `ctransformers` and with `llama-cpp-python` library
                 if new_lines_in_a_row > 3:
                     logging.warning("Warning: too many new lines")
                     return items
