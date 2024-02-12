@@ -200,6 +200,56 @@ class TextUtility:
         return sentences
 
 
+    def is_camel_case(string, can_be_snake_case = True):
+        if not string:
+            return False
+        
+        if string[0].islower():
+            return False
+        
+        if string.isspace():
+            return False
+        
+        if can_be_snake_case and '_' in string:
+            return False
+
+        return True
+
+
+    def convert_name_to_standard_convention(name):
+        if not name:
+            return ""
+
+        # Detect snake_case_convention
+        if name[0].islower() and '_' in name:
+            name_parts = name.split('_')
+            result = ""
+
+            for name_part in name_parts:
+                result += name_part + ' '
+            
+            result = result.rstrip() # Remove trailing space
+            return result
+        
+        # Detect CamelCase
+        if TextUtility.is_camel_case(name, can_be_snake_case=False):
+            result = ""
+
+            for index, char in enumerate(name):
+                if index == 0:
+                    result += char
+                    continue
+
+                if (char.isupper()):
+                    result += ' ' + char.lower()
+                else:
+                    result += char
+
+            return result
+
+        return name
+
+
     def create_query(entity):
         #query = f'What attributes does \"{entity}\" have?'
         #query = f"Information about {entity}"
