@@ -1,0 +1,394 @@
+Entity: vehicle
+1) category
+- inference: vehicle category
+- data type: string
+- cardinality: 
+
+
+Entity: road vehicle
+1) purpose
+- inference: the purpose for which the road vehicle is intended
+- data type: string
+- cardinality: 
+
+2) factory mark
+- inference: the manufacturer's factory mark as specified by the road vehicle manufacturer
+- data type: string
+- cardinality: 
+
+3) trade name
+- inference: the trade name if specified by the road vehicle manufacturer
+- data type: string
+- cardinality: 
+
+4) vehicle identification number
+- inference: the vehicle identification number (VIN) of the road vehicle
+- data type: string
+- cardinality: 
+
+5) chassis serial number
+- inference: the chassis serial number of the road vehicle
+- data type: string
+- cardinality: 
+
+6) number of seats
+- inference: for a road vehicle it is stated: number of seats
+- data type: integer
+- cardinality: 
+
+7) number of standing places
+- inference: for a road vehicle it is stated: number of standing places
+- data type: integer
+- cardinality: 
+
+8) number of beds
+- inference: for a road vehicle it is stated: number of beds
+- data type: integer
+- cardinality: 
+
+9) dimensions of loading area
+- inference: for a road vehicle it is stated: dimensions of the loading area
+- data type: number
+- cardinality: 
+
+10) volume of box
+- inference: for a road vehicle it is stated: volume of the box
+- data type: number
+- cardinality: 
+
+11) volume of tank
+- inference: for a road vehicle it is stated: volume of the tank
+- data type: number
+- cardinality: 
+
+12) overall dimension
+- inference: the overall dimensions of the road vehicle
+- data type: number
+- cardinality: 
+
+13) is not listed as missing
+- inference: the road vehicle is not listed as missing
+- data type: boolean
+- cardinality: 
+
+14) is not listed as stolen
+- inference: the road vehicle is not listed as stolen
+- data type: boolean
+- cardinality: 
+
+
+Entity: motorised vehicle
+1) maximum technically permissible weight
+- inference: the maximum technically permissible weight of the road motor vehicle
+- data type: number
+- cardinality: 
+
+2) maximum permissible weight
+- inference: the maximum permissible weight of the road motor vehicle
+- data type: number
+- cardinality: 
+
+3) maximum permissible operating weight
+- inference: the maximum permissible operating weight of the road motor vehicle
+- data type: number
+- cardinality: 
+
+4) maximum technically permissible weight per axle
+- inference: of the road motor vehicle and the maximum technically permissible weight per axle
+- data type: number
+- cardinality: 
+
+5) maximum permissible weight per axle
+- inference: of the road motor vehicle and the maximum permissible weight per axle
+- data type: number
+- cardinality: 
+
+6) type of coupling device
+- inference: the type of coupling device
+- data type: number
+- cardinality: 
+
+7) maximum technically permissible mass of the trailer
+- inference: the maximum technically permissible mass of the trailer
+- data type: number
+- cardinality: 
+
+8) maximum permissible mass of the trailer
+- inference: the maximum permissible mass of the trailer
+- data type: number
+- cardinality: 
+
+9) maximum technically permissible mass of the combination
+- inference: the maximum technically permissible mass of the combination
+- data type: number
+- cardinality: 
+
+10) maximum permissible mass of the combination
+- inference: the maximum permissible mass of the combination
+- data type: number
+- cardinality: 
+
+
+Entity: natural person
+1) full name
+- inference: If the person is a natural person, his name
+- data type: string
+- cardinality: 
+
+2) first name
+- inference: If the person is a natural person, where applicable, first names
+- data type: string
+- cardinality: 0..*
+
+3) last name
+- inference: If the person is a natural person, where applicable, last names
+- data type: string
+- cardinality: 0..*
+
+4) birth number
+- inference: If the person is a natural person, his birth number
+- data type: integer
+- cardinality: 0..1
+
+5) birth date
+- inference: If the person is a natural person, his date of birth shall be entered
+- data type: string
+- cardinality: 0..1
+
+
+Entity: business natural person
+1) business name
+- inference: if the person is a natural person engaged in business, then the business name
+- data type: string
+- cardinality: 0..1
+
+2) first name
+- inference: if the person is a natural person engaged in business, then business name or first name
+- data type: string
+- cardinality: 0..*
+
+3) last name
+- inference: if the person is a natural person engaged in business, then business name or last name
+- data type: string
+- cardinality: 0..*
+
+4) distinguishing name supplement
+- inference: if the person is a natural person engaged in business, where appropriate, a distinguishing supplement
+- data type: string
+- cardinality: 0..1
+
+5) personal identification number
+- inference: if the person is a natural person engaged in business, where appropriate, the personal identification number
+- data type: string
+- cardinality: 0..1
+
+
+Entity: legal person
+1) business name
+- inference: If it is a legal person, then the business name or name shall be indicated
+- data type: string
+- cardinality: 0..1
+
+2) name
+- inference: If it is a legal person, then the business name or name shall be indicated
+- data type: string
+- cardinality: 0..1
+
+3) personal identification number
+- inference: If it is a legal person the personal identification number shall be indicated
+- data type: string
+- cardinality: 0..1
+
+
+Entity: legal person branch
+1) business name
+- inference: If it is a legal person or a branch thereof, then the business name or name shall be indicated
+- data type: string
+- cardinality: 0..1
+
+2) name
+- inference: If it is a legal person or a branch thereof, then the business name or name shall be indicated
+- data type: string
+- cardinality: 0..1
+
+
+Entity: registration
+1) registration date
+- inference: the date of first registration of the road vehicle
+- data type: string
+- cardinality: 
+
+2) state of registration
+- inference: the state of last registration of the road vehicle
+- data type: string
+- cardinality: 
+
+3) registration plate
+- inference: the registration plate
+- data type: string
+- cardinality: 0..1
+
+4) registration plate assignment date
+- inference: the date on which the registration plate was assigned
+- data type: string
+- cardinality: 0..1
+
+
+Entity: registration certificate
+1) number
+- inference: the number of the registration certificate
+- data type: number
+- cardinality: 
+
+
+Entity: registration application
+1) proof of vehicle roadworthiness
+- inference: attach to the application for registration a proof of the vehicle's roadworthiness
+- data type: string
+- cardinality: 
+
+2) proof of technical inspection
+- inference: attach to the application for registration proof of a technical inspection
+- data type: string
+- cardinality: 
+
+
+Entity: third party insurance
+1) date of notification
+- inference: the date of notification
+- data type: string
+- cardinality: 
+
+2) date of commencement
+- inference: the date of commencement of insurance
+- data type: string
+- cardinality: 
+
+3) period of interruption
+- inference: the period of interruption of insurance
+- data type: string
+- cardinality: 
+
+4) date of change
+- inference: the date of change of insurance
+- data type: string
+- cardinality: 
+
+5) date of termination
+- inference: the date of termination of insurance
+- data type: string
+- cardinality: 
+
+
+Entity: insurance contract
+1) duration of insurance
+- inference: the insurance contract shall always contain the duration of the insurance
+- data type: string
+- cardinality: 
+
+2) limit of insurance benefits
+- inference: the insurance contract shall always contain the limit of the insurance benefit
+- data type: string
+- cardinality: 
+
+3) amount of premium
+- inference: the insurance contract shall always contain the amount of the premium
+- data type: string
+- cardinality: 
+
+4) maturity
+- inference: the insurance contract shall always contain its maturity
+- data type: string
+- cardinality: 
+
+5) method of payment
+- inference: the insurance contract shall always contain the method of payment
+- data type: string
+- cardinality: 
+
+6) form of notification of claim
+- inference: the insurance contract shall always contain the form of notification of the claim
+- data type: string
+- cardinality: 
+
+7) place of notification of claim
+- inference: the insurance contract shall always contain the place of notification of the claim
+- data type: string
+- cardinality: 
+
+
+Entity: engine
+1) engine type
+- inference: type of engine specified by the manufacturer of the road vehicle
+- data type: string
+- cardinality: 
+
+2) engine power
+- inference: engine power specified by the road vehicle manufacturer
+- data type: integer
+- cardinality: 
+
+3) fuel type
+- inference: the engine data for the road vehicle that include the fuel type of the road vehicle
+- data type: string
+- cardinality: 
+
+
+Entity: internal combustion engine
+1) displacement
+- inference: the displacement of the internal combustion engine
+- data type: string
+- cardinality: 
+
+
+Entity: body work
+1) type
+- inference: type of bodywork
+- data type: string
+- cardinality: 
+
+2) serial number
+- inference: serial number of bodywork
+- data type: string
+- cardinality: 
+
+3) color
+- inference: colour of bodywork
+- data type: string
+- cardinality: 
+
+
+Entity: technical inspection
+1) type
+- inference: type of technical inspection carried out
+- data type: string
+- cardinality: 
+
+2) date
+- inference: date on which the technical inspection was carried out
+- data type: string
+- cardinality: 
+
+3) date of validity
+- inference: date of validity of the technical inspection
+- data type: string
+- cardinality: 
+
+4) condition
+- inference: data on the condition of the road vehicle according to the result of the technical inspection
+- data type: string
+- cardinality: 
+
+5) result
+- inference: result of the technical inspection
+- data type: string
+- cardinality: 
+
+
+Entity: technical inspection report
+1) date of issue
+- inference: the date of issue of the technical inspection report
+- data type: string
+- cardinality: 
+
+
