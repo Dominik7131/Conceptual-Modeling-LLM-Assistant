@@ -8,10 +8,9 @@ import json
 
 ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
-IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
-IS_RELATIONSHIPS_IS_A = True
+IS_RELATIONSHIPS_IS_A = False
 
 CONFIG_FILE_PATH = "llm-config.json"
 TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
@@ -75,7 +74,8 @@ class LLMAssistant:
                 if IS_RELATIONSHIPS_IS_A:
                     system = "You are an expert at extracting is-a relationships in JSON format for a given entity solely based on a given context."
                 else:
-                    system = "You are an expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
+                    system = "You are expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
+                    #system = "You are expert at extracting relationships in JSON format for a given entity solely based on a given context."
 
 
 
@@ -101,18 +101,6 @@ class LLMAssistant:
             system = ""
 
         self.messages.append({"role": "system", "content": system})
-
-        user_first_msg = "What is the definition of conceptual model in software engineering?"
-        assistent_first_msg = "In software engineering, a conceptual model is a high-level representation of a system or problem domain that helps to organize and understand the key concepts, relationships, and constraints involved. It provides a framework for thinking about the problem space and can be used as a starting point for further analysis, design, and development. \
-            A conceptual model typically includes: \
-            Entities: The objects or concepts that are relevant to the problem domain. These may include users, systems, processes, data, etc. \
-            Relationships: The connections between entities, such as associations, dependencies, or compositions. \
-            Attributes: The characteristics or properties of entities and relationships."
-
-        if IS_CONCEPTUAL_MODEL_DEFINITION:
-            self.messages.append({"role": "user", "content": user_first_msg})
-            self.messages.append({"role": "assistant", "content": assistent_first_msg})
-
         self._are_default_messages_appended = True
         return
     
@@ -163,13 +151,21 @@ class LLMAssistant:
 
         elif user_choice == RELATIONSHIPS_STRING:
 
+            if not 'source' in completed_item or not 'target' in completed_item:
+                completed_item["name"] = "error: missing key 'source' or 'target' entity"
+                return completed_item, False
+
             is_entity1_source_or_target = user_input_entity1 == completed_item['source'] or user_input_entity1 == completed_item['target']
 
             is_entity1_in_sentence = True
             if "sentence" in completed_item:
                 is_entity1_in_sentence = user_input_entity1 in completed_item['sentence']
-            
-            is_none = (completed_item['source'].lower() == "none") or (completed_item['target'].lower() == "none")
+
+            try:            
+                is_none = (completed_item['source'].lower() == "none") or (completed_item['target'].lower() == "none")
+            except AttributeError:
+                completed_item["name"] = "error: unexpected exception"
+                return completed_item, False
             
             if not is_entity1_source_or_target or not is_entity1_in_sentence or is_none:
                 # For debugging purpuses do not end parsing but otherwise we would probably end
@@ -460,21 +456,22 @@ class LLMAssistant:
                 if IS_RELATIONSHIPS_IS_A:
                     prompt = f'Solely based on the following context which is-a relationships does this entity: "{entity1}" have? First output all possible is-a relationships for the entity "{entity1}". Then output only those is-a relationships which you are certain about in JSON format like this: '
                 else:
-                    prompt = f'Solely based on the following text which relationships does this entity: "{entity1}" have? '
+                    prompt = f'Solely based on the following context which relationships does this entity: "{entity1}" have? '
+                    prompt += 'First for each relationship output its name and output only the exact part of the given context containing this relationship. Be careful that some sentences contain more than one relationship so make sure to not skip any relationship. After outputting all relationships output each single relationship in JSON object like this: {"inference": "only the exact part of the given context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}'
 
                     #prompt += f'Always make sure that the entity: "{entity_name}" is the source entity in all the relationships. '
                     #prompt += f'Output only those relationships which you are certain about in JSON format like this: '
-                    prompt += f'Output it in JSON format like this: '
+                    #prompt += f'Output it in JSON format like this: '
             
-            names = ["inference", "name", "source", "target"]
+            #names = ["inference", "name", "source", "target"]
 
-            prompt += TextUtility.build_json(
-                names=names,
+            #prompt += TextUtility.build_json(
+                #names=names,
                 #descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
                 #descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship", f"* relationship {inference_prompt}", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
                 # is-a
-                descriptions=['"text from the following context containing this relationship"', '"is-a"', '"source entity name"', '"target entity name"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
+                #descriptions=['"text from the following context containing this relationship"', '"is-a"', '"source entity name"', '"target entity name"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
     
         
@@ -521,10 +518,7 @@ class LLMAssistant:
         if not is_domain_description:
             pass
         else:
-            if user_choice == ATTRIBUTES_STRING:
-                prompt += f'. This is the following context:\n"{domain_description}"'
-            else:
-                prompt += f'. This is the following text:\n"{domain_description}"'
+            prompt += f'. This is the following context:\n"{domain_description}"'
         
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
