@@ -557,7 +557,7 @@ class LLMAssistant:
         tries_limit = 3
 
         items = []
-        while items.len() == 0:
+        while len(items) == 0:
             tries_count += 1
             logging.debug(f"Try number: {tries_count}")
             items = self.__parse_non_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
