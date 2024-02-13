@@ -2,7 +2,6 @@ import logging
 from ufal.morphodita import *
 
 TAGGER_FILE = "C:/Users/dommo/.cache/morphodita-models/english-morphium-wsj-140407/english-morphium-wsj-140407.tagger"
-logging.basicConfig(level=logging.DEBUG, format="%(message)s")
 
 # Code based on the `run_tagger` documentation https://pypi.org/project/ufal.morphodita/
 class Morphodita_Tagger:
