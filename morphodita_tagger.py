@@ -1,11 +1,10 @@
-import sys
 import logging
 from ufal.morphodita import *
 
 TAGGER_FILE = "C:/Users/dommo/.cache/MorphoDiTa models/english-morphium-wsj-140407/english-morphium-wsj-140407.tagger"
 logging.basicConfig(level=logging.DEBUG, format="%(message)s")
 
-# Code based on the run_tagger documentation https://pypi.org/project/ufal.morphodita/
+# Code based on the `run_tagger` documentation https://pypi.org/project/ufal.morphodita/
 class Morphodita_Tagger:
 
     def __init__(self):
@@ -43,6 +42,8 @@ class Morphodita_Tagger:
 
 
 def main():
+
+    # Simple usage example
     text = "road vehicles"
     morphodita_tagger = Morphodita_Tagger()
     result = morphodita_tagger.get_lemmas(text)
