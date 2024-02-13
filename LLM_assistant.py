@@ -553,7 +553,18 @@ class LLMAssistant:
         messages_prettified = TextUtility.messages_prettify(new_messages)
         logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
-        items = self.__parse_non_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+        tries_count = 0
+        tries_limit = 3
+
+        items = []
+        while items.len() == 0:
+            tries_count += 1
+            logging.debug(f"Try number: {tries_count}")
+            items = self.__parse_non_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+
+            if tries_count >= tries_limit:
+                break
+
         self.debug_info.prompt = messages_prettified
         return items
 
