@@ -1,6 +1,6 @@
 from llama_cpp import Llama
 from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, PROPERTIES_STRING
-from find_relevant_text_lemmatization import RelevantTextFinderManual
+from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
 import logging
 import json
@@ -35,8 +35,8 @@ class LLMAssistant:
         self.llm = Llama(model_path=model_path, chat_format=model_type, n_gpu_layers=-1, main_gpu=1, n_ctx=context_size, verbose=True)
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
-            # assumption: domain description never changes
-            self.chunks, self.is_bullet_point_list, self.title_references = RelevantTextFinderManual.load_chunks()
+            # Assumption: domain description never changes
+            self.relevant_text_finder = RelevantTextFinderLemmatization()
         
         self.debug_info = self.DebugInfo()
     
@@ -426,8 +426,7 @@ class LLMAssistant:
         self.__append_default_messages_for_suggestions(user_choice=user_choice, is_domain_description=is_domain_description)        
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
-            entity_lemmas = RelevantTextFinderManual.get_lemmas(entity1)
-            relevant_texts = RelevantTextFinderManual.get_relevant_texts(entity_lemmas, self.chunks, self.is_bullet_point_list, self.title_references)
+            relevant_texts = self.relevant_text_finder.get(entity1)
 
             result = ""
             for text in relevant_texts:

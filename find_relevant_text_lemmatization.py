@@ -1,13 +1,11 @@
 from text_utility import TextUtility
-import requests
+from morphodita_tagger import Morphodita_Tagger
 import json
 
 PATH_TO_DATA_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case/"
 INPUT_DOMAIN_DESCRIPTION_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/56-2001-extract-llm-assistant-test-case.txt"
 
 ENTITY = "green card"
-MODEL = "english-morphium-wsj-140407"
-BASE_URL = "http://lindat.mff.cuni.cz/services/morphodita/api/tag?"
 CHACHING_FILE = "cache.txt"
 OUTPUT_FILE = "out_manual.txt"
 
@@ -15,64 +13,44 @@ IS_CHUNKS_CACHING = False
 IS_SAVE_OUTPUT_TO_FILE = True
 
 
-class RelevantTextFinderManual:
+class RelevantTextFinderLemmatization:
 
-    def load_chunks():
+    def __init__(self):
+        self.tagger = Morphodita_Tagger()
+
+
+    def load_chunks(self):
         # Edited chunks contain more text than chunks for more context
-        edited_chunks, chunks, is_bullet_point_list, title_references = TextUtility.split_file_into_chunks(INPUT_DOMAIN_DESCRIPTION_FILE_PATH)
+        edited_chunks, self.chunks, self.is_bullet_point_list, self.title_references = TextUtility.split_file_into_chunks(INPUT_DOMAIN_DESCRIPTION_FILE_PATH)
 
         if IS_CHUNKS_CACHING:
-            RelevantTextFinderManual.cache_chunks(edited_chunks)
-        
-        return chunks, is_bullet_point_list, title_references
+            RelevantTextFinderLemmatization.cache_chunks(edited_chunks)
+
+        return
 
 
-    def cache_chunks(chunks):
+    def cache_chunks(self):
         with open(CHACHING_FILE, 'w') as file:
-            for chunk in chunks:
-                response = requests.get(f"{BASE_URL}model={MODEL}&data={chunk}&output=json")
-                json_text = json.loads(response.text)
-                results_json = json_text['result']
-
-                parsed_lemmas = []
-                for result in results_json:
-                    for dictionary in result:
-                        parsed_lemmas.append(dictionary['lemma'].lower())
-
-                lemmas_json = json.dumps(parsed_lemmas)
+            for chunk in self.chunks:
+                lemmas = self.tagger.get_lemmas(chunk)
+                lemmas_json = json.dumps(lemmas)
                 lemmas_json = '{"lemmas" : ' + lemmas_json + ' }'
 
                 file.write(f"{lemmas_json}\n")
 
 
-    def get_lemmas(text):
-        text_parts = text.split()
-        lemmas = []
-        for text_part in text_parts:
-            try:
-                response = requests.get(f"{BASE_URL}model={MODEL}&data={text_part}&output=json")
-            except:
-                print("Error: Invalid response")
+    def get(self, entity, domain_description = ""):
 
-            # Exception
-            if text_part == "motorised":
-                lemmas.append("motorised")
-                continue
+        # TODO: convert `domain_description` into chunks
+        self.load_chunks()
+        entity_lemmas = self.tagger.get_lemmas(entity)
+        # print(f"Aquired lemmas: {lemmas}")
 
-            json_text = json.loads(response.text)
-            lemmas.append(json_text['result'][0][0]['lemma'])
-        
-        print(f"Aquired lemmas: {lemmas}")
-        return lemmas
-
-
-    def get_relevant_texts(entity_lemmas, chunks, is_bullet_point_list, title_references):
         result = []
-
         is_chunk_included = []
 
         with open(CHACHING_FILE, 'r') as caching_file:
-            for index, chunk in enumerate(chunks):
+            for index, chunk in enumerate(self.chunks):
                 # Load chunk lemmas from the cached file
                 chunk_lemmas = caching_file.readline()
                 chunk_lemmas_json = json.loads(chunk_lemmas)
@@ -90,10 +68,10 @@ class RelevantTextFinderManual:
                     is_chunk_included.append(True)
 
                     # If a bullet point is included then make sure that the text in front of these bullet points is included
-                    if is_bullet_point_list[index]:
-                        if not is_chunk_included[title_references[index]]:
-                            result.append(chunks[title_references[index]])
-                            is_chunk_included[title_references[index]] = True
+                    if self.is_bullet_point_list[index]:
+                        if not is_chunk_included[self.title_references[index]]:
+                            result.append(self.chunks[self.title_references[index]])
+                            is_chunk_included[self.title_references[index]] = True
 
                     result.append(chunk)
 
@@ -121,9 +99,9 @@ class RelevantTextFinderManual:
                         output_file.write(f"{chunk}\n")
 
 def main():
-    chunks, is_bullet_point_list, title_references = RelevantTextFinderManual.load_chunks()
-    entity_lemmas = RelevantTextFinderManual.get_lemmas(ENTITY)
-    relevant_texts = RelevantTextFinderManual.get_relevant_texts(entity_lemmas, chunks, is_bullet_point_list, title_references)
+
+    relevant_text_finder = RelevantTextFinderLemmatization()
+    relevant_texts = relevant_text_finder.get(ENTITY)
 
     if IS_SAVE_OUTPUT_TO_FILE:
         with open(OUTPUT_FILE, 'w') as file:

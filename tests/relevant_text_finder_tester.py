@@ -2,7 +2,7 @@ import sys
 sys.path.append('.')
 import json
 from text_utility import TextUtility
-from find_relevant_text_lemmatization import RelevantTextFinderManual
+from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 
 PATH_TO_DATA_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case/"
 TEST_DATA_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}relevant_texts.json"
@@ -11,17 +11,14 @@ class RAGTester:
 
     def test_lemmas_approach():
         test_cases = RAGTester.load_test_cases()
-
-        chunks, is_bullet_point_list, text_references = RelevantTextFinderManual.load_chunks()
-
+        relevant_text_finder = RelevantTextFinderLemmatization()
         are_all_tests_passing = True
 
         for test_case in test_cases:
             entity = test_case['entity']
             expected_relevant_texts = test_case['relevant_texts']
 
-            entity_lemmas = RelevantTextFinderManual.get_lemmas(entity)
-            actual_relevant_texts = RelevantTextFinderManual.get_relevant_texts(entity_lemmas, chunks, is_bullet_point_list, text_references)
+            actual_relevant_texts = relevant_text_finder.get(entity)
 
             for expected_text in expected_relevant_texts:
                 is_relevant_text_found = False
@@ -41,12 +38,12 @@ class RAGTester:
     def output_relevant_text_for_given_entities():
         entities = ["vehicle type", "motorised vehicle", "structural component", "manufacturer", "vehicle system", "owner", "operator", "natural person", "business natural person", "address", "legal person", "registration", "registration application", "third party insurance", "insurance contract", "policy holder", "insurer", "green card", "technical inspection", "technical inspection report", "defect"]
 
-        chunks, is_bullet_point_list, text_references = RelevantTextFinderManual.load_chunks()
+        chunks, is_bullet_point_list, text_references = RelevantTextFinderLemmatization.load_chunks()
         print()
         
         for entity in entities:
-            entity_lemmas = RelevantTextFinderManual.get_lemmas(entity)
-            relevant_texts = RelevantTextFinderManual.get_relevant_texts(entity_lemmas, chunks, is_bullet_point_list, text_references)
+            entity_lemmas = RelevantTextFinderLemmatization.get_lemmas(entity)
+            relevant_texts = RelevantTextFinderLemmatization.get(entity_lemmas, chunks, is_bullet_point_list, text_references)
             print(f"Entity: {entity}")
             for text in relevant_texts:
                 print(text)
@@ -135,9 +132,9 @@ class RAGTester:
 
 
 def main():
-    #RAGTester.test_lemmas_approach()
+    RAGTester.test_lemmas_approach()
 
-    RAGTester.output_relevant_text_for_given_entities()
+    #RAGTester.output_relevant_text_for_given_entities()
 
 
 if __name__ == "__main__":
