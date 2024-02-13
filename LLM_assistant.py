@@ -480,6 +480,8 @@ class LLMAssistant:
             else:
                 if IS_RELATIONSHIPS_IS_A:
                     prompt = f'Solely based on the following context which is-a relationships does this entity: "{entity1}" have? First output all possible is-a relationships for the entity "{entity1}". Then output only those is-a relationships which you are certain about in JSON format like this: '
+                    prompt += '{"inference": "text from the following context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}'
+
                 else:
                     #prompt = f'Solely based on the following text which relationships does this entity: "{entity1}" have? '
 
