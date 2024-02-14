@@ -108,25 +108,12 @@ def suggest():
 
     is_mock_up = True
     is_stream_output = False
+    
     if is_mock_up:
         if not is_stream_output:
             return create_suggest_mock_up(entity1, user_choice, domain_description)
-
-        # TODO: read the Request Context documentation: https://flask.palletsprojects.com/en/3.0.x/reqcontext/
-        def generate():
-            yield {"name": "name1", "inference": "courses have a name1", "data_type": "string"}
-            yield {"name": "name2", "inference": "courses have a name2", "data_type": "string"}
-            yield {"name": "name3", "inference": "courses have a name3", "data_type": "string"}
-        return generate()
     else:
-        suggestions = llm_assistant.suggest(entity1, "", user_choice, 5, conceptual_model=[], domain_description=domain_description)
-        print("Suggestions:")
-        print(suggestions)
-        return suggestions
-        # suggestions_iterator = llm_assistant.suggest(entity1, "", user_choice, 5, conceptual_model=[], domain_description=domain_description)
-        # for suggestion in suggestions_iterator:
-        #     print(suggestion)
-        #     yield suggestion
+        return llm_assistant.suggest(entity1, "", user_choice, 5, conceptual_model=[], domain_description=domain_description)
 
 
 def create_summary_mock_up(entities : list[str]) -> list[dict]:
@@ -166,19 +153,6 @@ def summary():
     return json.dumps(result)
 
 
-# curl --data 'user=dom' http://127.0.0.1:5000
-# @app.route('/curl', methods=['GET'])
-# def curl():
-#     print(request.form)
-#     entity1 = request.form.get("entity1")
-#     user_choice = request.form.get("user_choice")
-#     file = request.files.get('description')
-#     domain_description = str(file.read())
-#     print(f"Domain description: {domain_description}")
-    
-#     return assistant.suggest(entity1=entity1, user_choice=user_choice, domain_description=domain_description)
-
-
 @app.route('/test', methods=['GET'])
 @cross_origin()
 def test():
@@ -186,14 +160,19 @@ def test():
     return json.dumps(dictionary)
 
 
+@app.route('/stream_test')
+@cross_origin()
+def stream_test():
+
+    def generate_items():
+        yield f"Number: {1}\n"
+        yield f"Number: {2}\n"
+        yield f"Number: {3}\n"
+
+    return generate_items()
 
 
 if __name__ == '__main__':
-
-    # Define the model
-    # model_path_or_repo_id = "TheBloke/Llama-2-7B-Chat-GGUF"
-    # model_file = "llama-2-7b-chat.Q5_K_M.gguf"
-    # model_type = "llama"
-    # llm_assistant = LLMAssistant(model_path_or_repo_id=model_path_or_repo_id, model_file=model_file, model_type=model_type)
+    #llm_assistant = LLMAssistant()
 
     app.run(port=5000) # host="0.0.0.0"
