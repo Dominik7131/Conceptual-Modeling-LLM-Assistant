@@ -14,7 +14,7 @@ commands.txt
 llama/
 output/
 requirements.txt
-test_llama_cpp.py
+get_stream.py
 cache.txt
 data/56-2001-extract-llm-assistant-test-case/56-2001-extract-llm-assistant-test-case.txt_embeddings.npy
 data/56-2001-extract-llm-assistant-test-case/actual_output.txt
