@@ -167,53 +167,94 @@ const useConceptualModel = () =>
           const userChoice = "attributes"
           const url = `http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=${userChoice}&domain_description=${currentDomainDesciption}`
     
-          // fetch(url)
-          // .then(response => response.json())
-          // .then(data => 
-          //     {
-          //       for (let i = 0; i < data.length; i++)
-          //       {
-          //         // let attribute = JSON.parse(data[i])
-          //         let attribute : Attribute = data[i]
-          //         console.log("Attribute: ")
-          //         console.log(attribute)
-          //         setSuggestedAttributes(previousSuggestedAttributes => {
-          //           return [...previousSuggestedAttributes, attribute]
-          //         })
-          //       }
-          //     })
-          // .catch(error => console.log(error))
-          // return
+          const is_fetch_stream_data = true
 
-          const fetchData = async () =>
+          if (!is_fetch_stream_data)
           {
-            const response = await fetch(url);
-            if (!response.ok || !response.body)
-            {
-              throw response.statusText;
-            }
-
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder();
-     
-            while (true)
-            {
-              const { value, done } = await reader.read();
-              console.log("Value: ")
-              console.log(value)
-              if (done)
-              {
-                console.log("Done")
-                break;
-              }
-     
-              const decodedChunk = decoder.decode(value, { stream: true });
-              console.log("Data: ")
-              console.log(decodedChunk)
-            }
+            fetch(url)
+            .then(response => response.json())
+            .then(data => 
+                {
+                  for (let i = 0; i < data.length; i++)
+                  {
+                    // let attribute = JSON.parse(data[i])
+                    let attribute : Attribute = data[i]
+                    console.log("Attribute: ")
+                    console.log(attribute)
+                    setSuggestedAttributes(previousSuggestedAttributes => {
+                      return [...previousSuggestedAttributes, attribute]
+                    })
+                  }
+                })
+            .catch(error => console.log(error))
+            return
           }
 
-          fetchData()
+          // const test_url = `http://127.0.0.1:5000/stream_test`
+          // Fetch the event stream from the server
+          // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
+          fetch(url)
+          .then(response =>
+            {
+              // Get the readable stream from the response body
+              const stream = response.body;
+
+              if (stream == null)
+              {
+                console.log("Stream is null")
+                return
+              }
+
+              // Get the reader from the stream
+              const reader = stream.getReader();
+
+              // Define a function to read each chunk
+              const readChunk = () =>
+              {
+                  // Read a chunk from the reader
+                  reader.read()
+                      .then(({value, done}) =>
+                      {
+                          if (done)
+                          {
+                              console.log("Stream finished")
+                              return
+                          }
+
+                          // Convert the `value` to a string
+                          const jsonString = new TextDecoder().decode(value)
+                          console.log(jsonString)
+                          console.log("\n")
+
+                          // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
+                          const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
+
+                          for (let i = 0; i < jsonStringParts.length; i++)
+                          {
+                            let attribute : Attribute = JSON.parse(jsonStringParts[i])
+                            console.log("Attribute: ")
+                            console.log(attribute)
+                            setSuggestedAttributes(previousSuggestedAttributes => {
+                              return [...previousSuggestedAttributes, attribute]
+                            })
+                          }
+
+                          // Read the next chunk
+                          readChunk();
+                      })
+                      .catch(error =>
+                      {
+                        console.error(error);
+                      });
+              };
+              // Start reading the first chunk
+              readChunk();
+          })
+          .catch(error =>
+          {
+              console.error(error);
+          });
+
         }
         else
         {
