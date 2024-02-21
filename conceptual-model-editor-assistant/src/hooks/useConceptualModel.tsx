@@ -7,6 +7,7 @@ import useUtility from './useUtility';
 
 const initialNodes : Node[] = [{ id: 'student', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
 
+
 const useConceptualModel = () =>
 {
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
@@ -22,7 +23,7 @@ const useConceptualModel = () =>
   
     const [summaryData, setSummaryData] = useState<SummaryObject[]>([])
   
-    const [domainDescription, setDomainDescription] = useState<string>("We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price.")
+    const [domainDescription, setDomainDescription] = useState<string>("")
   
     const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState<boolean>(false)
 
@@ -57,7 +58,7 @@ const useConceptualModel = () =>
 
       const parseSerializedConceptualModel = () =>
       {
-        const input = { "entities": [ {"name": "Person", "attributes": []},
+        const input = { "entities": [ {"name": "Engine", "attributes": []},
                                       {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
                                       {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
                                       {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
@@ -222,7 +223,10 @@ const useConceptualModel = () =>
                           }
 
                           // Convert the `value` to a string
-                          const jsonString = new TextDecoder().decode(value)
+                          var jsonString = new TextDecoder().decode(value)
+                          // Replace all single quotes with double quotes
+                          // We need to use reg-exp to replace all single quotes
+                          jsonString = jsonString.replace(/'/g, '"')
                           console.log(jsonString)
                           console.log("\n")
 
@@ -323,6 +327,14 @@ const useConceptualModel = () =>
         updateNodes()
 
         parseSerializedConceptualModel()
+
+        // Load domain description from a file
+        fetch("input.txt")
+        .then((res) => res.text())
+        .then((text) => {
+          setDomainDescription(_ => text)
+         })
+        .catch((e) => console.error(e));
     
         const domainDescriptionTextArea = document.getElementById("domainDescriptionText")
         if (domainDescriptionTextArea)
