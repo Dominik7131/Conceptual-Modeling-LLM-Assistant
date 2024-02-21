@@ -7,6 +7,7 @@ import json
 
 
 ITEMS_COUNT = 5
+IS_GENERATOR_FUNCTION = True
 IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
@@ -137,7 +138,11 @@ class LLMAssistant:
         except ValueError:
             logging.error(f"Cannot decode JSON: {item}\n")
             completed_item = {f"name": "Error: {item}"}
-            return completed_item, False
+
+            if IS_GENERATOR_FUNCTION:
+                yield completed_item, False
+            else:
+                return completed_item, False
         
         is_item_ok = True
         user_input_entity1 = user_input_entity1.lower()
@@ -145,15 +150,16 @@ class LLMAssistant:
 
         if "name" not in completed_item:
             completed_item["name"] = "error: no name"
-            return completed_item, False
+            is_item_ok = False
 
         elif not isinstance(completed_item['name'], str):
             completed_item["name"] = "error: name is not a string"
-            return completed_item, False
+            is_item_ok = False
+
         
         elif not completed_item["name"]: # is string empty
             completed_item["name"] = "error: name is empty string"
-            return completed_item, False
+            is_item_ok = False
 
         else:
             # Lower case the first letter in the `name` to consistently have all names with the first letter in lower case
@@ -162,6 +168,12 @@ class LLMAssistant:
             completed_item["name"] = TextUtility.convert_name_to_standard_convention(completed_item["name"])
         
 
+        if not is_item_ok:
+            if IS_GENERATOR_FUNCTION:
+                yield completed_item, is_item_ok
+            else:
+                return completed_item, is_item_ok
+        
         if user_choice == ATTRIBUTES_STRING:
             pass
             # Remove attributes in which their inferred text does not contain the given entity
@@ -175,11 +187,18 @@ class LLMAssistant:
         elif user_choice == RELATIONSHIPS_STRING:
             if not "source" in completed_item:
                 completed_item["name"] = "error: no source entity"
-                return completed_item, False
+                is_item_ok = False
             
             if not "target" in completed_item:
                 completed_item["name"] = "error: no target entity"
-                return completed_item, False
+                is_item_ok = False
+            
+
+            if not is_item_ok:
+                if IS_GENERATOR_FUNCTION:
+                    yield completed_item, is_item_ok
+                else:
+                    return completed_item, is_item_ok
 
             is_entity1_source_or_target = user_input_entity1 == completed_item['source'] or user_input_entity1 == completed_item['target']
 
@@ -226,7 +245,11 @@ class LLMAssistant:
             logging.info(f"- Data type: {completed_item['data_type']}")
 
         logging.info("\n")
-        return completed_item, is_item_ok
+
+        if IS_GENERATOR_FUNCTION:
+            yield completed_item, is_item_ok
+        else:
+            return completed_item, is_item_ok
 
 
     def __parse_streamed_output(self, messages, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
@@ -269,31 +292,53 @@ class LLMAssistant:
                     opened_square_brackets -= 1
 
                     # We already got the last object of the JSON output
-                    # If something weird starts happening with the LLM this premature return might be the cause
                     if opened_square_brackets == 0:
-                        return items
+                        if IS_GENERATOR_FUNCTION:
+                            return
+                        else:
+                            return items
                 
                 # Return when LLM gets stuck in printing only new lines
                 if new_lines_in_a_row > 3:
                     logging.warning("Warning: too many new lines")
-                    return items
+                    if IS_GENERATOR_FUNCTION:
+                        return
+                    else:
+                        return items
                 
                 if is_item_start:
                     item += char
                 
                 if char == "}" and item != '':
                     is_item_start = False
-                    completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
 
-                    # TODO: Add comment what this code is doing
-                    if self.end_parsing_prematurely:
-                        logging.info(f"Ending parsing prematurely: {completed_item}")
-                        return items
-                        
-                    if is_item_ok:
-                        items.append(completed_item)
+                    if IS_GENERATOR_FUNCTION:
+                        iterator = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
+
+                        for completed_item, is_item_ok in iterator:
+                            # TODO: Add comment what this code is doing
+                            if self.end_parsing_prematurely:
+                                logging.info(f"Ending parsing prematurely: {completed_item}")
+                                return
+                                
+                            if is_item_ok:
+                                yield completed_item
+                            else:
+                                self.debug_info.deleted_items.append(completed_item)
+
                     else:
-                        self.debug_info.deleted_items.append(completed_item)
+                        completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
+
+                        # TODO: Add comment what this code is doing
+                        if self.end_parsing_prematurely:
+                            logging.info(f"Ending parsing prematurely: {completed_item}")
+                            return items
+                            
+                        if is_item_ok:
+                            items.append(completed_item)
+                        else:
+                            self.debug_info.deleted_items.append(completed_item)
+
                     item = ""
                 
                 last_char = char
@@ -303,23 +348,40 @@ class LLMAssistant:
             # So try to finish the object by appending the last curly bracket
             if is_item_start:
                 item += '}'
-                completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
 
-                if is_item_ok:
-                    items.append(completed_item)
+                if IS_GENERATOR_FUNCTION:
+                    iterator = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
+
+                    for completed_item, is_item_ok in iterator:
+                        if is_item_ok:
+                            yield completed_item
+                        else:
+                            self.debug_info.deleted_items.append(completed_item)
+
                 else:
-                    self.debug_info.deleted_items.append(completed_item)
+                    completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
+
+                    if is_item_ok:
+                        items.append(completed_item)
+                    else:
+                        self.debug_info.deleted_items.append(completed_item)
     
         if is_skip_parsing:
             logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
         
         logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
 
-        return items
+        if IS_GENERATOR_FUNCTION:
+            return
+        else:
+            return items
 
 
     def __parse_non_streamed_output(self, messages, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
         self.debug_info = self.DebugInfo()
+
+        if IS_GENERATOR_FUNCTION:
+            logging.warn("Warning: generator function is set to True but trying to get non-streamed output")
 
         output = self.llm.create_chat_completion(messages=messages, temperature=0, repeat_penalty=1.05)
         content = output['choices'][0]['message']['content']
@@ -414,6 +476,7 @@ class LLMAssistant:
 
     def suggest(self, entity1, entity2, user_choice, count_items_to_suggest, conceptual_model, domain_description):
 
+        print("Suggesting items")
         entity1 = entity1.strip()
 
         if IS_IGNORE_DOMAIN_DESCRIPTION:
@@ -553,20 +616,20 @@ class LLMAssistant:
 
         messages_prettified = TextUtility.messages_prettify(new_messages)
         logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
-
-        tries_count = 0
-        tries_limit = 3
-
-        items = []
-        while len(items) == 0:
-            tries_count += 1
-            logging.debug(f"Try number: {tries_count}")
-            items = self.__parse_non_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
-
-            if tries_count >= tries_limit:
-                break
-
         self.debug_info.prompt = messages_prettified
+
+        if IS_GENERATOR_FUNCTION:
+            items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+
+            for item in items_iterator:
+                # TODO: Get inference_indexes and append them to the `item`
+                print(f"Yielding item: {item}")
+                #item = item.replace('\'', '\"')
+                yield f"{item}\n"
+            return
+
+        items = []        
+        items = self.__parse_non_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
         return items
 
 
