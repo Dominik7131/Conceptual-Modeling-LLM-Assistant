@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from LLM_assistant import LLMAssistant
 import json
+import time
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -106,12 +107,18 @@ def suggest():
     print("User choice: " + user_choice)
     domain_description = request.args.get("domain_description")
 
-    is_mock_up = True
-    is_stream_output = False
+    is_mock_up = False
+    is_stream_output = True
     
     if is_mock_up:
         if not is_stream_output:
             return create_suggest_mock_up(entity1, user_choice, domain_description)
+        else:
+            def generate_mock_up():
+                yield '{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"}\n'
+                time.sleep(2)
+                yield '{"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"}\n'
+            return generate_mock_up()
     else:
         return llm_assistant.suggest(entity1, "", user_choice, 5, conceptual_model=[], domain_description=domain_description)
 
@@ -173,6 +180,6 @@ def stream_test():
 
 
 if __name__ == '__main__':
-    #llm_assistant = LLMAssistant()
+    llm_assistant = LLMAssistant()
 
     app.run(port=5000) # host="0.0.0.0"
