@@ -624,7 +624,7 @@ class LLMAssistant:
             for item in items_iterator:
                 suggestion_dictionary = json.loads(json.dumps(item))
                 inference = item['inference']
-                inference_indexes = TextUtility.find_text_in_domain_description(inference)
+                inference_indexes = TextUtility.find_text_in_domain_description(inference, domain_description)
                 suggestion_dictionary['inference_indexes'] = inference_indexes
 
                 json_item = json.dumps(suggestion_dictionary)
