@@ -494,7 +494,7 @@ class LLMAssistant:
             for text in relevant_texts:
                 result += f"{text}\n"
             
-            domain_description = result.rstrip() # Remove trailing new line
+            relevant_texts = result.rstrip() # Remove trailing new line
 
         times_to_repeat = count_items_to_suggest
         is_elipsis = False
@@ -609,7 +609,7 @@ class LLMAssistant:
         if not is_domain_description:
             pass
         else:
-            prompt += f'.\nThis is the given context:\n"{domain_description}"'
+            prompt += f'.\nThis is the given context:\n"{relevant_texts}"'
         
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
@@ -624,7 +624,7 @@ class LLMAssistant:
             for item in items_iterator:
                 suggestion_dictionary = json.loads(json.dumps(item))
                 inference = item['inference']
-                inference_indexes = TextUtility.find_text_in_domain_description(inference, domain_description)
+                inference_indexes, _, _ = TextUtility.find_text_in_domain_description(inference, domain_description)
                 suggestion_dictionary['inference_indexes'] = inference_indexes
 
                 json_item = json.dumps(suggestion_dictionary)

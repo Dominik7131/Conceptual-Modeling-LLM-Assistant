@@ -373,21 +373,15 @@ class TextUtility:
         return result, inference_parts_found, inference_parts_total
 
 
-    def show_inference_in_domain_description(inference_indexes):
+    def show_inference_in_domain_description(inference_indexes, domain_description):
         # TODO: Add domain description as an method argument
         # E.g. inference_indexes = [4, 10, 20, 24]
-        data_directory_path = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
-        file_name = "56-2001-extract-llm-assistant-test-case.txt"
-        domain_description_file = os.path.join(data_directory_path, file_name)
-
-        with open(domain_description_file, 'r') as file:
-            domain_description = file.read()
 
         from termcolor import cprint
 
         start_at_index = 0
         
-        for i in range(inference_indexes, 2):
+        for i in range(0, len(inference_indexes), 2):
             inference_index_start = inference_indexes[i]
             inference_index_end = inference_indexes[i + 1]
             print(domain_description[start_at_index : inference_index_start], end="")
