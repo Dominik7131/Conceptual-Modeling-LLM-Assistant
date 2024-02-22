@@ -2,6 +2,7 @@ import ConceptualModel from './components/ConceptualModel';
 import Topbar from './components/Topbar'
 import SideBar from './components/Sidebar';
 import useConceptualModel from './hooks/useConceptualModel'
+import Overlay from './components/Overlay';
 
 import { ReactFlowProvider } from 'reactflow';
 
@@ -12,6 +13,7 @@ declare global
     name: string
     description: string
     inference: string
+    inference_indexes: number[]
     data_type: string
   }
   
@@ -19,6 +21,7 @@ declare global
     name: string
     description: string
     inference: string
+    inference_indexes: number[]
     source_entity: string
     target_entity: string
     cardinality: string
@@ -35,8 +38,8 @@ declare global
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onPlusButtonClick, onSummaryButtonClick,
-    summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes,
-    suggestedAttributes, suggestedRelationships, addAttributesToNode, addRelationshipsToNodes
+    summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay,
+    isLoading, suggestedAttributes, suggestedRelationships, addAttributesToNode, addRelationshipsToNodes, showInference
   } = useConceptualModel()
 
   return (
@@ -53,10 +56,12 @@ function App()
       />
 
       <SideBar
+        isLoading={isLoading}
         attributes={suggestedAttributes}
         relationships={suggestedRelationships}
         addAttributesToNode={addAttributesToNode}
         addRelationshipsToNodes={addRelationshipsToNodes}
+        showInference={showInference}
       />
 
       <ConceptualModel
@@ -66,6 +71,14 @@ function App()
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
       />
+
+      <Overlay
+      domainDescription={domainDescription}
+      isShowOverlay={isShowOverlay}
+      setIsShowOverlay={setIsShowOverlay}
+      inferenceIndexes={inferenceIndexesMockUp}
+      />
+
     </div>
   );
 }

@@ -37,6 +37,33 @@
   overflow: auto;
 }
 
+.overlay {
+  background: rgba(255,255,255,0.7);
+  font-family: Arial;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  overflow-y: auto;
+  white-space: pre-wrap; /* Preserve new lines */
+}
+
+.overlay div {
+  max-width: 800px;
+  background: #fff;
+  padding: 40px;
+  border-radius: 10px;
+  margin: 2% auto;
+  box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+}
+
+.close {
+  margin-right: 0;
+  margin-left:auto;
+  display:block;
+}
+
 .highlight {
   background-color: orange;
   position: relative;

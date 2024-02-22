@@ -1,12 +1,14 @@
 
 interface props {
+    isLoading : boolean
     attributes : Attribute[],
     relationships : Relationship[],
     addAttributesToNode : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
     addRelationshipsToNodes : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationship : Relationship) => void,
+    showInference : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
 }
 
-const Sidebar: React.FC<props> = ({attributes, relationships, addAttributesToNode, addRelationshipsToNodes}) =>
+const Sidebar: React.FC<props> = ({isLoading, attributes, relationships, addAttributesToNode, addRelationshipsToNodes, showInference}) =>
 {
     const showTextOnSidebar = () =>
     {
@@ -23,6 +25,8 @@ const Sidebar: React.FC<props> = ({attributes, relationships, addAttributesToNod
                         {showRelationship(r, index)}
                     </span>
                 )}
+
+                {isLoading && <p>Loading...</p>}
             </span>
         )
     }
@@ -35,6 +39,7 @@ const Sidebar: React.FC<props> = ({attributes, relationships, addAttributesToNod
                <strong>Data type:</strong> {attribute.data_type} <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addAttributesToNode(event)}>Add</button>
                <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, true)}>Edit</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
             </p>
         )
     }
@@ -48,6 +53,7 @@ const Sidebar: React.FC<props> = ({attributes, relationships, addAttributesToNod
                <strong>Target:</strong> {relationship.target_entity} <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addRelationshipsToNodes(event, relationship)}>Add</button>
                <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, false)}>Edit</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
             </p>
         )
     }

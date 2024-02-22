@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect } from 'reactflow';
+import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect, useStoreApi } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 import useInferenceIndexes from './useInferenceIndexes';
@@ -13,6 +13,7 @@ const useConceptualModel = () =>
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [suggestedAttributes, setSuggestedAttributes] = useState<Attribute[]>([])
     const [suggestedRelationships, setSuggestedRelationships] = useState<Relationship[]>([])
   
@@ -27,7 +28,13 @@ const useConceptualModel = () =>
   
     const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState<boolean>(false)
 
+    const [isShowOverlay, setIsShowOverlay] = useState<boolean>(false)
+
+    // Mock-up
+    const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([31, 71])
+
     const { inferenceIndexes, setInferenceIndexes, getIndexesForOneInference } = useInferenceIndexes()
+
     const { capitalizeString } = useUtility()
 
     const onConnect : OnConnect = useCallback(
@@ -150,7 +157,7 @@ const useConceptualModel = () =>
                 {
                   // let relationship = JSON.parse(data[i])
                   const relationship = data[i]
-                  const editedRelationship : Relationship = { "name": relationship.name, "source_entity": relationship.source, "target_entity": relationship.target, "inference": relationship.inference, "description": "", "cardinality": relationship.cardinality}
+                  const editedRelationship : Relationship = { "name": relationship.name, "source_entity": relationship.source, "target_entity": relationship.target, "inference": relationship.inference, inference_indexes: relationship.inference_indexes, "description": "", "cardinality": relationship.cardinality}
 
                   setSuggestedRelationships(previousSuggestedRelationships => {
                     return [...previousSuggestedRelationships, editedRelationship]
@@ -191,6 +198,7 @@ const useConceptualModel = () =>
             return
           }
 
+          setIsLoading(_ => true)
           // const test_url = `http://127.0.0.1:5000/stream_test`
           // Fetch the event stream from the server
           // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
@@ -219,14 +227,12 @@ const useConceptualModel = () =>
                           if (done)
                           {
                               console.log("Stream finished")
+                              setIsLoading(_ => false)
                               return
                           }
 
                           // Convert the `value` to a string
                           var jsonString = new TextDecoder().decode(value)
-                          // Replace all single quotes with double quotes
-                          // We need to use reg-exp to replace all single quotes
-                          jsonString = jsonString.replace(/'/g, '"')
                           console.log(jsonString)
                           console.log("\n")
 
@@ -390,11 +396,6 @@ const useConceptualModel = () =>
     
       // useEffect(() =>
       // {
-      //   console.log(inferenceIndexes)
-      // }, [inferenceIndexes])
-    
-      // useEffect(() =>
-      // {
       //   console.log("Nodes: ")
       //   console.log(nodes)
       // }, [nodes]);
@@ -512,14 +513,36 @@ const useConceptualModel = () =>
           })
       }
 
+      const showInference = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+      {
+        // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
+        const targetID = Number(event.currentTarget.id.slice(6))
+
+        setIsShowOverlay(_ => true)
+        
+        if (suggestedAttributes.length > targetID)
+        {
+          const attribute = suggestedAttributes[targetID]
+          setInferenceIndexesMockUp(_ => attribute.inference_indexes)
+        }
+
+        if (suggestedRelationships.length > targetID)
+        {
+          const relationship = suggestedRelationships[targetID]
+          setInferenceIndexesMockUp(_ => relationship.inference_indexes)
+        }
+        
+        console.log("Showing inference")
+      }
+
       const handleIgnoreDomainDescriptionChange = () =>
       {
         setIsIgnoreDomainDescription(previousValue => !previousValue)
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onPlusButtonClick, onSummaryButtonClick,
-        summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes,
-        suggestedAttributes, suggestedRelationships, addAttributesToNode, addRelationshipsToNodes
+        summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay,
+        isLoading, suggestedAttributes, suggestedRelationships, addAttributesToNode, addRelationshipsToNodes, showInference
     }
 }
 
