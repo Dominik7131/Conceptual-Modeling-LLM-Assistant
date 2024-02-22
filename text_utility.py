@@ -365,7 +365,8 @@ class TextUtility:
                 # Append all occurencies of the `inference_part` in the `domain_description`
                 if domain_description[i:].startswith(inference_part):
                     is_inference_found = True
-                    result.append([i, i + len(inference_part)])
+                    result.append(i)
+                    result.append(i + len(inference_part))
 
             # TODO: Backup plan: if an inference is not found at least try to find some relevant setence with lemmatization
             # Relevant sentece = sentence that contains all lemmas in `inference_part` (probably except brackets, punctuation etc.)
@@ -373,8 +374,7 @@ class TextUtility:
                 print(f"Warning: inference not found: {inference_part}")
             else:
                 inference_parts_found += 1
-                    
-        
+
         return result, inference_parts_found, inference_parts_total
 
 
@@ -389,14 +389,16 @@ class TextUtility:
 
         from termcolor import cprint
 
-        # [ [4, 10], [20, 24] ]
+        # E.g. inference_indexes = [4, 10, 20, 24]
         start_at_index = 0
-        for inference_index in inference_indexes:
-            inference_index_start = inference_index[0]
-            inference_index_end = inference_index[1]
+        
+        for i in range(inference_indexes, 2):
+            inference_index_start = inference_indexes[i]
+            inference_index_end = inference_indexes[i + 1]
             print(domain_description[start_at_index : inference_index_start], end="")
             cprint(domain_description[inference_index_start : inference_index_end], "green", "on_black", end='')
             start_at_index = inference_index_end
+
         
         print(domain_description[start_at_index:])
         print("\n\n")
