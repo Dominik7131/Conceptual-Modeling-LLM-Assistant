@@ -50,7 +50,7 @@
 }
 
 .overlay div {
-  max-width: 800px;
+  max-width: 1000px;
   background: #fff;
   padding: 40px;
   border-radius: 10px;
@@ -59,9 +59,13 @@
 }
 
 .close {
-  margin-right: 0;
+  /* left: 1430px; */
+  left: 1840px;
+  top: 10px;
   margin-left:auto;
-  display:block;
+  display: block;
+  position: fixed;
+  
 }
 
 .highlight {

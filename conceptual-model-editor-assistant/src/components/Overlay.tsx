@@ -28,8 +28,9 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
             <div className="overlay">
                 <div>
                     <p><button className="close" onClick={ () => setIsShowOverlay(_ => false)}>Close</button></p>
+                    {inferenceIndexes.length == 0 && <p><b>Warning: Inference not found</b></p> }
                     <span>{domainDescription.slice(0, inferenceStart)}</span>
-                    <span className="highlight">{domainDescription.slice(inferenceStart, inferenceEnd)}</span>
+                    <span id="highlightedInference" className="highlight">{domainDescription.slice(inferenceStart, inferenceEnd)}</span>
                     <span>{domainDescription.slice(inferenceEnd, -1)}</span>
                 </div>
             </div>)
