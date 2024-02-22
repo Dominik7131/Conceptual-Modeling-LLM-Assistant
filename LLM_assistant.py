@@ -622,14 +622,19 @@ class LLMAssistant:
             items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
 
             for item in items_iterator:
-                # TODO: Get inference_indexes and append them to the `item`
-                json_item = json.dumps(item)
+                suggestion_dictionary = json.loads(json.dumps(item))
+                inference = item['inference']
+                inference_indexes = TextUtility.find_text_in_domain_description(inference)
+                suggestion_dictionary['inference_indexes'] = inference_indexes
+
+                json_item = json.dumps(suggestion_dictionary)
                 print(f"Yielding item: {json_item}")
                 yield f"{json_item}\n"
             return
 
         items = []        
         items = self.__parse_non_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+        # TODO: For each item in items get inference indexes (do the same thing as for generator function)
         return items
 
 
