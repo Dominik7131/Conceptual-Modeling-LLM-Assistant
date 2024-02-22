@@ -335,16 +335,11 @@ class TextUtility:
         return sentences
     
 
-    def find_text_in_domain_description(inference):
+    def find_text_in_domain_description(inference, domain_description):
         # TODO: Add domain description as an method argument
-        data_directory_path = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
-        file_name = "56-2001-extract-llm-assistant-test-case.txt"
-        domain_description_file = os.path.join(data_directory_path, file_name)
 
         # Convert all text to lower-case as LLM sometimes does not generate case-sensitive inference
-
-        with open(domain_description_file, 'r') as file:
-            domain_description = file.read().lower()
+        domain_description = domain_description.lower()
         
         # Split inference if it contains more inferences:
         # E.g.: "The insurance contract shall always contain... the limit of the insurance benefit..."
@@ -380,6 +375,7 @@ class TextUtility:
 
     def show_inference_in_domain_description(inference_indexes):
         # TODO: Add domain description as an method argument
+        # E.g. inference_indexes = [4, 10, 20, 24]
         data_directory_path = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
         file_name = "56-2001-extract-llm-assistant-test-case.txt"
         domain_description_file = os.path.join(data_directory_path, file_name)
@@ -389,7 +385,6 @@ class TextUtility:
 
         from termcolor import cprint
 
-        # E.g. inference_indexes = [4, 10, 20, 24]
         start_at_index = 0
         
         for i in range(inference_indexes, 2):
