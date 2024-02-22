@@ -66,6 +66,8 @@ const useConceptualModel = () =>
       const parseSerializedConceptualModel = () =>
       {
         const input = { "entities": [ {"name": "Engine", "attributes": []},
+                                      {"name": "Bodywork", "attributes": []},
+                                      {"name": "Natural person", "attributes": []},
                                       {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
                                       {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
                                       {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
@@ -139,53 +141,27 @@ const useConceptualModel = () =>
         const entityName = selectedNodes[0].id.toLowerCase()
         const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
     
-        if (buttonInnerHTML === "+Relationships")
+        if (buttonInnerHTML === "+Attributes")
         {
+          setIsLoading(_ => true)
           setSuggestedAttributes(_ => {return []})
           setSuggestedRelationships(_ => {return []})
-          const userChoice = "relationships"
-    
-          fetch(`http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=${userChoice}&domain_description=${currentDomainDesciption}`)
-          .then(response => response.json())
-          .then(data => 
-              {
-                console.log("Data: ")
-                console.log(data)
-                console.log("----")
 
-                for (let i = 0; i < data.length; i++)
-                {
-                  // let relationship = JSON.parse(data[i])
-                  const relationship = data[i]
-                  const editedRelationship : Relationship = { "name": relationship.name, "source_entity": relationship.source, "target_entity": relationship.target, "inference": relationship.inference, inference_indexes: relationship.inference_indexes, "description": "", "cardinality": relationship.cardinality}
-
-                  setSuggestedRelationships(previousSuggestedRelationships => {
-                    return [...previousSuggestedRelationships, editedRelationship]
-                  })
-                }
-              })
-          .catch(error => console.log(error))
-          return
-        }
-        else if (buttonInnerHTML === "+Attributes")
-        {
-          setSuggestedAttributes(_ => {return []})
-          setSuggestedRelationships(_ => {return []})
           const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
+          const url = "http://127.0.0.1:5000/suggest"
           const userChoice = "attributes"
-          const url = `http://127.0.0.1:5000/suggest?entity1=${entityName}&user_choice=${userChoice}&domain_description=${currentDomainDesciption}`
-    
+          const body_data = JSON.stringify({"entity": entityName, "user_choice": userChoice, "domain_description": currentDomainDesciption})
+          const headers = { "Content-Type": "application/json" }
           const is_fetch_stream_data = true
 
           if (!is_fetch_stream_data)
           {
-            fetch(url)
+            fetch(url, { method: "POST", headers, body: body_data })
             .then(response => response.json())
             .then(data => 
                 {
                   for (let i = 0; i < data.length; i++)
                   {
-                    // let attribute = JSON.parse(data[i])
                     let attribute : Attribute = data[i]
                     console.log("Attribute: ")
                     console.log(attribute)
@@ -195,18 +171,16 @@ const useConceptualModel = () =>
                   }
                 })
             .catch(error => console.log(error))
+            setIsLoading(_ => false)
             return
           }
 
-          setIsLoading(_ => true)
-          // const test_url = `http://127.0.0.1:5000/stream_test`
           // Fetch the event stream from the server
           // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
-          fetch(url)
+          fetch(url, { method: "POST", headers, body: body_data })
           .then(response =>
             {
-              // Get the readable stream from the response body
-              const stream = response.body;
+              const stream = response.body; // Get the readable stream from the response body
 
               if (stream == null)
               {
@@ -214,20 +188,16 @@ const useConceptualModel = () =>
                 return
               }
 
-              // Get the reader from the stream
               const reader = stream.getReader();
 
-              // Define a function to read each chunk
               const readChunk = () =>
               {
-                  // Read a chunk from the reader
                   reader.read()
                       .then(({value, done}) =>
                       {
                           if (done)
                           {
                               console.log("Stream finished")
-                              setIsLoading(_ => false)
                               return
                           }
 
@@ -264,12 +234,107 @@ const useConceptualModel = () =>
           {
               console.error(error);
           });
+        }
+        else if (buttonInnerHTML === "+Relationships")
+        {
+          setSuggestedAttributes(_ => {return []})
+          setSuggestedRelationships(_ => {return []})
 
+          const url = "http://127.0.0.1:5000/suggest"
+          const userChoice = "relationships"
+          const body_data = JSON.stringify({"entity": entityName, "user_choice": userChoice, "domain_description": currentDomainDesciption})
+          const headers = { "Content-Type": "application/json" }
+          const is_fetch_stream_data = true
+
+          if (!is_fetch_stream_data)
+          {
+            fetch(url, { method: "POST", headers, body: body_data })
+            .then(response => response.json())
+            .then(data => 
+                {
+                  console.log("Data: ")
+                  console.log(data)
+                  console.log("----")
+  
+                  for (let i = 0; i < data.length; i++)
+                  {
+                    const relationship = data[i]
+                    const editedRelationship : Relationship = { "name": relationship.name, "source_entity": relationship.source, "target_entity": relationship.target, "inference": relationship.inference, inference_indexes: relationship.inference_indexes, "description": "", "cardinality": relationship.cardinality}
+  
+                    setSuggestedRelationships(previousSuggestedRelationships => {
+                      return [...previousSuggestedRelationships, editedRelationship]
+                    })
+                  }
+                })
+            .catch(error => console.log(error))
+            return
+          }
+          else
+          {
+            fetch(url, { method: "POST", headers, body: body_data })
+              .then(response =>
+              {
+                const stream = response.body; // Get the readable stream from the response body
+
+                if (stream == null)
+                {
+                  console.log("Stream is null")
+                  return
+                }
+
+                const reader = stream.getReader();
+
+                const readChunk = () =>
+                {
+                    reader.read()
+                        .then(({value, done}) =>
+                        {
+                            if (done)
+                            {
+                                console.log("Stream finished")
+                                return
+                            }
+
+                            // Convert the `value` to a string
+                            var jsonString = new TextDecoder().decode(value)
+                            console.log(jsonString)
+                            console.log("\n")
+
+                            // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
+                            const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
+
+                            for (let i = 0; i < jsonStringParts.length; i++)
+                            {
+                              let relationship : Relationship = JSON.parse(jsonStringParts[i])
+
+                              console.log("Relationship: ")
+                              console.log(relationship)
+                              setSuggestedRelationships(previousSuggestedRelationships => {
+                                return [...previousSuggestedRelationships, relationship]
+                              })
+                            }
+
+                            readChunk(); // Read the next chunk
+                        })
+                        .catch(error =>
+                        {
+                          console.error(error);
+                        });
+                };
+                readChunk(); // Start reading the first chunk
+            })
+            .catch(error =>
+            {
+                console.error(error);
+            });
+          }
         }
         else
         {
           alert(`Clicked on unknown button: ${buttonInnerHTML}`)
         }
+
+        setIsLoading(_ => false)
       }
     
       const onSummaryButtonClick = () =>
@@ -341,12 +406,15 @@ const useConceptualModel = () =>
           setDomainDescription(_ => text)
          })
         .catch((e) => console.error(e));
+
     
-        const domainDescriptionTextArea = document.getElementById("domainDescriptionText")
-        if (domainDescriptionTextArea)
-        {
-          setDomainDescription(domainDescriptionTextArea.innerHTML)
-        }
+        // TODO: Update `domainDescription` variable if the text in text area get changed
+        // const domainDescriptionTextArea = document.getElementById("domainDescriptionText")
+        // if (domainDescriptionTextArea)
+        // {
+        //   setDomainDescription(domainDescriptionTextArea.innerHTML)
+        // }
+
       }, []);
     
       useEffect(() =>
@@ -393,6 +461,21 @@ const useConceptualModel = () =>
           return node;
         }));
       }, [domainDescription])
+
+      useEffect(() =>
+      {
+        if (!isShowOverlay)
+        {
+          return
+        }
+
+        let highlightedText = document.getElementById("highlightedInference")
+        if (highlightedText)
+        {
+            highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
+        }
+
+      }, [isShowOverlay])
     
       // useEffect(() =>
       // {
