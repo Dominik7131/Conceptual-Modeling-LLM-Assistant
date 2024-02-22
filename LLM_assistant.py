@@ -623,9 +623,9 @@ class LLMAssistant:
 
             for item in items_iterator:
                 # TODO: Get inference_indexes and append them to the `item`
-                print(f"Yielding item: {item}")
-                #item = item.replace('\'', '\"')
-                yield f"{item}\n"
+                json_item = json.dumps(item)
+                print(f"Yielding item: {json_item}")
+                yield f"{json_item}\n"
             return
 
         items = []        
