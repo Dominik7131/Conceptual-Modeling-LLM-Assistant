@@ -1,5 +1,6 @@
 import re
-
+import os
+import logging
 
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
@@ -324,7 +325,7 @@ class TextUtility:
 
 
     # TODO: Add sliding window to each sentence
-    def split_file_into_chunks2(file_name):
+    def split_file_into_chunks_sliding_window(file_name):
         with open(file_name) as file:
             lines = [line.rstrip() for line in file]
 
@@ -332,3 +333,75 @@ class TextUtility:
         sentences = [TextUtility.split_into_sentences(line) for line in lines]
         sentences = [x for xs in sentences for x in xs] # flatten sentences
         return sentences
+    
+
+    def find_text_in_domain_description(inference):
+        # TODO: Add domain description as an method argument
+        data_directory_path = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
+        file_name = "56-2001-extract-llm-assistant-test-case.txt"
+        domain_description_file = os.path.join(data_directory_path, file_name)
+
+        # Convert all text to lower-case as LLM sometimes does not generate case-sensitive inference
+
+        with open(domain_description_file, 'r') as file:
+            domain_description = file.read().lower()
+        
+        # Split inference if it contains more inferences:
+        # E.g.: "The insurance contract shall always contain... the limit of the insurance benefit..."
+        # -> ["The insurance contract shall always contain", "the limit of the insurance benefit"]
+        result = []
+
+        inference_parts = inference.split(sep="...")
+        inference_parts = list(filter(None, inference_parts)) # Remove empty strings
+
+        inference_parts_total = len(inference_parts)
+        inference_parts_found = 0
+
+        for inference_part in inference_parts:
+            inference_part = inference_part.lower().strip()
+            is_inference_found = False
+
+            for i in range(len(domain_description)):
+                # Append all occurencies of the `inference_part` in the `domain_description`
+                if domain_description[i:].startswith(inference_part):
+                    is_inference_found = True
+                    result.append([i, i + len(inference_part)])
+
+            # TODO: Backup plan: if an inference is not found at least try to find some relevant setence with lemmatization
+            # Relevant sentece = sentence that contains all lemmas in `inference_part` (probably except brackets, punctuation etc.)
+            if not is_inference_found:            
+                print(f"Warning: inference not found: {inference_part}")
+            else:
+                inference_parts_found += 1
+                    
+        
+        return result, inference_parts_found, inference_parts_total
+
+
+    def show_inference_in_domain_description(inference_indexes):
+        # TODO: Add domain description as an method argument
+        data_directory_path = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
+        file_name = "56-2001-extract-llm-assistant-test-case.txt"
+        domain_description_file = os.path.join(data_directory_path, file_name)
+
+        with open(domain_description_file, 'r') as file:
+            domain_description = file.read()
+
+        from termcolor import cprint
+
+        # [ [4, 10], [20, 24] ]
+        start_at_index = 0
+        for inference_index in inference_indexes:
+            inference_index_start = inference_index[0]
+            inference_index_end = inference_index[1]
+            print(domain_description[start_at_index : inference_index_start], end="")
+            cprint(domain_description[inference_index_start : inference_index_end], "green", "on_black", end='')
+            start_at_index = inference_index_end
+        
+        print(domain_description[start_at_index:])
+        print("\n\n")
+
+
+        
+
+        
