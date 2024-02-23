@@ -5,19 +5,67 @@ import json
 import time
 
 app = Flask(__name__)
-cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type'
 llm_assistant = None
 
-
-# How to use curl with this script:
-# curl.exe --request POST -F description=@input.txt -F entity1=school -F user_choice=a http://127.0.0.1:5000
-# curl.exe --request POST -F description=@input.txt -F entity1=school -F user_choice=a http://u-pl5.ms.mff.cuni.cz:5000
-
-# How to parse arguments from client:
-# https://stackoverflow.com/questions/10434599/get-the-data-received-in-a-flask-request
-
 # CORS error from frontend solution: https://stackoverflow.com/a/33091782
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type' 
+
+
+@app.route('/suggest', methods=['POST'])
+@cross_origin()
+def suggest():
+
+    body_data = request.get_json()
+    entity = body_data["entity"]
+    user_choice = body_data["user_choice"]
+    domain_description = body_data["domain_description"]
+
+    is_mock_up = True
+    is_stream_output = True
+    
+    if is_mock_up:
+        if not is_stream_output:
+            return create_suggest_mock_up(entity, user_choice, domain_description)
+        else:
+            def generate_mock_up():
+                # time.sleep(1)
+                yield '{"inference": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "inference_indexes": [5388, 5456, 5500, 5550]}\n'
+                #yield '{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "inference_indexes": [10,20], "source_entity": "student", "target_entity": "course"}\n'
+                yield '{"inference": "the fuel type of the road vehicle", "name": "fuel type", "inference_indexes": [0, 20]}\n'
+                #time.sleep(1)
+                #yield '{"name": "accommodated in", "inference": "students can be accommodated in dormitories", "inference_indexes": [20,30], "source_entity": "student", "target_entity": "dormitory"}\n'
+            return generate_mock_up()
+    else:
+        return llm_assistant.suggest(entity, "", user_choice, 5, conceptual_model=[], domain_description=domain_description)
+
+
+@app.route('/summary', methods=['GET'])
+@cross_origin()
+def summary():
+    entities_comma_separated = request.args.get("entities").lower()
+    entities = entities_comma_separated.split(',')
+    result = create_summary_mock_up(entities)
+    return json.dumps(result)
+
+
+@app.route('/test', methods=['GET'])
+@cross_origin()
+def test():
+    dictionary = {"name": "rest-api-response", "inference": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "data_type": "string"}
+    return json.dumps(dictionary)
+
+
+@app.route('/stream_test')
+@cross_origin()
+def stream_test():
+
+    def generate_items():
+        yield f"Number: {1}\n"
+        yield f"Number: {2}\n"
+        yield f"Number: {3}\n"
+
+    return generate_items()
 
 def create_suggest_mock_up(entity, user_choice, domain_description):
     if entity == "student":
@@ -96,33 +144,6 @@ def create_suggest_mock_up(entity, user_choice, domain_description):
             dictionary1 = json.dumps({"name": "has", "inference": "students can be accomodated in dormitories", "source_entity": "dormitory", "target_entity": "student"})
             return [dictionary1]
 
-
-# Google Chrome: http://127.0.0.1:5000/?entity1=e&user_choice=a&domain_description=
-@app.route('/suggest', methods=['GET'])
-@cross_origin()
-def suggest():
-    #print(f"Received arguments: {request.args}")
-    entity1 = request.args.get("entity1").lower()
-    user_choice = request.args.get("user_choice")
-    print("User choice: " + user_choice)
-    domain_description = request.args.get("domain_description")
-
-    is_mock_up = False
-    is_stream_output = True
-    
-    if is_mock_up:
-        if not is_stream_output:
-            return create_suggest_mock_up(entity1, user_choice, domain_description)
-        else:
-            def generate_mock_up():
-                yield '{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"}\n'
-                time.sleep(2)
-                yield '{"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"}\n'
-            return generate_mock_up()
-    else:
-        return llm_assistant.suggest(entity1, "", user_choice, 5, conceptual_model=[], domain_description=domain_description)
-
-
 def create_summary_mock_up(entities : list[str]) -> list[dict]:
     result = []
 
@@ -149,34 +170,6 @@ def create_summary_mock_up(entities : list[str]) -> list[dict]:
                                   "attributes": [{"name": "price", "description": "Represents the price of accommodation in the dormitory."}],
                                   "relationships": [{"name": "accommodates", "description": "Indicates the relationship between a dormitory and a student. A dormitory can accommodate multiple students."}]}))
     return result
-
-
-@app.route('/summary', methods=['GET'])
-@cross_origin()
-def summary():
-    entities_comma_separated = request.args.get("entities").lower()
-    entities = entities_comma_separated.split(',')
-    result = create_summary_mock_up(entities)
-    return json.dumps(result)
-
-
-@app.route('/test', methods=['GET'])
-@cross_origin()
-def test():
-    dictionary = {"name": "rest-api-response", "inference": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "data_type": "string"}
-    return json.dumps(dictionary)
-
-
-@app.route('/stream_test')
-@cross_origin()
-def stream_test():
-
-    def generate_items():
-        yield f"Number: {1}\n"
-        yield f"Number: {2}\n"
-        yield f"Number: {3}\n"
-
-    return generate_items()
 
 
 if __name__ == '__main__':
