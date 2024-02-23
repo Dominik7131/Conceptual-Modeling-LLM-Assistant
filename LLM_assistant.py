@@ -7,7 +7,6 @@ import json
 
 
 ITEMS_COUNT = 5
-IS_GENERATOR_FUNCTION = True
 IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
@@ -132,17 +131,17 @@ class LLMAssistant:
 
     # Returns (parsed_item, is_item_ok)
     # is_item_ok: False if there is any issue while parsing otherwise True
-    def __parse_item(self, item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
+    def __parse_item_streamed_output(self, item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
         try:
+            # Replace invalid characters from JSON
+            item = item.replace('\_', ' ')
+            
             completed_item = json.loads(item)
         except ValueError:
             logging.error(f"Cannot decode JSON: {item}\n")
             completed_item = {f"name": "Error: {item}"}
 
-            if IS_GENERATOR_FUNCTION:
-                yield completed_item, False
-            else:
-                return completed_item, False
+            yield completed_item, False
         
         is_item_ok = True
         user_input_entity1 = user_input_entity1.lower()
@@ -169,10 +168,7 @@ class LLMAssistant:
         
 
         if not is_item_ok:
-            if IS_GENERATOR_FUNCTION:
-                yield completed_item, is_item_ok
-            else:
-                return completed_item, is_item_ok
+            yield completed_item, is_item_ok
         
         if user_choice == ATTRIBUTES_STRING:
             pass
@@ -195,10 +191,7 @@ class LLMAssistant:
             
 
             if not is_item_ok:
-                if IS_GENERATOR_FUNCTION:
-                    yield completed_item, is_item_ok
-                else:
-                    return completed_item, is_item_ok
+                yield completed_item, is_item_ok
 
             is_entity1_source_or_target = user_input_entity1 == completed_item['source'] or user_input_entity1 == completed_item['target']
 
@@ -246,10 +239,7 @@ class LLMAssistant:
 
         logging.info("\n")
 
-        if IS_GENERATOR_FUNCTION:
-            yield completed_item, is_item_ok
-        else:
-            return completed_item, is_item_ok
+        yield completed_item, is_item_ok
 
 
     def __parse_streamed_output(self, messages, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
@@ -293,18 +283,12 @@ class LLMAssistant:
 
                     # We already got the last object of the JSON output
                     if opened_square_brackets == 0:
-                        if IS_GENERATOR_FUNCTION:
-                            return
-                        else:
-                            return items
+                        return
                 
                 # Return when LLM gets stuck in printing only new lines
                 if new_lines_in_a_row > 3:
                     logging.warning("Warning: too many new lines")
-                    if IS_GENERATOR_FUNCTION:
-                        return
-                    else:
-                        return items
+                    return
                 
                 if is_item_start:
                     item += char
@@ -312,144 +296,19 @@ class LLMAssistant:
                 if char == "}" and item != '':
                     is_item_start = False
 
-                    if IS_GENERATOR_FUNCTION:
-                        iterator = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
+                    iterator = self.__parse_item_streamed_output(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
 
-                        for completed_item, is_item_ok in iterator:
-                            # TODO: Add comment what this code is doing
-                            if self.end_parsing_prematurely:
-                                logging.info(f"Ending parsing prematurely: {completed_item}")
-                                return
-                                
-                            if is_item_ok:
-                                yield completed_item
-                            else:
-                                self.debug_info.deleted_items.append(completed_item)
-
-                    else:
-                        completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
-
+                    for completed_item, is_item_ok in iterator:
                         # TODO: Add comment what this code is doing
                         if self.end_parsing_prematurely:
                             logging.info(f"Ending parsing prematurely: {completed_item}")
-                            return items
+                            return
                             
-                        if is_item_ok:
-                            items.append(completed_item)
-                        else:
-                            self.debug_info.deleted_items.append(completed_item)
-
-                    item = ""
-                
-                last_char = char
-        
-        if len(items) != ITEMS_COUNT:
-            # LLM sometimes does not properly finish the JSON object
-            # So try to finish the object by appending the last curly bracket
-            if is_item_start:
-                item += '}'
-
-                if IS_GENERATOR_FUNCTION:
-                    iterator = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
-
-                    for completed_item, is_item_ok in iterator:
                         if is_item_ok:
                             yield completed_item
                         else:
                             self.debug_info.deleted_items.append(completed_item)
 
-                else:
-                    completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
-
-                    if is_item_ok:
-                        items.append(completed_item)
-                    else:
-                        self.debug_info.deleted_items.append(completed_item)
-    
-        if is_skip_parsing:
-            logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
-        
-        logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
-
-        if IS_GENERATOR_FUNCTION:
-            return
-        else:
-            return items
-
-
-    def __parse_non_streamed_output(self, messages, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
-        self.debug_info = self.DebugInfo()
-
-        if IS_GENERATOR_FUNCTION:
-            logging.warn("Warning: generator function is set to True but trying to get non-streamed output")
-
-        output = self.llm.create_chat_completion(messages=messages, temperature=0, repeat_penalty=1.05)
-        content = output['choices'][0]['message']['content']
-
-        logging.debug("Output:")
-        logging.debug(output)
-        logging.debug("\n\n\n")
-
-        self.debug_info = self.DebugInfo() # Reset debug info
-
-        items = []
-        item = ""
-        is_item_start = False
-        is_skip_parsing = False
-        new_lines_in_a_row = 0
-        last_char = ''
-        self.end_parsing_prematurely = False
-        opened_square_brackets = 0
-
-        for text in content:
-            self.debug_info.assistant_message += text
-            if is_skip_parsing:
-                continue
-
-            # Edit apostrophes for now by deleting them
-            # TODO: If apostrophes need to be replaced then remember the substituted symbol to replace them back after the parsing
-            text = text.replace("'", "")
-            for char in text:
-                if char == '{':
-                    is_item_start = True
-                if char == '[':
-                    opened_square_brackets += 1
-
-                if char == '\n' and last_char == '\n':
-                    new_lines_in_a_row += 1
-                else:
-                    new_lines_in_a_row = 0
-                
-                if char == ']':
-                    opened_square_brackets -= 1
-
-                    # We already got the last object of the JSON output
-                    # If something weird starts happening with the LLM this premature return might be the cause
-                    if opened_square_brackets == 0:
-                        return items
-                
-                # Return when LLM gets stuck in generating only new lines
-                # This can happened both with `ctransformers` and with `llama-cpp-python` library
-                if new_lines_in_a_row > 3:
-                    logging.warning("Warning: too many new lines")
-                    return items
-                
-                if is_item_start:
-                    item += char
-                
-                if char == "}" and item != '':
-                    is_item_start = False
-                    completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
-
-                    # TODO: Add comment what this code is doing
-                    if self.end_parsing_prematurely:
-                        logging.info(f"Ending parsing prematurely: {completed_item}")
-                        return items
-                        
-                    if is_item_ok:
-                        items.append(completed_item)
-                    else:
-                        self.debug_info.deleted_items.append(completed_item)
                     item = ""
                 
                 last_char = char
@@ -459,24 +318,23 @@ class LLMAssistant:
             # So try to finish the object by appending the last curly bracket
             if is_item_start:
                 item += '}'
-                completed_item, is_item_ok = self.__parse_item(item, items, user_choice, is_provided_class_source, user_input_entity1)
 
-                if is_item_ok:
-                    items.append(completed_item)
-                else:
-                    self.debug_info.deleted_items.append(completed_item)
+                iterator = self.__parse_item_streamed_output(item, items, user_choice, is_provided_class_source, user_input_entity1)
+
+                for completed_item, is_item_ok in iterator:
+                    if is_item_ok:
+                        yield completed_item
+                    else:
+                        self.debug_info.deleted_items.append(completed_item)
     
         if is_skip_parsing:
             logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
         
         logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
-
-        return items
+        return
 
 
     def suggest(self, entity1, entity2, user_choice, count_items_to_suggest, conceptual_model, domain_description):
-
-        print("Suggesting items")
         entity1 = entity1.strip()
 
         if IS_IGNORE_DOMAIN_DESCRIPTION:
@@ -618,24 +476,21 @@ class LLMAssistant:
         logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
         self.debug_info.prompt = messages_prettified
 
-        if IS_GENERATOR_FUNCTION:
-            items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+        items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
 
-            for item in items_iterator:
-                suggestion_dictionary = json.loads(json.dumps(item))
+        for item in items_iterator:
+            suggestion_dictionary = json.loads(json.dumps(item))
+
+            if 'inference' in item:
                 inference = item['inference']
                 inference_indexes, _, _ = TextUtility.find_text_in_domain_description(inference, domain_description)
                 suggestion_dictionary['inference_indexes'] = inference_indexes
+            else:
+                logging.warn(f"Warning: inference not in item: {item}")
 
-                json_item = json.dumps(suggestion_dictionary)
-                print(f"Yielding item: {json_item}")
-                yield f"{json_item}\n"
-            return
-
-        items = []        
-        items = self.__parse_non_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
-        # TODO: For each item in items get inference indexes (do the same thing as for generator function)
-        return items
+            json_item = json.dumps(suggestion_dictionary)
+            #print(f"Yielding item: {json_item}")
+            yield f"{json_item}\n"
 
 
     def summarize_conceptual_model(self, conceptual_model):
