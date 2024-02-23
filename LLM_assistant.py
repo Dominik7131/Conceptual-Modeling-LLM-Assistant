@@ -131,17 +131,18 @@ class LLMAssistant:
 
     # Returns (parsed_item, is_item_ok)
     # is_item_ok: False if there is any issue while parsing otherwise True
-    def __parse_item_streamed_output(self, item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
+    def __parse_item_streamed_output(self, item, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2=""):
         try:
             # Replace invalid characters from JSON
             item = item.replace('\_', ' ')
-            
+
             completed_item = json.loads(item)
+
         except ValueError:
             logging.error(f"Cannot decode JSON: {item}\n")
-            completed_item = {f"name": "Error: {item}"}
-
+            completed_item = { "name": f"Error: {item}"}
             yield completed_item, False
+            return
         
         is_item_ok = True
         user_input_entity1 = user_input_entity1.lower()
@@ -220,7 +221,7 @@ class LLMAssistant:
                 completed_item['name'] = "(Deleted: Inputed entites are not contained in source and target entities) " + completed_item['name']
                 is_item_ok = False
 
-        logging.info(f"{len(items) + 1}) {completed_item['name']}")
+        logging.info(f"Completed item: {completed_item['name']}")
 
         if "description" in completed_item:
             logging.info(f"- Description: {completed_item['description']}")
@@ -254,13 +255,24 @@ class LLMAssistant:
         self.end_parsing_prematurely = False
         opened_square_brackets = 0
 
-        output = self.llm.create_chat_completion(messages=messages, temperature=0, stream=True)
+        # For debugging purposes generate whole text first because there might be some bug on my side when parsing text on the fly
+        is_generate_content_first = True
+
+        if is_generate_content_first:
+            output = self.llm.create_chat_completion(messages=messages, temperature=0)
+            logging.debug(f"Output: {output}")
+            output = output['choices'][0]['message']['content']
+        else:
+            output = self.llm.create_chat_completion(messages=messages, temperature=0, stream=True)
+
 
         for text in output:
-            if not 'content' in text['choices'][0]['delta']:
-                continue
 
-            text = text['choices'][0]['delta']['content']
+            if not is_generate_content_first:
+                if not 'content' in text['choices'][0]['delta']:
+                    continue
+                text = text['choices'][0]['delta']['content']
+
 
             self.debug_info.assistant_message += text
             if is_skip_parsing:
@@ -283,6 +295,7 @@ class LLMAssistant:
 
                     # We already got the last object of the JSON output
                     if opened_square_brackets == 0:
+                        logging.debug("End: last square bracket was detected")
                         return
                 
                 # Return when LLM gets stuck in printing only new lines
@@ -296,12 +309,12 @@ class LLMAssistant:
                 if char == "}" and item != '':
                     is_item_start = False
 
-                    iterator = self.__parse_item_streamed_output(item, items, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
+                    iterator = self.__parse_item_streamed_output(item, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
 
                     for completed_item, is_item_ok in iterator:
                         # TODO: Add comment what this code is doing
                         if self.end_parsing_prematurely:
-                            logging.info(f"Ending parsing prematurely: {completed_item}")
+                            logging.debug(f"Ending parsing prematurely: {completed_item}")
                             return
                             
                         if is_item_ok:
@@ -313,13 +326,15 @@ class LLMAssistant:
                 
                 last_char = char
         
+        #logging.debug(f"-- End of LLM output generation --")
+
         if len(items) != ITEMS_COUNT:
             # LLM sometimes does not properly finish the JSON object
             # So try to finish the object by appending the last curly bracket
             if is_item_start:
                 item += '}'
 
-                iterator = self.__parse_item_streamed_output(item, items, user_choice, is_provided_class_source, user_input_entity1)
+                iterator = self.__parse_item_streamed_output(item, user_choice, is_provided_class_source, user_input_entity1)
 
                 for completed_item, is_item_ok in iterator:
                     if is_item_ok:
@@ -378,7 +393,8 @@ class LLMAssistant:
                 #prompt += 'First for each attribute output its name and output from the given context only the exact sentence containing this class and attribute. '
                 #prompt += f'Then output only those attributes which you are certain about in JSON format like this: '
                 #prompt += f'Then output those attributes in JSON format like this: '
-                prompt += 'Be careful that some sentences contain more than one attribute. First for each attribute output its name and output only the exact part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "only the exact part of the given context containing this attribute", "name": "attribute name"}'
+                #prompt += 'Be careful that some sentences contain more than one attribute. First for each attribute output its name and output only the exact part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "only the exact part of the given context containing this attribute", "name": "attribute name"}'
+                prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}'
 
             is_description = True
             if is_description:
@@ -444,22 +460,6 @@ class LLMAssistant:
             prompt += TextUtility.build_json(
                 names=names,
                 descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity', f"* relationship {inference_prompt}", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-
-
-        elif user_choice == PROPERTIES_STRING:
-            if not is_domain_description:
-                #prompt = f'What properties does this entity: "{entity1}" have? '
-                prompt = f'What properties could be relevant for a conceptual model of a "{entity1}"? '
-                prompt += f'Output exactly {str(count_items_to_suggest)} of those properties in JSON format exactly like this: '
-            
-            else:
-                prompt = f'Solely based on the following text which properties does the entity: "{entity1}" have? '
-                prompt += f'Output only those properties which you are certain about in JSON format like this: '
-
-            if not is_domain_description:
-                prompt += TextUtility.build_json(names=["name", "description"], descriptions=["* property name", "* property description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-            else:
-                prompt += TextUtility.build_json(names=["name", "inference", "data_type"], descriptions=["* property name", f"* property {inference_prompt}", "* property data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
 
         else:
             raise ValueError(f"Error: Undefined user choice: {user_choice}")
