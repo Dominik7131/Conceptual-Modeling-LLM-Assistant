@@ -12,26 +12,40 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
     // const substring = "information system"
     // domainDescription.replace(substring, '<b>' + substring + '</b>')
 
-    const showOverlay = () =>
+    const highlightInference = (inferenceIndexes : number[]) =>
     {
-        let inferenceStart = 0
-        let inferenceEnd = 0
+        let start = 0
+        let texts = []
 
-        if (inferenceIndexes.length != 0)
-        {         
-            inferenceStart = inferenceIndexes[0]
-            inferenceEnd = inferenceIndexes[1]
+        for (let i = 0; i < inferenceIndexes.length; i += 2)
+        {
+            texts.push(domainDescription.slice(start, inferenceIndexes[i]))
+            texts.push(domainDescription.slice(inferenceIndexes[i], inferenceIndexes[i + 1]))
+            start = inferenceIndexes[i + 1]
         }
 
+        texts.push(domainDescription.slice(start, -1))
+
+        return (
+            <span>
+                { texts.map((text, index) =>
+                (
+                        index % 2 === 0 ? <span key={index}>{text}</span> :
+                        <span id={`highlightedInference-${index}`} className="highlight" key={index}>{text}</span>
+                ))}
+            </span>
+        )
+    }
+
+    const showOverlay = () =>
+    {
         return (
             isShowOverlay &&
             <div className="overlay">
                 <div>
                     <p><button className="close" onClick={ () => setIsShowOverlay(_ => false)}>Close</button></p>
-                    {inferenceIndexes.length == 0 && <p><b>Warning: Inference not found</b></p> }
-                    <span>{domainDescription.slice(0, inferenceStart)}</span>
-                    <span id="highlightedInference" className="highlight">{domainDescription.slice(inferenceStart, inferenceEnd)}</span>
-                    <span>{domainDescription.slice(inferenceEnd, -1)}</span>
+                    {inferenceIndexes.length === 0 && <p><b>Warning: Inference not found</b></p> }
+                    { highlightInference(inferenceIndexes) }
                 </div>
             </div>)
     }

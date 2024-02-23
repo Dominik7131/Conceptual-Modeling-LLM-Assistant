@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect, useStoreApi } from 'reactflow';
+import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 import useInferenceIndexes from './useInferenceIndexes';
@@ -469,7 +469,8 @@ const useConceptualModel = () =>
           return
         }
 
-        let highlightedText = document.getElementById("highlightedInference")
+        // Scroll down to the first highlighted inference in the overlay
+        let highlightedText = document.getElementById("highlightedInference-1")
         if (highlightedText)
         {
             highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
@@ -599,6 +600,7 @@ const useConceptualModel = () =>
       const showInference = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
         // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
+        // TODO: probably move this function into file `useInferenceIndexes.tsx`
         const targetID = Number(event.currentTarget.id.slice(6))
 
         setIsShowOverlay(_ => true)
