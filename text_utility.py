@@ -1,6 +1,7 @@
 import re
 import os
 import logging
+from difflib import SequenceMatcher
 
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
@@ -356,6 +357,7 @@ class TextUtility:
             inference_part = inference_part.lower().strip()
             is_inference_found = False
 
+            # TODO: Do not iterate from 0 every time because each inference part should not be at index < the previous part index
             for i in range(len(domain_description)):
                 # Append all occurencies of the `inference_part` in the `domain_description`
                 if domain_description[i:].startswith(inference_part):
@@ -364,11 +366,17 @@ class TextUtility:
                     result.append(i + len(inference_part))
 
             # TODO: Backup plan: if an inference is not found at least try to find some relevant setence with lemmatization
-            # Relevant sentece = sentence that contains all lemmas in `inference_part` (probably except brackets, punctuation etc.)
-            if not is_inference_found:            
-                print(f"Warning: inference not found: {inference_part}")
-            else:
+            # Relevant sentece = sentence that contains all lemmas in `inference_part` (probably except brackets, punctuation etc.)        
+            if is_inference_found:
                 inference_parts_found += 1
+            else:
+                new_result = TextUtility.findSubstrings(inference_part, domain_description)
+                if new_result:
+                    is_inference_found = True
+                    for inference_index in new_result:
+                        result.append(inference_index)
+                else:
+                    print(f"Warning: inference not found: {inference_part}")
 
         return result, inference_parts_found, inference_parts_total
 
@@ -392,6 +400,90 @@ class TextUtility:
         print(domain_description[start_at_index:])
         print("\n\n")
 
+
+    def longest_substring(s1, s2):
+
+        seq_match = SequenceMatcher(None, s1, s2)
+
+        match = seq_match.find_longest_match(0, len(s1), 0, len(s2))
+
+        # returns the longest substring
+        if (match.size != 0):
+            return (s1[match.a: match.a + match.size])
+        else:
+            return ("")
+
+
+    def find_inference_indexes(inference_parts, domain_description):
+            result = []
+            for inference_part in inference_parts:
+                inference_part = inference_part.lower().strip()
+
+                last_result_index = 0
+                append_only_first_occurence = False
+
+                # Skip immediately to the previous detected inference as the next inference part should not be before the previous one
+                if result:
+                    last_result_index = result[-1]
+                    append_only_first_occurence = True
+
+                for i in range(last_result_index, len(domain_description)):
+
+                    # Append all occurencies of the `inference_part` in the `domain_description`
+                    if domain_description[i:].startswith(inference_part):
+                        result.append(i)
+                        result.append(i + len(inference_part))
+
+                        if append_only_first_occurence:
+                            break
+            
+            is_everything_found = len(result) == 4
+            return result, is_everything_found
+
+
+    def findSubstrings(inference, domain_description):
+        longest_substring = TextUtility.longest_substring(domain_description, inference)
+
+        if not longest_substring:
+            return
+
+        if inference.startswith(longest_substring):
+            inference_parts = [inference[0:len(longest_substring)], inference[len(longest_substring):]]
+            result, is_everything_found = TextUtility.find_inference_indexes(inference_parts, domain_description)
+
+            # Try to detect one typo by dividing inference into two inferences and skipping the character at which it failed
+            if not is_everything_found:
+                inference_parts = [inference[0:len(longest_substring)], inference[len(longest_substring) + 1:]]
+                result, is_everything_found = TextUtility.find_inference_indexes(inference_parts, domain_description)
+            
+            return result
+        
+        elif inference.endswith(longest_substring):
+            # Symmetrically do the same thing as before
+            split = len(inference) - len(longest_substring)
+            inference_parts = [inference[:split], inference[split:]]
+            result, is_everything_found = TextUtility.find_inference_indexes(inference_parts, domain_description)
+
+            # Try to detect one typo by dividing inference into two inferences and skipping the character at which it failed
+            if not is_everything_found:
+                inference_parts = [inference[0:len(longest_substring)], inference[len(longest_substring) + 1:]]
+                result, is_everything_found = TextUtility.find_inference_indexes(inference_parts, domain_description)
+            
+            return result
+
+        else: # Longest substring was detected in the middle of the inference
+
+            # Get start index and end index of the middle part of the inference
+            for i in range(len(inference)):
+                if inference[i:].startswith(longest_substring):
+                    start_index = i
+                    end_index = i + len(longest_substring)
+                    break
+
+            inference_parts = [inference[:start_index], inference[start_index : end_index], inference[end_index:]]
+            result, is_everything_found = TextUtility.find_inference_indexes(inference_parts, domain_description)
+
+            return result
 
         
 
