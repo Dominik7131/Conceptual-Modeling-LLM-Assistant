@@ -30,8 +30,8 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
             <span>
                 { texts.map((text, index) =>
                 (
-                        index % 2 === 0 ? <span key={index}>{text}</span> :
-                        <span id={`highlightedInference-${index}`} className="highlight" key={index}>{text}</span>
+                    index % 2 === 0 ? <span key={index}>{text}</span> :
+                    <span id={`highlightedInference-${index}`} className="highlight" key={index}>{text}</span>
                 ))}
             </span>
         )
