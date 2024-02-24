@@ -108,11 +108,11 @@ Output:
 - {"name": "is-a", "inference": "manufacturer is a person", "source_entity": "Manufacturer", "target_entity": "Person", "cardinality": ""}
 
 
-### Manufacturer "1..1" --> "0..*" StructuralComponent : manufactures component
+### Manufacturer "1..1" --> "0..*" Component : manufactures component
 Text: A manufacturer is a person who manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
 
 Output:
-- {"name": "manufactures component", "inference": "manufacturer is a person who manufactures component", "source_entity": "Manufacturer", "target_entity": "StructuralComponent", "cardinality": "1..1 --> 0..*"}
+- {"name": "manufactures component", "inference": "manufacturer is a person who manufactures component", "source_entity": "Manufacturer", "target_entity": "Component", "cardinality": "1..1 --> 0..*"}
 
 
 ### Manufacturer "1..1" --> "0..*" Vehicle : manufactures vehicle
@@ -726,14 +726,9 @@ Output:
 - {"name": "is-a", "inference": "trailer is a non-motorised road vehicle", "source_entity": "Trailer", "target_entity": "NonMotorisedVehicle", "cardinality": ""}
 
 
-### StructuralComponent
-- {"name": "has a component", "inference": "structural component of a vehicle is a component of the vehicle", "source_entity": "Vehicle", "target_entity": "StructuralComponent", "cardinality": "1..1 --> 1..*"}
-- {"name": "manufactures component", "inference": "manufacturer is a person who manufactures component", "source_entity": "Manufacturer", "target_entity": "StructuralComponent", "cardinality": "1..1 --> 0..*"}
-
-
 ### Manufacturer
 - {"name": "is-a", "inference": "manufacturer is a person", "source_entity": "Manufacturer", "target_entity": "Person", "cardinality": ""}
-- {"name": "manufactures component", "inference": "manufacturer is a person who manufactures component", "source_entity": "Manufacturer", "target_entity": "StructuralComponent", "cardinality": "1..1 --> 0..*"}
+- {"name": "manufactures component", "inference": "manufacturer is a person who manufactures component", "source_entity": "Manufacturer", "target_entity": "Component", "cardinality": "1..1 --> 0..*"}
 - {"name": "manufactures vehicle", "inference": "manufacturer is a person who manufactures a vehicle", "source_entity": "Manufacturer", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
 - {"name": "manufactures system", "inference": "manufacturer is a person who manufactures a vehicle, its system", "source_entity": "Manufacturer", "target_entity": "VehicleSystem", "cardinality": "1..1 --> 0..*"}
 
