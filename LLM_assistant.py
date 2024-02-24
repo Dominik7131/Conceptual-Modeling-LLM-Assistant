@@ -11,6 +11,7 @@ IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
+IS_CHAIN_OF_THOUGHTS = True
 IS_RELATIONSHIPS_IS_A = False
 
 CONFIG_FILE_PATH = "llm-config.json"
@@ -351,21 +352,26 @@ class LLMAssistant:
 
     def __create_prompt(self, user_choice, entity1, entity2, is_domain_description, count_items_to_suggest, relevant_texts):
 
-        # TODO: Load prompts from JSON file something like this: prompt = prompt_file['user_choice']
-        # And then somehow get prompt for situation with domain description based on the `is_domain_description` argument
+        # TODO: Load prompts from JSON file and do something like this: prompt = prompt_file['user_choice']['is_domain_description']
+        # JSON file structure example: { "attributes": { "is_domain_description" : "prompt1", "is_not_domain_description": "prompt2" } }
+        # If we need to substitute `entity1` then the JSON file can contain as string ENTITY1 and we will call prompt.replace("ENTITY1", entity1)
 
         if user_choice == ATTRIBUTES_STRING:
             if not is_domain_description:
-                prompt = f'What attributes does the entity: "{entity1}" have? Output exactly {str(count_items_to_suggest)} attributes in JSON format like this: '
+                prompt = f'What attributes does the entity: "{entity1}" have? Output exactly {count_items_to_suggest} attributes in JSON format like this: '
                 prompt += '{"description": "attribute description", "name": "attribute name"}.'
             else:
                 prompt = f'Solely based on the following context which attributes does the entity: "{entity1}" have? '
-                prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
+                
+                if IS_CHAIN_OF_THOUGHTS:
+                    prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
+                else:
+                    prompt += 'Output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
 
 
         elif user_choice == RELATIONSHIPS_STRING:
             if not is_domain_description:
-                prompt = f'Which relationships does the entity: "{entity1}" have? Output exactly {str(count_items_to_suggest)} relationships in JSON format like this: '
+                prompt = f'Which relationships does the entity: "{entity1}" have? Output exactly {count_items_to_suggest} relationships in JSON format like this: '
                 prompt += '{"description": "relationship description", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
 
             else:
@@ -389,10 +395,9 @@ class LLMAssistant:
 
         else:
             raise ValueError(f"Error: Encountered undefined user choice while creating prompt: {user_choice}")
-        
-        if not is_domain_description:
-            pass
-        else:
+
+
+        if is_domain_description:
             prompt += f'\n\nThis is the given context:\n"{relevant_texts}"'
 
         return prompt
@@ -417,6 +422,8 @@ class LLMAssistant:
                 result += f"{text}\n"
             
             relevant_texts = result.rstrip() # Remove trailing new line
+        else:
+            relevant_texts = domain_description
 
         prompt = self.__create_prompt(user_choice, entity1, entity2, is_domain_description, count_items_to_suggest, relevant_texts)
         
@@ -432,6 +439,7 @@ class LLMAssistant:
         for item in items_iterator:
             suggestion_dictionary = json.loads(json.dumps(item))
 
+            # Find inference indexes for `item['inference']` in `domain_description`
             if 'inference' in item:
                 inference = item['inference']
                 inference_indexes, _, _ = TextUtility.find_text_in_domain_description(inference, domain_description)
