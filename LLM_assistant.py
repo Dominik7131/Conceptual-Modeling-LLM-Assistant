@@ -349,6 +349,55 @@ class LLMAssistant:
         return
 
 
+    def __create_prompt(self, user_choice, entity1, entity2, is_domain_description, count_items_to_suggest, relevant_texts):
+
+        # TODO: Load prompts from JSON file something like this: prompt = prompt_file['user_choice']
+        # And then somehow get prompt for situation with domain description based on the `is_domain_description` argument
+
+        if user_choice == ATTRIBUTES_STRING:
+            if not is_domain_description:
+                prompt = f'What attributes does the entity: "{entity1}" have? Output exactly {str(count_items_to_suggest)} attributes in JSON format like this: '
+                prompt += '{"description": "attribute description", "name": "attribute name"}.'
+            else:
+                prompt = f'Solely based on the following context which attributes does the entity: "{entity1}" have? '
+                prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
+
+
+        elif user_choice == RELATIONSHIPS_STRING:
+            if not is_domain_description:
+                prompt = f'Which relationships does the entity: "{entity1}" have? Output exactly {str(count_items_to_suggest)} relationships in JSON format like this: '
+                prompt += '{"description": "relationship description", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
+
+            else:
+                if IS_RELATIONSHIPS_IS_A:
+                    prompt = f'Solely based on the following context which is-a relationships does the entity: "{entity1}" have? First output all possible is-a relationships for the entity "{entity1}". Then output only those is-a relationships which you are certain about in JSON format like this: '
+                    prompt += '{"inference": "copy the part of the given context containing this is-a relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
+
+                else:
+                    prompt = f'Solely based on the following context which relationships does the entity: "{entity1}" have? '
+                    prompt += 'First for each relationship output: its name, only the exact part of the given context containing this relationship, source entity of this relationship and target entity of this relationship. After outputting all relationships output each relationship in JSON object like this: {"inference": "text from the following context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.' 
+
+
+        elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
+            if not is_domain_description:
+                prompt = f'What relationships are between source entity "{entity1}" and target entity "{entity2}"? Output exactly {count_items_to_suggest} relationships in JSON format like this: '
+                prompt += '{"description": "relationship description", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
+
+            else:
+                prompt = f'Solely based on the following text which relationships are between the entity "{entity1}" and the entity "{entity2}"? '
+                prompt += 'First for each relationship output: its name, only the exact part of the given context containing this relationship, source entity of this relationship and target entity of this relationship. After outputting all relationships output each relationship in JSON object like this: {"inference": "text from the following context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
+
+        else:
+            raise ValueError(f"Error: Encountered undefined user choice while creating prompt: {user_choice}")
+        
+        if not is_domain_description:
+            pass
+        else:
+            prompt += f'\n\nThis is the given context:\n"{relevant_texts}"'
+
+        return prompt
+
+
     def suggest(self, entity1, entity2, user_choice, count_items_to_suggest, conceptual_model, domain_description):
         entity1 = entity1.strip()
 
@@ -369,105 +418,7 @@ class LLMAssistant:
             
             relevant_texts = result.rstrip() # Remove trailing new line
 
-        times_to_repeat = count_items_to_suggest
-        is_elipsis = False
-        if is_domain_description:
-            #times_to_repeat = 2
-            #is_elipsis = True
-            times_to_repeat = 1
-            is_elipsis = False
-
-        inference_prompt = "inference from which exact text in the following text was it inferred"
-        #inference_prompt = "inference by copying the following text and inserting the symbol < to the start of the part from which it was inferred and inserting the symbol > to the end of the part from which it was inferred"
-        #inference_prompt = "inference by copying the following text and leaving only the part from which it was inferred"
-
-        if user_choice == ATTRIBUTES_STRING:
-
-            if not is_domain_description:
-                prompt = f'What attributes does this entity: "{entity1}" have? '
-                prompt += f'Output exactly {str(count_items_to_suggest)} attributes in JSON format like this: '  
-            
-            else:
-                prompt = f'Solely based on the following context which attributes does the entity: "{entity1}" have? '
-                #prompt += 'First for each attribute provide detailed reasoning. '
-                #prompt += 'First for each attribute output its name and output from the given context only the exact sentence containing this class and attribute. '
-                #prompt += f'Then output only those attributes which you are certain about in JSON format like this: '
-                #prompt += f'Then output those attributes in JSON format like this: '
-                #prompt += 'Be careful that some sentences contain more than one attribute. First for each attribute output its name and output only the exact part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "only the exact part of the given context containing this attribute", "name": "attribute name"}'
-                prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}'
-
-            is_description = True
-            if is_description:
-                if not is_domain_description:
-                    prompt += TextUtility.build_json(names=["name", "description"], descriptions=["* attribute name", "* attribute description"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                else:
-                    # prompt += TextUtility.build_json(names=["name", "inference", "data_type"], descriptions=["* attribute name", f"* attribute {inference_prompt}", "* attribute data type"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                    # prompt += TextUtility.build_json(names=["inference", "name"], descriptions=['"only the exact part of the given context containing this attribute"', '"attribute name"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                    pass
-
-            else:
-                prompt += TextUtility.build_json(names=["name"], descriptions=["* attribute name"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-        
-        elif user_choice == RELATIONSHIPS_STRING:
-
-            if not is_domain_description:
-                prompt = f'Which relationships does the source entity: "{entity1}" have? Output exactly {str(count_items_to_suggest)} relationships in JSON format like this: '
-
-            else:
-                if IS_RELATIONSHIPS_IS_A:
-                    prompt = f'Solely based on the following context which is-a relationships does this entity: "{entity1}" have? First output all possible is-a relationships for the entity "{entity1}". Then output only those is-a relationships which you are certain about in JSON format like this: '
-                    prompt += '{"inference": "text from the following context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}'
-
-                else:
-                    #prompt = f'Solely based on the following text which relationships does this entity: "{entity1}" have? '
-
-                    #prompt += f'Always make sure that the entity: "{entity_name}" is the source entity in all the relationships. '
-                    #prompt += f'Output only those relationships which you are certain about in JSON format like this: '
-                    #prompt += f'Output it in JSON format like this: '
-
-                    prompt = f'Solely based on the following context which relationships does this entity: "{entity1}" have? '
-                    prompt += 'First for each relationship output: its name, only the exact part of the given context containing this relationship, source entity of this relationship and target entity of this relationship. After outputting all relationships output each relationship in JSON object like this: {"inference": "text from the following context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}'
-            
-            names = ["inference", "name", "source", "target"]
-
-            #prompt += TextUtility.build_json(
-                #names=names,
-                #descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-                #descriptions=["* relationship name", f'"{entity1}"', f"* relationship target entity", "the short meaningful sentence for the * relationship", f"* relationship {inference_prompt}", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-
-                # is-a
-                #descriptions=['"text from the following context containing this relationship"', '"is-a"', '"source entity name"', '"target entity name"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-
-    
-        
-
-        elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
-            if not is_domain_description:
-                prompt = 'What relationships are between source entity "' + entity1 + '" and target entity "' + entity2 + '"? '
-                #prompt += 'Output exactly ' + str(count_items_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": short meaningful sentence where you put the first relationship name in between the source entity and the target entity in this order}, {"name": second relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": short meaningful sentence where you put the first relationship name in between the source entity and the target entity in this order}, ...]. '
-                #prompt += 'Output exactly ' + str(count_items_to_suggest) + ' relationships in JSON format like this: [{"name": first relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": the short meaningful sentence for the first relationship}, {"name": second relationship name where "' + source_entity + '" is the source entity and "' + target_entity + '" is the target entity, "sentence": the short meaningful sentence for the first relationship}, ...]. '
-                prompt += 'Output exactly ' + str(count_items_to_suggest) + ' relationships in JSON format like this: '
-
-            else:
-                prompt = f'Solely based on the following text which relationships are between the entity "{entity1}" and the entity "{entity2}"? '
-
-                prompt += f'Output only those relationships which you are certain about in JSON format like this: '
-
-
-            names = ["name", "source", "target", "sentence", "inference", "cardinality"]
-            #prompt += JSONBuilder.build(names=["name", "source", "target", "sentence"], descriptions=[f'* relationship name where "{entity1}" is the source entity and "{entity2}" is the target entity', f'"{entity1}"', f'"{entity2}"', f'the short meaningful sentence for the first relationship where the source entity "{entity1}" comes first then follows the relationship name and then follows the target entity "{entity2}"'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-            #prompt += JSONBuilder.build(names=["name", "source", "target", "sentence"], descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity'], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-            prompt += TextUtility.build_json(
-                names=names,
-                descriptions=[f'* relationship name', 'the source entity', 'the target entity', f'the short meaningful sentence for the first relationship where the source entity comes first then follows the relationship name and then follows the target entity', f"* relationship {inference_prompt}", "* relationship cardinality"], times_to_repeat=times_to_repeat, is_elipsis=is_elipsis)
-
-        else:
-            raise ValueError(f"Error: Undefined user choice: {user_choice}")
-        
-        if not is_domain_description:
-            pass
-        else:
-            prompt += f'.\nThis is the given context:\n"{relevant_texts}"'
+        prompt = self.__create_prompt(user_choice, entity1, entity2, is_domain_description, count_items_to_suggest, relevant_texts)
         
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
@@ -489,7 +440,6 @@ class LLMAssistant:
                 logging.warn(f"Warning: inference not in item: {item}")
 
             json_item = json.dumps(suggestion_dictionary)
-            #print(f"Yielding item: {json_item}")
             yield f"{json_item}\n"
 
 
