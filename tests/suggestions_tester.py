@@ -13,7 +13,7 @@ EXPECTED_OUTPUT = "expected-output"
 TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 # Settings
-IS_GENERATE_EXPECTED_OUTPUT = False
+IS_GENERATE_EXPECTED_OUTPUT = True
 USER_CHOICE = ATTRIBUTES_STRING
 
 
@@ -59,7 +59,7 @@ def write_output_to_file(file, index, output):
 def main():
 
     test_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}.json"
-    expected_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}_{EXPECTED_OUTPUT}.txt"
+    expected_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}-{EXPECTED_OUTPUT}.txt"
     actual_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{TIMESTAMP_PREFIX}-{USER_CHOICE}-{ACTUAL_OUTPUT}.txt"
  
     if IS_GENERATE_EXPECTED_OUTPUT:
