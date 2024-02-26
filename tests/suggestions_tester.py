@@ -32,29 +32,21 @@ def generate_expected_output(test_file_path, output_file_path):
 
 def write_outputs_to_file(file, outputs):
     for index, output in enumerate(outputs):
-        file.write(f"{index + 1}) {output['name']}\n")
-
-        for key in output:
-            # We already outputed the name
-            if key == "name":
-                continue
-
-            file.write((f"- {key}: {output[key]}\n"))
-
-        file.write("\n")
+        write_to_file(file, index, output)
 
 
-def write_output_to_file(file, index, output):
-    file.write(f"{index}) {output['name']}\n")
+def write_to_file(file, index, output):
+    file.write(f"{index + 1}) {output['name']}\n")
 
     for key in output:
         # We already outputed the name
-        if key == "name":
+        if key == "name" or key == "inference_indexes":
             continue
 
         file.write((f"- {key}: {output[key]}\n"))
 
     file.write("\n")
+
 
 def main():
 
@@ -89,7 +81,7 @@ def main():
 
             for index, suggested_item in enumerate(iterator):
                 suggested_item = json.loads(suggested_item)
-                write_output_to_file(file, index, suggested_item)
+                write_to_file(file, index, suggested_item)
                 file.write("\n")
 
 if __name__ == "__main__":
