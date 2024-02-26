@@ -35,10 +35,6 @@ class LLMAssistant:
 
         self.llm = Llama(model_path=model_path, chat_format=model_type, n_gpu_layers=-1, main_gpu=1, n_ctx=context_size, verbose=True)
 
-        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
-            # Assumption: domain description never changes
-            self.relevant_text_finder = RelevantTextFinderLemmatization()
-        
         self.debug_info = self.DebugInfo()
     
     class DebugInfo:
@@ -415,7 +411,9 @@ class LLMAssistant:
         self.__append_default_messages_for_suggestions(user_choice=user_choice, is_domain_description=is_domain_description)        
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
-            relevant_texts = self.relevant_text_finder.get(entity1)
+            # TODO: Add option for semantic text finder
+            relevant_text_finder = RelevantTextFinderLemmatization()
+            relevant_texts = relevant_text_finder.get(entity1)
 
             result = ""
             for text in relevant_texts:
