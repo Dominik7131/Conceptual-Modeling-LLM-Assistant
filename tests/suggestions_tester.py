@@ -13,7 +13,7 @@ EXPECTED_OUTPUT = "expected-output"
 TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 # Settings
-IS_GENERATE_EXPECTED_OUTPUT = True
+IS_GENERATE_EXPECTED_OUTPUT = False
 USER_CHOICE = ATTRIBUTES_STRING
 
 
@@ -69,7 +69,7 @@ def main():
     test_data_attributes = test_data[USER_CHOICE]
 
     with open(actual_output_file_path, 'w') as file:
-        for test_case in test_data_attributes[2:]:
+        for test_case in test_data_attributes:
             entity_name = test_case['entity']
             file.write(f"Entity: {entity_name}\n")
 
