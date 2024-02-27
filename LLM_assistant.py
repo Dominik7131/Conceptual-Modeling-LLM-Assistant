@@ -280,7 +280,6 @@ class LLMAssistant:
             if is_skip_parsing:
                 continue
 
-            text = text.replace("'", "") # Edit apostrophes for now by deleting them
             for char in text:
                 if char == '{':
                     is_item_start = True
