@@ -422,7 +422,7 @@ class LLMAssistant:
         self.messages = []
         self.__append_default_messages_for_suggestions(user_choice=user_choice, is_domain_description=is_domain_description)        
 
-        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
+        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION and user_choice != ENTITIES_STRING:
             relevant_texts = self.relevant_text_finder.get(entity1)
 
             result = ""
