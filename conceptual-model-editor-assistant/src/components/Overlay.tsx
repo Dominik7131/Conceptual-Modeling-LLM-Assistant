@@ -43,7 +43,15 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
             isShowOverlay &&
             <div className="overlay">
                 <div>
-                    <p><button className="close" onClick={ () => setIsShowOverlay(_ => false)}>Close</button></p>
+                    <p><button className="close" onClick={ () => setIsShowOverlay(_ => false)}>close</button></p>
+
+                    {/* TODO: Add element for editing the current suggestion */}
+                    {/* <div>
+                        <p>Edit: </p>
+                        <p>Name:</p>
+                        <p>Inference:</p>
+                    </div> */}
+                    
                     {inferenceIndexes.length === 0 && <p><b>Warning: Inference not found</b></p> }
                     { highlightInference(inferenceIndexes) }
                 </div>

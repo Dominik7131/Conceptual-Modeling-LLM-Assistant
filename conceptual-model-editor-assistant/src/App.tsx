@@ -9,6 +9,12 @@ import { ReactFlowProvider } from 'reactflow';
 
 declare global
 {
+  type Entity = {
+    name: string
+    inference: string
+    inference_indexes: number[]
+  }
+
   type Attribute = {
     name: string
     description: string
@@ -39,7 +45,7 @@ function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onPlusButtonClick, onSummaryButtonClick,
     summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay,
-    isLoading, suggestedAttributes, suggestedRelationships, addAttributesToNode, addRelationshipsToNodes, showInference
+    isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, addEntity, addAttributesToNode, addRelationshipsToNodes, showInference
   } = useConceptualModel()
 
   return (
@@ -57,8 +63,10 @@ function App()
 
       <SideBar
         isLoading={isLoading}
+        entities={suggestedEntities}
         attributes={suggestedAttributes}
         relationships={suggestedRelationships}
+        addEntity={addEntity}
         addAttributesToNode={addAttributesToNode}
         addRelationshipsToNodes={addRelationshipsToNodes}
         showInference={showInference}

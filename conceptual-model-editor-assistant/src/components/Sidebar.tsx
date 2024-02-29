@@ -1,33 +1,53 @@
 
 interface props {
-    isLoading : boolean
+    isLoading : boolean,
+    entities : Entity[],
     attributes : Attribute[],
     relationships : Relationship[],
+    addEntity : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
     addAttributesToNode : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
     addRelationshipsToNodes : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationship : Relationship) => void,
     showInference : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
 }
 
-const Sidebar: React.FC<props> = ({isLoading, attributes, relationships, addAttributesToNode, addRelationshipsToNodes, showInference}) =>
+const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationships, addEntity, addAttributesToNode, addRelationshipsToNodes, showInference}) =>
 {
     const showTextOnSidebar = () =>
     {
         return (
             <span>
-                {attributes.map((a, index) => 
-                    <span key={a.name}>
-                        {showAttribute(a, index)}
+                {entities.map((entity, index) => 
+                    <span key={entity.name}>
+                        {showEntity(entity, index)}
                     </span>
                 )}
 
-                {relationships.map((r, index) => 
+                {attributes.map((attribute, index) => 
+                    <span key={attribute.name}>
+                        {showAttribute(attribute, index)}
+                    </span>
+                )}
+
+                {relationships.map((relationship, index) => 
                     <span key={index}>
-                        {showRelationship(r, index)}
+                        {showRelationship(relationship, index)}
                     </span>
                 )}
 
                 {isLoading && <p>Loading...</p>}
             </span>
+        )
+    }
+
+    const showEntity = (entity : Entity, index : number) =>
+    {
+        return (
+            <p><strong>Name:</strong> {entity.name} <br />
+               <strong>Inference:</strong> {entity.inference} <br />
+               <button className="btn" id={`button${index}`} onClick={(event) => addEntity(event)}>Add</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, true)}>Edit</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
+            </p>
         )
     }
 

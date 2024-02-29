@@ -14,6 +14,7 @@ const useConceptualModel = () =>
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [suggestedEntities, setSuggestedEntities] = useState<Entity[]>([])
     const [suggestedAttributes, setSuggestedAttributes] = useState<Attribute[]>([])
     const [suggestedRelationships, setSuggestedRelationships] = useState<Relationship[]>([])
   
@@ -86,7 +87,6 @@ const useConceptualModel = () =>
 
         for (const [key, entity] of Object.entries(input["entities"]))
         {
-          // console.log(entity.name);
           const entityNameLowerCase = entity.name.toLowerCase()
           const newNode = { id: entityNameLowerCase, position: { x: positionX, y: positionY }, data: { label: "", attributes: entity.attributes } }
           newNodes.push(newNode)
@@ -119,13 +119,177 @@ const useConceptualModel = () =>
         setEdges(() => { return newEdges })
         updateNodes()
       }
+
+
+      const fetch_non_streamed_data = (url : string, headers : any, body_data : any, userChoice : string) =>
+      {
+        fetch(url, { method: "POST", headers, body: body_data })
+        .then(response => response.json())
+        .then(data => 
+            {
+              if (userChoice === "entities")
+              {
+                for (let i = 0; i < data.length; i++)
+                {
+                  let entity : Entity = data[i]
+                  console.log("Entity: ")
+                  console.log(entity)
+                  setSuggestedEntities(previousSuggestedEntities => {
+                    return [...previousSuggestedEntities, entity]
+                  })
+                }
+              }
+              else if (userChoice === "attributes")
+              {
+                for (let i = 0; i < data.length; i++)
+                {
+                  const relationship = data[i]
+                  const editedRelationship : Relationship = { "name": relationship.name, "source_entity": relationship.source, "target_entity": relationship.target, "inference": relationship.inference, inference_indexes: relationship.inference_indexes, "description": "", "cardinality": relationship.cardinality}
+  
+                  setSuggestedRelationships(previousSuggestedRelationships => {
+                    return [...previousSuggestedRelationships, editedRelationship]
+                  })
+                }
+              }
+              else if (userChoice === "relationships")
+              {
+                for (let i = 0; i < data.length; i++)
+                {
+                  const relationship = data[i]
+                  const editedRelationship : Relationship = { "name": relationship.name, "source_entity": relationship.source, "target_entity": relationship.target, "inference": relationship.inference, inference_indexes: relationship.inference_indexes, "description": "", "cardinality": relationship.cardinality}
+
+                  setSuggestedRelationships(previousSuggestedRelationships => {
+                    return [...previousSuggestedRelationships, editedRelationship]
+                  })
+                }
+              }
+            })
+        .catch(error => console.log(error))
+        setIsLoading(_ => false)
+        return
+      }
+
+      const fetch_streamed_data = (url : string, headers : any, body_data : any, userChoice : string) =>
+      {
+        // Fetch the event stream from the server
+        // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
+        fetch(url, { method: "POST", headers, body: body_data })
+        .then(response =>
+          {
+            setIsLoading(_ => true)
+            const stream = response.body; // Get the readable stream from the response body
+
+            if (stream == null)
+            {
+              console.log("Stream is null")
+              setIsLoading(_ => false)
+              return
+            }
+
+            const reader = stream.getReader();
+
+            const readChunk = () =>
+            {
+                reader.read()
+                    .then(({value, done}) =>
+                    {
+                        if (done)
+                        {
+                            console.log("Stream finished")
+                            setIsLoading(_ => false)
+                            return
+                        }
+
+                        // Convert the `value` to a string
+                        var jsonString = new TextDecoder().decode(value)
+                        console.log(jsonString)
+                        console.log("\n")
+
+                        // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
+                        const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
+
+                        for (let i = 0; i < jsonStringParts.length; i++)
+                        {
+                          if (userChoice === "entities")
+                          {
+                            let entity : Entity = JSON.parse(jsonStringParts[i])
+                            console.log("Entity: ")
+                            console.log(entity)
+                            setSuggestedEntities(previousSuggestedEntities => {
+                              return [...previousSuggestedEntities, entity]
+                            })
+                          }
+                          else if (userChoice === "attributes")
+                          {
+                            let attribute : Attribute = JSON.parse(jsonStringParts[i])
+                            console.log("Attribute: ")
+                            console.log(attribute)
+                            setSuggestedAttributes(previousSuggestedAttributes => {
+                              return [...previousSuggestedAttributes, attribute]
+                            })
+                          }
+                          else if (userChoice === "relationships")
+                          {
+                            let relationship : Relationship = JSON.parse(jsonStringParts[i])
+
+                            console.log("Relationship: ")
+                            console.log(relationship)
+                            setSuggestedRelationships(previousSuggestedRelationships => {
+                              return [...previousSuggestedRelationships, relationship]
+                            })
+                          }
+                        }
+
+                        // Read the next chunk
+                        readChunk();
+                    })
+                    .catch(error =>
+                    {
+                      console.error(error);
+                    });
+            };
+            // Start reading the first chunk
+            readChunk();
+        })
+        .catch(error =>
+        {
+          console.error(error);
+        });
+      }
     
       const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
         //console.log("On plus button nodes: " + nodes)
         // const buttonInnerHTML = event.target.innerHTML
         const buttonInnerHTML = event.currentTarget.innerHTML
-    
+        setIsLoading(_ => true)
+
+        setSuggestedEntities(_ => {return []})
+        setSuggestedAttributes(_ => {return []})
+        setSuggestedRelationships(_ => {return []})
+
+        const url = "http://127.0.0.1:5000/suggest"
+        const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
+        const headers = { "Content-Type": "application/json" }
+        const is_fetch_stream_data = true
+        let userChoice = ""
+
+        if (buttonInnerHTML === "+Entities")
+        {
+          userChoice = "entities"
+          const body_data = JSON.stringify({"entity": "", "user_choice": userChoice, "domain_description": currentDomainDesciption})
+
+          if (!is_fetch_stream_data)
+          {
+            fetch_non_streamed_data(url, headers, body_data, userChoice)
+          }
+          else
+          {
+            fetch_streamed_data(url, headers, body_data, userChoice)
+          }
+          return
+        }
+
         if (!selectedNodes[0])
         {
           console.log("Zero nodes selected")
@@ -140,202 +304,30 @@ const useConceptualModel = () =>
         setSourceEntity(_ => {return selectedNodes[0].id.toLowerCase() })
     
         const entityName = selectedNodes[0].id.toLowerCase()
-        const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
+        const body_data = JSON.stringify({"entity": entityName, "user_choice": userChoice, "domain_description": currentDomainDesciption})
     
         if (buttonInnerHTML === "+Attributes")
         {
-          setIsLoading(_ => true)
-          setSuggestedAttributes(_ => {return []})
-          setSuggestedRelationships(_ => {return []})
-
-          const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
-          const url = "http://127.0.0.1:5000/suggest"
-          const userChoice = "attributes"
-          const body_data = JSON.stringify({"entity": entityName, "user_choice": userChoice, "domain_description": currentDomainDesciption})
-          const headers = { "Content-Type": "application/json" }
-          const is_fetch_stream_data = true
-
-          if (!is_fetch_stream_data)
-          {
-            fetch(url, { method: "POST", headers, body: body_data })
-            .then(response => response.json())
-            .then(data => 
-                {
-                  for (let i = 0; i < data.length; i++)
-                  {
-                    let attribute : Attribute = data[i]
-                    console.log("Attribute: ")
-                    console.log(attribute)
-                    setSuggestedAttributes(previousSuggestedAttributes => {
-                      return [...previousSuggestedAttributes, attribute]
-                    })
-                  }
-                })
-            .catch(error => console.log(error))
-            setIsLoading(_ => false)
-            return
-          }
-
-          // Fetch the event stream from the server
-          // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
-          fetch(url, { method: "POST", headers, body: body_data })
-          .then(response =>
-            {
-              const stream = response.body; // Get the readable stream from the response body
-
-              if (stream == null)
-              {
-                console.log("Stream is null")
-                return
-              }
-
-              const reader = stream.getReader();
-
-              const readChunk = () =>
-              {
-                  reader.read()
-                      .then(({value, done}) =>
-                      {
-                          if (done)
-                          {
-                              console.log("Stream finished")
-                              return
-                          }
-
-                          // Convert the `value` to a string
-                          var jsonString = new TextDecoder().decode(value)
-                          console.log(jsonString)
-                          console.log("\n")
-
-                          // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
-                          const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
-
-                          for (let i = 0; i < jsonStringParts.length; i++)
-                          {
-                            let attribute : Attribute = JSON.parse(jsonStringParts[i])
-                            console.log("Attribute: ")
-                            console.log(attribute)
-                            setSuggestedAttributes(previousSuggestedAttributes => {
-                              return [...previousSuggestedAttributes, attribute]
-                            })
-                          }
-
-                          // Read the next chunk
-                          readChunk();
-                      })
-                      .catch(error =>
-                      {
-                        console.error(error);
-                      });
-              };
-              // Start reading the first chunk
-              readChunk();
-          })
-          .catch(error =>
-          {
-              console.error(error);
-          });
+          userChoice = "attributes"
         }
         else if (buttonInnerHTML === "+Relationships")
         {
-          setSuggestedAttributes(_ => {return []})
-          setSuggestedRelationships(_ => {return []})
-
-          const url = "http://127.0.0.1:5000/suggest"
-          const userChoice = "relationships"
-          const body_data = JSON.stringify({"entity": entityName, "user_choice": userChoice, "domain_description": currentDomainDesciption})
-          const headers = { "Content-Type": "application/json" }
-          const is_fetch_stream_data = true
-
-          if (!is_fetch_stream_data)
-          {
-            fetch(url, { method: "POST", headers, body: body_data })
-            .then(response => response.json())
-            .then(data => 
-                {
-                  console.log("Data: ")
-                  console.log(data)
-                  console.log("----")
-  
-                  for (let i = 0; i < data.length; i++)
-                  {
-                    const relationship = data[i]
-                    const editedRelationship : Relationship = { "name": relationship.name, "source_entity": relationship.source, "target_entity": relationship.target, "inference": relationship.inference, inference_indexes: relationship.inference_indexes, "description": "", "cardinality": relationship.cardinality}
-  
-                    setSuggestedRelationships(previousSuggestedRelationships => {
-                      return [...previousSuggestedRelationships, editedRelationship]
-                    })
-                  }
-                })
-            .catch(error => console.log(error))
-            return
-          }
-          else
-          {
-            fetch(url, { method: "POST", headers, body: body_data })
-              .then(response =>
-              {
-                const stream = response.body; // Get the readable stream from the response body
-
-                if (stream == null)
-                {
-                  console.log("Stream is null")
-                  return
-                }
-
-                const reader = stream.getReader();
-
-                const readChunk = () =>
-                {
-                    reader.read()
-                        .then(({value, done}) =>
-                        {
-                            if (done)
-                            {
-                                console.log("Stream finished")
-                                return
-                            }
-
-                            // Convert the `value` to a string
-                            var jsonString = new TextDecoder().decode(value)
-                            console.log(jsonString)
-                            console.log("\n")
-
-                            // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
-                            const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
-
-                            for (let i = 0; i < jsonStringParts.length; i++)
-                            {
-                              let relationship : Relationship = JSON.parse(jsonStringParts[i])
-
-                              console.log("Relationship: ")
-                              console.log(relationship)
-                              setSuggestedRelationships(previousSuggestedRelationships => {
-                                return [...previousSuggestedRelationships, relationship]
-                              })
-                            }
-
-                            readChunk(); // Read the next chunk
-                        })
-                        .catch(error =>
-                        {
-                          console.error(error);
-                        });
-                };
-                readChunk(); // Start reading the first chunk
-            })
-            .catch(error =>
-            {
-                console.error(error);
-            });
-          }
+          userChoice = "relationships"
         }
         else
         {
           alert(`Clicked on unknown button: ${buttonInnerHTML}`)
+          return
         }
 
-        setIsLoading(_ => false)
+        if (!is_fetch_stream_data)
+        {
+          fetch_non_streamed_data(url, headers, body_data, userChoice)
+        }
+        else
+        {
+          fetch_streamed_data(url, headers, body_data, userChoice)
+        }
       }
     
       const onSummaryButtonClick = () =>
@@ -489,10 +481,38 @@ const useConceptualModel = () =>
       // {
       //   console.log(edges)
       // }, [edges]);
+
+      const addNode = (nodeID : string, positionX : number, positionY : number, attributes : Attribute[] = []) =>
+      {
+        // Do not add a new node if it already exists
+        for (let i = 0; i < nodes.length; i++)
+        {
+          if (nodes[i].id == nodeID)
+          {
+            return
+          }
+        }
+
+        const newNode = { id: nodeID, position: { x: positionX, y: positionY }, data: { label: "", attributes: attributes } }
+        setNodes(previousNodes => {
+          return [...previousNodes, newNode]
+        })
+        updateNodes()
+      }
+
+      const addEntity = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+      {
+        setIsShowOverlay(_ => false)
+        const entityTargetID = event.currentTarget.id.slice(6)
+        const entityToAdd = suggestedEntities[Number(entityTargetID)]
+        addNode(entityToAdd.name, 66, 66)
+      }
     
     
       const addAttributesToNode = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
+        setIsShowOverlay(_ => false)
+
         const attributeTargetID = event.currentTarget.id.slice(6)
         const attributeToAdd = suggestedAttributes[Number(attributeTargetID)]
     
@@ -541,6 +561,7 @@ const useConceptualModel = () =>
     
       const addRelationshipsToNodes = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationshipObject : Relationship) =>
       {
+        setIsShowOverlay(_ => false)
         const relationshipIndex = event.currentTarget.id.slice(6)
         const relationshipToAdd = suggestedRelationships[Number(relationshipIndex)]
         const sourceNodeID = sourceEntity.toLowerCase()
@@ -604,15 +625,28 @@ const useConceptualModel = () =>
         // TODO: probably move this function into file `useInferenceIndexes.tsx`
         const targetID = Number(event.currentTarget.id.slice(6))
 
+        // Close overlay if it is already displayed
+        if (isShowOverlay)
+        {
+          setIsShowOverlay(_ => false)
+          return
+        }
+
         setIsShowOverlay(_ => true)
+
+        if (targetID < suggestedEntities.length)
+        {
+          const entity = suggestedEntities[targetID]
+          setInferenceIndexesMockUp(_ => entity.inference_indexes)
+        }
         
-        if (suggestedAttributes.length > targetID)
+        if (targetID < suggestedAttributes.length)
         {
           const attribute = suggestedAttributes[targetID]
           setInferenceIndexesMockUp(_ => attribute.inference_indexes)
         }
 
-        if (suggestedRelationships.length > targetID)
+        if (targetID < suggestedRelationships.length)
         {
           const relationship = suggestedRelationships[targetID]
           setInferenceIndexesMockUp(_ => relationship.inference_indexes)
@@ -628,7 +662,7 @@ const useConceptualModel = () =>
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onPlusButtonClick, onSummaryButtonClick,
         summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay,
-        isLoading, suggestedAttributes, suggestedRelationships, addAttributesToNode, addRelationshipsToNodes, showInference
+        isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, addEntity, addAttributesToNode, addRelationshipsToNodes, showInference
     }
 }
 

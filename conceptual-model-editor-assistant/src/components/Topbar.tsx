@@ -162,6 +162,7 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onPlusBut
                 value={domainDescription}></textarea>
             <br />
             <br />
+            <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Entities</button>
             <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
             <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
             {/* <button className="plusButton" onClick={() => onSummaryButtonClick()}>Document</button>

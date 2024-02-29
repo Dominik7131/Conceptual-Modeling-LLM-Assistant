@@ -41,7 +41,7 @@
   background: rgba(255,255,255,0.7);
   font-family: Arial;
   position: fixed;
-  width: 100%;
+  width: 80%;
   height: 100%;
   top: 0;
   left: 0;
@@ -59,8 +59,8 @@
 }
 
 .close {
-  /* left: 1430px; */
-  left: 1840px;
+  left: 1450px;
+  /* left: 1840px; */
   top: 10px;
   margin-left:auto;
   display: block;
