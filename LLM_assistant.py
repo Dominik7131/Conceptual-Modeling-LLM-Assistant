@@ -10,8 +10,8 @@ ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
-TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
-IS_CHAIN_OF_THOUGHTS = True
+TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
+IS_CHAIN_OF_THOUGHTS = False
 IS_RELATIONSHIPS_IS_A = False
 
 CONFIG_FILE_PATH = "llm-config.json"
@@ -150,17 +150,8 @@ class LLMAssistant:
         user_input_entity1 = user_input_entity1.lower()
         user_input_entity2 = user_input_entity2.lower()
 
-        if "name" not in completed_item:
+        if "name" not in completed_item or not completed_item["name"]:
             completed_item["name"] = "error: no name"
-            is_item_ok = False
-
-        elif not isinstance(completed_item['name'], str):
-            completed_item["name"] = "error: name is not a string"
-            is_item_ok = False
-
-        
-        elif not completed_item["name"]: # is string empty
-            completed_item["name"] = "error: name is empty string"
             is_item_ok = False
 
         else:
@@ -172,6 +163,7 @@ class LLMAssistant:
 
         if not is_item_ok:
             yield completed_item, is_item_ok
+            return
         
         if user_choice == ATTRIBUTES_STRING:
             pass
@@ -184,32 +176,33 @@ class LLMAssistant:
 
 
         elif user_choice == RELATIONSHIPS_STRING:
-            if not "source" in completed_item:
-                completed_item["name"] = "error: no source entity"
-                is_item_ok = False
+            # if not "source" in completed_item or not completed_item["source"]:
+            #     completed_item["name"] = "error: no source entity"
+            #     is_item_ok = False
             
-            if not "target" in completed_item:
-                completed_item["name"] = "error: no target entity"
-                is_item_ok = False
+            # if not "target" in completed_item or not completed_item["target"]:
+            #     completed_item["name"] = "error: no target entity"
+            #     is_item_ok = False
             
+            # if not is_item_ok:
+            #     yield completed_item, is_item_ok
+            #     return
 
-            if not is_item_ok:
-                yield completed_item, is_item_ok
+            # is_entity1_source_or_target = user_input_entity1 == completed_item['source'] or user_input_entity1 == completed_item['target']
 
-            is_entity1_source_or_target = user_input_entity1 == completed_item['source'] or user_input_entity1 == completed_item['target']
-
-            is_entity1_in_sentence = True
-            if "sentence" in completed_item:
-                is_entity1_in_sentence = user_input_entity1 in completed_item['sentence']
+            # is_entity1_in_sentence = True
+            # if "sentence" in completed_item:
+            #     is_entity1_in_sentence = user_input_entity1 in completed_item['sentence']
             
-            is_none = (completed_item['source'].lower() == "none") or (completed_item['target'].lower() == "none")
+            # is_none = (completed_item['source'].lower() == "none") or (completed_item['target'].lower() == "none")
             
-            if not is_entity1_source_or_target or not is_entity1_in_sentence or is_none:
-                # For debugging purpuses do not end parsing but otherwise we would probably end
-                #self.end_parsing_prematurely = True
-                #return completed_item
-                completed_item['name'] = "(Deleted: Inputed entity is not source/target entity) " + completed_item['name']
-                is_item_ok = False
+            # if not is_entity1_source_or_target or not is_entity1_in_sentence or is_none:
+            #     # For debugging purpuses do not end parsing but otherwise we would probably end
+            #     #self.end_parsing_prematurely = True
+            #     #return completed_item
+            #     completed_item['name'] = "(Deleted: Inputed entity is not source/target entity) " + completed_item['name']
+            #     is_item_ok = False
+            pass
 
 
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
@@ -225,20 +218,26 @@ class LLMAssistant:
 
         logging.info(f"Completed item: {completed_item['name']}")
 
-        if "description" in completed_item:
-            logging.info(f"- Description: {completed_item['description']}")
-        if "source" in completed_item:
-            logging.info(f"- Source: {completed_item['source']}")
-        if "target" in completed_item:
-            logging.info(f"- Target: {completed_item['target']}")
-        if "sentence" in completed_item:
-            logging.info(f"- Sentence: {completed_item['sentence']}")
-        if "inference" in completed_item:
-            logging.info(f"- Inference: {completed_item['inference']}")
-        if "cardinality" in completed_item:
-            logging.info(f"- Cardinality: {completed_item['cardinality']}")
-        if "data_type" in completed_item:
-            logging.info(f"- Data type: {completed_item['data_type']}")
+        for key in completed_item:
+            if key == "name":
+                continue
+            key_name = key.replace('_', ' ').capitalize()
+            logging.info(f"- {key_name}: {completed_item[key]}")
+
+        # if "description" in completed_item:
+        #     logging.info(f"- Description: {completed_item['description']}")
+        # if "source" in completed_item:
+        #     logging.info(f"- Source: {completed_item['source']}")
+        # if "target" in completed_item:
+        #     logging.info(f"- Target: {completed_item['target']}")
+        # if "sentence" in completed_item:
+        #     logging.info(f"- Sentence: {completed_item['sentence']}")
+        # if "inference" in completed_item:
+        #     logging.info(f"- Inference: {completed_item['inference']}")
+        # if "cardinality" in completed_item:
+        #     logging.info(f"- Cardinality: {completed_item['cardinality']}")
+        # if "data_type" in completed_item:
+        #     logging.info(f"- Data type: {completed_item['data_type']}")
 
         logging.info("\n")
 
@@ -364,7 +363,8 @@ class LLMAssistant:
                 prompt = f'Solely based on the following context which attributes does the entity: "{entity1}" have? '
                 
                 if IS_CHAIN_OF_THOUGHTS:
-                    prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
+                    # prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
+                    prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name", "data_type": "data type of the attribute", "cardinality": "cardinality of the attribute"}.'
                 else:
                     prompt += 'Output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
 
@@ -381,7 +381,11 @@ class LLMAssistant:
 
                 else:
                     prompt = f'Solely based on the following context which relationships does the entity: "{entity1}" have? '
-                    prompt += 'First for each relationship output: its name, only the exact part of the given context containing this relationship, source entity of this relationship and target entity of this relationship. After outputting all relationships output each relationship in JSON object like this: {"inference": "text from the following context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.' 
+
+                    if IS_CHAIN_OF_THOUGHTS:
+                        prompt += 'First for each relationship output its name and copy the part of the given context containing this relationship. After outputting all relationships output each relationship in JSON object like this: {"inference": "copy the part of the given context containing this relationship", "name": "relationship name"}.'
+                    else:
+                        prompt += 'Output each single relationship in JSON object like this: {"inference": "copy the part of the given context containing this relationship", "name": "relationship name"}.'
 
 
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
