@@ -207,7 +207,7 @@ class TextUtility:
         if not string:
             return False
         
-        if string[0].islower():
+        if ' ' in string:
             return False
         
         if string.isspace():
@@ -220,8 +220,13 @@ class TextUtility:
 
 
     def convert_name_to_standard_convention(name):
+        # Convert text in any convention to a lower-cased text where each word is delimited with a space
+
         # TODO: Convert camel case starting with a small letter
         # E.g.: periodOfInterruptionOfInsurance, dateOfChangeOfInsurance
+
+        if name == "Capitalized Name":
+            print("")
         
         if not name:
             return ""
@@ -235,7 +240,7 @@ class TextUtility:
                 result += name_part + ' '
             
             result = result.rstrip() # Remove trailing space
-            return result
+            return result.lower()
         
         # Detect CamelCase
         if TextUtility.is_camel_case(name, can_be_snake_case=False):
@@ -251,9 +256,9 @@ class TextUtility:
                 else:
                     result += char
 
-            return result
+            return result.lower()
 
-        return name
+        return name.lower()
 
 
     def create_query(entity):
