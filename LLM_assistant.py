@@ -1,5 +1,5 @@
 from llama_cpp import Llama
-from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, PROPERTIES_STRING
+from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, ENTITIES_STRING
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
 import logging
@@ -81,21 +81,19 @@ class LLMAssistant:
                     system = "You are an expert at extracting relationships in JSON format for a given entity solely based on a given context."
 
 
-
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
             system = "You are an expert at creating a conceptual model which consists of entities and their relationships. "
             system += "Each relationship is between exactly two entities, we will describe them as the source entity and the target entity. "
             system += "Each relationship has a name in a verb form such that when you insert this verb in between the source entity and the target entity in this order a short meaningful sentence is created. "
             system += "Always make sure that the short meaningful sentence indeed makes sense. Be very careful when creating the short meaningful sentence: the source entity must come first then follows the relationship name and then follows the target entity name which ends the sentence. Always check that this order holds."
 
-        elif user_choice == PROPERTIES_STRING:
+
+        elif user_choice == ENTITIES_STRING:
 
             if not is_domain_description:
-                system = "You are an expert at generating properties for a given entity in context of creating conceptual model in software engineering."
+                system = "You are an expert at generating entities in JSON format."
             else:
-                system = "You are an expert at extracting properties for a given entity solely based on a given text in context of creating conceptual model in software engineering."
-
-
+                system = "You are an expert at extracting entities in JSON format solely based on a given context."
 
         else:
             raise ValueError(f"Error: Unknown user choice: {user_choice}")
@@ -397,6 +395,12 @@ class LLMAssistant:
                 prompt = f'Solely based on the following text which relationships are between the entity "{entity1}" and the entity "{entity2}"? '
                 prompt += 'First for each relationship output: its name, only the exact part of the given context containing this relationship, source entity of this relationship and target entity of this relationship. After outputting all relationships output each relationship in JSON object like this: {"inference": "text from the following context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
 
+
+        elif user_choice == ENTITIES_STRING:
+            if IS_CHAIN_OF_THOUGHTS:
+                prompt = 'Solely based on the following context extract all entities. First for each entity output its name and copy the part of the given context containing this entity. After outputting all entities output each entity in this JSON object: {"inference": "copy the part of the given context containing this entity", "name": "entity name"}. '
+            else:
+                prompt = 'Solely based on the following context extract all entities in this JSON object: {"name": "entity name", "inference": "copy the part of the given context containing this entity"}.'
         else:
             raise ValueError(f"Error: Encountered undefined user choice while creating prompt: {user_choice}")
 
