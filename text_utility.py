@@ -6,7 +6,7 @@ from difflib import SequenceMatcher
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
 RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
-PROPERTIES_STRING = "properties"
+ENTITIES_STRING = "entities"
 
 alphabets= "([A-Za-z])"
 prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
@@ -32,6 +32,7 @@ class TextUtility:
     
 
     def build_llama2_prompt(messages):
+        # llama2 prompt format: https://huggingface.co/blog/llama2#how-to-prompt-llama-2
         start_prompt = "<s>[INST] "
         end_prompt = " [/INST]"
         conversation = []
@@ -219,6 +220,9 @@ class TextUtility:
 
 
     def convert_name_to_standard_convention(name):
+        # TODO: Convert camel case starting with a small letter
+        # E.g.: periodOfInterruptionOfInsurance, dateOfChangeOfInsurance
+        
         if not name:
             return ""
 
@@ -415,30 +419,32 @@ class TextUtility:
 
 
     def find_inference_indexes(inference_parts, domain_description):
-            result = []
-            for inference_part in inference_parts:
-                inference_part = inference_part.lower().strip()
+        result = []
+        for inference_part in inference_parts:
+            inference_part = inference_part.lower().strip()
 
-                last_result_index = 0
-                append_only_first_occurence = False
+            last_result_index = 0
+            append_only_first_occurence = False
 
-                # Skip immediately to the previous detected inference as the next inference part should not be before the previous one
-                if result:
-                    last_result_index = result[-1]
-                    append_only_first_occurence = True
+            # Skip immediately to the previous detected inference as the next inference part should not be before the previous one
+            # We cannot skip immediately to the index at result[-1] if there are more inferences found for the previous inference part
+            if result:
+                last_result_index = result[1]
+                append_only_first_occurence = True
 
-                for i in range(last_result_index, len(domain_description)):
+            for i in range(last_result_index, len(domain_description)):
 
-                    # Append all occurencies of the `inference_part` in the `domain_description`
-                    if domain_description[i:].startswith(inference_part):
-                        result.append(i)
-                        result.append(i + len(inference_part))
+                # Append all occurencies of the `inference_part` in the `domain_description`
+                if domain_description[i:].startswith(inference_part):
+                    result.append(i)
+                    result.append(i + len(inference_part))
 
-                        if append_only_first_occurence:
-                            break
-            
-            is_everything_found = len(result) == 4
-            return result, is_everything_found
+                    if append_only_first_occurence:
+                        break
+
+        # TODO: Find out a better way to analyze if everything was found
+        is_everything_found = len(result) > 2
+        return result, is_everything_found
 
 
     def findSubstrings(inference, domain_description):

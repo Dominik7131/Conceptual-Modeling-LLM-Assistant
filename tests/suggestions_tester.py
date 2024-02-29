@@ -1,7 +1,7 @@
 import sys
 sys.path.append('.')
 from LLM_assistant import LLMAssistant, ITEMS_COUNT
-from text_utility import ATTRIBUTES_STRING, RELATIONSHIPS_STRING
+from text_utility import ATTRIBUTES_STRING, RELATIONSHIPS_STRING, ENTITIES_STRING
 import time
 import json
 
@@ -14,7 +14,7 @@ TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 # Settings
 IS_GENERATE_EXPECTED_OUTPUT = False
-USER_CHOICE = ATTRIBUTES_STRING
+USER_CHOICE = ENTITIES_STRING
 
 
 def generate_expected_output(test_file_path, output_file_path):
@@ -63,8 +63,11 @@ def main():
     with open(INPUT_DOMAIN_DESCRIPTION_FILE_PATH, 'r') as file:
         domain_description = file.read()
     
-    with open(test_file_path) as file:
-        test_data = json.load(file)
+    if user_choice == ENTITIES_STRING:
+        test_data = {"entities:" [{"entity": ""}]}
+    else:
+        with open(test_file_path) as file:
+            test_data = json.load(file)
     
     test_data_attributes = test_data[USER_CHOICE]
 
