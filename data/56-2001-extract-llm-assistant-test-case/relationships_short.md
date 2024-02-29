@@ -19,10 +19,10 @@ Output:
 
 
 ### RoadVehicle "0..*" --> "1..1" VehicleType : has type
-Text: A type of road vehicle is defined as a set of road vehicles which are identical in at least their basic characteristics.
+Text: A type of road vehicle is defined as a set of road vehicles which are identical in at least their basic characteristics. ... A declaration of conformity of the road vehicle with a vehicle type approved by the Ministry.
 
 Output:
-- {"name": "has type", "inference": "type of road vehicle is defined as a set of road vehicles", "source_entity": "RoadVehicle", "target_entity": "VehicleType", "cardinality": "0..* --> 1..1"}
+- {"name": "has type", "inference": "...road vehicle with a vehicle type", "source_entity": "RoadVehicle", "target_entity": "VehicleType", "cardinality": "0..* --> 1..1"}
 
 
 ### MotorisedVehicle --|> RoadVehicle
@@ -57,35 +57,35 @@ Output:
 Text: Road vehicles are divided into the following basic types: motorcycles, passenger cars, buses, lorries, special purpose vehicles, trailers, powered wheelchairs if their width or length exceeds 1.4 m, their design speed exceeds 15 km.h-1 or their maximum permissible weight exceeds 450 kg, and other road vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: passenger cars", "source_entity": "PassengerCar", "target_entity": "RoadVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: ... passenger cars", "source_entity": "PassengerCar", "target_entity": "RoadVehicle", "cardinality": ""}
 
 
 ### Bus --|> RoadVehicle
 Text: Road vehicles are divided into the following basic types: motorcycles, passenger cars, buses, lorries, special purpose vehicles, trailers, powered wheelchairs if their width or length exceeds 1.4 m, their design speed exceeds 15 km.h-1 or their maximum permissible weight exceeds 450 kg, and other road vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: buses", "source_entity": "Bus", "target_entity": "RoadVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: ... buses", "source_entity": "Bus", "target_entity": "RoadVehicle", "cardinality": ""}
 
 
 ### Lorry --|> RoadVehicle
 Text: Road vehicles are divided into the following basic types: motorcycles, passenger cars, buses, lorries, special purpose vehicles, trailers, powered wheelchairs if their width or length exceeds 1.4 m, their design speed exceeds 15 km.h-1 or their maximum permissible weight exceeds 450 kg, and other road vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: lorries", "source_entity": "Lorry", "target_entity": "RoadVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: ... lorries", "source_entity": "Lorry", "target_entity": "RoadVehicle", "cardinality": ""}
 
 
 ### SpecialPurposeVehicle --|> RoadVehicle
 Text: Road vehicles are divided into the following basic types: motorcycles, passenger cars, buses, lorries, special purpose vehicles, trailers, powered wheelchairs if their width or length exceeds 1.4 m, their design speed exceeds 15 km.h-1 or their maximum permissible weight exceeds 450 kg, and other road vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: special purpose vehicles", "source_entity": "SpecialPurposeVehicle", "target_entity": "RoadVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: ... special purpose vehicles", "source_entity": "SpecialPurposeVehicle", "target_entity": "RoadVehicle", "cardinality": ""}
 
 
 ### PoweredWheelchair --|> RoadVehicle
 Text: Road vehicles are divided into the following basic types: motorcycles, passenger cars, buses, lorries, special purpose vehicles, trailers, powered wheelchairs if their width or length exceeds 1.4 m, their design speed exceeds 15 km.h-1 or their maximum permissible weight exceeds 450 kg, and other road vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: powered wheelchairs", "source_entity": "PoweredWheelchair", "target_entity": "RoadVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Road vehicles are divided into the following basic types: ... powered wheelchairs", "source_entity": "PoweredWheelchair", "target_entity": "RoadVehicle", "cardinality": ""}
 
 
 ### Trailer --|> NonMotorisedVehicle
@@ -93,6 +93,7 @@ Text: A trailer is a non-motorised road vehicle intended to be towed by another 
 
 Output:
 - {"name": "is-a", "inference": "trailer is a non-motorised road vehicle", "source_entity": "Trailer", "target_entity": "NonMotorisedVehicle", "cardinality": ""}
+
 
 ### Vehicle "1..1" --> "1..*" StructuralComponent : has a component
 Text: A structural component of a vehicle is a component of the vehicle which must be type-approved independently of the vehicle if so provided for in the implementing legislation and which is subject to the technical requirements laid down in the implementing legislation. An example of a structural component of a vehicle is a lamp.
@@ -112,7 +113,7 @@ Output:
 Text: A manufacturer is a person who manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
 
 Output:
-- {"name": "manufactures component", "inference": "manufacturer is a person who manufactures component", "source_entity": "Manufacturer", "target_entity": "Component", "cardinality": "1..1 --> 0..*"}
+- {"name": "manufactures component", "inference": "manufacturer is a person who manufactures ... component", "source_entity": "Manufacturer", "target_entity": "Component", "cardinality": "1..1 --> 0..*"}
 
 
 ### Manufacturer "1..1" --> "0..*" Vehicle : manufactures vehicle
@@ -168,7 +169,7 @@ Output:
 Text: A vehicle type may include variants and versions.
 
 Output:
-- {"name": "includes version", "inference": "vehicle type may include versions", "source_entity": "VehicleType", "target_entity": "VehicleTypeVersion", "cardinality": "1..1" *- "0..*"}
+- {"name": "includes version", "inference": "vehicle type may include ... versions", "source_entity": "VehicleType", "target_entity": "VehicleTypeVersion", "cardinality": "1..1" *- "0..*"}
 
 
 ### TractorTrailer --|> Trailer
@@ -190,56 +191,49 @@ Output:
 Text: Special vehicles are divided into the following basic types: agricultural or forestry tractors and their trailers, self-propelled work machines, work machines carried, work machines attached, interchangeable towed equipment, vehicles designed primarily for driving on snow, vehicles designed primarily for off-road driving, single-axle tractors and their trailers, special tractors and their trailers, carriers of working adaptors and other special vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: self-propelled work machines", "source_entity": "SelfPropelledWorkMachine", "target_entity": "SpecialVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: ... self-propelled work machines", "source_entity": "SelfPropelledWorkMachine", "target_entity": "SpecialVehicle", "cardinality": ""}
 
 
 ### WorkMachineCarried --|> SpecialVehicle
 Text: Special vehicles are divided into the following basic types: agricultural or forestry tractors and their trailers, self-propelled work machines, work machines carried, work machines attached, interchangeable towed equipment, vehicles designed primarily for driving on snow, vehicles designed primarily for off-road driving, single-axle tractors and their trailers, special tractors and their trailers, carriers of working adaptors and other special vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: work machines carried", "source_entity": "WorkMachineCarried", "target_entity": "SpecialVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: ... work machines carried", "source_entity": "WorkMachineCarried", "target_entity": "SpecialVehicle", "cardinality": ""}
 
 
 ### WorkMachineAttached --|> SpecialVehicle
 Text: Special vehicles are divided into the following basic types: agricultural or forestry tractors and their trailers, self-propelled work machines, work machines carried, work machines attached, interchangeable towed equipment, vehicles designed primarily for driving on snow, vehicles designed primarily for off-road driving, single-axle tractors and their trailers, special tractors and their trailers, carriers of working adaptors and other special vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: work machines attached", "source_entity": "WorkMachineAttached", "target_entity": "SpecialVehicle", "cardinality": ""}
-
-
-### WorkMachineAttached --|> SpecialVehicle
-Text: Special vehicles are divided into the following basic types: agricultural or forestry tractors and their trailers, self-propelled work machines, work machines carried, work machines attached, interchangeable towed equipment, vehicles designed primarily for driving on snow, vehicles designed primarily for off-road driving, single-axle tractors and their trailers, special tractors and their trailers, carriers of working adaptors and other special vehicles.
-
-Output:
-- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: work machines attached", "source_entity": "WorkMachineAttached", "target_entity": "SpecialVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: ... work machines attached", "source_entity": "WorkMachineAttached", "target_entity": "SpecialVehicle", "cardinality": ""}
 
 
 ### InterchangeableTowedEquipment --|> SpecialVehicle
 Text: Special vehicles are divided into the following basic types: agricultural or forestry tractors and their trailers, self-propelled work machines, work machines carried, work machines attached, interchangeable towed equipment, vehicles designed primarily for driving on snow, vehicles designed primarily for off-road driving, single-axle tractors and their trailers, special tractors and their trailers, carriers of working adaptors and other special vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: interchangeable towed equipment", "source_entity": "InterchangeableTowedEquipment", "target_entity": "SpecialVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: ... interchangeable towed equipment", "source_entity": "InterchangeableTowedEquipment", "target_entity": "SpecialVehicle", "cardinality": ""}
 
 
 ### SnowVehicles --|> SpecialVehicle
 Text: Special vehicles are divided into the following basic types: agricultural or forestry tractors and their trailers, self-propelled work machines, work machines carried, work machines attached, interchangeable towed equipment, vehicles designed primarily for driving on snow, vehicles designed primarily for off-road driving, single-axle tractors and their trailers, special tractors and their trailers, carriers of working adaptors and other special vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: vehicles designed primarily for driving on snow", "source_entity": "SnowVehicles", "target_entity": "SpecialVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: ... vehicles designed primarily for driving on snow", "source_entity": "SnowVehicles", "target_entity": "SpecialVehicle", "cardinality": ""}
 
 
 ### OffroadVehicles --|> SpecialVehicle
 Text: Special vehicles are divided into the following basic types: agricultural or forestry tractors and their trailers, self-propelled work machines, work machines carried, work machines attached, interchangeable towed equipment, vehicles designed primarily for driving on snow, vehicles designed primarily for off-road driving, single-axle tractors and their trailers, special tractors and their trailers, carriers of working adaptors and other special vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: vehicles designed primarily for off-road driving", "source_entity": "OffroadVehicles", "target_entity": "SpecialVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: ... vehicles designed primarily for off-road driving", "source_entity": "OffroadVehicles", "target_entity": "SpecialVehicle", "cardinality": ""}
 
 
 ### CarrierOfWorkingAdaptors --|> SpecialVehicle
 Text: Special vehicles are divided into the following basic types: agricultural or forestry tractors and their trailers, self-propelled work machines, work machines carried, work machines attached, interchangeable towed equipment, vehicles designed primarily for driving on snow, vehicles designed primarily for off-road driving, single-axle tractors and their trailers, special tractors and their trailers, carriers of working adaptors and other special vehicles.
 
 Output:
-- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: carriers of working adaptors", "source_entity": "CarrierOfWorkingAdaptors", "target_entity": "SpecialVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "Special vehicles are divided into the following basic types: ... carriers of working adaptors", "source_entity": "CarrierOfWorkingAdaptors", "target_entity": "SpecialVehicle", "cardinality": ""}
 
 
 ### Vehicle "1..1" --> "1..*" VehicleSystem : has a structural system
@@ -251,10 +245,11 @@ Output:
 
 ### IncompleteRoadVehicle --|> RoadVehicle
 Text: The municipal authority of a municipality with extended competence shall enter a road vehicle, the roadworthiness of which is subject to approval, in the register of road vehicles on the basis of a written application by the owner of the road vehicle
+...
 - it is not an incomplete road vehicle
 
 Output:
-- {"name": "is-a", "inference": "it is not an incomplete road vehicle", "source_entity": "IncompleteRoadVehicle", "target_entity": "RoadVehicle", "cardinality": ""}
+- {"name": "is-a", "inference": "road vehicle ... it is not an incomplete road vehicle", "source_entity": "IncompleteRoadVehicle", "target_entity": "RoadVehicle", "cardinality": ""}
 
 
 ### Owner --|> Person
@@ -284,7 +279,7 @@ Output:
 Text: The following information on the owner and operator, if different from the owner, of a road vehicle shall be entered in the register of road vehicles.
 
 Output:
-- {"name": "operates", "inference": "information on the operator of a road vehicle", "source_entity": "Operator", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
+- {"name": "operates", "inference": "operator of a road vehicle", "source_entity": "Operator", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
 
 
 ### NaturalPerson --|> Person
@@ -300,7 +295,7 @@ Text: The following information on the owner and operator, if different from the
 - If the person is a natural person, his name, or, where applicable, first and last names, the address of his permanent residence, long-term residence, temporary residence of at least 6 months or other authorised residence and his birth number, if any, and, where applicable, his date of birth shall be entered.
 
 Output:
-- {"name": "has permanent residence", "inference": "If the person is a natural person, the address of his permanent residence", "source_entity": "NaturalPerson", "target_entity": "Address", "cardinality": "0..* --> 0..1"}
+- {"name": "has permanent residence", "inference": "If the person is a natural person, ... the address of his permanent residence", "source_entity": "NaturalPerson", "target_entity": "Address", "cardinality": "0..* --> 0..1"}
 
 
 ### NaturalPerson "0..*" --> "0..1" Address : has long-term residence
@@ -308,7 +303,7 @@ Text: The following information on the owner and operator, if different from the
 - If the person is a natural person, his name, or, where applicable, first and last names, the address of his permanent residence, long-term residence, temporary residence of at least 6 months or other authorised residence and his birth number, if any, and, where applicable, his date of birth shall be entered.
 
 Output:
-- {"name": "has long-term residence", "inference": "If the person is a natural person, the address of his long-term residence", "source_entity": "NaturalPerson", "target_entity": "Address", "cardinality": "0..* --> 0..1"}
+- {"name": "has long-term residence", "inference": "If the person is a natural person, ... the address of his ... long-term residence", "source_entity": "NaturalPerson", "target_entity": "Address", "cardinality": "0..* --> 0..1"}
 
 
 ### NaturalPerson "0..*" --> "0..1" Address : has temporary residence
@@ -316,7 +311,7 @@ Text: The following information on the owner and operator, if different from the
 - If the person is a natural person, his name, or, where applicable, first and last names, the address of his permanent residence, long-term residence, temporary residence of at least 6 months or other authorised residence and his birth number, if any, and, where applicable, his date of birth shall be entered.
 
 Output:
-- {"name": "has temporary residence", "inference": "If the person is a natural person, the address of his temporary residence", "source_entity": "NaturalPerson", "target_entity": "Address", "cardinality": "0..* --> 0..1"}
+- {"name": "has temporary residence", "inference": "If the person is a natural person, ... the address of his ... temporary residence", "source_entity": "NaturalPerson", "target_entity": "Address", "cardinality": "0..* --> 0..1"}
 
 
 ### NaturalPerson "0..*" --> "0..1" Address : has other authorised residence
@@ -324,7 +319,7 @@ Text: The following information on the owner and operator, if different from the
 - If the person is a natural person, his name, or, where applicable, first and last names, the address of his permanent residence, long-term residence, temporary residence of at least 6 months or other authorised residence and his birth number, if any, and, where applicable, his date of birth shall be entered.
 
 Output:
-- {"name": "has other authorised residence", "inference": "If the person is a natural person, the address of his other authorised residence", "source_entity": "NaturalPerson", "target_entity": "Address", "cardinality": "0..* --> 0..1"}
+- {"name": "has other authorised residence", "inference": "If the person is a natural person, ... the address of his ... other authorised residence", "source_entity": "NaturalPerson", "target_entity": "Address", "cardinality": "0..* --> 0..1"}
 
 
 ### BusinessNaturalPerson --|> Person
@@ -537,7 +532,7 @@ Text: In addition, for a road vehicle it is stated:
 - type, serial number and colour of bodywork, number of seats and standing places or beds, dimensions of the loading area, volume of the box or tank,
 
 Output:
-- {"name": "has body work", "inference": "for a road vehicle it is stated: colour of bodywork", "source_entity": "RoadVehicle", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
+- {"name": "has body work", "inference": "for a road vehicle it is stated: colour of bodywork", "source_entity": "RoadVehicle", "target_entity": "BodyWork", "cardinality": "1..1 --> 1..1"}
 
 
 ### TechnicalInspection "1..*" --> "1..1" TechnicalInspectionStation : carried out by
@@ -670,7 +665,7 @@ Output:
 - {"name": "is-a", "inference": "it is not an incomplete road vehicle", "source_entity": "IncompleteRoadVehicle", "target_entity": "RoadVehicle", "cardinality": ""}
 - {"name": "has type", "inference": "type of road vehicle is defined as a set of road vehicles", "source_entity": "RoadVehicle", "target_entity": "VehicleType", "cardinality": "0..* --> 1..1"}
 - {"name": "registers", "inference": "registering a road vehicle in the register of road vehicles", "source_entity": "Registration", "target_entity": "RoadVehicle", "cardinality": "0..1 --> 1..1"}
-- {"name": "has body work", "inference": "for a road vehicle it is stated: colour of bodywork", "source_entity": "RoadVehicle", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
+- {"name": "has body work", "inference": "for a road vehicle it is stated: colour of bodywork", "source_entity": "RoadVehicle", "target_entity": "BodyWork", "cardinality": "1..1 --> 1..1"}
 - {"name": "roadworthiness inspected by", "inference": "road vehicle technical inspection is an inspection of its roadworthiness", "source_entity": "RoadVehicle", "target_entity": "TechnicalInspection", "cardinality": "1..1 --> 0..*"}
 - {"name": "roadworthiness approved by", "inference": "road vehicle technical inspection is an inspection of its roadworthiness ... technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle", "source_entity": "RoadVehicle", "target_entity": "ReportOnRoadworthiness", "cardinality": "0..1 --> 0..*"}
 - {"name": "limited roadworthiness approved by", "inference": "road vehicle technical inspection is an inspection of its roadworthiness ... technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle", "source_entity": "RoadVehicle", "target_entity": "ReportOnLimitedRoadworthiness", "cardinality": "0..1 --> 0..*"}
@@ -683,18 +678,17 @@ Output:
 - {"name": "has a component", "inference": "structural component of a vehicle is a component of the vehicle", "source_entity": "Vehicle", "target_entity": "StructuralComponent", "cardinality": "1..1 --> 1..*"}
 - {"name": "manufactures vehicle", "inference": "manufacturer is a person who manufactures a vehicle", "source_entity": "Manufacturer", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
 - {"name": "has a structural system", "inference": "Vehicle system means any structural system of a vehicle", "source_entity": "Vehicle", "target_entity": "VehicleSystem", "cardinality": "1..1 --> 1..*"}
-- {"name": "owns", "inference": "information on the owner of a road vehicle", "source_entity": "Owner", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
+- {"name": "owns", "inference": "information on the owner ... of a road vehicle", "source_entity": "Owner", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
 - {"name": "operates", "inference": "information on the operator of a road vehicle", "source_entity": "Operator", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
 - {"name": "insured by", "inference": "vehicle has been covered by a third party insurance", "source_entity": "Vehicle", "target_entity": "ThirdPartyInsurance", "cardinality": "1..1 --> 1..1"}
 - {"name": "insures vehicle", "inference": "insurance contract shall always contain the particulars of the vehicle", "source_entity": "InsuranceContract", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
 - {"name": "specifies", "inference": "Green Card means a certificate ... for the vehicle specified in the certificate", "source_entity": "GreenCard", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
-- {"name": "has body work", "inference": "for a road vehicle it is stated: colour of bodywork", "source_entity": "RoadVehicle", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
 
 
 ### VehicleType
 - {"name": "has type", "inference": "type of road vehicle is defined as a set of road vehicles", "source_entity": "RoadVehicle", "target_entity": "VehicleType", "cardinality": "0..* --> 1..1"}
-- {"name": "includes variant", "inference": "vehicle type may include versions", "source_entity": "VehicleType", "target_entity": "VehicleTypeVariant", "cardinality": "1..1" *- "0..*"}
-- {"name": "includes version", "inference": "vehicle type may include variants", "source_entity": "VehicleType", "target_entity": "VehicleTypeVersion", "cardinality": "1..1" *- "0..*"}
+- {"name": "includes variant", "inference": "vehicle type may include versions", "source_entity": "VehicleType", "target_entity": "VehicleTypeVariant", "cardinality": "1..1 *- 0..*"}
+- {"name": "includes version", "inference": "vehicle type may include variants", "source_entity": "VehicleType", "target_entity": "VehicleTypeVersion", "cardinality": "1..1 *- 0..*"}
 
 
 ### MotorisedVehicle
