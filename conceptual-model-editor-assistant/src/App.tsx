@@ -44,8 +44,8 @@ declare global
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onPlusButtonClick, onSummaryButtonClick,
-    summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay,
-    isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, addEntity, addAttributesToNode, addRelationshipsToNodes, showInference
+    summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay, isShowEdit, setIsShowEdit,
+    isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, addEntity, addAttributesToNode, addRelationshipsToNodes, editSuggestion, showInference
   } = useConceptualModel()
 
   return (
@@ -69,6 +69,7 @@ function App()
         addEntity={addEntity}
         addAttributesToNode={addAttributesToNode}
         addRelationshipsToNodes={addRelationshipsToNodes}
+        editSuggestion={editSuggestion}
         showInference={showInference}
       />
 
@@ -84,6 +85,9 @@ function App()
       domainDescription={domainDescription}
       isShowOverlay={isShowOverlay}
       setIsShowOverlay={setIsShowOverlay}
+      isShowEdit={isShowEdit}
+      setIsShowEdit={setIsShowEdit}
+      suggestedItem={suggestedItem}
       inferenceIndexes={inferenceIndexesMockUp}
       />
 

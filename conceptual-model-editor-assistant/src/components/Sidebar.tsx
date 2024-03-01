@@ -7,10 +7,11 @@ interface props {
     addEntity : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
     addAttributesToNode : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
     addRelationshipsToNodes : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationship : Relationship) => void,
+    editSuggestion : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, userChoice : string) => void,
     showInference : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
 }
 
-const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationships, addEntity, addAttributesToNode, addRelationshipsToNodes, showInference}) =>
+const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationships, addEntity, addAttributesToNode, addRelationshipsToNodes, editSuggestion, showInference}) =>
 {
     const showTextOnSidebar = () =>
     {
@@ -45,7 +46,7 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
             <p><strong>Name:</strong> {entity.name} <br />
                <strong>Inference:</strong> {entity.inference} <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addEntity(event)}>Add</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, true)}>Edit</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "entities")}>Edit</button>
                <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
             </p>
         )
@@ -58,7 +59,7 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
                <strong>Inference:</strong> {attribute.inference} <br />
                <strong>Data type:</strong> {attribute.data_type} <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addAttributesToNode(event)}>Add</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, true)}>Edit</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "attributes")}>Edit</button>
                <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
             </p>
         )
@@ -72,15 +73,10 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
                <strong>Source:</strong> {relationship.source_entity} <br />
                <strong>Target:</strong> {relationship.target_entity} <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addRelationshipsToNodes(event, relationship)}>Add</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, false)}>Edit</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "relationships")}>Edit</button>
                <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
             </p>
         )
-    }
-
-    const editSuggestion = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, isAttributes : boolean) =>
-    {
-        // In a new window show form in which user can change the corresponding fields
     }
 
     return (

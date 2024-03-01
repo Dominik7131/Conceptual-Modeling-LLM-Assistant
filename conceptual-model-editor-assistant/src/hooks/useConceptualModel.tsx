@@ -17,6 +17,7 @@ const useConceptualModel = () =>
     const [suggestedEntities, setSuggestedEntities] = useState<Entity[]>([])
     const [suggestedAttributes, setSuggestedAttributes] = useState<Attribute[]>([])
     const [suggestedRelationships, setSuggestedRelationships] = useState<Relationship[]>([])
+    const [suggestedItem, setSuggestedItem] = useState<Entity|Attribute|Relationship>({"name": "", "description": "", "inference": "", "inference_indexes": []})
   
     const [sourceEntity, setSourceEntity] = useState<string>("")
   
@@ -30,6 +31,7 @@ const useConceptualModel = () =>
     const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState<boolean>(false)
 
     const [isShowOverlay, setIsShowOverlay] = useState<boolean>(false)
+    const [isShowEdit, setIsShowEdit] = useState<boolean>(false)
 
     // Mock-up
     const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([31, 71])
@@ -619,12 +621,45 @@ const useConceptualModel = () =>
           })
       }
 
+
+      const editSuggestion = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, userChoice : string) =>
+      {
+        setIsShowOverlay(_ => false)
+        setIsShowEdit(_ => true)
+
+        const targetID = Number(event.currentTarget.id.slice(6))
+
+        if (userChoice == "entities")
+        {
+          const entity = suggestedEntities[targetID]
+          setSuggestedItem(entity)
+        }
+        else if (userChoice == "attributes")
+        {
+          const attribute = suggestedAttributes[targetID]
+          setSuggestedItem(attribute)
+        }
+        else if (userChoice == "relationships")
+        {
+          const relationship = suggestedRelationships[targetID]
+          setSuggestedItem(relationship)
+        }
+        else
+        {
+          alert("Unknown suggestion to edit")
+          return
+        }
+      }
+
       const showInference = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
         // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
         // TODO: probably move this function into file `useInferenceIndexes.tsx`
         const targetID = Number(event.currentTarget.id.slice(6))
 
+        setIsShowEdit(_ => false)
+
+        // TODO: Do not close the overlay if the user clicked on a different suggestion
         // Close overlay if it is already displayed
         if (isShowOverlay)
         {
@@ -651,8 +686,6 @@ const useConceptualModel = () =>
           const relationship = suggestedRelationships[targetID]
           setInferenceIndexesMockUp(_ => relationship.inference_indexes)
         }
-        
-        console.log("Showing inference")
       }
 
       const handleIgnoreDomainDescriptionChange = () =>
@@ -661,8 +694,8 @@ const useConceptualModel = () =>
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onPlusButtonClick, onSummaryButtonClick,
-        summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay,
-        isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, addEntity, addAttributesToNode, addRelationshipsToNodes, showInference
+        summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay, isShowEdit, setIsShowEdit,
+        isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, addEntity, addAttributesToNode, addRelationshipsToNodes, editSuggestion, showInference
     }
 }
 

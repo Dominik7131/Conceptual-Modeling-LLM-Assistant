@@ -127,6 +127,8 @@ textarea {
 
 .plusButton {
   font-size: 20px;
+  /* padding-right: 50px; */
+  margin-right: 20px;
 }
 
 .reactFlowDiv {
