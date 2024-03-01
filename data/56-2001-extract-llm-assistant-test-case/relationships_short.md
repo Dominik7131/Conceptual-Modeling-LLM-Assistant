@@ -391,7 +391,7 @@ Text: The following information on the owner and operator, if different from the
 - If it is a legal person or a branch thereof, then the business name or name, the address of the registered office or the location of the branch and the personal identification number, if any, shall be indicated.
 
 Output:
-- {"name": "has location", "inference": "If it is a legal person, the location", "source_entity": "LegalPerson", "target_entity": "Address", "cardinality": "0..* --> 0..1"}
+- {"name": "has location", "inference": "If it is a legal person ... the location", "source_entity": "LegalPerson", "target_entity": "Address", "cardinality": "0..* --> 0..1"}
 
 
 ### LegalPerson "0..*" --> "0..1" LegalPersonBranch : has branch
@@ -423,7 +423,7 @@ Text: An application for registration of a road vehicle in the register of road 
 - a green card issued under the Motor Third Party Insurance Act
 
 Output:
-- {"name": "contains", "inference": "application for registration of a road vehicle shall include a green card", "source_entity": "RegistrationApplication", "target_entity": "GreenCard", "cardinality": "0..1 o-> 1..1"}
+- {"name": "contains", "inference": "application for registration of a road vehicle shall include ... a green card", "source_entity": "RegistrationApplication", "target_entity": "GreenCard", "cardinality": "0..1 o-> 1..1"}
 
 
 ### RegistrationApplication "1..1" --> "0..1" VehicleRegistration : results into
@@ -437,7 +437,7 @@ Output:
 Text: The municipal authority of a municipality with extended competence shall enter a road vehicle, the roadworthiness of which is subject to approval, in the register of road vehicles on the basis of a written application by the owner of the road vehicle
 
 Output:
-- {"name": "results into", "inference": "in the register of road vehicles on the basis of a written application by the owner of the road vehicle", "source_entity": "Owner", "target_entity": "RegistrationApplication", "cardinality": "1..1 --> 0..*"}
+- {"name": "results into", "inference": "shall enter ... in the register of road vehicles on the basis of a written application by the owner of the road vehicle", "source_entity": "Owner", "target_entity": "RegistrationApplication", "cardinality": "1..1 --> 0..*"}
 
 
 ### RegistrationApplication "0..*" --> "0..1" CertificateOfPayment : has attached certification of payment of value added tax
@@ -445,7 +445,7 @@ Text: An application for registration of a road vehicle in the register of road 
 - a certificate of payment of value added tax in the case of the purchase of a new vehicle from another Member State.
 
 Output:
-- {"name": "has attached certification of payment of value added tax", "inference": "application for registration of a road vehicle in the register of road vehicles shall include a certificate of payment of value added tax", "source_entity": "RegistrationApplication", "target_entity": "CertificateOfPayment", "cardinality": "0..* --> 0..1"}
+- {"name": "has attached certification of payment of value added tax", "inference": "application for registration of a road vehicle in the register of road vehicles shall include ... a certificate of payment of value added tax", "source_entity": "RegistrationApplication", "target_entity": "CertificateOfPayment", "cardinality": "0..* --> 0..1"}
 
 
 ### Vehicle "1..1" --> "1..1" ThirdPartyInsurance : insured by
@@ -472,7 +472,7 @@ Output:
 Text: The insurance contract shall always contain the designation of the insurer and the policyholder and the particulars of the vehicle, the duration of the insurance, the limit of the insurance benefit, the amount of the premium, its maturity and the method of payment and the form and place of notification of the claim.
 
 Output:
-- {"name": "has policyholder", "inference": "insurance contract shall always contain the designation of the policyholder", "source_entity": "InsuranceContract", "target_entity": "PolicyHolder", "cardinality": "0..* --> 1..1"}
+- {"name": "has policyholder", "inference": "insurance contract shall always contain the designation of ... the policyholder", "source_entity": "InsuranceContract", "target_entity": "PolicyHolder", "cardinality": "0..* --> 1..1"}
 
 
 ### InsuranceContract "0..*" --> "1..1" Insurer : has insurer
@@ -486,7 +486,7 @@ Output:
 Text: The insurance contract shall always contain the designation of the insurer and the policyholder and the particulars of the vehicle, the duration of the insurance, the limit of the insurance benefit, the amount of the premium, its maturity and the method of payment and the form and place of notification of the claim.
 
 Output:
-- {"name": "insures vehicle", "inference": "insurance contract shall always contain the particulars of the vehicle", "source_entity": "InsuranceContract", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
+- {"name": "insures vehicle", "inference": "insurance contract shall always contain ... the particulars of the vehicle", "source_entity": "InsuranceContract", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
 
 
 ### Insurer --|> InsuranceCompany
@@ -508,7 +508,7 @@ Text: Green Card means an international certificate proving that the vehicle has
 
 
 Output:
-- {"name": "specifies", "inference": "Green Card means a certificate ... for the vehicle specified in the certificate", "source_entity": "GreenCard", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
+- {"name": "specifies", "inference": "Green Card means an international certificate ... for the vehicle specified in the certificate", "source_entity": "GreenCard", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
 
 
 ### MotorisedVehicle "1..1" --> "1..1" Engine : powered by
@@ -519,20 +519,21 @@ Output:
 - {"name": "powered by", "inference": "for a road vehicle it is stated: the engine power specified by the road vehicle", "source_entity": "MotorisedVehicle", "target_entity": "Engine", "cardinality": "1..1 --> 1..1"}
 
 
-### InternalCombustionEngine --|> Engine
+###  CombustionEngine --|> Engine
 Text: In addition, for a road vehicle it is stated:
 - the engine data for the road vehicle that include the type of engine specified by the manufacturer of the road vehicle, the engine power specified by the road vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines, the displacement of the internal combustion engine as specified by the manufacturer of the road vehicle in cm3; and the fuel type of the road vehicle
 
 Output:
-- {"name": "is-a", "inference": "engine power specified by the road vehicle manufacturer in kW/rpm in the case of an internal combustion engine", "source_entity": "InternalCombustionEngine", "target_entity": "Engine", "cardinality": "1..1 --> 1..1"}
+- {"name": "is-a", "inference": "engine power specified by the road vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines", "source_entity": "InternalCombustionEngine", "target_entity": "Engine", "cardinality": "1..1 --> 1..1"}
 
 
 ### RoadVehicle "1..1" --> "1..1" BodyWork : has body work
 Text: In addition, for a road vehicle it is stated:
+...
 - type, serial number and colour of bodywork, number of seats and standing places or beds, dimensions of the loading area, volume of the box or tank,
 
 Output:
-- {"name": "has body work", "inference": "for a road vehicle it is stated: colour of bodywork", "source_entity": "RoadVehicle", "target_entity": "BodyWork", "cardinality": "1..1 --> 1..1"}
+- {"name": "has body work", "inference": "for a road vehicle it is stated: ... type, serial number and colour of bodywork", "source_entity": "RoadVehicle", "target_entity": "BodyWork", "cardinality": "1..1 --> 1..1"}
 
 
 ### TechnicalInspection "1..*" --> "1..1" TechnicalInspectionStation : carried out by
@@ -564,10 +565,10 @@ Output:
 
 
 ### RoadVehicle "0..1" --> "0..*" ReportOnTechnicalUnfittness : technical unfittness detected by
-Text: On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the vehicle for the technical inspection. If the technical inspection of a road vehicle reveals a dangerous defect, the vehicle is technically unfit for use and must not be used in traffic.
+Text: If a technical inspection reveals a serious defect, the vehicle is technically fit for use only for 30 days from the date of issue of the technical inspection report. ... if the repeated technical inspection reveals that the defect to be rectified has been recurrently rectified, the vehicle is technically unfit for use and may not be used in traffic
 
 Output:
-- {"name": "technical unfittness detected by", "inference": "On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle", "source_entity": "RoadVehicle", "target_entity": "ReportOnTechnicalUnfittness", "cardinality": "0..1 --> 0..*"}
+- {"name": "technical unfittness detected by", "inference": "technical inspection reveals ... defect ... technical inspection report ... the vehicle is technically unfit for use", "source_entity": "RoadVehicle", "target_entity": "ReportOnTechnicalUnfittness", "cardinality": "0..1 --> 0..*"}
 
 
 ### MinorDefect --|> Defect
@@ -580,6 +581,7 @@ Output:
 
 ### SeriousDefect --|> Defect
 Text: The technical inspection of a road vehicle can detect 3 levels of defects, which are
+...
 - a serious defect which affects the operational characteristics of the vehicle, is liable to endanger road traffic, may adversely affect the environment or consists of a serious deficiency in the identification of the vehicle, or
 
 Output:
@@ -588,6 +590,7 @@ Output:
 
 ### DangerousDefect --|> Defect
 Text: The technical inspection of a road vehicle can detect 3 levels of defects, which are
+...
 - a dangerous defect which poses an immediate threat to the safety of the road vehicle, to road traffic or to the environment.
 
 Output:
@@ -609,21 +612,21 @@ Output:
 
 
 ### TechnicalInspection "0..*" --> "0..*" Defect : detects
-Text: On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the vehicle for the technical inspection.
+Text: On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the vehicle for the technical inspection. ... If the technical inspection has revealed minor defects, the operator of the road vehicle shall remedy them.
 
 Output:
-- {"name": "detects", "inference": "On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle", "source_entity": "TechnicalInspectionReport", "target_entity": "Defect", "cardinality": "0..* --> 0..*"}
+- {"name": "detects", "inference": "On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle ... If the technical inspection has revealed minor defects", "source_entity": "TechnicalInspectionReport", "target_entity": "Defect", "cardinality": "0..* --> 0..*"}
 
 
 ### TechnicalInspectionReport "0..*" --> "1..*" SeriousDefect : reports on
-Text: On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the vehicle for the technical inspection. If a technical inspection reveals a serious defect, the vehicle is technically fit for use only for 30 days from the date of issue of the technical inspection report.
+Text: On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the vehicle for the technical inspection. ... If a technical inspection reveals a serious defect, the vehicle is technically fit for use only for 30 days from the date of issue of the technical inspection report.
 
 Output:
 - {"name": "reports on", "inference": "On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle ... If a technical inspection reveals a serious defect", "source_entity": "TechnicalInspectionReport", "target_entity": "SeriousDefect", "cardinality": "0..* --> 1..*"}
 
 
 ### TechnicalInspectionReport "0..*" --> "1..*" DangerousDefect : reports on
-Text: On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the vehicle for the technical inspection. If the technical inspection of a road vehicle reveals a dangerous defect, the vehicle is technically unfit for use and must not be used in traffic.
+Text: On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the vehicle for the technical inspection. ... If the technical inspection of a road vehicle reveals a dangerous defect, the vehicle is technically unfit for use and must not be used in traffic.
 
 Output:
 - {"name": "reports on", "inference": "On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle ... If the technical inspection of a road vehicle reveals a dangerous defect", "source_entity": "TechnicalInspectionReport", "target_entity": "DangerousDefect", "cardinality": "0..* --> 1..*"}
@@ -644,10 +647,10 @@ Output:
 
 
 ### TechnicalInspectionStationOperator --|> Person
-Text: A technical inspection station may be operated by a legal or natural person who has a licence to operate it and a certificate issued by the regional authority.
+Text: If the person is a natural person. ... A technical inspection station may be operated by a legal or natural person who has a licence to operate it and a certificate issued by the regional authority.
 
 Output:
-- {"name": "is-a", "inference": "technical inspection station may be operated by a legal or natural person", "source_entity": "TechnicalInspectionStationOperator", "target_entity": "Person", "cardinality": ""}
+- {"name": "is-a", "inference": "If the person is a natural person ... technical inspection station may be operated by a legal or natural person", "source_entity": "TechnicalInspectionStationOperator", "target_entity": "Person", "cardinality": ""}
 
 
 ## Relationships grouped by source entity or target entity
@@ -681,8 +684,8 @@ Output:
 - {"name": "owns", "inference": "information on the owner ... of a road vehicle", "source_entity": "Owner", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
 - {"name": "operates", "inference": "information on the operator of a road vehicle", "source_entity": "Operator", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
 - {"name": "insured by", "inference": "vehicle has been covered by a third party insurance", "source_entity": "Vehicle", "target_entity": "ThirdPartyInsurance", "cardinality": "1..1 --> 1..1"}
-- {"name": "insures vehicle", "inference": "insurance contract shall always contain the particulars of the vehicle", "source_entity": "InsuranceContract", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
-- {"name": "specifies", "inference": "Green Card means a certificate ... for the vehicle specified in the certificate", "source_entity": "GreenCard", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
+- {"name": "insures vehicle", "inference": "insurance contract shall always contain ... the particulars of the vehicle", "source_entity": "InsuranceContract", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
+- {"name": "specifies", "inference": "Green Card means an international certificate ... for the vehicle specified in the certificate", "source_entity": "GreenCard", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
 
 
 ### VehicleType
@@ -754,7 +757,7 @@ Output:
 ### Owner
 - {"name": "is-a", "inference": "owner of a road vehicle ... the person", "source_entity": "Owner", "target_entity": "Person", "cardinality": ""}
 - {"name": "owns", "inference": "information on the owner of a road vehicle", "source_entity": "Owner", "target_entity": "Vehicle", "cardinality": "1..1 --> 0..*"}
-- {"name": "results into", "inference": "in the register of road vehicles on the basis of a written application by the owner of the road vehicle", "source_entity": "Owner", "target_entity": "RegistrationApplication", "cardinality": "1..1 --> 0..*"}
+- {"name": "results into", "inference": "shall enter ... in the register of road vehicles on the basis of a written application by the owner of the road vehicle", "source_entity": "Owner", "target_entity": "RegistrationApplication", "cardinality": "1..1 --> 0..*"}
 
 
 ### Operator
@@ -806,10 +809,10 @@ Output:
 
 
 ### RegistrationApplication
-- {"name": "contains", "inference": "application for registration of a road vehicle shall include a green card", "source_entity": "RegistrationApplication", "target_entity": "GreenCard", "cardinality": "0..1 o-> 1..1"}
+- {"name": "contains", "inference": "application for registration of a road vehicle shall include ... a green card", "source_entity": "RegistrationApplication", "target_entity": "GreenCard", "cardinality": "0..1 o-> 1..1"}
 - {"name": "results into", "inference": "application for registration of a road vehicle in the register of road vehicles", "source_entity": "RegistrationApplication", "target_entity": "VehicleRegistration", "cardinality": "1..1 --> 0..1"}
-- {"name": "results into", "inference": "in the register of road vehicles on the basis of a written application by the owner of the road vehicle", "source_entity": "Owner", "target_entity": "RegistrationApplication", "cardinality": "1..1 --> 0..*"}
-- {"name": "has attached certification of payment of value added tax", "inference": "application for registration of a road vehicle in the register of road vehicles shall include a certificate of payment of value added tax", "source_entity": "RegistrationApplication", "target_entity": "CertificateOfPayment", "cardinality": "0..* --> 0..1"}
+- {"name": "results into", "inference": "shall enter ... in the register of road vehicles on the basis of a written application by the owner of the road vehicle", "source_entity": "Owner", "target_entity": "RegistrationApplication", "cardinality": "1..1 --> 0..*"}
+- {"name": "has attached certification of payment of value added tax", "inference": "application for registration of a road vehicle in the register of road vehicles shall include ... a certificate of payment of value added tax", "source_entity": "RegistrationApplication", "target_entity": "CertificateOfPayment", "cardinality": "0..* --> 0..1"}
 
 
 ### ThirdPartyInsurance
@@ -820,14 +823,14 @@ Output:
 
 ### InsuranceContract
 - {"name": "is based on", "inference": "vehicle has been covered by a third party insurance ... insurance is based on an insurance contract", "source_entity": "ThirdPartyInsurance", "target_entity": "InsuranceContract", "cardinality": "1..1 --> 1..1"}
-- {"name": "has policyholder", "inference": "insurance contract shall always contain the designation of the policyholder", "source_entity": "InsuranceContract", "target_entity": "PolicyHolder", "cardinality": "0..* --> 1..1"}
+- {"name": "has policyholder", "inference": "insurance contract shall always contain the designation of ... the policyholder", "source_entity": "InsuranceContract", "target_entity": "PolicyHolder", "cardinality": "0..* --> 1..1"}
 - {"name": "has insurer", "inference": "insurance contract shall always contain the designation of the insurer", "source_entity": "InsuranceContract", "target_entity": "Insurer", "cardinality": "0..* --> 1..1"}
-- {"name": "insures vehicle", "inference": "insurance contract shall always contain the particulars of the vehicle", "source_entity": "InsuranceContract", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
+- {"name": "insures vehicle", "inference": "insurance contract shall always contain ... the particulars of the vehicle", "source_entity": "InsuranceContract", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
 
 
 ### Policyholder
 - {"name": "is-a", "inference": "policyholder is the person", "source_entity": "PolicyHolder", "target_entity": "Person", "cardinality": ""}
-- {"name": "has policyholder", "inference": "insurance contract shall always contain the designation of the policyholder", "source_entity": "InsuranceContract", "target_entity": "Policyholder", "cardinality": "0..* --> 1..1"}
+- {"name": "has policyholder", "inference": "insurance contract shall always contain the designation of ... the policyholder", "source_entity": "InsuranceContract", "target_entity": "Policyholder", "cardinality": "0..* --> 1..1"}
 
 
 ### Insurer
@@ -836,9 +839,9 @@ Output:
 
 
 ### GreenCard
-- {"name": "contains", "inference": "application for registration of a road vehicle shall include a green card", "source_entity": "RegistrationApplication", "target_entity": "GreenCard", "cardinality": "0..1 o-> 1..1"}
+- {"name": "contains", "inference": "application for registration of a road vehicle shall include ... a green card", "source_entity": "RegistrationApplication", "target_entity": "GreenCard", "cardinality": "0..1 o-> 1..1"}
 - {"name": "proves insurance", "inference": "Green Card means a certificate proving that the vehicle has been covered by a third party insurance contract", "source_entity": "GreenCard", "target_entity": "ThirdPartyInsurance", "cardinality": "1..* --> 1..1"}
-- {"name": "specifies", "inference": "Green Card means a certificate ... for the vehicle specified in the certificate", "source_entity": "GreenCard", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
+- {"name": "specifies", "inference": "Green Card means an international certificate ... for the vehicle specified in the certificate", "source_entity": "GreenCard", "target_entity": "Vehicle", "cardinality": "1..1 --> 1..1"}
 
 
 ### TechnicalInspection
