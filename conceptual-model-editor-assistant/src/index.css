@@ -2,7 +2,6 @@
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  
 }
 
 /* Source: https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp */
@@ -31,10 +30,41 @@
   height: 310px;
   width: 80%;
   padding-top: 10px;
+  margin-left: 5px;
   color: black;
   background-color: white;
   font-family: Arial;
   overflow: auto;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  height: 40px;
+}
+
+.buttonsContainer {
+  margin-right: 10px;
+}
+
+#domainDescriptionText {
+  flex-grow: 1;
+  margin-right: 10px;
+}
+
+.domainTextContainer {
+  display: flex;
+  flex-wrap: wrap;
+  height: 203px;
+  flex-grow: 1;
+  margin-bottom: 20px;
+}
+
+.plusButtonsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
 }
 
 .overlay {

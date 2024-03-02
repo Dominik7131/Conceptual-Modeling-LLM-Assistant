@@ -5,7 +5,7 @@ import 'reactflow/dist/style.css';
 import useInferenceIndexes from './useInferenceIndexes';
 import useUtility from './useUtility';
 
-const initialNodes : Node[] = [{ id: 'student', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
+const initialNodes : Node[] = [{ id: 'engine', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
 
 
 const useConceptualModel = () =>
@@ -258,6 +258,11 @@ const useConceptualModel = () =>
           console.error(error);
         });
       }
+      
+      const onImportButtonClick = () =>
+      {
+        parseSerializedConceptualModel()
+      }
     
       const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
@@ -392,7 +397,7 @@ const useConceptualModel = () =>
       {
         updateNodes()
 
-        parseSerializedConceptualModel()
+        // parseSerializedConceptualModel()
 
         // Load domain description from a file
         fetch("input.txt")
@@ -693,7 +698,7 @@ const useConceptualModel = () =>
         setIsIgnoreDomainDescription(previousValue => !previousValue)
       }
     
-    return { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onPlusButtonClick, onSummaryButtonClick,
+    return { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay, isShowEdit, setIsShowEdit,
         isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, addEntity, addAttributesToNode, addRelationshipsToNodes, editSuggestion, showInference
     }

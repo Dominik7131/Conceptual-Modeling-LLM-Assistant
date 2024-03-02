@@ -43,7 +43,7 @@ declare global
 
 function App()
 {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onPlusButtonClick, onSummaryButtonClick,
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
     summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay, isShowEdit, setIsShowEdit,
     isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, addEntity, addAttributesToNode, addRelationshipsToNodes, editSuggestion, showInference
   } = useConceptualModel()
@@ -52,6 +52,7 @@ function App()
     <div className="appDiv">
       <Topbar
         handleIgnoreDomainDescriptionChange={handleIgnoreDomainDescriptionChange}
+        onImportButtonClick={onImportButtonClick}
         onPlusButtonClick={onPlusButtonClick}
         onSummaryButtonClick={onSummaryButtonClick}
         summaryData={summaryData}

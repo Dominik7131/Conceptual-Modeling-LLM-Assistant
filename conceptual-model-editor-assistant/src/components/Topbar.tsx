@@ -2,6 +2,7 @@ import useInferenceIndexes from "../hooks/useInferenceIndexes"
 
 interface props {
     handleIgnoreDomainDescriptionChange : () => void,
+    onImportButtonClick : () => void,
     onPlusButtonClick : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
     onSummaryButtonClick : () => void,
     summaryData : SummaryObject[],
@@ -11,7 +12,7 @@ interface props {
     inferenceIndexes : number[][]
 }
 
-const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onPlusButtonClick, onSummaryButtonClick, summaryData, capitalizeString,
+const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, summaryData, capitalizeString,
     domainDescription, setDomainDescription, inferenceIndexes}) =>
 {
     const { removeOverlappingInferenceIndexes, simplifyInferenceIndexes } = useInferenceIndexes()
@@ -123,7 +124,6 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onPlusBut
 
     const showDemoHighlightSuggestions = () =>
     {
-
         // Directly show in domain description
         return <span>We know that <span className="highlightAttributes">courses have a name</span> and a <span className="highlightAttributes">specific number of credits</span>. <span className="highlightRelationships">Each course can have one or more </span><span className="highlightAttributes highlightRelationships">professors</span><span className="highlightAttributes">, who have a name</span>. <span className="highlightRelationships">Professors could participate in any number of courses</span>. <span className="highlightRelationships">For a course to exist, it must aggregate, at least, five students</span>, where <span className="highlightAttributes">each student has a name</span>. <span className="highlightRelationships">Students can be enrolled in any number of courses</span>. Finally, <span className="highlightRelationships">students can be accommodated in dormitories</span>, where <span className="highlightRelationships">each dormitory can have from one to four students</span>. Besides, <span className="highlightAttributes">each dormitory has a price</span>.</span>
 
@@ -152,19 +152,42 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onPlusBut
 
     return (
         <div className="topBar">
-            <label className="domainDescriptionLabel" htmlFor="story">Domain description: </label>
-            <input type="checkbox" id="isIgnoreDomainDescription" defaultChecked onClick={() => handleIgnoreDomainDescriptionChange()}></input>
-            <br />
-            <br />
-            <textarea id="domainDescriptionText" name="story" rows={8} cols={70}
-                // https://react.dev/reference/react-dom/components/textarea
-                onChange={e => setDomainDescription(e.target.value)}
-                value={domainDescription}></textarea>
-            <br />
-            <br />
-            <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Entities</button>
-            <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
-            <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
+            <div className="container">
+                <div className="domainContainer">
+                    <label className="domainDescriptionLabel" htmlFor="story">Domain description: </label>
+                    <input type="checkbox" id="isIgnoreDomainDescription" defaultChecked onClick={() => handleIgnoreDomainDescriptionChange()}></input>
+                </div>
+
+                <div className="buttonsContainer">
+                    <button onClick={() => onImportButtonClick()}>Import</button>
+                    <button>Export</button>
+                </div>
+            </div>
+            <div className="domainTextContainer">
+                <textarea id="domainDescriptionText" name="story"
+                    // https://react.dev/reference/react-dom/components/textarea
+                    onChange={e => setDomainDescription(e.target.value)}
+                    value={domainDescription}></textarea>
+            </div >
+            
+            <div className="container">
+                <div className="plusButtonsContainer">
+                    <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Entities</button>
+                    <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
+                    <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
+                </div>
+
+                <div className="buttonsContainer">
+                    <button>Add node</button>
+                    <button>Add edge</button>
+                </div>
+            </div>
+
+            <div>
+
+            </div>
+
+
             {/* <button className="plusButton" onClick={() => onSummaryButtonClick()}>Document</button>
             <button className="plusButton">Summary</button>
             {FormatSummary()} */}
