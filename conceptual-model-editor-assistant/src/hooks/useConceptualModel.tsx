@@ -71,17 +71,26 @@ const useConceptualModel = () =>
         const input = { "entities": [ {"name": "Engine", "attributes": []},
                                       {"name": "Bodywork", "attributes": []},
                                       {"name": "Natural person", "attributes": []},
+                                      {"name": "Vehicle", "attributes": []},
                                       {"name": "Road vehicle", "attributes": []},
-                                      {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
-                                      {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
-                                      {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
-                                      {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
-                        "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
-                                          {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
-                                          {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
-                                          {"name": "is-a", "source_entity": "student", "target_entity": "person"}
-                                        ]}
+                                      {"name": "Registration", "attributes": []},
+                                      {"name": "Insurance contract", "attributes": []},
+                                      {"name": "Technical inspection", "attributes": []}],
+                        "relationships": [{"name": "is-a", "inference": "", "source_entity": "vehicle", "target_entity": "road vehicle"}]}
+        
+        // const input = { "entities": [
+        //     {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
+        //     {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
+        //     {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
+        //     {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
+        //   "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
+        //                     {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
+        //                     {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
+        //                     {"name": "is-a", "source_entity": "student", "target_entity": "person"}
+        //                   ]}
 
+        const incrementX = 250
+        const incrementY = 250
         let positionX = 100
         let positionY = 100
         let newNodes : Node[] = []
@@ -100,15 +109,23 @@ const useConceptualModel = () =>
           //   newEdges.push(newEdge)
           // }
 
-          if (positionX === 100 || positionX === 350)
-          {
-            positionX += 250
-          }
-          else
+          positionX += incrementX
+
+          if (positionX >= 1300)
           {
             positionX = 100
-            positionY += 250
+            positionY += incrementY
           }
+
+          // if (positionX === 100 || positionX === 350)
+          // {
+          //   positionX += incrementX
+          // }
+          // else
+          // {
+          //   positionX = 100
+          //   positionY += incrementY
+          // }
         }
 
         for (const [key, relationship] of Object.entries(input["relationships"]))
@@ -310,9 +327,6 @@ const useConceptualModel = () =>
     
         setSourceEntity(_ => {return selectedNodes[0].id.toLowerCase() })
     
-        const entityName = selectedNodes[0].id.toLowerCase()
-        const body_data = JSON.stringify({"entity": entityName, "user_choice": userChoice, "domain_description": currentDomainDesciption})
-    
         if (buttonInnerHTML === "+Attributes")
         {
           userChoice = "attributes"
@@ -326,6 +340,9 @@ const useConceptualModel = () =>
           alert(`Clicked on unknown button: ${buttonInnerHTML}`)
           return
         }
+
+        const entityName = selectedNodes[0].id.toLowerCase()
+        const body_data = JSON.stringify({"entity": entityName, "user_choice": userChoice, "domain_description": currentDomainDesciption})
 
         if (!is_fetch_stream_data)
         {
