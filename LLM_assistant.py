@@ -10,8 +10,8 @@ ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
-TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
-IS_CHAIN_OF_THOUGHTS = False
+TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
+IS_CHAIN_OF_THOUGHTS = True
 IS_RELATIONSHIPS_IS_A = False
 
 CONFIG_FILE_PATH = "llm-config.json"
@@ -93,7 +93,7 @@ class LLMAssistant:
             if not is_domain_description:
                 system = "You are an expert at generating entities in JSON format."
             else:
-                system = "You are an expert at extracting entities in JSON format solely based on a given context."
+                system = "You are an expert at extracting class names in JSON format solely based on a given context."
 
         else:
             raise ValueError(f"Error: Unknown user choice: {user_choice}")
@@ -255,7 +255,7 @@ class LLMAssistant:
         opened_square_brackets = 0
 
         # For debugging purposes generate whole text first because there might be some bug on my side when parsing text on the fly
-        is_generate_content_first = True
+        is_generate_content_first = False
 
         if is_generate_content_first:
             output = self.llm.create_chat_completion(messages=messages, temperature=0)
@@ -339,9 +339,6 @@ class LLMAssistant:
                         yield completed_item
                     else:
                         self.debug_info.deleted_items.append(completed_item)
-    
-        if is_skip_parsing:
-            logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
         
         logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
         return
@@ -353,6 +350,8 @@ class LLMAssistant:
         # JSON file structure example: { "attributes": { "is_domain_description" : "prompt1", "is_not_domain_description": "prompt2" } }
         # If we need to substitute `entity1` then the JSON file can contain as string ENTITY1 and we will call prompt.replace("ENTITY1", entity1)
 
+        # TODO: Probably make separate class for parsing as this is one component of the whole LLM-assistant logic
+
         if user_choice == ATTRIBUTES_STRING:
             if not is_domain_description:
                 prompt = f'What attributes does the entity: "{entity1}" have? Output exactly {count_items_to_suggest} attributes in JSON format like this: '
@@ -361,8 +360,44 @@ class LLMAssistant:
                 prompt = f'Solely based on the following context which attributes does the entity: "{entity1}" have? '
                 
                 if IS_CHAIN_OF_THOUGHTS:
-                    # prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
-                    prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name", "data_type": "data type of the attribute", "cardinality": "cardinality of the attribute"}.'
+                    #prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
+                    prompt += """For each attribute output its name and copy the part of the given context containing this attribute and data type and then output this attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name, "data_type": "data type of the attribute"}.
+
+Example start
+
+Solely based on the following context which attributes does the entity: "natural person" have?
+This is the given context:
+"If the person is a natural person, his name, or, where applicable, first and last names and his birth number, if any, and, where applicable, his date of birth shall be entered."
+
+Output:
+Name: name
+Context: "If the person is a natural person, his name"
+Data type: string
+JSON object: {"inference": "If the person is a natural person, his name", "name": "name", "data_type": "string"}
+
+Name: first name
+Context: "If the person is a natural person ... first names"
+Data type: string
+JSON object: {"inference": "If the person is a natural person ... first names", "name": "first name", "data_type": "string"}
+
+Name: last name
+Context: "If the person is a natural person ... last names"
+Data type: string
+JSON object: {"inference": "If the person is a natural person ... last names", "name": "last name", "data_type": "string"}
+
+Name: birth number
+Context: "If the person is a natural person ... his birth number"
+Data type: integer
+JSON object: {"inference": "If the person is a natural person ... his birth number", "name": "birth number", "data_type": "integer"}
+
+Name: birth date
+Context: "If the person is a natural person ... his date of birth"
+Data type: date
+JSON object: {"inference": "If the person is a natural person ... his date of birth", "name": "birth date", "data_type": "date"}
+
+Example end"""
+
+                    # prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name", "data_type": "data type of the attribute", "cardinality": "cardinality of the attribute"}.'
                 else:
                     prompt += 'Output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
 
@@ -398,9 +433,34 @@ class LLMAssistant:
 
         elif user_choice == ENTITIES_STRING:
             if IS_CHAIN_OF_THOUGHTS:
-                prompt = 'Solely based on the following context extract all entities. First for each entity output its name and copy the part of the given context containing this entity. After outputting all entities output each entity in this JSON object: {"inference": "copy the part of the given context containing this entity", "name": "entity name"}. '
+                prompt = """Solely based on the following context extract all classes for a UML diagram. For each class output its name and copy the part of the given context containing this class and then output this class in JSON object like this: {"inference": "copy the part of the given context containing this class", "name": "name of the class"}.
+
+Example start
+
+This is the given context:
+"An application for registration of a road vehicle in the register of road vehicles shall include: ..."
+
+Output:
+name: registration application
+context: "An application for registration of a road vehicle"
+JSON object: {"inference": "An application for registration of a road vehicle", "name": "registration application"}
+
+name: registration
+context: "registration of a road vehicle"
+JSON object: {"inference": "registration of a road vehicle", "name": "registration"}
+
+name: road vehicle
+context: "registration of a road vehicle"
+JSON object: {"inference": "registration of a road vehicle", "name": "road vehicle"}
+
+name: road vehicles register
+context: "register of road vehicles shall include"
+JSON object: {"inference": "register of road vehicles shall include", "name": "road vehicles register"}
+
+Example end"""
+
             else:
-                prompt = 'Solely based on the following context extract all entities in this JSON object: {"name": "entity name", "inference": "copy the part of the given context containing this entity"}.'
+                prompt = 'Solely based on the following context extract each entity in JSON object like this: {"name": "entity name", "inference": "copy the part of the given context containing this entity"}.'
         else:
             raise ValueError(f"Error: Encountered undefined user choice while creating prompt: {user_choice}")
 
