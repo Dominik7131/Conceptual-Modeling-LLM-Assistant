@@ -1,16 +1,16 @@
 The Road Vehicle Register is a public administration information system. It contains records of road vehicles, the owners and operators of these vehicles, lost, stolen, damaged and destroyed road vehicle registration certificates and registration plates.
 
-For the purposes of regulating the conditions of operation of vehicles on roads, a road vehicle is a motorised or non-motorised vehicle which is constructed for use on roads for the carriage of persons, animals or goods.
-A special vehicle is a vehicle manufactured for purposes other than road traffic, which may be operated on roads if conditions are met.
-A vehicle category is a group of vehicles which have the same technical conditions laid down in an implementing regulation.
+For the purposes of regulating the conditions of operation of road vehicles on roads, a road vehicle is a motorised or non-motorised vehicle which is constructed for use on roads for the carriage of persons, animals or goods.
+A special vehicle is a road vehicle manufactured for purposes other than road traffic, which may be operated on roads if conditions are met.
+A road vehicle category is a group of road vehicles which have the same technical conditions laid down in an implementing regulation.
 Road vehicles and special vehicles are divided into categories L, M, N, O, T, C, R, S and Z.
-A type of road vehicle is defined as a set of road vehicles which are identical in at least their basic characteristics. A vehicle type may include variants and versions.
+A type of road vehicle is defined as a set of road vehicles which are identical in at least their basic characteristics. A road vehicle type may include variants and versions.
 Road vehicles are divided into the following basic types: motorcycles, passenger cars, buses, lorries, special purpose vehicles, trailers, powered wheelchairs if their width or length exceeds 1.4 m, their design speed exceeds 15 km.h-1 or their maximum permissible weight exceeds 450 kg, and other road vehicles.
 Special vehicles are divided into the following basic types: agricultural or forestry tractors and their trailers, self-propelled work machines, work machines carried, work machines attached, interchangeable towed equipment, vehicles designed primarily for driving on snow, vehicles designed primarily for off-road driving, single-axle tractors and their trailers, special tractors and their trailers, carriers of working adaptors and other special vehicles.
-A trailer is a non-motorised vehicle intended to be towed by another vehicle to which it is coupled in a combination.
-Vehicle system means any structural system of a vehicle which is subject to the technical requirements laid down in an implementing regulation. An example of a vehicle system is brakes or emission reduction devices.
-A structural component of a vehicle is a component of the vehicle which must be type-approved independently of the vehicle if so provided for in the implementing legislation and which is subject to the technical requirements laid down in the implementing legislation. An example of a structural component of a vehicle is a lamp.
-A manufacturer is a person who manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
+A trailer is a non-motorised vehicle intended to be towed by another road vehicle to which it is coupled in a combination.
+Road vehicle system means any structural system of a road vehicle which is subject to the technical requirements laid down in an implementing regulation. An example of a road vehicle system is brakes or emission reduction devices.
+A structural component of a road vehicle is a component of the road vehicle which must be type-approved independently of the road vehicle if so provided for in the implementing legislation and which is subject to the technical requirements laid down in the implementing legislation. An example of a structural component of a road vehicle is a lamp.
+A manufacturer is a person who manufactures a road vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
 
 The following information on the owner and operator, if different from the owner, of a road vehicle shall be entered in the register of road vehicles.
 - If the person is a natural person, his name, or, where applicable, first and last names, the address of his permanent residence, long-term residence, temporary residence of at least 6 months or other authorised residence and his birth number, if any, and, where applicable, his date of birth shall be entered.
@@ -19,30 +19,30 @@ The following information on the owner and operator, if different from the owner
 
 In addition, for a motorised vehicle it is stated:
 - the registration plate, the date on which the registration plate was assigned,
-- the number of the registration certificate of the road vehicle,
-- the date of first registration of the road vehicle,
-- the State of last registration, the number of the registration certificate of the road vehicle or similar document issued in the State of last registration and the registration plate of the road vehicle if the State of last registration is not the Czech Republic,
-- information on the insurance against liability for damage caused by the operation of the vehicle (hereinafter referred to as 'third party insurance') communicated by the Czech Insurance Office, including the date of notification of data by the Czech Insurers' Bureau, the date of commencement of insurance, the period of interruption of insurance, the date of change of insurance, and the date of termination of insurance,
-- the purpose for which the road vehicle is intended, which is a taxi service vehicle, a vehicle with right of way, a car rental vehicle for hire, a vehicle for general use, or a vehicle for the operation of road transport for hire by its operator,
-- the category of road vehicle,
-- the manufacturer's factory mark as specified by the road vehicle manufacturer,
-- the trade name if specified by the road vehicle manufacturer,
-- the type as specified by the road vehicle manufacturer and the variant and version if specified by the road vehicle manufacturer.
-- the vehicle identification number (VIN) of the road vehicle and, if not, the chassis serial number of the road vehicle,
-- the engine data for the road vehicle that include the type of engine specified by the manufacturer of the road vehicle, the engine power specified by the road vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines, the displacement of the internal combustion engine as specified by the manufacturer of the road vehicle in cm3; and the fuel type of the road vehicle
+- the number of the registration certificate of the motorised vehicle,
+- the date of first registration of the motorised vehicle,
+- the State of last registration, the number of the registration certificate of the motorised vehicle or similar document issued in the State of last registration and the registration plate of the motorised vehicle if the State of last registration is not the Czech Republic,
+- information on the insurance against liability for damage caused by the operation of the motorised vehicle (hereinafter referred to as 'third party insurance') communicated by the Czech Insurance Office, including the date of notification of data by the Czech Insurers' Bureau, the date of commencement of insurance, the period of interruption of insurance, the date of change of insurance, and the date of termination of insurance,
+- the purpose for which the motorised vehicle is intended, which is a taxi service motorised vehicle, a motorised vehicle with right of way, a car rental motorised vehicle for hire, a motorised vehicle for general use, or a motorised vehicle for the operation of road transport for hire by its operator,
+- the category of motorised vehicle,
+- the manufacturer's factory mark as specified by the motorised vehicle manufacturer,
+- the trade name if specified by the motorised vehicle manufacturer,
+- the type as specified by the motorised vehicle manufacturer and the variant and version if specified by the motorised vehicle manufacturer.
+- the motorised vehicle identification number (VIN) of the motorised vehicle and, if not, the chassis serial number of the motorised vehicle,
+- the engine data for the motorised vehicle that include the type of engine specified by the manufacturer of the motorised vehicle, the engine power specified by the motorised vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines, the displacement of the internal combustion engine as specified by the manufacturer of the motorised vehicle in cm3; and the fuel type of the road vehicle
 - type, serial number and colour of bodywork, number of seats and standing places or beds, dimensions of the loading area, volume of the box or tank,
-- an the overall dimensions of the road vehicle,
+- an the overall dimensions of the motorised vehicle,
 - the maximum technically permissible weight, the maximum permissible weight, the maximum permissible operating weight, the maximum technically permissible weight per axle and the maximum permissible weight per axle,
 - the type of coupling device, the maximum technically permissible mass of the trailer, the maximum permissible mass of the trailer, the maximum technically permissible mass of the combination and the maximum permissible mass of the combination,
-- data on technical inspections of the road vehicle which is the type of technical inspection carried out, the date on which the technical inspection was carried out, the date of validity of the technical inspection, the designation of the technical inspection station and data on the condition of the road vehicle according to the result of the technical inspection,
+- data on technical inspections of the motorised vehicle which is the type of technical inspection carried out, the date on which the technical inspection was carried out, the date of validity of the technical inspection, the designation of the technical inspection station and data on the condition of the motorised vehicle according to the result of the technical inspection,
 
 A road vehicle, the roadworthiness of which is subject to approval, operated on the roads must be entered in the register of road vehicles if the person operating it has permanent residence, long-term residence or, if a citizen of another Member State, temporary residence of at least 6 months per calendar year in the territory of the Czech Republic, or has been granted asylum.
-In the case of a legal person, the obligation to register the vehicle applies if it has its registered office in the Czech Republic.
+In the case of a legal person, the obligation to register the road vehicle applies if it has its registered office in the Czech Republic.
 If it is a foreign legal person, the obligation applies if it has a branch plant in the Czech Republic.
 
 The municipal authority of a municipality with extended competence shall enter a road vehicle, the roadworthiness of which is subject to approval, in the register of road vehicles on the basis of a written application by the owner of the road vehicle
 - the road vehicle's roadworthiness has been approved,
-- the obligation to take out third-party liability insurance in respect of such a vehicle is fulfilled,
+- the obligation to take out third-party liability insurance in respect of such a road vehicle is fulfilled,
 - value added tax has been paid on the acquisition of the road vehicle from another Member State, if a special legal provision so provides,
 - the road vehicle is not listed as missing or stolen in the Schengen Information System or in the information system of the Police of the Czech Republic or this information is not established by another procedure,
 - it is not an incomplete road vehicle
@@ -51,19 +51,19 @@ An application for registration of a road vehicle in the register of road vehicl
 - the type and category of the road vehicle, the road vehicle's manufacturer's make, its commercial designation and the designation of the type of road vehicle and the purpose for which the road vehicle is intended,
 - details of the owner of the road vehicle
 - details of the operator of the road vehicle if the owner is not also the operator of the road vehicle.
-The applicant shall attach to the application for registration of a road vehicle in the Register of Road Vehicles a proof of the vehicle's roadworthiness, which is
-- a declaration of conformity of the road vehicle with a vehicle type approved by the Ministry, approved by an authority of another Member State with validity in all Member States or approved by an authority of another Member State and recognised by the Ministry,
+The applicant shall attach to the application for registration of a road vehicle in the Register of Road Vehicles a proof of the road vehicle's roadworthiness, which is
+- a declaration of conformity of the road vehicle with a road vehicle type approved by the Ministry, approved by an authority of another Member State with validity in all Member States or approved by an authority of another Member State and recognised by the Ministry,
 - a certificate of approval of an individually manufactured road vehicle issued by a municipal authority of a municipality with extended powers or by an authority of another Member State valid in all Member States,
-- a registration certificate for a road vehicle issued by another Member State or an equivalent document issued by a Member State other than the Member State evidencing the approval of the vehicle type or the approval of the individually manufactured road vehicle, or
+- a registration certificate for a road vehicle issued by another Member State or an equivalent document issued by a Member State other than the Member State evidencing the approval of the road vehicle type or the approval of the individually manufactured road vehicle, or
 - a decision approving the roadworthiness of an imported road vehicle.
 In addition, the applicant shall attach proof of a technical inspection if it is a road vehicle in operation, except for a road vehicle registered in another Member State for which the period for the first periodic technical inspection has not expired since the date of its first registration on the date of application. The proof of the technical inspection shall be
-- proof of a periodic technical inspection carried out in another Member State in which the vehicle is registered,
+- proof of a periodic technical inspection carried out in another Member State in which the road vehicle is registered,
 - a technical inspection report for the purpose of registration of the road vehicle in the register of road vehicles, if the owner is obliged to ensure that the technical inspection is carried out; or
 - a technical inspection report for the purpose of approving the roadworthiness of an imported road vehicle.
 
 In addition, the applicant shall attach
 - a green card issued under the Motor Third Party Insurance Act,
-- a certificate of payment of value added tax in the case of the purchase of a new vehicle from another Member State.
+- a certificate of payment of value added tax in the case of the purchase of a new road vehicle from another Member State.
 
 When registering a road vehicle in the register of road vehicles, the municipal authority of the municipality with extended competence shall issue a certificate of registration of the road vehicle to the applicant.
 
@@ -71,33 +71,33 @@ The municipal authority of the municipality with extended competence, when regis
 The registration plate shall consist of a combination of capital letters of the Latin alphabet and Arabic numerals.
 When issuing a registration plate, the municipal authority of the municipality with extended jurisdiction shall affix a sticker to the plate issued, indicating the date of the periodic technical inspection. If the road vehicle has been found to be seriously defective, the municipal authority of the municipality with extended jurisdiction shall mark on the sticker the date of the repeated technical inspection, which shall be the last day of the month following the month of registration of the road vehicle in the register of road vehicles. If the road vehicle has been found to be dangerously defective, the municipal authority of the municipality with extended jurisdiction shall not affix the sticker to the registration plate.
 
-Green Card means an international certificate proving that the vehicle has been covered by a third party insurance contract for the vehicle specified in the certificate. Liability insurance is based on an insurance contract concluded between the policyholder and the insurer. The insurer is an insurance company authorised to operate liability insurance in the Czech Republic. The policyholder is the person who has concluded a contract of liability insurance with the insurer. The insurance contract shall always contain the designation of the insurer and the policyholder and the particulars of the vehicle, the duration of the insurance, the limit of the insurance benefit, the amount of the premium, its maturity and the method of payment and the form and place of notification of the claim.
+Green Card means an international certificate proving that the road vehicle has been covered by a third party insurance contract for the road vehicle specified in the certificate. Liability insurance is based on an insurance contract concluded between the policyholder and the insurer. The insurer is an insurance company authorised to operate liability insurance in the Czech Republic. The policyholder is the person who has concluded a contract of liability insurance with the insurer. The insurance contract shall always contain the designation of the insurer and the policyholder and the particulars of the road vehicle, the duration of the insurance, the limit of the insurance benefit, the amount of the premium, its maturity and the method of payment and the form and place of notification of the claim.
 
 
-The operator of a road vehicle which has not been registered in another State prior to its registration in the Register of Road Vehicles shall bring the road vehicle in for a technical inspection within 4 years from the date of registration of the vehicle in the Register of Road Vehicles and periodically thereafter within 2 years from the date of the previous technical inspection.
+The operator of a road vehicle which has not been registered in another State prior to its registration in the Register of Road Vehicles shall bring the road vehicle in for a technical inspection within 4 years from the date of registration of the road vehicle in the Register of Road Vehicles and periodically thereafter within 2 years from the date of the previous technical inspection.
 
 A road vehicle technical inspection is an inspection of its roadworthiness which includes the technical condition and functioning of a road vehicle, its systems, components and separate technical units and their environmental impact or a registration test of a road vehicle.
 A technical inspection station is a workplace specialised in carrying out technical inspections of road vehicles.
 A technical inspection station may be operated by a legal or natural person who has a licence to operate it and a certificate issued by the regional authority. The competent authority to decide on the granting of the authorisation is the regional authority in whose administrative district the operator of the technical inspection station will carry out its activities.
 
-Emissions measurement as part of the technical inspection can be carried out at the emission measurement station before other inspection tasks are carried out at the technical inspection station. The emission measurement station shall draw up a report on the emission measurement which shall be handed over to the natural person who brought the vehicle to the emission measurement station.
+Emissions measurement as part of the technical inspection can be carried out at the emission measurement station before other inspection tasks are carried out at the technical inspection station. The emission measurement station shall draw up a report on the emission measurement which shall be handed over to the natural person who brought the road vehicle to the emission measurement station.
 The inspection technician of the technical inspection station shall include the results of the emission measurement in the technical inspection report. In such a case, the day on which the other checking operations were carried out in the framework of the periodic technical inspection at the technical inspection station shall be considered as the day on which the periodic technical inspection of the road vehicle was carried out. If more than 30 days have elapsed between the date on which the emission measurement was carried out and the date on which the road vehicle was brought in for the other checking operations, the emission measurement carried out shall not be taken into account.
 
-During a technical inspection the technical inspection station shall determine whether the technical condition and operation of the road vehicle, its systems, structural parts and separate technical units are free from defects or have defects by comparing the actual technical condition of the road vehicle with the conditions laid down for the technical condition of the vehicle.
-On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the vehicle for the technical inspection.
+During a technical inspection the technical inspection station shall determine whether the technical condition and operation of the road vehicle, its systems, structural parts and separate technical units are free from defects or have defects by comparing the actual technical condition of the road vehicle with the conditions laid down for the technical condition of the road vehicle.
+On the basis of the defect record, the technical inspection station shall draw up a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the road vehicle for the technical inspection.
 
 The registration inspection report for a road vehicle shall cease to be valid if, after the registration inspection has been carried out
-- changes have been made to the vehicle which are not in accordance with the information entered in the register of road vehicles, in the registration certificate of the road vehicle or in a similar document issued by a Member State other than the Member State on the date of the check; or
+- changes have been made to the road vehicle which are not in accordance with the information entered in the register of road vehicles, in the registration certificate of the road vehicle or in a similar document issued by a Member State other than the Member State on the date of the check; or
 - a reduction in the distance travelled on the odometer of the road vehicle.
 These rules shall apply mutatis mutandis to emission measurements carried out at an emission measurement station.
 
 The technical inspection of a road vehicle can detect 3 levels of defects, which are
-- a minor defect which does not significantly affect the operational characteristics of the vehicle, road safety or the environment,
-- a serious defect which affects the operational characteristics of the vehicle, is liable to endanger road traffic, may adversely affect the environment or consists of a serious deficiency in the identification of the vehicle, or
+- a minor defect which does not significantly affect the operational characteristics of the road vehicle, road safety or the environment,
+- a serious defect which affects the operational characteristics of the road vehicle, is liable to endanger road traffic, may adversely affect the environment or consists of a serious deficiency in the identification of the road vehicle, or
 - a dangerous defect which poses an immediate threat to the safety of the road vehicle, to road traffic or to the environment.
 
 A road vehicle is technically fit for use on the road if no defects or only minor defects have been found during the road vehicle inspection. If the technical inspection has revealed minor defects, the operator of the road vehicle shall remedy them. The technical inspection station shall affix an inspection sticker on the rear plate of the registration plate of the road vehicle indicating the month and year of the next periodic technical inspection of the road vehicle.
 
-If a technical inspection reveals a serious defect, the vehicle is technically fit for use only for 30 days from the date of issue of the technical inspection report. Within this period, the operator of the road vehicle shall be obliged to bring the road vehicle with the rectified serious defect to the technical inspection station for a repeat technical inspection. If the operator of the road vehicle does not proceed in this way, or if the repeated technical inspection reveals that the defect to be rectified has been recurrently rectified, the vehicle is technically unfit for use and may not be used in traffic. The operator shall be obliged to ensure that the vehicle is towed away from the technical inspection station at his own expense.
+If a technical inspection reveals a serious defect, the road vehicle is technically fit for use only for 30 days from the date of issue of the technical inspection report. Within this period, the operator of the road vehicle shall be obliged to bring the road vehicle with the rectified serious defect to the technical inspection station for a repeat technical inspection. If the operator of the road vehicle does not proceed in this way, or if the repeated technical inspection reveals that the defect to be rectified has been recurrently rectified, the road vehicle is technically unfit for use and may not be used in traffic. The operator shall be obliged to ensure that the road vehicle is towed away from the technical inspection station at his own expense.
 
-If the technical inspection of a road vehicle reveals a dangerous defect, the vehicle is technically unfit for use and must not be used in traffic. The operator is obliged to ensure that the vehicle is towed at his own expense from the technical inspection station, that the dangerous defect is removed, and that the road vehicle is brought in for a repeat technical inspection. Upon detection of a dangerous defect, the technical inspection station shall remove the technical inspection sticker from the rear plate of the registration plate.
+If the technical inspection of a road vehicle reveals a dangerous defect, the road vehicle is technically unfit for use and must not be used in traffic. The operator is obliged to ensure that the road vehicle is towed at his own expense from the technical inspection station, that the dangerous defect is removed, and that the road vehicle is brought in for a repeat technical inspection. Upon detection of a dangerous defect, the technical inspection station shall remove the technical inspection sticker from the rear plate of the registration plate.
