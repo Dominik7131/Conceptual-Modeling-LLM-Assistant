@@ -1,6 +1,6 @@
 {
     "attributes": [
-		{"entity": "resident", "expected_output": [
+		{"entity": "person", "expected_output": [
 			{"name": "name", "inference": "resident enters a name", "data_type": "string"},
 			{"name": "address", "inference": "resident enters a ... street address", "data_type": "string"},
 			{"name": "phone number", "inference": "resident enters a ... phone number", "data_type": "integer"},
