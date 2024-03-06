@@ -43,12 +43,22 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
     const showEntity = (entity : Entity, index : number) =>
     {
         return (
-            <p><strong>Name:</strong> {entity.name} <br />
-               <strong>Inference:</strong> {entity.inference} <br />
-               <button className="btn" id={`button${index}`} onClick={(event) => addEntity(event)}>Add</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "entities")}>Edit</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
-            </p>
+            <>
+                <p><strong>Name:</strong> {entity.name} <br /> {entity.inference != null && <span><strong>Inference:</strong> {entity.inference} <br /> </span>}
+                    <button className="btn" id={`button${index}`} onClick={(event) => addEntity(event)}>Add</button>
+                    <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "entities")}>Edit</button>
+                    { entity.inference != null && <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button> }
+                </p>
+
+            </>
+            // <>
+            //     <p><strong>Name:</strong> {entity.name} <br />
+            //         { entity.inference != null && <strong>Inference:</strong> entity.inference } <br />
+            //         <button className="btn" id={`button${index}`} onClick={(event) => addEntity(event)}>Add</button>
+            //         <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "entities")}>Edit</button>
+            //         <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
+            //     </p>
+            // </>
         )
     }
 

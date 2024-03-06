@@ -67,7 +67,7 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
                         <p><button className="close" onClick={ () => setIsShowEdit(_ => false)}>close</button></p>
                         <p>Name: {suggestedItem['name']} </p>
                         <p>Inference: {suggestedItem['inference']}</p>
-                        { attribute && <p>Data type: {attribute['data_type']}</p>}
+                        {/* { attribute && <p>Data type: {attribute['data_type']}</p>} */}
                         {/* <p>Data type: {suggestedItem['data_type']}</p> */}
                         {/* <span>
                             <form>
@@ -98,7 +98,7 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
                 <div className="overlay">
                     <div>
                         <p><button className="close" onClick={ () => { setIsShowOverlay(_ => false) }}>close</button></p>
-                        {inferenceIndexes.length === 0 && <p><b>Warning: Inference not found</b></p> }
+                        {inferenceIndexes.length === 0 && <p id="highlightedInference-1"><b>Warning: Inference not found in the domain description</b></p> }
                         { highlightInference(inferenceIndexes) }
                     </div>
                 </div>

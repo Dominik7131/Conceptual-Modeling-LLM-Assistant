@@ -116,16 +116,6 @@ const useConceptualModel = () =>
             positionX = 100
             positionY += incrementY
           }
-
-          // if (positionX === 100 || positionX === 350)
-          // {
-          //   positionX += incrementX
-          // }
-          // else
-          // {
-          //   positionX = 100
-          //   positionY += incrementY
-          // }
         }
 
         for (const [key, relationship] of Object.entries(input["relationships"]))
@@ -198,7 +188,7 @@ const useConceptualModel = () =>
             setIsLoading(_ => true)
             const stream = response.body; // Get the readable stream from the response body
 
-            if (stream == null)
+            if (stream === null)
             {
               console.log("Stream is null")
               setIsLoading(_ => false)
@@ -511,7 +501,7 @@ const useConceptualModel = () =>
         // Do not add a new node if it already exists
         for (let i = 0; i < nodes.length; i++)
         {
-          if (nodes[i].id == nodeID)
+          if (nodes[i].id === nodeID)
           {
             return
           }
@@ -651,17 +641,17 @@ const useConceptualModel = () =>
 
         const targetID = Number(event.currentTarget.id.slice(6))
 
-        if (userChoice == "entities")
+        if (userChoice === "entities")
         {
           const entity = suggestedEntities[targetID]
           setSuggestedItem(entity)
         }
-        else if (userChoice == "attributes")
+        else if (userChoice === "attributes")
         {
           const attribute = suggestedAttributes[targetID]
           setSuggestedItem(attribute)
         }
-        else if (userChoice == "relationships")
+        else if (userChoice === "relationships")
         {
           const relationship = suggestedRelationships[targetID]
           setSuggestedItem(relationship)
