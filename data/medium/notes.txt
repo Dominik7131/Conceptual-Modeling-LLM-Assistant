@@ -1,0 +1,2 @@
+02
+- renamed class Person to Resident because "person" is never mentioned in the text

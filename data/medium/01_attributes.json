@@ -1,0 +1,19 @@
+{
+    "attributes": [
+		{"entity": "BTMS", "expected_output": [
+			{"name": "current date", "inference": "?", "data_type": "date"}]},
+		{"entity": "bus vehicle", "expected_output": [
+			{"name": "licence plate", "inference": "bus is identified by its unique licence plate", "data_type": "string"},
+            {"name": "is in repair shop", "inference": "whether a bus is in the repair shop", "data_type": "boolean"}]},
+		{"entity": "route", "expected_output": [
+			{"name": "number", "inference": "route is identified by a unique number", "data_type": "integer"}]},
+		{"entity": "route assignment", "expected_output": [
+			{"name": "date", "inference": "For up to a year in advance, city staff assigns buses to routes", "data_type": "date"}]},
+		{"entity": "driver", "expected_output": [
+			{"name": "name", "inference": "keeps track of driver's name", "data_type": "string"},
+            {"name": "id", "inference": "assigns a unique ID to each driver", "data_type": "integer"},
+            {"name": "on sick leave", "inference": "driver is on sick leave", "data_type": "boolean"}]},
+		{"entity": "driver schedule", "expected_output": [
+			{"name": "shift", "inference": "?", "data_type": "string"}]}
+    ]
+}
