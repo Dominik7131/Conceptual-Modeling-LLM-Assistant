@@ -10,7 +10,7 @@ ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
-TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
+TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
 IS_CHAIN_OF_THOUGHTS = True
 IS_RELATIONSHIPS_IS_A = False
 
@@ -93,7 +93,7 @@ class LLMAssistant:
             if not is_domain_description:
                 system = "You are an expert at generating entities in JSON format."
             else:
-                system = "You are an expert at extracting class names in JSON format solely based on a given context."
+                system = "You are an expert at extracting class names for a UML diagram in JSON format solely based on a given context."
 
         else:
             raise ValueError(f"Error: Unknown user choice: {user_choice}")
@@ -255,7 +255,7 @@ class LLMAssistant:
         opened_square_brackets = 0
 
         # For debugging purposes generate whole text first because there might be some bug on my side when parsing text on the fly
-        is_generate_content_first = False
+        is_generate_content_first = True
 
         if is_generate_content_first:
             output = self.llm.create_chat_completion(messages=messages, temperature=0)
@@ -433,34 +433,28 @@ Example end"""
 
         elif user_choice == ENTITIES_STRING:
             if IS_CHAIN_OF_THOUGHTS:
-                prompt = """Solely based on the following context extract all classes for a UML diagram. For each class output its name and copy the part of the given context containing this class and then output this class in JSON object like this: {"inference": "copy the part of the given context containing this class", "name": "name of the class"}.
+                prompt = """Solely based on the following context extract all class names for a UML diagram. Output each class name in JSON format.
 
-Example start
+EXAMPLE START
 
+Solely based on the given context extract all class names for a UML diagram.
 This is the given context:
-"An application for registration of a road vehicle in the register of road vehicles shall include: ..."
+"A road vehicle is a motorised or non-motorised vehicle"
 
 Output:
-name: registration application
-context: "An application for registration of a road vehicle"
-JSON object: {"inference": "An application for registration of a road vehicle", "name": "registration application"}
-
-name: registration
-context: "registration of a road vehicle"
-JSON object: {"inference": "registration of a road vehicle", "name": "registration"}
-
 name: road vehicle
-context: "registration of a road vehicle"
-JSON object: {"inference": "registration of a road vehicle", "name": "road vehicle"}
+JSON: {"name": "road vehicle"}
 
-name: road vehicles register
-context: "register of road vehicles shall include"
-JSON object: {"inference": "register of road vehicles shall include", "name": "road vehicles register"}
+name: motorised vehicle
+JSON: {"name": "motorised vehicle"}
 
-Example end"""
+name: non-motorised vehicle
+JSON: {"name": "non-motorised vehicle"}
+
+EXAMPLE END"""
 
             else:
-                prompt = 'Solely based on the following context extract each entity in JSON object like this: {"name": "entity name", "inference": "copy the part of the given context containing this entity"}.'
+                prompt = """Solely based on the given context extract all entities. Output each entity in JSON object like this: {"name": "entity name"}."""
         else:
             raise ValueError(f"Error: Encountered undefined user choice while creating prompt: {user_choice}")
 
@@ -504,6 +498,9 @@ Example end"""
 
         items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
 
+        if user_choice == ENTITIES_STRING:
+            suggested_entities = []
+
         for item in items_iterator:
             suggestion_dictionary = json.loads(json.dumps(item))
 
@@ -514,6 +511,12 @@ Example end"""
                 suggestion_dictionary['inference_indexes'] = inference_indexes
             else:
                 logging.warn(f"Warning: inference not in item: {item}")
+
+            if user_choice == ENTITIES_STRING:
+                if suggestion_dictionary['name'] in suggested_entities:
+                    logging.debug(f"Skipping duplicate entity: {suggestion_dictionary['name']}")
+                    continue
+                suggested_entities.append(suggestion_dictionary['name'])
 
             json_item = json.dumps(suggestion_dictionary)
             yield f"{json_item}\n"
