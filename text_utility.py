@@ -272,15 +272,13 @@ class TextUtility:
         return text[0] == '-'
 
 
-    def split_file_into_chunks(file_name):
-        with open(file_name) as file:
-            lines = [line.rstrip() for line in file]
-
+    def split_text_into_chunks(domain_description):
         # Divide the text into: sentences and bullets
+        lines = domain_description.split(sep='\n')
+        lines = list(filter(None, lines)) # Remove empty elements
         sentences = [TextUtility.split_into_sentences(line) for line in lines]
         sentences = [x for xs in sentences for x in xs] # flatten sentences
-
-
+        
         edited_sentences = []
         text_before_bullet_points = ""
         chunk_before_bullet_points_index = 0
@@ -386,6 +384,11 @@ class TextUtility:
                         result.append(inference_index)
                 else:
                     print(f"Warning: inference not found: {inference_part}")
+
+
+        # TODO: Fix bug with too many inference indexes
+        if len(result) > 10:
+            result = []
 
         return result, inference_parts_found, inference_parts_total
 
