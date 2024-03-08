@@ -1,12 +1,15 @@
 import sys
 sys.path.append('.')
 from LLM_assistant import LLMAssistant, ITEMS_COUNT
-from text_utility import ATTRIBUTES_STRING, RELATIONSHIPS_STRING, ENTITIES_STRING
+from text_utility import ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, ENTITIES_STRING
 import time
 import json
+import os
 
-PATH_TO_DATA_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case"
-INPUT_DOMAIN_DESCRIPTION_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/56-2001-extract-llm-assistant-test-case.txt"
+
+PATH_TO_DATA_DIRECTORY = "data" #"data/56-2001-extract-llm-assistant-test-case"
+INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "56-2001-extract-llm-assistant-test-case", "56-2001-extract-llm-assistant-test-case.txt")
+#INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "medium", "01_domain_description.txt")
 IS_A_RELATIONSHIPS_STRING = "is_a_relationships"
 ACTUAL_OUTPUT = "actual-output"
 EXPECTED_OUTPUT = "expected-output"
@@ -14,7 +17,7 @@ TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 # Settings
 IS_GENERATE_EXPECTED_OUTPUT = False
-USER_CHOICE = ENTITIES_STRING
+USER_CHOICE = RELATIONSHIPS_STRING_TWO_ENTITIES
 
 
 def generate_expected_output(test_file_path, output_file_path):
@@ -25,8 +28,11 @@ def generate_expected_output(test_file_path, output_file_path):
 
     with open(output_file_path, 'w') as file:
         for test_case in test_cases:
-            file.write(f"Entity: {test_case['entity']}\n")
-            write_outputs_to_file(file, test_case['expected_output'])
+            if USER_CHOICE == ENTITIES_STRING:
+                file.write(f"Entity: {test_case}\n")
+            else:
+                file.write(f"Entity: {test_case['entity']}\n")
+                write_outputs_to_file(file, test_case['expected_output'])
             file.write("\n")
 
 
@@ -64,7 +70,7 @@ def main():
         domain_description = file.read()
     
     if user_choice == ENTITIES_STRING:
-        test_data = {"entities:" [{"entity": ""}]}
+        test_data = {"entities" : [{"entity": ""}]}
     else:
         with open(test_file_path) as file:
             test_data = json.load(file)
