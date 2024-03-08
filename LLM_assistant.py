@@ -7,7 +7,7 @@ import json
 
 
 ITEMS_COUNT = 5
-IS_SYSTEM_MSG = True
+IS_SYSTEM_MSG = False
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
@@ -82,14 +82,14 @@ class LLMAssistant:
 
 
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
-            system = "You are an expert at creating a conceptual model which consists of entities and their relationships. "
-            system += "Each relationship is between exactly two entities, we will describe them as the source entity and the target entity. "
-            system += "Each relationship has a name in a verb form such that when you insert this verb in between the source entity and the target entity in this order a short meaningful sentence is created. "
-            system += "Always make sure that the short meaningful sentence indeed makes sense. Be very careful when creating the short meaningful sentence: the source entity must come first then follows the relationship name and then follows the target entity name which ends the sentence. Always check that this order holds."
+            if not is_domain_description:
+                system = "You are an expert at generating relationships in between two given entities."
+            else:
+                # system = "You are an expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will describe them as the source entity and the target entity. Each relationship has a name in a verb form such that when you insert this verb in between the source entity and the target entity in this order a short meaningful sentence is created. Always make sure that the short meaningful sentence indeed makes sense. Be very careful when creating the short meaningful sentence: the source entity must come first then follows the relationship name and then follows the target entity name which ends the sentence. Always check that this order holds."
+                system = "You are an expert at extracting relationships in JSON format for two given entities solely based on a given context."
 
 
         elif user_choice == ENTITIES_STRING:
-
             if not is_domain_description:
                 system = "You are an expert at generating entities in JSON format."
             else:
@@ -204,15 +204,23 @@ class LLMAssistant:
 
 
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
-            source_lower = completed_item['source'].lower()
-            target_lower = completed_item['target'].lower()
+            if 'source' in completed_item and 'target' in completed_item:
 
-            is_match = (user_input_entity1 == source_lower and user_input_entity2 == target_lower) or (user_input_entity2 == source_lower and user_input_entity1 == target_lower)
-            is_none = (source_lower == "none") or (target_lower == "none")
+                # Replace 's' for 'z' to solve the following issue:
+                #   - input: motoriSed vehicle with S
+                #   - LLM output: motoriZed vehicle with Z
+                source_lower = completed_item['source'].lower().replace('s', 'z')
+                target_lower = completed_item['target'].lower().replace('s', 'z')
 
-            if not is_match or is_none:
-                completed_item['name'] = "(Deleted: Inputed entites are not contained in source and target entities) " + completed_item['name']
-                is_item_ok = False
+                entity1 = user_input_entity1.replace('s', 'z')
+                entity2 = user_input_entity2.replace('s', 'z')
+
+                is_match = (entity1 == source_lower and entity2 == target_lower) or (entity2 == source_lower and entity1 == target_lower)
+                is_none = (source_lower == "none") or (target_lower == "none")
+
+                if not is_match or is_none:
+                    completed_item['name'] = f"Deleted: Inputed entites are not contained in source and target entities: {completed_item['name']}"
+                    is_item_ok = False
 
         logging.info(f"Completed item: {completed_item['name']}")
 
@@ -221,21 +229,6 @@ class LLMAssistant:
                 continue
             key_name = key.replace('_', ' ').capitalize()
             logging.info(f"- {key_name}: {completed_item[key]}")
-
-        # if "description" in completed_item:
-        #     logging.info(f"- Description: {completed_item['description']}")
-        # if "source" in completed_item:
-        #     logging.info(f"- Source: {completed_item['source']}")
-        # if "target" in completed_item:
-        #     logging.info(f"- Target: {completed_item['target']}")
-        # if "sentence" in completed_item:
-        #     logging.info(f"- Sentence: {completed_item['sentence']}")
-        # if "inference" in completed_item:
-        #     logging.info(f"- Inference: {completed_item['inference']}")
-        # if "cardinality" in completed_item:
-        #     logging.info(f"- Cardinality: {completed_item['cardinality']}")
-        # if "data_type" in completed_item:
-        #     logging.info(f"- Data type: {completed_item['data_type']}")
 
         logging.info("\n")
 
@@ -363,7 +356,7 @@ class LLMAssistant:
                     #prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
                     prompt += """For each attribute output its name and copy the part of the given context containing this attribute and data type and then output this attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name, "data_type": "data type of the attribute"}.
 
-Example start
+EXAMPLE START
 
 Solely based on the following context which attributes does the entity: "natural person" have?
 This is the given context:
@@ -395,7 +388,7 @@ Context: "If the person is a natural person ... his date of birth"
 Data type: date
 JSON object: {"inference": "If the person is a natural person ... his date of birth", "name": "birth date", "data_type": "date"}
 
-Example end"""
+EXAMPLE END"""
 
                     # prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name", "data_type": "data type of the attribute", "cardinality": "cardinality of the attribute"}.'
                 else:
@@ -423,13 +416,16 @@ Example end"""
 
         elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
             if not is_domain_description:
-                prompt = f'What relationships are between source entity "{entity1}" and target entity "{entity2}"? Output exactly {count_items_to_suggest} relationships in JSON format like this: '
+                prompt = f'What relationships are between the entity "{entity1}" and the entity "{entity2}"? Output exactly {count_items_to_suggest} relationships in JSON format like this: '
                 prompt += '{"description": "relationship description", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
 
             else:
-                prompt = f'Solely based on the following text which relationships are between the entity "{entity1}" and the entity "{entity2}"? '
-                prompt += 'First for each relationship output: its name, only the exact part of the given context containing this relationship, source entity of this relationship and target entity of this relationship. After outputting all relationships output each relationship in JSON object like this: {"inference": "text from the following context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
+                prompt = f'Solely based on the given context which relationships are between the entity "{entity1}" and the entity "{entity2}"? '
+                prompt += 'For each relationship output its name and source entity and target entity and copy the part of the given context containing this relationship in JSON object like this: {"inference": "copy the part of the given context containing this relationship", "name": "relationship name", "source": "source entity name: either \'' + entity1 + '\' or \'' + entity2 + '\'", "target": "target entity name: either \'' + entity1 + '\' or \'' + entity2 + '\'"}'
 
+                prompt += f'\n\nEXAMPLE START\nSolely based on the given context which relationships are between the entity "{entity1}" and the entity "{entity2}"?\nThis is the given context:\n"{entity1.capitalize()} is in relationship with {entity2}. {entity2.capitalize()} is in some other relationship with {entity1}."\n'
+
+                prompt += 'Output:\nname: is in relationship with\ncontext: "' + entity1 + ' is in relationship with ' + entity2 + '"\nsource entity: ' + entity1 + '\ntarget entity: ' + entity2 + '\nJSON object: {"inference": "' + entity1 + ' is in relationship with ' + entity2 + '", "name": "is in relationship with", "source": "' + entity1 + '", "target": "' + entity2 + '"}\n\nname: is in some other relationship with\ncontext: "' + entity2 + ' is in relationship with ' + entity1 + '"\nsource entity: ' + entity2 + '\ntarget entity: ' + entity1 + '\nJSON object: {"inference": "' + entity2 + ' is in some other relationship with ' + entity1 + '", "name": "is in some other relationship with", "source": "' + entity2 + '", "target": "' + entity1 + '"}\nEXAMPLE END'
 
         elif user_choice == ENTITIES_STRING:
             if IS_CHAIN_OF_THOUGHTS:
@@ -505,12 +501,12 @@ EXAMPLE END"""
             suggestion_dictionary = json.loads(json.dumps(item))
 
             # Find inference indexes for `item['inference']` in `domain_description`
-            if 'inference' in item:
-                inference = item['inference']
-                inference_indexes, _, _ = TextUtility.find_text_in_domain_description(inference, domain_description)
-                suggestion_dictionary['inference_indexes'] = inference_indexes
-            else:
-                logging.warn(f"Warning: inference not in item: {item}")
+            # if 'inference' in item:
+            #     inference = item['inference']
+            #     inference_indexes, _, _ = TextUtility.find_text_in_domain_description(inference, domain_description)
+            #     suggestion_dictionary['inference_indexes'] = inference_indexes
+            # else:
+            #     logging.warn(f"Warning: inference not in item: {item}")
 
             if user_choice == ENTITIES_STRING:
                 if suggestion_dictionary['name'] in suggested_entities:
