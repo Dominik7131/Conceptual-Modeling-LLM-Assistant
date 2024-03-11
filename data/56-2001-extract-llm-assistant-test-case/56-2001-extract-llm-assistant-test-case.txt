@@ -29,7 +29,7 @@ In addition, for a motorised vehicle it is stated:
 - the trade name if specified by the motorised vehicle manufacturer,
 - the type as specified by the motorised vehicle manufacturer and the variant and version if specified by the motorised vehicle manufacturer.
 - the motorised vehicle identification number (VIN) of the motorised vehicle and, if not, the chassis serial number of the motorised vehicle,
-- the engine data for the motorised vehicle that include the type of engine specified by the manufacturer of the motorised vehicle, the engine power specified by the motorised vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines, the displacement of the internal combustion engine as specified by the manufacturer of the motorised vehicle in cm3; and the fuel type of the road vehicle
+- the engine data for the motorised vehicle that include the type of engine specified by the manufacturer of the motorised vehicle, the engine power specified by the motorised vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines, the displacement of the internal combustion engine as specified by the manufacturer of the motorised vehicle in cm3; and the fuel type of the motorised vehicle
 - type, serial number and colour of bodywork, number of seats and standing places or beds, dimensions of the loading area, volume of the box or tank,
 - an the overall dimensions of the motorised vehicle,
 - the maximum technically permissible weight, the maximum permissible weight, the maximum permissible operating weight, the maximum technically permissible weight per axle and the maximum permissible weight per axle,
