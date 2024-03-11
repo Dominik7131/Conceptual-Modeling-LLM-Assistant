@@ -59,7 +59,7 @@ function App()
         capitalizeString={capitalizeString}
         nodeToAddName={nodeToAddName}
         setNodeToAddName={setNodeToAddName}
-        OnClickAddNodeUser={OnClickAddNode}
+        OnClickAddNode={OnClickAddNode}
         domainDescription={domainDescription}
         setDomainDescription={setDomainDescription}
         inferenceIndexes={inferenceIndexes}
