@@ -79,7 +79,7 @@ def main():
     chunks = TextUtility.split_file_into_chunks(INPUT_FILE_PATH)
 
     if IS_TESTING:
-        RAGTester.test(model, chunks, SCORE_NECESSARY_THRESHOLD, RANGE_FROM_TOP)
+        RAGTester.test_RAG_approach(model, chunks, SCORE_NECESSARY_THRESHOLD, RANGE_FROM_TOP)
         return
 
     query = TextUtility.create_query(ENTITY)
