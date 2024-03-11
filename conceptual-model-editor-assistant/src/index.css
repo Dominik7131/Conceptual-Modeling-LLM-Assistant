@@ -48,6 +48,10 @@
   margin-right: 10px;
 }
 
+.importButton {
+  margin-right: 10px;
+}
+
 #domainDescriptionText {
   flex-grow: 1;
   margin-right: 10px;
@@ -153,6 +157,47 @@
 textarea {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
+  resize: none;
+}
+
+/* TODO: Style text areas with flex-boxes or grids */
+#textAreaEdit1 {
+  margin-left: 34px;
+  margin-bottom: -6px;
+  padding-left: 5px;
+  width: 900px;
+  height: 18px;
+}
+#textAreaEdit2 {
+  margin-left: 10px;
+  margin-bottom: -6px;
+  padding-left: 5px;
+  width: 900px;
+  height: 18px;
+}
+
+#textAreaEdit3 {
+  margin-left: 8px;
+  margin-bottom: -6px;
+  padding-left: 5px;
+  width: 900px;
+  height: 18px;
+}
+
+#textAreaEdit4 {
+  margin-left: 25px;
+  margin-bottom: -6px;
+  padding-left: 5px;
+  width: 900px;
+  height: 18px;
+}
+
+#textAreaEdit5 {
+  margin-left: 31px;
+  margin-bottom: -6px;
+  padding-left: 5px;
+  width: 900px;
+  height: 18px;
 }
 
 .plusButton {
@@ -162,11 +207,7 @@ textarea {
 }
 
 .addNodeButton {
-  margin-right: 20px;
-}
-
-textarea {
-  resize: none;
+  margin-right: 10px;
 }
 
 .reactFlowDiv {

@@ -68,6 +68,7 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
             <p><strong>Name:</strong> {attribute.name} <br />
                <strong>Inference:</strong> {attribute.inference} <br />
                <strong>Data type:</strong> {attribute.dataType} <br />
+               <strong>Cardinality:</strong> <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addAttributesToNode(event)}>Add</button>
                <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "attributes")}>Edit</button>
                <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
@@ -82,6 +83,7 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
                <strong>Inference:</strong> {relationship.inference} <br />
                <strong>Source:</strong> {relationship.source} <br />
                <strong>Target:</strong> {relationship.target} <br />
+               <strong>Cardinality:</strong> <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addRelationshipsToNodes(event, relationship)}>Add</button>
                <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "relationships")}>Edit</button>
                <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>

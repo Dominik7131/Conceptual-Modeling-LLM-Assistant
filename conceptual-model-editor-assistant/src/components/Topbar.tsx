@@ -34,7 +34,7 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onImportB
                 </div>
 
                 <div className="buttonsContainer">
-                    <button onClick={() => onImportButtonClick()}>Import</button>
+                    <button className="importButton" onClick={() => onImportButtonClick()}>Import</button>
                     <button>Export</button>
                 </div>
             </div>

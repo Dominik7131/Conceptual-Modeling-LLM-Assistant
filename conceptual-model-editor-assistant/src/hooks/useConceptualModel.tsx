@@ -20,6 +20,7 @@ const useConceptualModel = () =>
     const [suggestedItem, setSuggestedItem] = useState<Entity|Attribute|Relationship>({"name": "", "description": "", "inference": "", "inference_indexes": []})
   
     const [sourceEntity, setSourceEntity] = useState<string>("")
+    const [targetEntity, setTargetEntity] = useState<string>("")
   
     const [isMultiSelection, setIsMultiSelection] = useState<boolean>(false);
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
@@ -53,7 +54,7 @@ const useConceptualModel = () =>
     
         if (nodes[1] !== undefined)
         {
-          console.log("Selected more than 1 node")
+          // console.log("Selected more than 1 node")
           setIsMultiSelection(true)
         }
         else
@@ -160,7 +161,7 @@ const useConceptualModel = () =>
                   })
                 }
               }
-              else if (userChoice === "relationships")
+              else if (userChoice === "relationships" || userChoice==="relationships2")
               {
                 for (let i = 0; i < data.length; i++)
                 {
@@ -239,7 +240,7 @@ const useConceptualModel = () =>
                               return [...previousSuggestedAttributes, attribute]
                             })
                           }
-                          else if (userChoice === "relationships")
+                          else if (userChoice === "relationships" || userChoice === "relationships2")
                           {
                             let relationship : Relationship = JSON.parse(jsonStringParts[i])
 
@@ -311,13 +312,37 @@ const useConceptualModel = () =>
           console.log("Zero nodes selected")
           return
         }
-        if (selectedNodes.length >= 2)
+
+        // TODO: is this code needed when we obtain the name from `selectedNodes[0].id.toLowerCase()`?
+        setSourceEntity(_ => { return selectedNodes[0].id.toLowerCase() })
+
+        if (selectedNodes.length === 2 && buttonInnerHTML === "+Relationships")
+        {
+          setTargetEntity(_ => { return selectedNodes[1].id.toLowerCase() } )
+
+          userChoice = "relationships2"
+
+          const sourceEntityName = selectedNodes[0].id.toLowerCase()
+          const targetEntityName = selectedNodes[1].id.toLowerCase()
+          const body_data = JSON.stringify({"sourceEntity": sourceEntityName, "targetEntity": targetEntityName, "userChoice": userChoice, "domainDescription": currentDomainDesciption})
+
+          if (!is_fetch_stream_data)
+          {
+            fetch_non_streamed_data(url, headers, body_data, userChoice)
+          }
+          else
+          {
+            fetch_streamed_data(url, headers, body_data, userChoice)
+          }
+          return
+        }
+
+        if (selectedNodes.length > 2)
         {
           console.log("More than one node selected")
           return
         }
     
-        setSourceEntity(_ => {return selectedNodes[0].id.toLowerCase() })
     
         if (buttonInnerHTML === "+Attributes")
         {
@@ -334,7 +359,7 @@ const useConceptualModel = () =>
         }
 
         const entityName = selectedNodes[0].id.toLowerCase()
-        const body_data = JSON.stringify({"entity": entityName, "user_choice": userChoice, "domain_description": currentDomainDesciption})
+        const body_data = JSON.stringify({"sourceEntity": entityName, "targetEntity": "", "userChoice": userChoice, "domainDescription": currentDomainDesciption})
 
         if (!is_fetch_stream_data)
         {
