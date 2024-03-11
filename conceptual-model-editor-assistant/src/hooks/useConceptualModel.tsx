@@ -143,8 +143,6 @@ const useConceptualModel = () =>
                 for (let i = 0; i < data.length; i++)
                 {
                   let entity : Entity = data[i]
-                  console.log("Entity: ")
-                  console.log(entity)
                   setSuggestedEntities(previousSuggestedEntities => {
                     return [...previousSuggestedEntities, entity]
                   })
@@ -154,11 +152,11 @@ const useConceptualModel = () =>
               {
                 for (let i = 0; i < data.length; i++)
                 {
-                  const relationship = data[i]
-                  const editedRelationship : Relationship = { "name": relationship.name, "source_entity": relationship.source, "target_entity": relationship.target, "inference": relationship.inference, inference_indexes: relationship.inference_indexes, "description": "", "cardinality": relationship.cardinality}
+                  const attribute : Attribute = data[i]
+                  const editedAttribute : Attribute = { "name": attribute.name, "inference": attribute.inference, "dataType": attribute.dataType, inference_indexes: attribute.inference_indexes, "description": ""}
   
-                  setSuggestedRelationships(previousSuggestedRelationships => {
-                    return [...previousSuggestedRelationships, editedRelationship]
+                  setSuggestedAttributes(previousSuggestedAttributes => {
+                    return [...previousSuggestedAttributes, editedAttribute]
                   })
                 }
               }
@@ -167,7 +165,7 @@ const useConceptualModel = () =>
                 for (let i = 0; i < data.length; i++)
                 {
                   const relationship = data[i]
-                  const editedRelationship : Relationship = { "name": relationship.name, "source_entity": relationship.source, "target_entity": relationship.target, "inference": relationship.inference, inference_indexes: relationship.inference_indexes, "description": "", "cardinality": relationship.cardinality}
+                  const editedRelationship : Relationship = { "name": relationship.name, "source": relationship.source, "target": relationship.target, "inference": relationship.inference, inference_indexes: relationship.inference_indexes, "description": "", "cardinality": relationship.cardinality}
 
                   setSuggestedRelationships(previousSuggestedRelationships => {
                     return [...previousSuggestedRelationships, editedRelationship]
@@ -233,6 +231,8 @@ const useConceptualModel = () =>
                           else if (userChoice === "attributes")
                           {
                             let attribute : Attribute = JSON.parse(jsonStringParts[i])
+                            attribute = { "name": attribute.name, "inference": attribute.inference, "dataType": attribute.dataType, inference_indexes: attribute.inference_indexes, "description": ""}
+          
                             console.log("Attribute: ")
                             console.log(attribute)
                             setSuggestedAttributes(previousSuggestedAttributes => {
@@ -394,7 +394,7 @@ const useConceptualModel = () =>
                     <p>
                     {node.data.attributes.map((attribute : Attribute, index : number) =>
                     (
-                        <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.data_type} <br /> </span>
+                        <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.dataType} <br /> </span>
                     ))}
                     </p>
                  </div>
@@ -563,7 +563,7 @@ const useConceptualModel = () =>
               })
           }
     
-          const newAttributeObject = { name: attributeToAdd.name, inference: attributeToAdd.inference, inference_indexes: newInferenceIndexes, data_type: attributeToAdd.data_type}
+          const newAttributeObject = { name: attributeToAdd.name, inference: attributeToAdd.inference, inference_indexes: newInferenceIndexes, data_type: attributeToAdd.dataType}
     
           // If the node already contains the selected attribute do not add anything
           let isAttributePresent = false
@@ -593,7 +593,7 @@ const useConceptualModel = () =>
         const relationshipIndex = event.currentTarget.id.slice(6)
         const relationshipToAdd = suggestedRelationships[Number(relationshipIndex)]
         const sourceNodeID = sourceEntity.toLowerCase()
-        const targetNodeID = relationshipToAdd.target_entity.toLowerCase()
+        const targetNodeID = relationshipToAdd.target.toLowerCase()
     
         // Return if the edge is already existing
         const newEdgeID = `${sourceNodeID},${targetNodeID}`

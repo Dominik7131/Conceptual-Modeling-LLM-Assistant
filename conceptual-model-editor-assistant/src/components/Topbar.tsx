@@ -39,8 +39,9 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onImportB
                 </div>
             </div>
             <div className="domainTextContainer">
-                <textarea // https://react.dev/reference/react-dom/components/textarea
-                // Auto re-size is disabled in index.css: textarea { resize: none;}
+                <textarea
+                    // https://react.dev/reference/react-dom/components/textarea
+                    // Auto re-size is disabled in index.css: textarea { resize: none;}
                     id="domainDescriptionText"
                     name="story"
                     onChange={e => setDomainDescription(e.target.value)}

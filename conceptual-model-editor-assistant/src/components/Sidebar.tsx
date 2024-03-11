@@ -47,7 +47,7 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
                 <p><strong>Name:</strong> {entity.name} <br /> {entity.inference != null && <span><strong>Inference:</strong> {entity.inference} <br /> </span>}
                     <button className="btn" id={`button${index}`} onClick={(event) => addEntity(event)}>Add</button>
                     <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "entities")}>Edit</button>
-                    { entity.inference != null && <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button> }
+                    { entity.inference == null && <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button> }
                 </p>
 
             </>
@@ -67,7 +67,7 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
         return (
             <p><strong>Name:</strong> {attribute.name} <br />
                <strong>Inference:</strong> {attribute.inference} <br />
-               <strong>Data type:</strong> {attribute.data_type} <br />
+               <strong>Data type:</strong> {attribute.dataType} <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addAttributesToNode(event)}>Add</button>
                <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "attributes")}>Edit</button>
                <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
@@ -80,8 +80,8 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
         return (
             <p><strong>Name:</strong> {relationship.name} <br />
                <strong>Inference:</strong> {relationship.inference} <br />
-               <strong>Source:</strong> {relationship.source_entity} <br />
-               <strong>Target:</strong> {relationship.target_entity} <br />
+               <strong>Source:</strong> {relationship.source} <br />
+               <strong>Target:</strong> {relationship.target} <br />
                <button className="btn" id={`button${index}`} onClick={(event) => addRelationshipsToNodes(event, relationship)}>Add</button>
                <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "relationships")}>Edit</button>
                <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>

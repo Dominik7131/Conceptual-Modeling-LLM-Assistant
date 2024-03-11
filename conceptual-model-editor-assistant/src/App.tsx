@@ -20,7 +20,7 @@ declare global
     description: string
     inference: string
     inference_indexes: number[]
-    data_type: string
+    dataType: string
   }
   
   type Relationship = {
@@ -28,8 +28,8 @@ declare global
     description: string
     inference: string
     inference_indexes: number[]
-    source_entity: string
-    target_entity: string
+    source: string
+    target: string
     cardinality: string
   }
 

@@ -59,14 +59,76 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
             // const dictionary : Entity|Attribute|Relationship = { "name": "n", "description": "", "inference": "i", "inference_indexes": [], "data_type": ""}
 
             // TODO: Probably get as argument `userChoice` to know which object we are editing
+            // const attribute = (suggestedItem as Attribute)
+            const something : Entity|Attribute|Relationship = suggestedItem
+
             const attribute = (suggestedItem as Attribute)
+            const relationship = (suggestedItem as Relationship)
+            const entity = (suggestedItem as Entity)
+
+            const isDataType = attribute.dataType != null
+            const isSourceEntity = relationship.source != null
+            const isTargetEntity = relationship.target != null
 
             return (
                 <div className="overlay">
-                    <div>
+                    <div className="editContainer">
                         <p><button className="close" onClick={ () => setIsShowEdit(_ => false)}>close</button></p>
-                        <p>Name: {suggestedItem['name']} </p>
-                        <p>Inference: {suggestedItem['inference']}</p>
+
+                        <p>Name:
+                            <textarea
+                                id="textAreaEdit1"
+                                name="nameEdit"
+                                value={suggestedItem["name"]}>
+                            </textarea>
+                        </p>
+                        <p>
+                            Inference:
+                            <textarea
+                            id="textAreaEdit2"
+                            name="inferenceEdit"
+                            value={suggestedItem["inference"]}>
+                            </textarea>
+                        </p>
+
+                        {
+                            isDataType &&
+                            <p>
+                                Data type:
+                                <textarea
+                                id="textAreaEdit3"
+                                name="dataTypeEdit"
+                                value={attribute["dataType"]}>
+                                </textarea>
+                            </p>
+                        }
+
+                        {
+                            isSourceEntity &&
+                            <p>
+                                Source:
+                                <textarea
+                                id="textAreaEdit4"
+                                name="sourceEntityEdit"
+                                value={relationship["source"]}>
+                                </textarea>
+                            </p>
+                        }
+
+                        {
+                            isTargetEntity &&
+                            <p>
+                                Target:
+                                <textarea
+                                id="textAreaEdit5"
+                                name="targetEntityEdit"
+                                value={relationship["target"]}>
+                                </textarea>
+                            </p>
+                        }
+
+
+
                         {/* { attribute && <p>Data type: {attribute['data_type']}</p>} */}
                         {/* <p>Data type: {suggestedItem['data_type']}</p> */}
                         {/* <span>
