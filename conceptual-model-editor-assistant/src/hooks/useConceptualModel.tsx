@@ -23,6 +23,8 @@ const useConceptualModel = () =>
   
     const [isMultiSelection, setIsMultiSelection] = useState<boolean>(false);
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
+
+    const [nodeToAddName, setNodeToAddName] = useState<string>("")
   
     const [summaryData, setSummaryData] = useState<SummaryObject[]>([])
   
@@ -503,6 +505,7 @@ const useConceptualModel = () =>
         {
           if (nodes[i].id === nodeID)
           {
+            console.log("Node already exists")
             return
           }
         }
@@ -520,6 +523,17 @@ const useConceptualModel = () =>
         const entityTargetID = event.currentTarget.id.slice(6)
         const entityToAdd = suggestedEntities[Number(entityTargetID)]
         addNode(entityToAdd.name, 66, 66)
+      }
+
+      const OnClickAddNode = () =>
+      {
+        console.log(`On click add node: ${nodeToAddName}`)
+        if (!nodeToAddName)
+        {
+          return
+        }
+
+        addNode(nodeToAddName.toLowerCase(), 0, 0, [])
       }
     
     
@@ -706,7 +720,7 @@ const useConceptualModel = () =>
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-        summaryData, capitalizeString, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay, isShowEdit, setIsShowEdit,
+        summaryData, capitalizeString, nodeToAddName, setNodeToAddName, OnClickAddNode, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay, isShowEdit, setIsShowEdit,
         isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, addEntity, addAttributesToNode, addRelationshipsToNodes, editSuggestion, showInference
     }
 }

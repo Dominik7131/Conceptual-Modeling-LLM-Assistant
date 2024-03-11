@@ -161,6 +161,14 @@ textarea {
   margin-right: 20px;
 }
 
+.addNodeButton {
+  margin-right: 20px;
+}
+
+textarea {
+  resize: none;
+}
+
 .reactFlowDiv {
   width: 80%;
   height: 627px;

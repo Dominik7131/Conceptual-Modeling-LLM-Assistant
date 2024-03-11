@@ -1,11 +1,16 @@
 const useUtility = () =>
 {
-    const capitalizeString = (string : string) =>
+    const capitalizeString = (inputString : string) =>
     {
-      return string.charAt(0).toUpperCase() + string.slice(1)
+      if (!inputString)
+      {
+        return ""
+      }
+
+      return inputString.charAt(0).toUpperCase() + inputString.slice(1)
     }
 
-    return { capitalizeString}
+    return { capitalizeString }
 }
 
 export default useUtility
