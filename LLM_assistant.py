@@ -18,6 +18,8 @@ CONFIG_FILE_PATH = "llm-config.json"
 TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
 LOG_FILE_PATH = f"{TIMESTAMP}-log.txt"
 
+DEFINED_DATA_TYPES = ["string, number, time, boolean"]
+
 logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
 
 
@@ -164,7 +166,21 @@ class LLMAssistant:
             return
         
         if user_choice == ATTRIBUTES_STRING:
-            pass
+            # TODO: define all attribute field names so we do not have to type "dataType" but can use some variable instead
+            if "dataType" in completed_item:
+                if completed_item["dataType"] == "float":
+                    logging.debug(f"Converting float data type to number")
+                    completed_item["dataType"] = "number"
+
+                elif completed_item["dataType"] == "date":
+                    logging.debug(f"Converting date data type to time")
+                    completed_item["dataType"] = "time"
+
+                # Convert any unknown data type to string
+                if not completed_item["dataType"] in DEFINED_DATA_TYPES:
+                    logging.debug(f"Converting unknown data type to string")
+                    completed_item["dataType"] = "string"
+
             # Remove attributes in which their inferred text does not contain the given entity
             # is_inference = "inference" in completed_item
             # if is_inference and user_input_entity1 not in completed_item['inference'].lower():
