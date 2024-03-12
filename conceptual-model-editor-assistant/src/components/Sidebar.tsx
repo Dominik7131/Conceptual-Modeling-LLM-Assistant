@@ -35,7 +35,7 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
                     </span>
                 )}
 
-                {isLoading && <p>Loading...</p>}
+                {isLoading && <p ><strong>Loading...</strong></p>}
             </span>
         )
     }

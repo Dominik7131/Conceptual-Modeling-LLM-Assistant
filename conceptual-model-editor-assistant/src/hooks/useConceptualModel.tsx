@@ -266,6 +266,8 @@ const useConceptualModel = () =>
         .catch(error =>
         {
           console.error(error);
+          setIsLoading(_ => false)
+          alert("Error: request failed")
         });
       }
       
@@ -278,6 +280,13 @@ const useConceptualModel = () =>
       {
         //console.log("On plus button nodes: " + nodes)
         // const buttonInnerHTML = event.target.innerHTML
+
+        if (isLoading)
+        {
+          alert("Another request is already being processed")
+          return
+        }
+
         const buttonInnerHTML = event.currentTarget.innerHTML
         setIsLoading(_ => true)
 
@@ -294,7 +303,8 @@ const useConceptualModel = () =>
         if (buttonInnerHTML === "+Entities")
         {
           userChoice = "entities"
-          const body_data = JSON.stringify({"entity": "", "user_choice": userChoice, "domain_description": currentDomainDesciption})
+          // TODO: Define field names such as `sourceEntity`, `targetEntity`, `userChoice`, ...
+          const body_data = JSON.stringify({"sourceEntity": "", "targetEntity": "", "userChoice": userChoice, "domainDescription": currentDomainDesciption})
 
           if (!is_fetch_stream_data)
           {
