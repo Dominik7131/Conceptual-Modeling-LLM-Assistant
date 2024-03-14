@@ -160,7 +160,7 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
                 <div className="overlay">
                     <div>
                         <p><button className="close" onClick={ () => { setIsShowOverlay(_ => false) }}>close</button></p>
-                        {inferenceIndexes.length === 0 && <p id="highlightedInference-1"><b>Warning: Inference not found in the domain description</b></p> }
+                        {inferenceIndexes.length === 0 && <p id="highlightedInference-1"><b>Warning: Unable to highlight inference</b></p> }
                         { highlightInference(inferenceIndexes) }
                     </div>
                 </div>

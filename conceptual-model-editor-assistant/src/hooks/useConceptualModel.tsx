@@ -597,8 +597,8 @@ const useConceptualModel = () =>
                 return [...previousInferenceIndexes, newInferenceIndexes]
               })
           }
-    
-          const newAttributeObject = { name: attributeToAdd.name, inference: attributeToAdd.inference, inference_indexes: newInferenceIndexes, data_type: attributeToAdd.dataType}
+
+          const newAttributeObject : Attribute = { name: attributeToAdd.name, description: "", inference: attributeToAdd.inference, inference_indexes: newInferenceIndexes, dataType: attributeToAdd.dataType}
     
           // If the node already contains the selected attribute do not add anything
           let isAttributePresent = false
