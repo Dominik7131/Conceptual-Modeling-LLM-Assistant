@@ -9,13 +9,15 @@ import { ReactFlowProvider } from 'reactflow';
 
 declare global
 {
-  type Entity = {
+  type Entity =
+  {
     name: string
     inference: string
     inference_indexes: number[]
   }
 
-  type Attribute = {
+  type Attribute =
+  {
     name: string
     description: string
     inference: string
@@ -23,7 +25,8 @@ declare global
     dataType: string
   }
   
-  type Relationship = {
+  type Relationship =
+  {
     name: string
     description: string
     inference: string
@@ -33,7 +36,8 @@ declare global
     cardinality: string
   }
 
-  type SummaryObject = {
+  type SummaryObject =
+  {
     entity: string
     attributes: Attribute[]
     relationships: Relationship[]
@@ -43,26 +47,21 @@ declare global
 
 function App()
 {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-    summaryData, capitalizeString, nodeToAddName, setNodeToAddName, OnClickAddNode, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay, isShowEdit, setIsShowEdit,
-    isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, addEntity, addAttributesToNode, addRelationshipsToNodes, editSuggestion, showInference
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
+    OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose,
+    isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference
   } = useConceptualModel()
 
   return (
     <div className="appDiv">
       <Topbar
-        handleIgnoreDomainDescriptionChange={handleIgnoreDomainDescriptionChange}
+        onIgnoreDomainDescriptionChange={onIgnoreDomainDescriptionChange}
         onImportButtonClick={onImportButtonClick}
         onPlusButtonClick={onPlusButtonClick}
         onSummaryButtonClick={onSummaryButtonClick}
-        summaryData={summaryData}
-        capitalizeString={capitalizeString}
-        nodeToAddName={nodeToAddName}
-        setNodeToAddName={setNodeToAddName}
         OnClickAddNode={OnClickAddNode}
         domainDescription={domainDescription}
-        setDomainDescription={setDomainDescription}
-        inferenceIndexes={inferenceIndexes}
+        onDomainDescriptionChange={onDomainDescriptionChange}
       />
 
       <SideBar
@@ -70,11 +69,11 @@ function App()
         entities={suggestedEntities}
         attributes={suggestedAttributes}
         relationships={suggestedRelationships}
-        addEntity={addEntity}
-        addAttributesToNode={addAttributesToNode}
-        addRelationshipsToNodes={addRelationshipsToNodes}
-        editSuggestion={editSuggestion}
-        showInference={showInference}
+        onAddEntity={onAddEntity}
+        onAddAttributesToNode={onAddAttributesToNode}
+        onAddRelationshipsToNodes={onAddRelationshipsToNodes}
+        onEditSuggestion={onEditSuggestion}
+        onShowInference={onShowInference}
       />
 
       <ConceptualModel
@@ -88,9 +87,9 @@ function App()
       <Overlay
       domainDescription={domainDescription}
       isShowOverlay={isShowOverlay}
-      setIsShowOverlay={setIsShowOverlay}
+      onOverlayClose={onOverlayClose}
       isShowEdit={isShowEdit}
-      setIsShowEdit={setIsShowEdit}
+      onEditClose={onEditClose}
       suggestedItem={suggestedItem}
       inferenceIndexes={inferenceIndexesMockUp}
       />

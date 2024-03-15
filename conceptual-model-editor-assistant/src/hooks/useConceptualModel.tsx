@@ -4,6 +4,7 @@ import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange
 import 'reactflow/dist/style.css';
 import useInferenceIndexes from './useInferenceIndexes';
 import useUtility from './useUtility';
+import useDomainDescription from './useDomainDescription';
 
 const initialNodes : Node[] = [{ id: 'engine', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
 
@@ -17,29 +18,25 @@ const useConceptualModel = () =>
     const [suggestedEntities, setSuggestedEntities] = useState<Entity[]>([])
     const [suggestedAttributes, setSuggestedAttributes] = useState<Attribute[]>([])
     const [suggestedRelationships, setSuggestedRelationships] = useState<Relationship[]>([])
-    const [suggestedItem, setSuggestedItem] = useState<Entity|Attribute|Relationship>({"name": "", "description": "", "inference": "", "inference_indexes": []})
+    const [suggestedItem, setSuggestedItem] = useState<Entity | Attribute | Relationship>({"name": "", "description": "", "inference": "", "inference_indexes": []})
   
     const [sourceEntity, setSourceEntity] = useState<string>("")
     const [targetEntity, setTargetEntity] = useState<string>("")
   
     const [isMultiSelection, setIsMultiSelection] = useState<boolean>(false);
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
-
-    const [nodeToAddName, setNodeToAddName] = useState<string>("")
   
     const [summaryData, setSummaryData] = useState<SummaryObject[]>([])
-  
-    const [domainDescription, setDomainDescription] = useState<string>("")
-  
-    const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState<boolean>(false)
 
     const [isShowOverlay, setIsShowOverlay] = useState<boolean>(false)
     const [isShowEdit, setIsShowEdit] = useState<boolean>(false)
 
-    // Mock-up
-    const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([31, 71])
+
+    const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([])
 
     const { inferenceIndexes, setInferenceIndexes, getIndexesForOneInference } = useInferenceIndexes()
+
+    const { domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
 
     const { capitalizeString } = useUtility()
 
@@ -278,16 +275,13 @@ const useConceptualModel = () =>
     
       const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
-        //console.log("On plus button nodes: " + nodes)
-        // const buttonInnerHTML = event.target.innerHTML
-
         if (isLoading)
         {
           alert("Another request is already being processed")
           return
         }
 
-        const buttonInnerHTML = event.currentTarget.innerHTML
+        const buttonText = event.currentTarget.innerHTML
         setIsLoading(_ => true)
 
         setSuggestedEntities(_ => {return []})
@@ -300,7 +294,7 @@ const useConceptualModel = () =>
         const is_fetch_stream_data = true
         let userChoice = ""
 
-        if (buttonInnerHTML === "+Entities")
+        if (buttonText === "+Entities")
         {
           userChoice = "entities"
           // TODO: Define field names such as `sourceEntity`, `targetEntity`, `userChoice`, ...
@@ -326,7 +320,7 @@ const useConceptualModel = () =>
         // TODO: is this code needed when we obtain the name from `selectedNodes[0].id.toLowerCase()`?
         setSourceEntity(_ => { return selectedNodes[0].id.toLowerCase() })
 
-        if (selectedNodes.length === 2 && buttonInnerHTML === "+Relationships")
+        if (selectedNodes.length === 2 && buttonText === "+Relationships")
         {
           setTargetEntity(_ => { return selectedNodes[1].id.toLowerCase() } )
 
@@ -354,17 +348,17 @@ const useConceptualModel = () =>
         }
     
     
-        if (buttonInnerHTML === "+Attributes")
+        if (buttonText === "+Attributes")
         {
           userChoice = "attributes"
         }
-        else if (buttonInnerHTML === "+Relationships")
+        else if (buttonText === "+Relationships")
         {
           userChoice = "relationships"
         }
         else
         {
-          alert(`Clicked on unknown button: ${buttonInnerHTML}`)
+          alert(`Clicked on unknown button: ${buttonText}`)
           return
         }
 
@@ -383,6 +377,9 @@ const useConceptualModel = () =>
     
       const onSummaryButtonClick = () =>
       {
+        alert("Not implemented")
+        return
+
         // Get titles of all selected entites
         let selectedEntites = ""
         for (let i = 0; i < selectedNodes.length; i++)
@@ -436,29 +433,11 @@ const useConceptualModel = () =>
         };
         return node;
       }
-    
+
       useEffect(() =>
       {
-        updateNodes()
-
+        updateNodes() 
         // parseSerializedConceptualModel()
-
-        // Load domain description from a file
-        fetch("input.txt")
-        .then((res) => res.text())
-        .then((text) => {
-          setDomainDescription(_ => text)
-         })
-        .catch((e) => console.error(e));
-
-    
-        // TODO: Update `domainDescription` variable if the text in text area get changed
-        // const domainDescriptionTextArea = document.getElementById("domainDescriptionText")
-        // if (domainDescriptionTextArea)
-        // {
-        //   setDomainDescription(domainDescriptionTextArea.innerHTML)
-        // }
-
       }, []);
     
       useEffect(() =>
@@ -552,7 +531,12 @@ const useConceptualModel = () =>
         updateNodes()
       }
 
-      const addEntity = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+      const onOverlayClose = () =>
+      {
+        setIsShowOverlay(false)
+      }
+
+      const onAddEntity = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
         setIsShowOverlay(_ => false)
         const entityTargetID = event.currentTarget.id.slice(6)
@@ -560,19 +544,18 @@ const useConceptualModel = () =>
         addNode(entityToAdd.name, 66, 66)
       }
 
-      const OnClickAddNode = () =>
+      const OnClickAddNode = (nodeName : string) =>
       {
-        console.log(`On click add node: ${nodeToAddName}`)
-        if (!nodeToAddName)
+        if (!nodeName)
         {
           return
         }
 
-        addNode(nodeToAddName.toLowerCase(), 0, 0, [])
+        addNode(nodeName.toLowerCase(), 0, 0, [])
       }
     
     
-      const addAttributesToNode = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+      const onAddAttributesToNode = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
         setIsShowOverlay(_ => false)
 
@@ -622,7 +605,7 @@ const useConceptualModel = () =>
         );
       }
     
-      const addRelationshipsToNodes = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationshipObject : Relationship) =>
+      const onAddRelationshipsToNodes = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationshipObject : Relationship) =>
       {
         setIsShowOverlay(_ => false)
         const relationshipIndex = event.currentTarget.id.slice(6)
@@ -683,10 +666,16 @@ const useConceptualModel = () =>
       }
 
 
-      const editSuggestion = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, userChoice : string) =>
+      const onEditClose = () =>
       {
-        setIsShowOverlay(_ => false)
-        setIsShowEdit(_ => true)
+        setIsShowEdit(false)
+      }
+
+
+      const onEditSuggestion = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, userChoice : string) =>
+      {
+        setIsShowOverlay(false)
+        setIsShowEdit(true)
 
         const targetID = Number(event.currentTarget.id.slice(6))
 
@@ -712,7 +701,7 @@ const useConceptualModel = () =>
         }
       }
 
-      const showInference = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+      const onShowInference = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
         // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
         // TODO: probably move this function into file `useInferenceIndexes.tsx`
@@ -748,15 +737,10 @@ const useConceptualModel = () =>
           setInferenceIndexesMockUp(_ => relationship.inference_indexes)
         }
       }
-
-      const handleIgnoreDomainDescriptionChange = () =>
-      {
-        setIsIgnoreDomainDescription(previousValue => !previousValue)
-      }
     
-    return { nodes, edges, onNodesChange, onEdgesChange, onConnect, handleIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-        summaryData, capitalizeString, nodeToAddName, setNodeToAddName, OnClickAddNode, domainDescription, setDomainDescription, inferenceIndexes, inferenceIndexesMockUp, isShowOverlay, setIsShowOverlay, isShowEdit, setIsShowEdit,
-        isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, addEntity, addAttributesToNode, addRelationshipsToNodes, editSuggestion, showInference
+    return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
+        summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose,
+        isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference
     }
 }
 

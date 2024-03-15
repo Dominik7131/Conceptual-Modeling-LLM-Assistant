@@ -1,18 +1,24 @@
 
-interface props {
+interface Props
+{
     isLoading : boolean,
     entities : Entity[],
     attributes : Attribute[],
     relationships : Relationship[],
-    addEntity : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
-    addAttributesToNode : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
-    addRelationshipsToNodes : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationship : Relationship) => void,
-    editSuggestion : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, userChoice : string) => void,
-    showInference : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+    onAddEntity : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+    onAddAttributesToNode : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+    onAddRelationshipsToNodes : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationship : Relationship) => void,
+    onEditSuggestion : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, userChoice : string) => void,
+    onShowInference : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
 }
 
-const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationships, addEntity, addAttributesToNode, addRelationshipsToNodes, editSuggestion, showInference}) =>
+const Sidebar: React.FC<Props> = ({isLoading, entities, attributes, relationships, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference}) =>
 {
+    // TODO: Decompose the sidebar into more sub-components
+    // E.g.:
+    //  - one component for text such as name: ..., inference: ..., ...
+    //  - one component for buttons such as "Add", "Edit", "Show inference"
+
     const showTextOnSidebar = () =>
     {
         return (
@@ -45,20 +51,12 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
         return (
             <>
                 <p><strong>Name:</strong> {entity.name} <br /> {entity.inference != null && <span><strong>Inference:</strong> {entity.inference} <br /> </span>}
-                    <button className="btn" id={`button${index}`} onClick={(event) => addEntity(event)}>Add</button>
-                    <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "entities")}>Edit</button>
-                    { entity.inference == null && <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button> }
+                    <button className="btn" id={`button${index}`} onClick={(event) => onAddEntity(event)}>Add</button>
+                    <button className="btn" id={`button${index}`} onClick={(event) => onEditSuggestion(event, "entities")}>Edit</button>
+                    { entity.inference == null && <button className="btn" id={`button${index}`} onClick={(event) => onShowInference(event)}>Show</button> }
                 </p>
 
             </>
-            // <>
-            //     <p><strong>Name:</strong> {entity.name} <br />
-            //         { entity.inference != null && <strong>Inference:</strong> entity.inference } <br />
-            //         <button className="btn" id={`button${index}`} onClick={(event) => addEntity(event)}>Add</button>
-            //         <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "entities")}>Edit</button>
-            //         <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
-            //     </p>
-            // </>
         )
     }
 
@@ -69,9 +67,9 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
                <strong>Inference:</strong> {attribute.inference} <br />
                <strong>Data type:</strong> {attribute.dataType} <br />
                <strong>Cardinality:</strong> <br />
-               <button className="btn" id={`button${index}`} onClick={(event) => addAttributesToNode(event)}>Add</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "attributes")}>Edit</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => onAddAttributesToNode(event)}>Add</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => onEditSuggestion(event, "attributes")}>Edit</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => onShowInference(event)}>Show</button>
             </p>
         )
     }
@@ -84,15 +82,17 @@ const Sidebar: React.FC<props> = ({isLoading, entities, attributes, relationship
                <strong>Source:</strong> {relationship.source} <br />
                <strong>Target:</strong> {relationship.target} <br />
                <strong>Cardinality:</strong> <br />
-               <button className="btn" id={`button${index}`} onClick={(event) => addRelationshipsToNodes(event, relationship)}>Add</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => editSuggestion(event, "relationships")}>Edit</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => showInference(event)}>Show</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => onAddRelationshipsToNodes(event, relationship)}>Add</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => onEditSuggestion(event, "relationships")}>Edit</button>
+               <button className="btn" id={`button${index}`} onClick={(event) => onShowInference(event)}>Show</button>
             </p>
         )
     }
 
     return (
-        <div className="sideBar">{showTextOnSidebar()}</div>
+        <div className="sideBar">
+            {showTextOnSidebar()}
+        </div>
     )
 }
 

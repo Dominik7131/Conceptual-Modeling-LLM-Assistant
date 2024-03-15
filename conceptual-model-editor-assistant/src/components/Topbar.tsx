@@ -1,28 +1,19 @@
-import { ChangeEvent } from "react"
+import { useState } from "react"
 
-interface props {
-    handleIgnoreDomainDescriptionChange : () => void
+interface Props
+{
+    onIgnoreDomainDescriptionChange : () => void
     onImportButtonClick : () => void
     onPlusButtonClick : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
     onSummaryButtonClick : () => void
-    summaryData : SummaryObject[]
-    capitalizeString : (string : string) => string
+    OnClickAddNode : (nodeName : string) => void
     domainDescription : string
-    nodeToAddName : string
-    OnClickAddNode : any
-    setNodeToAddName : React.Dispatch<React.SetStateAction<string>>
-    setDomainDescription : React.Dispatch<React.SetStateAction<string>>
-    inferenceIndexes : number[][]
+    onDomainDescriptionChange : (newDomainDescriptionText : string) => void
 }
 
-const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, summaryData, capitalizeString,
-    domainDescription, nodeToAddName, setNodeToAddName, OnClickAddNode, setDomainDescription, inferenceIndexes}) =>
+const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange}) =>
 {
-
-    const handleNodeNameChange = (event : ChangeEvent<HTMLInputElement>) =>
-    {
-        setNodeToAddName(_ => event.target.value)
-    }
+    const [insertedNodeNameText, setInsertedNodeNameText] = useState<string>("")
 
     return (
         <div className="topBar">
@@ -30,7 +21,7 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onImportB
             <div className="container">
                 <div className="domainContainer">
                     <label className="domainDescriptionLabel" htmlFor="story">Domain description: </label>
-                    <input type="checkbox" id="isIgnoreDomainDescription" defaultChecked onClick={() => handleIgnoreDomainDescriptionChange()}></input>
+                    <input type="checkbox" id="isIgnoreDomainDescription" defaultChecked onClick={() => onIgnoreDomainDescriptionChange()}></input>
                 </div>
 
                 <div className="buttonsContainer">
@@ -44,7 +35,7 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onImportB
                     // Auto re-size is disabled in index.css: textarea { resize: none;}
                     id="domainDescriptionText"
                     name="story"
-                    onChange={e => setDomainDescription(e.target.value)}
+                    onChange={event => onDomainDescriptionChange(event.target.value)}
                     value={domainDescription}>
                 </textarea>
             </div >
@@ -54,15 +45,16 @@ const Topbar: React.FC<props> = ({handleIgnoreDomainDescriptionChange, onImportB
                     <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Entities</button>
                     <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
                     <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
+                    <button className="plusButton" onClick={onSummaryButtonClick}>+Summary</button>
                 </div>
 
                 <div className="buttonsContainer">
-                    <button className="addNodeButton" onClick={(event) => OnClickAddNode()}>Add node </button>
+                    <button className="addNodeButton" onClick={() => OnClickAddNode(insertedNodeNameText)}>Add node </button>
                     <input
                         name="nodeName"
                         placeholder="Insert node name to add"
-                        value={nodeToAddName}
-                        onChange={(event) => handleNodeNameChange(event)}>
+                        value={insertedNodeNameText}
+                        onChange={(event) => setInsertedNodeNameText(event.target.value)}>
                     </input>
                 </div>
             </div>

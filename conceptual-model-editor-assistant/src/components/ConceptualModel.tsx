@@ -1,7 +1,8 @@
-import ReactFlow, { Node, Edge, useNodesState, OnConnect, OnNodesChange, OnEdgesChange, MiniMap, Controls, Background, ReactFlowProvider } from 'reactflow';
+import ReactFlow, { Node, Edge, OnConnect, OnNodesChange, OnEdgesChange, MiniMap, Controls, Background } from 'reactflow';
 
 
-interface props {
+interface Props
+{
   nodes : Node[],
   edges : Edge[],
   onNodesChange : OnNodesChange,
@@ -9,20 +10,20 @@ interface props {
   onConnect : OnConnect
 }
 
-const ConceptualModel: React.FC<props> = ({nodes, edges, onNodesChange, onEdgesChange, onConnect}) =>
+const ConceptualModel: React.FC<Props> = ({nodes, edges, onNodesChange, onEdgesChange, onConnect}) =>
 {
     return (
             <div className="reactFlowDiv">
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}>
-                <MiniMap nodeStrokeWidth={3} zoomable pannable />
-                <Controls />
-                <Background color="black" />
-            </ReactFlow>
+              <ReactFlow
+                  nodes={nodes}
+                  edges={edges}
+                  onNodesChange={onNodesChange}
+                  onEdgesChange={onEdgesChange}
+                  onConnect={onConnect}>
+                  <MiniMap nodeStrokeWidth={3} zoomable pannable />
+                  <Controls />
+                  <Background color="black" />
+              </ReactFlow>
             </div>
         )
 }

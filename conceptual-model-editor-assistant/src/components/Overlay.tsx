@@ -1,15 +1,17 @@
 
-interface props {
+interface Props
+{
     domainDescription : string
     isShowOverlay : boolean
-    setIsShowOverlay : React.Dispatch<React.SetStateAction<boolean>>
+    onOverlayClose : React.Dispatch<React.SetStateAction<boolean>>
     isShowEdit : boolean
-    setIsShowEdit : React.Dispatch<React.SetStateAction<boolean>>
+    onEditClose : () => void
+    // onEditSave : () => void // TODO: Implement
     suggestedItem : Entity|Attribute|Relationship
     inferenceIndexes : number[]
 }
 
-const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOverlay, isShowEdit, setIsShowEdit, suggestedItem, inferenceIndexes}) =>
+const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayClose, isShowEdit, onEditClose: onEditClose, suggestedItem, inferenceIndexes}) =>
 {
     // TODO: try to find easy way to make substring bold
     // const substring = "information system"
@@ -73,7 +75,7 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
             return (
                 <div className="overlay">
                     <div className="editContainer">
-                        <p><button className="close" onClick={ () => setIsShowEdit(_ => false)}>close</button></p>
+                        <p><button className="close" onClick={onEditClose}>close</button></p>
 
                         <p>Name:
                             <textarea
@@ -147,8 +149,8 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
                         </span> */}
 
                         <p>
-                            <button className="save" onClick={ () => setIsShowEdit(_ => false)}>Save</button>
-                            <button className="cancel" onClick={ () => setIsShowEdit(_ => false)}>Cancel</button>
+                            <button className="save" onClick={onEditClose}>Save</button>
+                            <button className="cancel" onClick={onEditClose}>Cancel</button>
                         </p>
                     </div>
                 </div>
@@ -159,7 +161,7 @@ const Overlay: React.FC<props> = ({domainDescription, isShowOverlay, setIsShowOv
             return (
                 <div className="overlay">
                     <div>
-                        <p><button className="close" onClick={ () => { setIsShowOverlay(_ => false) }}>close</button></p>
+                        <p><button className="close" onClick={ () => { onOverlayClose(_ => false) }}>close</button></p>
                         {inferenceIndexes.length === 0 && <p id="highlightedInference-1"><b>Warning: Unable to highlight inference</b></p> }
                         { highlightInference(inferenceIndexes) }
                     </div>
