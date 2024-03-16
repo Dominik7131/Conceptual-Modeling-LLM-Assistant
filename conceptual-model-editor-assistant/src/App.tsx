@@ -9,26 +9,26 @@ import { ReactFlowProvider } from 'reactflow';
 
 declare global
 {
-  type Entity =
+  interface Entity
   {
     name: string
     inference: string
     inference_indexes: number[]
   }
 
-  type Attribute =
+  interface Attribute
   {
     name: string
-    description: string
+    description?: string
     inference: string
     inference_indexes: number[]
     dataType: string
   }
   
-  type Relationship =
+  interface Relationship
   {
     name: string
-    description: string
+    description?: string
     inference: string
     inference_indexes: number[]
     source: string
@@ -36,7 +36,7 @@ declare global
     cardinality: string
   }
 
-  type SummaryObject =
+  interface SummaryObject
   {
     entity: string
     attributes: Attribute[]
@@ -48,7 +48,7 @@ declare global
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-    OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose,
+    OnClickAddNode, onAddAsAssociation, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose,
     isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference
   } = useConceptualModel()
 
@@ -72,6 +72,8 @@ function App()
         onAddEntity={onAddEntity}
         onAddAttributesToNode={onAddAttributesToNode}
         onAddRelationshipsToNodes={onAddRelationshipsToNodes}
+        onAddAsAssociation={onAddAsAssociation}
+        onAddAsAttribute={onAddAsAttribute}
         onEditSuggestion={onEditSuggestion}
         onShowInference={onShowInference}
       />

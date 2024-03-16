@@ -47,19 +47,19 @@ const useConceptualModel = () =>
     
     const onChange = useCallback(({ nodes, edges } : { nodes : Node[], edges : Edge[]}) =>
     {
-        setSelectedNodes(nodes)
-    
-        if (nodes[1] !== undefined)
-        {
-          // console.log("Selected more than 1 node")
-          setIsMultiSelection(true)
-        }
-        else
-        {
-          setIsMultiSelection(false)
-        }
-        // console.log(nodes, edges);
-      }, []);
+      setSelectedNodes(nodes)
+  
+      if (nodes[1])
+      {
+        //console.log("Selected more than 1 node: ", nodes[0], nodes[1])
+        setIsMultiSelection(true)
+      }
+      else
+      {
+        setIsMultiSelection(false)
+      }
+
+    }, []);
     
       // On nodes/edges selection: https://codesandbox.io/p/sandbox/elegant-silence-gtg683?file=%2Fsrc%2FFlow.tsx%3A81%2C1
       useOnSelectionChange({
@@ -409,7 +409,6 @@ const useConceptualModel = () =>
     
       const updateNodes = () =>
       {
-        // console.log("Updating nodes")
         setNodes((nodes) => nodes.map((node) =>
         {
           return updateNode(node)
@@ -436,7 +435,7 @@ const useConceptualModel = () =>
 
       useEffect(() =>
       {
-        updateNodes() 
+        updateNodes()
         // parseSerializedConceptualModel()
       }, []);
     
@@ -544,6 +543,22 @@ const useConceptualModel = () =>
         addNode(entityToAdd.name, 66, 66)
       }
 
+
+      const onAddAsAssociation = (attribute : Attribute) =>
+      {
+        const relationship : Relationship = {"name": "", "inference": attribute.inference, "inference_indexes": attribute.inference_indexes, 
+                                             "source": sourceEntity, "target": attribute.name, "cardinality": ""}
+        onAddRelationshipsToNodes(relationship)
+      }
+
+
+      const onAddAsAttribute = (relationship : Relationship) =>
+      {
+        const attribute : Attribute = {"name": relationship.target, "dataType": "string", "inference": relationship.inference, "inference_indexes": relationship.inference_indexes}
+        onAddAttributesToNode(attribute)
+      }
+
+
       const OnClickAddNode = (nodeName : string) =>
       {
         if (!nodeName)
@@ -555,12 +570,9 @@ const useConceptualModel = () =>
       }
     
     
-      const onAddAttributesToNode = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+      const onAddAttributesToNode = (attribute : Attribute) =>
       {
         setIsShowOverlay(_ => false)
-
-        const attributeTargetID = event.currentTarget.id.slice(6)
-        const attributeToAdd = suggestedAttributes[Number(attributeTargetID)]
     
         const nodeID = sourceEntity.toLowerCase()
         
@@ -572,7 +584,7 @@ const useConceptualModel = () =>
             return currentNode;
           }
     
-          const newInferenceIndexes = getIndexesForOneInference(attributeToAdd.inference, domainDescription)
+          const newInferenceIndexes = getIndexesForOneInference(attribute.inference, domainDescription)
           if (newInferenceIndexes.length !== 0)
           {
             setInferenceIndexes(previousInferenceIndexes =>
@@ -581,7 +593,7 @@ const useConceptualModel = () =>
               })
           }
 
-          const newAttributeObject : Attribute = { name: attributeToAdd.name, description: "", inference: attributeToAdd.inference, inference_indexes: newInferenceIndexes, dataType: attributeToAdd.dataType}
+          const newAttributeObject : Attribute = { name: attribute.name, description: "", inference: attribute.inference, inference_indexes: newInferenceIndexes, dataType: attribute.dataType}
     
           // If the node already contains the selected attribute do not add anything
           let isAttributePresent = false
@@ -605,13 +617,11 @@ const useConceptualModel = () =>
         );
       }
     
-      const onAddRelationshipsToNodes = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, relationshipObject : Relationship) =>
+      const onAddRelationshipsToNodes = (relationshipObject : Relationship) =>
       {
         setIsShowOverlay(_ => false)
-        const relationshipIndex = event.currentTarget.id.slice(6)
-        const relationshipToAdd = suggestedRelationships[Number(relationshipIndex)]
-        const sourceNodeID = sourceEntity.toLowerCase()
-        const targetNodeID = relationshipToAdd.target.toLowerCase()
+        const sourceNodeID = relationshipObject.source.toLowerCase()
+        const targetNodeID = relationshipObject.target.toLowerCase()
     
         // Return if the edge is already existing
         const newEdgeID = `${sourceNodeID},${targetNodeID}`
@@ -740,7 +750,7 @@ const useConceptualModel = () =>
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose,
-        isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference
+        isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsAssociation, onAddAsAttribute, onEditSuggestion, onShowInference
     }
 }
 
