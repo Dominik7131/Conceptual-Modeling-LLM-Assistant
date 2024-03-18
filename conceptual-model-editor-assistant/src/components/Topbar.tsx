@@ -36,7 +36,8 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     id="domainDescriptionText"
                     name="story"
                     onChange={event => onDomainDescriptionChange(event.target.value)}
-                    value={domainDescription}>
+                    value={domainDescription}
+                    spellCheck="false">
                 </textarea>
             </div >
             

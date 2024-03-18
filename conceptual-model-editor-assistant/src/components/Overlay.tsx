@@ -8,7 +8,7 @@ interface Props
     isShowEdit : boolean
     onEditClose : () => void
     // onEditSave : () => void // TODO: Implement
-    onEditPlus : (attributeName: string) => void
+    onEditPlus : (attributeName: string, field: string) => void
     suggestedItem : Entity|Attribute|Relationship
     inferenceIndexes : number[]
 }
@@ -79,28 +79,31 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
                             <textarea
                                 id="textAreaEdit1"
                                 name="nameEdit"
-                                value={suggestedItem["name"]}>
+                                value={suggestedItem["name"]}
+                                spellCheck="false">
                             </textarea>
                         </p>
                         <p>
                             Inference:
                             <textarea
-                            id="textAreaEdit2"
-                            name="inferenceEdit"
-                            value={suggestedItem["inference"]}>
+                                id="textAreaEdit2"
+                                name="inferenceEdit"
+                                value={suggestedItem["inference"]}
+                                spellCheck="false">
                             </textarea>
                         </p>
                         <p className="editContainerElement">
                             Description:
                             <textarea
-                            id="textAreaEdit3"
-                            className= "textGray"
-                            name="descriptionEdit"
-                            value={suggestedItem["description"]}>
+                                id="textAreaEdit3"
+                                className= "textGray"
+                                name="descriptionEdit"
+                                value={suggestedItem["description"]}
+                                spellCheck="false">
                             </textarea>
                             <button
                                 className="plusEditButton"
-                                onClick={() => {onEditPlus(suggestedItem.name)}}>
+                                onClick={() => {onEditPlus(suggestedItem.name, "description")}}>
                                 +
                             </button>
                         </p>
@@ -110,10 +113,29 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
                             <p>
                                 Data type:
                                 <textarea
-                                id="textAreaEdit3"
-                                name="dataTypeEdit"
-                                value={attribute["dataType"]}>
+                                    id="textAreaEdit3"
+                                    name="dataTypeEdit"
+                                    value={attribute["dataType"]}
+                                    spellCheck="false">
                                 </textarea>
+                            </p>
+                        }
+
+                        {
+                            <p className="editContainerElement">
+                                Cardinality:
+                                <textarea
+                                id="textAreaEdit3"
+                                className= "textGray"
+                                name="cardinalityEdit"
+                                value={attribute["cardinality"]}
+                                spellCheck="false">
+                                </textarea>
+                                <button
+                                    className="plusEditButton"
+                                    onClick={() => {onEditPlus(suggestedItem.name, "cardinality")}}>
+                                    +
+                                </button>
                             </p>
                         }
 
@@ -124,7 +146,8 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
                                 <textarea
                                 id="textAreaEdit4"
                                 name="sourceEntityEdit"
-                                value={relationship["source"]}>
+                                value={relationship["source"]}
+                                spellCheck="false">
                                 </textarea>
                             </p>
                         }
@@ -136,7 +159,8 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
                                 <textarea
                                 id="textAreaEdit5"
                                 name="targetEntityEdit"
-                                value={relationship["target"]}>
+                                value={relationship["target"]}
+                                spellCheck="false">
                                 </textarea>
                             </p>
                         }

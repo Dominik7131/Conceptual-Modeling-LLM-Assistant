@@ -23,7 +23,8 @@ declare global // TODO: Export instead of "global"
     description?: string
     inference: string
     inference_indexes: number[]
-    dataType: string
+    dataType?: string
+    cardinality?: string
   }
   
   interface Relationship

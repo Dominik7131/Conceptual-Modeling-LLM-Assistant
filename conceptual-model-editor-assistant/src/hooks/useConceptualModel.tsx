@@ -42,7 +42,7 @@ const useConceptualModel = () =>
 
     const { capitalizeString } = useUtility()
 
-    const { isLoadingEdit, descriptionData, use_fetch_streamed_data_general } = useFetchData((x, y) => onAttributeDescriptionChange(x, y))
+    const { isLoadingEdit, descriptionData, use_fetch_streamed_data_general } = useFetchData((x, y, z) => onAttributeChange(x, y, z))
 
 
     const onConnect : OnConnect = useCallback(
@@ -278,35 +278,43 @@ const useConceptualModel = () =>
         parseSerializedConceptualModel()
       }
 
-      const onEditPlus = (attributeName: string) =>
+      const onEditPlus = (attributeName: string, field: string) =>
       {
-        const endpointName = "getOnlyDescription"
+        const endpointName = "getOnly"
         const endpoint = URL + endpointName
         const headers = { "Content-Type": "application/json" }
-        const bodyData = JSON.stringify({"attributeName": attributeName, "sourceEntity": sourceEntity, "domainDescription": domainDescription})
+        const bodyData = JSON.stringify({"attributeName": attributeName, "sourceEntity": sourceEntity, "field": field, "domainDescription": domainDescription})
 
-        use_fetch_streamed_data_general(endpoint, headers, bodyData, attributeName)
-
-        console.log("Data2:", descriptionData)
-        // alert(descriptionData["description"])
+        use_fetch_streamed_data_general(endpoint, headers, bodyData, attributeName, field)
       }
 
-      const onAttributeDescriptionChange = (attributeName : string, newDescription: string) =>
+      const onAttributeChange = (attributeName: string, newText: string, field: string) =>
       {
-        console.log("attribute name:", attributeName)
-        console.log("new description:", newDescription)
-
-        // setSuggestedAttributes(suggestedAttributes.map(attribute => attribute.name === attributeName ? {...attribute, description: newDescription} : attribute))
-        setSuggestedAttributes(suggestedAttributes.map((attribute) =>
+        // TODO: Do not save changes immediately, let the user choose to accept or reject the new change
+        if (field === "description")
+        {
+          setSuggestedAttributes(suggestedAttributes.map((attribute) =>
           {
-            console.log(attribute.name)
             if (attribute.name === attributeName)
             {
-              setSuggestedItem({ ...attribute, description: newDescription })
+              setSuggestedItem({ ...attribute, description: newText })
             }
 
-            return attribute.name === attributeName ? {...attribute, description: newDescription} : attribute
+            return attribute.name === attributeName ? {...attribute, description: newText} : attribute
           }));
+        }
+        else if (field === "cardinality")
+        {
+          setSuggestedAttributes(suggestedAttributes.map((attribute) =>
+          {
+            if (attribute.name === attributeName)
+            {
+              setSuggestedItem({ ...attribute, cardinality: newText })
+            }
+
+            return attribute.name === attributeName ? {...attribute, cardinality: newText} : attribute
+          }));
+        }
       }
     
       const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
@@ -544,11 +552,6 @@ const useConceptualModel = () =>
         }
 
       }, [isShowOverlay])
-
-      useEffect(() =>
-      {
-        console.log("Suggested attributes: ", suggestedAttributes)
-      }, [suggestedAttributes]);
     
       // useEffect(() =>
       // {
