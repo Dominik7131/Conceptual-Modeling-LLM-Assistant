@@ -1,3 +1,4 @@
+import { useState } from "react"
 
 interface Props
 {
@@ -7,15 +8,18 @@ interface Props
     isShowEdit : boolean
     onEditClose : () => void
     // onEditSave : () => void // TODO: Implement
+    onEditPlus : (attributeName: string) => void
     suggestedItem : Entity|Attribute|Relationship
     inferenceIndexes : number[]
 }
 
-const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayClose, isShowEdit, onEditClose: onEditClose, suggestedItem, inferenceIndexes}) =>
+const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus, suggestedItem, inferenceIndexes}) =>
 {
     // TODO: try to find easy way to make substring bold
     // const substring = "information system"
     // domainDescription.replace(substring, '<b>' + substring + '</b>')
+
+    const [description, setDescription] = useState<string>("")
 
     const highlightInference = (inferenceIndexes : number[]) =>
     {
@@ -42,16 +46,9 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
         )
     }
 
-    const showEditSuggestion = () =>
+    const onClickEditPlusButton = () =>
     {
-        {/* TODO: Add element for editing the current suggestion */}
-        return (
-            <div>
-                <p>Edit: </p>
-                <p>Name:</p>
-                <p>Inference:</p>
-            </div>
-        )
+        console.log("x")
     }
 
     const showOverlay = () =>
@@ -77,7 +74,8 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
                     <div className="editContainer">
                         <p><button className="close" onClick={onEditClose}>close</button></p>
 
-                        <p>Name:
+                        <p>
+                            Name:
                             <textarea
                                 id="textAreaEdit1"
                                 name="nameEdit"
@@ -91,6 +89,20 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
                             name="inferenceEdit"
                             value={suggestedItem["inference"]}>
                             </textarea>
+                        </p>
+                        <p className="editContainerElement">
+                            Description:
+                            <textarea
+                            id="textAreaEdit3"
+                            className= "textGray"
+                            name="descriptionEdit"
+                            value={suggestedItem["description"]}>
+                            </textarea>
+                            <button
+                                className="plusEditButton"
+                                onClick={() => {onEditPlus(suggestedItem.name)}}>
+                                +
+                            </button>
                         </p>
 
                         {

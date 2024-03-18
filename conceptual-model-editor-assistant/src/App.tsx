@@ -7,11 +7,12 @@ import Overlay from './components/Overlay';
 import { ReactFlowProvider } from 'reactflow';
 
 
-declare global
+declare global // TODO: Export instead of "global"
 {
   interface Entity
   {
     name: string
+    description?: string
     inference: string
     inference_indexes: number[]
   }
@@ -48,7 +49,7 @@ declare global
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-    OnClickAddNode, onAddAsAssociation, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose,
+    OnClickAddNode, onAddAsAssociation, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus,
     isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference
   } = useConceptualModel()
 
@@ -92,6 +93,7 @@ function App()
       onOverlayClose={onOverlayClose}
       isShowEdit={isShowEdit}
       onEditClose={onEditClose}
+      onEditPlus={onEditPlus}
       suggestedItem={suggestedItem}
       inferenceIndexes={inferenceIndexesMockUp}
       />

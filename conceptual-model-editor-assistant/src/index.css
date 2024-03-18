@@ -200,6 +200,19 @@ textarea {
   height: 18px;
 }
 
+.editContainerElement {
+  display: flex;
+  justify-content: space-between;
+}
+
+.plusEditButton {
+  margin-left: 20px;
+}
+
+.textGray {
+  color: gray;
+}
+
 .plusButton {
   font-size: 20px;
   /* padding-right: 50px; */

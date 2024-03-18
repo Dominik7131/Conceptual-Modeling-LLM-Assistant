@@ -5,6 +5,7 @@ import 'reactflow/dist/style.css';
 import useInferenceIndexes from './useInferenceIndexes';
 import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
+import useFetchData from './useFetchData';
 
 const initialNodes : Node[] = [{ id: 'engine', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
 
@@ -31,14 +32,18 @@ const useConceptualModel = () =>
     const [isShowOverlay, setIsShowOverlay] = useState<boolean>(false)
     const [isShowEdit, setIsShowEdit] = useState<boolean>(false)
 
-
     const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([])
+
+    const URL = "http://127.0.0.1:5000/"
 
     const { inferenceIndexes, setInferenceIndexes, getIndexesForOneInference } = useInferenceIndexes()
 
     const { domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
 
     const { capitalizeString } = useUtility()
+
+    const { isLoadingEdit, descriptionData, use_fetch_streamed_data_general } = useFetchData((x, y) => onAttributeDescriptionChange(x, y))
+
 
     const onConnect : OnConnect = useCallback(
         (params) => setEdges((eds) => addEdge(params, eds)),
@@ -176,11 +181,11 @@ const useConceptualModel = () =>
         return
       }
 
-      const fetch_streamed_data = (url : string, headers : any, body_data : any, userChoice : string) =>
+      const fetch_streamed_data = (url : string, headers : any, bodyData : any, userChoice : string) =>
       {
         // Fetch the event stream from the server
         // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
-        fetch(url, { method: "POST", headers, body: body_data })
+        fetch(url, { method: "POST", headers, body: bodyData })
         .then(response =>
           {
             setIsLoading(_ => true)
@@ -272,6 +277,37 @@ const useConceptualModel = () =>
       {
         parseSerializedConceptualModel()
       }
+
+      const onEditPlus = (attributeName: string) =>
+      {
+        const endpointName = "getOnlyDescription"
+        const endpoint = URL + endpointName
+        const headers = { "Content-Type": "application/json" }
+        const bodyData = JSON.stringify({"attributeName": attributeName, "sourceEntity": sourceEntity, "domainDescription": domainDescription})
+
+        use_fetch_streamed_data_general(endpoint, headers, bodyData, attributeName)
+
+        console.log("Data2:", descriptionData)
+        // alert(descriptionData["description"])
+      }
+
+      const onAttributeDescriptionChange = (attributeName : string, newDescription: string) =>
+      {
+        console.log("attribute name:", attributeName)
+        console.log("new description:", newDescription)
+
+        // setSuggestedAttributes(suggestedAttributes.map(attribute => attribute.name === attributeName ? {...attribute, description: newDescription} : attribute))
+        setSuggestedAttributes(suggestedAttributes.map((attribute) =>
+          {
+            console.log(attribute.name)
+            if (attribute.name === attributeName)
+            {
+              setSuggestedItem({ ...attribute, description: newDescription })
+            }
+
+            return attribute.name === attributeName ? {...attribute, description: newDescription} : attribute
+          }));
+      }
     
       const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
       {
@@ -288,7 +324,8 @@ const useConceptualModel = () =>
         setSuggestedAttributes(_ => {return []})
         setSuggestedRelationships(_ => {return []})
 
-        const url = "http://127.0.0.1:5000/suggest"
+        const endpointName = "suggest"
+        const endpoint = URL + endpointName
         const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
         const headers = { "Content-Type": "application/json" }
         const is_fetch_stream_data = true
@@ -298,15 +335,15 @@ const useConceptualModel = () =>
         {
           userChoice = "entities"
           // TODO: Define field names such as `sourceEntity`, `targetEntity`, `userChoice`, ...
-          const body_data = JSON.stringify({"sourceEntity": "", "targetEntity": "", "userChoice": userChoice, "domainDescription": currentDomainDesciption})
+          const bodyData = JSON.stringify({"sourceEntity": "", "targetEntity": "", "userChoice": userChoice, "domainDescription": currentDomainDesciption})
 
           if (!is_fetch_stream_data)
           {
-            fetch_non_streamed_data(url, headers, body_data, userChoice)
+            fetch_non_streamed_data(endpoint, headers, bodyData, userChoice)
           }
           else
           {
-            fetch_streamed_data(url, headers, body_data, userChoice)
+            fetch_streamed_data(endpoint, headers, bodyData, userChoice)
           }
           return
         }
@@ -332,11 +369,11 @@ const useConceptualModel = () =>
 
           if (!is_fetch_stream_data)
           {
-            fetch_non_streamed_data(url, headers, body_data, userChoice)
+            fetch_non_streamed_data(endpoint, headers, body_data, userChoice)
           }
           else
           {
-            fetch_streamed_data(url, headers, body_data, userChoice)
+            fetch_streamed_data(endpoint, headers, body_data, userChoice)
           }
           return
         }
@@ -367,11 +404,11 @@ const useConceptualModel = () =>
 
         if (!is_fetch_stream_data)
         {
-          fetch_non_streamed_data(url, headers, body_data, userChoice)
+          fetch_non_streamed_data(endpoint, headers, body_data, userChoice)
         }
         else
         {
-          fetch_streamed_data(url, headers, body_data, userChoice)
+          fetch_streamed_data(endpoint, headers, body_data, userChoice)
         }
       }
     
@@ -436,6 +473,14 @@ const useConceptualModel = () =>
       useEffect(() =>
       {
         updateNodes()
+
+        const attribute1 : Attribute = { "name": "a1", "description": "", "dataType": "", "inference": "", "inference_indexes": []}
+        const attribute2 : Attribute = { "name": "a2", "description": "", "dataType": "", "inference": "", "inference_indexes": []}
+
+        // setSuggestedAttributes([...suggestedAttributes, attribute1, attribute2])
+
+        // setSuggestedAttributes(suggestedAttributes.map(attribute => attribute.name === "a1" ? attribute : attribute))
+        // setSuggestedAttributes(suggestedAttributes.map(attribute => attribute.name === "a1" ? {...attribute, name: "a10"} : attribute))
         // parseSerializedConceptualModel()
       }, []);
     
@@ -499,16 +544,20 @@ const useConceptualModel = () =>
         }
 
       }, [isShowOverlay])
+
+      useEffect(() =>
+      {
+        console.log("Suggested attributes: ", suggestedAttributes)
+      }, [suggestedAttributes]);
     
       // useEffect(() =>
       // {
-      //   console.log("Nodes: ")
-      //   console.log(nodes)
+      //   console.log("Nodes: ", nodes)
       // }, [nodes]);
     
       // useEffect(() =>
       // {
-      //   console.log(edges)
+      //   console.log("Edges: ", edges)
       // }, [edges]);
 
       const addNode = (nodeID : string, positionX : number, positionY : number, attributes : Attribute[] = []) =>
@@ -749,7 +798,7 @@ const useConceptualModel = () =>
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-        summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose,
+        summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus,
         isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsAssociation, onAddAsAttribute, onEditSuggestion, onShowInference
     }
 }
