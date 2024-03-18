@@ -25,7 +25,7 @@ def suggest():
     return llm_assistant.suggest(source_entity, target_entity, user_choice, 5, conceptual_model=[], domain_description=domain_description)
 
 
-@app.route('/suggest', methods=['POST'])
+@app.route('/getOnlyDescription', methods=['POST'])
 @cross_origin()
 def get_attribute_description():
 

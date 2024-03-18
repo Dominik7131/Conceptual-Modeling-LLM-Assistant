@@ -1,5 +1,5 @@
 from llama_cpp import Llama
-from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, ENTITIES_STRING
+from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, ENTITIES_STRING, ONLY_DESCRIPTION
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
 import logging
@@ -151,6 +151,15 @@ class LLMAssistant:
         is_item_ok = True
         user_input_entity1 = user_input_entity1.lower()
         user_input_entity2 = user_input_entity2.lower()
+
+        if user_choice == ONLY_DESCRIPTION:
+            is_item_ok = "description" in completed_item
+
+            if not is_item_ok:
+                logging.error("No description in the item")
+
+            yield completed_item, is_item_ok
+            return
 
         if "name" not in completed_item or not completed_item["name"]:
             completed_item["name"] = "error: no name"
@@ -514,8 +523,8 @@ EXAMPLE END
         return prompt
 
 
-    def suggest(self, entity1, entity2, user_choice, count_items_to_suggest, conceptual_model, domain_description):
-        entity1 = entity1.strip()
+    def suggest(self, source_entity, target_entity, user_choice, count_items_to_suggest, conceptual_model, domain_description):
+        source_entity = source_entity.strip()
 
         if IS_IGNORE_DOMAIN_DESCRIPTION:
             domain_description = ""
@@ -526,7 +535,7 @@ EXAMPLE END
         self.__append_default_messages_for_suggestions(user_choice=user_choice, is_domain_description=is_domain_description)        
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION and user_choice != ENTITIES_STRING:
-            relevant_texts = self.relevant_text_finder.get(entity1, domain_description)
+            relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
 
             result = ""
             for text in relevant_texts:
@@ -540,7 +549,7 @@ EXAMPLE END
             logging.warn("No relevant texts found.")
             return
 
-        prompt = self.__create_prompt(user_choice, entity1, entity2, is_domain_description, count_items_to_suggest, relevant_texts)
+        prompt = self.__create_prompt(user_choice, source_entity, target_entity, is_domain_description, count_items_to_suggest, relevant_texts)
         
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
@@ -550,8 +559,9 @@ EXAMPLE END
         self.debug_info.prompt = messages_prettified
 
         try:
-            items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+            items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=source_entity, user_input_entity2=target_entity)
         finally:
+            # TODO: Test if this work
             IS_STOP_GENERATING_OUTPUT = True
 
         if user_choice == ENTITIES_STRING:
@@ -578,6 +588,25 @@ EXAMPLE END
                 logging.warn(f"Warning: inference not in item: {item}")
 
             json_item = json.dumps(suggestion_dictionary)
+            yield f"{json_item}\n"
+    
+
+    def get_description(self, source_entity, attribute_name, domain_description):
+        source_entity = source_entity.strip()
+
+        prompt = f'Solely based on the given context provide description for the attribute: "{attribute_name}" of the entity: "{source_entity}" and output it in this JSON object: '
+        prompt += '{"description": "..."}.\n\n'
+        prompt += f'This is the given context:\n"{domain_description}"'
+
+        new_messages = self.messages.copy()
+        new_messages.append({"role": "user", "content": prompt})
+
+        items_iterator = self.__parse_streamed_output(new_messages, ONLY_DESCRIPTION, source_entity)
+
+        for item in items_iterator:
+            description_dictionary = json.loads(json.dumps(item))
+
+            json_item = json.dumps(description_dictionary)
             yield f"{json_item}\n"
 
 

@@ -3,10 +3,12 @@ import os
 import logging
 from difflib import SequenceMatcher
 
+# TODO: Change to enum
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
 RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
 ENTITIES_STRING = "entities"
+ONLY_DESCRIPTION = "description"
 
 alphabets= "([A-Za-z])"
 prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
