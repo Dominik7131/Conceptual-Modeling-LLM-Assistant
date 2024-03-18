@@ -34,7 +34,7 @@ def get_attribute_description():
     attribute_name = body_data["attributeName"]
     domain_description = body_data["domainDescription"]
 
-    return llm_assistant.get_description(sourceEntity, attribute_name, domain_description)
+    return llm_assistant.get_description(attribute_name, sourceEntity, domain_description)
 
 
 @app.route('/summary', methods=['GET'])

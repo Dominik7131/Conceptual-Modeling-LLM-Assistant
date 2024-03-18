@@ -591,15 +591,20 @@ EXAMPLE END
             yield f"{json_item}\n"
     
 
-    def get_description(self, source_entity, attribute_name, domain_description):
+    def get_description(self, attribute_name, source_entity, domain_description):
         source_entity = source_entity.strip()
 
         prompt = f'Solely based on the given context provide description for the attribute: "{attribute_name}" of the entity: "{source_entity}" and output it in this JSON object: '
         prompt += '{"description": "..."}.\n\n'
         prompt += f'This is the given context:\n"{domain_description}"'
 
+        self.messages = []
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
+        messages_prettified = TextUtility.messages_prettify(new_messages)
+        self.debug_info.prompt = messages_prettified
+
+        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items_iterator = self.__parse_streamed_output(new_messages, ONLY_DESCRIPTION, source_entity)
 
