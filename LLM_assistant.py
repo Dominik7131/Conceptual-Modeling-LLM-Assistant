@@ -14,6 +14,8 @@ TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
 IS_CHAIN_OF_THOUGHTS = True
 IS_RELATIONSHIPS_IS_A = False
 
+IS_STOP_GENERATING_OUTPUT = False
+
 CONFIG_FILE_PATH = "llm-config.json"
 TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
 LOG_FILE_PATH = f"{TIMESTAMP}-log.txt"
@@ -286,6 +288,11 @@ class LLMAssistant:
 
 
             self.debug_info.assistant_message += text
+
+            if IS_STOP_GENERATING_OUTPUT:
+                logging.debug("Stopping generating output")
+                return
+
             if is_skip_parsing:
                 continue
 
@@ -475,25 +482,25 @@ EXAMPLE END
 
         elif user_choice == ENTITIES_STRING:
             if IS_CHAIN_OF_THOUGHTS:
-                prompt = """Solely based on the following context extract all class names for a UML diagram. Output each class name in JSON format.
+                prompt = """Solely based on the given context extract all classes for a UML diagram. For each class output its name and then output this class in JSON object.
 
 EXAMPLE START
 
-Solely based on the given context extract all class names for a UML diagram.
 This is the given context:
 "A road vehicle is a motorised or non-motorised vehicle"
 
 Output:
 name: road vehicle
-JSON: {"name": "road vehicle"}
+JSON object: {"name": "road vehicle"}
 
 name: motorised vehicle
-JSON: {"name": "motorised vehicle"}
+JSON object: {"name": "motorised vehicle"}
 
 name: non-motorised vehicle
-JSON: {"name": "non-motorised vehicle"}
+JSON object: {"name": "non-motorised vehicle"}
 
-EXAMPLE END"""
+EXAMPLE END
+"""
 
             else:
                 prompt = """Solely based on the given context extract all entities. Output each entity in JSON object like this: {"name": "entity name"}."""
@@ -542,7 +549,10 @@ EXAMPLE END"""
         logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
         self.debug_info.prompt = messages_prettified
 
-        items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+        try:
+            items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=entity1, user_input_entity2=entity2)
+        finally:
+            IS_STOP_GENERATING_OUTPUT = True
 
         if user_choice == ENTITIES_STRING:
             suggested_entities = []
