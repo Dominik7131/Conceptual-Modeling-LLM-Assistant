@@ -326,7 +326,7 @@ const useConceptualModel = () =>
           return
         }
 
-        const buttonText = event.currentTarget.innerHTML
+        const buttonText = event.currentTarget.innerText.toLowerCase()
         setIsLoading(_ => true)
 
         setSuggestedEntities(_ => {return []})
@@ -340,7 +340,7 @@ const useConceptualModel = () =>
         const is_fetch_stream_data = true
         let userChoice = ""
 
-        if (buttonText === "+Entities")
+        if (buttonText === "+entities")
         {
           userChoice = "entities"
           // TODO: Define field names such as `sourceEntity`, `targetEntity`, `userChoice`, ...
@@ -394,11 +394,11 @@ const useConceptualModel = () =>
         }
     
     
-        if (buttonText === "+Attributes")
+        if (buttonText === "+attributes")
         {
           userChoice = "attributes"
         }
-        else if (buttonText === "+Relationships")
+        else if (buttonText === "+relationships")
         {
           userChoice = "relationships"
         }

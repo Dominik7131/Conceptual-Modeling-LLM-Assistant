@@ -1,3 +1,9 @@
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import { relative } from 'path';
+
 
 interface Props
 {
@@ -33,13 +39,13 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
         texts.push(domainDescription.slice(start, -1))
 
         return (
-            <span>
+            <Typography display={'inline'} position={'relative'}>
                 { texts.map((text, index) =>
                 (
                     index % 2 === 0 ? <span key={index}>{text}</span> :
-                    <span id={`highlightedInference-${index}`} className="highlight" key={index}>{text}</span>
+                    <Typography display={'inline'} position={'relative'} id={`highlightedInference-${index}`} className="highlight" key={index}>{text}</Typography>
                 ))}
-            </span>
+            </Typography>
         )
     }
 
@@ -47,8 +53,6 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
     {
         if (isShowEdit)
         {
-            // const dictionary : Entity|Attribute|Relationship = { "name": "n", "description": "", "inference": "i", "inference_indexes": [], "data_type": ""}
-
             // TODO: Probably get as argument `userChoice` to know which object we are editing
             // const attribute = (suggestedItem as Attribute)
 
@@ -63,7 +67,6 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
             return (
                 <div className="overlay">
                     <div className="editContainer">
-                        <p><button className="close" onClick={onEditClose}>close</button></p>
 
                         <span className="editContainerElement">
                             <span>Name:</span>
@@ -77,11 +80,11 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
                             </textarea>
                             {
                                 suggestedItem["name"] !== "" ? null :
-                                    <button
+                                    <Button variant="contained"
                                         className="plusEditButton"
                                         onClick={() => {onEditPlus(suggestedItem.name, "name")}}>
                                         +
-                                    </button>
+                                    </Button>
                             }
                             
                         </span>
@@ -187,10 +190,9 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
                             </form>
                         </span> */}
 
-                        <p>
-                            <button className="save" onClick={onEditClose}>Save</button>
-                            <button className="cancel" onClick={onEditClose}>Cancel</button>
-                        </p>
+                        <Button variant="contained" onClick={onEditClose}>Save</Button>
+                        <Button variant="contained" onClick={onEditClose}>Cancel</Button>
+
                     </div>
                 </div>
             )
@@ -199,8 +201,15 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
         {
             return (
                 <div className="overlay">
+                    <Button 
+                        sx={{
+                            position: 'fixed',
+                            top: '20px',
+                            left: '1420px',
+                        }}
+                        variant="contained" onClick={ () => { onOverlayClose(_ => false) }}>close</Button>
+
                     <div>
-                        <p><button className="close" onClick={ () => { onOverlayClose(_ => false) }}>close</button></p>
                         {inferenceIndexes.length === 0 && <p id="highlightedInference-1"><b>Warning: Unable to highlight inference</b></p> }
                         { highlightInference(inferenceIndexes) }
                     </div>

@@ -1,3 +1,13 @@
+import Drawer from '@mui/material/Drawer';
+import Typography from '@mui/material/Typography';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
+
 
 interface Props
 {
@@ -24,89 +34,125 @@ const Sidebar: React.FC<Props> = ({isLoading, entities, attributes, relationship
     const showTextOnSidebar = () =>
     {
         return (
-            <span>
-                {entities.map((entity, index) => 
-                    <span key={entity.name}>
-                        {showEntity(entity, index)}
-                    </span>
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+
+                {entities.map((entity, index) =>
+                    <>
+                        <ListItem key={entity.name}>
+                            {showItem(entity, "entities", index)}
+                        </ListItem>
+                        <Divider/>
+                    </>
                 )}
 
                 {attributes.map((attribute, index) => 
-                    <span key={attribute.name}>
-                        {showAttribute(attribute, index)}
-                    </span>
+                    <>
+                        <ListItem key={attribute.name}>
+                            {showItem(attribute, "attributes", index)}
+                        </ListItem>
+                        <Divider/>
+                    </>
                 )}
 
-                {relationships.map((relationship, index) => 
-                    <span key={index}>
-                        {showRelationship(relationship, index)}
-                    </span>
+                {relationships.map((relationship, index) =>
+                    <>
+                        <ListItem key={index}>
+                            {showItem(relationship, "relationships", index)}
+                        </ListItem>
+                        <Divider/>
+                    </>
                 )}
 
                 {isLoading && <p ><strong>Loading...</strong></p>}
-            </span>
+            </List>
         )
     }
 
-    const showEntity = (entity : Entity, index : number) =>
+    const showItem = (item : Attribute | Relationship | Entity, userChoice : string, index : number) =>
     {
-        return (
-            <>
-                <p><strong>Name:</strong> {entity.name} <br /> {entity.inference != null && <span><strong>Inference:</strong> {entity.inference} <br /> </span>}
-                    <button className="btn" id={`button${index}`} onClick={(event) => onAddEntity(event)}>Add</button>
-                    <button className="btn" id={`button${index}`} onClick={(event) => onEditSuggestion(event, "entities")}>Edit</button>
-                    { entity.inference == null && <button className="btn" id={`button${index}`} onClick={(event) => onShowInference(event)}>Show</button> }
-                </p>
+        const attribute : Attribute = (item as Attribute)
+        const relationship : Relationship = (item as Relationship)
 
-            </>
-        )
-    }
-
-    const showAttribute = (attribute : Attribute, index : number) =>
-    {
         return (
-            <p><strong>Name:</strong> {attribute.name} <br />
-               <strong>Inference:</strong> {attribute.inference} <br />
-               <strong>Data type:</strong> {attribute.dataType} <br />
-               <strong>Cardinality:</strong> <br />
-               <button
-                    className="btn"
-                    id={`button${index}`}
-                    onClick={() => onAddAttributesToNode(attribute)}>
-                        Add
-                </button>
-               <button
-                    className="btn"
-                    id={`button${index}`}
-                    onClick={ () => onAddAsRelationship(attribute) }>
-                        Add as relationship
-                </button>
-               <button className="btn" id={`button${index}`} onClick={(event) => onEditSuggestion(event, "attributes")}>Edit</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => onShowInference(event)}>Show</button>
-            </p>
-        )
-    }
+            <ListItemText>
+                <Typography>
+                    <strong>Name:</strong> {item.name}
+                </Typography>
 
-    const showRelationship = (relationship : Relationship, index : number) =>
-    {
-        return (
-            <p><strong>Name:</strong> {relationship.name} <br />
-               <strong>Inference:</strong> {relationship.inference} <br />
-               <strong>Source:</strong> {relationship.source} <br />
-               <strong>Target:</strong> {relationship.target} <br />
-               <strong>Cardinality:</strong> <br />
-               <button className="btn" id={`button${index}`} onClick={() => onAddRelationshipsToNodes(relationship)}>Add</button>
-               <button className="btn" id={`button${index}`} onClick={() => onAddAsAttribute(relationship)}>Add as attribute</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => onEditSuggestion(event, "relationships")}>Edit</button>
-               <button className="btn" id={`button${index}`} onClick={(event) => onShowInference(event)}>Show</button>
-            </p>
+                <Typography>
+                    <strong>Inference:</strong> {item.inference}
+                </Typography>
+
+                {
+                    userChoice === "attributes" &&
+                    <Typography>
+                        <strong>Data type:</strong> {attribute.dataType}
+                    </Typography>
+                }
+
+                {
+                    (userChoice === "attributes" || userChoice === "relationships") &&
+                    <Typography>
+                        <strong>Cardinality:</strong> {attribute.cardinality}
+                    </Typography>
+                }
+
+
+                {
+                    userChoice === "relationships" &&
+                    <Typography>
+                        <strong>Source entity:</strong> {relationship.source}
+                    </Typography>
+                }
+
+                {
+                    userChoice === "relationships" &&
+                    <Typography>
+                        <strong>Target entity:</strong> {relationship.target}
+                    </Typography>
+                }
+
+                <Stack marginTop={1}> 
+                    <ButtonGroup size="small">
+                        <Button
+                            onClick={() => onAddAttributesToNode(attribute)}>
+                                Add
+                        </Button>
+                        {
+                            userChoice === "attributes" ?
+                            <Button
+                                onClick={ () => onAddAsRelationship(attribute) }>
+                                Add as relationship
+                            </Button>
+                            :
+                            <Button
+                                onClick={ () => onAddAsAttribute(relationship) }>
+                                Add as attribute
+                            </Button>
+                        }
+                        <Button onClick={(event) => onEditSuggestion(event, userChoice)}>Edit</Button>
+                        <Button onClick={(event) => onShowInference(event)}>Show</Button>
+                    </ButtonGroup>
+                </Stack>
+            </ListItemText>
         )
     }
 
     return (
-        <div className="sideBar">
+        <Drawer
+            sx={{
+                flexShrink: 0,
+                '& .MuiDrawer-paper': {
+                    width: '20%',
+                    boxSizing: 'border-box',
+                },
+            }}
+            variant="permanent"
+            anchor="right"
+            >
+
             {showTextOnSidebar()}
-        </div>
+        </Drawer>
     )
 }
 

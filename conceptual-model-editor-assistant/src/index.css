@@ -1,36 +1,8 @@
-.appDiv {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-}
-
-/* Source: https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp */
-.sideBar {
-  position: absolute;
-  height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 20%;
-  top: 0;
-  right: 0;
-  padding: 0px 0px 0px 0px;
-  overflow-x: hidden; /* Disable horizontal scroll */
-  color: white;
-  background-color: #111;
-  font-family: Arial;
-  /* border-color: black;
-  border-width: 4px;
-  border-style: solid; */
-}
-
-.sideBar p {
-  padding: 6px 8px 6px 16px;
-  font-size: 16px;
-}
-
 .topBar {
-  height: 310px;
+  height: 315px;
   width: 80%;
   padding-top: 10px;
-  margin-left: 5px;
+  margin-left: 4px;
   color: black;
   background-color: white;
   font-family: Arial;
@@ -44,31 +16,12 @@
   height: 40px;
 }
 
-.buttonsContainer {
-  margin-right: 10px;
-}
-
-.importButton {
-  margin-right: 10px;
-}
-
-#domainDescriptionText {
-  flex-grow: 1;
-  margin-right: 10px;
-}
-
 .domainTextContainer {
   display: flex;
   flex-wrap: wrap;
   height: 203px;
   flex-grow: 1;
   margin-bottom: 20px;
-}
-
-.plusButtonsContainer {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
 }
 
 .overlay {
@@ -96,7 +49,7 @@
   left: 1450px;
   /* left: 1840px; */
   top: 10px;
-  margin-left:auto;
+  margin-left: auto;
   display: block;
   position: fixed;
   
@@ -203,10 +156,6 @@ textarea {
 .editContainerElement {
   display: flex;
   justify-content: space-between;
-}
-
-.plusEditButton {
-  margin-left: 20px;
 }
 
 .textGray {

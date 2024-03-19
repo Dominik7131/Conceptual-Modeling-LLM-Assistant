@@ -1,4 +1,12 @@
 import { useState } from "react"
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+
 
 interface Props
 {
@@ -17,47 +25,92 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
 
     return (
         <div className="topBar">
-
             <div className="container">
-                <div className="domainContainer">
-                    <label className="domainDescriptionLabel" htmlFor="story">Domain description: </label>
-                    <input type="checkbox" id="isIgnoreDomainDescription" defaultChecked onClick={() => onIgnoreDomainDescriptionChange()}></input>
-                </div>
+                <FormGroup>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                defaultChecked
+                                onClick={() => onIgnoreDomainDescriptionChange()}/>}
+                                label="Use domain description"/>
+                </FormGroup>
 
-                <div className="buttonsContainer">
-                    <button className="importButton" onClick={() => onImportButtonClick()}>Import</button>
-                    <button>Export</button>
-                </div>
+                <Stack
+                    spacing={1}
+                    className=""
+                    direction="row"
+                    paddingX={1}
+                    >
+                    <Button
+                        variant="contained"
+                        disableElevation
+                        onClick={() => onImportButtonClick()}
+                        size="small"
+                        >
+                        Import
+                    </Button>
+
+                    <Button
+                        variant="contained"
+                        size="small"
+                        disableElevation
+                        >
+                        Export
+                    </Button>
+                </Stack>
             </div>
-            <div className="domainTextContainer">
-                <textarea
+            <Box
+                className="domainTextContainer"
+                component="form"
+                sx={{
+                  '& .MuiTextField-root': { m: 1, width: '100%' },
+                }}
+                noValidate
+                autoComplete="off"
+            >
+                <TextField
                     // https://react.dev/reference/react-dom/components/textarea
                     // Auto re-size is disabled in index.css: textarea { resize: none;}
-                    id="domainDescriptionText"
                     name="story"
+                    label="Domain description"
+                    variant="outlined"
+                    multiline
+                    maxRows={7}
                     onChange={event => onDomainDescriptionChange(event.target.value)}
                     value={domainDescription}
                     spellCheck="false">
-                </textarea>
-            </div >
+                </TextField>
+            </Box >
             
             <div className="container">
-                <div className="plusButtonsContainer">
-                    <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Entities</button>
-                    <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Attributes</button>
-                    <button className="plusButton" onClick={(event) => onPlusButtonClick(event)}>+Relationships</button>
-                    <button className="plusButton" onClick={onSummaryButtonClick}>+Summary</button>
-                </div>
+                <Stack
+                    direction="row"
+                    paddingX={1}
+                    spacing={2}
+                >
+                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>+Entities</Button>
+                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>+Attributes</Button>
+                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>+Relationships</Button>
+                    <Button variant="contained" disableElevation onClick={onSummaryButtonClick}>+Summary</Button>
+                </Stack>
 
-                <div className="buttonsContainer">
-                    <button className="addNodeButton" onClick={() => OnClickAddNode(insertedNodeNameText)}>Add node </button>
-                    <input
-                        name="nodeName"
+                <Stack
+                    direction="row"
+                    paddingX={1}
+                    spacing={2}
+                >
+                    <Button
+                        variant="contained"
+                        size="small"
+                        disableElevation
+                        onClick={() => OnClickAddNode(insertedNodeNameText)}>Add node</Button>
+                    <TextField variant="standard"
                         placeholder="Insert node name to add"
                         value={insertedNodeNameText}
+                        rows={1}
                         onChange={(event) => setInsertedNodeNameText(event.target.value)}>
-                    </input>
-                </div>
+                    </TextField>
+                </Stack>
             </div>
         </div>
     )
