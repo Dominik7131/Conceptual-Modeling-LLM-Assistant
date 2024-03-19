@@ -1,4 +1,3 @@
-import { useState } from "react"
 
 interface Props
 {
@@ -18,8 +17,6 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
     // TODO: try to find easy way to make substring bold
     // const substring = "information system"
     // domainDescription.replace(substring, '<b>' + substring + '</b>')
-
-    const [description, setDescription] = useState<string>("")
 
     const highlightInference = (inferenceIndexes : number[]) =>
     {
@@ -46,11 +43,6 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
         )
     }
 
-    const onClickEditPlusButton = () =>
-    {
-        console.log("x")
-    }
-
     const showOverlay = () =>
     {
         if (isShowEdit)
@@ -59,7 +51,6 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
 
             // TODO: Probably get as argument `userChoice` to know which object we are editing
             // const attribute = (suggestedItem as Attribute)
-            const something : Entity|Attribute|Relationship = suggestedItem
 
             const attribute = (suggestedItem as Attribute)
             const relationship = (suggestedItem as Relationship)
@@ -74,15 +65,27 @@ const Overlay: React.FC<Props> = ({domainDescription, isShowOverlay, onOverlayCl
                     <div className="editContainer">
                         <p><button className="close" onClick={onEditClose}>close</button></p>
 
-                        <p>
-                            Name:
+                        <span className="editContainerElement">
+                            <span>Name:</span>
                             <textarea
                                 id="textAreaEdit1"
-                                name="nameEdit"
+                                name="editTextArea"
                                 value={suggestedItem["name"]}
-                                spellCheck="false">
+                                spellCheck="false"
+                            >
+                                
                             </textarea>
-                        </p>
+                            {
+                                suggestedItem["name"] !== "" ? null :
+                                    <button
+                                        className="plusEditButton"
+                                        onClick={() => {onEditPlus(suggestedItem.name, "name")}}>
+                                        +
+                                    </button>
+                            }
+                            
+                        </span>
+
                         <p>
                             Inference:
                             <textarea

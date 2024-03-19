@@ -291,6 +291,7 @@ const useConceptualModel = () =>
       const onAttributeChange = (attributeName: string, newText: string, field: string) =>
       {
         // TODO: Do not save changes immediately, let the user choose to accept or reject the new change
+
         if (field === "description")
         {
           setSuggestedAttributes(suggestedAttributes.map((attribute) =>
@@ -596,10 +597,15 @@ const useConceptualModel = () =>
       }
 
 
-      const onAddAsAssociation = (attribute : Attribute) =>
+      const onAddAsRelationship = (attribute : Attribute) =>
       {
         const relationship : Relationship = {"name": "", "inference": attribute.inference, "inference_indexes": attribute.inference_indexes, 
                                              "source": sourceEntity, "target": attribute.name, "cardinality": ""}
+        
+        setSuggestedItem(relationship)
+        setIsShowEdit(true)
+
+        // TODO: Wait for the user to accept or cancel the edit box
         onAddRelationshipsToNodes(relationship)
       }
 
@@ -607,6 +613,11 @@ const useConceptualModel = () =>
       const onAddAsAttribute = (relationship : Relationship) =>
       {
         const attribute : Attribute = {"name": relationship.target, "dataType": "string", "inference": relationship.inference, "inference_indexes": relationship.inference_indexes}
+
+        setSuggestedItem(attribute)
+        setIsShowEdit(true)
+
+        // TODO: Wait for the user to accept or cancel the edit box
         onAddAttributesToNode(attribute)
       }
 
@@ -802,7 +813,7 @@ const useConceptualModel = () =>
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus,
-        isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsAssociation, onAddAsAttribute, onEditSuggestion, onShowInference
+        isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsAssociation: onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference
     }
 }
 

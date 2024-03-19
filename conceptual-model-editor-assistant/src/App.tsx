@@ -50,7 +50,7 @@ declare global // TODO: Export instead of "global"
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-    OnClickAddNode, onAddAsAssociation, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus,
+    OnClickAddNode, onAddAsAssociation: onAddAsRelationship, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus,
     isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference
   } = useConceptualModel()
 
@@ -74,7 +74,7 @@ function App()
         onAddEntity={onAddEntity}
         onAddAttributesToNode={onAddAttributesToNode}
         onAddRelationshipsToNodes={onAddRelationshipsToNodes}
-        onAddAsAssociation={onAddAsAssociation}
+        onAddAsRelationship={onAddAsRelationship}
         onAddAsAttribute={onAddAsAttribute}
         onEditSuggestion={onEditSuggestion}
         onShowInference={onShowInference}

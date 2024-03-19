@@ -8,13 +8,13 @@ interface Props
     onAddEntity : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
     onAddAttributesToNode : (attribute : Attribute) => void,
     onAddRelationshipsToNodes : (relationship : Relationship) => void,
-    onAddAsAssociation : (attribute : Attribute) => void,
+    onAddAsRelationship : (attribute : Attribute) => void,
     onAddAsAttribute : (relationship : Relationship) => void,
     onEditSuggestion : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, userChoice : string) => void,
     onShowInference : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
 }
 
-const Sidebar: React.FC<Props> = ({isLoading, entities, attributes, relationships, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsAssociation, onAddAsAttribute, onEditSuggestion, onShowInference}) =>
+const Sidebar: React.FC<Props> = ({isLoading, entities, attributes, relationships, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference}) =>
 {
     // TODO: Decompose the sidebar into more sub-components
     // E.g.:
@@ -78,8 +78,8 @@ const Sidebar: React.FC<Props> = ({isLoading, entities, attributes, relationship
                <button
                     className="btn"
                     id={`button${index}`}
-                    onClick={ () => onAddAsAssociation(attribute) }>
-                        Add as association
+                    onClick={ () => onAddAsRelationship(attribute) }>
+                        Add as relationship
                 </button>
                <button className="btn" id={`button${index}`} onClick={(event) => onEditSuggestion(event, "attributes")}>Edit</button>
                <button className="btn" id={`button${index}`} onClick={(event) => onShowInference(event)}>Show</button>

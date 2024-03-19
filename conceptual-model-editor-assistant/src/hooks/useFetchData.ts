@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const useFetchData = (onAttributeDescriptionChange: (x : string, y: string, z: string) => void) =>
+const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => void) =>
 {
     // TODO: Insert here methods for fetching data
     // Probably this hook should receive function what to do on data receive
@@ -47,7 +47,7 @@ const useFetchData = (onAttributeDescriptionChange: (x : string, y: string, z: s
 
                         const parsedData = JSON.parse(jsonString)
                         setDescriptionData(parsedData[field])
-                        onAttributeDescriptionChange(attributeName, parsedData[field], field)
+                        onAttributeChange(attributeName, parsedData[field], field)
 
                         readChunk(); // Read the next chunk
                     })
