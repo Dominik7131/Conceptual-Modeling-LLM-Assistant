@@ -9,8 +9,14 @@ import { ReactFlowProvider } from 'reactflow';
 
 declare global // TODO: Export instead of "global"
 {
+  interface Item extends Entity, Attribute, Relationship
+  {
+    
+  }
+
   interface Entity
   {
+    ID: number
     name: string
     description?: string
     inference: string
@@ -19,6 +25,7 @@ declare global // TODO: Export instead of "global"
 
   interface Attribute
   {
+    ID: number
     name: string
     description?: string
     inference: string
@@ -29,13 +36,14 @@ declare global // TODO: Export instead of "global"
   
   interface Relationship
   {
+    ID: number
     name: string
     description?: string
     inference: string
     inference_indexes: number[]
-    source: string
-    target: string
-    cardinality: string
+    source?: string
+    target?: string
+    cardinality?: string
   }
 
   interface SummaryObject
@@ -50,8 +58,8 @@ declare global // TODO: Export instead of "global"
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-    OnClickAddNode, onAddAsAssociation: onAddAsRelationship, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus,
-    isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference
+    OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus,
+    isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference
   } = useConceptualModel()
 
   return (
@@ -68,9 +76,8 @@ function App()
 
       <SideBar
         isLoading={isLoading}
-        entities={suggestedEntities}
-        attributes={suggestedAttributes}
-        relationships={suggestedRelationships}
+        items={suggestedItems}
+        userChoice={userChoiceSuggestion}
         onAddEntity={onAddEntity}
         onAddAttributesToNode={onAddAttributesToNode}
         onAddRelationshipsToNodes={onAddRelationshipsToNodes}
@@ -95,7 +102,7 @@ function App()
       isShowEdit={isShowEdit}
       onEditClose={onEditClose}
       onEditPlus={onEditPlus}
-      suggestedItem={suggestedItem}
+      suggestedItem={selectedSuggestedItem}
       inferenceIndexes={inferenceIndexesMockUp}
       />
 

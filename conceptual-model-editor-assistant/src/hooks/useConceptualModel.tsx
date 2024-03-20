@@ -16,10 +16,8 @@ const useConceptualModel = () =>
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   
     const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [suggestedEntities, setSuggestedEntities] = useState<Entity[]>([])
-    const [suggestedAttributes, setSuggestedAttributes] = useState<Attribute[]>([])
-    const [suggestedRelationships, setSuggestedRelationships] = useState<Relationship[]>([])
-    const [suggestedItem, setSuggestedItem] = useState<Entity | Attribute | Relationship>({"name": "", "description": "", "inference": "", "inference_indexes": []})
+    const [suggestedItems, setSuggestedItems] = useState<Item[]>([])
+    const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, name: "", inference: "", inference_indexes: []})
   
     const [sourceEntity, setSourceEntity] = useState<string>("")
     const [targetEntity, setTargetEntity] = useState<string>("")
@@ -33,6 +31,9 @@ const useConceptualModel = () =>
     const [isShowEdit, setIsShowEdit] = useState<boolean>(false)
 
     const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([])
+
+    let IDToAssign = 0
+    const [userChoiceSuggestion, setUserChoiceSuggestion] = useState<string>("")
 
     const URL = "http://127.0.0.1:5000/"
 
@@ -135,45 +136,27 @@ const useConceptualModel = () =>
       }
 
 
-      const fetch_non_streamed_data = (url : string, headers : any, body_data : any, userChoice : string) =>
+      const assignID = () =>
+      {
+        const newID = IDToAssign
+        IDToAssign += 1
+        return newID
+      }
+
+      const fetchNonStreamedData = (url : string, headers : any, body_data : any, userChoice : string) =>
       {
         fetch(url, { method: "POST", headers, body: body_data })
         .then(response => response.json())
         .then(data => 
             {
-              if (userChoice === "entities")
+              for (let i = 0; i < data.length; i++)
               {
-                for (let i = 0; i < data.length; i++)
-                {
-                  let entity : Entity = data[i]
-                  setSuggestedEntities(previousSuggestedEntities => {
-                    return [...previousSuggestedEntities, entity]
-                  })
-                }
-              }
-              else if (userChoice === "attributes")
-              {
-                for (let i = 0; i < data.length; i++)
-                {
-                  const attribute : Attribute = data[i]
-                  const editedAttribute : Attribute = { "name": attribute.name, "inference": attribute.inference, "dataType": attribute.dataType, inference_indexes: attribute.inference_indexes, "description": ""}
-  
-                  setSuggestedAttributes(previousSuggestedAttributes => {
-                    return [...previousSuggestedAttributes, editedAttribute]
-                  })
-                }
-              }
-              else if (userChoice === "relationships" || userChoice==="relationships2")
-              {
-                for (let i = 0; i < data.length; i++)
-                {
-                  const relationship = data[i]
-                  const editedRelationship : Relationship = { "name": relationship.name, "source": relationship.source, "target": relationship.target, "inference": relationship.inference, inference_indexes: relationship.inference_indexes, "description": "", "cardinality": relationship.cardinality}
+                const ID = assignID()
+                data[i]['ID'] = ID
 
-                  setSuggestedRelationships(previousSuggestedRelationships => {
-                    return [...previousSuggestedRelationships, editedRelationship]
-                  })
-                }
+                setSuggestedItems(previousSuggestedItems => {
+                  return [...previousSuggestedItems, data[i]]
+                })
               }
             })
         .catch(error => console.log(error))
@@ -222,36 +205,12 @@ const useConceptualModel = () =>
 
                         for (let i = 0; i < jsonStringParts.length; i++)
                         {
-                          if (userChoice === "entities")
-                          {
-                            let entity : Entity = JSON.parse(jsonStringParts[i])
-                            console.log("Entity: ")
-                            console.log(entity)
-                            setSuggestedEntities(previousSuggestedEntities => {
-                              return [...previousSuggestedEntities, entity]
-                            })
-                          }
-                          else if (userChoice === "attributes")
-                          {
-                            let attribute : Attribute = JSON.parse(jsonStringParts[i])
-                            attribute = { "name": attribute.name, "inference": attribute.inference, "dataType": attribute.dataType, inference_indexes: attribute.inference_indexes, "description": ""}
-          
-                            console.log("Attribute: ")
-                            console.log(attribute)
-                            setSuggestedAttributes(previousSuggestedAttributes => {
-                              return [...previousSuggestedAttributes, attribute]
-                            })
-                          }
-                          else if (userChoice === "relationships" || userChoice === "relationships2")
-                          {
-                            let relationship : Relationship = JSON.parse(jsonStringParts[i])
+                          let item : Item = JSON.parse(jsonStringParts[i])
+                          item['ID'] = assignID()
 
-                            console.log("Relationship: ")
-                            console.log(relationship)
-                            setSuggestedRelationships(previousSuggestedRelationships => {
-                              return [...previousSuggestedRelationships, relationship]
-                            })
-                          }
+                          setSuggestedItems(previousSuggestedItems => {
+                            return [...previousSuggestedItems, item]
+                          })
                         }
 
                         // Read the next chunk
@@ -292,30 +251,23 @@ const useConceptualModel = () =>
       {
         // TODO: Do not save changes immediately, let the user choose to accept or reject the new change
 
-        if (field === "description")
+        setSuggestedItems(suggestedItems.map((attribute) =>
         {
-          setSuggestedAttributes(suggestedAttributes.map((attribute) =>
+          if (attribute.name === attributeName)
           {
-            if (attribute.name === attributeName)
+            if (field === "description")
             {
-              setSuggestedItem({ ...attribute, description: newText })
+              setSelectedSuggestedItem({ ...attribute, description: newText })
+              return attribute.name === attributeName ? {...attribute, description: newText} : attribute
             }
-
-            return attribute.name === attributeName ? {...attribute, description: newText} : attribute
-          }));
-        }
-        else if (field === "cardinality")
-        {
-          setSuggestedAttributes(suggestedAttributes.map((attribute) =>
-          {
-            if (attribute.name === attributeName)
+            else if (field === "cardinality")
             {
-              setSuggestedItem({ ...attribute, cardinality: newText })
+              setSelectedSuggestedItem({ ...attribute, cardinality: newText })
+              return attribute.name === attributeName ? {...attribute, cardinality: newText} : attribute
             }
-
-            return attribute.name === attributeName ? {...attribute, cardinality: newText} : attribute
-          }));
-        }
+          }
+          return attribute
+        }));
       }
     
       const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
@@ -327,11 +279,11 @@ const useConceptualModel = () =>
         }
 
         const buttonText = event.currentTarget.innerText.toLowerCase()
+        setUserChoiceSuggestion(buttonText.slice(1))
+
         setIsLoading(_ => true)
 
-        setSuggestedEntities(_ => {return []})
-        setSuggestedAttributes(_ => {return []})
-        setSuggestedRelationships(_ => {return []})
+        setSuggestedItems(_ => {return []})
 
         const endpointName = "suggest"
         const endpoint = URL + endpointName
@@ -348,7 +300,7 @@ const useConceptualModel = () =>
 
           if (!is_fetch_stream_data)
           {
-            fetch_non_streamed_data(endpoint, headers, bodyData, userChoice)
+            fetchNonStreamedData(endpoint, headers, bodyData, userChoice)
           }
           else
           {
@@ -378,7 +330,7 @@ const useConceptualModel = () =>
 
           if (!is_fetch_stream_data)
           {
-            fetch_non_streamed_data(endpoint, headers, body_data, userChoice)
+            fetchNonStreamedData(endpoint, headers, body_data, userChoice)
           }
           else
           {
@@ -413,7 +365,7 @@ const useConceptualModel = () =>
 
         if (!is_fetch_stream_data)
         {
-          fetch_non_streamed_data(endpoint, headers, body_data, userChoice)
+          fetchNonStreamedData(endpoint, headers, body_data, userChoice)
         }
         else
         {
@@ -482,9 +434,6 @@ const useConceptualModel = () =>
       useEffect(() =>
       {
         updateNodes()
-
-        const attribute1 : Attribute = { "name": "a1", "description": "", "dataType": "", "inference": "", "inference_indexes": []}
-        const attribute2 : Attribute = { "name": "a2", "description": "", "dataType": "", "inference": "", "inference_indexes": []}
 
         // setSuggestedAttributes([...suggestedAttributes, attribute1, attribute2])
 
@@ -588,21 +537,20 @@ const useConceptualModel = () =>
         setIsShowOverlay(false)
       }
 
-      const onAddEntity = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+      const onAddEntity = (entity: Entity) =>
       {
+        console.log("adding entities")
         setIsShowOverlay(_ => false)
-        const entityTargetID = event.currentTarget.id.slice(6)
-        const entityToAdd = suggestedEntities[Number(entityTargetID)]
-        addNode(entityToAdd.name, 66, 66)
+        addNode(entity.name, 66, 66)
       }
 
 
       const onAddAsRelationship = (attribute : Attribute) =>
       {
-        const relationship : Relationship = {"name": "", "inference": attribute.inference, "inference_indexes": attribute.inference_indexes, 
+        const relationship : Relationship = {ID: attribute.ID, "name": "", "inference": attribute.inference, "inference_indexes": attribute.inference_indexes, 
                                              "source": sourceEntity, "target": attribute.name, "cardinality": ""}
         
-        setSuggestedItem(relationship)
+        setSelectedSuggestedItem(attribute)
         setIsShowEdit(true)
 
         // TODO: Wait for the user to accept or cancel the edit box
@@ -610,15 +558,15 @@ const useConceptualModel = () =>
       }
 
 
-      const onAddAsAttribute = (relationship : Relationship) =>
+      const onAddAsAttribute = (item : Item) =>
       {
-        const attribute : Attribute = {"name": relationship.target, "dataType": "string", "inference": relationship.inference, "inference_indexes": relationship.inference_indexes}
+        // const attribute : Attribute = {"name": relationship.target, "dataType": "string", "inference": relationship.inference, "inference_indexes": relationship.inference_indexes}
 
-        setSuggestedItem(attribute)
+        setSelectedSuggestedItem(item)
         setIsShowEdit(true)
 
         // TODO: Wait for the user to accept or cancel the edit box
-        onAddAttributesToNode(attribute)
+        onAddAttributesToNode(item)
       }
 
 
@@ -656,7 +604,7 @@ const useConceptualModel = () =>
               })
           }
 
-          const newAttributeObject : Attribute = { name: attribute.name, description: "", inference: attribute.inference, inference_indexes: newInferenceIndexes, dataType: attribute.dataType}
+          const newAttributeObject : Attribute = { ID: attribute.ID, name: attribute.name, description: "", inference: attribute.inference, inference_indexes: newInferenceIndexes, dataType: attribute.dataType}
     
           // If the node already contains the selected attribute do not add anything
           let isAttributePresent = false
@@ -683,8 +631,18 @@ const useConceptualModel = () =>
       const onAddRelationshipsToNodes = (relationshipObject : Relationship) =>
       {
         setIsShowOverlay(_ => false)
-        const sourceNodeID = relationshipObject.source.toLowerCase()
-        const targetNodeID = relationshipObject.target.toLowerCase()
+        let sourceNodeID = relationshipObject.source?.toLowerCase()
+        let targetNodeID = relationshipObject.target?.toLowerCase()
+
+        // TODO: Try to find a way to make the code more compact
+        if (!sourceNodeID)
+        {
+          sourceNodeID = ""
+        }
+        if (!targetNodeID)
+        {
+          targetNodeID = ""
+        }
     
         // Return if the edge is already existing
         const newEdgeID = `${sourceNodeID},${targetNodeID}`
@@ -745,40 +703,18 @@ const useConceptualModel = () =>
       }
 
 
-      const onEditSuggestion = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, userChoice : string) =>
+      const onEditSuggestion = (itemID : number, userChoice : string) =>
       {
         setIsShowOverlay(false)
         setIsShowEdit(true)
 
-        const targetID = Number(event.currentTarget.id.slice(6))
-
-        if (userChoice === "entities")
-        {
-          const entity = suggestedEntities[targetID]
-          setSuggestedItem(entity)
-        }
-        else if (userChoice === "attributes")
-        {
-          const attribute = suggestedAttributes[targetID]
-          setSuggestedItem(attribute)
-        }
-        else if (userChoice === "relationships")
-        {
-          const relationship = suggestedRelationships[targetID]
-          setSuggestedItem(relationship)
-        }
-        else
-        {
-          alert("Unknown suggestion to edit")
-          return
-        }
+        setSelectedSuggestedItem(suggestedItems[itemID])
       }
 
-      const onShowInference = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
+      const onShowInference = (itemID : number) =>
       {
         // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
         // TODO: probably move this function into file `useInferenceIndexes.tsx`
-        const targetID = Number(event.currentTarget.id.slice(6))
 
         setIsShowEdit(_ => false)
 
@@ -792,28 +728,13 @@ const useConceptualModel = () =>
 
         setIsShowOverlay(_ => true)
 
-        if (targetID < suggestedEntities.length)
-        {
-          const entity = suggestedEntities[targetID]
-          setInferenceIndexesMockUp(_ => entity.inference_indexes)
-        }
-        
-        if (targetID < suggestedAttributes.length)
-        {
-          const attribute = suggestedAttributes[targetID]
-          setInferenceIndexesMockUp(_ => attribute.inference_indexes)
-        }
-
-        if (targetID < suggestedRelationships.length)
-        {
-          const relationship = suggestedRelationships[targetID]
-          setInferenceIndexesMockUp(_ => relationship.inference_indexes)
-        }
+        const item : Item = suggestedItems[itemID]
+        setInferenceIndexesMockUp(_ => item.inference_indexes)
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus,
-        isLoading, suggestedEntities, suggestedAttributes, suggestedRelationships, suggestedItem, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsAssociation: onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference
+        isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference
     }
 }
 

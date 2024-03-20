@@ -14,7 +14,7 @@ interface Props
     onEditClose : () => void
     // onEditSave : () => void // TODO: Implement
     onEditPlus : (attributeName: string, field: string) => void
-    suggestedItem : Entity|Attribute|Relationship
+    suggestedItem : Item
     inferenceIndexes : number[]
 }
 

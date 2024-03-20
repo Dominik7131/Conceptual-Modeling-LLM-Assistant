@@ -12,19 +12,18 @@ import Stack from '@mui/material/Stack';
 interface Props
 {
     isLoading : boolean,
-    entities : Entity[],
-    attributes : Attribute[],
-    relationships : Relationship[],
-    onAddEntity : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+    items : Item[],
+    userChoice : string,
+    onAddEntity : (entity : Entity) => void,
     onAddAttributesToNode : (attribute : Attribute) => void,
     onAddRelationshipsToNodes : (relationship : Relationship) => void,
     onAddAsRelationship : (attribute : Attribute) => void,
     onAddAsAttribute : (relationship : Relationship) => void,
-    onEditSuggestion : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>, userChoice : string) => void,
-    onShowInference : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void,
+    onEditSuggestion : (itemID : number, userChoice : string) => void,
+    onShowInference : (itemID : number) => void,
 }
 
-const Sidebar: React.FC<Props> = ({isLoading, entities, attributes, relationships, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference}) =>
+const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference}) =>
 {
     // TODO: Decompose the sidebar into more sub-components
     // E.g.:
@@ -32,35 +31,14 @@ const Sidebar: React.FC<Props> = ({isLoading, entities, attributes, relationship
     //  - one component for buttons such as "Add", "Edit", "Show inference"
 
     const showTextOnSidebar = () =>
-    {
+    {        
         return (
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
 
-                {entities.map((entity, index) =>
-                    <>
-                        <ListItem key={entity.name}>
-                            {showItem(entity, "entities", index)}
+                {items.map((item, index) =>
+                        <ListItem key={item.ID}>
+                            {showItem(item, userChoice, index)}
                         </ListItem>
-                        <Divider/>
-                    </>
-                )}
-
-                {attributes.map((attribute, index) => 
-                    <>
-                        <ListItem key={attribute.name}>
-                            {showItem(attribute, "attributes", index)}
-                        </ListItem>
-                        <Divider/>
-                    </>
-                )}
-
-                {relationships.map((relationship, index) =>
-                    <>
-                        <ListItem key={index}>
-                            {showItem(relationship, "relationships", index)}
-                        </ListItem>
-                        <Divider/>
-                    </>
                 )}
 
                 {isLoading && <p ><strong>Loading...</strong></p>}
@@ -68,10 +46,14 @@ const Sidebar: React.FC<Props> = ({isLoading, entities, attributes, relationship
         )
     }
 
-    const showItem = (item : Attribute | Relationship | Entity, userChoice : string, index : number) =>
+    const showItem = (item : Item, userChoice : string, index : number) =>
     {
         const attribute : Attribute = (item as Attribute)
         const relationship : Relationship = (item as Relationship)
+        const entity : Entity = (item as Entity)
+
+        // TODO: Why the sidebar is being rerendered every time user moves a node?
+        // console.log("node moved")
 
         return (
             <ListItemText>
@@ -112,10 +94,24 @@ const Sidebar: React.FC<Props> = ({isLoading, entities, attributes, relationship
                     </Typography>
                 }
 
-                <Stack marginTop={1}> 
+                <Stack marginTop={1} marginBottom={1}> 
                     <ButtonGroup size="small">
                         <Button
-                            onClick={() => onAddAttributesToNode(attribute)}>
+                            onClick={() => 
+                            { 
+                                if (userChoice === "attributes")
+                                {
+                                    onAddAttributesToNode(attribute)
+                                }
+                                else if (userChoice === "relationships")
+                                {
+                                    onAddRelationshipsToNodes(relationship)
+                                }
+                                else if (userChoice === "entities")
+                                {
+                                    onAddEntity(entity)
+                                }
+                            }}>
                                 Add
                         </Button>
                         {
@@ -124,16 +120,20 @@ const Sidebar: React.FC<Props> = ({isLoading, entities, attributes, relationship
                                 onClick={ () => onAddAsRelationship(attribute) }>
                                 Add as relationship
                             </Button>
-                            :
+                            : userChoice === "relationships" ?
                             <Button
                                 onClick={ () => onAddAsAttribute(relationship) }>
                                 Add as attribute
                             </Button>
+                            : null
                         }
-                        <Button onClick={(event) => onEditSuggestion(event, userChoice)}>Edit</Button>
-                        <Button onClick={(event) => onShowInference(event)}>Show</Button>
+                        <Button onClick={() => onEditSuggestion(item.ID, userChoice)}>Edit</Button>
+                        <Button onClick={() => onShowInference(item.ID)}>Show</Button>
                     </ButtonGroup>
                 </Stack>
+
+                {/* <Divider /> */}
+
             </ListItemText>
         )
     }
