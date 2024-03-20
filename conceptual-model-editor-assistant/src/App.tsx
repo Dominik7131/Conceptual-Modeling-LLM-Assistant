@@ -2,17 +2,15 @@ import ConceptualModel from './components/ConceptualModel';
 import Topbar from './components/Topbar'
 import SideBar from './components/Sidebar';
 import useConceptualModel from './hooks/useConceptualModel'
-import Overlay from './components/Overlay';
 
 import { ReactFlowProvider } from 'reactflow';
+import OverlayShow from './components/OverlayShow';
+import OverlayEdit from './components/OverlayEdit';
 
 
 declare global // TODO: Export instead of "global"
 {
-  interface Item extends Entity, Attribute, Relationship
-  {
-    
-  }
+  interface Item extends Entity, Attribute, Relationship {    }
 
   interface Entity
   {
@@ -58,8 +56,9 @@ declare global // TODO: Export instead of "global"
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-    OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus,
-    isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference
+    OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus, onEditSave,
+    isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference,
+    isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose
   } = useConceptualModel()
 
   return (
@@ -95,15 +94,21 @@ function App()
         onConnect={onConnect}
       />
 
-      <Overlay
-      domainDescription={domainDescription}
-      isShowOverlay={isShowOverlay}
-      onOverlayClose={onOverlayClose}
-      isShowEdit={isShowEdit}
-      onEditClose={onEditClose}
-      onEditPlus={onEditPlus}
-      suggestedItem={selectedSuggestedItem}
-      inferenceIndexes={inferenceIndexesMockUp}
+      <OverlayShow
+        domainDescription={domainDescription}
+        isShow={isShowOverlayDomainDescription}
+        inferenceIndexes={inferenceIndexesMockUp}
+        onClose={onOverlayDomainDescriptionClose}
+      />
+
+      <OverlayEdit
+        isShow={isShowEdit}
+        item={selectedSuggestedItem}
+        userChoice={userChoiceSuggestion}
+        isDisableSave={false}
+        onClose={onEditClose}
+        onPlus={onEditPlus}
+        onSave={onEditSave}
       />
 
     </div>

@@ -6,6 +6,7 @@ import useInferenceIndexes from './useInferenceIndexes';
 import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
+import { Typography } from '@mui/material';
 
 const initialNodes : Node[] = [{ id: 'engine', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
 
@@ -28,6 +29,7 @@ const useConceptualModel = () =>
     const [summaryData, setSummaryData] = useState<SummaryObject[]>([])
 
     const [isShowOverlay, setIsShowOverlay] = useState<boolean>(false)
+    const [isShowOverlayDomainDescription, setIsShowOverlayDomainDescription] = useState<boolean>(false)
     const [isShowEdit, setIsShowEdit] = useState<boolean>(false)
 
     const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([])
@@ -247,6 +249,21 @@ const useConceptualModel = () =>
         use_fetch_streamed_data_general(endpoint, headers, bodyData, attributeName, field)
       }
 
+      const onEditSave = (newItem : Item) =>
+      {
+        // TODO: instead of selectedSuggestedItem have only ID saved
+        setSelectedSuggestedItem(newItem)
+
+        setSuggestedItems(suggestedItems.map(item => 
+          {
+            if (item.ID === newItem.ID)
+            {
+              return newItem
+            }
+            return item
+          }))
+      }
+
       const onAttributeChange = (attributeName: string, newText: string, field: string) =>
       {
         // TODO: Do not save changes immediately, let the user choose to accept or reject the new change
@@ -418,7 +435,7 @@ const useConceptualModel = () =>
         node.data =
         {
           ...node.data,
-          label: <div className="node">
+          label: <Typography component='span' className="node">
                     <p className="nodeTitle"><strong>{capitalizeString(node.id)}</strong></p>
                     <p>
                     {node.data.attributes.map((attribute : Attribute, index : number) =>
@@ -426,7 +443,7 @@ const useConceptualModel = () =>
                         <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.dataType} <br /> </span>
                     ))}
                     </p>
-                 </div>
+                 </Typography>
         };
         return node;
       }
@@ -489,7 +506,7 @@ const useConceptualModel = () =>
 
       useEffect(() =>
       {
-        if (!isShowOverlay)
+        if (!isShowOverlayDomainDescription)
         {
           return
         }
@@ -498,10 +515,11 @@ const useConceptualModel = () =>
         let highlightedText = document.getElementById("highlightedInference-1")
         if (highlightedText)
         {
-            highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
+          console.log("yes")
+          highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
         }
 
-      }, [isShowOverlay])
+      }, [isShowOverlayDomainDescription])
     
       // useEffect(() =>
       // {
@@ -532,6 +550,16 @@ const useConceptualModel = () =>
         updateNodes()
       }
 
+      const onOverlayDomainDescriptionOpen = () =>
+      {
+        setIsShowOverlayDomainDescription(true)
+      }
+
+      const onOverlayDomainDescriptionClose = () =>
+      {
+        setIsShowOverlayDomainDescription(false)
+      }
+
       const onOverlayClose = () =>
       {
         setIsShowOverlay(false)
@@ -550,11 +578,8 @@ const useConceptualModel = () =>
         const relationship : Relationship = {ID: attribute.ID, "name": "", "inference": attribute.inference, "inference_indexes": attribute.inference_indexes, 
                                              "source": sourceEntity, "target": attribute.name, "cardinality": ""}
         
-        setSelectedSuggestedItem(attribute)
+        setSelectedSuggestedItem(relationship)
         setIsShowEdit(true)
-
-        // TODO: Wait for the user to accept or cancel the edit box
-        onAddRelationshipsToNodes(relationship)
       }
 
 
@@ -722,19 +747,20 @@ const useConceptualModel = () =>
         // Close overlay if it is already displayed
         if (isShowOverlay)
         {
-          setIsShowOverlay(_ => false)
+          setIsShowOverlayDomainDescription(_ => false)
           return
         }
 
-        setIsShowOverlay(_ => true)
+        setIsShowOverlayDomainDescription(_ => true)
 
         const item : Item = suggestedItems[itemID]
         setInferenceIndexesMockUp(_ => item.inference_indexes)
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-        summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus,
-        isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference
+        summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus, onEditSave,
+        isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
+        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose
     }
 }
 
