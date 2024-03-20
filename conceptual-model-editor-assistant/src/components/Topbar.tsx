@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { UserChoice } from "../App";
 
 
 interface Props
@@ -60,10 +61,10 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 </Stack>
             </div>
             <Box
-                className="domainTextContainer"
+                className="domainTextContainers"
                 component="form"
                 sx={{
-                  '& .MuiTextField-root': { m: 1, width: '100%' },
+                  '& .MuiTextField-root': { m: 1, width: '98.9%' },
                 }}
                 noValidate
                 autoComplete="off"
@@ -88,10 +89,10 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     paddingX={1}
                     spacing={2}
                 >
-                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>+Entities</Button>
-                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>+Attributes</Button>
-                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>+Relationships</Button>
-                    <Button variant="contained" disableElevation onClick={onSummaryButtonClick}>+Summary</Button>
+                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ENTITIES}</Button>
+                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ATTRIBUTES}</Button>
+                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.RELATIONSHIPS}</Button>
+                    <Button variant="contained" disableElevation onClick={onSummaryButtonClick}>Summary</Button>
                 </Stack>
 
                 <Stack

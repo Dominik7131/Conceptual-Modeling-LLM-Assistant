@@ -11,6 +11,7 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
+import { UserChoice } from '../App';
 
 interface FieldOptions {
     field : "name" | "description"
@@ -42,16 +43,16 @@ const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, 
     const onAdd = () =>
     {
         // TODO: Try to less repeat yourself
-        if (userChoice === "attributes")
+        if (userChoice === UserChoice.ATTRIBUTES)
         {
             //onAddAttributesToNode(editedItem)
             
         }
-        else if (userChoice === "relationships")
+        else if (userChoice === UserChoice.RELATIONSHIPS)
         {
             //onAddRelationshipsToNodes(editedItem)
         }
-        else if (userChoice === "entities")
+        else if (userChoice === UserChoice.ENTITIES)
         {
             //onAddEntity(editedItem)
         }
@@ -100,7 +101,7 @@ const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, 
                     </Fab>
                 </Stack>
 
-                {userChoice === "attributes" &&
+                {userChoice === UserChoice.ATTRIBUTES &&
                     <Stack direction="row" paddingX={1}>
                         
                         <TextField margin="dense" label="Data type" fullWidth variant="standard" spellCheck={false}
@@ -113,7 +114,7 @@ const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, 
                     </Stack>
                 }
 
-                {userChoice === "relationships" &&
+                {userChoice === UserChoice.RELATIONSHIPS &&
                     <Stack direction="row" paddingX={1}>
                         <TextField margin="dense" label="Source entity" fullWidth variant="standard" spellCheck={false}
                             onChange={(e) => setEditedItem({ ...editedItem, source: e.target.value })}
@@ -125,7 +126,7 @@ const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, 
                     </Stack>
                 }
 
-                {userChoice === "relationships" &&
+                {userChoice === UserChoice.RELATIONSHIPS &&
                     <Stack direction="row" paddingX={1}>
                         <TextField margin="dense" label="Target entity" fullWidth variant="standard" spellCheck={false}
                             onChange={(e) => setEditedItem({ ...editedItem, target: e.target.value })}
@@ -137,7 +138,7 @@ const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, 
                     </Stack>
                 }
 
-                {(userChoice === "attributes" || userChoice === "relationships") &&
+                {(userChoice === UserChoice.ATTRIBUTES || userChoice === UserChoice.RELATIONSHIPS) &&
                     <Stack direction="row" paddingX={1}>
                         
                         <TextField margin="dense" label="Cardinality" fullWidth variant="standard" spellCheck={false}

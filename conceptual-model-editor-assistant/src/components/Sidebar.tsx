@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
+import { UserChoice } from '../App';
 
 
 interface Props
@@ -66,14 +67,14 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
                 </Typography>
 
                 {
-                    userChoice === "attributes" &&
+                    userChoice === UserChoice.ATTRIBUTES &&
                     <Typography>
                         <strong>Data type:</strong> {attribute.dataType}
                     </Typography>
                 }
 
                 {
-                    (userChoice === "attributes" || userChoice === "relationships") &&
+                    (userChoice === UserChoice.ATTRIBUTES || userChoice === UserChoice.RELATIONSHIPS) &&
                     <Typography>
                         <strong>Cardinality:</strong> {attribute.cardinality}
                     </Typography>
@@ -81,14 +82,14 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
 
 
                 {
-                    userChoice === "relationships" &&
+                    userChoice === UserChoice.RELATIONSHIPS &&
                     <Typography>
                         <strong>Source entity:</strong> {relationship.source}
                     </Typography>
                 }
 
                 {
-                    userChoice === "relationships" &&
+                    userChoice === UserChoice.RELATIONSHIPS &&
                     <Typography>
                         <strong>Target entity:</strong> {relationship.target}
                     </Typography>
@@ -98,12 +99,12 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
                     <ButtonGroup size="small">
                         <Button
                             onClick={() => 
-                            { 
-                                if (userChoice === "attributes")
+                            {
+                                if (userChoice === UserChoice.ATTRIBUTES)
                                 {
                                     onAddAttributesToNode(attribute)
                                 }
-                                else if (userChoice === "relationships")
+                                else if (userChoice === UserChoice.RELATIONSHIPS)
                                 {
                                     onAddRelationshipsToNodes(relationship)
                                 }
@@ -115,12 +116,12 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
                                 Add
                         </Button>
                         {
-                            userChoice === "attributes" ?
+                            userChoice === UserChoice.ATTRIBUTES ?
                             <Button
                                 onClick={ () => onAddAsRelationship(attribute) }>
                                 Add as relationship
                             </Button>
-                            : userChoice === "relationships" ?
+                            : userChoice === UserChoice.RELATIONSHIPS ?
                             <Button
                                 onClick={ () => onAddAsAttribute(relationship) }>
                                 Add as attribute

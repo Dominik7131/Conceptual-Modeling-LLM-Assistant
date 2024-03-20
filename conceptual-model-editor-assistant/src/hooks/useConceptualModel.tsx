@@ -7,6 +7,7 @@ import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
 import { Typography } from '@mui/material';
+import { UserChoice } from '../App';
 
 const initialNodes : Node[] = [{ id: 'engine', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
 
@@ -28,7 +29,6 @@ const useConceptualModel = () =>
   
     const [summaryData, setSummaryData] = useState<SummaryObject[]>([])
 
-    const [isShowOverlay, setIsShowOverlay] = useState<boolean>(false)
     const [isShowOverlayDomainDescription, setIsShowOverlayDomainDescription] = useState<boolean>(false)
     const [isShowEdit, setIsShowEdit] = useState<boolean>(false)
 
@@ -145,7 +145,7 @@ const useConceptualModel = () =>
         return newID
       }
 
-      const fetchNonStreamedData = (url : string, headers : any, body_data : any, userChoice : string) =>
+      const fetchNonStreamedData = (url : string, headers : any, body_data : any) =>
       {
         fetch(url, { method: "POST", headers, body: body_data })
         .then(response => response.json())
@@ -166,7 +166,7 @@ const useConceptualModel = () =>
         return
       }
 
-      const fetch_streamed_data = (url : string, headers : any, bodyData : any, userChoice : string) =>
+      const fetch_streamed_data = (url : string, headers : any, bodyData : any) =>
       {
         // Fetch the event stream from the server
         // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
@@ -296,7 +296,7 @@ const useConceptualModel = () =>
         }
 
         const buttonText = event.currentTarget.innerText.toLowerCase()
-        setUserChoiceSuggestion(buttonText.slice(1))
+        setUserChoiceSuggestion(buttonText)
 
         setIsLoading(_ => true)
 
@@ -307,21 +307,19 @@ const useConceptualModel = () =>
         const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
         const headers = { "Content-Type": "application/json" }
         const is_fetch_stream_data = true
-        let userChoice = ""
 
-        if (buttonText === "+entities")
+        if (buttonText === UserChoice.ENTITIES)
         {
-          userChoice = "entities"
           // TODO: Define field names such as `sourceEntity`, `targetEntity`, `userChoice`, ...
-          const bodyData = JSON.stringify({"sourceEntity": "", "targetEntity": "", "userChoice": userChoice, "domainDescription": currentDomainDesciption})
+          const bodyData = JSON.stringify({"sourceEntity": "", "targetEntity": "", "userChoice": UserChoice.ENTITIES, "domainDescription": currentDomainDesciption})
 
           if (!is_fetch_stream_data)
           {
-            fetchNonStreamedData(endpoint, headers, bodyData, userChoice)
+            fetchNonStreamedData(endpoint, headers, bodyData)
           }
           else
           {
-            fetch_streamed_data(endpoint, headers, bodyData, userChoice)
+            fetch_streamed_data(endpoint, headers, bodyData)
           }
           return
         }
@@ -339,19 +337,17 @@ const useConceptualModel = () =>
         {
           setTargetEntity(_ => { return selectedNodes[1].id.toLowerCase() } )
 
-          userChoice = "relationships2"
-
           const sourceEntityName = selectedNodes[0].id.toLowerCase()
           const targetEntityName = selectedNodes[1].id.toLowerCase()
-          const body_data = JSON.stringify({"sourceEntity": sourceEntityName, "targetEntity": targetEntityName, "userChoice": userChoice, "domainDescription": currentDomainDesciption})
+          const body_data = JSON.stringify({"sourceEntity": sourceEntityName, "targetEntity": targetEntityName, "userChoice": UserChoice.RELATIONSHIPS2, "domainDescription": currentDomainDesciption})
 
           if (!is_fetch_stream_data)
           {
-            fetchNonStreamedData(endpoint, headers, body_data, userChoice)
+            fetchNonStreamedData(endpoint, headers, body_data)
           }
           else
           {
-            fetch_streamed_data(endpoint, headers, body_data, userChoice)
+            fetch_streamed_data(endpoint, headers, body_data)
           }
           return
         }
@@ -363,18 +359,11 @@ const useConceptualModel = () =>
         }
     
     
-        if (buttonText === "+attributes")
+        let userChoice = UserChoice.ATTRIBUTES
+
+        if (buttonText === UserChoice.RELATIONSHIPS)
         {
-          userChoice = "attributes"
-        }
-        else if (buttonText === "+relationships")
-        {
-          userChoice = "relationships"
-        }
-        else
-        {
-          alert(`Clicked on unknown button: ${buttonText}`)
-          return
+          userChoice = UserChoice.RELATIONSHIPS
         }
 
         const entityName = selectedNodes[0].id.toLowerCase()
@@ -382,11 +371,11 @@ const useConceptualModel = () =>
 
         if (!is_fetch_stream_data)
         {
-          fetchNonStreamedData(endpoint, headers, body_data, userChoice)
+          fetchNonStreamedData(endpoint, headers, body_data)
         }
         else
         {
-          fetch_streamed_data(endpoint, headers, body_data, userChoice)
+          fetch_streamed_data(endpoint, headers, body_data)
         }
       }
     
@@ -560,15 +549,9 @@ const useConceptualModel = () =>
         setIsShowOverlayDomainDescription(false)
       }
 
-      const onOverlayClose = () =>
-      {
-        setIsShowOverlay(false)
-      }
-
       const onAddEntity = (entity: Entity) =>
       {
         console.log("adding entities")
-        setIsShowOverlay(_ => false)
         addNode(entity.name, 66, 66)
       }
 
@@ -607,9 +590,7 @@ const useConceptualModel = () =>
     
     
       const onAddAttributesToNode = (attribute : Attribute) =>
-      {
-        setIsShowOverlay(_ => false)
-    
+      {    
         const nodeID = sourceEntity.toLowerCase()
         
         setNodes((nodes) => nodes.map((currentNode) =>
@@ -655,7 +636,6 @@ const useConceptualModel = () =>
     
       const onAddRelationshipsToNodes = (relationshipObject : Relationship) =>
       {
-        setIsShowOverlay(_ => false)
         let sourceNodeID = relationshipObject.source?.toLowerCase()
         let targetNodeID = relationshipObject.target?.toLowerCase()
 
@@ -730,7 +710,6 @@ const useConceptualModel = () =>
 
       const onEditSuggestion = (itemID : number, userChoice : string) =>
       {
-        setIsShowOverlay(false)
         setIsShowEdit(true)
 
         setSelectedSuggestedItem(suggestedItems[itemID])
@@ -745,7 +724,7 @@ const useConceptualModel = () =>
 
         // TODO: Do not close the overlay if the user clicked on a different suggestion
         // Close overlay if it is already displayed
-        if (isShowOverlay)
+        if (isShowOverlayDomainDescription)
         {
           setIsShowOverlayDomainDescription(_ => false)
           return
@@ -758,7 +737,7 @@ const useConceptualModel = () =>
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-        summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus, onEditSave,
+        summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
         isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose
     }

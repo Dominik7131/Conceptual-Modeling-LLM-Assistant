@@ -2,14 +2,22 @@ import ConceptualModel from './components/ConceptualModel';
 import Topbar from './components/Topbar'
 import SideBar from './components/Sidebar';
 import useConceptualModel from './hooks/useConceptualModel'
-
 import { ReactFlowProvider } from 'reactflow';
 import OverlayShow from './components/OverlayShow';
 import OverlayEdit from './components/OverlayEdit';
 
+export const enum UserChoice
+{
+  ENTITIES = "entities",
+  ATTRIBUTES = "attributes",
+  RELATIONSHIPS = "relationships",
+  RELATIONSHIPS2 = "relationships2"
+}
 
 declare global // TODO: Export instead of "global"
 {
+
+
   interface Item extends Entity, Attribute, Relationship {    }
 
   interface Entity
@@ -56,7 +64,7 @@ declare global // TODO: Export instead of "global"
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-    OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowOverlay, onOverlayClose, isShowEdit, onEditClose, onEditPlus, onEditSave,
+    OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
     isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference,
     isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose
   } = useConceptualModel()

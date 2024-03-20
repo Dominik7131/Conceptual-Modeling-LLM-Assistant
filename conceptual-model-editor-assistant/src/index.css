@@ -16,14 +16,6 @@
   height: 40px;
 }
 
-.domainTextContainer {
-  display: flex;
-  flex-wrap: wrap;
-  height: 203px;
-  flex-grow: 1;
-  margin-bottom: 20px;
-}
-
 .highlight {
   background-color: orange;
   position: relative;
@@ -60,21 +52,6 @@
 
 .highlightAttributes.highlightRelationships {
   background-color: rgb(124, 236, 124);
-}
-
-/* Ignore domain description checkbox */
-#isIgnoreDomainDescription {
-  width: 18px;
-  height: 18px;
-  padding: 0;
-  margin: 0;
-  vertical-align: bottom;
-}
-
-
-.editContainerElement {
-  display: flex;
-  justify-content: space-between;
 }
 
 .textGray {
