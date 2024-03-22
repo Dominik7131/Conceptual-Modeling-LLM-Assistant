@@ -14,11 +14,29 @@ export const enum UserChoice
   RELATIONSHIPS2 = "relationships2"
 }
 
+export const enum Field
+{
+  ID = "id",
+  NAME = "name",
+  DESCRIPTION = "description",
+  INFERENCE = "inference",
+  INFERENCE_INDEXES = "inference_indexes",
+  DATA_TYPE = "dataType",
+  CARDINALITY = "cardinality",
+  SOURCE_ENTITY = "source",
+  TARGET_ENTITY = "target"
+}
+
+
 declare global // TODO: Export instead of "global"
 {
-
-
+  // TODO: Item should be either:
+  // - type Item = Entity | Attribute | Relationship
+  //    - then we need to add field "type" to each object to determine the type 
+  // - or abstract class with childs: Entity, Attribute, Relationship
   interface Item extends Entity, Attribute, Relationship {    }
+
+  // type Item = Entity | Attribute | Relationship
 
   interface Entity
   {

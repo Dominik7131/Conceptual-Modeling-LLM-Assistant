@@ -5,6 +5,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Typography from '@mui/material/Typography';
+import Stack from '@mui/material/Stack';
+import Alert from '@mui/material/Alert';
 import { useEffect, useRef, useState } from 'react';
 
 
@@ -51,6 +53,7 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isShow, inferenceInde
       )
   }
 
+
   // TODO: Fix scrolling into the first highlighted inference
   const highlightedInferenceRef = useRef<HTMLDivElement>(null);
   // useEffect(() =>
@@ -78,7 +81,10 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isShow, inferenceInde
         scroll={'paper'}
       >
         <DialogTitle>
-          Domain description
+          <Stack spacing={2}>
+            { inferenceIndexes.length === 0 && <Alert variant="outlined" severity="warning">Unable to find original text in domain description</Alert>}
+            <Typography variant="h5">Text Domain description</Typography>
+          </Stack>
         </DialogTitle>
 
         <DialogContent dividers={true}>

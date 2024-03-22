@@ -11,11 +11,8 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
-import { UserChoice } from '../App';
+import { Field, UserChoice } from '../App';
 
-interface FieldOptions {
-    field : "name" | "description"
-}
 
 interface Props
 {
@@ -25,7 +22,7 @@ interface Props
     isDisableSave : boolean
     onClose : () => void
     onSave : (editedItem : Item) => void
-    onPlus : (attributeName: string, field: string) => void
+    onPlus : (name: string, field: string) => void
 }
 
 const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, onClose, onSave, onPlus} : Props) =>
@@ -42,6 +39,7 @@ const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, 
 
     const onAdd = () =>
     {
+        // TODO: Put this code into useConceptualModel hook
         // TODO: Try to less repeat yourself
         if (userChoice === UserChoice.ATTRIBUTES)
         {
@@ -94,10 +92,10 @@ const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, 
                 <Stack direction="row" paddingX={1}>
                     <TextField margin="dense" label="Description" fullWidth variant="standard" spellCheck={false}
                         onChange={(e) => setEditedItem({ ...editedItem, description: e.target.value })}
-                        value={editedItem.dataType === undefined ? "" : editedItem.description}
+                        value={editedItem.description === undefined ? "" : editedItem.description}
                     />
                     <Fab color="primary" aria-label="add" size="small">
-                        <AddIcon onClick={() => console.log("hi")}/>
+                        <AddIcon onClick={() => onPlus(editedItem.name, Field.DESCRIPTION)}/>
                     </Fab>
                 </Stack>
 

@@ -239,14 +239,16 @@ const useConceptualModel = () =>
         parseSerializedConceptualModel()
       }
 
-      const onEditPlus = (attributeName: string, field: string) =>
+      const onEditPlus = (name: string, field: string) =>
       {
+        // TODO: based on the `userChoiceSuggestion` let LLM suggest field for entity/attribute/relationship
+        
         const endpointName = "getOnly"
         const endpoint = URL + endpointName
         const headers = { "Content-Type": "application/json" }
-        const bodyData = JSON.stringify({"attributeName": attributeName, "sourceEntity": sourceEntity, "field": field, "domainDescription": domainDescription})
+        const bodyData = JSON.stringify({"attributeName": name, "sourceEntity": sourceEntity, "field": field, "domainDescription": domainDescription})
 
-        use_fetch_streamed_data_general(endpoint, headers, bodyData, attributeName, field)
+        use_fetch_streamed_data_general(endpoint, headers, bodyData, name, field)
       }
 
       const onEditSave = (newItem : Item) =>

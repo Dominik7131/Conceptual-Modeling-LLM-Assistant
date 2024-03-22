@@ -26,6 +26,8 @@ interface Props
 
 const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference}) =>
 {
+    // TODO: Instead of different functions for adding pass probably only one Add function and implement the logic in useConceptualModel hook
+
     // TODO: Decompose the sidebar into more sub-components
     // E.g.:
     //  - one component for text such as name: ..., inference: ..., ...
