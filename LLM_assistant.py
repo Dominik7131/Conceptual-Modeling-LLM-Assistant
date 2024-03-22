@@ -287,7 +287,7 @@ class LLMAssistant:
         opened_square_brackets = 0
 
         # For debugging purposes generate whole text first because there might be some bug on my side when parsing text on the fly
-        is_generate_content_first = False
+        is_generate_content_first = True
 
         if is_generate_content_first:
             output = self.llm.create_chat_completion(messages=messages, temperature=0)
@@ -637,7 +637,7 @@ EXAMPLE END
         #                     {"name": "is-a", "source_entity": "student", "target_entity": "person"}
         #                   ]}
         
-        prompt = f"In plain text detaily summarize the given conceptual model and output the summary in this JSON object: "
+        prompt = f"In plain text detaily summarize the given conceptual model: each entity and relationship and output the summary in this JSON object: "
         prompt += '{"summary": "..."}\n'
 
         prompt += f"This is the given conceptual model:\n{conceptual_model}"

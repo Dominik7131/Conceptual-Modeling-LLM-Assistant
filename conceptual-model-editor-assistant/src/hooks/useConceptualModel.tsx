@@ -26,8 +26,7 @@ const useConceptualModel = () =>
   
     const [isMultiSelection, setIsMultiSelection] = useState<boolean>(false);
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
-  
-    const [summaryData, setSummaryData] = useState<SummaryObject[]>([])
+    const [selectedEdges, setSelectedEdges] = useState<Edge[]>([]);
 
     const [isShowOverlayDomainDescription, setIsShowOverlayDomainDescription] = useState<boolean>(false)
     const [isShowEdit, setIsShowEdit] = useState<boolean>(false)
@@ -37,7 +36,7 @@ const useConceptualModel = () =>
     let IDToAssign = 0
     const [userChoiceSuggestion, setUserChoiceSuggestion] = useState<string>("")
 
-    const URL = "http://127.0.0.1:5002/"
+    const URL = "http://127.0.0.1:5000/"
 
     const { inferenceIndexes, setInferenceIndexes, getIndexesForOneInference } = useInferenceIndexes()
 
@@ -49,13 +48,14 @@ const useConceptualModel = () =>
 
 
     const onConnect : OnConnect = useCallback(
-        (params) => setEdges((eds) => addEdge(params, eds)),
+        (params) => setEdges((edge) => addEdge(params, edge)),
         [setEdges],
       );
     
     const onChange = useCallback(({ nodes, edges } : { nodes : Node[], edges : Edge[]}) =>
     {
       setSelectedNodes(nodes)
+      setSelectedEdges(edges)
   
       if (nodes[1])
       {
@@ -76,26 +76,26 @@ const useConceptualModel = () =>
 
       const parseSerializedConceptualModel = () =>
       {
-        const input = { "entities": [ {"name": "Engine", "attributes": []},
-                                      {"name": "Bodywork", "attributes": []},
-                                      {"name": "Natural person", "attributes": []},
-                                      {"name": "Vehicle", "attributes": []},
-                                      {"name": "Road vehicle", "attributes": []},
-                                      {"name": "Registration", "attributes": []},
-                                      {"name": "Insurance contract", "attributes": []},
-                                      {"name": "Technical inspection", "attributes": []}],
-                        "relationships": [{"name": "is-a", "inference": "", "source_entity": "vehicle", "target_entity": "road vehicle"}]}
+        // const input = { "entities": [ {"name": "Engine", "attributes": []},
+        //                               {"name": "Bodywork", "attributes": []},
+        //                               {"name": "Natural person", "attributes": []},
+        //                               {"name": "Vehicle", "attributes": []},
+        //                               {"name": "Road vehicle", "attributes": []},
+        //                               {"name": "Registration", "attributes": []},
+        //                               {"name": "Insurance contract", "attributes": []},
+        //                               {"name": "Technical inspection", "attributes": []}],
+        //                 "relationships": [{"name": "is-a", "inference": "", "source_entity": "vehicle", "target_entity": "road vehicle"}]}
         
-        // const input = { "entities": [
-        //     {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
-        //     {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
-        //     {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
-        //     {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
-        //   "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
-        //                     {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
-        //                     {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
-        //                     {"name": "is-a", "source_entity": "student", "target_entity": "person"}
-        //                   ]}
+        const input = { "entities": [
+            {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
+            {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
+            {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
+            {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
+          "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
+                            {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
+                            {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
+                            {"name": "is-a", "source_entity": "student", "target_entity": "person"}
+                          ]}
 
         const incrementX = 250
         const incrementY = 250
@@ -128,7 +128,7 @@ const useConceptualModel = () =>
 
         for (const [key, relationship] of Object.entries(input["relationships"]))
         {
-          const newEdge = { id: `${relationship.source_entity},${relationship.target_entity}`, source: relationship.source_entity, target: relationship.target_entity, label: relationship.name, description: "", inference: relationship.inference, type: 'straight'}
+          const newEdge : Edge = { id: `${relationship.source_entity},${relationship.target_entity}`, source: relationship.source_entity, target: relationship.target_entity, label: relationship.name, type: 'straight', data: { description: "", inference: relationship.inference } }
           newEdges.push(newEdge)
         }
         
@@ -141,14 +141,31 @@ const useConceptualModel = () =>
       const convertConceptualModelToJSON = () =>
       {
         let result: { [key: string]: any } = {
-          entities: [],
-          relationships: []
+          entities: []
         };
 
-        for (let node of nodes)
+        for (let node of selectedNodes)
         {
-          result.entities.push({"name": node.id, "attributes": node.data.attributes})
+          let attributes = []
+          for (let attribute of node.data.attributes)
+          {
+            attributes.push({"name": attribute.name, "inference": attribute.inference})
+          }
+          result.entities.push({"name": node.id, "attributes": attributes})
         }
+
+        let relationships = []
+        for (let edge of selectedEdges)
+        {
+          relationships.push({"name": edge.label, "inference": edge.data.inference, "source_entity": edge.source, "target_entity": edge.target})
+        }
+
+        if (relationships)
+        {
+          result.relationships = relationships
+        }
+
+        // console.log(result)
 
         return result
 
@@ -721,7 +738,7 @@ const useConceptualModel = () =>
         }
     
         console.log("Adding a new edge")
-        const newEdge = { id: newEdgeID, source: sourceNodeID, target: targetNodeID, label: relationshipObject.name, name: relationshipObject.name, description: relationshipObject.description, inference: relationshipObject.inference}
+        const newEdge : Edge = { id: newEdgeID, data: {name: relationshipObject.name, description: relationshipObject.description, inference: relationshipObject.inference}, source: sourceNodeID, target: targetNodeID, label: relationshipObject.name}
     
         setEdges(previousEdges =>
           {
