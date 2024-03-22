@@ -25,22 +25,31 @@ def suggest():
     return llm_assistant.suggest(source_entity, target_entity, user_choice, 5, conceptual_model=[], domain_description=domain_description)
 
 
-@app.route('/getOnlyDescription', methods=['POST'])
+@app.route('/getOnly', methods=['POST'])
 @cross_origin()
+
 def get_attribute_description():
+    body_data = request.get_json()
+    sourceEntity = body_data["sourceEntity"]
+    attribute_name = body_data["attributeName"]
+    domain_description = body_data["domainDescription"]
+    field = body_data["field"]
+
+    # TODO: Decide on which thing to generate based on the `field` variable
+    return llm_assistant.get_description(attribute_name, sourceEntity, domain_description)
+
+
+@app.route('/summary1', methods=['POST'])
+@cross_origin()
+def summary1():
 
     body_data = request.get_json()
     sourceEntity = body_data["sourceEntity"]
     attribute_name = body_data["attributeName"]
     domain_description = body_data["domainDescription"]
+    field = body_data["field"]
 
-    return llm_assistant.get_description(attribute_name, sourceEntity, domain_description)
-
-
-@app.route('/summary', methods=['GET'])
-@cross_origin()
-def summary():
-    return ""
+    return llm_assistant.summarize_conceptual_model([], "")
 
 
 if __name__ == '__main__':

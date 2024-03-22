@@ -1,5 +1,5 @@
 from llama_cpp import Llama
-from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, ENTITIES_STRING, ONLY_DESCRIPTION
+from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, ENTITIES_STRING, ONLY_DESCRIPTION, SUMMARY1, SUMMARY2
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
 import logging
@@ -37,7 +37,7 @@ class LLMAssistant:
         model_type = config['model_type']
         context_size = config['context_size']
 
-        self.llm = Llama(model_path=model_path, chat_format=model_type, n_gpu_layers=-1, main_gpu=1, n_ctx=context_size, verbose=True)
+        self.llm = Llama(model_path=model_path, chat_format=model_type, n_gpu_layers=-1, n_ctx=context_size, n_batch=4096, verbose=True)
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             # Assumption: domain description never changes
@@ -157,6 +157,15 @@ class LLMAssistant:
 
             if not is_item_ok:
                 logging.error("No description in the item")
+
+            yield completed_item, is_item_ok
+            return
+        
+        if user_choice == SUMMARY1:
+            is_item_ok = "summary" in completed_item
+
+            if not is_item_ok:
+                logging.error("No summary in the item")
 
             yield completed_item, is_item_ok
             return
@@ -615,33 +624,36 @@ EXAMPLE END
             yield f"{json_item}\n"
 
 
-    def summarize_conceptual_model(self, conceptual_model):
+    def summarize_conceptual_model(self, conceptual_model, domain_description):
 
-        # TODO: Possible improvement: convert `conceptual_model` in JSON format into simple model description
+        conceptual_model = { "entities": [
+            {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
+            {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
+            {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
+            {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
+          "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
+                            {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
+                            {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
+                            {"name": "is-a", "source_entity": "student", "target_entity": "person"}
+                          ]}
+        
+        prompt = f"In plain text detaily summarize the given conceptual model and output the summary in this JSON object: "
+        prompt += '{"summary": "..."}\n'
 
-        conceptual_model = {
-            "student" : { "attributes": [ {"attribute_name" : "name", "dataType": "string"}], "relationships" : [{"relationship_name": "is accomodated", "source_entity": "student", "target_entity": "dormitory" }, {"relationship_name": "enrolls", "source_entity": "student", "target_entity": "course" }] },
-            "course" : { "attributes": [ {"attribute_name": "name", "dataType": "string"}, {"attribute_name": "number of credits", "dataType": "integer"}], "relationships" : [{"relationship_name": "have", "source_entity": "course", "target_entity": "professor" }, {"relationship_name": "aggregates", "source_entity": "course", "target_entity": "student" }], },
-            "professor" : { "attributes": [ {"attribute_name": "name", "dataType": "string"}], "relationships" : [{"relationship_name": "participates in", "source_entity": "professor", "target_entity": "course" }], },
-            "dormitory" : { "attributes": [ {"attribute_name": "price", "dataType": "real"}], "relationships" : [{"relationship_name": "accomodates", "source_entity": "dormitory", "target_entity": "student" }], },
-
-        }
-        #prompt = f"Create a human description of this conceptual model: {json.dumps(conceptual_model)}?"
-        #prompt = f"The following conceptual model was created from some domain description. Create this domain description based on the following conceptual model: "
-        prompt = f"Create domain description like human in simple sentences solely based on this conceptual model: "
-
-        prompt += f"{json.dumps(conceptual_model)}"
-
+        prompt += f"This is the given conceptual model:\n{conceptual_model}"
 
         self.messages = []
-        self.__append_default_messages_for_summaries()
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
+        messages_prettified = TextUtility.messages_prettify(new_messages)
+        self.debug_info.prompt = messages_prettified
 
-        llm_prompt = TextUtility.create_llm_prompt(self.model_type, new_messages)
-        logging.debug(f"Sending this prompt to llm:\n{llm_prompt}\n")
+        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
-        for text in self.llm(prompt, stream=True):
-            logging.info(text, end="", flush=True)
+        items_iterator = self.__parse_streamed_output(new_messages, SUMMARY1, "")
 
-        return ""
+        for item in items_iterator:
+            dictionary = json.loads(json.dumps(item))
+
+            json_item = json.dumps(dictionary)
+            yield f"{json_item}\n"
