@@ -23,23 +23,6 @@
   /* border-bottom: 1px dotted black; */
 }
 
-.highlight .tooltip {
-  visibility: hidden;
-  position: absolute;
-  z-index: 1;
-  bottom: 100%;
-  left: 50%;
-  background-color: white;
-  border-width: 6px;
-  border-style: solid;
-  border-color: white;
-  margin-left: -60px;
-}
-
-.highlight:hover .tooltip {
-  visibility: visible;
-}
-
 .highlightAttributes {
   background-color: rgb(0, 179, 255);
 }

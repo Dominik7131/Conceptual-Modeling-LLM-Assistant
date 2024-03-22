@@ -84,7 +84,7 @@ function App()
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
     OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
     isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference,
-    isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose
+    isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems
   } = useConceptualModel()
 
   return (
@@ -97,6 +97,7 @@ function App()
         OnClickAddNode={OnClickAddNode}
         domainDescription={domainDescription}
         onDomainDescriptionChange={onDomainDescriptionChange}
+        onHighlightSelectedItems={onHighlightSelectedItems}
       />
 
       <SideBar

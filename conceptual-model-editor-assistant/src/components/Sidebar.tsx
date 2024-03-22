@@ -7,7 +7,9 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
+import CircularProgress from '@mui/material/CircularProgress';
 import { UserChoice } from '../App';
+import Box from '@mui/material/Box';
 
 
 interface Props
@@ -44,7 +46,10 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
                         </ListItem>
                 )}
 
-                {isLoading && <p ><strong>Loading...</strong></p>}
+                {isLoading &&
+                    <Box sx={{ display: 'flex', justifyContent:"center", marginY: 2}}>
+                        <CircularProgress />
+                    </Box>}
             </List>
         )
     }
@@ -65,7 +70,7 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
                 </Typography>
 
                 <Typography>
-                    <strong>Inference:</strong> {item.inference}
+                    <strong>Original text:</strong> {item.inference}
                 </Typography>
 
                 {

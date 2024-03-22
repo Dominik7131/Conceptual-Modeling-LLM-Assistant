@@ -328,6 +328,7 @@ const useConceptualModel = () =>
 
         if (!selectedNodes[0])
         {
+          setIsLoading(_ => false)
           console.log("Zero nodes selected")
           return
         }
@@ -412,6 +413,26 @@ const useConceptualModel = () =>
         .catch(error => console.log(error))
         return
       }
+
+      const onHighlightSelectedItems = () =>
+      {
+        // TODO: Process also all selected edges
+        // let selectedInferenceIndexes : number[] = []
+        // [{"inference_indexes": [10, 20], "name": "Attribute: type of engine"}, {...}]
+        // 1) sort objects by "inference_indexes" value[0]
+        // 2) merge instances with the same value[0] and merge their names
+        //  - e.g. [{10, 20, "x"}, [{10, 100, "y"}] -> [{10, 20, "x, y"}, {20, 100, "y"}]
+        //  - e.g. [{5, 10, "x"}, {6, 8, "y"}] -> [{5, 6, "x"}, {6, 8, "x, y"}, {8, 10, "y"}]
+
+        // for (let i = 0; i < selectedNodes.length; i++)
+        // {
+        //   for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
+        //   {
+        //     const element = selectedNodes[i].data.attributes[j];
+        //     console.log(element.inference_indexes)   
+        //   }
+        // }
+      }
     
       const updateNodes = () =>
       {
@@ -469,31 +490,31 @@ const useConceptualModel = () =>
         }
       }, [isIgnoreDomainDescription]);
     
-      useEffect(() =>
-      {
-        // Recompute inference indexes
-        setInferenceIndexes([])
+      // useEffect(() =>
+      // {
+      //   // Recompute inference indexes
+      //   setInferenceIndexes([])
     
-        setNodes((nodes) => nodes.map((node) =>
-        {
-          for (let i = 0; i < node.data.attributes.length; i++)
-          {
-            const newInferenceIndexes = getIndexesForOneInference(node.data.attributes[i].inference, domainDescription)
-            if (newInferenceIndexes.length === 0)
-            {
-              continue
-            }
+      //   setNodes((nodes) => nodes.map((node) =>
+      //   {
+      //     for (let i = 0; i < node.data.attributes.length; i++)
+      //     {
+      //       const newInferenceIndexes = getIndexesForOneInference(node.data.attributes[i].inference, domainDescription)
+      //       if (newInferenceIndexes.length === 0)
+      //       {
+      //         continue
+      //       }
     
-            node.data.attributes.inference_indexes = newInferenceIndexes
+      //       node.data.attributes.inference_indexes = newInferenceIndexes
     
-            setInferenceIndexes(previousInferenceIndexes => 
-              {
-                return [...previousInferenceIndexes, newInferenceIndexes]
-              })
-          }
-          return node;
-        }));
-      }, [domainDescription])
+      //       setInferenceIndexes(previousInferenceIndexes => 
+      //         {
+      //           return [...previousInferenceIndexes, newInferenceIndexes]
+      //         })
+      //     }
+      //     return node;
+      //   }));
+      // }, [domainDescription])
 
       useEffect(() =>
       {
@@ -603,16 +624,16 @@ const useConceptualModel = () =>
             return currentNode;
           }
     
-          const newInferenceIndexes = getIndexesForOneInference(attribute.inference, domainDescription)
-          if (newInferenceIndexes.length !== 0)
-          {
-            setInferenceIndexes(previousInferenceIndexes =>
-              {
-                return [...previousInferenceIndexes, newInferenceIndexes]
-              })
-          }
+          // const newInferenceIndexes = getIndexesForOneInference(attribute.inference, domainDescription)
+          // if (newInferenceIndexes.length !== 0)
+          // {
+          //   setInferenceIndexes(previousInferenceIndexes =>
+          //     {
+          //       return [...previousInferenceIndexes, newInferenceIndexes]
+          //     })
+          // }
 
-          const newAttributeObject : Attribute = { ID: attribute.ID, name: attribute.name, description: "", inference: attribute.inference, inference_indexes: newInferenceIndexes, dataType: attribute.dataType}
+          const newAttributeObject : Attribute = { ID: attribute.ID, name: attribute.name, description: "", inference: attribute.inference, inference_indexes: attribute.inference_indexes, dataType: attribute.dataType}
     
           // If the node already contains the selected attribute do not add anything
           let isAttributePresent = false
@@ -741,7 +762,7 @@ const useConceptualModel = () =>
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
-        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose
+        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems
     }
 }
 

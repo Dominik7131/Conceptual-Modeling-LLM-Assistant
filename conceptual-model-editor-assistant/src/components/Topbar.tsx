@@ -7,6 +7,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { UserChoice } from "../App";
+import Tooltip from '@mui/material/Tooltip';
 
 
 interface Props
@@ -18,9 +19,10 @@ interface Props
     OnClickAddNode : (nodeName : string) => void
     domainDescription : string
     onDomainDescriptionChange : (newDomainDescriptionText : string) => void
+    onHighlightSelectedItems : () => void
 }
 
-const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange}) =>
+const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems}) =>
 {
     const [insertedNodeNameText, setInsertedNodeNameText] = useState<string>("")
 
@@ -42,6 +44,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     direction="row"
                     paddingX={1}
                     >
+
                     <Button
                         variant="contained"
                         disableElevation
@@ -87,12 +90,24 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 <Stack
                     direction="row"
                     paddingX={1}
-                    spacing={2}
+                    spacing={10}
                 >
-                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ENTITIES}</Button>
-                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ATTRIBUTES}</Button>
-                    <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.RELATIONSHIPS}</Button>
-                    <Button variant="contained" disableElevation onClick={onSummaryButtonClick}>Summary</Button>
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                    >
+                        <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ENTITIES}</Button>
+                        <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ATTRIBUTES}</Button>
+                        <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.RELATIONSHIPS}</Button>
+                    </Stack>
+
+                    <Stack
+                        direction="row"
+                        spacing={2}
+                    >
+                        <Button variant="contained" disableElevation onClick={onSummaryButtonClick}>Summary</Button>
+                        <Button variant="contained" disableElevation onClick={onHighlightSelectedItems}>Highlight</Button>
+                    </Stack>
                 </Stack>
 
                 <Stack
