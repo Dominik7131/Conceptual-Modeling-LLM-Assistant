@@ -37,7 +37,7 @@ const useConceptualModel = () =>
     let IDToAssign = 0
     const [userChoiceSuggestion, setUserChoiceSuggestion] = useState<string>("")
 
-    const URL = "http://127.0.0.1:5000/"
+    const URL = "http://127.0.0.1:5002/"
 
     const { inferenceIndexes, setInferenceIndexes, getIndexesForOneInference } = useInferenceIndexes()
 
@@ -45,7 +45,7 @@ const useConceptualModel = () =>
 
     const { capitalizeString } = useUtility()
 
-    const { isLoadingEdit, descriptionData, use_fetch_streamed_data_general } = useFetchData((x, y, z) => onAttributeChange(x, y, z))
+    const { isLoadingEdit, text, summaryText, fetchStreamedDataGeneral, fetchSummary } = useFetchData((x, y, z) => onAttributeChange(x, y, z))
 
 
     const onConnect : OnConnect = useCallback(
@@ -135,6 +135,33 @@ const useConceptualModel = () =>
         setNodes(() => { return newNodes })
         setEdges(() => { return newEdges })
         updateNodes()
+      }
+
+
+      const convertConceptualModelToJSON = () =>
+      {
+        let result: { [key: string]: any } = {
+          entities: [],
+          relationships: []
+        };
+
+        for (let node of nodes)
+        {
+          result.entities.push({"name": node.id, "attributes": node.data.attributes})
+        }
+
+        return result
+
+        // From nodes and edges create JSON in the following format:
+        // const input = { "entities": [ {"name": "Engine", "attributes": []},
+        //         {"name": "Bodywork", "attributes": []},
+        //         {"name": "Natural person", "attributes": []},
+        //         {"name": "Vehicle", "attributes": []},
+        //         {"name": "Road vehicle", "attributes": []},
+        //         {"name": "Registration", "attributes": []},
+        //         {"name": "Insurance contract", "attributes": []},
+        //         {"name": "Technical inspection", "attributes": []}],
+        // "relationships": [{"name": "is-a", "inference": "", "source_entity": "vehicle", "target_entity": "road vehicle"}]}
       }
 
 
@@ -248,7 +275,7 @@ const useConceptualModel = () =>
         const headers = { "Content-Type": "application/json" }
         const bodyData = JSON.stringify({"attributeName": name, "sourceEntity": sourceEntity, "field": field, "domainDescription": domainDescription})
 
-        use_fetch_streamed_data_general(endpoint, headers, bodyData, name, field)
+        fetchStreamedDataGeneral(endpoint, headers, bodyData, name, field)
       }
 
       const onEditSave = (newItem : Item) =>
@@ -329,7 +356,7 @@ const useConceptualModel = () =>
         if (!selectedNodes[0])
         {
           setIsLoading(_ => false)
-          console.log("Zero nodes selected")
+          alert("No nodes selected")
           return
         }
 
@@ -384,34 +411,11 @@ const useConceptualModel = () =>
     
       const onSummaryButtonClick = () =>
       {
-        alert("Not implemented")
-        return
-
-        // Get titles of all selected entites
-        let selectedEntites = ""
-        for (let i = 0; i < selectedNodes.length; i++)
-        {
-          selectedEntites += `${selectedNodes[i].id},`
-        }
-        selectedEntites = selectedEntites.slice(0, -1)
-    
-        fetch(`http://127.0.0.1:5000/summary?entities=${selectedEntites}`)
-        .then(response => response.json())
-        .then(data => 
-            {
-              setSummaryData([]) // Clear summary data
-    
-              for (let i = 0; i < data.length; i++)
-              {
-                let summaryObject = JSON.parse(data[i])
-                setSummaryData(previousData => 
-                  {
-                    return [...previousData, summaryObject]
-                  })
-              }
-            })
-        .catch(error => console.log(error))
-        return
+        const endpoint = URL + "summary1"
+        const headers = { "Content-Type": "application/json" }
+        const conceptualModel = convertConceptualModelToJSON()
+        const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
+        fetchSummary(endpoint, headers, bodyData)
       }
 
       const onHighlightSelectedItems = () =>
@@ -533,10 +537,11 @@ const useConceptualModel = () =>
 
       }, [isShowOverlayDomainDescription])
     
-      // useEffect(() =>
-      // {
-      //   console.log("Nodes: ", nodes)
-      // }, [nodes]);
+      useEffect(() =>
+      {
+        // console.log("Nodes: ", nodes)
+        convertConceptualModelToJSON()
+      }, [nodes]);
     
       // useEffect(() =>
       // {
@@ -760,7 +765,7 @@ const useConceptualModel = () =>
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-        summaryData, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
+        summaryText, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
         isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems
     }

@@ -8,6 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { UserChoice } from "../App";
 import Tooltip from '@mui/material/Tooltip';
+import { Typography } from "@mui/material";
 
 
 interface Props
@@ -20,11 +21,25 @@ interface Props
     domainDescription : string
     onDomainDescriptionChange : (newDomainDescriptionText : string) => void
     onHighlightSelectedItems : () => void
+    summary : string
+    isShowSummary : boolean
 }
 
-const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems}) =>
+const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isShowSummary}) =>
 {
     const [insertedNodeNameText, setInsertedNodeNameText] = useState<string>("")
+
+    const showSummary = () =>
+    {
+        return (
+            <Typography variant="h5">
+                Summary
+                <Typography>
+                    {summary}
+                </Typography>
+            </Typography>
+        )
+    }
 
     return (
         <div className="topBar">
@@ -34,7 +49,8 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                         control={
                             <Checkbox
                                 defaultChecked
-                                onClick={() => onIgnoreDomainDescriptionChange()}/>}
+                                onClick={() => onIgnoreDomainDescriptionChange()}/>
+                            }
                                 label="Use domain description"/>
                 </FormGroup>
 
@@ -128,6 +144,12 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     </TextField>
                 </Stack>
             </div>
+
+            { summary && isShowSummary &&
+            <Stack direction="row" paddingX={1} paddingY={4} spacing={2}>
+                { showSummary()}
+            </Stack>
+            }
         </div>
     )
 }

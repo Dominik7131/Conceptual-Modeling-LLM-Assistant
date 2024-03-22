@@ -44,12 +44,10 @@ def get_attribute_description():
 def summary1():
 
     body_data = request.get_json()
-    sourceEntity = body_data["sourceEntity"]
-    attribute_name = body_data["attributeName"]
     domain_description = body_data["domainDescription"]
-    field = body_data["field"]
+    conceptual_model = body_data["conceptualModel"]
 
-    return llm_assistant.summarize_conceptual_model([], "")
+    return llm_assistant.summarize_conceptual_model(conceptual_model, domain_description)
 
 
 if __name__ == '__main__':

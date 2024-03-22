@@ -626,16 +626,16 @@ EXAMPLE END
 
     def summarize_conceptual_model(self, conceptual_model, domain_description):
 
-        conceptual_model = { "entities": [
-            {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
-            {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
-            {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
-            {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
-          "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
-                            {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
-                            {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
-                            {"name": "is-a", "source_entity": "student", "target_entity": "person"}
-                          ]}
+        # conceptual_model = { "entities": [
+        #     {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
+        #     {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
+        #     {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
+        #     {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
+        #   "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
+        #                     {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
+        #                     {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
+        #                     {"name": "is-a", "source_entity": "student", "target_entity": "person"}
+        #                   ]}
         
         prompt = f"In plain text detaily summarize the given conceptual model and output the summary in this JSON object: "
         prompt += '{"summary": "..."}\n'

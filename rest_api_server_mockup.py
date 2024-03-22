@@ -6,6 +6,7 @@ import time
 app = Flask(__name__)
 llm_assistant = None
 
+# TODO: Try to remove CORS by filling in the header properly
 # CORS error from frontend solution: https://stackoverflow.com/a/33091782
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type' 
@@ -26,25 +27,53 @@ def suggest():
         return create_suggest_mockup(sourceEntity, user_choice, domain_description)
     else:
         def generate_mock_up():
-            time.sleep(2)
+            # time.sleep(2)
             if user_choice == "attributes" or user_choice == "entity":
-                yield '{"inference": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "inference_indexes": [5388, 5456, 5500, 5550]}\n'
-                time.sleep(2)
-                yield '{"inference": "the fuel type of the road vehicle", "name": "fuel type", "inference_indexes": [0, 20]}\n'
-                time.sleep(2)
+                yield '{"inference": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "inference_indexes": [], "dataType": "string"}\n'
+                # time.sleep(2)
+                yield '{"inference": "the fuel type of the road vehicle", "name": "fuel type", "inference_indexes": [0, 20], "dataType": "string"}\n'
+                # time.sleep(2)
             else:
                 yield '{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "inference_indexes": [10,20], "source": "student", "target": "course"}\n'
-                yield '{"name": "accommodated in", "inference": "students can be accommodated in dormitories", "inference_indexes": [20,30], "source": "student", "target": "dormitory"}\n'
+                yield '{"name": "accommodated in", "inference": "students can be accommodated in dormitories", "inference_indexes": [20,100], "source": "student", "target": "dormitory"}\n'
         return generate_mock_up()
 
 
-@app.route('/summary', methods=['GET'])
+@app.route('/summary1', methods=['POST'])
 @cross_origin()
 def summary():
-    entities_comma_separated = request.args.get("entities").lower()
-    entities = entities_comma_separated.split(',')
-    result = create_summary_mockup(entities)
-    return json.dumps(result)
+
+    body_data = request.get_json()
+    domain_description = body_data["domainDescription"]
+    conceptual_model = body_data["conceptualModel"]
+
+    def generate_mock_up():
+        yield '{"summary": "The conceptual model includes four main entities: Student, Course, Dormitory, and Professor. The Student entity has a name attribute and can be enrolled in any number of Courses. The Course entity has a name and a number of credits attribute, and can have one or more Professors. The Dormitory entity has a price attribute, and students can be accommodated in it. The Professor entity has a name attribute. Additionally, there is a relationship between Student and Person through an \'is-a\' relationship."}\n'
+        return
+
+    return generate_mock_up()
+
+
+@app.route('/getOnly', methods=['POST'])
+@cross_origin()
+def get_only():
+
+    def generator_function(field):
+
+        if field == "description":
+            dictionary = { field: "The engine type attribute of a road vehicle refers to the specific classification assigned by the manufacturer to denote the kind of engine installed in the vehicle. It encompasses various types such as internal combustion engines or other alternative propulsion systems. This attribute provides crucial information about the power source and characteristics of the engine, aiding in regulatory compliance, maintenance, and performance assessment."}
+        elif field == "cardinality":
+            dictionary = { field: "1..*"}
+
+        yield json.dumps(dictionary)
+
+    body_data = request.get_json()
+    source_entity = body_data["sourceEntity"]
+    attribute_name = body_data["attributeName"]
+    field = body_data["field"]
+    domain_description = body_data["domainDescription"]
+
+    return generator_function(field)
 
 
 @app.route('/test', methods=['GET'])
@@ -173,4 +202,4 @@ def create_summary_mockup(entities : list[str]) -> list[dict]:
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=5002)
