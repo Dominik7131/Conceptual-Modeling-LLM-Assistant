@@ -1,5 +1,5 @@
 from llama_cpp import Llama
-from text_utility import TextUtility, ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, ENTITIES_STRING, ONLY_DESCRIPTION, SUMMARY1, SUMMARY2
+from text_utility import TextUtility, UserChoice
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
 import logging
@@ -36,8 +36,9 @@ class LLMAssistant:
         model_path = config['model_path']
         model_type = config['model_type']
         context_size = config['context_size']
+        n_batch = config['n_batch']
 
-        self.llm = Llama(model_path=model_path, chat_format=model_type, n_gpu_layers=-1, n_ctx=context_size, n_batch=4096, verbose=True)
+        self.llm = Llama(model_path=model_path, chat_format=model_type, n_gpu_layers=-1, n_ctx=context_size, n_batch=n_batch, verbose=True)
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             # Assumption: domain description never changes
@@ -55,7 +56,7 @@ class LLMAssistant:
 
     def __append_default_messages_for_suggestions(self, user_choice, is_domain_description=False):
         system = ""
-        if user_choice == ATTRIBUTES_STRING:
+        if user_choice == UserChoice.ATTRIBUTES.value:
             if not is_domain_description:
                 system = "You are an expert at generating attributes for a given entity."
             else:
@@ -64,7 +65,7 @@ class LLMAssistant:
                 system = "You are an expert at extracting attributes in JSON format for a given entity solely based on a given context."
 
 
-        elif user_choice == RELATIONSHIPS_STRING:
+        elif user_choice == UserChoice.RELATIONSHIPS.value:
 
             if not is_domain_description:
                 system = "You are an expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name always make sure that the described short meaningful sentence can be created."
@@ -85,7 +86,7 @@ class LLMAssistant:
                     system = "You are an expert at extracting relationships in JSON format for a given entity solely based on a given context."
 
 
-        elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
+        elif user_choice == UserChoice.RELATIONSHIPS2.value:
             if not is_domain_description:
                 system = "You are an expert at generating relationships in between two given entities."
             else:
@@ -93,7 +94,7 @@ class LLMAssistant:
                 # system = "You are an expert at extracting relationships for an UML diagram in JSON format for two given entities solely based on a given context."
 
 
-        elif user_choice == ENTITIES_STRING:
+        elif user_choice == UserChoice.ENTITIES.value:
             if not is_domain_description:
                 system = "You are an expert at generating entities in JSON format."
             else:
@@ -152,7 +153,7 @@ class LLMAssistant:
         user_input_entity1 = user_input_entity1.lower()
         user_input_entity2 = user_input_entity2.lower()
 
-        if user_choice == ONLY_DESCRIPTION:
+        if user_choice == UserChoice.ONLY_DESCRIPTION.value:
             is_item_ok = "description" in completed_item
 
             if not is_item_ok:
@@ -161,7 +162,7 @@ class LLMAssistant:
             yield completed_item, is_item_ok
             return
         
-        if user_choice == SUMMARY1:
+        if user_choice == UserChoice.SUMMARY1.value:
             is_item_ok = "summary" in completed_item
 
             if not is_item_ok:
@@ -185,7 +186,7 @@ class LLMAssistant:
             yield completed_item, is_item_ok
             return
         
-        if user_choice == ATTRIBUTES_STRING:
+        if user_choice == UserChoice.ATTRIBUTES.value:
             # TODO: define all attribute field names so we do not have to type "dataType" but can use some variable instead
             if "dataType" in completed_item:
                 if completed_item["dataType"] == "float":
@@ -209,7 +210,7 @@ class LLMAssistant:
                 # is_item_ok = True
 
 
-        elif user_choice == RELATIONSHIPS_STRING:
+        elif user_choice == UserChoice.RELATIONSHIPS.value:
             if not "source" in completed_item or not completed_item["source"]:
                 completed_item["name"] = "error: no source entity"
                 is_item_ok = False
@@ -242,7 +243,7 @@ class LLMAssistant:
                 is_item_ok = False
 
 
-        elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
+        elif user_choice == UserChoice.RELATIONSHIPS2.value:
             if 'source' in completed_item and 'target' in completed_item:
 
                 # Replace 's' for 'z' to solve the following issue:
@@ -389,7 +390,7 @@ class LLMAssistant:
 
         # TODO: Probably make separate class for parsing as this is one component of the whole LLM-assistant logic
 
-        if user_choice == ATTRIBUTES_STRING:
+        if user_choice == UserChoice.ATTRIBUTES.value:
             if not is_domain_description:
                 prompt = f'What attributes does the entity: "{entity1}" have? Output exactly {count_items_to_suggest} attributes in JSON format like this: '
                 prompt += '{"description": "attribute description", "name": "attribute name"}.'
@@ -439,7 +440,7 @@ EXAMPLE END"""
                     prompt += 'Output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
 
 
-        elif user_choice == RELATIONSHIPS_STRING:
+        elif user_choice == UserChoice.RELATIONSHIPS.value:
             if not is_domain_description:
                 prompt = f'Which relationships does the entity: "{entity1}" have? Output exactly {count_items_to_suggest} relationships in JSON format like this: '
                 prompt += '{"description": "relationship description", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
@@ -462,7 +463,7 @@ EXAMPLE END"""
                     #     prompt += 'Output each single relationship in JSON object like this: {"inference": "copy the part of the given context containing this relationship", "name": "relationship name"}.'
 
 
-        elif user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
+        elif user_choice == UserChoice.RELATIONSHIPS2.value:
             if not is_domain_description:
                 prompt = f'What relationships are between the entity "{entity1}" and the entity "{entity2}"? Output exactly {count_items_to_suggest} relationships in JSON format like this: '
                 prompt += '{"description": "relationship description", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
@@ -498,7 +499,7 @@ EXAMPLE END
 
                 # prompt += 'Output:\nname: is in relationship with\ncontext: "' + entity1 + ' is in relationship with ' + entity2 + '"\nsource entity: ' + entity1 + '\ntarget entity: ' + entity2 + '\nJSON object: {"inference": "' + entity1 + ' is in relationship with ' + entity2 + '", "name": "is in relationship with", "source": "' + entity1 + '", "target": "' + entity2 + '"}\n\nname: is in some other relationship with\ncontext: "' + entity2 + ' is in relationship with ' + entity1 + '"\nsource entity: ' + entity2 + '\ntarget entity: ' + entity1 + '\nJSON object: {"inference": "' + entity2 + ' is in some other relationship with ' + entity1 + '", "name": "is in some other relationship with", "source": "' + entity2 + '", "target": "' + entity1 + '"}\nEXAMPLE END'
 
-        elif user_choice == ENTITIES_STRING:
+        elif user_choice == UserChoice.ENTITIES.value:
             if IS_CHAIN_OF_THOUGHTS:
                 prompt = """Solely based on the given context extract all classes for a UML diagram. For each class output its name and then output this class in JSON object.
 
@@ -543,7 +544,7 @@ EXAMPLE END
         self.messages = []
         self.__append_default_messages_for_suggestions(user_choice=user_choice, is_domain_description=is_domain_description)        
 
-        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION and user_choice != ENTITIES_STRING:
+        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION and user_choice != UserChoice.ENTITIES.value:
             relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
 
             result = ""
@@ -573,13 +574,13 @@ EXAMPLE END
             # TODO: Test if this work
             IS_STOP_GENERATING_OUTPUT = True
 
-        if user_choice == ENTITIES_STRING:
+        if user_choice == UserChoice.ENTITIES.value:
             suggested_entities = []
 
         for item in items_iterator:
             suggestion_dictionary = json.loads(json.dumps(item))
 
-            if user_choice == ENTITIES_STRING:
+            if user_choice == UserChoice.ENTITIES.value:
                 if suggestion_dictionary['name'] in suggested_entities:
                     logging.debug(f"Skipping duplicate entity: {suggestion_dictionary['name']}")
                     continue
@@ -615,7 +616,7 @@ EXAMPLE END
 
         logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
-        items_iterator = self.__parse_streamed_output(new_messages, ONLY_DESCRIPTION, source_entity)
+        items_iterator = self.__parse_streamed_output(new_messages, UserChoice.ONLY_DESCRIPTION.value, source_entity)
 
         for item in items_iterator:
             description_dictionary = json.loads(json.dumps(item))
@@ -650,7 +651,7 @@ EXAMPLE END
 
         logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
-        items_iterator = self.__parse_streamed_output(new_messages, SUMMARY1, "")
+        items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY1, "")
 
         for item in items_iterator:
             dictionary = json.loads(json.dumps(item))

@@ -2,8 +2,18 @@ import re
 import os
 import logging
 from difflib import SequenceMatcher
+from enum import Enum
 
 # TODO: Change to enum
+class UserChoice(Enum):
+    ATTRIBUTES = "attributes"
+    RELATIONSHIPS = "relationships"
+    RELATIONSHIPS2 = "relationships2"
+    ENTITIES = "entities"
+    ONLY_DESCRIPTION = "description"
+    SUMMARY1 = "summary1"
+    SUMMARY2 = "summary2"
+
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
 RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
