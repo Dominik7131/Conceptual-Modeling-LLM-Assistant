@@ -70,6 +70,20 @@ def basic_tests():
     expected_inference_indexes = [0, 7, 18, 34, 41, 49]
     test(inference, domain_description, expected_inference_indexes)
 
+    # Temp
+    data_directory_path = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
+    file_name = "56-2001-extract-llm-assistant-test-case.txt"
+    domain_description_file = os.path.join(data_directory_path, file_name)
+
+    with open(domain_description_file, 'r') as file:
+        domain_description = file.read().lower()
+
+    # domain_description = "In addition, for a road vehicle it is stated:\n- the registration plate, the date on which the registration plate was assigned,\n- the purpose for which the road vehicle is intended, which is a taxi service vehicle, a vehicle with right of way, a car rental vehicle for hire, a vehicle for general use, or a vehicle for the operation of road transport for hire by its operator,\n- the category of road vehicle,\n- the manufacturer's factory mark as specified by the road vehicle manufacturer,\n- the trade name if specified by the road vehicle manufacturer,\n- the type as specified by the road vehicle manufacturer and the variant and version if specified by the road vehicle manufacturer.\n- the vehicle identification number (VIN) of the road vehicle and, if not, the chassis serial number of the road vehicle,\n- the engine data for the road vehicle that include the type of engine specified by the manufacturer of the road vehicle, the engine power specified by the road vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines, the displacement of the internal combustion engine as specified by the manufacturer of the road vehicle in cm3; and the fuel type of the road vehicle\n- type, serial number and colour of bodywork, number of seats and standing places or beds, dimensions of the loading area, volume of the box or tank,\n- data on technical inspections of the road vehicle which is the type of technical inspection carried out, the date on which the technical inspection was carried out, the date of validity of the technical inspection, the designation of the technical inspection station and data on the condition of the road vehicle according to the result of the technical inspection,"
+        
+    inference = "it is not listed as missing or stolen in the Schengen Information System or in the information system of the Police of the Czech Republic or this information is not established by another procedure"
+    expected_inference_indexes = []
+    test(inference, domain_description, expected_inference_indexes)
+
 
 def check_inference_in_actual_output(domain_description, actual_output_file):
 

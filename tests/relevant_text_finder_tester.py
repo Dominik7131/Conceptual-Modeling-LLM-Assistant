@@ -6,19 +6,24 @@ from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 
 PATH_TO_DATA_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case/"
 TEST_DATA_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}relevant_texts.json"
+INPUT_DOMAIN_DESCRIPTION_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/56-2001-extract-llm-assistant-test-case.txt"
 
 class RAGTester:
 
     def test_lemmas_approach():
         test_cases = RAGTester.load_test_cases()
         relevant_text_finder = RelevantTextFinderLemmatization()
+
+        with open(INPUT_DOMAIN_DESCRIPTION_FILE_PATH, 'r') as domain_description_file:
+            domain_description = domain_description_file.read()
+
         are_all_tests_passing = True
 
         for test_case in test_cases:
             entity = test_case['entity']
             expected_relevant_texts = test_case['relevant_texts']
 
-            actual_relevant_texts = relevant_text_finder.get(entity)
+            actual_relevant_texts = relevant_text_finder.get(entity, domain_description)
 
             for expected_text in expected_relevant_texts:
                 is_relevant_text_found = False

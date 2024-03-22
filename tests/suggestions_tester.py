@@ -1,7 +1,7 @@
 import sys
 sys.path.append('.')
 from LLM_assistant import LLMAssistant, ITEMS_COUNT
-from text_utility import ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, ENTITIES_STRING, TextUtility
+from text_utility import TextUtility, UserChoice
 import time
 import json
 import os
@@ -17,7 +17,7 @@ TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 # Settings
 IS_GENERATE_EXPECTED_OUTPUT = False
-USER_CHOICE = RELATIONSHIPS_STRING
+USER_CHOICE = UserChoice.RELATIONSHIPS.value
 IS_SKIP_IS_A_RELATIONSHIPS = True
 
 
@@ -29,7 +29,7 @@ def generate_expected_output(test_file_path, output_file_path, test_name):
 
     with open(output_file_path, 'w') as file:
         for index, test_case in enumerate(test_cases):
-            if USER_CHOICE == ENTITIES_STRING:
+            if USER_CHOICE == UserChoice.ENTITIES.value:
                 file.write(f"Entity: {test_case}\n")
 
             elif test_name == "relationships":
@@ -64,7 +64,7 @@ def write_to_file(file, index, output):
 
 # TODO: Merge this with the implementation in the main method
 def test_relationships(llm_assistant, test_data_json, domain_description, actual_output_file_path):
-    test_data = test_data_json[RELATIONSHIPS_STRING]
+    test_data = test_data_json[UserChoice.RELATIONSHIPS.value]
 
     iterations_count = 0
     tested_relationships = []
@@ -81,14 +81,14 @@ def test_relationships(llm_assistant, test_data_json, domain_description, actual
             if iterations_count >= 20:
                 break
 
-            if USER_CHOICE == RELATIONSHIPS_STRING_TWO_ENTITIES:
+            if USER_CHOICE == UserChoice.RELATIONSHIPS2.value:
                 is_relationship_already_tested = (source_entity, target_entity) in tested_relationships
                 if is_relationship_already_tested:
                     continue
                 else:
                     tested_relationships.append((source_entity, target_entity))
 
-            elif USER_CHOICE == RELATIONSHIPS_STRING:
+            elif USER_CHOICE == UserChoice.RELATIONSHIPS.value:
                 target_entity = ""
                 is_relationship_already_tested = source_entity in tested_relationships
                 if is_relationship_already_tested:
@@ -112,7 +112,7 @@ def test_relationships(llm_assistant, test_data_json, domain_description, actual
 def main():
 
     test_name = USER_CHOICE
-    if USER_CHOICE == RELATIONSHIPS_STRING or USER_CHOICE == RELATIONSHIPS_STRING_TWO_ENTITIES or USER_CHOICE == IS_A_RELATIONSHIPS_STRING:
+    if USER_CHOICE == UserChoice.RELATIONSHIPS.value or USER_CHOICE == UserChoice.RELATIONSHIPS2.value or USER_CHOICE == IS_A_RELATIONSHIPS_STRING:
         test_name = "relationships"
 
     test_file_path = f"{PATH_TO_DATA_DIRECTORY}/{test_name}.json"
@@ -128,7 +128,7 @@ def main():
     with open(INPUT_DOMAIN_DESCRIPTION_FILE_PATH, 'r') as file:
         domain_description = file.read()
     
-    if USER_CHOICE == ENTITIES_STRING:
+    if USER_CHOICE == UserChoice.ENTITIES.value:
         test_data_json = {"entities" : [{"entity": ""}]}
     else:
         with open(test_file_path) as file:

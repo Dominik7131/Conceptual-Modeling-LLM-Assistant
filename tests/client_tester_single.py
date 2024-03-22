@@ -1,7 +1,7 @@
 import sys
 sys.path.append('.')
 from LLM_assistant import LLMAssistant, ITEMS_COUNT, TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION
-from text_utility import ATTRIBUTES_STRING, RELATIONSHIPS_STRING, RELATIONSHIPS_STRING_TWO_ENTITIES, PROPERTIES_STRING
+from text_utility import UserChoice
 import time
 import json
 from enum import Enum
@@ -26,7 +26,7 @@ def main():
     # entities = ["course", "student"] #, "dormitory", "student"]
     entities = ["engine", "bodywork"] #, "dormitory", "student"]
     #entities = [("dormitory", "student")]
-    user_choice = ATTRIBUTES_STRING
+    user_choice = UserChoice.ATTRIBUTES.value
 
 
     if LLM_FEATURE == LLM_Feature.IS_SUGGESTION:
@@ -35,7 +35,7 @@ def main():
 
             entity_1 = entity
             entity_2 = ""
-            if user_choice == RELATIONSHIPS_STRING_TWO_ENTITIES:
+            if user_choice == UserChoice.RELATIONSHIPS2.value:
                 entity_1 = entity[0]
                 entity_2 = entity[1]
 
