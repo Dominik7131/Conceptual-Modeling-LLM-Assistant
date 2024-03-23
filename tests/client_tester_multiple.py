@@ -3,6 +3,7 @@ sys.path.append('.')
 from LLM_assistant import LLMAssistant, ITEMS_COUNT, TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION
 from text_utility import TextUtility, UserChoice
 import time
+import os
 import json
 
 IS_SAVE_TO_FILE = True
@@ -22,7 +23,7 @@ def main():
     domain_descriptions = ["We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."]
     user_choices = [UserChoice.ATTRIBUTES.value, UserChoice.RELATIONSHIPS.value, UserChoice.RELATIONSHIPS2.value]
 
-    file_name = f"output/{time.strftime('%Y-%m-%d-%H-%M-%S')}.txt"
+    file_name = os.path.join("output", f"{time.strftime('%Y-%m-%d-%H-%M-%S')}.txt")
 
     if (IS_SAVE_TO_FILE):
         with open(file_name, 'w') as file:

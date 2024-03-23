@@ -13,8 +13,8 @@ SCORE_NECESSARY_THRESHOLD = 0.2
 SCORE_MIN_THRESHOLD = 0.5
 RANGE_FROM_TOP = 0.4 # E.g. if max score is 0.7 then invalidate any text with score lower than 0.7 - `RANGE_FROM_TOP`
 IS_CACHING = False
-PATH_TO_DATA_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case/"
-INPUT_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/56-2001-extract-llm-assistant-test-case.txt"
+PATH_TO_DATA_DIRECTORY = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
+INPUT_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "56-2001-extract-llm-assistant-test-case.txt")
 OUTPUT_FILE_NAME = "out.txt"
 IS_TESTING = False
 

@@ -1,12 +1,13 @@
 import sys
 sys.path.append('.')
 import json
+import os
 from text_utility import TextUtility
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 
-PATH_TO_DATA_DIRECTORY = "data/56-2001-extract-llm-assistant-test-case/"
+PATH_TO_DATA_DIRECTORY = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
 TEST_DATA_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}relevant_texts.json"
-INPUT_DOMAIN_DESCRIPTION_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}/56-2001-extract-llm-assistant-test-case.txt"
+INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "56-2001-extract-llm-assistant-test-case.txt")
 
 class RAGTester:
 

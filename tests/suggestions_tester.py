@@ -115,9 +115,9 @@ def main():
     if USER_CHOICE == UserChoice.RELATIONSHIPS.value or USER_CHOICE == UserChoice.RELATIONSHIPS2.value or USER_CHOICE == IS_A_RELATIONSHIPS_STRING:
         test_name = "relationships"
 
-    test_file_path = f"{PATH_TO_DATA_DIRECTORY}/{test_name}.json"
-    expected_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{USER_CHOICE}-{EXPECTED_OUTPUT}.txt"
-    actual_output_file_path = f"{PATH_TO_DATA_DIRECTORY}/{TIMESTAMP_PREFIX}-{USER_CHOICE}-{ACTUAL_OUTPUT}.txt"
+    test_file_path = os.path.join(PATH_TO_DATA_DIRECTORY, f"{test_name}.json")
+    expected_output_file_path = os.path.join(PATH_TO_DATA_DIRECTORY, f"{USER_CHOICE}-{EXPECTED_OUTPUT}.txt")
+    actual_output_file_path = os.path.join(PATH_TO_DATA_DIRECTORY, f"{TIMESTAMP_PREFIX}-{USER_CHOICE}-{ACTUAL_OUTPUT}.txt")
  
     if IS_GENERATE_EXPECTED_OUTPUT:
         generate_expected_output(test_file_path, expected_output_file_path, test_name)

@@ -1,15 +1,16 @@
 import logging
 from ufal.morphodita import *
 
-TAGGER_FILE = "C:/Users/dommo/.cache/morphodita-models/english-morphium-wsj-140407/english-morphium-wsj-140407.tagger"
+# TODO: Provide config similar to llm-config.json for setting the tagger file path
+TAGGER_FILE_PATH = "C:/Users/dommo/.cache/morphodita-models/english-morphium-wsj-140407/english-morphium-wsj-140407.tagger"
 
 # Code based on the `run_tagger` documentation https://pypi.org/project/ufal.morphodita/
 class Morphodita_Tagger:
 
     def __init__(self):
-        self.tagger = Tagger.load(TAGGER_FILE)
+        self.tagger = Tagger.load(TAGGER_FILE_PATH)
         if not self.tagger:
-            logging.error(f"Cannot load tagger from file: {TAGGER_FILE}")
+            logging.error(f"Cannot load tagger from file: {TAGGER_FILE_PATH}")
             exit(1)
         
         self.forms = Forms()

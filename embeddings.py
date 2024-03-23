@@ -19,6 +19,8 @@ INPUT_TEXT = "bodywork"
 SCORE_MIN_THRESHOLD = 0.5
 SCORE_POSITIVE_THRESHOLD = 0.6
 
+MODEL_PATH = os.path.join("BAAI", "bge-large-en-v1.5")
+
 
 def print_green_on_black(x):
     return cprint(x, 'green', 'on_black')
@@ -30,7 +32,7 @@ class Embeddings:
     def __init__(self):
         self.passage_embeddings = None
         query_instruction_for_retrieval = "Represent this sentence for searching relevant passages: "
-        self.model = FlagModel('BAAI/bge-large-en-v1.5', query_instruction_for_retrieval=query_instruction_for_retrieval,
+        self.model = FlagModel(MODEL_PATH, query_instruction_for_retrieval=query_instruction_for_retrieval,
                   use_fp16=False) # Setting use_fp16 to True speeds up computation with a slight performance degradation
 
     # for s2p(short query to long passage) retrieval task, suggest to use encode_queries() which will automatically add the instruction to each query
