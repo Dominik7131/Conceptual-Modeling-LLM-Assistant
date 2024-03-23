@@ -87,10 +87,10 @@ const useConceptualModel = () =>
         //                 "relationships": [{"name": "is-a", "inference": "", "source_entity": "vehicle", "target_entity": "road vehicle"}]}
         
         const input = { "entities": [
-            {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
-            {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
-            {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
-            {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
+            {"name": "Student", "description": "A student entity representing individuals enrolled in courses.", "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
+            {"name": "Course", "description": "A course entity representing educational modules.", "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
+            {"name": "Dormitory", "description": "A professor entity representing instructors teaching courses.", "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "int", "description": "The price of staying in the dormitory."}]},
+            {"name": "Professor", "description": "A dormitory entity representing residential facilities for students.", "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
           "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
                             {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
                             {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
@@ -107,7 +107,7 @@ const useConceptualModel = () =>
         for (const [key, entity] of Object.entries(input["entities"]))
         {
           const entityNameLowerCase = entity.name.toLowerCase()
-          const newNode = { id: entityNameLowerCase, position: { x: positionX, y: positionY }, data: { label: "", attributes: entity.attributes } }
+          const newNode : Node = { id: entityNameLowerCase, position: { x: positionX, y: positionY }, data: { label: "", description: entity.description, attributes: entity.attributes } }
           newNodes.push(newNode)
 
           // if (entity.parent_entity)
@@ -489,7 +489,7 @@ const useConceptualModel = () =>
 
         // setSuggestedAttributes(suggestedAttributes.map(attribute => attribute.name === "a1" ? attribute : attribute))
         // setSuggestedAttributes(suggestedAttributes.map(attribute => attribute.name === "a1" ? {...attribute, name: "a10"} : attribute))
-        // parseSerializedConceptualModel()
+        parseSerializedConceptualModel()
       }, []);
     
       useEffect(() =>
@@ -784,7 +784,7 @@ const useConceptualModel = () =>
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryText, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
-        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems
+        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes
     }
 }
 
