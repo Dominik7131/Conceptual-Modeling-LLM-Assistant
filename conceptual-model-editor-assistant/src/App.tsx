@@ -82,7 +82,7 @@ declare global // TODO: Export instead of "global"
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, summaryText,
-    OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
+    OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
     isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference,
     isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes
   } = useConceptualModel()
@@ -94,6 +94,7 @@ function App()
     <div className="appDiv">
       <Topbar
         onIgnoreDomainDescriptionChange={onIgnoreDomainDescriptionChange}
+        isIgnoreDomainDescription={isIgnoreDomainDescription}
         onImportButtonClick={onImportButtonClick}
         onPlusButtonClick={onPlusButtonClick}
         onSummaryButtonClick={onSummaryButtonClick}

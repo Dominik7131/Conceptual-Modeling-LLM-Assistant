@@ -782,7 +782,7 @@ const useConceptualModel = () =>
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-        summaryText, capitalizeString, OnClickAddNode, domainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
+        summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
         isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes
     }
