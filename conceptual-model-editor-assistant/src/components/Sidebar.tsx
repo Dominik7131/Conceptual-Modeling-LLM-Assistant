@@ -24,9 +24,12 @@ interface Props
     onAddAsAttribute : (relationship : Relationship) => void,
     onEditSuggestion : (itemID : number, userChoice : string) => void,
     onShowInference : (itemID : number) => void,
+    sidebarWidthPercentage : number,
+    isSidebarOpen : boolean,
+    onToggleSideBarCollapse : () => void
 }
 
-const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference}) =>
+const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference, sidebarWidthPercentage, isSidebarOpen, onToggleSideBarCollapse}) =>
 {
     // TODO: Instead of different functions for adding pass probably only one Add function and implement the logic in useConceptualModel hook
 
@@ -149,20 +152,21 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
         <Drawer
             sx={{
                 flexShrink: 0,
-                width: "20%",
                 '& .MuiDrawer-paper': {
-                    width: '20%',
+                    width: `${sidebarWidthPercentage}%`,
                     boxSizing: 'border-box',
                 },
             }}
             variant="persistent"
             anchor="right"
-            open={true}
+            open={isSidebarOpen}
             >
 
-            {showTextOnSidebar()}
-            <p>hello</p>
-            
+            {showTextOnSidebar()}     
+
+            {/* <Button onClick={ () => onToggleSideBarCollapse() }>
+                Close
+            </Button> */}
         </Drawer>
     )
 }

@@ -33,10 +33,12 @@ interface Props
     
     isShowSummary2 : boolean
     selectedNodes : Node[]
+
+    sidebarWidthPercentage : number
 }
 
 
-const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isShowSummary1, isShowSummary2, selectedNodes, isIgnoreDomainDescription}) =>
+const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isShowSummary1, isShowSummary2, selectedNodes, isIgnoreDomainDescription, sidebarWidthPercentage}) =>
 {
     const [tabValue, setTabValue] = useState<string>('0');
     const [insertedNodeNameText, setInsertedNodeNameText] = useState<string>("")
@@ -175,8 +177,11 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
         setTabValue(newValue);
     };
 
+    const topBarWidth = 100 - sidebarWidthPercentage
+    const heightPx = 387
+
     return (
-        <Box sx={{ width: '80%', height: '387px', overflow: 'auto', typography: 'body1' }}>
+        <Box sx={{ width: `${topBarWidth}%`, height: `${heightPx}px`, overflow: 'auto', typography: 'body1' }}>
             <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange}>

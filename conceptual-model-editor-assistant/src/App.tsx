@@ -5,6 +5,8 @@ import useConceptualModel from './hooks/useConceptualModel'
 import { ReactFlowProvider } from 'reactflow';
 import OverlayShow from './components/OverlayShow';
 import OverlayEdit from './components/OverlayEdit';
+import useLayoutSize from './hooks/useLayoutSize';
+
 
 export const enum UserChoice
 {
@@ -26,7 +28,6 @@ export const enum Field
   SOURCE_ENTITY = "source",
   TARGET_ENTITY = "target"
 }
-
 
 declare global // TODO: Export instead of "global"
 {
@@ -87,11 +88,11 @@ function App()
     isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes
   } = useConceptualModel()
 
-  const summary = "The conceptual model includes four main entities: Student, Course, Dormitory, and Professor. The Student entity has a name attribute and can be enrolled in any number of Courses. The Course entity has a name and a number of credits attribute, and can have one or more Professors. The Dormitory entity has a price attribute, and students can be accommodated in it. The Professor entity has a name attribute. Additionally, there is a relationship between Student and Person through an 'is-a' relationship."
+  const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
 
 
   return (
-    <div className="appDiv">
+    <>
       <Topbar
         onIgnoreDomainDescriptionChange={onIgnoreDomainDescriptionChange}
         isIgnoreDomainDescription={isIgnoreDomainDescription}
@@ -106,6 +107,16 @@ function App()
         isShowSummary1={true}
         isShowSummary2={true}
         selectedNodes={selectedNodes}
+        sidebarWidthPercentage={sideBarWidthPercentage}
+      />
+
+      <ConceptualModel
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        sidebarWidthPercentage={sideBarWidthPercentage}
       />
 
       <SideBar
@@ -119,14 +130,9 @@ function App()
         onAddAsAttribute={onAddAsAttribute}
         onEditSuggestion={onEditSuggestion}
         onShowInference={onShowInference}
-      />
-
-      <ConceptualModel
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
+        sidebarWidthPercentage={sideBarWidthPercentage}
+        isSidebarOpen={isSidebarOpen}
+        onToggleSideBarCollapse={onToggleSideBarCollapse}
       />
 
       <OverlayShow
@@ -146,7 +152,7 @@ function App()
         onSave={onEditSave}
       />
 
-    </div>
+    </>
   );
 }
 
