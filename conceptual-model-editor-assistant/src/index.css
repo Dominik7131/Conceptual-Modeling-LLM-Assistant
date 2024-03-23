@@ -1,10 +1,3 @@
-.container {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  height: 40px;
-}
-
 .highlight {
   background-color: orange;
   position: relative;
@@ -28,10 +21,6 @@
 
 .textGray {
   color: gray;
-}
-
-.addNodeButton {
-  margin-right: 10px;
 }
 
 .reactFlowDiv {

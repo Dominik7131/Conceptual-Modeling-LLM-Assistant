@@ -98,7 +98,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
     {
         return (
             <>
-                <div className="container">
+                <Stack direction="row" justifyContent="space-between">
                     <FormGroup>
                         <FormControlLabel
                             control={
@@ -119,14 +119,9 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                             Export
                         </Button>
                     </Stack>
-                </div>
+                </Stack>
 
-                <Box
-                    className="domainTextContainers"
-                    component="form"
-                    sx={{
-                    '& .MuiTextField-root': { m: 1, width: '98.9%' },
-                    }}
+                <Box component="form" sx={{ '& .MuiTextField-root': { m: 1, width: '98.9%' } }}
                     noValidate
                     autoComplete="off"
                 >
@@ -143,49 +138,34 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     </TextField>
                 </Box >
                 
-                <div className="container">
-                    <Stack
-                        direction="row"
-                        paddingX={1}
-                        spacing={10}
-                    >
-                        <Stack
-                            direction="row"
-                            spacing={2}
-                        >
+                <Stack direction="row" justifyContent="space-between">
+                    <Stack direction="row" paddingX={1} spacing={10}>
+                        <Stack direction="row" spacing={2}>
                             <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ENTITIES}</Button>
                             <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ATTRIBUTES}</Button>
                             <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.RELATIONSHIPS}</Button>
                         </Stack>
 
-                        <Stack
-                            direction="row"
-                            spacing={2}
-                        >
+                        <Stack direction="row" spacing={2}>
                             <Button variant="contained" disableElevation onClick={onSummaryButtonClick}>Summary1</Button>
                             <Button variant="contained" disableElevation>Summary2</Button>
                             <Button variant="contained" disableElevation onClick={onHighlightSelectedItems}>Highlight</Button>
                         </Stack>
                     </Stack>
 
-                    <Stack
-                        direction="row"
-                        paddingX={1}
-                        spacing={2}
-                    >
-                        <Button
-                            variant="contained"
-                            size="small"
-                            disableElevation
-                            onClick={() => OnClickAddNode(insertedNodeNameText)}>Add node</Button>
-                        <TextField variant="standard"
-                            placeholder="Insert node name to add"
+                    <Stack direction="row" spacing={2}>
+                        <Button variant="contained" size="small" disableElevation
+                            onClick={() => OnClickAddNode(insertedNodeNameText)}>
+                                Add node
+                        </Button>
+
+                        <TextField variant="standard" placeholder="Insert node name to add"
                             value={insertedNodeNameText}
                             rows={1}
                             onChange={(event) => setInsertedNodeNameText(event.target.value)}>
                         </TextField>
                     </Stack>
-                </div>
+                </Stack>
             </>
         )
     }
@@ -199,7 +179,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
         <Box sx={{ width: '80%', height: '387px', overflow: 'auto', typography: 'body1' }}>
             <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList onChange={handleChange} aria-label="lab API tabs example">
+                    <TabList onChange={handleChange}>
                         <Tab label="Main" value="0" />
                         <Tab label="Summary 1" value="1" />
                         <Tab label="Summary 2" value="2" />
@@ -213,20 +193,20 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
 
                 <TabPanel value="1">
                     { summary && isShowSummary1 &&
-                        <Stack paddingX={1} spacing={2}>
+                        <Stack spacing={2}>
                             { showSummary1()}
                         </Stack>
                     }
                 </TabPanel>
 
                 <TabPanel value="2">
-                    <Stack paddingX={1} spacing={2}>
+                    <Stack spacing={2}>
                         { showSummary2()}
                     </Stack>
                 </TabPanel>
 
                 <TabPanel value="3">
-                    <Stack paddingX={1} spacing={2}>
+                    <Stack>
                         <Typography>
                         <FormGroup>
                             <FormControlLabel control={<Checkbox defaultChecked />} label="settings1" />

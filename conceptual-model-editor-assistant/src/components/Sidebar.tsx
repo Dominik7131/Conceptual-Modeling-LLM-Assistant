@@ -39,7 +39,6 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
     {        
         return (
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-
                 {items.map((item, index) =>
                         <ListItem key={item.ID}>
                             {showItem(item, userChoice, index)}
@@ -150,16 +149,20 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
         <Drawer
             sx={{
                 flexShrink: 0,
+                width: "20%",
                 '& .MuiDrawer-paper': {
                     width: '20%',
                     boxSizing: 'border-box',
                 },
             }}
-            variant="permanent"
+            variant="persistent"
             anchor="right"
+            open={true}
             >
 
             {showTextOnSidebar()}
+            <p>hello</p>
+            
         </Drawer>
     )
 }
