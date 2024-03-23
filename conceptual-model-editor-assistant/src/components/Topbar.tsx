@@ -216,6 +216,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                         <FormGroup>
                             <FormControlLabel control={<Checkbox defaultChecked />} label="settings1" />
                             <FormControlLabel control={<Checkbox />} label="settings2" />
+                            <FormControlLabel control={<Checkbox />} label="maybe add text area to edit prompt for summarization" />
                         </FormGroup>
                         </Typography>
                     </Stack>

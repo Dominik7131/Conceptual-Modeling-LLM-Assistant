@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import useInferenceIndexes from './useInferenceIndexes';
 import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
@@ -33,18 +32,16 @@ const useConceptualModel = () =>
 
     const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([])
 
-    let IDToAssign = 0
     const [userChoiceSuggestion, setUserChoiceSuggestion] = useState<string>("")
-
-    const URL = "http://127.0.0.1:5000/"
-
-    const { inferenceIndexes, setInferenceIndexes, getIndexesForOneInference } = useInferenceIndexes()
 
     const { domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
 
     const { capitalizeString } = useUtility()
 
     const { isLoadingEdit, text, summaryText, fetchStreamedDataGeneral, fetchSummary } = useFetchData((x, y, z) => onAttributeChange(x, y, z))
+
+    let IDToAssign = 0
+    const URL = "http://127.0.0.1:5000/"
 
 
     const onConnect : OnConnect = useCallback(
@@ -453,6 +450,8 @@ const useConceptualModel = () =>
         //     console.log(element.inference_indexes)   
         //   }
         // }
+
+        setIsShowOverlayDomainDescription(true)
       }
     
       const updateNodes = () =>
@@ -499,15 +498,6 @@ const useConceptualModel = () =>
         if (!domainDescriptionText)
         {
           return
-        }
-    
-        if (isIgnoreDomainDescription)
-        {
-          domainDescriptionText.style.color = '#D3D3D3'
-        }
-        else
-        {
-          domainDescriptionText.style.color = 'black';
         }
       }, [isIgnoreDomainDescription]);
     
@@ -765,26 +755,27 @@ const useConceptualModel = () =>
         // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
         // TODO: probably move this function into file `useInferenceIndexes.tsx`
 
-        setIsShowEdit(_ => false)
+        setIsShowOverlayDomainDescription(_ => true)
 
-        // TODO: Do not close the overlay if the user clicked on a different suggestion
-        // Close overlay if it is already displayed
-        if (isShowOverlayDomainDescription)
+        // Find the suggested item with ID: itemID
+
+        const suggestedItem : Item | undefined = suggestedItems.find(item => item.ID === itemID);
+
+        if (!suggestedItem)
         {
-          setIsShowOverlayDomainDescription(_ => false)
+          alert("Error: Suggested item not found by the given ID")
           return
         }
 
-        setIsShowOverlayDomainDescription(_ => true)
+        setSelectedSuggestedItem(suggestedItem)
 
-        const item : Item = suggestedItems[itemID]
-        setInferenceIndexesMockUp(_ => item.inference_indexes)
+        setInferenceIndexesMockUp(_ => suggestedItem.inference_indexes)
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
-        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes
+        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity
     }
 }
 

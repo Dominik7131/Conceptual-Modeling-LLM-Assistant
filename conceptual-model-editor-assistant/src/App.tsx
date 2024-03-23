@@ -85,7 +85,7 @@ function App()
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, summaryText,
     OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
     isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference,
-    isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes
+    isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -137,13 +137,16 @@ function App()
 
       <OverlayShow
         domainDescription={domainDescription}
-        isShow={isShowOverlayDomainDescription}
+        isOpened={isShowOverlayDomainDescription}
         inferenceIndexes={inferenceIndexesMockUp}
         onClose={onOverlayDomainDescriptionClose}
+        itemName={selectedSuggestedItem.name}
+        selectedEntityName={sourceEntity}
+        userChoiceSuggestion={userChoiceSuggestion}
       />
 
       <OverlayEdit
-        isShow={isShowEdit}
+        isOpened={isShowEdit}
         item={selectedSuggestedItem}
         userChoice={userChoiceSuggestion}
         isDisableSave={false}

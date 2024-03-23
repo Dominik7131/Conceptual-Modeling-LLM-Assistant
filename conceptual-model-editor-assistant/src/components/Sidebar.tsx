@@ -14,18 +14,18 @@ import Box from '@mui/material/Box';
 
 interface Props
 {
-    isLoading : boolean,
-    items : Item[],
-    userChoice : string,
-    onAddEntity : (entity : Entity) => void,
-    onAddAttributesToNode : (attribute : Attribute) => void,
-    onAddRelationshipsToNodes : (relationship : Relationship) => void,
-    onAddAsRelationship : (attribute : Attribute) => void,
-    onAddAsAttribute : (relationship : Relationship) => void,
-    onEditSuggestion : (itemID : number, userChoice : string) => void,
-    onShowInference : (itemID : number) => void,
-    sidebarWidthPercentage : number,
-    isSidebarOpen : boolean,
+    isLoading : boolean
+    items : Item[]
+    userChoice : string
+    onAddEntity : (entity : Entity) => void
+    onAddAttributesToNode : (attribute : Attribute) => void
+    onAddRelationshipsToNodes : (relationship : Relationship) => void
+    onAddAsRelationship : (attribute : Attribute) => void
+    onAddAsAttribute : (relationship : Relationship) => void
+    onEditSuggestion : (itemID : number, userChoice : string) => void
+    onShowInference : (itemID : number) => void
+    sidebarWidthPercentage : number
+    isSidebarOpen : boolean
     onToggleSideBarCollapse : () => void
 }
 

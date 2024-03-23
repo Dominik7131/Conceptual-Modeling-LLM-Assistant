@@ -17,7 +17,7 @@ import { Field, UserChoice } from '../App';
 interface Props
 {
     item : Item
-    isShow : boolean
+    isOpened : boolean
     userChoice : string
     isDisableSave : boolean
     onClose : () => void
@@ -25,7 +25,7 @@ interface Props
     onPlus : (name: string, field: string) => void
 }
 
-const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, onClose, onSave, onPlus} : Props) =>
+const OverlayEdit: React.FC<Props> = ({item, isOpened, userChoice, isDisableSave, onClose, onSave, onPlus} : Props) =>
 {
     const [editedItem, setEditedItem] = useState<Item>(item)
 
@@ -36,6 +36,21 @@ const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, 
     useEffect(() => {
         setEditedItem(item);
     }, [item]);
+
+    // Event listener to handle click outside the dialog
+    const handleClickOutside = (event: MouseEvent) =>
+    {
+        const target = event.target as HTMLElement;
+        if (target.className.includes('MuiDialog-container')) { onClose(); }
+    }
+
+    useEffect(() =>
+    {
+        if (isOpened) { document.addEventListener('click', handleClickOutside) }
+        else { document.removeEventListener('click', handleClickOutside) }
+
+        return () => { document.removeEventListener('click', handleClickOutside) }
+    }, [isOpened])
 
     const onAdd = () =>
     {
@@ -58,7 +73,7 @@ const OverlayEdit: React.FC<Props> = ({item, isShow, userChoice, isDisableSave, 
 
     return (
         <Dialog
-            open={isShow}
+            open={isOpened}
             fullWidth={true}
             maxWidth={'lg'}
         >
