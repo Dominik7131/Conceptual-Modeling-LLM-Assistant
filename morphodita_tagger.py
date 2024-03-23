@@ -1,7 +1,7 @@
 import logging
 from ufal.morphodita import *
 
-# TODO: Provide config similar to llm-config.json for setting the tagger file path
+# TODO: Provide config similar to `llm-config.json` for setting the tagger file path
 TAGGER_FILE_PATH = "C:/Users/dommo/.cache/morphodita-models/english-morphium-wsj-140407/english-morphium-wsj-140407.tagger"
 
 # Code based on the `run_tagger` documentation https://pypi.org/project/ufal.morphodita/
