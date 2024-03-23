@@ -31,6 +31,7 @@ const useConceptualModel = () =>
     const [isShowEdit, setIsShowEdit] = useState<boolean>(false)
 
     const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([])
+    const [tooltips, setTooltips] = useState<string[]>([])
 
     const [userChoiceSuggestion, setUserChoiceSuggestion] = useState<string>("")
 
@@ -434,6 +435,15 @@ const useConceptualModel = () =>
 
       const onHighlightSelectedItems = () =>
       {
+        // Mockup
+        const fakeInferenceIndexes = [2960, 2980, 2982, 3114, 3122, 3143, 3171, 3184, 3185, 3201, 3206, 3315, 3322, 3368, 3536, 3582]
+        setInferenceIndexesMockUp(fakeInferenceIndexes)
+
+        const tooltips = [ "Natural person: name", "Natural person - Address: has", "Natural person: birth number", "Natural person: date of birth",
+        "Natural person: name, birth number, date of birth", "Business natural person: name", "Business natural person: distinguishing name supplement",
+        "Business natural person: personal identification number"]
+        setTooltips(tooltips)
+
         // TODO: Process also all selected edges
         // let selectedInferenceIndexes : number[] = []
         // [{"inference_indexes": [10, 20], "name": "Attribute: type of engine"}, {...}]
@@ -770,12 +780,33 @@ const useConceptualModel = () =>
         setSelectedSuggestedItem(suggestedItem)
 
         setInferenceIndexesMockUp(_ => suggestedItem.inference_indexes)
+
+        // Create tooltips for highlighted original text
+        let tooltip = ""
+        const capitalizedSourceEntity : string = capitalizeString(sourceEntity)
+
+        if (userChoiceSuggestion === UserChoice.ENTITIES)
+        {
+          tooltip = capitalizedSourceEntity
+        }
+        else if (userChoiceSuggestion === UserChoice.ATTRIBUTES)
+        {
+          tooltip = `${capitalizedSourceEntity}: ${suggestedItem.name}`
+        }
+        else if (userChoiceSuggestion === UserChoice.RELATIONSHIPS)
+        {
+          tooltip = `${capitalizedSourceEntity}-${targetEntity}: ${suggestedItem.name}`
+        }
+
+        let newTooltips : string[] = Array(suggestedItem.inference_indexes.length).fill(tooltip)
+        console.log("New tooltips: ", newTooltips)
+        setTooltips(newTooltips)
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
-        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity
+        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips
     }
 }
 

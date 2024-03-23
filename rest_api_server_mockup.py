@@ -31,7 +31,7 @@ def suggest():
             if user_choice == "attributes" or user_choice == "entity":
                 yield '{"inference": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "inference_indexes": [], "dataType": "string", "description": "specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle"}\n'
                 # time.sleep(2)
-                yield '{"inference": "the fuel type of the road vehicle", "name": "fuel type", "inference_indexes": [0, 20], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
+                yield '{"inference": "the fuel type of the road vehicle", "name": "fuel type", "inference_indexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
                 # time.sleep(2)
             else:
                 yield '{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "inference_indexes": [10,20], "source": "student", "target": "course"}\n'

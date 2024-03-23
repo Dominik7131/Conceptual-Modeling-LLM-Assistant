@@ -11,7 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
 import { UserChoice } from '../App';
 import useUtility from '../hooks/useUtility';
-import { styled } from '@mui/material/styles';
+import { styled } from '@mui/system';
 
 
 interface Props
@@ -23,19 +23,14 @@ interface Props
   itemName : string
   selectedEntityName : string
   userChoiceSuggestion : string
+  tooltips : string[]
 }
 
-const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIndexes, onClose, itemName, selectedEntityName, userChoiceSuggestion } : Props) =>
+const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIndexes, onClose, itemName, selectedEntityName, userChoiceSuggestion, tooltips } : Props) =>
 {
   const { capitalizeString, getUserChoiceSingular } = useUtility()
 
-  inferenceIndexes = [2960, 2980, 2982, 3114, 3122, 3143, 3171, 3184, 3185, 3201, 3206, 3315, 3322, 3368, 3536, 3582]
-  const tooltips = [ "Natural person: name", "Natural person - Address: has", "Natural person: birth number", "Natural person: date of birth",
-    "Natural person: name, birth number, date of birth", "Business natural person: name", "Business natural person: distinguishing name supplement",
-    "Business natural person: personal identification number"]
-
-  // Event listener to handle click outside the dialog
-  const handleClickOutside = (event: MouseEvent) =>
+  const handleClickOutsideDialog = (event: MouseEvent) =>
   {
     const target = event.target as HTMLElement;
     if (target.className.includes('MuiDialog-container')) { onClose(); }
@@ -43,10 +38,10 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIn
 
   useEffect(() =>
   {
-    if (isOpened) { document.addEventListener('click', handleClickOutside) }
-    else { document.removeEventListener('click', handleClickOutside) }
+    if (isOpened) { document.addEventListener('click', handleClickOutsideDialog) }
+    else { document.removeEventListener('click', handleClickOutsideDialog) }
 
-    return () => { document.removeEventListener('click', handleClickOutside) }
+    return () => { document.removeEventListener('click', handleClickOutsideDialog) }
   }, [isOpened])
 
 
@@ -68,7 +63,6 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIn
       )
     }
 
-    // return `Entity: ${selectedEntityName}: ${itemString}`
     return (
       <>
         <Typography variant="h5"> Entity: {selectedEntityName}</Typography>
@@ -81,6 +75,14 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIn
     const number = (index - 1) / 2
     return tooltips[number]
   }
+
+  // Define a styled span component
+  const HoverSpan = styled('span')(({ theme }) => ({
+    transition: 'background 0.3s ease',
+    '&:hover': {
+      background: "#77dae6"
+    },
+  }));
 
   const highlightInference = () =>
   {
@@ -102,14 +104,15 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIn
               (
                   index % 2 === 0 ? <span key={index}>{text}</span> :
                   <HtmlTooltip title={<Typography color="inherit">{getTooltip(index)}</Typography>} arrow key={index}>
-                    <span
+                    <HoverSpan
                       id={`highlightedInference-${index}`}
                       className="highlight"
                       key={index}
                       ref={highlightedInferenceRef}
+                      // sx={{transition: 'color 0.3s ease', '&:hover': { color: "#ffffff", background: "blue" }}}
                     >
                       {text}
-                    </span>
+                    </HoverSpan>
                   </HtmlTooltip>
               ))}
           </Typography>
@@ -163,7 +166,7 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIn
           <Stack spacing={2}>
             { inferenceIndexes.length === 0 &&
               <Alert variant="outlined" severity="warning">
-                Unable to find original text in domain description.
+                Unable to find original text in domain description
               </Alert>}
             <Typography variant="h5">Domain description</Typography>
             {/* <Typography variant="body1">{showSelectedSuggestion()}</Typography> */}
