@@ -6,7 +6,7 @@ import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
 import { Typography } from '@mui/material';
-import { UserChoice } from '../App';
+import { ItemType, UserChoice } from '../App';
 
 const initialNodes : Node[] = [{ id: 'engine', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
 
@@ -18,7 +18,7 @@ const useConceptualModel = () =>
   
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [suggestedItems, setSuggestedItems] = useState<Item[]>([])
-    const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, name: "", inference: "", inference_indexes: []})
+    const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", inference: "", inference_indexes: []})
   
     const [sourceEntity, setSourceEntity] = useState<string>("")
     const [targetEntity, setTargetEntity] = useState<string>("")
@@ -603,8 +603,8 @@ const useConceptualModel = () =>
 
       const onAddAsRelationship = (attribute : Attribute) =>
       {
-        const relationship : Relationship = {ID: attribute.ID, "name": "", "inference": attribute.inference, "inference_indexes": attribute.inference_indexes, 
-                                             "source": sourceEntity, "target": attribute.name, "cardinality": ""}
+        const relationship : Relationship = {ID: attribute.ID, type: ItemType.RELATIONSHIP, name: "", inference: attribute.inference, inference_indexes: attribute.inference_indexes, 
+                                             source: sourceEntity, target: attribute.name, cardinality: ""}
         
         setSelectedSuggestedItem(relationship)
         setIsShowEdit(true)
@@ -655,7 +655,7 @@ const useConceptualModel = () =>
           //     })
           // }
 
-          const newAttributeObject : Attribute = { ID: attribute.ID, name: attribute.name, description: "", inference: attribute.inference, inference_indexes: attribute.inference_indexes, dataType: attribute.dataType}
+          const newAttributeObject : Attribute = { ID: attribute.ID, type: ItemType.ATTRIBUTE, name: attribute.name, description: "", inference: attribute.inference, inference_indexes: attribute.inference_indexes, dataType: attribute.dataType}
     
           // If the node already contains the selected attribute do not add anything
           let isAttributePresent = false

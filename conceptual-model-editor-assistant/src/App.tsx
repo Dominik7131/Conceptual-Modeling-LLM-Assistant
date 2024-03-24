@@ -16,6 +16,13 @@ export const enum UserChoice
   RELATIONSHIPS2 = "relationships2"
 }
 
+export const enum ItemType
+{
+  ENTITY = "entity",
+  ATTRIBUTE = "attribute",
+  RELATIONSHIP = "relationship"
+}
+
 export const enum Field
 {
   ID = "id",
@@ -31,16 +38,11 @@ export const enum Field
 
 declare global // TODO: Export instead of "global"
 {
-  // TODO: Item should be either:
-  // - type Item = Entity | Attribute | Relationship
-  //    - then we need to add field "type" to each object to determine the type 
-  // - or abstract class with childs: Entity, Attribute, Relationship
-  interface Item extends Entity, Attribute, Relationship {    }
-
-  // type Item = Entity | Attribute | Relationship
+  type Item = Entity | Attribute | Relationship
 
   interface Entity
   {
+    type : ItemType
     ID: number
     name: string
     description?: string
@@ -50,6 +52,7 @@ declare global // TODO: Export instead of "global"
 
   interface Attribute
   {
+    type : ItemType
     ID: number
     name: string
     description?: string
@@ -61,6 +64,7 @@ declare global // TODO: Export instead of "global"
   
   interface Relationship
   {
+    type : ItemType
     ID: number
     name: string
     description?: string
@@ -69,13 +73,6 @@ declare global // TODO: Export instead of "global"
     source?: string
     target?: string
     cardinality?: string
-  }
-
-  interface SummaryObject
-  {
-    entity: string
-    attributes: Attribute[]
-    relationships: Relationship[]
   }
 }
 

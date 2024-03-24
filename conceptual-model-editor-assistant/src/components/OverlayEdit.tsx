@@ -11,7 +11,7 @@ import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
-import { Field, UserChoice } from '../App';
+import { Field, ItemType, UserChoice } from '../App';
 
 
 interface Props
@@ -52,47 +52,32 @@ const OverlayEdit: React.FC<Props> = ({item, isOpened, userChoice, isDisableSave
         return () => { document.removeEventListener('click', handleClickOutside) }
     }, [isOpened])
 
-    const onAdd = () =>
+
+    const showEditField = (handleChange : (event : any) => void) =>
     {
-        // TODO: Put this code into useConceptualModel hook
-        // TODO: Try to less repeat yourself
-        if (userChoice === UserChoice.ATTRIBUTES)
-        {
-            //onAddAttributesToNode(editedItem)
-            
-        }
-        else if (userChoice === UserChoice.RELATIONSHIPS)
-        {
-            //onAddRelationshipsToNodes(editedItem)
-        }
-        else if (userChoice === UserChoice.ENTITIES)
-        {
-            //onAddEntity(editedItem)
-        }
-    }
-
-    return (
-        <Dialog
-            open={isOpened}
-            fullWidth={true}
-            maxWidth={'lg'}
-        >
-
-            <DialogTitle>
-                Edit
-            </DialogTitle>
-
-            {/* TODO: Do not repeat the same code: either try to do one component for this or break it down into more components/functions */}
-            <DialogContent>
-                <Stack direction="row" paddingX={1}>
+        return (
+            <Stack direction="row" paddingX={1}>
                     <TextField margin="dense" label="Name" fullWidth variant="standard" spellCheck={false}
-                        onChange={(e) => setEditedItem({ ...editedItem, name: e.target.value })}
+                        onChange={(event) => handleChange(event)}
                         value={editedItem.name}
                     />
                     <Fab color="primary" size="small">
                         <AddIcon onClick={() => console.log("hi")}/>
                     </Fab>
                 </Stack>
+        )
+    }
+
+
+    return (
+        <Dialog open={isOpened} fullWidth={true} maxWidth={'lg'}>
+
+            <DialogTitle> Edit </DialogTitle>
+
+            {/* TODO: Do not repeat the same code: either try to do one component for this or break it down into more components/functions */}
+            <DialogContent>
+
+                { showEditField((event) => setEditedItem({ ...editedItem, name: event.target.value })) }
 
                 <Stack direction="row" paddingX={1}>
                     <TextField margin="dense" label="Original text" fullWidth variant="standard" spellCheck={false} multiline
@@ -114,7 +99,7 @@ const OverlayEdit: React.FC<Props> = ({item, isOpened, userChoice, isDisableSave
                     </Fab>
                 </Stack>
 
-                {userChoice === UserChoice.ATTRIBUTES &&
+                {/* {editedItem.type === ItemType.ATTRIBUTE &&
                     <Stack direction="row" paddingX={1}>
                         
                         <TextField margin="dense" label="Data type" fullWidth variant="standard" spellCheck={false}
@@ -125,9 +110,9 @@ const OverlayEdit: React.FC<Props> = ({item, isOpened, userChoice, isDisableSave
                             <AddIcon onClick={() => console.log("hi")}/>
                         </Fab>
                     </Stack>
-                }
+                } */}
 
-                {userChoice === UserChoice.RELATIONSHIPS &&
+                {/* {userChoice === UserChoice.RELATIONSHIPS &&
                     <Stack direction="row" paddingX={1}>
                         <TextField margin="dense" label="Source entity" fullWidth variant="standard" spellCheck={false}
                             onChange={(e) => setEditedItem({ ...editedItem, source: e.target.value })}
@@ -137,9 +122,9 @@ const OverlayEdit: React.FC<Props> = ({item, isOpened, userChoice, isDisableSave
                             <AddIcon onClick={() => console.log("hi")}/>
                         </Fab>
                     </Stack>
-                }
+                } */}
 
-                {userChoice === UserChoice.RELATIONSHIPS &&
+                {/* {userChoice === UserChoice.RELATIONSHIPS &&
                     <Stack direction="row" paddingX={1}>
                         <TextField margin="dense" label="Target entity" fullWidth variant="standard" spellCheck={false}
                             onChange={(e) => setEditedItem({ ...editedItem, target: e.target.value })}
@@ -149,9 +134,9 @@ const OverlayEdit: React.FC<Props> = ({item, isOpened, userChoice, isDisableSave
                             <AddIcon onClick={() => console.log("hi")}/>
                         </Fab>
                     </Stack>
-                }
+                } */}
 
-                {(userChoice === UserChoice.ATTRIBUTES || userChoice === UserChoice.RELATIONSHIPS) &&
+                {/* {(userChoice === UserChoice.ATTRIBUTES || userChoice === UserChoice.RELATIONSHIPS) &&
                     <Stack direction="row" paddingX={1}>
                         
                         <TextField margin="dense" label="Cardinality" fullWidth variant="standard" spellCheck={false}
@@ -162,7 +147,7 @@ const OverlayEdit: React.FC<Props> = ({item, isOpened, userChoice, isDisableSave
                             <AddIcon onClick={() => console.log("hi")}/>
                         </Fab>
                     </Stack>
-                }
+                } */}
 
             </DialogContent>
 
