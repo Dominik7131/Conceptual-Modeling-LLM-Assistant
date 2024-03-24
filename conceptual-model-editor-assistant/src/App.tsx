@@ -25,12 +25,13 @@ export const enum ItemType
 
 export const enum Field
 {
-  ID = "id",
+  ID = "ID",
+  TYPE = "type",
   NAME = "name",
   DESCRIPTION = "description",
   INFERENCE = "inference",
-  INFERENCE_INDEXES = "inference_indexes",
-  DATA_TYPE = "dataType",
+  INFERENCE_INDEXES = "inference indexes",
+  DATA_TYPE = "data type",
   CARDINALITY = "cardinality",
   SOURCE_ENTITY = "source",
   TARGET_ENTITY = "target"

@@ -6,7 +6,7 @@ import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
 import { Typography } from '@mui/material';
-import { ItemType, UserChoice } from '../App';
+import { Field, ItemType, UserChoice } from '../App';
 
 const initialNodes : Node[] = [{ id: 'engine', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
 
@@ -187,7 +187,7 @@ const useConceptualModel = () =>
         return newID
       }
 
-      const fetchNonStreamedData = (url : string, headers : any, body_data : any) =>
+      const fetchNonStreamedData = (url : string, headers : any, body_data : any, itemType : ItemType) =>
       {
         fetch(url, { method: "POST", headers, body: body_data })
         .then(response => response.json())
@@ -196,7 +196,8 @@ const useConceptualModel = () =>
               for (let i = 0; i < data.length; i++)
               {
                 const ID = assignID()
-                data[i]['ID'] = ID
+                data[i][Field.ID] = ID
+                data[i][Field.TYPE] = itemType
 
                 setSuggestedItems(previousSuggestedItems => {
                   return [...previousSuggestedItems, data[i]]
@@ -208,8 +209,10 @@ const useConceptualModel = () =>
         return
       }
 
-      const fetch_streamed_data = (url : string, headers : any, bodyData : any) =>
+      const fetchStreamedData = (url : string, headers : any, bodyData : any, itemType : ItemType) =>
       {
+        // TODO: add interface for header and bodyData
+
         // Fetch the event stream from the server
         // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
         fetch(url, { method: "POST", headers, body: bodyData })
@@ -250,7 +253,8 @@ const useConceptualModel = () =>
                         for (let i = 0; i < jsonStringParts.length; i++)
                         {
                           let item : Item = JSON.parse(jsonStringParts[i])
-                          item['ID'] = assignID()
+                          item[Field.ID] = assignID()
+                          item[Field.TYPE] = itemType
 
                           setSuggestedItems(previousSuggestedItems => {
                             return [...previousSuggestedItems, item]
@@ -359,11 +363,11 @@ const useConceptualModel = () =>
 
           if (!is_fetch_stream_data)
           {
-            fetchNonStreamedData(endpoint, headers, bodyData)
+            fetchNonStreamedData(endpoint, headers, bodyData, ItemType.ENTITY)
           }
           else
           {
-            fetch_streamed_data(endpoint, headers, bodyData)
+            fetchStreamedData(endpoint, headers, bodyData, ItemType.ENTITY)
           }
           return
         }
@@ -384,15 +388,15 @@ const useConceptualModel = () =>
 
           const sourceEntityName = selectedNodes[0].id.toLowerCase()
           const targetEntityName = selectedNodes[1].id.toLowerCase()
-          const body_data = JSON.stringify({"sourceEntity": sourceEntityName, "targetEntity": targetEntityName, "userChoice": UserChoice.RELATIONSHIPS2, "domainDescription": currentDomainDesciption})
+          const bodyData = JSON.stringify({"sourceEntity": sourceEntityName, "targetEntity": targetEntityName, "userChoice": UserChoice.RELATIONSHIPS2, "domainDescription": currentDomainDesciption})
 
           if (!is_fetch_stream_data)
           {
-            fetchNonStreamedData(endpoint, headers, body_data)
+            fetchNonStreamedData(endpoint, headers, bodyData, ItemType.RELATIONSHIP)
           }
           else
           {
-            fetch_streamed_data(endpoint, headers, body_data)
+            fetchStreamedData(endpoint, headers, bodyData, ItemType.RELATIONSHIP)
           }
           return
         }
@@ -405,22 +409,24 @@ const useConceptualModel = () =>
     
     
         let userChoice = UserChoice.ATTRIBUTES
+        let itemType = ItemType.ATTRIBUTE
 
         if (buttonText === UserChoice.RELATIONSHIPS)
         {
           userChoice = UserChoice.RELATIONSHIPS
+          itemType = ItemType.RELATIONSHIP
         }
 
         const entityName = selectedNodes[0].id.toLowerCase()
-        const body_data = JSON.stringify({"sourceEntity": entityName, "targetEntity": "", "userChoice": userChoice, "domainDescription": currentDomainDesciption})
+        const bodyData = JSON.stringify({"sourceEntity": entityName, "targetEntity": "", "userChoice": userChoice, "domainDescription": currentDomainDesciption})
 
         if (!is_fetch_stream_data)
         {
-          fetchNonStreamedData(endpoint, headers, body_data)
+          fetchNonStreamedData(endpoint, headers, bodyData, itemType)
         }
         else
         {
-          fetch_streamed_data(endpoint, headers, body_data)
+          fetchStreamedData(endpoint, headers, bodyData, itemType)
         }
       }
     
