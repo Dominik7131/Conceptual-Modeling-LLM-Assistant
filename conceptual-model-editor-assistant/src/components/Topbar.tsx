@@ -101,16 +101,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
         return (
             <>
                 <Stack direction="row" justifyContent="space-between">
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    defaultChecked
-                                    onClick={() => onIgnoreDomainDescriptionChange()}/>
-                                }
-                                    label="Use domain description"/>
-                    </FormGroup>
-
+                    <div style={{ flexGrow: 1 }}> </div>
                     <Stack spacing={1} direction="row"paddingX={1}>
 
                         <Button variant="contained" size="small" disableElevation onClick={() => onImportButtonClick()}>
@@ -214,9 +205,14 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     <Stack>
                         <Typography>
                         <FormGroup>
-                            <FormControlLabel control={<Checkbox defaultChecked />} label="settings1" />
-                            <FormControlLabel control={<Checkbox />} label="settings2" />
-                            <FormControlLabel control={<Checkbox />} label="maybe add text area to edit prompt for summarization" />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        defaultChecked
+                                        onClick={() => onIgnoreDomainDescriptionChange()}/>
+                                    }
+                                        label="Use domain description"/>
+                            {/* <FormControlLabel control={<Checkbox />} label="maybe add text area to edit prompt for summarization" /> */}
                         </FormGroup>
                         </Typography>
                     </Stack>

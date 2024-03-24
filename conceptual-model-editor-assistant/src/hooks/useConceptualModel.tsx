@@ -83,6 +83,15 @@ const useConceptualModel = () =>
         //                               {"name": "Insurance contract", "attributes": []},
         //                               {"name": "Technical inspection", "attributes": []}],
         //                 "relationships": [{"name": "is-a", "inference": "", "source_entity": "vehicle", "target_entity": "road vehicle"}]}
+
+        // const input = { "entities": [
+        //     {name: "Natural person", description: "", attributes: [{ID: 0, type: ItemType.ATTRIBUTE, name: "name"},
+        //                                                            {ID: 1, type: ItemType.ATTRIBUTE, name: "birth number"},
+        //                                                            {ID: 2, type: ItemType.ATTRIBUTE, name: "date of birth"}]},
+        //     {name: "Business natural person", description: "", attributes: [{ID: 3, type: ItemType.ATTRIBUTE, name: "name"},
+        //                                                                     {ID: 4, type: ItemType.ATTRIBUTE, name: "distinguishing name supplement"},
+        //                                                                     {ID: 5, type: ItemType.ATTRIBUTE, name: "personal identification number"}]}],
+        //                 "relationships": [{"name": "is-a", "inference": "", "source_entity": "vehicle", "target_entity": "road vehicle"}]}
         
         const input = { "entities": [
             {"name": "Student", "description": "A student entity representing individuals enrolled in courses.", "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
@@ -600,6 +609,40 @@ const useConceptualModel = () =>
         setIsShowOverlayDomainDescription(false)
       }
 
+      const onAddItem = (item : Item, addAsDifferent : boolean = false) =>
+      {
+        if (item.type === ItemType.ENTITY)
+        {
+          onAddEntity(item as Entity)
+        }
+        else if (item.type === ItemType.ATTRIBUTE)
+        {
+          const attribute = item as Attribute
+          if (addAsDifferent)
+          {
+            onAddAsRelationship(attribute)
+          }
+          else
+          {
+            onAddAttributesToNode(attribute)
+          }
+        }
+        else if (item.type === ItemType.RELATIONSHIP)
+        {
+          const relationship = item as Relationship
+          if (addAsDifferent)
+          {
+            onAddAsAttribute(relationship)
+          }
+          else
+          {
+            onAddRelationshipsToNodes(relationship)
+          }
+        }
+
+        console.log("Unknown item type: ", item.type)
+      }
+
       const onAddEntity = (entity: Entity) =>
       {
         console.log("adding entities")
@@ -617,15 +660,13 @@ const useConceptualModel = () =>
       }
 
 
-      const onAddAsAttribute = (item : Item) =>
+      const onAddAsAttribute = (relationship : Relationship) =>
       {
-        // const attribute : Attribute = {"name": relationship.target, "dataType": "string", "inference": relationship.inference, "inference_indexes": relationship.inference_indexes}
+        const attribute : Attribute = {ID: relationship.ID, type: ItemType.ATTRIBUTE, name: relationship.target,
+                                       dataType: "string", inference: relationship.inference, inference_indexes: relationship.inference_indexes}
 
-        setSelectedSuggestedItem(item)
+        setSelectedSuggestedItem(attribute)
         setIsShowEdit(true)
-
-        // TODO: Wait for the user to accept or cancel the edit box
-        onAddAttributesToNode(item)
       }
 
 
@@ -812,7 +853,7 @@ const useConceptualModel = () =>
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
-        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips
+        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem
     }
 }
 

@@ -4,7 +4,7 @@ import SideBar from './components/Sidebar';
 import useConceptualModel from './hooks/useConceptualModel'
 import { ReactFlowProvider } from 'reactflow';
 import OverlayShow from './components/OverlayShow';
-import OverlayEdit from './components/OverlayEdit';
+import OverlayEdit from './components/DialogEditItem';
 import useLayoutSize from './hooks/useLayoutSize';
 
 
@@ -71,8 +71,8 @@ declare global // TODO: Export instead of "global"
     description?: string
     inference: string
     inference_indexes: number[]
-    source?: string
-    target?: string
+    source: string
+    target: string
     cardinality?: string
   }
 }
@@ -83,7 +83,7 @@ function App()
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, summaryText,
     OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
     isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference,
-    isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips
+    isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -120,12 +120,7 @@ function App()
       <SideBar
         isLoading={isLoading}
         items={suggestedItems}
-        userChoice={userChoiceSuggestion}
-        onAddEntity={onAddEntity}
-        onAddAttributesToNode={onAddAttributesToNode}
-        onAddRelationshipsToNodes={onAddRelationshipsToNodes}
-        onAddAsRelationship={onAddAsRelationship}
-        onAddAsAttribute={onAddAsAttribute}
+        onAddItem={onAddItem}
         onEditSuggestion={onEditSuggestion}
         onShowInference={onShowInference}
         sidebarWidthPercentage={sideBarWidthPercentage}
@@ -147,11 +142,11 @@ function App()
       <OverlayEdit
         isOpened={isShowEdit}
         item={selectedSuggestedItem}
-        userChoice={userChoiceSuggestion}
         isDisableSave={false}
         onClose={onEditClose}
         onPlus={onEditPlus}
         onSave={onEditSave}
+        onAddItem={onAddItem}
       />
 
     </>

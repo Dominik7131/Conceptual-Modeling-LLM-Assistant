@@ -8,7 +8,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
-import { UserChoice } from '../App';
+import { ItemType, UserChoice } from '../App';
 import Box from '@mui/material/Box';
 
 
@@ -16,35 +16,23 @@ interface Props
 {
     isLoading : boolean
     items : Item[]
-    userChoice : string
-    onAddEntity : (entity : Entity) => void
-    onAddAttributesToNode : (attribute : Attribute) => void
-    onAddRelationshipsToNodes : (relationship : Relationship) => void
-    onAddAsRelationship : (attribute : Attribute) => void
-    onAddAsAttribute : (relationship : Relationship) => void
-    onEditSuggestion : (itemID : number, userChoice : string) => void
+    onAddItem : (item : Item, addAsDifferent : boolean) => void
+    onEditSuggestion : (itemID : number, itemType : ItemType) => void
     onShowInference : (itemID : number) => void
     sidebarWidthPercentage : number
     isSidebarOpen : boolean
     onToggleSideBarCollapse : () => void
 }
 
-const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference, sidebarWidthPercentage, isSidebarOpen, onToggleSideBarCollapse}) =>
+const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion, onShowInference, sidebarWidthPercentage, isSidebarOpen, onToggleSideBarCollapse}) =>
 {
-    // TODO: Instead of different functions for adding pass probably only one Add function and implement the logic in useConceptualModel hook
-
-    // TODO: Decompose the sidebar into more sub-components
-    // E.g.:
-    //  - one component for text such as name: ..., inference: ..., ...
-    //  - one component for buttons such as "Add", "Edit", "Show inference"
-
     const showTextOnSidebar = () =>
     {        
         return (
             <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {items.map((item, index) =>
                         <ListItem key={item.ID}>
-                            {showItem(item, userChoice, index)}
+                            {showItem(item)}
                         </ListItem>
                 )}
 
@@ -56,7 +44,7 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
         )
     }
 
-    const showItem = (item : Item, userChoice : string, index : number) =>
+    const showItem = (item : Item) =>
     {
         const attribute : Attribute = (item as Attribute)
         const relationship : Relationship = (item as Relationship)
@@ -76,14 +64,14 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
                 </Typography>
 
                 {
-                    userChoice === UserChoice.ATTRIBUTES &&
+                    item.type === ItemType.ATTRIBUTE &&
                     <Typography>
                         <strong>Data type:</strong> {attribute.dataType}
                     </Typography>
                 }
 
                 {
-                    (userChoice === UserChoice.ATTRIBUTES || userChoice === UserChoice.RELATIONSHIPS) &&
+                    (item.type === ItemType.ATTRIBUTE || item.type === ItemType.RELATIONSHIP) &&
                     <Typography>
                         <strong>Cardinality:</strong> {attribute.cardinality}
                     </Typography>
@@ -91,14 +79,14 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
 
 
                 {
-                    userChoice === UserChoice.RELATIONSHIPS &&
+                    item.type === ItemType.RELATIONSHIP &&
                     <Typography>
                         <strong>Source entity:</strong> {relationship.source}
                     </Typography>
                 }
 
                 {
-                    userChoice === UserChoice.RELATIONSHIPS &&
+                    item.type === ItemType.RELATIONSHIP &&
                     <Typography>
                         <strong>Target entity:</strong> {relationship.target}
                     </Typography>
@@ -106,38 +94,21 @@ const Sidebar: React.FC<Props> = ({isLoading, items, userChoice, onAddEntity, on
 
                 <Stack marginTop={1} marginBottom={1}> 
                     <ButtonGroup size="small">
-                        <Button
-                            onClick={() => 
-                            {
-                                if (userChoice === UserChoice.ATTRIBUTES)
-                                {
-                                    onAddAttributesToNode(attribute)
-                                }
-                                else if (userChoice === UserChoice.RELATIONSHIPS)
-                                {
-                                    onAddRelationshipsToNodes(relationship)
-                                }
-                                else if (userChoice === "entities")
-                                {
-                                    onAddEntity(entity)
-                                }
-                            }}>
-                                Add
-                        </Button>
+                        <Button onClick={() => onAddItem(item, false)}> Add </Button>
                         {
-                            userChoice === UserChoice.ATTRIBUTES ?
+                            item.type === ItemType.ATTRIBUTE ?
                             <Button
-                                onClick={ () => onAddAsRelationship(attribute) }>
+                                onClick={ () => onAddItem(item, true)}>
                                 Add as relationship
                             </Button>
-                            : userChoice === UserChoice.RELATIONSHIPS ?
+                            : item.type === ItemType.RELATIONSHIP ?
                             <Button
-                                onClick={ () => onAddAsAttribute(relationship) }>
+                                onClick={ () => onAddItem(item, true)}>
                                 Add as attribute
                             </Button>
                             : null
                         }
-                        <Button onClick={() => onEditSuggestion(item.ID, userChoice)}>Edit</Button>
+                        <Button onClick={() => onEditSuggestion(item.ID, item.type)}>Edit</Button>
                         <Button onClick={() => onShowInference(item.ID)}>Show</Button>
                     </ButtonGroup>
                 </Stack>
