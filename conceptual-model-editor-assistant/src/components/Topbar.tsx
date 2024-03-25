@@ -189,7 +189,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 <TabPanel value="1">
                     { isLoadingSummary1 ? <CircularProgress /> :
                         <Stack spacing={2}>
-                            { showSummary1()}
+                            { showSummary1() }
                         </Stack>
                     }
                 </TabPanel>

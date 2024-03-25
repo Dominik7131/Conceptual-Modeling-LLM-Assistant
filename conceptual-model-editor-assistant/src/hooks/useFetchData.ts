@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Field, ItemType } from "../App";
 import { parse } from "path";
 
-const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => void) =>
+const useFetchData = () =>
 {
     // TODO: Insert here methods for fetching data
     // Probably this hook should receive function what to do on data receive
@@ -11,7 +11,6 @@ const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => v
     const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(false)
     const [isLoadingSummary1, setIsLoadingSummary1] = useState<boolean>(false)
     const [fieldToLoad, setFieldToLoad] = useState<Field>(Field.ID)
-    const [text, setText] = useState<string>("")
     const [summaryText, setSummaryText] = useState<string>("")
 
     const fetchStreamedDataGeneral = (endpoint : string, headers : any, bodyData : any, attributeName : string, field: Field) =>
@@ -199,7 +198,7 @@ const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => v
       }
     }
 
-    return { isLoadingEdit, isLoadingSummary1, fieldToLoad, text, summaryText, regeneratedItem, OnClearRegeneratedItem, fetchStreamedDataGeneral, fetchSummary }
+    return { isLoadingEdit, isLoadingSummary1, fieldToLoad, summaryText, regeneratedItem, OnClearRegeneratedItem, fetchStreamedDataGeneral, fetchSummary }
 }
 
 export default useFetchData
