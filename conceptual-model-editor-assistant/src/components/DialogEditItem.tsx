@@ -32,24 +32,11 @@ const DialogEditItem: React.FC<Props> = ({item, isOpened, isDisableSave, onClose
     const attribute = editedItem as Attribute
     const relationship = editedItem as Relationship
 
+    
     useEffect(() =>
     {
         setEditedItem(item);
     }, [item]);
-
-    // const handleClickOutsideDialog = (event: MouseEvent) =>
-    // {
-    //     const target = event.target as HTMLElement;
-    //     if (target.className.includes('MuiDialog-container')) { onClose(); }
-    // }
-
-    // useEffect(() =>
-    // {
-    //     if (isOpened) { document.addEventListener('click', handleClickOutsideDialog) }
-    //     else { document.removeEventListener('click', handleClickOutsideDialog) }
-
-    //     return () => { document.removeEventListener('click', handleClickOutsideDialog) }
-    // }, [isOpened])
 
 
     const showEditField = (label : string, value : string, handleChange : (event : any) => void) =>

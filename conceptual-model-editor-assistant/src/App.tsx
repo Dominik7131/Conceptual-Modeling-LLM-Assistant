@@ -3,9 +3,9 @@ import Topbar from './components/Topbar'
 import SideBar from './components/Sidebar';
 import useConceptualModel from './hooks/useConceptualModel'
 import { ReactFlowProvider } from 'reactflow';
-import OverlayShow from './components/OverlayShow';
-import OverlayEdit from './components/DialogEditItem';
 import useLayoutSize from './hooks/useLayoutSize';
+import DialogDomainDescription from './components/DialogDomainDescription';
+import DialogEditItem from './components/DialogEditItem';
 
 
 export const enum UserChoice
@@ -81,9 +81,9 @@ declare global // TODO: Export instead of "global"
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, summaryText,
-    OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
+    OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
     isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference,
-    isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem
+    isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -128,9 +128,9 @@ function App()
         onToggleSideBarCollapse={onToggleSideBarCollapse}
       />
 
-      <OverlayShow
+      <DialogDomainDescription
         domainDescription={domainDescription}
-        isOpened={isShowOverlayDomainDescription}
+        isOpened={isShowDialogDomainDescription}
         inferenceIndexes={inferenceIndexesMockUp}
         onClose={onOverlayDomainDescriptionClose}
         itemName={selectedSuggestedItem.name}
@@ -139,8 +139,8 @@ function App()
         tooltips={tooltips}
       />
 
-      <OverlayEdit
-        isOpened={isShowEdit}
+      <DialogEditItem
+        isOpened={isShowDialogEdit}
         item={selectedSuggestedItem}
         isDisableSave={false}
         onClose={onEditClose}

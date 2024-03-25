@@ -26,7 +26,7 @@ interface Props
   tooltips : string[]
 }
 
-const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIndexes, onClose, itemName, selectedEntityName, userChoiceSuggestion, tooltips } : Props) =>
+const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened, inferenceIndexes, onClose, itemName, selectedEntityName, userChoiceSuggestion, tooltips } : Props) =>
 {
   const { capitalizeString, getUserChoiceSingular } = useUtility()
 
@@ -106,22 +106,24 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIn
 
 
   // TODO: Fix scrolling into the first highlighted inference
-  const highlightedInferenceRef = useRef<HTMLDivElement>(null);
-  // useEffect(() =>
-  // {
-  //   console.log("Use effect")
-  //   if (highlightedInferenceRef.current)
-  //   {
-  //     highlightedInferenceRef.current.scrollIntoView({
-  //       behavior: 'smooth',
-  //       block: 'center',
-  //     });
-  //   }
-  //   else
-  //   {
-  //     console.log("Is null")
-  //   }
-  // }, [highlightedInferenceRef]);
+  const highlightedInferenceRef = useRef<HTMLSpanElement>(null);
+  useEffect(() =>
+  {
+    // let highlightedText = document.getElementById("highlightedInference-1")
+    // console.log("Trying to scroll", highlightedText)
+    console.log("Use effect")
+    if (highlightedInferenceRef.current)
+    {
+      highlightedInferenceRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+    else
+    {
+      console.log("Is null")
+    }
+  }, [highlightedInferenceRef.current]);
 
 
   // Tooltip from https://mui.com/material-ui/react-tooltip/#customization
@@ -181,4 +183,4 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIn
     </> )
 }
 
-export default OverlayShow
+export default DialogDomainDescription

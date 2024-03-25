@@ -27,8 +27,8 @@ const useConceptualModel = () =>
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [selectedEdges, setSelectedEdges] = useState<Edge[]>([]);
 
-    const [isShowOverlayDomainDescription, setIsShowOverlayDomainDescription] = useState<boolean>(false)
-    const [isShowEdit, setIsShowEdit] = useState<boolean>(false)
+    const [isShowDialogDomainDescription, setIsShowDialogDomainDescription] = useState<boolean>(false)
+    const [isShowDialogEdit, setIsShowDialogEdit] = useState<boolean>(false)
 
     const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([])
     const [tooltips, setTooltips] = useState<string[]>([])
@@ -367,7 +367,7 @@ const useConceptualModel = () =>
 
         if (buttonText === UserChoice.ENTITIES)
         {
-          // TODO: Define field names such as `sourceEntity`, `targetEntity`, `userChoice`, ...
+          // TODO: Define body field names such as `sourceEntity`, `targetEntity`, `userChoice`, ...
           const bodyData = JSON.stringify({"sourceEntity": "", "targetEntity": "", "userChoice": UserChoice.ENTITIES, "domainDescription": currentDomainDesciption})
 
           if (!is_fetch_stream_data)
@@ -476,7 +476,7 @@ const useConceptualModel = () =>
         //   }
         // }
 
-        setIsShowOverlayDomainDescription(true)
+        setIsShowDialogDomainDescription(true)
       }
     
       const updateNodes = () =>
@@ -554,20 +554,32 @@ const useConceptualModel = () =>
 
       useEffect(() =>
       {
-        if (!isShowOverlayDomainDescription)
+        if (!isShowDialogDomainDescription)
         {
           return
         }
 
-        // Scroll down to the first highlighted inference in the overlay
-        let highlightedText = document.getElementById("highlightedInference-1")
-        if (highlightedText)
+        // Scroll down to the first highlighted inference in the dialog
+        // We need to wait for few miliseconds to let the dialog render
+        // TODO: Try to comeup with solution that doesn't need any hardcoded timeout
+        const delay = async () =>
         {
-          console.log("yes")
-          highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
-        }
+          await new Promise(resolve => setTimeout(resolve, 200));
 
-      }, [isShowOverlayDomainDescription])
+          let highlightedText = document.getElementById("highlightedInference-1")
+          console.log("Trying to scroll", highlightedText)
+
+          if (highlightedText)
+          {
+            console.log("yes")
+            highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
+          }
+    
+        };
+
+        delay()
+
+      }, [isShowDialogDomainDescription])
     
       useEffect(() =>
       {
@@ -601,12 +613,12 @@ const useConceptualModel = () =>
 
       const onOverlayDomainDescriptionOpen = () =>
       {
-        setIsShowOverlayDomainDescription(true)
+        setIsShowDialogDomainDescription(true)
       }
 
       const onOverlayDomainDescriptionClose = () =>
       {
-        setIsShowOverlayDomainDescription(false)
+        setIsShowDialogDomainDescription(false)
       }
 
       const onAddItem = (item : Item, addAsDifferent : boolean = false) =>
@@ -656,7 +668,7 @@ const useConceptualModel = () =>
                                              source: sourceEntity, target: attribute.name, cardinality: ""}
         
         setSelectedSuggestedItem(relationship)
-        setIsShowEdit(true)
+        setIsShowDialogEdit(true)
       }
 
 
@@ -666,7 +678,7 @@ const useConceptualModel = () =>
                                        dataType: "string", inference: relationship.inference, inference_indexes: relationship.inference_indexes}
 
         setSelectedSuggestedItem(attribute)
-        setIsShowEdit(true)
+        setIsShowDialogEdit(true)
       }
 
 
@@ -796,13 +808,13 @@ const useConceptualModel = () =>
 
       const onEditClose = () =>
       {
-        setIsShowEdit(false)
+        setIsShowDialogEdit(false)
       }
 
 
       const onEditSuggestion = (itemID : number, userChoice : string) =>
       {
-        setIsShowEdit(true)
+        setIsShowDialogEdit(true)
 
         setSelectedSuggestedItem(suggestedItems[itemID])
       }
@@ -812,7 +824,7 @@ const useConceptualModel = () =>
         // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
         // TODO: probably move this function into file `useInferenceIndexes.tsx`
 
-        setIsShowOverlayDomainDescription(_ => true)
+        setIsShowDialogDomainDescription(_ => true)
 
         // Find the suggested item with ID: itemID
 
@@ -846,14 +858,14 @@ const useConceptualModel = () =>
         }
 
         let newTooltips : string[] = Array(suggestedItem.inference_indexes.length).fill(tooltip)
-        console.log("New tooltips: ", newTooltips)
+        // console.log("New tooltips: ", newTooltips)
         setTooltips(newTooltips)
       }
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
-        summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowEdit, onEditClose, onEditPlus, onEditSave,
+        summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
-        isShowOverlayDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem
+        isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem
     }
 }
 
