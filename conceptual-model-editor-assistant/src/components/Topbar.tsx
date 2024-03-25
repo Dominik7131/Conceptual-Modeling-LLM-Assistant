@@ -8,7 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { UserChoice } from "../App";
 import Tooltip from '@mui/material/Tooltip';
-import { Divider, List, ListItem, ListItemText, Tab, Tabs, Typography } from "@mui/material";
+import { Divider, FormControl, FormLabel, List, ListItem, ListItemText, Radio, RadioGroup, Tab, Tabs, Typography } from "@mui/material";
 import { Node } from 'reactflow';
 import useUtility from "../hooks/useUtility";
 import TabPanel from '@mui/lab/TabPanel';
@@ -203,18 +203,22 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
 
                 <TabPanel value="3">
                     <Stack>
-                        <Typography>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        defaultChecked
-                                        onClick={() => onIgnoreDomainDescriptionChange()}/>
-                                    }
-                                        label="Use domain description"/>
-                            {/* <FormControlLabel control={<Checkbox />} label="maybe add text area to edit prompt for summarization" /> */}
-                        </FormGroup>
-                        </Typography>
+                        <FormLabel > Domain description filtering </FormLabel >
+                        <RadioGroup row defaultValue="Syntactit">
+                            <FormControlLabel value="None" control={<Radio />} label="None" />
+                            <FormControlLabel value="Semantic" control={<Radio />} label="Semantic" />
+                            <FormControlLabel value="Syntactit" control={<Radio />} label="Syntactic" />
+                        </RadioGroup>
+
+                        <p></p>
+                        <Divider></Divider>
+                        <p></p>
+
+                        <FormControlLabel label="Ignore domain description"
+                            control={
+                                <Checkbox checked={isIgnoreDomainDescription} onChange={onIgnoreDomainDescriptionChange}/>
+                                }/>
+                        {/* <FormControlLabel control={<Checkbox />} label="maybe add text area to edit prompt for summarization" /> */}
                     </Stack>
                 </TabPanel>
             </TabContext>

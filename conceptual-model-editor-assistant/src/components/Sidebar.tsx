@@ -71,7 +71,7 @@ const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion
                 }
 
                 {
-                    (item.type === ItemType.ATTRIBUTE || item.type === ItemType.RELATIONSHIP) &&
+                    item.type === ItemType.ATTRIBUTE &&
                     <Typography>
                         <strong>Cardinality:</strong> {attribute.cardinality}
                     </Typography>
@@ -89,6 +89,13 @@ const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion
                     item.type === ItemType.RELATIONSHIP &&
                     <Typography>
                         <strong>Target entity:</strong> {relationship.target}
+                    </Typography>
+                }
+
+                {
+                    item.type === ItemType.RELATIONSHIP &&
+                    <Typography>
+                        <strong>Cardinality:</strong> {relationship.cardinality}
                     </Typography>
                 }
 

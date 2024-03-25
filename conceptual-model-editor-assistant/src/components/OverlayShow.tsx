@@ -30,21 +30,6 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIn
 {
   const { capitalizeString, getUserChoiceSingular } = useUtility()
 
-  const handleClickOutsideDialog = (event: MouseEvent) =>
-  {
-    const target = event.target as HTMLElement;
-    if (target.className.includes('MuiDialog-container')) { onClose(); }
-  }
-
-  useEffect(() =>
-  {
-    if (isOpened) { document.addEventListener('click', handleClickOutsideDialog) }
-    else { document.removeEventListener('click', handleClickOutsideDialog) }
-
-    return () => { document.removeEventListener('click', handleClickOutsideDialog) }
-  }, [isOpened])
-
-
   const createTooltip = () =>
   {
     const userChoice : string = getUserChoiceSingular(userChoiceSuggestion)
@@ -161,6 +146,7 @@ const OverlayShow: React.FC<Props> = ({ domainDescription, isOpened, inferenceIn
         fullWidth={true}
         maxWidth={'xl'}
         scroll={'paper'}
+        onClose={onClose}
       >
         <DialogTitle>
           <Stack spacing={2}>

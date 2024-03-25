@@ -27,35 +27,29 @@ interface Props
 
 const DialogEditItem: React.FC<Props> = ({item, isOpened, isDisableSave, onClose, onSave, onPlus, onAddItem} : Props) =>
 {
-    // TODO: Fix bug with setting fields that exist only on specific types such as Data type on Attribute
-    // -> editing data types is not working
-    // if we have state variables: editedEntity, editedAttribute and editedRelationship then to call setEditedEntity/Attribute/Relationship(...) we need 3 ifs
-
     const [editedItem, setEditedItem] = useState<Item>(item)
 
-    // TODO: Try to avoid this repeated code
-    const attribute = item as Attribute
-    const relationship = item as Relationship
-    const entity = item as Entity
+    const attribute = editedItem as Attribute
+    const relationship = editedItem as Relationship
 
     useEffect(() =>
     {
         setEditedItem(item);
     }, [item]);
 
-    const handleClickOutsideDialog = (event: MouseEvent) =>
-    {
-        const target = event.target as HTMLElement;
-        if (target.className.includes('MuiDialog-container')) { onClose(); }
-    }
+    // const handleClickOutsideDialog = (event: MouseEvent) =>
+    // {
+    //     const target = event.target as HTMLElement;
+    //     if (target.className.includes('MuiDialog-container')) { onClose(); }
+    // }
 
-    useEffect(() =>
-    {
-        if (isOpened) { document.addEventListener('click', handleClickOutsideDialog) }
-        else { document.removeEventListener('click', handleClickOutsideDialog) }
+    // useEffect(() =>
+    // {
+    //     if (isOpened) { document.addEventListener('click', handleClickOutsideDialog) }
+    //     else { document.removeEventListener('click', handleClickOutsideDialog) }
 
-        return () => { document.removeEventListener('click', handleClickOutsideDialog) }
-    }, [isOpened])
+    //     return () => { document.removeEventListener('click', handleClickOutsideDialog) }
+    // }, [isOpened])
 
 
     const showEditField = (label : string, value : string, handleChange : (event : any) => void) =>
@@ -74,7 +68,7 @@ const DialogEditItem: React.FC<Props> = ({item, isOpened, isDisableSave, onClose
     }
 
     return (
-        <Dialog open={isOpened} fullWidth={true} maxWidth={'lg'}>
+        <Dialog open={isOpened} fullWidth={true} maxWidth={'lg'} onClose={onClose}>
 
             <DialogTitle> Edit </DialogTitle>
 
@@ -82,29 +76,35 @@ const DialogEditItem: React.FC<Props> = ({item, isOpened, isDisableSave, onClose
 
                 { showEditField(Field.NAME, editedItem.name, (event) => setEditedItem({ ...editedItem, name: event.target.value })) }
 
-                {/* TODO: Switch "Original text" to Field.ORIGINAL_TEXT*/}
+                {/* TODO: Switch "original text" to Field.ORIGINAL_TEXT*/}
                 { showEditField("original text", editedItem.inference, (event) => setEditedItem({ ...editedItem, inference: event.target.value })) }
 
                 { showEditField(Field.DESCRIPTION, editedItem.description === undefined ? "" : editedItem.description, (event) => setEditedItem({ ...editedItem, description: event.target.value })) }
 
                 { item.type === ItemType.ATTRIBUTE &&
-                  showEditField(Field.DATA_TYPE, attribute.dataType === undefined ? "" : attribute.dataType, (event) => setEditedItem({ ...editedItem, dataType: event.target.value })) }
+                  showEditField(Field.DATA_TYPE, attribute.dataType === undefined ? "" : attribute.dataType, (event) => setEditedItem({ ...editedItem, dataType: event.target.value }))
+                }
+
+                { item.type === ItemType.ATTRIBUTE &&
+                  showEditField(Field.CARDINALITY, attribute.cardinality === undefined ? "" : attribute.cardinality, (event) => setEditedItem({ ...editedItem, cardinality: event.target.value })) 
+                }
+                
 
                 { item.type === ItemType.RELATIONSHIP &&
-                  showEditField(Field.SOURCE_ENTITY, relationship.source === undefined ? "" : relationship.source, (event) => setEditedItem({ ...editedItem, source: event.target.value })) }
+                  showEditField(Field.SOURCE_ENTITY, relationship.source, (event) => setEditedItem({ ...editedItem, source: event.target.value })) }
 
                 { item.type === ItemType.RELATIONSHIP &&
-                  showEditField(Field.TARGET_ENTITY, relationship.target === undefined ? "" : relationship.target, (event) => setEditedItem({ ...editedItem, target: event.target.value })) }
+                  showEditField(Field.TARGET_ENTITY, relationship.target, (event) => setEditedItem({ ...editedItem, target: event.target.value })) }
 
-                { (item.type === ItemType.ATTRIBUTE || item.type === ItemType.RELATIONSHIP) &&
-                  showEditField(Field.CARDINALITY, attribute.cardinality === undefined ? "" : attribute.cardinality, (event) => setEditedItem({ ...editedItem, target: event.target.value })) }
+                { item.type === ItemType.RELATIONSHIP &&
+                  showEditField(Field.CARDINALITY, relationship.cardinality === undefined ? "" : relationship.cardinality, (event) => setEditedItem({ ...editedItem, cardinality: event.target.value })) }
 
             </DialogContent>
 
             <DialogActions>
                 <Button onClick={() => onClose()}>Cancel</Button>
                 <Button disabled={isDisableSave} onClick={() => { {onSave(editedItem)}; onClose()}}>Save</Button>
-                <Button onClick={() => { onAddItem(item, false); onClose()}}>Add</Button>
+                <Button onClick={() => { onAddItem(editedItem, false); onClose()}}>Add</Button>
             </DialogActions>
         </Dialog>
     )
