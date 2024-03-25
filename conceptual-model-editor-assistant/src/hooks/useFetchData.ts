@@ -9,6 +9,7 @@ const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => v
 
     const [regeneratedItem, setRegeneratedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: ""})
     const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(false)
+    const [isLoadingSummary1, setIsLoadingSummary1] = useState<boolean>(false)
     const [fieldToLoad, setFieldToLoad] = useState<Field>(Field.ID)
     const [text, setText] = useState<string>("")
     const [summaryText, setSummaryText] = useState<string>("")
@@ -108,57 +109,57 @@ const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => v
 
     const fetchSummary = (endpoint : string, headers : any, bodyData : any) =>
     {
-        setIsLoadingEdit(_ => true)
+      setIsLoadingSummary1(_ => true)
 
-        fetch(endpoint, { method: "POST", headers, body: bodyData })
-        .then(response =>
-        {
-            const stream = response.body; // Get the readable stream from the response body
+      fetch(endpoint, { method: "POST", headers, body: bodyData })
+      .then(response =>
+      {
+          const stream = response.body; // Get the readable stream from the response body
 
-            if (stream === null)
-            {
-              console.log("Stream is null")
-              setIsLoadingEdit(_ => false)
-              return
-            }
+          if (stream === null)
+          {
+            console.log("Stream is null")
+            setIsLoadingSummary1(_ => false)
+            return
+          }
 
-            const reader = stream.getReader();
+          const reader = stream.getReader();
 
-            const readChunk = () =>
-            {
-                reader.read()
-                    .then(({value, done}) =>
-                    {
-                        if (done)
-                        {
-                            console.log("Stream finished")
-                            setIsLoadingEdit(_ => false)
-                            return
-                        }
+          const readChunk = () =>
+          {
+              reader.read()
+                  .then(({value, done}) =>
+                  {
+                      if (done)
+                      {
+                          console.log("Stream finished")
+                          setIsLoadingSummary1(_ => false)
+                          return
+                      }
 
-                        // Convert the `value` to a string
-                        var jsonString = new TextDecoder().decode(value)
-                        console.log("JsonString: ", jsonString)
-                        
-                        const parsedData = JSON.parse(jsonString)
-                        console.log("Parsed data:", parsedData)
-                        setSummaryText(parsedData["summary"])
+                      // Convert the `value` to a string
+                      var jsonString = new TextDecoder().decode(value)
+                      console.log("JsonString: ", jsonString)
+                      
+                      const parsedData = JSON.parse(jsonString)
+                      console.log("Parsed data:", parsedData)
+                      setSummaryText(parsedData["summary"])
 
-                        readChunk(); // Read the next chunk
-                    })
-                    .catch(error =>
-                    {
-                      console.error(error);
-                    });
-            };
-            readChunk(); // Start reading the first chunk
-        })
-        .catch(error =>
-        {
-          console.error(error);
-          setIsLoadingEdit(_ => false)
-          alert("Error: request failed")
-        });
+                      readChunk(); // Read the next chunk
+                  })
+                  .catch(error =>
+                  {
+                    console.error(error);
+                  });
+          };
+          readChunk(); // Start reading the first chunk
+      })
+      .catch(error =>
+      {
+        console.error(error);
+        setIsLoadingSummary1(_ => false)
+        alert("Error: request failed")
+      });
     }
 
     const OnClearRegeneratedItem = (field: string, clearAll: boolean) =>
@@ -198,7 +199,7 @@ const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => v
       }
     }
 
-    return { isLoadingEdit, fieldToLoad, text, summaryText, regeneratedItem, OnClearRegeneratedItem, fetchStreamedDataGeneral, fetchSummary }
+    return { isLoadingEdit, isLoadingSummary1, fieldToLoad, text, summaryText, regeneratedItem, OnClearRegeneratedItem, fetchStreamedDataGeneral, fetchSummary }
 }
 
 export default useFetchData

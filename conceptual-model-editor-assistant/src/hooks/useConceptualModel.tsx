@@ -39,7 +39,7 @@ const useConceptualModel = () =>
 
     const { capitalizeString } = useUtility()
 
-    const { isLoadingEdit, fieldToLoad, text, summaryText, regeneratedItem, OnClearRegeneratedItem, fetchStreamedDataGeneral, fetchSummary } = useFetchData((x, y, z) => onAttributeChange(x, y, z))
+    const { isLoadingEdit, isLoadingSummary1, fieldToLoad, text, summaryText, regeneratedItem, OnClearRegeneratedItem, fetchStreamedDataGeneral, fetchSummary } = useFetchData((x, y, z) => onAttributeChange(x, y, z))
 
     let IDToAssign = 0
     const URL = "http://127.0.0.1:5000/"
@@ -866,7 +866,7 @@ const useConceptualModel = () =>
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
-        regeneratedItem, OnClearRegeneratedItem, isLoadingEdit, fieldToLoad
+        regeneratedItem, OnClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, fieldToLoad
     }
 }
 

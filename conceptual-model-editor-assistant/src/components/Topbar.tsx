@@ -8,7 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { UserChoice } from "../App";
 import Tooltip from '@mui/material/Tooltip';
-import { Divider, FormControl, FormLabel, List, ListItem, ListItemText, Radio, RadioGroup, Tab, Tabs, Typography } from "@mui/material";
+import { CircularProgress, Divider, FormControl, FormLabel, List, ListItem, ListItemText, Radio, RadioGroup, Tab, Tabs, Typography } from "@mui/material";
 import { Node } from 'reactflow';
 import useUtility from "../hooks/useUtility";
 import TabPanel from '@mui/lab/TabPanel';
@@ -28,17 +28,16 @@ interface Props
     onDomainDescriptionChange : (newDomainDescriptionText : string) => void
     onHighlightSelectedItems : () => void
 
-    isShowSummary1 : boolean
+    isLoadingSummary1 : boolean
     summary : string
     
-    isShowSummary2 : boolean
     selectedNodes : Node[]
 
     sidebarWidthPercentage : number
 }
 
 
-const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isShowSummary1, isShowSummary2, selectedNodes, isIgnoreDomainDescription, sidebarWidthPercentage}) =>
+const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isLoadingSummary1, selectedNodes, isIgnoreDomainDescription, sidebarWidthPercentage}) =>
 {
     const [tabValue, setTabValue] = useState<string>('0');
     const [insertedNodeNameText, setInsertedNodeNameText] = useState<string>("")
@@ -140,8 +139,8 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                         </Stack>
 
                         <Stack direction="row" spacing={2}>
-                            <Button variant="contained" disableElevation onClick={onSummaryButtonClick}>Summary1</Button>
-                            <Button variant="contained" disableElevation>Summary2</Button>
+                            <Button variant="contained" disableElevation onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary1</Button>
+                            <Button variant="contained" disableElevation onClick={() => setTabValue('2')}>Summary2</Button>
                             <Button variant="contained" disableElevation onClick={onHighlightSelectedItems}>Highlight</Button>
                         </Stack>
                     </Stack>
@@ -188,7 +187,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 </TabPanel>
 
                 <TabPanel value="1">
-                    { summary && isShowSummary1 &&
+                    { isLoadingSummary1 ? <CircularProgress /> :
                         <Stack spacing={2}>
                             { showSummary1()}
                         </Stack>
