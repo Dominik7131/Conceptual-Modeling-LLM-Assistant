@@ -35,8 +35,7 @@ def get_attribute_description():
     domain_description = body_data["domainDescription"]
     field = body_data["field"]
 
-    # TODO: Decide on which thing to generate based on the `field` variable
-    return llm_assistant.get_description(attribute_name, sourceEntity, domain_description)
+    return llm_assistant.get_field_content(attribute_name, sourceEntity, domain_description, field)
 
 
 @app.route('/summary1', methods=['POST'])

@@ -12,79 +12,174 @@ import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
 import { Field, ItemType } from '../App';
+import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
 
 
 interface Props
 {
     item : Item
+    regeneratedItem : Item
     isOpened : boolean
     isDisableSave : boolean
     onClose : () => void
     onSave : (editedItem : Item) => void
-    onPlus : (name: string, field: string) => void
+    onPlus : (itemName: string, field: Field) => void
     onAddItem : (item : Item, addAsDifferent : boolean) => void
+    OnClearSuggestion : (field: string) => void
 }
 
-const DialogEditItem: React.FC<Props> = ({item, isOpened, isDisableSave, onClose, onSave, onPlus, onAddItem} : Props) =>
+const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDisableSave, onClose, onSave, onPlus, onAddItem, OnClearSuggestion} : Props) =>
 {
     const [editedItem, setEditedItem] = useState<Item>(item)
 
     const attribute = editedItem as Attribute
     const relationship = editedItem as Relationship
-
     
     useEffect(() =>
     {
         setEditedItem(item);
     }, [item]);
 
-
-    const showEditField = (label : string, value : string, handleChange : (event : any) => void) =>
+    const applyRegeneratedText = (field : Field) =>
     {
+        // TODO: Try to find a way to make this code more readable
+        if (field === Field.NAME && regeneratedItem.name)
+        {
+            setEditedItem({...editedItem, name: regeneratedItem.name})
+        }
+        else if (field === Field.DESCRIPTION && regeneratedItem.description)
+        {
+            setEditedItem({...editedItem, description: regeneratedItem.description})
+        }
+        else if (field === Field.INFERENCE && regeneratedItem.inference)
+        {
+            setEditedItem({...editedItem, inference: regeneratedItem.inference})
+        }
+        else if (field === Field.DATA_TYPE && (regeneratedItem as Attribute).dataType)
+        {
+            setEditedItem({...editedItem, dataType: (regeneratedItem as Attribute).dataType})
+        }
+        else if (field === Field.CARDINALITY && (regeneratedItem as Attribute).cardinality)
+        {
+            setEditedItem({...editedItem, cardinality: (regeneratedItem as Attribute).cardinality})
+        }
+        else if (field === Field.SOURCE_ENTITY && (regeneratedItem as Relationship).source)
+        {
+            setEditedItem({...editedItem, source: (regeneratedItem as Relationship).source})
+        }
+        else if (field === Field.TARGET_ENTITY && (regeneratedItem as Relationship).target)
+        {
+            setEditedItem({...editedItem, target: (regeneratedItem as Relationship).target})
+        }
+
+        OnClearSuggestion(field)
+    }
+
+
+    const showEditField = (label : string, field : Field, value : string, handleChange : (event : any) => void) =>
+    {
+        let newValue : string = ""
+        let isRegeneratedText : boolean = true
+        let color : string = "gray"
+
+        if (field === Field.NAME && regeneratedItem.name)
+        {
+            newValue = regeneratedItem.name
+        }
+        else if (field === Field.DESCRIPTION && regeneratedItem.description)
+        {
+            newValue = regeneratedItem.description
+        }
+        else if (field === Field.INFERENCE && regeneratedItem.inference)
+        {
+            newValue = regeneratedItem.inference
+        }
+        else if (field === Field.DATA_TYPE && (regeneratedItem as Attribute).dataType)
+        {
+            const regeneratedAttribute = regeneratedItem as Attribute
+            if (regeneratedAttribute)
+            {
+                newValue = regeneratedAttribute.dataType ? regeneratedAttribute.dataType : ""
+            }
+        }
+        else if (field === Field.CARDINALITY && (regeneratedItem as Attribute).cardinality)
+        {
+            const regeneratedAttribute = regeneratedItem as Attribute
+            if (regeneratedAttribute)
+            {
+                newValue = regeneratedAttribute.cardinality ? regeneratedAttribute.cardinality : ""
+            }
+        }
+        else
+        {
+            newValue = value
+            isRegeneratedText = false
+            
+        }
+
+        if (!isRegeneratedText)
+        {
+            color = "black"
+        }
+
         return (
-            <Stack direction="row" paddingX={1}>
-                    <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={label}
+            <Stack direction="row" spacing={4}>
+                    <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={label} multiline
+                        sx={{'& textarea': {color: color} }}
                         onChange={(event) => handleChange(event)}
-                        value={value}
+                        value={newValue}
                     />
-                    <Fab color="primary" size="small">
-                        <AddIcon onClick={() => console.log("On click function not implemented")}/>
-                    </Fab>
+                    { !isRegeneratedText ?
+                        <IconButton color="primary" size="small" onClick={() => onPlus(editedItem.name, field)}>
+                            <AddIcon/>
+                        </IconButton>
+                        :
+                        <Stack direction="row">
+                            <IconButton onClick={() => applyRegeneratedText(field)}>
+                                <CheckIcon color="success"/>
+                            </IconButton>
+                            <IconButton onClick={() => OnClearSuggestion(field)}>
+                                <CloseIcon color="error"/>
+                            </IconButton>
+                        </Stack>
+                    }
                 </Stack>
         )
     }
 
+
     return (
-        <Dialog open={isOpened} fullWidth={true} maxWidth={'lg'} onClose={onClose}>
+        <Dialog open={isOpened} fullWidth={true} maxWidth={'xl'} onClose={onClose}>
 
             <DialogTitle> Edit </DialogTitle>
 
             <DialogContent>
 
-                { showEditField(Field.NAME, editedItem.name, (event) => setEditedItem({ ...editedItem, name: event.target.value })) }
+                { showEditField("Name", Field.NAME, editedItem.name, (event) => setEditedItem({ ...editedItem, name: event.target.value })) }
 
-                {/* TODO: Switch "original text" to Field.ORIGINAL_TEXT*/}
-                { showEditField("original text", editedItem.inference, (event) => setEditedItem({ ...editedItem, inference: event.target.value })) }
+                { showEditField("Original text", Field.INFERENCE, editedItem.inference, (event) => setEditedItem({ ...editedItem, inference: event.target.value })) }
 
-                { showEditField(Field.DESCRIPTION, editedItem.description === undefined ? "" : editedItem.description, (event) => setEditedItem({ ...editedItem, description: event.target.value })) }
+                { showEditField("Description", Field.DESCRIPTION, regeneratedItem.description ? regeneratedItem.description : editedItem.description, (event) => setEditedItem({ ...editedItem, description: event.target.value })) }
 
                 { item.type === ItemType.ATTRIBUTE &&
-                  showEditField(Field.DATA_TYPE, attribute.dataType === undefined ? "" : attribute.dataType, (event) => setEditedItem({ ...editedItem, dataType: event.target.value }))
+                  showEditField("Data type", Field.DATA_TYPE, attribute.dataType === undefined ? "" : attribute.dataType, (event) => setEditedItem({ ...editedItem, dataType: event.target.value }))
                 }
 
                 { item.type === ItemType.ATTRIBUTE &&
-                  showEditField(Field.CARDINALITY, attribute.cardinality === undefined ? "" : attribute.cardinality, (event) => setEditedItem({ ...editedItem, cardinality: event.target.value })) 
+                  showEditField("Cardinality", Field.CARDINALITY, attribute.cardinality === undefined ? "" : attribute.cardinality, (event) => setEditedItem({ ...editedItem, cardinality: event.target.value })) 
                 }
                 
 
                 { item.type === ItemType.RELATIONSHIP &&
-                  showEditField(Field.SOURCE_ENTITY, relationship.source, (event) => setEditedItem({ ...editedItem, source: event.target.value })) }
+                  showEditField("Source entity", Field.SOURCE_ENTITY, relationship.source, (event) => setEditedItem({ ...editedItem, source: event.target.value })) }
 
                 { item.type === ItemType.RELATIONSHIP &&
-                  showEditField(Field.TARGET_ENTITY, relationship.target, (event) => setEditedItem({ ...editedItem, target: event.target.value })) }
+                  showEditField("Target entity", Field.TARGET_ENTITY, relationship.target, (event) => setEditedItem({ ...editedItem, target: event.target.value })) }
 
                 { item.type === ItemType.RELATIONSHIP &&
-                  showEditField(Field.CARDINALITY, relationship.cardinality === undefined ? "" : relationship.cardinality, (event) => setEditedItem({ ...editedItem, cardinality: event.target.value })) }
+                  showEditField("Cardinality", Field.CARDINALITY, relationship.cardinality === undefined ? "" : relationship.cardinality, (event) => setEditedItem({ ...editedItem, cardinality: event.target.value })) }
 
             </DialogContent>
 

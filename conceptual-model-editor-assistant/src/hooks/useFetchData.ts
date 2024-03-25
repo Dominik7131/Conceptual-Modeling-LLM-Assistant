@@ -1,22 +1,23 @@
 import { useState } from "react";
+import { Field, ItemType } from "../App";
+import { parse } from "path";
 
 const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => void) =>
 {
     // TODO: Insert here methods for fetching data
     // Probably this hook should receive function what to do on data receive
 
+    const [regeneratedItem, setRegeneratedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: ""})
     const [isLoadingEdit, setIsLoadingEdit] = useState(false);
     const [text, setText] = useState<string>("");
     const [summaryText, setSummaryText] = useState<string>("");
 
-    const fetchStreamedDataGeneral = (endpoint : string, headers : any, bodyData : any, attributeName : string, field: string) =>
+    const fetchStreamedDataGeneral = (endpoint : string, headers : any, bodyData : any, attributeName : string, field: Field) =>
     {
         setIsLoadingEdit(_ => true)
 
         let result : string = ""
 
-        // Fetch the event stream from the server
-        // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
         fetch(endpoint, { method: "POST", headers, body: bodyData })
         .then(response =>
         {
@@ -49,11 +50,41 @@ const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => v
                         console.log("\n")
 
                         const parsedData = JSON.parse(jsonString)
-                        // setDescriptionData(parsedData[field])
-                        result = parsedData[field]
-                        onAttributeChange(attributeName, parsedData[field], field)
 
-                        readChunk(); // Read the next chunk
+                        if (field === Field.NAME)
+                        {
+                          setRegeneratedItem({...regeneratedItem, name: parsedData[field]})
+                        }
+                        else if (field === Field.DESCRIPTION)
+                        {
+                          setRegeneratedItem({...regeneratedItem, description: parsedData[field]})
+                        }
+                        else if (field === Field.INFERENCE)
+                        {
+                          setRegeneratedItem({...regeneratedItem, inference: parsedData[field]})
+                        }
+                        else if (field === Field.DATA_TYPE)
+                        {
+                          setRegeneratedItem({...regeneratedItem, dataType: parsedData[field]})
+                        }
+                        else if (field === Field.CARDINALITY)
+                        {
+                          setRegeneratedItem({...regeneratedItem, cardinality: parsedData[field]})
+                        }
+                        else if (field === Field.SOURCE_ENTITY)
+                        {
+                          setRegeneratedItem({...regeneratedItem, source: parsedData[field]})
+                        }
+                        else if (field === Field.TARGET_ENTITY)
+                        {
+                          setRegeneratedItem({...regeneratedItem, target: parsedData[field]})
+                        }
+                        else
+                        {
+                          console.log("Unknown field", field)
+                        }
+
+                        readChunk(); 
                     })
                     .catch(error =>
                     {
@@ -128,7 +159,7 @@ const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => v
         });
     }
 
-    return { isLoadingEdit, text, summaryText, fetchStreamedDataGeneral, fetchSummary }
+    return { isLoadingEdit, text, summaryText, regeneratedItem, setRegeneratedItem, fetchStreamedDataGeneral, fetchSummary }
 }
 
 export default useFetchData

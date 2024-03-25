@@ -30,12 +30,6 @@ const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened,
 {
   const { capitalizeString, getUserChoiceSingular } = useUtility()
 
-  const createTooltip = () =>
-  {
-    const userChoice : string = getUserChoiceSingular(userChoiceSuggestion)
-    return `${userChoice}: ${itemName}`
-  }
-
   const showSelectedSuggestion = () =>
   {
     const itemString = `${getUserChoiceSingular(userChoiceSuggestion)}: ${itemName}`

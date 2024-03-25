@@ -601,9 +601,10 @@ EXAMPLE END
             yield f"{json_item}\n"
     
 
-    def get_description(self, attribute_name, source_entity, domain_description):
+    def get_field_content(self, attribute_name, source_entity, domain_description, field):
         source_entity = source_entity.strip()
 
+        # For simplicity right now generate content only for "description" field
         prompt = f'Solely based on the given context provide description for the attribute: "{attribute_name}" of the entity: "{source_entity}" and output it in this JSON object: '
         prompt += '{"description": "..."}.\n\n'
         prompt += f'This is the given context:\n"{domain_description}"'

@@ -30,8 +30,8 @@ export const enum Field
   NAME = "name",
   DESCRIPTION = "description",
   INFERENCE = "inference",
-  INFERENCE_INDEXES = "inference indexes",
-  DATA_TYPE = "data type",
+  INFERENCE_INDEXES = "inferenceIndexes",
+  DATA_TYPE = "dataType",
   CARDINALITY = "cardinality",
   SOURCE_ENTITY = "source",
   TARGET_ENTITY = "target"
@@ -46,9 +46,9 @@ declare global // TODO: Export instead of "global"
     type : ItemType
     ID: number
     name: string
-    description?: string
+    description: string
     inference: string
-    inference_indexes: number[]
+    inferenceIndexes: number[]
   }
 
   interface Attribute
@@ -56,9 +56,9 @@ declare global // TODO: Export instead of "global"
     type : ItemType
     ID: number
     name: string
-    description?: string
+    description: string
     inference: string
-    inference_indexes: number[]
+    inferenceIndexes: number[]
     dataType?: string
     cardinality?: string
   }
@@ -68,9 +68,9 @@ declare global // TODO: Export instead of "global"
     type : ItemType
     ID: number
     name: string
-    description?: string
+    description: string
     inference: string
-    inference_indexes: number[]
+    inferenceIndexes: number[]
     source: string
     target: string
     cardinality?: string
@@ -81,9 +81,10 @@ declare global // TODO: Export instead of "global"
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, summaryText,
-    OnClickAddNode, onAddAsRelationship, onAddAsAttribute, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
-    isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onEditSuggestion, onShowInference,
-    isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem
+    OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
+    isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
+    isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
+    regeneratedItem, OnClearSuggestion
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -140,13 +141,15 @@ function App()
       />
 
       <DialogEditItem
-        isOpened={isShowDialogEdit}
         item={selectedSuggestedItem}
+        regeneratedItem={regeneratedItem}
+        isOpened={isShowDialogEdit}
         isDisableSave={false}
         onClose={onEditClose}
         onPlus={onEditPlus}
         onSave={onEditSave}
         onAddItem={onAddItem}
+        OnClearSuggestion={OnClearSuggestion}
       />
 
     </>

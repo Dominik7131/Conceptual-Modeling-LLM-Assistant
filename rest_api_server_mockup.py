@@ -59,11 +59,20 @@ def summary():
 def get_only():
 
     def generator_function(field):
-
-        if field == "description":
+        if field == "name":
+            dictionary = { field: "Regenerated name" }
+        elif field == "description":
             dictionary = { field: "The engine type attribute of a road vehicle refers to the specific classification assigned by the manufacturer to denote the kind of engine installed in the vehicle. It encompasses various types such as internal combustion engines or other alternative propulsion systems. This attribute provides crucial information about the power source and characteristics of the engine, aiding in regulatory compliance, maintenance, and performance assessment."}
+        elif field == "inference":
+            dictionary = { field: "Regenerated original text" }
+        elif field == "dataType":
+            dictionary = { field: "Regenerated data type" }
         elif field == "cardinality":
             dictionary = { field: "1..*"}
+        elif field == "source":
+            dictionary = { field: "New source entity"}
+        elif field == "target":
+            dictionary = { field: "New target entity"}
 
         yield json.dumps(dictionary)
 

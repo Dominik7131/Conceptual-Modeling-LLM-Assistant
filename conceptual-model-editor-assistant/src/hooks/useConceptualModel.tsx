@@ -18,7 +18,7 @@ const useConceptualModel = () =>
   
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [suggestedItems, setSuggestedItems] = useState<Item[]>([])
-    const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", inference: "", inference_indexes: []})
+    const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
   
     const [sourceEntity, setSourceEntity] = useState<string>("")
     const [targetEntity, setTargetEntity] = useState<string>("")
@@ -39,7 +39,7 @@ const useConceptualModel = () =>
 
     const { capitalizeString } = useUtility()
 
-    const { isLoadingEdit, text, summaryText, fetchStreamedDataGeneral, fetchSummary } = useFetchData((x, y, z) => onAttributeChange(x, y, z))
+    const { isLoadingEdit, text, summaryText, regeneratedItem, setRegeneratedItem, fetchStreamedDataGeneral, fetchSummary } = useFetchData((x, y, z) => onAttributeChange(x, y, z))
 
     let IDToAssign = 0
     const URL = "http://127.0.0.1:5000/"
@@ -294,10 +294,8 @@ const useConceptualModel = () =>
         parseSerializedConceptualModel()
       }
 
-      const onEditPlus = (name: string, field: string) =>
+      const onEditPlus = (name: string, field: Field) =>
       {
-        // TODO: based on the `userChoiceSuggestion` let LLM suggest field for entity/attribute/relationship
-        
         const endpointName = "getOnly"
         const endpoint = URL + endpointName
         const headers = { "Content-Type": "application/json" }
@@ -461,8 +459,8 @@ const useConceptualModel = () =>
 
         // TODO: Process also all selected edges
         // let selectedInferenceIndexes : number[] = []
-        // [{"inference_indexes": [10, 20], "name": "Attribute: type of engine"}, {...}]
-        // 1) sort objects by "inference_indexes" value[0]
+        // [{"inferenceIndexes": [10, 20], "name": "Attribute: type of engine"}, {...}]
+        // 1) sort objects by "inferenceIndexes" value[0]
         // 2) merge instances with the same value[0] and merge their names
         //  - e.g. [{10, 20, "x"}, [{10, 100, "y"}] -> [{10, 20, "x, y"}, {20, 100, "y"}]
         //  - e.g. [{5, 10, "x"}, {6, 8, "y"}] -> [{5, 6, "x"}, {6, 8, "x, y"}, {8, 10, "y"}]
@@ -472,7 +470,7 @@ const useConceptualModel = () =>
         //   for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
         //   {
         //     const element = selectedNodes[i].data.attributes[j];
-        //     console.log(element.inference_indexes)   
+        //     console.log(element.inferenceIndexes)   
         //   }
         // }
 
@@ -541,7 +539,7 @@ const useConceptualModel = () =>
       //         continue
       //       }
     
-      //       node.data.attributes.inference_indexes = newInferenceIndexes
+      //       node.data.attributes.inferenceIndexes = newInferenceIndexes
     
       //       setInferenceIndexes(previousInferenceIndexes => 
       //         {
@@ -561,7 +559,7 @@ const useConceptualModel = () =>
 
         // Scroll down to the first highlighted inference in the dialog
         // We need to wait for few miliseconds to let the dialog render
-        // TODO: Try to comeup with solution that doesn't need any hardcoded timeout
+        // TODO: Try to come up with solution that doesn't need any hardcoded timeout
         const delay = async () =>
         {
           await new Promise(resolve => setTimeout(resolve, 200));
@@ -664,7 +662,7 @@ const useConceptualModel = () =>
 
       const onAddAsRelationship = (attribute : Attribute) =>
       {
-        const relationship : Relationship = {ID: attribute.ID, type: ItemType.RELATIONSHIP, name: "", inference: attribute.inference, inference_indexes: attribute.inference_indexes, 
+        const relationship : Relationship = {ID: attribute.ID, type: ItemType.RELATIONSHIP, name: "", description: "", inference: attribute.inference, inferenceIndexes: attribute.inferenceIndexes, 
                                              source: sourceEntity, target: attribute.name, cardinality: ""}
         
         setSelectedSuggestedItem(relationship)
@@ -674,8 +672,8 @@ const useConceptualModel = () =>
 
       const onAddAsAttribute = (relationship : Relationship) =>
       {
-        const attribute : Attribute = {ID: relationship.ID, type: ItemType.ATTRIBUTE, name: relationship.target,
-                                       dataType: "string", inference: relationship.inference, inference_indexes: relationship.inference_indexes}
+        const attribute : Attribute = {ID: relationship.ID, type: ItemType.ATTRIBUTE, name: relationship.target, description: "",
+                                       dataType: "string", inference: relationship.inference, inferenceIndexes: relationship.inferenceIndexes}
 
         setSelectedSuggestedItem(attribute)
         setIsShowDialogEdit(true)
@@ -714,7 +712,7 @@ const useConceptualModel = () =>
           //     })
           // }
 
-          const newAttributeObject : Attribute = { ID: attribute.ID, type: ItemType.ATTRIBUTE, name: attribute.name, description: "", inference: attribute.inference, inference_indexes: attribute.inference_indexes, dataType: attribute.dataType}
+          const newAttributeObject : Attribute = { ID: attribute.ID, type: ItemType.ATTRIBUTE, name: attribute.name, description: "", inference: attribute.inference, inferenceIndexes: attribute.inferenceIndexes, dataType: attribute.dataType}
     
           // If the node already contains the selected attribute do not add anything
           let isAttributePresent = false
@@ -838,7 +836,7 @@ const useConceptualModel = () =>
 
         setSelectedSuggestedItem(suggestedItem)
 
-        setInferenceIndexesMockUp(_ => suggestedItem.inference_indexes)
+        setInferenceIndexesMockUp(_ => suggestedItem.inferenceIndexes)
 
         // Create tooltips for highlighted original text
         let tooltip = ""
@@ -857,15 +855,50 @@ const useConceptualModel = () =>
           tooltip = `${capitalizedSourceEntity}-${targetEntity}: ${suggestedItem.name}`
         }
 
-        let newTooltips : string[] = Array(suggestedItem.inference_indexes.length).fill(tooltip)
+        let newTooltips : string[] = Array(suggestedItem.inferenceIndexes.length).fill(tooltip)
         // console.log("New tooltips: ", newTooltips)
         setTooltips(newTooltips)
+    }
+    
+    const OnClearSuggestion = (field: string) =>
+    {
+      if (field === Field.NAME)
+      {
+        setRegeneratedItem({...regeneratedItem, name: "" })
       }
+      else if (field === Field.DESCRIPTION)
+      {
+        setRegeneratedItem({...regeneratedItem, description: "" })
+      }
+      else if (field === Field.INFERENCE)
+      {
+        setRegeneratedItem({...regeneratedItem, inference: "" })
+      }
+      else if (field === Field.DATA_TYPE)
+      {
+        setRegeneratedItem({...regeneratedItem, dataType: "" })
+      }
+      else if (field === Field.CARDINALITY)
+      {
+        setRegeneratedItem({...regeneratedItem, cardinality: "" })
+      }
+      else if (field === Field.SOURCE_ENTITY)
+      {
+        setRegeneratedItem({...regeneratedItem, source: "" })
+      }
+      else if (field === Field.TARGET_ENTITY)
+      {
+        setRegeneratedItem({...regeneratedItem, target: "" })
+      }
+
+    }
+    
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
-        isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onAddEntity, onAddAttributesToNode, onAddRelationshipsToNodes, onAddAsRelationship, onAddAsAttribute, onEditSuggestion, onShowInference,
-        isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem
+        isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
+        isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
+        regeneratedItem, OnClearSuggestion
     }
 }
 
