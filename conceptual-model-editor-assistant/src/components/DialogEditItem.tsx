@@ -15,22 +15,25 @@ import { Field, ItemType } from '../App';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 interface Props
 {
     item : Item
     regeneratedItem : Item
+    isLoading : boolean
+    fieldToLoad : Field
     isOpened : boolean
     isDisableSave : boolean
     onClose : () => void
     onSave : (editedItem : Item) => void
     onPlus : (itemName: string, field: Field) => void
     onAddItem : (item : Item, addAsDifferent : boolean) => void
-    OnClearSuggestion : (field: string) => void
+    OnClearSuggestion : (field: string, clearAll: boolean) => void
 }
 
-const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDisableSave, onClose, onSave, onPlus, onAddItem, OnClearSuggestion} : Props) =>
+const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDisableSave, onClose, onSave, onPlus, onAddItem, OnClearSuggestion, isLoading, fieldToLoad} : Props) =>
 {
     const [editedItem, setEditedItem] = useState<Item>(item)
 
@@ -74,7 +77,7 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
             setEditedItem({...editedItem, target: (regeneratedItem as Relationship).target})
         }
 
-        OnClearSuggestion(field)
+        OnClearSuggestion(field, false)
     }
 
 
@@ -124,6 +127,8 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
             color = "black"
         }
 
+        console.log()
+
         return (
             <Stack direction="row" spacing={4}>
                     <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={label} multiline
@@ -132,15 +137,16 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
                         value={newValue}
                     />
                     { !isRegeneratedText ?
+                        ( (isLoading && fieldToLoad === field) ? <CircularProgress sx={{position: 'relative', right: '3px', top: '5px'}} size={"30px"} /> :
                         <IconButton color="primary" size="small" onClick={() => onPlus(editedItem.name, field)}>
-                            <AddIcon/>
-                        </IconButton>
+                            <AddIcon/> 
+                        </IconButton>)
                         :
                         <Stack direction="row">
                             <IconButton onClick={() => applyRegeneratedText(field)}>
                                 <CheckIcon color="success"/>
                             </IconButton>
-                            <IconButton onClick={() => OnClearSuggestion(field)}>
+                            <IconButton onClick={() => OnClearSuggestion(field, false)}>
                                 <CloseIcon color="error"/>
                             </IconButton>
                         </Stack>
@@ -148,7 +154,6 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
                 </Stack>
         )
     }
-
 
     return (
         <Dialog open={isOpened} fullWidth={true} maxWidth={'xl'} onClose={onClose}>
@@ -161,7 +166,7 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
 
                 { showEditField("Original text", Field.INFERENCE, editedItem.inference, (event) => setEditedItem({ ...editedItem, inference: event.target.value })) }
 
-                { showEditField("Description", Field.DESCRIPTION, regeneratedItem.description ? regeneratedItem.description : editedItem.description, (event) => setEditedItem({ ...editedItem, description: event.target.value })) }
+                { showEditField("Description", Field.DESCRIPTION, editedItem.description, (event) => setEditedItem({ ...editedItem, description: event.target.value })) }
 
                 { item.type === ItemType.ATTRIBUTE &&
                   showEditField("Data type", Field.DATA_TYPE, attribute.dataType === undefined ? "" : attribute.dataType, (event) => setEditedItem({ ...editedItem, dataType: event.target.value }))

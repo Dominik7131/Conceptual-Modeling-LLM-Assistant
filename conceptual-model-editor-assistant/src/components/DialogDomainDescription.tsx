@@ -87,7 +87,6 @@ const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened,
                       id={`highlightedInference-${index}`}
                       className="highlight"
                       key={index}
-                      ref={highlightedInferenceRef}
                       // sx={{transition: 'color 0.3s ease', '&:hover': { color: "#ffffff", background: "blue" }}}
                     >
                       {text}
@@ -97,28 +96,6 @@ const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened,
           </Typography>
       )
   }
-
-
-  // TODO: Fix scrolling into the first highlighted inference
-  const highlightedInferenceRef = useRef<HTMLSpanElement>(null);
-  useEffect(() =>
-  {
-    // let highlightedText = document.getElementById("highlightedInference-1")
-    // console.log("Trying to scroll", highlightedText)
-    console.log("Use effect")
-    if (highlightedInferenceRef.current)
-    {
-      highlightedInferenceRef.current.scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-      });
-    }
-    else
-    {
-      console.log("Is null")
-    }
-  }, [highlightedInferenceRef.current]);
-
 
   // Tooltip from https://mui.com/material-ui/react-tooltip/#customization
   const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (

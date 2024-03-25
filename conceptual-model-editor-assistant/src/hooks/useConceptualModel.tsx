@@ -39,7 +39,7 @@ const useConceptualModel = () =>
 
     const { capitalizeString } = useUtility()
 
-    const { isLoadingEdit, text, summaryText, regeneratedItem, setRegeneratedItem, fetchStreamedDataGeneral, fetchSummary } = useFetchData((x, y, z) => onAttributeChange(x, y, z))
+    const { isLoadingEdit, fieldToLoad, text, summaryText, regeneratedItem, OnClearRegeneratedItem, fetchStreamedDataGeneral, fetchSummary } = useFetchData((x, y, z) => onAttributeChange(x, y, z))
 
     let IDToAssign = 0
     const URL = "http://127.0.0.1:5000/"
@@ -806,6 +806,7 @@ const useConceptualModel = () =>
 
       const onEditClose = () =>
       {
+        OnClearRegeneratedItem(Field.ID, true)
         setIsShowDialogEdit(false)
       }
 
@@ -860,45 +861,12 @@ const useConceptualModel = () =>
         setTooltips(newTooltips)
     }
     
-    const OnClearSuggestion = (field: string) =>
-    {
-      if (field === Field.NAME)
-      {
-        setRegeneratedItem({...regeneratedItem, name: "" })
-      }
-      else if (field === Field.DESCRIPTION)
-      {
-        setRegeneratedItem({...regeneratedItem, description: "" })
-      }
-      else if (field === Field.INFERENCE)
-      {
-        setRegeneratedItem({...regeneratedItem, inference: "" })
-      }
-      else if (field === Field.DATA_TYPE)
-      {
-        setRegeneratedItem({...regeneratedItem, dataType: "" })
-      }
-      else if (field === Field.CARDINALITY)
-      {
-        setRegeneratedItem({...regeneratedItem, cardinality: "" })
-      }
-      else if (field === Field.SOURCE_ENTITY)
-      {
-        setRegeneratedItem({...regeneratedItem, source: "" })
-      }
-      else if (field === Field.TARGET_ENTITY)
-      {
-        setRegeneratedItem({...regeneratedItem, target: "" })
-      }
-
-    }
-    
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
-        regeneratedItem, OnClearSuggestion
+        regeneratedItem, OnClearRegeneratedItem, isLoadingEdit, fieldToLoad
     }
 }
 

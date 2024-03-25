@@ -8,13 +8,15 @@ const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => v
     // Probably this hook should receive function what to do on data receive
 
     const [regeneratedItem, setRegeneratedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: ""})
-    const [isLoadingEdit, setIsLoadingEdit] = useState(false);
-    const [text, setText] = useState<string>("");
-    const [summaryText, setSummaryText] = useState<string>("");
+    const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(false)
+    const [fieldToLoad, setFieldToLoad] = useState<Field>(Field.ID)
+    const [text, setText] = useState<string>("")
+    const [summaryText, setSummaryText] = useState<string>("")
 
     const fetchStreamedDataGeneral = (endpoint : string, headers : any, bodyData : any, attributeName : string, field: Field) =>
     {
         setIsLoadingEdit(_ => true)
+        setFieldToLoad(field)
 
         let result : string = ""
 
@@ -159,7 +161,44 @@ const useFetchData = (onAttributeChange: (x : string, y: string, z: string) => v
         });
     }
 
-    return { isLoadingEdit, text, summaryText, regeneratedItem, setRegeneratedItem, fetchStreamedDataGeneral, fetchSummary }
+    const OnClearRegeneratedItem = (field: string, clearAll: boolean) =>
+    {
+      if (clearAll)
+      {
+        setRegeneratedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: ""})
+      }
+
+      if (field === Field.NAME)
+      {
+        setRegeneratedItem({...regeneratedItem, name: "" })
+      }
+      else if (field === Field.DESCRIPTION)
+      {
+        setRegeneratedItem({...regeneratedItem, description: "" })
+      }
+      else if (field === Field.INFERENCE)
+      {
+        setRegeneratedItem({...regeneratedItem, inference: "" })
+      }
+      else if (field === Field.DATA_TYPE)
+      {
+        setRegeneratedItem({...regeneratedItem, dataType: "" })
+      }
+      else if (field === Field.CARDINALITY)
+      {
+        setRegeneratedItem({...regeneratedItem, cardinality: "" })
+      }
+      else if (field === Field.SOURCE_ENTITY)
+      {
+        setRegeneratedItem({...regeneratedItem, source: "" })
+      }
+      else if (field === Field.TARGET_ENTITY)
+      {
+        setRegeneratedItem({...regeneratedItem, target: "" })
+      }
+    }
+
+    return { isLoadingEdit, fieldToLoad, text, summaryText, regeneratedItem, OnClearRegeneratedItem, fetchStreamedDataGeneral, fetchSummary }
 }
 
 export default useFetchData
