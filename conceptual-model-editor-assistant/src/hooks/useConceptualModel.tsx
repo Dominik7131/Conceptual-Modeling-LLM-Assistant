@@ -86,14 +86,14 @@ const useConceptualModel = () =>
 
         const input = { entities: [
             {name: "Engine", description: "", attributes: []},
-            {name: "Natural person", description: "", attributes: [{ID: 0, type: ItemType.ATTRIBUTE, name: "name"},
-                                                                   {ID: 1, type: ItemType.ATTRIBUTE, name: "birth number"},
-                                                                   {ID: 2, type: ItemType.ATTRIBUTE, name: "date of birth"}]},
-            {name: "Business natural person", description: "", attributes: [{ID: 3, type: ItemType.ATTRIBUTE, name: "name"},
-                                                                            {ID: 4, type: ItemType.ATTRIBUTE, name: "distinguishing name supplement"},
-                                                                            {ID: 5, type: ItemType.ATTRIBUTE, name: "personal identification number"}]},
+            {name: "Natural person", description: "", attributes: [{ID: 0, type: ItemType.ATTRIBUTE, name: "name", dataType: "string"},
+                                                                   {ID: 1, type: ItemType.ATTRIBUTE, name: "birth number", dataType: "number"},
+                                                                   {ID: 2, type: ItemType.ATTRIBUTE, name: "date of birth", dataType: "date"}]},
+            {name: "Business natural person", description: "", attributes: [{ID: 3, type: ItemType.ATTRIBUTE, name: "name", dataType: "string"},
+                                                                            {ID: 4, type: ItemType.ATTRIBUTE, name: "distinguishing name supplement", dataType: "string"},
+                                                                            {ID: 5, type: ItemType.ATTRIBUTE, name: "personal identification number", dataType: "number"}]},
             {name: "Road vehicle", description: "", attributes: []},
-            {name: "Student", description: "A student entity representing individuals enrolled in courses.", attributes: [{"ID": 6, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
+            {name: "Student", description: "A student entity represents an individual enrolled in an educational institution.", attributes: [{"ID": 6, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
             {name: "Course", description: "A course entity representing educational modules.", attributes: [{"ID": 7, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 8, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
             {name: "Dormitory", description: "A professor entity representing instructors teaching courses.", attributes: [{"ID": 9,"name": "price", "inference": "each dormitory has a price", "dataType": "int", "description": "The price of staying in the dormitory."}]},
             {name: "Professor", description: "A dormitory entity representing residential facilities for students.", attributes: [{"ID": 10, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
@@ -507,7 +507,8 @@ const useConceptualModel = () =>
                     <p>
                     {node.data.attributes.map((attribute : Attribute, index : number) =>
                     (
-                        <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.dataType} <br /> </span>
+                        // <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.dataType} <br /> </span>
+                        <span key={`${attribute.name}-${index}`}> +{attribute.name} <br /> </span>
                     ))}
                     </p>
                  </Typography>
@@ -674,7 +675,7 @@ const useConceptualModel = () =>
 
       const onAddAsRelationship = (attribute : Attribute) =>
       {
-        const relationship : Relationship = {ID: attribute.ID, type: ItemType.RELATIONSHIP, name: "", description: "", inference: attribute.inference, inferenceIndexes: attribute.inferenceIndexes, 
+        const relationship : Relationship = {ID: attribute.ID, type: ItemType.RELATIONSHIP, name: "", description: attribute.description, inference: attribute.inference, inferenceIndexes: attribute.inferenceIndexes, 
                                              source: sourceEntity, target: attribute.name, cardinality: ""}
         
         setSelectedSuggestedItem(relationship)
@@ -684,7 +685,7 @@ const useConceptualModel = () =>
 
       const onAddAsAttribute = (relationship : Relationship) =>
       {
-        const attribute : Attribute = {ID: relationship.ID, type: ItemType.ATTRIBUTE, name: relationship.target, description: "",
+        const attribute : Attribute = {ID: relationship.ID, type: ItemType.ATTRIBUTE, name: relationship.target, description: relationship.description,
                                        dataType: "string", inference: relationship.inference, inferenceIndexes: relationship.inferenceIndexes}
 
         setSelectedSuggestedItem(attribute)

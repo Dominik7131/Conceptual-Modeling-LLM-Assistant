@@ -106,17 +106,17 @@ const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion
                             item.type === ItemType.ATTRIBUTE ?
                             <Button
                                 onClick={ () => onAddItem(item, true)}>
-                                Add as relationship
+                                Change to relationship
                             </Button>
                             : item.type === ItemType.RELATIONSHIP ?
                             <Button
                                 onClick={ () => onAddItem(item, true)}>
-                                Add as attribute
+                                Change to attribute
                             </Button>
                             : null
                         }
                         <Button onClick={() => onEditSuggestion(item.ID, item.type)}>Edit</Button>
-                        <Button onClick={() => onShowInference(item.ID)}>Show</Button>
+                        <Button onClick={() => onShowInference(item.ID)}>Highlight</Button>
                     </ButtonGroup>
                 </Stack>
 

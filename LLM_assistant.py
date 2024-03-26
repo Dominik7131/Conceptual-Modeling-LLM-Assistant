@@ -639,10 +639,12 @@ EXAMPLE END
         #                     {"name": "is-a", "source_entity": "student", "target_entity": "person"}
         #                   ]}
         
-        prompt = f"In plain text detaily summarize the given conceptual model: each entity and relationship and output the summary in this JSON object: "
-        prompt += '{"summary": "..."}\n'
+        prompt = f"Solely based on the given conceptual model detaily summarize each given entity, attribute and relationship and output the whole result in this JSON object: "
+        prompt += '{"summary": "plain text summary of the given conceptual model"}\n\n'
 
-        prompt += f"This is the given conceptual model:\n{conceptual_model}"
+        prompt += f'This is the given conceptual model:\n"{conceptual_model}"\n\n'
+
+        # prompt += f'This is the given context:\n"{domain_description}"'
 
         self.messages = []
         new_messages = self.messages.copy()
