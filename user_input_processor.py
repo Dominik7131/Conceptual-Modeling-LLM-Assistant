@@ -17,13 +17,13 @@ class UserInputProcessor():
         self.user_choice = input("Input 'a' for attributes, 'r' for relationships, 'x' for relationships between two classes: ").lower()
 
         if self.user_choice == "a":
-            self.user_choice = UserChoice.ATTRIBUTES
+            self.user_choice = UserChoice.ATTRIBUTES.value
 
         elif self.user_choice == "r":
-            self.user_choice = UserChoice.RELATIONSHIPS
+            self.user_choice = UserChoice.RELATIONSHIPS.value
 
         elif self.user_choice == "x":
-            self.user_choice = UserChoice.RELATIONSHIPS2
+            self.user_choice = UserChoice.RELATIONSHIPS2.value
             entities = self.entity_name.split(',')
             self.entity_name = entities[0]
             self.entity_name_2 = entities[1]

@@ -265,6 +265,8 @@ const useConceptualModel = () =>
                           item[Field.ID] = assignID()
                           item[Field.TYPE] = itemType
 
+                          console.log("Item: ", item)
+
                           setSuggestedItems(previousSuggestedItems => {
                             return [...previousSuggestedItems, item]
                           })
@@ -855,6 +857,8 @@ const useConceptualModel = () =>
         {
           tooltip = `${capitalizedSourceEntity}-${targetEntity}: ${suggestedItem.name}`
         }
+
+        console.log("SI: ", suggestedItem)
 
         let newTooltips : string[] = Array(suggestedItem.inferenceIndexes.length).fill(tooltip)
         // console.log("New tooltips: ", newTooltips)

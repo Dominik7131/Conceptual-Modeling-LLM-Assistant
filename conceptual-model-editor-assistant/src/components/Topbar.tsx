@@ -118,6 +118,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     autoComplete="off"
                 >
                     <TextField
+                        id="domain description"
                         name="domain description"
                         label="domain description"
                         variant="outlined"

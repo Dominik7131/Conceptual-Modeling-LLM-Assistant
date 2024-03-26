@@ -127,8 +127,6 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
             color = "black"
         }
 
-        console.log()
-
         return (
             <Stack direction="row" spacing={4}>
                     <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={label} multiline
@@ -146,7 +144,7 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
                             <IconButton onClick={() => applyRegeneratedText(field)}>
                                 <CheckIcon color="success"/>
                             </IconButton>
-                            <IconButton onClick={() => OnClearSuggestion(field, false)}>
+                            <IconButton onClick={() => { OnClearSuggestion(field, false) }}>
                                 <CloseIcon color="error"/>
                             </IconButton>
                         </Stack>

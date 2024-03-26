@@ -29,13 +29,13 @@ def suggest():
         def generate_mock_up():
             # time.sleep(2)
             if user_choice == "attributes" or user_choice == "entity":
-                yield '{"inference": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "inference_indexes": [], "dataType": "string", "description": "specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle"}\n'
+                yield '{"inference": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "inferenceIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
                 # time.sleep(2)
-                yield '{"inference": "the fuel type of the road vehicle", "name": "fuel type", "inference_indexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
+                yield '{"inference": "the fuel type of the road vehicle", "name": "fuel type", "inferenceIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
                 # time.sleep(2)
             else:
-                yield '{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "inference_indexes": [10,20], "source": "student", "target": "course"}\n'
-                yield '{"name": "accommodated in", "inference": "students can be accommodated in dormitories", "inference_indexes": [20,100], "source": "student", "target": "dormitory"}\n'
+                yield '{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "inferenceIndexes": [10,20], "source": "student", "target": "course"}\n'
+                yield '{"name": "accommodated in", "inference": "students can be accommodated in dormitories", "inferenceIndexes": [20,100], "source": "student", "target": "dormitory"}\n'
         return generate_mock_up()
 
 

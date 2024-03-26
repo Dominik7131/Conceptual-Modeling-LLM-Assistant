@@ -288,7 +288,7 @@ class LLMAssistant:
         opened_square_brackets = 0
 
         # For debugging purposes generate whole text first because there might be some bug on my side when parsing text on the fly
-        is_generate_content_first = True
+        is_generate_content_first = False
 
         if is_generate_content_first:
             output = self.llm.create_chat_completion(messages=messages, temperature=0)
@@ -593,7 +593,7 @@ EXAMPLE END
             if 'inference' in item:
                 inference = item['inference']
                 inference_indexes, _, _ = TextUtility.find_text_in_domain_description(inference, domain_description)
-                suggestion_dictionary['inference_indexes'] = inference_indexes
+                suggestion_dictionary['inferenceIndexes'] = inference_indexes
             else:
                 logging.warn(f"Warning: inference not in item: {item}")
 
