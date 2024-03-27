@@ -5,13 +5,11 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
-import { Attribute, Field, Item, ItemType, Relationship } from '../App';
+import { Attribute, Field, Item, ItemFieldUIName, ItemType, Relationship } from '../App';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
@@ -21,6 +19,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 interface Props
 {
     item : Item
+    editedItem : Item
     regeneratedItem : Item
     isLoading : boolean
     fieldToLoad : Field
@@ -30,58 +29,21 @@ interface Props
     onSave : (editedItem : Item) => void
     onPlus : (itemName: string, field: Field) => void
     onAddItem : (item : Item, addAsDifferent : boolean) => void
-    OnClearSuggestion : (field: string, clearAll: boolean) => void
+    onClearSuggestion : (field: Field, clearAll: boolean) => void
+    onItemEdit : (field: Field, newValue : string) => void
+    onConfirmRegeneratedText : (field : Field) => void
 }
 
-const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDisableSave, onClose, onSave, onPlus, onAddItem, OnClearSuggestion, isLoading, fieldToLoad} : Props) =>
+const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isOpened, isDisableSave, isLoading, fieldToLoad, onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText} : Props) =>
 {
-    const [editedItem, setEditedItem] = useState<Item>(item)
-
     const attribute = editedItem as Attribute
     const relationship = editedItem as Relationship
-    
-    useEffect(() =>
-    {
-        setEditedItem(item);
-    }, [item]);
 
-    const applyRegeneratedText = (field : Field) =>
-    {
-        // TODO: Try to find a way to make this code more readable
-        if (field === Field.NAME && regeneratedItem.name)
-        {
-            setEditedItem({...editedItem, name: regeneratedItem.name})
-        }
-        else if (field === Field.DESCRIPTION && regeneratedItem.description)
-        {
-            setEditedItem({...editedItem, description: regeneratedItem.description})
-        }
-        else if (field === Field.INFERENCE && regeneratedItem.inference)
-        {
-            setEditedItem({...editedItem, inference: regeneratedItem.inference})
-        }
-        else if (field === Field.DATA_TYPE && (regeneratedItem as Attribute).dataType)
-        {
-            setEditedItem({...editedItem, dataType: (regeneratedItem as Attribute).dataType})
-        }
-        else if (field === Field.CARDINALITY && (regeneratedItem as Attribute).cardinality)
-        {
-            setEditedItem({...editedItem, cardinality: (regeneratedItem as Attribute).cardinality})
-        }
-        else if (field === Field.SOURCE_ENTITY && (regeneratedItem as Relationship).source)
-        {
-            setEditedItem({...editedItem, source: (regeneratedItem as Relationship).source})
-        }
-        else if (field === Field.TARGET_ENTITY && (regeneratedItem as Relationship).target)
-        {
-            setEditedItem({...editedItem, target: (regeneratedItem as Relationship).target})
-        }
-
-        OnClearSuggestion(field, false)
-    }
+    const isAttribute = item.type === ItemType.ATTRIBUTE
+    const isRelationship = item.type === ItemType.RELATIONSHIP
 
 
-    const showEditField = (label : string, field : Field, value : string, handleChange : (event : any) => void) =>
+    const showEditField = (label : string, field : Field, value : string) =>
     {
         let newValue : string = ""
         let isRegeneratedText : boolean = true
@@ -117,9 +79,14 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
         }
         else
         {
+            console.log("Setting old value: ", value)
             newValue = value
             isRegeneratedText = false
-            
+
+            if (!newValue)
+            {
+                newValue = ""
+            }
         }
 
         if (!isRegeneratedText)
@@ -131,7 +98,7 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
             <Stack direction="row" spacing={4}>
                     <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={label} multiline
                         sx={{'& textarea': {color: color} }}
-                        onChange={(event) => handleChange(event)}
+                        onChange={(event) => onItemEdit(field, event.target.value)}
                         value={newValue}
                     />
                     { !isRegeneratedText ?
@@ -141,10 +108,10 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
                         </IconButton>)
                         :
                         <Stack direction="row">
-                            <IconButton onClick={() => applyRegeneratedText(field)}>
+                            <IconButton onClick={() => onConfirmRegeneratedText(field)}>
                                 <CheckIcon color="success"/>
                             </IconButton>
-                            <IconButton onClick={() => { OnClearSuggestion(field, false) }}>
+                            <IconButton onClick={() => { onClearSuggestion(field, false) }}>
                                 <CloseIcon color="error"/>
                             </IconButton>
                         </Stack>
@@ -160,49 +127,52 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
 
             <DialogContent>
 
-                { showEditField("Name", Field.NAME, editedItem.name, (event) => setEditedItem({ ...editedItem, name: event.target.value })) }
+                { showEditField(ItemFieldUIName.NAME, Field.NAME, editedItem.name) } 
+                { showEditField(ItemFieldUIName.ORIGINAL_TEXT, Field.INFERENCE, editedItem.inference) }
+                { showEditField(ItemFieldUIName.DESCRIPTION, Field.DESCRIPTION, editedItem.description) }
 
-                { showEditField("Original text", Field.INFERENCE, editedItem.inference, (event) => setEditedItem({ ...editedItem, inference: event.target.value })) }
-
-                { showEditField("Description", Field.DESCRIPTION, editedItem.description, (event) => setEditedItem({ ...editedItem, description: event.target.value })) }
-
-                { item.type === ItemType.ATTRIBUTE &&
-                  showEditField("Data type", Field.DATA_TYPE, attribute.dataType === undefined ? "" : attribute.dataType, (event) => setEditedItem({ ...editedItem, dataType: event.target.value }))
+                { 
+                    isAttribute &&
+                    <>
+                        { showEditField(ItemFieldUIName.DATA_TYPE, Field.DATA_TYPE, attribute.dataType) }
+                        { showEditField(ItemFieldUIName.CARDINALITY, Field.CARDINALITY, attribute.cardinality) }
+                    </>
                 }
 
-                { item.type === ItemType.ATTRIBUTE &&
-                  showEditField("Cardinality", Field.CARDINALITY, attribute.cardinality === undefined ? "" : attribute.cardinality, (event) => setEditedItem({ ...editedItem, cardinality: event.target.value })) 
+                {
+                    isRelationship &&
+                    <>
+                        { showEditField(ItemFieldUIName.SOURCE_ENTITY, Field.SOURCE_ENTITY, relationship.source) }
+                        { showEditField(ItemFieldUIName.TARGET_ENTITY, Field.TARGET_ENTITY, relationship.target) }
+                        { showEditField(ItemFieldUIName.CARDINALITY, Field.CARDINALITY, relationship.cardinality) }
+                    </>
                 }
-                
-
-                { item.type === ItemType.RELATIONSHIP &&
-                  showEditField("Source entity", Field.SOURCE_ENTITY, relationship.source, (event) => setEditedItem({ ...editedItem, source: event.target.value })) }
-
-                { item.type === ItemType.RELATIONSHIP &&
-                  showEditField("Target entity", Field.TARGET_ENTITY, relationship.target, (event) => setEditedItem({ ...editedItem, target: event.target.value })) }
-
-                { item.type === ItemType.RELATIONSHIP &&
-                  showEditField("Cardinality", Field.CARDINALITY, relationship.cardinality === undefined ? "" : relationship.cardinality, (event) => setEditedItem({ ...editedItem, cardinality: event.target.value })) }
 
             </DialogContent>
 
             <DialogActions>
-                <Button onClick={() => { onAddItem(editedItem, false); onClose()}}>Add</Button>
-                {
-                    item.type === ItemType.ATTRIBUTE ?
-                    <Button
-                        onClick={ () => onAddItem(item, true)}>
-                        Change to relationship
-                    </Button>
-                    : item.type === ItemType.RELATIONSHIP ?
-                    <Button
-                        onClick={ () => onAddItem(item, true)}>
-                        Change to attribute
-                    </Button>
-                    : null
-                }
-                <Button disabled={isDisableSave} onClick={() => { {onSave(editedItem)}; onClose()}}>Save</Button>
-                <Button onClick={() => onClose()}>Cancel</Button>
+                <ButtonGroup>
+                    <Button onClick={() => { onAddItem(editedItem, false); onClose()}}>Add</Button>
+
+                    {
+                        isAttribute &&
+                            <Button
+                                onClick={ () => onAddItem(item, true)}>
+                                Change to relationship
+                            </Button>
+                    }
+
+                    {
+                        isRelationship &&
+                            <Button
+                                onClick={ () => onAddItem(item, true)}>
+                                Change to attribute
+                            </Button>
+                    }
+                    
+                    <Button disabled={isDisableSave} onClick={() => { {onSave(editedItem)}; onClose()}}>Save</Button>
+                    <Button onClick={() => onClose()}>Cancel</Button>
+                </ButtonGroup>
             </DialogActions>
         </Dialog>
     )

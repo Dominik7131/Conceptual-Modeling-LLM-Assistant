@@ -5,10 +5,9 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
-import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Attribute, Entity, Item, ItemType, Relationship, UserChoice } from '../App';
+import { Attribute, Entity, Item, ItemFieldUIName, ItemType, Relationship, UserChoice } from '../App';
 import Box from '@mui/material/Box';
 
 
@@ -27,13 +26,11 @@ interface Props
 const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion, onShowInference, sidebarWidthPercentage, isSidebarOpen, onToggleSideBarCollapse}) =>
 {
     const showTextOnSidebar = () =>
-    {        
+    {
         return (
-            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-                {items.map((item, index) =>
-                        <ListItem key={item.ID}>
-                            {showItem(item)}
-                        </ListItem>
+            <List>
+                {items.map(item =>
+                    <ListItem key={item.ID}> { showItem(item) } </ListItem>
                 )}
 
                 {isLoading &&
@@ -44,83 +41,55 @@ const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion
         )
     }
 
-    const showItem = (item : Item) =>
+    const showButtons = (item : Item) : JSX.Element =>
+    {
+        return (
+            <ButtonGroup fullWidth sx={{ marginTop: 1 }} variant="outlined" size="small">
+                <Button onClick={() => onAddItem(item, false)}> Add </Button>
+                <Button onClick={() => onEditSuggestion(item.ID, item.type)}> Edit </Button>
+                <Button onClick={() => onShowInference(item.ID)}> Highlight </Button>
+            </ButtonGroup>
+        )
+
+    }
+
+    const showItem = (item : Item) : JSX.Element =>
     {
         const attribute : Attribute = (item as Attribute)
         const relationship : Relationship = (item as Relationship)
-        const entity : Entity = (item as Entity)
 
-        // TODO: Why the sidebar is being rerendered every time user moves a node?
+        // TODO: Why is this logged every time a node is moved?
+        // Is the sidebar being rerendered every time user moves a node?
         // console.log("node moved")
+
+        const isAttribute = item.type === ItemType.ATTRIBUTE
+        const isRelationship = item.type === ItemType.RELATIONSHIP
 
         return (
             <ListItemText>
-                <Typography>
-                    <strong>Name:</strong> {item.name}
-                </Typography>
-
-                <Typography>
-                    <strong>Original text:</strong> {item.inference}
-                </Typography>
+                <Typography> <strong>{ ItemFieldUIName.NAME }:</strong> { item.name } </Typography>
+                <Typography> <strong>{ ItemFieldUIName.ORIGINAL_TEXT }:</strong> { item.inference } </Typography>
 
                 {
-                    item.type === ItemType.ATTRIBUTE &&
-                    <Typography>
-                        <strong>Data type:</strong> {attribute.dataType}
-                    </Typography>
+                    isAttribute &&
+                    <>
+                        <Typography> <strong>{ ItemFieldUIName.DATA_TYPE }:</strong> { attribute.dataType } </Typography>
+                        <Typography> <strong>{ ItemFieldUIName.CARDINALITY }:</strong> { attribute.cardinality } </Typography>
+                    </>
                 }
 
                 {
-                    item.type === ItemType.ATTRIBUTE &&
-                    <Typography>
-                        <strong>Cardinality:</strong> {attribute.cardinality}
-                    </Typography>
-                }
-
-
-                {
-                    item.type === ItemType.RELATIONSHIP &&
-                    <Typography>
-                        <strong>Source entity:</strong> {relationship.source}
-                    </Typography>
+                    isRelationship &&
+                    <>
+                        <Typography> <strong> { ItemFieldUIName.SOURCE_ENTITY }:</strong> { relationship.source } </Typography>
+                        <Typography> <strong> { ItemFieldUIName.TARGET_ENTITY }:</strong> { relationship.target } </Typography>
+                        <Typography> <strong> { ItemFieldUIName.CARDINALITY }:</strong> { relationship.cardinality } </Typography>
+                    </>
                 }
 
                 {
-                    item.type === ItemType.RELATIONSHIP &&
-                    <Typography>
-                        <strong>Target entity:</strong> {relationship.target}
-                    </Typography>
+                    showButtons(item)
                 }
-
-                {
-                    item.type === ItemType.RELATIONSHIP &&
-                    <Typography>
-                        <strong>Cardinality:</strong> {relationship.cardinality}
-                    </Typography>
-                }
-
-                <Stack marginTop={1} marginBottom={1}> 
-                    <ButtonGroup size="small">
-                        <Button onClick={() => onAddItem(item, false)}> Add </Button>
-                        {/* {
-                            item.type === ItemType.ATTRIBUTE ?
-                            <Button
-                                onClick={ () => onAddItem(item, true)}>
-                                Change to relationship
-                            </Button>
-                            : item.type === ItemType.RELATIONSHIP ?
-                            <Button
-                                onClick={ () => onAddItem(item, true)}>
-                                Change to attribute
-                            </Button>
-                            : null
-                        } */}
-                        <Button onClick={() => onEditSuggestion(item.ID, item.type)}>Edit</Button>
-                        <Button onClick={() => onShowInference(item.ID)}>Highlight</Button>
-                    </ButtonGroup>
-                </Stack>
-
-                {/* <Divider /> */}
 
             </ListItemText>
         )
@@ -142,9 +111,7 @@ const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion
 
             {showTextOnSidebar()}     
 
-            {/* <Button onClick={ () => onToggleSideBarCollapse() }>
-                Close
-            </Button> */}
+            {/* <Button onClick={ () => onToggleSideBarCollapse() }> Close </Button> */}
         </Drawer>
     )
 }

@@ -37,6 +37,20 @@ export const enum Field
   TARGET_ENTITY = "target"
 }
 
+export const enum ItemFieldUIName
+{
+  ID = "ID",
+  TYPE = "Ttype",
+  NAME = "Name",
+  DESCRIPTION = "Description",
+  ORIGINAL_TEXT = "Original text",
+  ORIGINAL_TEXT_INDEXES = "Original text indexes",
+  DATA_TYPE = "Data type",
+  CARDINALITY = "Cardinality",
+  SOURCE_ENTITY = "Source entity",
+  TARGET_ENTITY = "Target entity"
+}
+
 export type Item = Entity | Attribute | Relationship
 
 interface BaseItem
@@ -69,9 +83,9 @@ function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, summaryText,
     OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
-    isLoading, suggestedItems, selectedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
-    isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onOverlayDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
-    regeneratedItem, OnClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, fieldToLoad
+    isLoading, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
+    isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
+    regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, fieldToLoad, onItemEdit, onConfirmRegeneratedText
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -119,7 +133,7 @@ function App()
         domainDescription={domainDescription}
         isOpened={isShowDialogDomainDescription}
         inferenceIndexes={inferenceIndexesMockUp}
-        onClose={onOverlayDomainDescriptionClose}
+        onClose={onDialogDomainDescriptionClose}
         itemName={selectedSuggestedItem.name}
         selectedEntityName={sourceEntity}
         userChoiceSuggestion={userChoiceSuggestion}
@@ -128,6 +142,7 @@ function App()
 
       <DialogEditItem
         item={selectedSuggestedItem}
+        editedItem={editedSuggestedItem}
         regeneratedItem={regeneratedItem}
         isLoading={isLoadingEdit}
         fieldToLoad={fieldToLoad}
@@ -137,7 +152,9 @@ function App()
         onPlus={onEditPlus}
         onSave={onEditSave}
         onAddItem={onAddItem}
-        OnClearSuggestion={OnClearRegeneratedItem}
+        onClearSuggestion={onClearRegeneratedItem}
+        onItemEdit={onItemEdit}
+        onConfirmRegeneratedText={onConfirmRegeneratedText}
       />
 
     </>
