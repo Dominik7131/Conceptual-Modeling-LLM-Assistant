@@ -6,7 +6,7 @@ import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
 import { Typography } from '@mui/material';
-import { Field, ItemType, UserChoice } from '../App';
+import { Attribute, Entity, Field, Item, ItemType, Relationship, UserChoice } from '../App';
 
 const initialNodes : Node[] = [{ id: 'engine', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
 
@@ -685,8 +685,11 @@ const useConceptualModel = () =>
 
       const onAddAsAttribute = (relationship : Relationship) =>
       {
-        const attribute : Attribute = {ID: relationship.ID, type: ItemType.ATTRIBUTE, name: relationship.target, description: relationship.description,
-                                       dataType: "string", inference: relationship.inference, inferenceIndexes: relationship.inferenceIndexes}
+        const attribute : Attribute = {
+          ID: relationship.ID, type: ItemType.ATTRIBUTE, name: relationship.target, description: relationship.description,
+          dataType: "string", inference: relationship.inference, inferenceIndexes: relationship.inferenceIndexes,
+          cardinality: ""
+        }
 
         setSelectedSuggestedItem(attribute)
         setIsShowDialogEdit(true)
@@ -725,7 +728,10 @@ const useConceptualModel = () =>
           //     })
           // }
 
-          const newAttributeObject : Attribute = { ID: attribute.ID, type: ItemType.ATTRIBUTE, name: attribute.name, description: "", inference: attribute.inference, inferenceIndexes: attribute.inferenceIndexes, dataType: attribute.dataType}
+          const newAttributeObject : Attribute = {
+            ID: attribute.ID, type: ItemType.ATTRIBUTE, name: attribute.name, description: "", inference: attribute.inference, inferenceIndexes: attribute.inferenceIndexes, dataType: attribute.dataType,
+            cardinality: ''
+          }
     
           // If the node already contains the selected attribute do not add anything
           let isAttributePresent = false

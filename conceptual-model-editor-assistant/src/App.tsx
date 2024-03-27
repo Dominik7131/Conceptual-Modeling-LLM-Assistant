@@ -37,44 +37,31 @@ export const enum Field
   TARGET_ENTITY = "target"
 }
 
-declare global // TODO: Export instead of "global"
+export type Item = Entity | Attribute | Relationship
+
+interface BaseItem
 {
-  type Item = Entity | Attribute | Relationship
+  type : ItemType
+  ID: number
+  name: string
+  description: string
+  inference: string
+  inferenceIndexes: number[]
+}
 
-  interface Entity
-  {
-    type : ItemType
-    ID: number
-    name: string
-    description: string
-    inference: string
-    inferenceIndexes: number[]
-  }
+export interface Entity extends BaseItem { }
 
-  interface Attribute
-  {
-    type : ItemType
-    ID: number
-    name: string
-    description: string
-    inference: string
-    inferenceIndexes: number[]
-    dataType?: string
-    cardinality?: string
-  }
-  
-  interface Relationship
-  {
-    type : ItemType
-    ID: number
-    name: string
-    description: string
-    inference: string
-    inferenceIndexes: number[]
-    source: string
-    target: string
-    cardinality?: string
-  }
+export interface Attribute extends BaseItem
+{
+  dataType: string
+  cardinality: string
+}
+
+export interface Relationship extends BaseItem
+{
+  source: string
+  target: string
+  cardinality: string
 }
 
 

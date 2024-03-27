@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { UserChoice } from "../App";
+import { Attribute, UserChoice } from "../App";
 import Tooltip from '@mui/material/Tooltip';
 import { CircularProgress, Divider, FormControl, FormLabel, List, ListItem, ListItemText, Radio, RadioGroup, Tab, Tabs, Typography } from "@mui/material";
 import { Node } from 'reactflow';

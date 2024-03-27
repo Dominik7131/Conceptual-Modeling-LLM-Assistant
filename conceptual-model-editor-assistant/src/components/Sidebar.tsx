@@ -8,7 +8,7 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
-import { ItemType, UserChoice } from '../App';
+import { Attribute, Entity, Item, ItemType, Relationship, UserChoice } from '../App';
 import Box from '@mui/material/Box';
 
 
