@@ -120,7 +120,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     <TextField
                         id="domain description"
                         name="domain description"
-                        label="domain description"
+                        label="Domain description"
                         variant="outlined"
                         disabled={isIgnoreDomainDescription}
                         multiline

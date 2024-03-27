@@ -187,9 +187,22 @@ const DialogEditItem: React.FC<Props> = ({item, regeneratedItem, isOpened, isDis
             </DialogContent>
 
             <DialogActions>
-                <Button onClick={() => onClose()}>Cancel</Button>
-                <Button disabled={isDisableSave} onClick={() => { {onSave(editedItem)}; onClose()}}>Save</Button>
                 <Button onClick={() => { onAddItem(editedItem, false); onClose()}}>Add</Button>
+                {
+                    item.type === ItemType.ATTRIBUTE ?
+                    <Button
+                        onClick={ () => onAddItem(item, true)}>
+                        Change to relationship
+                    </Button>
+                    : item.type === ItemType.RELATIONSHIP ?
+                    <Button
+                        onClick={ () => onAddItem(item, true)}>
+                        Change to attribute
+                    </Button>
+                    : null
+                }
+                <Button disabled={isDisableSave} onClick={() => { {onSave(editedItem)}; onClose()}}>Save</Button>
+                <Button onClick={() => onClose()}>Cancel</Button>
             </DialogActions>
         </Dialog>
     )
