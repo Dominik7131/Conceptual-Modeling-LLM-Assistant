@@ -925,76 +925,27 @@ const useConceptualModel = () =>
 
     const onClearRegeneratedItem = (field: Field, isClearAll: boolean) : void=>
     {
-      // Weird visual bug: When changing a longer text in regenerated item to empty string the text field still shows the previous text
-      // instead of the actual text from editedSuggestedItem
-
       if (isClearAll)
       {
         setEditedSuggestedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: ""})
         setRegeneratedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: ""})
       }
 
-      if (field === Field.NAME)
+      if (regeneratedItem.hasOwnProperty(field))
       {
-        setRegeneratedItem({...regeneratedItem, name: "" })
-      }
-      else if (field === Field.DESCRIPTION)
-      {
-        setRegeneratedItem({...regeneratedItem, description: "" })
-      }
-      else if (field === Field.INFERENCE)
-      {
-        setRegeneratedItem({...regeneratedItem, inference: "" })
-      }
-      else if (field === Field.DATA_TYPE)
-      {
-        setRegeneratedItem({...regeneratedItem, dataType: "" })
-      }
-      else if (field === Field.CARDINALITY)
-      {
-        setRegeneratedItem({...regeneratedItem, cardinality: "" })
-      }
-      else if (field === Field.SOURCE_ENTITY)
-      {
-        setRegeneratedItem({...regeneratedItem, source: "" })
-      }
-      else if (field === Field.TARGET_ENTITY)
-      {
-        setRegeneratedItem({...regeneratedItem, target: "" })
+        setRegeneratedItem({...regeneratedItem, [field]: "" })
       }
     }
 
 
     const onConfirmRegeneratedText = (field : Field) =>
     {
-      // TODO: Try to find a way to make this code more readable
-      if (field === Field.NAME && regeneratedItem.name)
+
+      if (regeneratedItem.hasOwnProperty(field))
       {
-        setEditedSuggestedItem({...editedSuggestedItem, name: regeneratedItem.name})
-      }
-      else if (field === Field.DESCRIPTION && regeneratedItem.description)
-      {
-        setEditedSuggestedItem({...editedSuggestedItem, description: regeneratedItem.description})
-      }
-      else if (field === Field.INFERENCE && regeneratedItem.inference)
-      {
-        setEditedSuggestedItem({...editedSuggestedItem, inference: regeneratedItem.inference})
-      }
-      else if (field === Field.DATA_TYPE && (regeneratedItem as Attribute).dataType)
-      {
-        setEditedSuggestedItem({...editedSuggestedItem, dataType: (regeneratedItem as Attribute).dataType})
-      }
-      else if (field === Field.CARDINALITY && (regeneratedItem as Attribute).cardinality)
-      {
-        setEditedSuggestedItem({...editedSuggestedItem, cardinality: (regeneratedItem as Attribute).cardinality})
-      }
-      else if (field === Field.SOURCE_ENTITY && (regeneratedItem as Relationship).source)
-      {
-        setEditedSuggestedItem({...editedSuggestedItem, source: (regeneratedItem as Relationship).source})
-      }
-      else if (field === Field.TARGET_ENTITY && (regeneratedItem as Relationship).target)
-      {
-        setEditedSuggestedItem({...editedSuggestedItem, target: (regeneratedItem as Relationship).target})
+        // Set type to "any" because Typescript doesn't recognise that we already did the check
+        // Otherwise we need to write an if-statement for each field of type Item
+        setEditedSuggestedItem({...editedSuggestedItem, [field]: (regeneratedItem as any)[field]})
       }
 
       onClearRegeneratedItem(field, false)
@@ -1019,18 +970,7 @@ const useConceptualModel = () =>
 
     const onItemEdit = (field: Field, newValue : string) : void =>
     {
-      if (field === Field.NAME)
-      {
-        setEditedSuggestedItem({...editedSuggestedItem, name: newValue})
-      }
-      else if (field === Field.INFERENCE)
-      {
-        setEditedSuggestedItem({...editedSuggestedItem, inference: newValue})
-      }
-      else if (field === Field.DESCRIPTION)
-      {
-        setEditedSuggestedItem({...editedSuggestedItem, description: newValue})
-      }
+      setEditedSuggestedItem({...editedSuggestedItem, [field]: newValue})
     }
 
 

@@ -53,6 +53,8 @@ export const enum ItemFieldUIName
 
 export type Item = Entity | Attribute | Relationship
 
+export type ItemFieldsUnification = keyof Entity | keyof Attribute | keyof Relationship
+
 interface BaseItem
 {
   type : ItemType

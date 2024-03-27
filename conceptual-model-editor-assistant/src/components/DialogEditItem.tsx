@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
-import { Attribute, Field, Item, ItemFieldUIName, ItemType, Relationship } from '../App';
+import { Attribute, Field, Item, ItemFieldUIName, ItemFieldsUnification, ItemType, Relationship } from '../App';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
@@ -49,44 +49,19 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
         let isRegeneratedText : boolean = true
         let color : string = "gray"
 
-        if (field === Field.NAME && regeneratedItem.name)
+        if (regeneratedItem.hasOwnProperty(field))
         {
-            newValue = regeneratedItem.name
+            // Convert to "any" type because typescript doesn't recognise that we already checked that the object contains the given field
+            newValue = (regeneratedItem as any)[field]
         }
-        else if (field === Field.DESCRIPTION && regeneratedItem.description)
-        {
-            newValue = regeneratedItem.description
-        }
-        else if (field === Field.INFERENCE && regeneratedItem.inference)
-        {
-            newValue = regeneratedItem.inference
-        }
-        else if (field === Field.DATA_TYPE && (regeneratedItem as Attribute).dataType)
-        {
-            const regeneratedAttribute = regeneratedItem as Attribute
-            if (regeneratedAttribute)
-            {
-                newValue = regeneratedAttribute.dataType ? regeneratedAttribute.dataType : ""
-            }
-        }
-        else if (field === Field.CARDINALITY && (regeneratedItem as Attribute).cardinality)
-        {
-            const regeneratedAttribute = regeneratedItem as Attribute
-            if (regeneratedAttribute)
-            {
-                newValue = regeneratedAttribute.cardinality ? regeneratedAttribute.cardinality : ""
-            }
-        }
-        else
-        {
-            console.log("Setting old value: ", value)
-            newValue = value
-            isRegeneratedText = false
 
-            if (!newValue)
+        if (!newValue)
+        {
+            if (value)
             {
-                newValue = ""
+                newValue = value
             }
+            isRegeneratedText = false
         }
 
         if (!isRegeneratedText)
