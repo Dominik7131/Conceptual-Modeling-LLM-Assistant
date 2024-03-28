@@ -21,6 +21,7 @@ const useConceptualModel = () =>
     const [fieldToLoad, setFieldToLoad] = useState<Field>(Field.ID)
 
     const [suggestedItems, setSuggestedItems] = useState<Item[]>([])
+    // TODO: Do not use initial invalid item, instead make a type: Item | null
     const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
     const [editedSuggestedItem, setEditedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
     const [regeneratedItem, setRegeneratedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
@@ -132,13 +133,6 @@ const useConceptualModel = () =>
           const newNode : Node = { id: entityNameLowerCase, position: { x: positionX, y: positionY }, data: { label: "", description: entity.description, attributes: entity.attributes } }
           newNodes.push(newNode)
 
-          // if (entity.parent_entity)
-          // {
-          //   const parentLowerCase = entity.parent_entity.toLowerCase()
-          //   const newEdge = { id: `${entityNameLowerCase},${parentLowerCase}`, source: entityNameLowerCase, target: parentLowerCase, label: "is-a", description: "", inference: "", type: 'straight'}
-          //   newEdges.push(newEdge)
-          // }
-
           positionX += incrementX
 
           if (positionX >= 1300)
@@ -187,20 +181,7 @@ const useConceptualModel = () =>
           result.relationships = relationships
         }
 
-        // console.log(result)
-
         return result
-
-        // From nodes and edges create JSON in the following format:
-        // const input = { "entities": [ {"name": "Engine", "attributes": []},
-        //         {"name": "Bodywork", "attributes": []},
-        //         {"name": "Natural person", "attributes": []},
-        //         {"name": "Vehicle", "attributes": []},
-        //         {"name": "Road vehicle", "attributes": []},
-        //         {"name": "Registration", "attributes": []},
-        //         {"name": "Insurance contract", "attributes": []},
-        //         {"name": "Technical inspection", "attributes": []}],
-        // "relationships": [{"name": "is-a", "inference": "", "source_entity": "vehicle", "target_entity": "road vehicle"}]}
       }
 
 
@@ -239,8 +220,6 @@ const useConceptualModel = () =>
         setIsLoadingEdit(_ => true)
         setFieldToLoad(field)
 
-        let result : string = ""
-
         fetch(endpoint, { method: "POST", headers, body: bodyData })
         .then(response =>
         {
@@ -273,41 +252,7 @@ const useConceptualModel = () =>
                         console.log("\n")
 
                         const parsedData = JSON.parse(jsonString)
-
-                        if (field === Field.NAME)
-                        {
-                          setRegeneratedItem({...regeneratedItem, name: parsedData[field]})
-                        }
-                        else if (field === Field.DESCRIPTION)
-                        {
-                          setRegeneratedItem({...regeneratedItem, description: parsedData[field]})
-                        }
-                        else if (field === Field.INFERENCE)
-                        {
-                          setRegeneratedItem({...regeneratedItem, inference: parsedData[field]})
-                        }
-                        else if (field === Field.DATA_TYPE)
-                        {
-                          setRegeneratedItem({...regeneratedItem, dataType: parsedData[field]})
-                        }
-                        else if (field === Field.CARDINALITY)
-                        {
-                          setRegeneratedItem({...regeneratedItem, cardinality: parsedData[field]})
-                        }
-                        else if (field === Field.SOURCE_ENTITY)
-                        {
-                          setRegeneratedItem({...regeneratedItem, source: parsedData[field]})
-                        }
-                        else if (field === Field.TARGET_ENTITY)
-                        {
-                          setRegeneratedItem({...regeneratedItem, target: parsedData[field]})
-                        }
-                        else
-                        {
-                          console.log("Unknown field", field)
-                        }
-
-                        result = parsedData[field]
+                        setRegeneratedItem({...regeneratedItem, [field]: parsedData[field]})
 
                         readChunk(); 
                     })
@@ -324,8 +269,6 @@ const useConceptualModel = () =>
           setIsLoadingEdit(_ => false)
           alert("Error: request failed")
         });
-
-        return result
     }
 
     const fetchStreamedData = (url : string, headers : any, bodyData : any, itemType : ItemType) =>
@@ -400,11 +343,13 @@ const useConceptualModel = () =>
         alert("Error: request failed")
       });
     }
-    
+
+
     const onImportButtonClick = () =>
     {
       parseSerializedConceptualModel()
     }
+
 
     const onEditPlus = (name: string, field: Field) =>
     {
@@ -415,6 +360,7 @@ const useConceptualModel = () =>
 
       fetchStreamedDataGeneral(endpoint, headers, bodyData, name, field)
     }
+
 
     const onEditSave = (newItem : Item) =>
     {
@@ -431,29 +377,7 @@ const useConceptualModel = () =>
         }))
     }
 
-    const onAttributeChange = (attributeName: string, newText: string, field: string) =>
-    {
-      // TODO: Do not save changes immediately, let the user choose to accept or reject the new change
 
-      setSuggestedItems(suggestedItems.map((attribute) =>
-      {
-        if (attribute.name === attributeName)
-        {
-          if (field === "description")
-          {
-            setSelectedSuggestedItem({ ...attribute, description: newText })
-            return attribute.name === attributeName ? {...attribute, description: newText} : attribute
-          }
-          else if (field === "cardinality")
-          {
-            setSelectedSuggestedItem({ ...attribute, cardinality: newText })
-            return attribute.name === attributeName ? {...attribute, cardinality: newText} : attribute
-          }
-        }
-        return attribute
-      }));
-    }
-    
     const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
     {
       if (isLoading)
@@ -548,7 +472,8 @@ const useConceptualModel = () =>
         fetchStreamedData(endpoint, headers, bodyData, itemType)
       }
     }
-  
+
+
     const onSummaryButtonClick = () =>
     {
       const endpoint = URL + "summary1"
@@ -557,6 +482,7 @@ const useConceptualModel = () =>
       const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
       fetchSummary(endpoint, headers, bodyData)
     }
+
 
     const onHighlightSelectedItems = () =>
     {
@@ -588,7 +514,8 @@ const useConceptualModel = () =>
 
       setIsShowDialogDomainDescription(true)
     }
-  
+
+    
     const updateNodes = () =>
     {
       setNodes((nodes) => nodes.map((node) =>
@@ -596,7 +523,8 @@ const useConceptualModel = () =>
         return updateNode(node)
       }));
     }
-  
+
+
     const updateNode = (node : Node) =>
     {
       node.data =
@@ -619,14 +547,10 @@ const useConceptualModel = () =>
     useEffect(() =>
     {
       updateNodes()
-
-      // setSuggestedAttributes([...suggestedAttributes, attribute1, attribute2])
-
-      // setSuggestedAttributes(suggestedAttributes.map(attribute => attribute.name === "a1" ? attribute : attribute))
-      // setSuggestedAttributes(suggestedAttributes.map(attribute => attribute.name === "a1" ? {...attribute, name: "a10"} : attribute))
       parseSerializedConceptualModel()
     }, []);
-  
+
+
     useEffect(() =>
     {
       let domainDescriptionText = document.getElementById("domainDescriptionText")
@@ -636,32 +560,7 @@ const useConceptualModel = () =>
         return
       }
     }, [isIgnoreDomainDescription]);
-  
-    // useEffect(() =>
-    // {
-    //   // Recompute inference indexes
-    //   setInferenceIndexes([])
-  
-    //   setNodes((nodes) => nodes.map((node) =>
-    //   {
-    //     for (let i = 0; i < node.data.attributes.length; i++)
-    //     {
-    //       const newInferenceIndexes = getIndexesForOneInference(node.data.attributes[i].inference, domainDescription)
-    //       if (newInferenceIndexes.length === 0)
-    //       {
-    //         continue
-    //       }
-  
-    //       node.data.attributes.inferenceIndexes = newInferenceIndexes
-  
-    //       setInferenceIndexes(previousInferenceIndexes => 
-    //         {
-    //           return [...previousInferenceIndexes, newInferenceIndexes]
-    //         })
-    //     }
-    //     return node;
-    //   }));
-    // }, [domainDescription])
+
 
     useEffect(() =>
     {
@@ -685,23 +584,24 @@ const useConceptualModel = () =>
           console.log("yes")
           highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
         }
-  
       };
 
       delay()
 
     }, [isShowDialogDomainDescription])
-  
+
+
     useEffect(() =>
     {
       // console.log("Nodes: ", nodes)
       convertConceptualModelToJSON()
     }, [nodes]);
-  
+
     // useEffect(() =>
     // {
     //   console.log("Edges: ", edges)
     // }, [edges]);
+
 
     const addNode = (nodeID : string, positionX : number, positionY : number, attributes : Attribute[] = []) =>
     {
@@ -722,15 +622,18 @@ const useConceptualModel = () =>
       updateNodes()
     }
 
+
     const onOverlayDomainDescriptionOpen = () =>
     {
       setIsShowDialogDomainDescription(true)
     }
 
+
     const onDialogDomainDescriptionClose = () =>
     {
       setIsShowDialogDomainDescription(false)
     }
+
 
     const onAddItem = (item : Item, addAsDifferent : boolean = false) =>
     {
@@ -765,6 +668,7 @@ const useConceptualModel = () =>
 
       console.log("Unknown item type: ", item.type)
     }
+
 
     const onAddEntity = (entity: Entity) =>
     {
@@ -818,15 +722,6 @@ const useConceptualModel = () =>
         {
           return currentNode;
         }
-  
-        // const newInferenceIndexes = getIndexesForOneInference(attribute.inference, domainDescription)
-        // if (newInferenceIndexes.length !== 0)
-        // {
-        //   setInferenceIndexes(previousInferenceIndexes =>
-        //     {
-        //       return [...previousInferenceIndexes, newInferenceIndexes]
-        //     })
-        // }
 
         const newAttributeObject : Attribute = {
           ID: attribute.ID, type: ItemType.ATTRIBUTE, name: attribute.name, description: "", inference: attribute.inference, inferenceIndexes: attribute.inferenceIndexes, dataType: attribute.dataType,
@@ -923,12 +818,18 @@ const useConceptualModel = () =>
     }
 
 
-    const onClearRegeneratedItem = (field: Field, isClearAll: boolean) : void=>
+    const onClearRegeneratedItem = (field: Field | null, isClearAll: boolean) : void=>
     {
       if (isClearAll)
       {
-        setEditedSuggestedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: ""})
-        setRegeneratedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: ""})
+        console.log("Clearing all")
+        setEditedSuggestedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: "", cardinality: ""})
+        setRegeneratedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: "", cardinality: ""})
+      }
+
+      if (!field)
+      {
+        return
       }
 
       if (regeneratedItem.hasOwnProperty(field))
@@ -954,7 +855,7 @@ const useConceptualModel = () =>
 
     const onEditClose = () =>
     {
-      onClearRegeneratedItem(Field.ID, true)
+      onClearRegeneratedItem(null, true)
       setIsShowDialogEdit(false)
     }
 
