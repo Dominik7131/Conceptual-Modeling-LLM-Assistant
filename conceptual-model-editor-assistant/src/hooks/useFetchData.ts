@@ -2,13 +2,16 @@ import { useState } from "react";
 import { Field, Item, ItemType } from "../App";
 import { parse } from "path";
 
+
 const useFetchData = () =>
 {
     // TODO: Insert here methods for fetching data
     // Probably this hook should receive function what to do on data receive
 
     const [isLoadingSummary1, setIsLoadingSummary1] = useState<boolean>(false)
+    const [isLoadingSummaryDescriptions, setIsLoadingSummaryDescriptions] = useState<boolean>(false)
     const [summaryText, setSummaryText] = useState<string>("")
+    const [summaryDescriptions, setSummaryDescriptions] = useState<any[]>([]) // TODO: Define the expected object
 
     const fetchSummary = (endpoint : string, headers : any, bodyData : any) =>
     {
@@ -65,7 +68,67 @@ const useFetchData = () =>
       });
     }
 
-    return { isLoadingSummary1, summaryText, fetchSummary }
+    const fetchSummaryDescriptions = (endpoint : string, headers : any, bodyData : any) =>
+    {
+      setIsLoadingSummaryDescriptions(_ => true)
+
+      fetch(endpoint, { method: "POST", headers, body: bodyData })
+      .then(response =>
+      {
+          const stream = response.body; // Get the readable stream from the response body
+
+          if (stream === null)
+          {
+            console.log("Stream is null")
+            setIsLoadingSummaryDescriptions(_ => false)
+            return
+          }
+
+          const reader = stream.getReader();
+
+          const readChunk = () =>
+          {
+              reader.read()
+                  .then(({value, done}) =>
+                  {
+                      if (done)
+                      {
+                          console.log("Stream finished")
+                          setIsLoadingSummaryDescriptions(_ => false)
+                          return
+                      }
+
+                      // Convert the `value` to a string
+                      var jsonString = new TextDecoder().decode(value)
+                      console.log("JsonString: ", jsonString)
+                      
+                      const parsedData = JSON.parse(jsonString)
+                      console.log("Parsed data:", parsedData)
+                      
+                      // setSummaryDescriptions([...summaryDescriptions, parsedData])
+
+                      setSummaryDescriptions(previousSummary => {
+                        return [...previousSummary, parsedData]
+                      })
+
+                      readChunk(); // Read the next chunk
+                  })
+                  .catch(error =>
+                  {
+                    console.error(error);
+                  });
+          };
+          readChunk(); // Start reading the first chunk
+      })
+      .catch(error =>
+      {
+        console.error(error);
+        setIsLoadingSummaryDescriptions(_ => false)
+        alert("Error: request failed")
+      });
+    }
+
+    return { isLoadingSummary1, isLoadingSummaryDescriptions, summaryText, summaryDescriptions, fetchSummary, fetchSummaryDescriptions }
 }
 
 export default useFetchData

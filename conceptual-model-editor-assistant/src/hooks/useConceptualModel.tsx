@@ -45,10 +45,10 @@ const useConceptualModel = () =>
 
     const { capitalizeString } = useUtility()
 
-    const { isLoadingSummary1, summaryText, fetchSummary } = useFetchData()
+    const { isLoadingSummary1, isLoadingSummaryDescriptions, summaryText, fetchSummary, fetchSummaryDescriptions, summaryDescriptions } = useFetchData()
 
     let IDToAssign = 0
-    const URL = "http://127.0.0.1:5000/"
+    const BASE_URL = "http://127.0.0.1:5000/"
 
 
     const onConnect : OnConnect = useCallback(
@@ -154,7 +154,7 @@ const useConceptualModel = () =>
       }
 
 
-      const convertConceptualModelToJSON = () =>
+      const convertConceptualModelToJSON = (isOnlyNames : boolean) =>
       {
         let result: { [key: string]: any } = {
           entities: []
@@ -165,9 +165,23 @@ const useConceptualModel = () =>
           let attributes = []
           for (let attribute of node.data.attributes)
           {
-            attributes.push({[Field.NAME]: attribute.name, [Field.INFERENCE]: attribute.inference})
+            if (isOnlyNames)
+            {
+              attributes.push({[Field.NAME]: attribute.name})
+            }
+            else
+            {
+              attributes.push({[Field.NAME]: attribute.name, [Field.INFERENCE]: attribute.inference})
+            }
           }
+
           result.entities.push({[Field.NAME]: node.id, attributes: attributes})
+        }
+
+        if (isOnlyNames)
+        {
+          // TODO: First check that it works for entities + attributes and then add relationships
+          return result
         }
 
         let relationships = []
@@ -354,7 +368,7 @@ const useConceptualModel = () =>
     const onEditPlus = (name: string, field: Field) =>
     {
       const endpointName = "getOnly"
-      const endpoint = URL + endpointName
+      const endpoint = BASE_URL + endpointName
       const headers = { "Content-Type": "application/json" }
       const bodyData = JSON.stringify({"attributeName": name, "sourceEntity": sourceEntity, "field": field, "domainDescription": domainDescription})
 
@@ -394,7 +408,7 @@ const useConceptualModel = () =>
       setSuggestedItems(_ => {return []})
 
       const endpointName = "suggest"
-      const endpoint = URL + endpointName
+      const endpoint = BASE_URL + endpointName
       const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
       const headers = { "Content-Type": "application/json" }
       const is_fetch_stream_data = true
@@ -474,13 +488,25 @@ const useConceptualModel = () =>
     }
 
 
-    const onSummaryButtonClick = () =>
+    const onSummaryButtonClick = () : void =>
     {
-      const endpoint = URL + "summary1"
+      const endpoint = BASE_URL + "summary1"
       const headers = { "Content-Type": "application/json" }
-      const conceptualModel = convertConceptualModelToJSON()
+      const conceptualModel = convertConceptualModelToJSON(false)
       const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
+
       fetchSummary(endpoint, headers, bodyData)
+    }
+
+
+    const onSummaryDescriptionsClick = () : void =>
+    {
+      const endpoint = BASE_URL + "summary2"
+      const headers = { "Content-Type": "application/json" }
+      const conceptualModel = convertConceptualModelToJSON(true)
+      const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
+
+      fetchSummaryDescriptions(endpoint, headers, bodyData)
     }
 
 
@@ -594,7 +620,6 @@ const useConceptualModel = () =>
     useEffect(() =>
     {
       // console.log("Nodes: ", nodes)
-      convertConceptualModelToJSON()
     }, [nodes]);
 
     // useEffect(() =>
@@ -914,10 +939,7 @@ const useConceptualModel = () =>
         tooltip = `${capitalizedSourceEntity}-${targetEntity}: ${suggestedItem.name}`
       }
 
-      console.log("SI: ", suggestedItem)
-
       let newTooltips : string[] = Array(suggestedItem.inferenceIndexes.length).fill(tooltip)
-      // console.log("New tooltips: ", newTooltips)
       setTooltips(newTooltips)
     }
     
@@ -926,7 +948,7 @@ const useConceptualModel = () =>
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
-        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, fieldToLoad, onItemEdit, onConfirmRegeneratedText
+        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions
     }
 }
 

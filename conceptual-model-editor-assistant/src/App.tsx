@@ -87,7 +87,7 @@ function App()
     OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
     isLoading, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
     isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
-    regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, fieldToLoad, onItemEdit, onConfirmRegeneratedText
+    regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -107,7 +107,9 @@ function App()
         onHighlightSelectedItems={onHighlightSelectedItems}
         summary={summaryText}
         isLoadingSummary1={isLoadingSummary1}
-        selectedNodes={selectedNodes}
+        isLoadingSummaryDescriptions={isLoadingSummaryDescriptions}
+        onSummaryDescriptionsClick={onSummaryDescriptionsClick}
+        summaryDescriptions={summaryDescriptions}
         sidebarWidthPercentage={sideBarWidthPercentage}
       />
 

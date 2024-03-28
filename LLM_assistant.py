@@ -171,6 +171,10 @@ class LLMAssistant:
             yield completed_item, is_item_ok
             return
 
+        elif user_choice == UserChoice.SUMMARY2.value:
+            yield completed_item, is_item_ok
+            return
+
         if "name" not in completed_item or not completed_item["name"]:
             completed_item["name"] = "error: no name"
             is_item_ok = False
@@ -280,12 +284,10 @@ class LLMAssistant:
 
         items = []
         item = ""
-        is_item_start = False
-        is_skip_parsing = False
         new_lines_in_a_row = 0
         last_char = ''
         self.end_parsing_prematurely = False
-        opened_square_brackets = 0
+        opened_curly_brackets_count = 0
 
         # For debugging purposes generate whole text first because there might be some bug on my side when parsing text on the fly
         is_generate_content_first = False
@@ -312,38 +314,29 @@ class LLMAssistant:
                 logging.debug("Stopping generating output")
                 return
 
-            if is_skip_parsing:
-                continue
-
             for char in text:
                 if char == '{':
-                    is_item_start = True
-                if char == '[':
-                    opened_square_brackets += 1
+                    opened_curly_brackets_count += 1
 
                 if char == '\n' and last_char == '\n':
                     new_lines_in_a_row += 1
                 else:
                     new_lines_in_a_row = 0
-                
-                if char == ']':
-                    opened_square_brackets -= 1
 
-                    # We already got the last object of the JSON output
-                    if opened_square_brackets == 0:
-                        logging.debug("End: last square bracket was detected")
-                        return
                 
                 # Return when LLM gets stuck in printing only new lines
                 if new_lines_in_a_row > 3:
                     logging.warning("Warning: too many new lines")
                     return
                 
-                if is_item_start:
+                if opened_curly_brackets_count > 0:
                     item += char
                 
-                if char == "}" and item != '':
-                    is_item_start = False
+                if char == '}':
+                    opened_curly_brackets_count -= 1
+
+
+                if opened_curly_brackets_count == 0 and item != '':
 
                     iterator = self.__parse_item_streamed_output(item, user_choice, is_provided_class_source, user_input_entity1, user_input_entity2)
 
@@ -364,19 +357,21 @@ class LLMAssistant:
         
         #logging.debug(f"-- End of LLM output generation --")
 
-        if len(items) != ITEMS_COUNT:
-            # LLM sometimes does not properly finish the JSON object
-            # So try to finish the object by appending the last curly bracket
-            if is_item_start:
-                item += '}'
+        if IS_IGNORE_DOMAIN_DESCRIPTION and len(items) != ITEMS_COUNT:
+            logging.debug(f"Incorrect amount of items\n- expected: {ITEMS_COUNT}\n- actual: {len(items)}")
 
-                iterator = self.__parse_item_streamed_output(item, user_choice, is_provided_class_source, user_input_entity1)
+        # If the JSON object is not properly finished then insert the needed amount of closed curly brackets
+        if opened_curly_brackets_count > 0:
+            logging.debug(f"JSON object is not properly finished: {item}")
+            item += '}' * opened_curly_brackets_count
 
-                for completed_item, is_item_ok in iterator:
-                    if is_item_ok:
-                        yield completed_item
-                    else:
-                        self.debug_info.deleted_items.append(completed_item)
+            iterator = self.__parse_item_streamed_output(item, user_choice, is_provided_class_source, user_input_entity1)
+
+            for completed_item, is_item_ok in iterator:
+                if is_item_ok:
+                    yield completed_item
+                else:
+                    self.debug_info.deleted_items.append(completed_item)
         
         logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
         return
@@ -626,7 +621,7 @@ EXAMPLE END
             yield f"{json_item}\n"
 
 
-    def summarize_conceptual_model(self, conceptual_model, domain_description):
+    def summarize_conceptual_model1(self, conceptual_model, domain_description):
 
         # conceptual_model = { "entities": [
         #     {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
@@ -661,3 +656,48 @@ EXAMPLE END
 
             json_item = json.dumps(dictionary)
             yield f"{json_item}\n"
+    
+
+    def summarize_conceptual_model2(self, conceptual_model, domain_description):
+
+        prompt = """Solely based on the given context generate description for each given entity and attribute in the same JSON format as the example shows.
+
+EXAMPLE START
+
+Given entities and attributes:
+{"entities": [{"name": "student", "attributes": [{"name": "name"}]}, {"name": "course", "attributes": [{"name": "name"}, {"name": "number of credits"}]}, {"name": "professor", "attributes": [{"name": "name"}]}, {"name": "dormitory", "attributes": [{"name": "price"}]}, {"entity": "price", "attributes": []}]}
+
+Given context:
+"We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."
+
+Output:
+
+{"entity": "student", "description": "A student entity represents an individual enrolled in an educational institution", "attributes": [{"name": "name", "description": "The name of the student"}]}
+{"entity": "course", "description": "A course entity representing educational modules", "attributes": [{"name": "name", "description": "The name of the course"}, {"name": "number of credits", "description": "The number of credits assigned to the course"}]}
+{"entity": "professor", "description": "A professor entity representing instructors teaching courses", "attributes": [{"name": "name", "description": "The name of the professor"}]}
+{"entity": "dormitory", "description": "A dormitory entity representing residential facilities for students", "attributes": [{"name": "name", "description": "The price of staying in the dormitory"}]}
+{"entity": "price", "description": "the price students have to pay for dormitory", "attributes": []}
+
+EXAMPLE END\n
+"""
+
+        prompt += f"Given entities and attributes: {conceptual_model}\n\n"
+        prompt += f'This is the given context:\n"{domain_description}"'
+
+        self.messages = []
+        new_messages = self.messages.copy()
+        new_messages.append({"role": "user", "content": prompt})
+        messages_prettified = TextUtility.messages_prettify(new_messages)
+        self.debug_info.prompt = messages_prettified
+
+        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+
+        items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY2.value, "")
+
+        for item in items_iterator:
+            dictionary = json.loads(json.dumps(item))
+
+            json_item = json.dumps(dictionary)
+            print(f"Yielding: {json_item}")
+            yield f"{json_item}\n"
+    

@@ -46,7 +46,18 @@ def summary1():
     domain_description = body_data["domainDescription"]
     conceptual_model = body_data["conceptualModel"]
 
-    return llm_assistant.summarize_conceptual_model(conceptual_model, domain_description)
+    return llm_assistant.summarize_conceptual_model1(conceptual_model, domain_description)
+
+
+@app.route('/summary2', methods=['POST'])
+@cross_origin()
+def summary2():
+
+    body_data = request.get_json()
+    domain_description = body_data["domainDescription"]
+    conceptual_model = body_data["conceptualModel"]
+
+    return llm_assistant.summarize_conceptual_model2(conceptual_model, domain_description)
 
 
 if __name__ == '__main__':

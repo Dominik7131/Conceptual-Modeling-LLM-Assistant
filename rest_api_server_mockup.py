@@ -41,7 +41,7 @@ def suggest():
 
 @app.route('/summary1', methods=['POST'])
 @cross_origin()
-def summary():
+def summary1():
 
     body_data = request.get_json()
     domain_description = body_data["domainDescription"]
@@ -49,6 +49,21 @@ def summary():
 
     def generate_mock_up():
         yield '{"summary": "The conceptual model includes four main entities: Student, Course, Dormitory, and Professor. The Student entity has a name attribute and can be enrolled in any number of Courses. The Course entity has a name and a number of credits attribute, and can have one or more Professors. The Dormitory entity has a price attribute, and students can be accommodated in it. The Professor entity has a name attribute. Additionally, there is a relationship between Student and Person through an \'is-a\' relationship."}\n'
+        return
+
+    return generate_mock_up()
+
+
+@app.route('/summary2', methods=['POST'])
+@cross_origin()
+def summary2():
+
+    body_data = request.get_json()
+    domain_description = body_data["domainDescription"]
+    conceptual_model = body_data["conceptualModel"]
+
+    def generate_mock_up():
+        yield '{"entity": "engine","description": "An engine entity represents the power source of a vehicle.","attributes": [{"name": "engine type","description": "The type of engine, such as internal combustion, electric, etc."},{"name": "engine power","description": "The power output of the engine, typically measured in kilowatts (kW)."},{"name": "fuel type","description": "The type of fuel used by the engine, such as gasoline, diesel, electricity, etc."}]}\n'
         return
 
     return generate_mock_up()
