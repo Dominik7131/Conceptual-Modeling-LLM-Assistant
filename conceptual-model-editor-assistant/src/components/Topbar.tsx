@@ -8,7 +8,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { Attribute, UserChoice } from "../App";
 import Tooltip from '@mui/material/Tooltip';
-import { CircularProgress, Divider, FormControl, FormLabel, List, ListItem, ListItemText, Radio, RadioGroup, Tab, Tabs, Typography } from "@mui/material";
+import { CircularProgress, Divider, FormControl, FormLabel, List, ListItem, ListItemText, Radio, RadioGroup, Slider, Tab, Tabs, Typography } from "@mui/material";
 import { Node } from 'reactflow';
 import useUtility from "../hooks/useUtility";
 import TabPanel from '@mui/lab/TabPanel';
@@ -218,7 +218,17 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                             control={
                                 <Checkbox checked={isIgnoreDomainDescription} onChange={onIgnoreDomainDescriptionChange}/>
                                 }/>
-                        {/* <FormControlLabel control={<Checkbox />} label="maybe add text area to edit prompt for summarization" /> */}
+                        
+                        <p></p>
+                        <Divider></Divider>
+                        <p></p>
+
+                        {/* {TODO: Make something more like this: https://mui.com/material-ui/react-slider/#slider-with-input-field} */}
+                        <Typography id="input-slider" gutterBottom>
+                            Temperature
+                        </Typography>
+                        <Slider aria-label="Temperature" defaultValue={0} valueLabelDisplay="auto"
+                                shiftStep={0.1} step={0.1} marks min={0} max={1}/>
                     </Stack>
                 </TabPanel>
             </TabContext>

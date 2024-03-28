@@ -165,9 +165,9 @@ const useConceptualModel = () =>
           let attributes = []
           for (let attribute of node.data.attributes)
           {
-            attributes.push({"name": attribute.name, "inference": attribute.inference})
+            attributes.push({[Field.NAME]: attribute.name, [Field.INFERENCE]: attribute.inference})
           }
-          result.entities.push({"name": node.id, "attributes": attributes})
+          result.entities.push({[Field.NAME]: node.id, attributes: attributes})
         }
 
         let relationships = []
@@ -724,8 +724,9 @@ const useConceptualModel = () =>
         }
 
         const newAttributeObject : Attribute = {
-          ID: attribute.ID, type: ItemType.ATTRIBUTE, name: attribute.name, description: "", inference: attribute.inference, inferenceIndexes: attribute.inferenceIndexes, dataType: attribute.dataType,
-          cardinality: ''
+          [Field.ID]: attribute.ID, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: attribute.name, [Field.DESCRIPTION]: "",
+          [Field.INFERENCE]: attribute.inference, [Field.INFERENCE_INDEXES]: attribute.inferenceIndexes, [Field.DATA_TYPE]: attribute.dataType,
+          [Field.CARDINALITY]: ""
         }
   
         // If the node already contains the selected attribute do not add anything
