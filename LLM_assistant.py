@@ -10,7 +10,7 @@ ITEMS_COUNT = 5
 IS_SYSTEM_MSG = False
 IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
-TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
+TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = False
 IS_CHAIN_OF_THOUGHTS = True
 IS_RELATIONSHIPS_IS_A = False
 
@@ -281,6 +281,8 @@ class LLMAssistant:
 
     def __parse_streamed_output(self, messages, user_choice, user_input_entity1, user_input_entity2="", is_provided_class_source=True):
         self.debug_info = self.DebugInfo() # Reset debug info
+
+        self.llm.reset()
 
         items = []
         item = ""
