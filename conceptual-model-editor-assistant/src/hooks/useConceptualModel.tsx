@@ -178,23 +178,22 @@ const useConceptualModel = () =>
           result.entities.push({[Field.NAME]: node.id, attributes: attributes})
         }
 
-        if (isOnlyNames)
-        {
-          // TODO: First check that it works for entities + attributes and then add relationships
-          return result
-        }
-
         let relationships = []
         for (let edge of selectedEdges)
         {
-          relationships.push({"name": edge.label, "inference": edge.data.inference, "source_entity": edge.source, "target_entity": edge.target})
+          if (isOnlyNames)
+          {
+            relationships.push({[Field.NAME]: edge.label, "sourceEntity": edge.source, "targetEntity": edge.target})
+          }
+          else
+          {
+            relationships.push({[Field.NAME]: edge.label, [Field.INFERENCE]: edge.data.inference, "sourceEntity": edge.source, "targetEntity": edge.target})
+          }
         }
 
-        if (relationships)
-        {
-          result.relationships = relationships
-        }
+        result.relationships = relationships
 
+        console.log("CM: ", result)
         return result
       }
 
@@ -501,12 +500,18 @@ const useConceptualModel = () =>
 
     const onSummaryDescriptionsClick = () : void =>
     {
+      if (selectedNodes.length === 0)
+      {
+        alert("Nothing was selected")
+        return
+      }
+
       const endpoint = BASE_URL + "summary2"
       const headers = { "Content-Type": "application/json" }
       const conceptualModel = convertConceptualModelToJSON(true)
       const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
-      fetchSummaryDescriptions(endpoint, headers, bodyData)
+      // fetchSummaryDescriptions(endpoint, headers, bodyData)
     }
 
 

@@ -72,6 +72,8 @@ const useFetchData = () =>
     {
       setIsLoadingSummaryDescriptions(_ => true)
 
+      setSummaryDescriptions([])
+
       fetch(endpoint, { method: "POST", headers, body: bodyData })
       .then(response =>
       {
