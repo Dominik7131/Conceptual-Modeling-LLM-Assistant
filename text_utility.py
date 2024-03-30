@@ -4,7 +4,7 @@ import logging
 from difflib import SequenceMatcher
 from enum import Enum
 
-# TODO: Change to enum
+
 class UserChoice(Enum):
     ATTRIBUTES = "attributes"
     RELATIONSHIPS = "relationships"
@@ -13,6 +13,25 @@ class UserChoice(Enum):
     ONLY_DESCRIPTION = "description"
     SUMMARY1 = "summary1"
     SUMMARY2 = "summary2"
+
+
+class DataType(Enum):
+    STRING = "string"
+    NUMBER = "number"
+    TIME = "time"
+    BOOLEAN = "boolean"
+
+
+class Field(Enum):
+    NAME = "name",
+    DESCRIPTION = "description",
+    ORIGINAL_TEXT = "originalText",
+    ORIGINAL_TEXT_INDEXES = "originalTextIndexes",
+    DATA_TYPE = "dataType",
+    CARDINALITY = "cardinality",
+    SOURCE_ENTITY = "sourceEntity",
+    TARGET_ENTITY = "targetEntity"
+
 
 ATTRIBUTES_STRING = "attributes"
 RELATIONSHIPS_STRING = "relationships"
