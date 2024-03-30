@@ -45,5 +45,5 @@ text.react-flow__edge-text {
 .react-flow__node-default.selectable.selected
 {
   border-width: 5px;
-  border-color: rgb(0, 89, 255);
+  border-color: #2196f3;
 }

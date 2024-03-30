@@ -134,7 +134,8 @@ const useConceptualModel = () =>
 
         for (const [key, relationship] of Object.entries(input["relationships"]))
         {
-          const newEdge : Edge = { id: `${relationship.source_entity},${relationship.target_entity}`, source: relationship.source_entity, target: relationship.target_entity, label: relationship.name, type: 'straight', data: { description: "", inference: relationship.inference } }
+          const newEdge : Edge = { id: `${relationship.source_entity},${relationship.target_entity}`, source: relationship.source_entity, target: relationship.target_entity,
+                                   label: relationship.name, type: 'custom-edge', data: { description: "", inference: relationship.inference }}
           newEdges.push(newEdge)
         }
         
@@ -600,10 +601,10 @@ const useConceptualModel = () =>
     }, [isShowDialogDomainDescription])
 
 
-    useEffect(() =>
-    {
-      // console.log("Nodes: ", nodes)
-    }, [nodes]);
+    // useEffect(() =>
+    // {
+    //   // console.log("Nodes: ", nodes)
+    // }, [nodes]);
 
     // useEffect(() =>
     // {
