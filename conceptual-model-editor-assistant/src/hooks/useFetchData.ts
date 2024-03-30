@@ -11,7 +11,10 @@ const useFetchData = () =>
     const [isLoadingSummary1, setIsLoadingSummary1] = useState<boolean>(false)
     const [isLoadingSummaryDescriptions, setIsLoadingSummaryDescriptions] = useState<boolean>(false)
     const [summaryText, setSummaryText] = useState<string>("")
+
+    // TODO: This object should contain descriptions for "entities": array of entities and "relationships": array of relationships
     const [summaryDescriptions, setSummaryDescriptions] = useState<any[]>([]) // TODO: Define the expected object
+    const [summaryRelationshipsDescriptions, setSummaryRelationshipsDescriptions] = useState<any[]>([]) // TODO: Define the expected object
 
     const fetchSummary = (endpoint : string, headers : any, bodyData : any) =>
     {
@@ -106,12 +109,25 @@ const useFetchData = () =>
                       
                       const parsedData = JSON.parse(jsonString)
                       console.log("Parsed data:", parsedData)
-                      
-                      // setSummaryDescriptions([...summaryDescriptions, parsedData])
 
-                      setSummaryDescriptions(previousSummary => {
-                        return [...previousSummary, parsedData]
-                      })
+
+                      if (parsedData.hasOwnProperty("entity"))
+                      {
+                        setSummaryDescriptions(previousSummary => {
+                          return [...previousSummary, parsedData]
+                        })
+                      }
+                      else if (parsedData.hasOwnProperty("relationship"))
+                      {
+                        setSummaryRelationshipsDescriptions(previousSummary => {
+                          return [...previousSummary, parsedData]
+                        })
+                      }
+                      else
+                      {
+                        console.log("Received unknown object: ", parsedData)
+                      }
+
 
                       readChunk(); // Read the next chunk
                   })

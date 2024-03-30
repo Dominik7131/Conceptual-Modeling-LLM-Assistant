@@ -81,6 +81,7 @@ const useConceptualModel = () =>
 
         const input = { entities: [
             {name: "Engine", description: "", attributes: []},
+            {name: "Manufacturer", description: "", attributes: []},
             {name: "Natural person", description: "", attributes: [{ID: 0, type: ItemType.ATTRIBUTE, name: "name", dataType: "string"},
                                                                     {ID: 1, type: ItemType.ATTRIBUTE, name: "birth number", dataType: "number"},
                                                                     {ID: 2, type: ItemType.ATTRIBUTE, name: "date of birth", dataType: "date"}]},
@@ -96,7 +97,8 @@ const useConceptualModel = () =>
                       relationships: [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
                                 {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
                                 {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
-                                {"name": "is-a", "source_entity": "student", "target_entity": "person"}]}
+                                {"name": "is-a", "source_entity": "student", "target_entity": "person"},
+                                {"name": "manufactures", "source_entity": "manufacturer", "target_entity": "road vehicle"}]}
 
         // const input = { "entities": [
         //     {name: "Student", "description": "A student entity representing individuals enrolled in courses.", "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
@@ -184,7 +186,7 @@ const useConceptualModel = () =>
 
         result.relationships = relationships
 
-        console.log("CM: ", result)
+        // console.log("CM: ", result)
         return result
       }
 
@@ -500,7 +502,7 @@ const useConceptualModel = () =>
       const conceptualModel = convertConceptualModelToJSON(true)
       const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
-      // fetchSummaryDescriptions(endpoint, headers, bodyData)
+      fetchSummaryDescriptions(endpoint, headers, bodyData)
     }
 
 

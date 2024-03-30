@@ -80,7 +80,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 {
                     summaryDescriptions.map((summary) =>
                         <Typography component="span">
-                            <li><strong>{capitalizeString(summary.entity)}</strong>: {summary.description}</li>
+                            <li><strong>{capitalizeString(summary?.entity)}</strong>: {summary?.description}</li>
                             { summary.attributes.length > 0 && 
                                 <ul>
                                     <p></p>

@@ -1,5 +1,5 @@
 from llama_cpp import Llama
-from text_utility import TextUtility, UserChoice
+from text_utility import TextUtility, UserChoice, DataType
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
 import logging
@@ -20,7 +20,7 @@ CONFIG_FILE_PATH = "llm-config.json"
 TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
 LOG_FILE_PATH = f"{TIMESTAMP}-log.txt"
 
-DEFINED_DATA_TYPES = ["string, number, time, boolean"]
+DEFINED_DATA_TYPES = [DataType.STRING.value, DataType.NUMBER.value, DataType.TIME.value, DataType.BOOLEAN.value]
 
 logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
 
@@ -662,12 +662,13 @@ EXAMPLE END
 
     def summarize_conceptual_model2(self, conceptual_model, domain_description):
 
-        prompt = """Solely based on the given context generate description for each given entity and attribute in the same JSON format as the example shows.
+        prompt = """Solely based on the given context generate description for each given entity, attribute and relationship in the same JSON format as the example shows.
 
 EXAMPLE START
 
-Given entities and attributes:
-{"entities": [{"name": "student", "attributes": [{"name": "name"}]}, {"name": "course", "attributes": [{"name": "name"}, {"name": "number of credits"}]}, {"name": "professor", "attributes": [{"name": "name"}]}, {"name": "dormitory", "attributes": [{"name": "price"}]}, {"entity": "price", "attributes": []}]}
+Given entities, attributes and relationships:
+{"entities": [{"name": "student", "attributes": [{"name": "name"}]}, {"name": "course", "attributes": [{"name": "name"}, {"name": "number of credits"}]}, {"name": "professor", "attributes": [{"name": "name"}]}, {"name": "dormitory", "attributes": [{"name": "price"}]}],
+"relationships": [{"name": "has", "sourceEntity": "course", "targetEntity": "professor"}, {"name": "enrolled in", "sourceEntity": "student", "targetEntity": "course"}, {"name": "accommodated in", "sourceEntity": "student", "targetEntity": "dormitory"}]}
 
 Given context:
 "We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."
@@ -678,13 +679,16 @@ Output:
 {"entity": "course", "description": "A course entity representing educational modules", "attributes": [{"name": "name", "description": "The name of the course"}, {"name": "number of credits", "description": "The number of credits assigned to the course"}]}
 {"entity": "professor", "description": "A professor entity representing instructors teaching courses", "attributes": [{"name": "name", "description": "The name of the professor"}]}
 {"entity": "dormitory", "description": "A dormitory entity representing residential facilities for students", "attributes": [{"name": "name", "description": "The price of staying in the dormitory"}]}
-{"entity": "price", "description": "the price students have to pay for dormitory", "attributes": []}
+
+{"relationship": "has", "sourceEntity": "course", "targetEntity": "professor", "description": "Courses have professors who teach them"}
+{"relationship": "enrolled in", "sourceEntity": "student", "targetEntity": "course", "description": "Students can be enrolled in any number of courses"}
+{"relationship": "accommodated in", "sourceEntity": "student", "targetEntity": "dormitory", "description": "Students can be accommodated in dormitories"}
 
 EXAMPLE END\n
 """
 
-        prompt += f"Given entities and attributes: {conceptual_model}\n\n"
-        prompt += f'This is the given context:\n"{domain_description}"'
+        prompt += f"Given entities, attributes and relationships:\n{conceptual_model}\n\n"
+        prompt += f'Given context:\n"{domain_description}"'
 
         self.messages = []
         new_messages = self.messages.copy()

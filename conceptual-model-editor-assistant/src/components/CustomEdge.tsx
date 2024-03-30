@@ -1,7 +1,9 @@
 import Button from '@mui/material/Button';
-import { BaseEdge, EdgeLabelRenderer, EdgeProps, getStraightPath, useReactFlow } from 'reactflow';
+import { BaseEdge, EdgeLabelRenderer, EdgeProps, getStraightPath } from 'reactflow';
 
 
+// Inspiration: https://reactflow.dev/learn/customization/custom-edges
+// List of available props: https://reactflow.dev/api-reference/types/edge-props
 export default function CustomEdge ({ id, sourceX, sourceY, targetX, targetY, selected, label }: EdgeProps)
 {
   const [edgePath, labelX, labelY] = getStraightPath({sourceX, sourceY, targetX, targetY });
