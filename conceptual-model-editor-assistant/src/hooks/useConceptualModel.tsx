@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect } from 'reactflow';
+import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect, XYPosition } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 import useUtility from './useUtility';
@@ -8,12 +8,10 @@ import useFetchData from './useFetchData';
 import { Typography } from '@mui/material';
 import { Attribute, Entity, Field, Item, ItemType, Relationship, UserChoice } from '../App';
 
-const initialNodes : Node[] = [{ id: 'engine', position: { x: 100, y: 100 }, data: { label: "", attributes: [] } }, ];
-
 
 const useConceptualModel = () =>
 {
-    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   
     const [isLoading, setIsLoading] = useState<boolean>(false)
@@ -80,15 +78,6 @@ const useConceptualModel = () =>
 
       const parseSerializedConceptualModel = () =>
       {
-        // const input = { "entities": [ {name: "Engine", description: "", attributes: []},
-        //                               {name: "Bodywork", description: "", attributes: []},
-        //                               {name: "Natural person", description: "", attributes: []},
-        //                               {name: "Vehicle", description: "", attributes: []},
-        //                               {name: "Road vehicle", description: "", attributes: []},
-        //                               {name: "Registration", description: "", attributes: []},
-        //                               {name: "Insurance contract", description: "", attributes: []},
-        //                               {name: "Technical inspection", description: "", attributes: []}],
-        //                 "relationships": [{name: "is-a", inference: "", source_entity: "vehicle", target_entity: "road vehicle"}]}
 
         const input = { entities: [
             {name: "Engine", description: "", attributes: []},
@@ -130,7 +119,8 @@ const useConceptualModel = () =>
         for (const [key, entity] of Object.entries(input["entities"]))
         {
           const entityNameLowerCase = entity.name.toLowerCase()
-          const newNode : Node = { id: entityNameLowerCase, position: { x: positionX, y: positionY }, data: { label: "", description: entity.description, attributes: entity.attributes } }
+          const newNode : Node = { id: entityNameLowerCase, position: { x: positionX, y: positionY },
+                                   data: { label: createJsxNodeLabel(entityNameLowerCase, entity.attributes), description: entity.description, attributes: entity.attributes } }
           newNodes.push(newNode)
 
           positionX += incrementX
@@ -150,7 +140,7 @@ const useConceptualModel = () =>
         
         setNodes(() => { return newNodes })
         setEdges(() => { return newEdges })
-        updateNodes()
+        // updateNodes()
       }
 
 
@@ -286,7 +276,7 @@ const useConceptualModel = () =>
 
     const fetchStreamedData = (url : string, headers : any, bodyData : any, itemType : ItemType) =>
     {
-      // TODO: add interface for header and bodyData
+      // TODO: add object interface for header and bodyData
 
       // Fetch the event stream from the server
       // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
@@ -330,8 +320,6 @@ const useConceptualModel = () =>
                         let item : Item = JSON.parse(jsonStringParts[i])
                         item[Field.ID] = assignID()
                         item[Field.TYPE] = itemType
-
-                        console.log("Item: ", item)
 
                         setSuggestedItems(previousSuggestedItems => {
                           return [...previousSuggestedItems, item]
@@ -546,38 +534,28 @@ const useConceptualModel = () =>
       setIsShowDialogDomainDescription(true)
     }
 
-    
-    const updateNodes = () =>
+
+    const createJsxNodeLabel = (name: string, attributes: any[]) : JSX.Element =>
     {
-      setNodes((nodes) => nodes.map((node) =>
-      {
-        return updateNode(node)
-      }));
+      // For now accept attributes as "any[]" to simplify hand-crafted conceptual models for testing
+      // After implementing conceptual models import and export switch to `attributes: Attribute[]`
+
+      return (
+        <Typography component='span' className="node">
+        <p className="nodeTitle"><strong>{capitalizeString(name)}</strong></p>
+        <p>
+        {attributes.map((attribute : Attribute, index : number) =>
+        (
+            // <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.dataType} <br /> </span>
+            <span key={`${attribute.name}-${index}`}> +{attribute.name} <br /> </span>
+        ))}
+        </p>
+      </Typography> )
     }
 
-
-    const updateNode = (node : Node) =>
-    {
-      node.data =
-      {
-        ...node.data,
-        label: <Typography component='span' className="node">
-                  <p className="nodeTitle"><strong>{capitalizeString(node.id)}</strong></p>
-                  <p>
-                  {node.data.attributes.map((attribute : Attribute, index : number) =>
-                  (
-                      // <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.dataType} <br /> </span>
-                      <span key={`${attribute.name}-${index}`}> +{attribute.name} <br /> </span>
-                  ))}
-                  </p>
-                </Typography>
-      };
-      return node;
-    }
 
     useEffect(() =>
     {
-      updateNodes()
       parseSerializedConceptualModel()
     }, []);
 
@@ -645,11 +623,10 @@ const useConceptualModel = () =>
         }
       }
 
-      const newNode = { id: nodeID, position: { x: positionX, y: positionY }, data: { label: "", attributes: attributes } }
+      const newNode = { id: nodeID, position: { x: positionX, y: positionY }, data: { label: createJsxNodeLabel(nodeID, attributes), attributes: attributes } }
       setNodes(previousNodes => {
         return [...previousNodes, newNode]
       })
-      updateNodes()
     }
 
 
@@ -695,8 +672,10 @@ const useConceptualModel = () =>
           onAddRelationshipsToNodes(relationship)
         }
       }
-
-      console.log("Unknown item type: ", item.type)
+      else
+      {
+       console.log("Unknown item type: ", item.type)
+      }
     }
 
 
@@ -741,11 +720,11 @@ const useConceptualModel = () =>
     }
     
     
-    const onAddAttributesToNode = (attribute : Attribute) =>
+    const onAddAttributesToNode = (attribute : Attribute) : void =>
     {    
       const nodeID = sourceEntity.toLowerCase()
       
-      setNodes((nodes) => nodes.map((currentNode) =>
+      setNodes((nodes) => nodes.map((currentNode : Node) =>
       {
         // Skip nodes which are not getting a new attribute
         if (currentNode.id !== nodeID)
@@ -761,7 +740,8 @@ const useConceptualModel = () =>
   
         // If the node already contains the selected attribute do not add anything
         let isAttributePresent = false
-        currentNode.data.attributes.forEach((attribute : Attribute) => {
+        currentNode.data.attributes.forEach((attribute : Attribute) =>
+        {
           if (attribute.name === newAttributeObject.name)
           {
             isAttributePresent = true
@@ -773,12 +753,18 @@ const useConceptualModel = () =>
           console.log("Attribute is already present")
           return currentNode;
         }
+
+        // console.log("Adding new attribute: ", newAttributeObject)
+
+        const newAttributes = [...currentNode.data.attributes, newAttributeObject]
+        const position : XYPosition = { x: currentNode.position.x, y: currentNode.position.y}
+
+
+        const updatedNode : Node = { id: currentNode.id, position: position, data: {label: createJsxNodeLabel(currentNode.id, newAttributes),
+                                     attributes: newAttributes}}
   
-        console.log("Pushing new attributes")
-        currentNode.data.attributes.push(newAttributeObject)
-        return updateNode(currentNode)
-      })
-      );
+        return updatedNode
+      }));
     }
     
     const onAddRelationshipsToNodes = (relationshipObject : Relationship) =>
@@ -821,7 +807,7 @@ const useConceptualModel = () =>
       if (!isTargetNodeCreated)
       {
         // Create a new node
-        const newNode = { id: targetNodeID, position: { x: 500, y: 100 }, data: { label: "", attributes: []} }
+        const newNode = { id: targetNodeID, position: { x: 500, y: 100 }, data: { label: createJsxNodeLabel(targetNodeID, []), attributes: []} }
   
         setNodes(previousNodes => 
           {
@@ -833,7 +819,7 @@ const useConceptualModel = () =>
           if (node.id === targetNodeID)
           {
             console.log("Adding a new node")
-            return updateNode(node)
+            return node
           }
           return node
         }));
@@ -853,7 +839,7 @@ const useConceptualModel = () =>
     {
       if (isClearAll)
       {
-        console.log("Clearing all")
+        // console.log("Clearing all")
         setEditedSuggestedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: "", cardinality: ""})
         setRegeneratedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: "", cardinality: ""})
       }

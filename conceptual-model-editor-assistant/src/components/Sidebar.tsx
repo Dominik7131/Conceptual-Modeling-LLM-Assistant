@@ -58,9 +58,9 @@ const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion
         const attribute : Attribute = (item as Attribute)
         const relationship : Relationship = (item as Relationship)
 
-        // TODO: Why is this logged every time a node is moved?
+        // TODO: Why is this logged every time when there are suggestions on sidebar and a node is moved?
         // Is the sidebar being rerendered every time user moves a node?
-        // console.log("node moved")
+        console.log("node moved")
 
         const isAttribute = item.type === ItemType.ATTRIBUTE
         const isRelationship = item.type === ItemType.RELATIONSHIP
