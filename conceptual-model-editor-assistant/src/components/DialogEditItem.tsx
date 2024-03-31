@@ -8,7 +8,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
-import { useEffect, useState } from 'react';
 import { Attribute, Field, Item, ItemFieldUIName, ItemFieldsUnification, ItemType, Relationship } from '../interfaces';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
@@ -21,10 +20,10 @@ interface Props
     item : Item
     editedItem : Item
     regeneratedItem : Item
+    isSuggestedItem : boolean
     isLoading : boolean
     fieldToLoad : Field
     isOpened : boolean
-    isDisableSave : boolean
     onClose : () => void
     onSave : (editedItem : Item) => void
     onPlus : (itemName: string, field: Field) => void
@@ -34,7 +33,7 @@ interface Props
     onConfirmRegeneratedText : (field : Field) => void
 }
 
-const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isOpened, isDisableSave, isLoading, fieldToLoad, onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText} : Props) =>
+const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isOpened, isLoading, fieldToLoad, isSuggestedItem, onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText} : Props) =>
 {
     const attribute = editedItem as Attribute
     const relationship = editedItem as Relationship
@@ -127,10 +126,17 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
 
             <DialogActions>
                 <ButtonGroup>
-                    <Button onClick={() => { onAddItem(editedItem, false); onClose()}}>Add</Button>
 
                     {
-                        isAttribute &&
+                        isSuggestedItem ?
+                        <Button onClick={() => { onAddItem(editedItem, false); onClose()}}>Add</Button>
+                        :
+                        <Button onClick={() => { console.log("Remove not implemented"); onClose()}}>Remove</Button>
+                    }
+                    
+
+                    {
+                        isSuggestedItem && isAttribute &&
                             <Button
                                 onClick={ () => onAddItem(item, true)}>
                                 Change to relationship
@@ -138,14 +144,14 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                     }
 
                     {
-                        isRelationship &&
+                        isSuggestedItem && isRelationship &&
                             <Button
                                 onClick={ () => onAddItem(item, true)}>
                                 Change to attribute
                             </Button>
                     }
                     
-                    <Button disabled={isDisableSave} onClick={() => { {onSave(editedItem)}; onClose()}}>Save</Button>
+                    <Button onClick={() => { {onSave(editedItem)}; onClose()}}>Save</Button>
                     <Button onClick={() => onClose()}>Cancel</Button>
                 </ButtonGroup>
             </DialogActions>

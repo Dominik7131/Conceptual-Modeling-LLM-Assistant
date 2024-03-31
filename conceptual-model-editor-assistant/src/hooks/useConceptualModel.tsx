@@ -5,7 +5,7 @@ import 'reactflow/dist/style.css';
 import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
-import { Button, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import { Attribute, Entity, Field, Item, ItemType, Relationship, UserChoice } from '../interfaces';
 
 
@@ -23,6 +23,7 @@ const useConceptualModel = () =>
     const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
     const [editedSuggestedItem, setEditedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
     const [regeneratedItem, setRegeneratedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
+    const [isSuggestedItem, setIsSuggestedItem] = useState(true)
   
     const [sourceEntity, setSourceEntity] = useState<string>("")
     const [targetEntity, setTargetEntity] = useState<string>("")
@@ -88,17 +89,10 @@ const useConceptualModel = () =>
             {name: "Business natural person", description: "", attributes: [{ID: 3, type: ItemType.ATTRIBUTE, name: "name", dataType: "string"},
                                                                             {ID: 4, type: ItemType.ATTRIBUTE, name: "distinguishing name supplement", dataType: "string"},
                                                                             {ID: 5, type: ItemType.ATTRIBUTE, name: "personal identification number", dataType: "number"}]},
-            {name: "Road vehicle", description: "", attributes: []},
-            {name: "Student", description: "A student entity represents an individual enrolled in an educational institution.", attributes: [{"ID": 6, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
-            {name: "Course", description: "A course entity representing educational modules.", attributes: [{"ID": 7, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 8, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
-            {name: "Dormitory", description: "A professor entity representing instructors teaching courses.", attributes: [{"ID": 9,"name": "price", "inference": "each dormitory has a price", "dataType": "int", "description": "The price of staying in the dormitory."}]},
-            {name: "Professor", description: "A dormitory entity representing residential facilities for students.", attributes: [{"ID": 10, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
+            {name: "Road vehicle", description: "", attributes: []}],
 
-                      relationships: [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
-                                {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
-                                {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
-                                {"name": "is-a", "source_entity": "student", "target_entity": "person"},
-                                {"name": "manufactures", "source_entity": "manufacturer", "target_entity": "road vehicle"}]}
+                      relationships: [
+                        {"name": "manufactures", "source_entity": "manufacturer", "target_entity": "road vehicle", "inference": ""}]}
 
         // const input = { "entities": [
         //     {name: "Student", "description": "A student entity representing individuals enrolled in courses.", "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
@@ -120,6 +114,11 @@ const useConceptualModel = () =>
 
         for (const [key, entity] of Object.entries(input["entities"]))
         {
+          for (let index = 0; index < entity.attributes.length; index++)
+          {
+            // TODO: Do not use "any"
+            (entity.attributes[index] as any).type = ItemType.ATTRIBUTE;
+          }
           const entityNameLowerCase = entity.name.toLowerCase()
           const newNode : Node = { id: entityNameLowerCase, position: { x: positionX, y: positionY },
                                    data: { label: createJsxNodeLabel(entityNameLowerCase, entity.attributes), description: entity.description, attributes: entity.attributes } }
@@ -543,18 +542,39 @@ const useConceptualModel = () =>
       // For now accept attributes as "any[]" to simplify hand-crafted conceptual models for testing
       // After implementing conceptual models import and export switch to `attributes: Attribute[]`
 
+      const spacesCount: number = name.split(" ").length - 1
+
+      if (spacesCount == 0 && name.length > 12)
+      {
+        name = name.substring(0, 12) + "..."
+      }
+
+
       return (
-        <Typography component='span' className="node">
-        <p className="nodeTitle"><strong>{capitalizeString(name)}</strong></p>
-        <p>
-        {attributes.map((attribute : Attribute, index : number) =>
-        (
-            // <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.dataType} <br /> </span>
-            // <span key={`${attribute.name}-${index}`}> +{attribute.name} <br /> </span>
-            <Button size="small" key={`${attribute.name}-${index}`}> +{attribute.name} </Button>
-        ))}
-        </p>
-      </Typography> )
+        <>
+          {/* <p className="nodeTitle"><strong>{capitalizeString(name)}</strong></p> */}
+
+          <Button size="small" fullWidth={true}
+            sx={{ color: "black", fontSize: "16px" }}
+            // onClick={() => onEditItem(attribute)}
+            >
+            <strong>{name.substring(0, 100)}</strong>
+          </Button>
+
+
+        <Stack>
+          {attributes.map((attribute : Attribute, index : number) =>
+          (
+              // <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.dataType} <br /> </span>
+              // <span key={`${attribute.name}-${index}`}> +{attribute.name} <br /> </span>
+              <Button size="small" key={`${attribute.name}-${index}`}
+                sx={{ fontSize: "12px", textTransform: 'lowercase'}}
+                onClick={() => onEditItem(attribute)}>
+                +{attribute.name}
+              </Button>
+          ))}
+        </Stack>
+      </>)
     }
 
 
@@ -881,12 +901,23 @@ const useConceptualModel = () =>
     }
 
 
-    const onEditSuggestion = (itemID : number) : void =>
+    const onEditSuggestion = (itemID: number) : void =>
     {
-      setIsShowDialogEdit(true)
+      setIsSuggestedItem(_ => true)
+      setSelectedSuggestedItem(_ => suggestedItems[itemID])
+      setEditedSuggestedItem(_ => suggestedItems[itemID])
 
-      setSelectedSuggestedItem(suggestedItems[itemID])
-      setEditedSuggestedItem(suggestedItems[itemID])
+      setIsShowDialogEdit(true)
+    }
+
+
+    const onEditItem = (item: Item) : void =>
+    {
+      setIsSuggestedItem(_ => false)
+      setSelectedSuggestedItem(_ => item)
+      setEditedSuggestedItem(_ => item)
+
+      setIsShowDialogEdit(true)
     }
 
 
@@ -943,7 +974,7 @@ const useConceptualModel = () =>
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
-        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions
+        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions, isSuggestedItem
     }
 }
 

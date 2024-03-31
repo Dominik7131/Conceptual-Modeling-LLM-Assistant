@@ -28,13 +28,12 @@
   height: 622px;
 }
 
-.nodeTitle {
-  font-size: 18px;
+div.react-flow__node {
+  /* display: flex; */
+  /* padding: 20px; */
+  width: 180px;
+  text-align: "center";
 }
-
-/*div.react-flow__node {
-  padding: 20px;
-}*/
 
 text.react-flow__edge-text {
   font-size: 14px;

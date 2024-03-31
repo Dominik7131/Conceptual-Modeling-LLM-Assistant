@@ -75,7 +75,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
         //  - otherwise show the description as usual (black text, no buttons)
 
         // TODO: Add unique keys
-        console.log("Summary: ", summaryDescriptions)
+
         return (
             <>
             {
