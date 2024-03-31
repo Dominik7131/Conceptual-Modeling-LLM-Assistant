@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Attribute, Entity, Item, ItemFieldUIName, ItemType, Relationship, UserChoice } from '../App';
+import { Attribute, Entity, Item, ItemFieldUIName, ItemType, Relationship, UserChoice } from '../interfaces';
 import Box from '@mui/material/Box';
 
 

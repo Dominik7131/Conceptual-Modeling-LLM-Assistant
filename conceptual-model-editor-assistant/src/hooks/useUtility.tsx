@@ -1,4 +1,4 @@
-import { UserChoice } from "../App"
+import { UserChoice } from "../interfaces"
 
 const useUtility = () =>
 {

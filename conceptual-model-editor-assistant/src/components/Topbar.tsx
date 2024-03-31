@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Attribute, UserChoice } from "../App";
+import { Attribute, UserChoice, summaryObject } from "../interfaces";
 import Tooltip from '@mui/material/Tooltip';
 import { CircularProgress, Divider, FormControl, FormLabel, List, ListItem, ListItemText, Radio, RadioGroup, Slider, Tab, Tabs, Typography } from "@mui/material";
 import { Node } from 'reactflow';
@@ -33,7 +33,7 @@ interface Props
     summary : string
     
     onSummaryDescriptionsClick : () => void
-    summaryDescriptions : any[]
+    summaryDescriptions : summaryObject
 
     sidebarWidthPercentage : number
 }
@@ -75,29 +75,53 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
         //  - otherwise show the description as usual (black text, no buttons)
 
         // TODO: Add unique keys
+        console.log("Summary: ", summaryDescriptions)
         return (
-                <ol>
-                {
-                    summaryDescriptions.map((summary) =>
-                        <Typography component="span">
-                            <li><strong>{capitalizeString(summary?.entity)}</strong>: {summary?.description}</li>
-                            { summary.attributes.length > 0 && 
+            <>
+            {
+                summaryDescriptions.entities.length > 0 && <p>Entities and attributes:</p>
+            }
+            
+            <ul>
+            {
+                summaryDescriptions.entities.map((entity) =>
+                    <Typography component="span">
+                        <li><strong>{capitalizeString(entity.entity)}</strong>: {entity.description}</li>
+                        { entity.attributes.length > 0 && 
+                            <ul>
+                                <p></p>
+                                <li><strong>Attributes</strong></li>
                                 <ul>
-                                    <p></p>
-                                    <li><strong>Attributes</strong></li>
-                                    <ul>
-                                        {summary.attributes.map((attribute : Attribute) =>
-                                            <li><strong>{attribute.name}</strong>: {attribute.description}</li>
-                                        )}
-                                    </ul>
+                                    {entity.attributes.map((attribute : Attribute) =>
+                                        <li><strong>{attribute.name}</strong>: {attribute.description}</li>
+                                    )}
                                 </ul>
-                            }
-                            <p></p>
-                        </Typography>
-                    )
-                }
-                </ol>
+                            </ul>
+                        }
+                        <p></p>
+                    </Typography>
+                )
+            }
+
+            </ul>
+
+            {
+                summaryDescriptions.relationships.length > 0 && <p>Relationships:</p>
+            }
+
+            <ul>
+            {
+                summaryDescriptions.relationships.map((relationship) =>
+                    <Typography component="span">
+                        <li>
+                            <strong>{capitalizeString(relationship.sourceEntity)}</strong> {relationship.relationship} <strong>{capitalizeString(relationship.targetEntity)}</strong>: {relationship.description}</li>
+                    </Typography>
+                )
+            }
+            </ul>
+            </>
         )
+        
     }
 
     const showMainLayout = () =>

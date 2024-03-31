@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import { useEffect, useState } from 'react';
-import { Attribute, Field, Item, ItemFieldUIName, ItemFieldsUnification, ItemType, Relationship } from '../App';
+import { Attribute, Field, Item, ItemFieldUIName, ItemFieldsUnification, ItemType, Relationship } from '../interfaces';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';

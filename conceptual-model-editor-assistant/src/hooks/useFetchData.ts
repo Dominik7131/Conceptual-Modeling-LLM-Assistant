@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Field, Item, ItemType } from "../App";
+import { Field, Item, ItemType, summaryObject } from "../interfaces";
 import { parse } from "path";
 
 
@@ -13,8 +13,7 @@ const useFetchData = () =>
     const [summaryText, setSummaryText] = useState<string>("")
 
     // TODO: This object should contain descriptions for "entities": array of entities and "relationships": array of relationships
-    const [summaryDescriptions, setSummaryDescriptions] = useState<any[]>([]) // TODO: Define the expected object
-    const [summaryRelationshipsDescriptions, setSummaryRelationshipsDescriptions] = useState<any[]>([]) // TODO: Define the expected object
+    const [summaryDescriptions, setSummaryDescriptions] = useState<summaryObject>({ entities: [], relationships: []})
 
     const fetchSummary = (endpoint : string, headers : any, bodyData : any) =>
     {
@@ -75,7 +74,7 @@ const useFetchData = () =>
     {
       setIsLoadingSummaryDescriptions(_ => true)
 
-      setSummaryDescriptions([])
+      setSummaryDescriptions({entities: [], relationships: []})
 
       fetch(endpoint, { method: "POST", headers, body: bodyData })
       .then(response =>
@@ -106,37 +105,45 @@ const useFetchData = () =>
                       // Convert the `value` to a string
                       var jsonString = new TextDecoder().decode(value)
                       console.log("JsonString: ", jsonString)
-                      
-                      const parsedData = JSON.parse(jsonString)
-                      console.log("Parsed data:", parsedData)
 
 
-                      if (parsedData.hasOwnProperty("entity"))
+                      // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
+                      const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
+
+                      for (let i = 0; i < jsonStringParts.length; i++)
                       {
-                        setSummaryDescriptions(previousSummary => {
-                          return [...previousSummary, parsedData]
-                        })
-                      }
-                      else if (parsedData.hasOwnProperty("relationship"))
-                      {
-                        setSummaryRelationshipsDescriptions(previousSummary => {
-                          return [...previousSummary, parsedData]
-                        })
-                      }
-                      else
-                      {
-                        console.log("Received unknown object: ", parsedData)
+                        const parsedData = JSON.parse(jsonStringParts[i])
+                        console.log("Parsed data:", parsedData)
+
+                        if (parsedData.hasOwnProperty("entity"))
+                        {
+                          setSummaryDescriptions(previousSummary => ({
+                            ...previousSummary,
+                            entities: [...previousSummary.entities, parsedData],
+                          }));
+                        }
+                        else if (parsedData.hasOwnProperty("relationship"))
+                        {
+                          setSummaryDescriptions(previousSummary => ({
+                            ...previousSummary,
+                            relationships: [...previousSummary.relationships, parsedData],
+                          }));
+                        }
+                        else
+                        {
+                          console.log("Received unknown object: ", parsedData)
+                        }
                       }
 
 
-                      readChunk(); // Read the next chunk
+                      readChunk();
                   })
                   .catch(error =>
                   {
                     console.error(error);
                   });
           };
-          readChunk(); // Start reading the first chunk
+          readChunk();
       })
       .catch(error =>
       {

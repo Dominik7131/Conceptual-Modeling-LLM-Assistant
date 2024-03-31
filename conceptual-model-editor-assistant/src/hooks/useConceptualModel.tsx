@@ -5,8 +5,8 @@ import 'reactflow/dist/style.css';
 import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
-import { Typography } from '@mui/material';
-import { Attribute, Entity, Field, Item, ItemType, Relationship, UserChoice } from '../App';
+import { Button, Typography } from '@mui/material';
+import { Attribute, Entity, Field, Item, ItemType, Relationship, UserChoice } from '../interfaces';
 
 
 const useConceptualModel = () =>
@@ -401,14 +401,14 @@ const useConceptualModel = () =>
       const endpoint = BASE_URL + endpointName
       const currentDomainDesciption = isIgnoreDomainDescription ? "" : domainDescription
       const headers = { "Content-Type": "application/json" }
-      const is_fetch_stream_data = true
+      const isFetchStreamData = true
 
       if (buttonText === UserChoice.ENTITIES)
       {
         // TODO: Define body field names such as `sourceEntity`, `targetEntity`, `userChoice`, ...
         const bodyData = JSON.stringify({"sourceEntity": "", "targetEntity": "", "userChoice": UserChoice.ENTITIES, "domainDescription": currentDomainDesciption})
 
-        if (!is_fetch_stream_data)
+        if (!isFetchStreamData)
         {
           fetchNonStreamedData(endpoint, headers, bodyData, ItemType.ENTITY)
         }
@@ -437,7 +437,7 @@ const useConceptualModel = () =>
         const targetEntityName = selectedNodes[1].id.toLowerCase()
         const bodyData = JSON.stringify({"sourceEntity": sourceEntityName, "targetEntity": targetEntityName, "userChoice": UserChoice.RELATIONSHIPS2, "domainDescription": currentDomainDesciption})
 
-        if (!is_fetch_stream_data)
+        if (!isFetchStreamData)
         {
           fetchNonStreamedData(endpoint, headers, bodyData, ItemType.RELATIONSHIP)
         }
@@ -467,7 +467,7 @@ const useConceptualModel = () =>
       const entityName = selectedNodes[0].id.toLowerCase()
       const bodyData = JSON.stringify({"sourceEntity": entityName, "targetEntity": "", "userChoice": userChoice, "domainDescription": currentDomainDesciption})
 
-      if (!is_fetch_stream_data)
+      if (!isFetchStreamData)
       {
         fetchNonStreamedData(endpoint, headers, bodyData, itemType)
       }
@@ -550,7 +550,8 @@ const useConceptualModel = () =>
         {attributes.map((attribute : Attribute, index : number) =>
         (
             // <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.dataType} <br /> </span>
-            <span key={`${attribute.name}-${index}`}> +{attribute.name} <br /> </span>
+            // <span key={`${attribute.name}-${index}`}> +{attribute.name} <br /> </span>
+            <Button size="small" key={`${attribute.name}-${index}`}> +{attribute.name} </Button>
         ))}
         </p>
       </Typography> )
