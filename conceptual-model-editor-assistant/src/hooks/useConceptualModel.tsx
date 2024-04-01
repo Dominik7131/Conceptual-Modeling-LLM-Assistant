@@ -5,7 +5,7 @@ import 'reactflow/dist/style.css';
 import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
-import { Button, Stack, Typography } from '@mui/material';
+import { Button, Divider, Stack, Typography } from '@mui/material';
 import { Attribute, Entity, Field, Item, ItemType, Relationship, UserChoice } from '../interfaces';
 
 
@@ -119,9 +119,11 @@ const useConceptualModel = () =>
             // TODO: Do not use "any"
             (entity.attributes[index] as any).type = ItemType.ATTRIBUTE;
           }
+
           const entityNameLowerCase = entity.name.toLowerCase()
+          const entityObject : Entity = { [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: []}
           const newNode : Node = { id: entityNameLowerCase, position: { x: positionX, y: positionY },
-                                   data: { label: createJsxNodeLabel(entityNameLowerCase, entity.attributes), description: entity.description, attributes: entity.attributes } }
+                                   data: { label: createJsxNodeLabel(entityObject, entity.attributes), description: entity.description, attributes: entity.attributes } }
           newNodes.push(newNode)
 
           positionX += incrementX
@@ -537,16 +539,18 @@ const useConceptualModel = () =>
     }
 
 
-    const createJsxNodeLabel = (name: string, attributes: any[]) : JSX.Element =>
+    const createJsxNodeLabel = (entity: Entity, attributes: any[]) : JSX.Element =>
     {
       // For now accept attributes as "any[]" to simplify hand-crafted conceptual models for testing
       // After implementing conceptual models import and export switch to `attributes: Attribute[]`
 
-      const spacesCount: number = name.split(" ").length - 1
+      const spacesCount: number = entity.name.split(" ").length - 1
 
-      if (spacesCount == 0 && name.length > 12)
+      let entityName = entity.name
+
+      if (spacesCount === 0 && entity.name.length > 12)
       {
-        name = name.substring(0, 12) + "..."
+        entityName = entity.name.substring(0, 12) + "..."
       }
 
 
@@ -556,10 +560,15 @@ const useConceptualModel = () =>
 
           <Button size="small" fullWidth={true}
             sx={{ color: "black", fontSize: "16px" }}
-            // onClick={() => onEditItem(attribute)}
+            onClick={() => onEditItem(entity)}
             >
-            <strong>{name.substring(0, 100)}</strong>
+            <strong>{entityName}</strong>
           </Button>
+
+          {
+            attributes.length > 0 && <Divider sx={{marginX: "-10px"}}></Divider>
+          }
+
 
 
         <Stack>
@@ -647,7 +656,8 @@ const useConceptualModel = () =>
         }
       }
 
-      const newNode = { id: nodeID, position: { x: positionX, y: positionY }, data: { label: createJsxNodeLabel(nodeID, attributes), attributes: attributes } }
+      const entityObject : Entity = { [Field.ID]: 0, [Field.NAME]: nodeID, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: []}
+      const newNode = { id: nodeID, position: { x: positionX, y: positionY }, data: { label: createJsxNodeLabel(entityObject, attributes), attributes: attributes } }
       setNodes(previousNodes => {
         return [...previousNodes, newNode]
       })
@@ -784,7 +794,8 @@ const useConceptualModel = () =>
         const position : XYPosition = { x: currentNode.position.x, y: currentNode.position.y}
 
 
-        const updatedNode : Node = { id: currentNode.id, position: position, data: {label: createJsxNodeLabel(currentNode.id, newAttributes),
+        const entityObject : Entity = { [Field.ID]: 0, [Field.NAME]: currentNode.id, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: []}
+        const updatedNode : Node = { id: currentNode.id, position: position, data: {label: createJsxNodeLabel(entityObject, newAttributes),
                                      attributes: newAttributes}}
   
         return updatedNode
@@ -830,8 +841,8 @@ const useConceptualModel = () =>
   
       if (!isTargetNodeCreated)
       {
-        // Create a new node
-        const newNode = { id: targetNodeID, position: { x: 500, y: 100 }, data: { label: createJsxNodeLabel(targetNodeID, []), attributes: []} }
+        const entityObject : Entity = { [Field.ID]: 0, [Field.NAME]: targetNodeID, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: []}
+        const newNode = { id: targetNodeID, position: { x: 500, y: 100 }, data: { label: createJsxNodeLabel(entityObject, []), attributes: []} }
   
         setNodes(previousNodes => 
           {
@@ -921,6 +932,7 @@ const useConceptualModel = () =>
     }
 
 
+
     const onItemEdit = (field: Field, newValue : string) : void =>
     {
       setEditedSuggestedItem({...editedSuggestedItem, [field]: newValue})
@@ -974,7 +986,7 @@ const useConceptualModel = () =>
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
-        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions, isSuggestedItem
+        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions, isSuggestedItem, onEditItem
     }
 }
 

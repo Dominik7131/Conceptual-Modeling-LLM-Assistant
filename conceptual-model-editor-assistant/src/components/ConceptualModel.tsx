@@ -1,7 +1,7 @@
 import Stack from '@mui/material/Stack';
-import ReactFlow, { Node, Edge, OnConnect, OnNodesChange, OnEdgesChange, MiniMap, Controls, Background } from 'reactflow';
+import ReactFlow, { Node, Edge, OnConnect, OnNodesChange, OnEdgesChange, MiniMap, Controls, Background, EdgeProps } from 'reactflow';
 import CustomEdge from './CustomEdge';
-
+import { Item } from '../interfaces';
 
 interface Props
 {
@@ -13,16 +13,18 @@ interface Props
   sidebarWidthPercentage : number
 }
 
-// Define custom edge type for selected state
+
 const edgeTypes =
 {
-  'custom-edge': CustomEdge,
-};
+  'custom-edge': CustomEdge
+}
+
 
 const ConceptualModel: React.FC<Props> = ({nodes, edges, onNodesChange, onEdgesChange, onConnect, sidebarWidthPercentage}) =>
 {
   const heightPx = 560
 
+  // Define custom edge type for selected state
 
   return (
           <Stack width={`${100 - sidebarWidthPercentage}%`} height={`${heightPx}px`}>

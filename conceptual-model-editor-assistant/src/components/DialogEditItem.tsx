@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
-import { Attribute, Field, Item, ItemFieldUIName, ItemFieldsUnification, ItemType, Relationship } from '../interfaces';
+import { Attribute, Field, Item, ItemFieldUIName, ItemType, Relationship } from '../interfaces';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
