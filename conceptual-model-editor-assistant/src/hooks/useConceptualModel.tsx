@@ -6,7 +6,7 @@ import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
 import { Button, Divider, Stack, Typography } from '@mui/material';
-import { Attribute, Entity, Field, Item, ItemType, Relationship, UserChoice } from '../interfaces';
+import { Attribute, Entity, Field, Item, ItemType, OriginalTextIndexesItem, Relationship, UserChoice } from '../interfaces';
 
 
 const useConceptualModel = () =>
@@ -60,6 +60,8 @@ const useConceptualModel = () =>
       setSelectedNodes(nodes)
       setSelectedEdges(edges)
   
+      console.log(nodes)
+
       if (nodes[1])
       {
         //console.log("Selected more than 1 node: ", nodes[0], nodes[1])
@@ -81,15 +83,15 @@ const useConceptualModel = () =>
       {
 
         const input = { entities: [
-            {name: "Engine", description: "", attributes: []},
-            {name: "Manufacturer", description: "", attributes: []},
-            {name: "Natural person", description: "", attributes: [{ID: 0, type: ItemType.ATTRIBUTE, name: "name", dataType: "string"},
+            {name: "Engine", description: "", [Field.INFERENCE_INDEXES]: [0, 10], attributes: []},
+            {name: "Manufacturer", description: "", [Field.INFERENCE_INDEXES]: [2, 4], attributes: []},
+            {name: "Natural person", description: "", [Field.INFERENCE_INDEXES]: [3, 8], attributes: [{ID: 0, type: ItemType.ATTRIBUTE, name: "name", dataType: "string"},
                                                                     {ID: 1, type: ItemType.ATTRIBUTE, name: "birth number", dataType: "number"},
                                                                     {ID: 2, type: ItemType.ATTRIBUTE, name: "date of birth", dataType: "date"}]},
-            {name: "Business natural person", description: "", attributes: [{ID: 3, type: ItemType.ATTRIBUTE, name: "name", dataType: "string"},
+            {name: "Business natural person", description: "", [Field.INFERENCE_INDEXES]: [3, 10], attributes: [{ID: 3, type: ItemType.ATTRIBUTE, name: "name", dataType: "string"},
                                                                             {ID: 4, type: ItemType.ATTRIBUTE, name: "distinguishing name supplement", dataType: "string"},
                                                                             {ID: 5, type: ItemType.ATTRIBUTE, name: "personal identification number", dataType: "number"}]},
-            {name: "Road vehicle", description: "", attributes: []}],
+            {name: "Road vehicle", description: "", [Field.INFERENCE_INDEXES]: [4, 10], attributes: []}],
 
                       relationships: [
                         {"name": "manufactures", "source_entity": "manufacturer", "target_entity": "road vehicle", "inference": ""}]}
@@ -121,9 +123,13 @@ const useConceptualModel = () =>
           }
 
           const entityNameLowerCase = entity.name.toLowerCase()
-          const entityObject : Entity = { [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: []}
+
+          const entityObject : Entity = {
+            [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "",
+            [Field.INFERENCE_INDEXES]: entity.inferenceIndexes}
+
           const newNode : Node = { id: entityNameLowerCase, position: { x: positionX, y: positionY },
-                                   data: { label: createJsxNodeLabel(entityObject, entity.attributes), description: entity.description, attributes: entity.attributes } }
+                                   data: { label: createJsxNodeLabel(entityObject, entity.attributes), description: entity.description, attributes: entity.attributes, [Field.INFERENCE_INDEXES]: entityObject.inferenceIndexes } }
           newNodes.push(newNode)
 
           positionX += incrementX
@@ -348,6 +354,36 @@ const useConceptualModel = () =>
       });
     }
 
+    const fetchMergedOriginalTexts = (input : OriginalTextIndexesItem[]) =>
+    {
+      const endpoint = "merge_original_texts"
+      const url = BASE_URL + endpoint
+      const headers = { "Content-Type": "application/json" }
+      const bodyData = JSON.stringify({ "originalTextIndexesObject": input})
+      console.log("Stringified: ", bodyData)
+
+      fetch(url, { method: "POST", headers, body: bodyData})
+      .then(response => response.json())
+      .then(data => 
+            {
+              let tooltips : string[] = []
+              let originalTextIndexes : number[] = []
+
+              for (let index = 0; index < data.length; index++)
+              {
+                const element = data[index];
+                originalTextIndexes.push(element[0])
+                originalTextIndexes.push(element[1])
+                tooltips.push(element[2])
+              }
+
+              setInferenceIndexesMockUp(_ => originalTextIndexes)
+              setTooltips(_ => tooltips)
+            })
+        .catch(error => console.log(error))
+        return
+    }
+
 
     const onImportButtonClick = () =>
     {
@@ -517,22 +553,52 @@ const useConceptualModel = () =>
       "Business natural person: personal identification number"]
       setTooltips(tooltips)
 
-      // TODO: Process also all selected edges
-      // let selectedInferenceIndexes : number[] = []
-      // [{"inferenceIndexes": [10, 20], "name": "Attribute: type of engine"}, {...}]
-      // 1) sort objects by "inferenceIndexes" value[0]
-      // 2) merge instances with the same value[0] and merge their names
-      //  - e.g. [{10, 20, "x"}, [{10, 100, "y"}] -> [{10, 20, "x, y"}, {20, 100, "y"}]
-      //  - e.g. [{5, 10, "x"}, {6, 8, "y"}] -> [{5, 6, "x"}, {6, 8, "x, y"}, {8, 10, "y"}]
+      let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []
 
-      // for (let i = 0; i < selectedNodes.length; i++)
-      // {
-      //   for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
-      //   {
-      //     const element = selectedNodes[i].data.attributes[j];
-      //     console.log(element.inferenceIndexes)   
-      //   }
-      // }
+      // TODO: Process also all selected edges
+
+      for (let i = 0; i < selectedNodes.length; i++)
+      {
+        // Process each attribute for the given entity
+        for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
+        {
+          const element = selectedNodes[i].data.attributes[j];
+
+          if (!element.inferenceIndexes)
+          {
+            continue
+          }
+
+          // Process each original text indexes for the given attribute
+          for (let k = 0; k < element.inferenceIndexes.length; k += 2)
+          {
+            const ii1: number = element.inferenceIndexes[k]
+            const ii2: number = element.inferenceIndexes[k + 1]
+
+            // TODO: Implement labels
+            originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Attribute: ${element.name}`} )
+          }
+        }
+
+
+        if (!selectedNodes[i].data.inferenceIndexes)
+        {
+          continue
+        }
+
+        // Process each original text indexes for the given entity 
+        for (let k = 0; k < selectedNodes[i].data.inferenceIndexes.length; k += 2)
+        {
+          const ii1 : number = selectedNodes[i].data.inferenceIndexes[k]
+          const ii2 : number = selectedNodes[i].data.inferenceIndexes[k + 1]
+
+          // TODO: Implement labels
+          originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Entity: ${selectedNodes[i].id}`} )
+        }
+      }
+
+      fetchMergedOriginalTexts(originalTextsIndexesObjects)
+
 
       setIsShowDialogDomainDescription(true)
     }
@@ -558,10 +624,10 @@ const useConceptualModel = () =>
           {/* <p className="nodeTitle"><strong>{capitalizeString(name)}</strong></p> */}
 
           <Button size="small" fullWidth={true}
-            sx={{ color: "black", fontSize: "16px" }}
-            onClick={() => onEditItem(entity)}
+            sx={{ color: "black", fontSize: "17px", textTransform: 'capitalize' }}
+            // onClick={() => onEditItem(entity)}
             >
-            <strong>{entityName}</strong>
+           <strong>{entityName}</strong>
           </Button>
 
           {
@@ -618,11 +684,10 @@ const useConceptualModel = () =>
         await new Promise(resolve => setTimeout(resolve, 200));
 
         let highlightedText = document.getElementById("highlightedInference-1")
-        console.log("Trying to scroll", highlightedText)
+        // console.log("Trying to scroll", highlightedText)
 
         if (highlightedText)
         {
-          console.log("yes")
           highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
         }
       };

@@ -531,6 +531,8 @@ EXAMPLE END
 
 
     def suggest(self, source_entity, target_entity, user_choice, count_items_to_suggest, conceptual_model, domain_description):
+        global IS_STOP_GENERATING_OUTPUT
+
         source_entity = source_entity.strip()
 
         if IS_IGNORE_DOMAIN_DESCRIPTION:
@@ -568,7 +570,7 @@ EXAMPLE END
         try:
             items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=source_entity, user_input_entity2=target_entity)
         finally:
-            # TODO: Test if this work
+            # TODO: Test if this works
             IS_STOP_GENERATING_OUTPUT = True
 
         if user_choice == UserChoice.ENTITIES.value:

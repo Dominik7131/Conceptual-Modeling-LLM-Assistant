@@ -530,6 +530,44 @@ class TextUtility:
 
             return result
 
-        
+    
+    def merge_original_texts(input):
+
+        sorted_input = sorted(input, key=lambda x: (x[0], x[1]))
+
+        i = 0
+        while i < len(sorted_input):
+
+            if i + 1 >= len(sorted_input):
+                break
+
+            # [(x1, x2, l1), (y1, y2, l2)]
+            x1 = sorted_input[i][0]
+            x2 = sorted_input[i][1]
+            l1 = sorted_input[i][2]
+            y1 = sorted_input[i + 1][0]
+            y2 = sorted_input[i + 1][1]
+            l2 = sorted_input[i + 1][2]
+
+            if x2 == y1:
+                merged_tuples = (x1, y2, f"{l1}, {l2}")
+                sorted_input[i] = merged_tuples
+                sorted_input.pop(i + 1)
+            
+            elif x2 > y1 and x2 >= y2:
+                merged_tuples = (x1, x2, f"{l1}, {l2}")
+                sorted_input[i] = merged_tuples
+                sorted_input.pop(i + 1)
+            
+            elif x2 > y1 and x2 < y2:
+                merged_tuples = (y1, x2, f"{l1}, {l2}")
+                sorted_input[i] = (x1, y1 - 1, l1)
+                sorted_input.insert(i + 1, merged_tuples)
+                sorted_input[i + 2] = (x2 + 1, y2, l2)
+
+            else:
+                i += 1
+
+        return sorted_input
 
         
