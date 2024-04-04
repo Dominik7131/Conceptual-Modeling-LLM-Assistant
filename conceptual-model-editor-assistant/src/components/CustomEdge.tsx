@@ -1,11 +1,11 @@
 import Button from '@mui/material/Button';
 import { BaseEdge, EdgeLabelRenderer, EdgeProps, getStraightPath } from 'reactflow';
-import { Relationship } from '../interfaces';
+import { ItemType, Relationship } from '../interfaces';
 
 
 // Inspiration: https://reactflow.dev/learn/customization/custom-edges
 // List of available props: https://reactflow.dev/api-reference/types/edge-props
-export default function CustomEdge ({ id, sourceX, sourceY, targetX, targetY, selected, label, data }: EdgeProps) : JSX.Element
+export default function CustomEdge ({ id, sourceX, sourceY, targetX, targetY, source, target, selected, label, data }: EdgeProps) : JSX.Element
 {
   const [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
 
@@ -16,9 +16,10 @@ export default function CustomEdge ({ id, sourceX, sourceY, targetX, targetY, se
     strokeColor = '#2196f3'
   }
 
-  // TODO: How to call "onEditItem" from "useConceptualModel" hook?
-  // We probably need some context-management library such as Zustand or Recoil
-  const relationship : Relationship = data
+  const relationship : Relationship = {
+    ID: data.ID, type: ItemType.RELATIONSHIP, name: (label as string), description: data.description,
+    source: source, target: target, cardinality: data.cardinality, inference: data.inference, inferenceIndexes: data.inferenceIndexes
+  }
 
   return (
     <>
@@ -26,8 +27,8 @@ export default function CustomEdge ({ id, sourceX, sourceY, targetX, targetY, se
       <EdgeLabelRenderer>
         <Button className="nodrag nopan" variant="outlined" color="primary" size="small"
                 sx={{background: "white", position: 'absolute', transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-                pointerEvents: 'all', '&:hover': {backgroundColor: 'white',}}}>
-                {/* // onClick={() => onEditItem(relationship)}> */}
+                pointerEvents: 'all', '&:hover': {backgroundColor: 'white',}}}
+                onClick={() => data.onEdit(relationship)}>
                 {label}
         </Button>
       </EdgeLabelRenderer>
