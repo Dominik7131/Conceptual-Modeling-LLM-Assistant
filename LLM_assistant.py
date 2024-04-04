@@ -567,11 +567,13 @@ EXAMPLE END
         logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
         self.debug_info.prompt = messages_prettified
 
-        try:
-            items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=source_entity, user_input_entity2=target_entity)
-        finally:
-            # TODO: Test if this works
-            IS_STOP_GENERATING_OUTPUT = True
+        items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=source_entity, user_input_entity2=target_entity)
+
+        # TODO: Test if this works
+        # try:
+        #     items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=source_entity, user_input_entity2=target_entity)
+        # finally:
+        #     IS_STOP_GENERATING_OUTPUT = True
 
         if user_choice == UserChoice.ENTITIES.value:
             suggested_entities = []

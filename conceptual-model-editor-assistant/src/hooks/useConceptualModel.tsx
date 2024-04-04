@@ -60,8 +60,6 @@ const useConceptualModel = () =>
       setSelectedNodes(nodes)
       setSelectedEdges(edges)
   
-      console.log(nodes)
-
       if (nodes[1])
       {
         //console.log("Selected more than 1 node: ", nodes[0], nodes[1])
