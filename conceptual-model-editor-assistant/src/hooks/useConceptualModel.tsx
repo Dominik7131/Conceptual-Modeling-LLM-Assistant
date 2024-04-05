@@ -81,14 +81,10 @@ const useConceptualModel = () =>
       {
 
         const input = { entities: [
-            {name: "Engine", description: "", [Field.INFERENCE_INDEXES]: [0, 10], attributes: []},
-            {name: "Manufacturer", description: "", [Field.INFERENCE_INDEXES]: [2, 4], attributes: []},
-            {name: "Natural person", description: "", [Field.INFERENCE_INDEXES]: [3, 8], attributes: [{ID: 0, type: ItemType.ATTRIBUTE, name: "name", dataType: "string"},
-                                                                    {ID: 1, type: ItemType.ATTRIBUTE, name: "birth number", dataType: "number"},
-                                                                    {ID: 2, type: ItemType.ATTRIBUTE, name: "date of birth", dataType: "date"}]},
-            {name: "Business natural person", description: "", [Field.INFERENCE_INDEXES]: [3, 10], attributes: [{ID: 3, type: ItemType.ATTRIBUTE, name: "name", dataType: "string"},
-                                                                            {ID: 4, type: ItemType.ATTRIBUTE, name: "distinguishing name supplement", dataType: "string"},
-                                                                            {ID: 5, type: ItemType.ATTRIBUTE, name: "personal identification number", dataType: "number"}]},
+            {name: "Engine", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+            {name: "Manufacturer", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+            {name: "Natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+            {name: "Business natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
             {name: "Road vehicle", description: "", [Field.INFERENCE_INDEXES]: [4, 10], attributes: []}],
 
                       relationships: [
