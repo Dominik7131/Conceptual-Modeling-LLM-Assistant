@@ -138,7 +138,7 @@ const useConceptualModel = () =>
         for (const [key, relationship] of Object.entries(input["relationships"]))
         {
           const newEdge : Edge = { id: `${relationship.source_entity},${relationship.target_entity}`, source: relationship.source_entity, target: relationship.target_entity,
-                                   label: relationship.name, type: 'custom-edge', data: { description: "", inference: relationship.inference, onEdit: onEditItem }}
+                                   label: relationship.name, type: "custom-edge", data: { description: "", inference: relationship.inference, onEdit: onEditItem }}
           newEdges.push(newEdge)
         }
         
@@ -538,22 +538,13 @@ const useConceptualModel = () =>
 
     const onHighlightSelectedItems = () =>
     {
-      // Mockup
-      const fakeInferenceIndexes = [2960, 2980, 2982, 3114, 3122, 3143, 3171, 3184, 3185, 3201, 3206, 3315, 3322, 3368, 3536, 3582]
-      setInferenceIndexesMockUp(fakeInferenceIndexes)
-
-      const tooltips = [ "Natural person: name", "Natural person - Address: has", "Natural person: birth number", "Natural person: date of birth",
-      "Natural person: name, birth number, date of birth", "Business natural person: name", "Business natural person: distinguishing name supplement",
-      "Business natural person: personal identification number"]
-      setTooltips(tooltips)
-
       let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []
 
-      // TODO: Process also all selected edges
-
+      // Process all selected nodes
       for (let i = 0; i < selectedNodes.length; i++)
       {
         // Process each attribute for the given entity
+        const entityName: string = capitalizeString(selectedNodes[i].id)
         for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
         {
           const element = selectedNodes[i].data.attributes[j];
@@ -569,8 +560,7 @@ const useConceptualModel = () =>
             const ii1: number = element.inferenceIndexes[k]
             const ii2: number = element.inferenceIndexes[k + 1]
 
-            // TODO: Implement labels
-            originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Attribute: ${element.name}`} )
+            originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${entityName}: ${element.name}`} )
           }
         }
 
@@ -586,8 +576,25 @@ const useConceptualModel = () =>
           const ii1 : number = selectedNodes[i].data.inferenceIndexes[k]
           const ii2 : number = selectedNodes[i].data.inferenceIndexes[k + 1]
 
-          // TODO: Implement labels
           originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Entity: ${selectedNodes[i].id}`} )
+        }
+      }
+
+      // Process also all selected edges
+      for (let i = 0; i < selectedEdges.length; i++)
+      {
+        if (!selectedEdges[i].data.inferenceIndexes)
+        {
+          continue
+        }
+
+        // Process each original text indexes for the given edge 
+        for (let k = 0; k < selectedEdges[i].data.inferenceIndexes.length; k += 2)
+        {
+          const ii1 : number = selectedEdges[i].data.inferenceIndexes[k]
+          const ii2 : number = selectedEdges[i].data.inferenceIndexes[k + 1]
+
+          originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${selectedEdges[i].source} – ${selectedEdges[i].data.name} – ${selectedEdges[i].target}`} )
         }
       }
 
@@ -919,7 +926,11 @@ const useConceptualModel = () =>
       }
   
       console.log("Adding a new edge")
-      const newEdge : Edge = { id: newEdgeID, data: {name: relationshipObject.name, description: relationshipObject.description, inference: relationshipObject.inference}, source: sourceNodeID, target: targetNodeID, label: relationshipObject.name}
+      const newEdge : Edge = {
+        id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationshipObject.name, data: {
+          onEdit: onEditItem, [Field.NAME]: relationshipObject.name, [Field.DESCRIPTION]: relationshipObject.description, [Field.INFERENCE]: relationshipObject.inference,
+          [Field.INFERENCE_INDEXES]: relationshipObject.inferenceIndexes }
+      }
   
       setEdges(previousEdges =>
         {
