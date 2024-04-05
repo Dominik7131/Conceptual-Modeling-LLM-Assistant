@@ -399,42 +399,65 @@ const useConceptualModel = () =>
     }
 
 
-    const onEditSave = (newItem: Item, oldItem: Item, isSuggestedItem: boolean): void =>
+  const onEditSave = (newItem: Item, oldItem: Item, isSuggestedItem: boolean): void =>
+  {
+    if (isSuggestedItem)
     {
-      if (isSuggestedItem)
-      {
-        // TODO: instead of selectedSuggestedItem have only ID saved
-        setSelectedSuggestedItem(newItem)
+      // TODO: instead of selectedSuggestedItem have only ID saved
+      setSelectedSuggestedItem(newItem)
 
-        setSuggestedItems(suggestedItems.map(item => 
+      setSuggestedItems(suggestedItems.map(item => 
+        {
+          if (item.ID === newItem.ID)
           {
-            if (item.ID === newItem.ID)
-            {
-              return newItem
-            }
-            return item
-          }))
-        
-        return
-      }
-
-      if (newItem.type === ItemType.ENTITY)
-      {
-        editNodeEntity(newItem as Entity, oldItem as Entity)
-      }
-      else if (newItem.type === ItemType.ATTRIBUTE)
-      {
-        editNodeAttribute(newItem as Attribute, oldItem as Attribute)
-      }
-      else if (newItem.type === ItemType.RELATIONSHIP)
-      {
-        editEdgeRelationship(newItem as Relationship, oldItem as Relationship)
-      }
-      else
-      {
-        alert("Unknown action")
-      }
+            return newItem
+          }
+          return item
+        }))
+      
+      return
     }
+
+    if (newItem.type === ItemType.ENTITY)
+    {
+      editNodeEntity(newItem as Entity, oldItem as Entity)
+    }
+    else if (newItem.type === ItemType.ATTRIBUTE)
+    {
+      editNodeAttribute(newItem as Attribute, oldItem as Attribute)
+    }
+    else if (newItem.type === ItemType.RELATIONSHIP)
+    {
+      editEdgeRelationship(newItem as Relationship, oldItem as Relationship)
+    }
+    else
+    {
+      alert("Unknown action")
+    }
+  }
+
+  const onEditRemove = (item: Item): void =>
+  {
+    if (item.type === ItemType.ENTITY)
+    {
+      const nodeID = item.name
+      removeNode(nodeID)
+    }
+    else if (item.type === ItemType.ATTRIBUTE)
+    {
+      removeNodeAttribute(item as Attribute)
+    }
+    else if (item.type === ItemType.RELATIONSHIP)
+    {
+      const relationship: Relationship = (item as Relationship)
+      const edgeID = createEdgeID(relationship.source, relationship.target, relationship.name)
+      removeEdge(edgeID)
+    }
+    else
+    {
+      alert("Unknown action")
+    }
+  }
 
   
   const createEdgeID = (source: string, target: string, name: string): string =>
@@ -481,11 +504,8 @@ const useConceptualModel = () =>
   
       if (!nodeToUpdate)
       {
-        console.log("Returning: ", oldAttribute.source)
         return
       }
-  
-      console.log("New attribute: ", newAttribute)
 
       // Create an updated version of the old attribute
       let nodeToUpdateCopy: Node = { ...nodeToUpdate}
@@ -559,6 +579,50 @@ const useConceptualModel = () =>
         else
         {
           return currentEdge
+        }
+      }))
+  }
+
+
+  const removeNode = (nodeID: string): void =>
+  {
+    setNodes(nodes.filter(node => node.id !== nodeID))
+  }
+
+
+  const removeEdge = (edgeID: string): void =>
+  {
+    setEdges(edges.filter(edge => edge.id !== edgeID))
+  }
+
+
+  const removeNodeAttribute = (attribute: Attribute): void =>
+  {
+    const nodeID: string = attribute.source
+    let nodeToUpdate = nodes.find(node => node.id === nodeID)
+
+    if (!nodeToUpdate)
+    {
+      return 
+    }
+
+    const entity: Entity = {
+      [Field.ID]: 0, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: nodeToUpdate.id, [Field.DESCRIPTION]: nodeToUpdate.data.description, 
+      [Field.INFERENCE]: nodeToUpdate.data.inference, [Field.INFERENCE_INDEXES]: nodeToUpdate.data.inferenceIndexes
+    }
+
+    nodeToUpdate.data.attributes = nodeToUpdate.data.attributes.filter((element: Attribute) => element.name !== attribute.name)
+    nodeToUpdate.data.label = createJsxNodeLabel(entity, nodeToUpdate.data.attributes)
+
+    setNodes((nodes) => nodes.map((currentNode : Node) =>
+      {
+        if (currentNode.id === nodeID)
+        {
+          return (nodeToUpdate as Node)
+        }
+        else
+        {
+          return currentNode
         }
       }))
   }
@@ -1206,7 +1270,7 @@ const useConceptualModel = () =>
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
-        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions, isSuggestedItem, onEditItem
+        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions, isSuggestedItem, onEditRemove
     }
 }
 

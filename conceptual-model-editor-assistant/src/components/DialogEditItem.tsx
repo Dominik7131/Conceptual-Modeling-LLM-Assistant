@@ -30,10 +30,11 @@ interface Props
     onAddItem : (item: Item, addAsDifferent: boolean) => void
     onClearSuggestion : (field: Field, clearAll: boolean) => void
     onItemEdit : (field: Field, newValue: string) => void
+    onRemove : (item: Item) => void
     onConfirmRegeneratedText : (field : Field) => void
 }
 
-const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isOpened, isLoading, fieldToLoad, isSuggestedItem, onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText} : Props) =>
+const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isOpened, isLoading, fieldToLoad, isSuggestedItem, onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText, onRemove} : Props) =>
 {
     const attribute = editedItem as Attribute
     const relationship = editedItem as Relationship
@@ -130,7 +131,7 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                         isSuggestedItem ?
                         <Button onClick={() => { onAddItem(editedItem, false); onClose()}}>Add</Button>
                         :
-                        <Button onClick={() => { console.log("Remove not implemented"); onClose()}}>Remove</Button>
+                        <Button onClick={() => { onRemove(item); onClose()}}>Remove</Button>
                     }
                     
 
