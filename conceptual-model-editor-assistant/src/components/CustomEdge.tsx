@@ -38,18 +38,9 @@ export default function CustomEdge ({ id, sourceX, sourceY, targetX, targetY, so
                 >
                 { label }
                 { isHovered &&
-                          <IconButton color="primary" size="small">
-                              <EditIcon onClick={() => data.onEdit(relationship)}/> 
-                          </IconButton>}
-                {/* // <EditIcon
-                //   sx={{
-                //     position: 'absolute',
-                //     right: -10,
-                //     top: 20
-                //   }}
-                //   color="action"
-                //   onClick={() => data.onEdit(relationship)}>
-                // </EditIcon>} */}
+                  <IconButton color="primary" size="small">
+                      <EditIcon onClick={() => data.onEdit(relationship)}/> 
+                  </IconButton>}
         </Button>
       </EdgeLabelRenderer>
     </>
