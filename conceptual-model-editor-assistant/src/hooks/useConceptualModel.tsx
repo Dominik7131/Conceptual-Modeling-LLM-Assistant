@@ -81,26 +81,26 @@ const useConceptualModel = () =>
       const parseSerializedConceptualModel = () =>
       {
 
-        const input = { entities: [
-            {name: "Engine", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-            {name: "Manufacturer", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-            {name: "Natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-            {name: "Business natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-            {name: "Road vehicle", description: "", [Field.INFERENCE_INDEXES]: [4, 10], attributes: []}],
+        // const input = { entities: [
+        //     {name: "Engine", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+        //     {name: "Manufacturer", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+        //     {name: "Natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+        //     {name: "Business natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+        //     {name: "Road vehicle", description: "", [Field.INFERENCE_INDEXES]: [4, 10], attributes: []}],
 
-                      relationships: [
-                        {"name": "manufactures", "source_entity": "manufacturer", "target_entity": "road vehicle", "inference": ""}]}
+        //               relationships: [
+        //                 {"name": "manufactures", "source_entity": "manufacturer", "target_entity": "road vehicle", "inference": ""}]}
 
-        // const input = { "entities": [
-        //     {name: "Student", "description": "A student entity representing individuals enrolled in courses.", "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
-        //     {name: "Course", "description": "A course entity representing educational modules.", "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
-        //     {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "int", "description": "The price of staying in the dormitory."}]},
-        //     {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
-        //   "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
-        //                     {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
-        //                     {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
-        //                     {"name": "is-a", "source_entity": "student", "target_entity": "person"}
-        //                   ]}
+        const input = { "entities": [
+            {name: "Student", "description": "A student entity representing individuals enrolled in courses.", inferenceIndexes: [], "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
+            {name: "Course", "description": "A course entity representing educational modules.", inferenceIndexes: [], "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
+            {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", inferenceIndexes: [], "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "int", "description": "The price of staying in the dormitory."}]},
+            {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", inferenceIndexes: [], "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
+          "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", inferenceIndexes: [], "source_entity": "student", "target_entity": "course"},
+                            {"name": "accommodated in", "inference": "students can be accommodated in dormitories", inferenceIndexes: [], "source_entity": "student", "target_entity": "dormitory"},
+                            {"name": "has", "inference": "each course can have one or more professors", inferenceIndexes: [], "source_entity": "course", "target_entity": "professor"},
+                            {"name": "is-a", inferenceIndexes: [], "source_entity": "student", "target_entity": "person"}
+                          ]}
 
         const incrementX = 300
         const incrementY = 350
@@ -111,13 +111,14 @@ const useConceptualModel = () =>
 
         for (const [key, entity] of Object.entries(input["entities"]))
         {
+          const entityNameLowerCase = entity.name.toLowerCase()
+
           for (let index = 0; index < entity.attributes.length; index++)
           {
             // TODO: Do not use "any"
             (entity.attributes[index] as any).type = ItemType.ATTRIBUTE;
+            (entity.attributes[index] as any).source = entityNameLowerCase
           }
-
-          const entityNameLowerCase = entity.name.toLowerCase()
 
           const entityObject : Entity = {
             [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "",
@@ -138,7 +139,8 @@ const useConceptualModel = () =>
 
         for (const [key, relationship] of Object.entries(input["relationships"]))
         {
-          const newEdge : Edge = { id: `${relationship.source_entity},${relationship.target_entity}`, source: relationship.source_entity, target: relationship.target_entity,
+          const newID: string = createEdgeID(relationship.source_entity, relationship.target_entity, relationship.name)
+          const newEdge : Edge = { id: newID, source: relationship.source_entity, target: relationship.target_entity,
                                    label: relationship.name, type: "custom-edge", data: { description: "", inference: relationship.inference, onEdit: onEditItem }}
           newEdges.push(newEdge)
         }
@@ -397,20 +399,169 @@ const useConceptualModel = () =>
     }
 
 
-    const onEditSave = (newItem : Item) =>
+    const onEditSave = (newItem: Item, oldItem: Item, isSuggestedItem: boolean): void =>
     {
-      // TODO: instead of selectedSuggestedItem have only ID saved
-      setSelectedSuggestedItem(newItem)
+      if (isSuggestedItem)
+      {
+        // TODO: instead of selectedSuggestedItem have only ID saved
+        setSelectedSuggestedItem(newItem)
 
-      setSuggestedItems(suggestedItems.map(item => 
-        {
-          if (item.ID === newItem.ID)
+        setSuggestedItems(suggestedItems.map(item => 
           {
-            return newItem
-          }
-          return item
-        }))
+            if (item.ID === newItem.ID)
+            {
+              return newItem
+            }
+            return item
+          }))
+        
+        return
+      }
+
+      if (newItem.type === ItemType.ENTITY)
+      {
+        editNodeEntity(newItem as Entity, oldItem as Entity)
+      }
+      else if (newItem.type === ItemType.ATTRIBUTE)
+      {
+        editNodeAttribute(newItem as Attribute, oldItem as Attribute)
+      }
+      else if (newItem.type === ItemType.RELATIONSHIP)
+      {
+        editEdgeRelationship(newItem as Relationship, oldItem as Relationship)
+      }
+      else
+      {
+        alert("Unknown action")
+      }
     }
+
+  
+  const createEdgeID = (source: string, target: string, name: string): string =>
+  {
+    return `${source}-${name}-${target}`
+  }
+  
+  const editNodeEntity = (newEntity: Entity, oldEntity: Entity): void =>
+  {
+    const id: string = oldEntity.name
+    let nodeToUpdate = nodes.find(node => node.id === id)
+
+    if (!nodeToUpdate)
+    {
+      return
+    }
+
+    console.log("New entity: ", newEntity)
+    // Create an updated version of the old entity
+    let nodeToUpdateCopy: Node = { ...nodeToUpdate}
+    nodeToUpdateCopy.id = newEntity.name
+    nodeToUpdateCopy.data.description = newEntity.description
+    nodeToUpdateCopy.data.label = createJsxNodeLabel(newEntity, nodeToUpdate.data.attributes)
+
+    setNodes((nodes) => nodes.map((currentNode : Node) =>
+      {
+        if (currentNode.id === id)
+        {
+          console.log("Updating node: ", nodeToUpdateCopy)
+          return nodeToUpdateCopy
+        }
+        else
+        {
+          return currentNode
+        }
+      }))
+  }
+
+
+  const editNodeAttribute = (newAttribute: Attribute, oldAttribute: Attribute): void =>
+  {
+      const id: string = oldAttribute.source
+      let nodeToUpdate = nodes.find(node => node.id === id)
+  
+      if (!nodeToUpdate)
+      {
+        console.log("Returning: ", oldAttribute.source)
+        return
+      }
+  
+      console.log("New attribute: ", newAttribute)
+
+      // Create an updated version of the old attribute
+      let nodeToUpdateCopy: Node = { ...nodeToUpdate}
+      
+      let attributesCopy = [{...nodeToUpdate.data.attributes}]
+
+      // Update the given attribute in `nodeToUpdateCopy.data.attributes`
+      for (let index = 0; index < nodeToUpdate.data.attributes.length; index++)
+      {
+        const attribute = nodeToUpdate.data.attributes[index];
+        if (attribute.name === oldAttribute.name)
+        {
+          attributesCopy[index] = newAttribute
+          break
+        }
+      }
+
+      const entity: Entity = {
+        type: ItemType.ENTITY, name: nodeToUpdate.id, description: nodeToUpdate.data.description, ID: nodeToUpdate.data.id, inference: nodeToUpdate.data.inference,
+        inferenceIndexes: nodeToUpdate.data.inferenceIndexes}
+
+      nodeToUpdateCopy.data.attributes = attributesCopy
+      nodeToUpdateCopy.data.label = createJsxNodeLabel(entity, attributesCopy)
+      
+  
+      setNodes((nodes) => nodes.map((currentNode : Node) =>
+        {
+          if (currentNode.id === id)
+          {
+            console.log("Updating node: ", nodeToUpdateCopy)
+            return nodeToUpdateCopy
+          }
+          else
+          {
+            return currentNode
+          }
+        }))
+  }
+
+
+  const editEdgeRelationship = (newRelationship: Relationship, oldRelationship : Relationship): void =>
+  {
+    // Find the right edge based on the old ID
+    const id: string = createEdgeID(oldRelationship.source, oldRelationship.target, oldRelationship.name)
+    let edgeToUpdate = edges.find(edge => edge.id === id)
+
+    if (!edgeToUpdate)
+    {
+      return
+    }
+
+    // Create an updated version of the old edge
+    let edgeToUpdateCopy: Edge = { ...edgeToUpdate}
+    edgeToUpdateCopy.id = createEdgeID(newRelationship.source, newRelationship.target, newRelationship.name)
+    edgeToUpdateCopy.label = newRelationship.name
+    edgeToUpdateCopy.data.description = newRelationship.description
+    edgeToUpdateCopy.data.cardinality = newRelationship.cardinality
+
+    // TODO: Is the user allowed to change source and target?
+    // If the source/target does not exist we need to create a new node
+    edgeToUpdateCopy.source = newRelationship.source
+    edgeToUpdateCopy.target = newRelationship.target
+
+
+    setEdges((edges) => edges.map((currentEdge : Edge) =>
+      {
+        if (currentEdge.id === id)
+        {
+          return edgeToUpdateCopy
+        }
+        else
+        {
+          return currentEdge
+        }
+      }))
+  }
 
 
     const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
@@ -626,7 +777,7 @@ const useConceptualModel = () =>
 
           <Button size="small" fullWidth={true}
             sx={{ color: "black", fontSize: "17px", textTransform: 'capitalize' }}
-            // onClick={() => onEditItem(entity)}
+            onClick={() => onEditItem(entity)}
             >
            <strong>{entityName}</strong>
           </Button>
@@ -800,7 +951,7 @@ const useConceptualModel = () =>
       const attribute : Attribute = {
         ID: relationship.ID, type: ItemType.ATTRIBUTE, name: relationship.target, description: relationship.description,
         dataType: "string", inference: relationship.inference, inferenceIndexes: relationship.inferenceIndexes,
-        cardinality: ""
+        cardinality: "", source: relationship.source
       }
 
       setSelectedSuggestedItem(attribute)
@@ -834,7 +985,7 @@ const useConceptualModel = () =>
         const newAttributeObject : Attribute = {
           [Field.ID]: attribute.ID, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: attribute.name, [Field.DESCRIPTION]: "",
           [Field.INFERENCE]: attribute.inference, [Field.INFERENCE_INDEXES]: attribute.inferenceIndexes, [Field.DATA_TYPE]: attribute.dataType,
-          [Field.CARDINALITY]: ""
+          [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: currentNode.id
         }
   
         // If the node already contains the selected attribute do not add anything

@@ -25,11 +25,11 @@ interface Props
     fieldToLoad : Field
     isOpened : boolean
     onClose : () => void
-    onSave : (editedItem : Item) => void
+    onSave : (editedItem: Item, oldItem: Item, isSuggestedItem: boolean) => void
     onPlus : (itemName: string, field: Field) => void
-    onAddItem : (item : Item, addAsDifferent : boolean) => void
+    onAddItem : (item: Item, addAsDifferent: boolean) => void
     onClearSuggestion : (field: Field, clearAll: boolean) => void
-    onItemEdit : (field: Field, newValue : string) => void
+    onItemEdit : (field: Field, newValue: string) => void
     onConfirmRegeneratedText : (field : Field) => void
 }
 
@@ -40,7 +40,6 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
 
     const isAttribute = item.type === ItemType.ATTRIBUTE
     const isRelationship = item.type === ItemType.RELATIONSHIP
-
 
     const showEditField = (label : string, field : Field, value : string) =>
     {
@@ -151,7 +150,7 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                             </Button>
                     }
                     
-                    <Button onClick={() => { {onSave(editedItem)}; onClose()}}>Save</Button>
+                    <Button onClick={() => { {onSave(editedItem, item, isSuggestedItem)}; onClose()}}>Save</Button>
                     <Button onClick={() => onClose()}>Cancel</Button>
                 </ButtonGroup>
             </DialogActions>

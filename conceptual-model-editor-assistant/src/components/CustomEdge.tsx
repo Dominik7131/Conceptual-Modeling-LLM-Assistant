@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
+import { Typography } from '@mui/material';
 
 
 // Inspiration: https://reactflow.dev/learn/customization/custom-edges
@@ -29,8 +30,8 @@ export default function CustomEdge ({ id, sourceX, sourceY, targetX, targetY, so
     <>
       <BaseEdge id={id} path={edgePath} style={{stroke: strokeColor, strokeWidth: "2px"}} />
       <EdgeLabelRenderer>
-        <Button className="nodrag nopan" variant="outlined" color="primary" size="small"
-                sx={{background: "white", paddingX: "30px", textTransform: "capitalize", position: "absolute", transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+        <Button className="nodrag nopan" color="primary" variant="outlined" size="small"
+                sx={{background: "white", color: "black", paddingX: "30px", textTransform: "capitalize", position: "absolute", transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
                 pointerEvents: "all", "&:hover": {backgroundColor: "white"}}}
                 // onClick={() => data.onEdit(relationship)}
                 onMouseEnter={() => setIsHovered(_ => true)} 
@@ -38,9 +39,9 @@ export default function CustomEdge ({ id, sourceX, sourceY, targetX, targetY, so
                 >
                 { label }
                 { isHovered &&
-                  <IconButton color="primary" size="small">
-                      <EditIcon onClick={() => data.onEdit(relationship)}/> 
-                  </IconButton>}
+                  <Typography color="primary" onClick={() => data.onEdit(relationship)}>
+                      <EditIcon/> 
+                  </Typography>}
         </Button>
       </EdgeLabelRenderer>
     </>
