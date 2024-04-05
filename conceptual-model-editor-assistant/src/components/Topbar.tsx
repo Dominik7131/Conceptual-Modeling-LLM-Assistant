@@ -14,6 +14,7 @@ import useUtility from "../hooks/useUtility";
 import TabPanel from '@mui/lab/TabPanel';
 import TabList from "@mui/lab/TabList";
 import TabContext from '@mui/lab/TabContext';
+import AddIcon from '@mui/icons-material/Add';
 
 
 interface Props
@@ -41,6 +42,7 @@ interface Props
 
 const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isLoadingSummary1, isLoadingSummaryDescriptions, isIgnoreDomainDescription, sidebarWidthPercentage, onSummaryDescriptionsClick, summaryDescriptions}) =>
 {
+    const [isHovered, setIsHovered] = useState<boolean>(false)
     const [tabValue, setTabValue] = useState<string>('0');
     const [insertedNodeNameText, setInsertedNodeNameText] = useState<string>("")
 
@@ -132,11 +134,11 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     <div style={{ flexGrow: 1 }}> </div>
                     <Stack spacing={1} direction="row"paddingX={1}>
 
-                        <Button variant="contained" size="small" disableElevation onClick={() => onImportButtonClick()}>
+                        <Button variant="contained" size="small" disableElevation sx={{textTransform: "capitalize"}} onClick={() => onImportButtonClick()}>
                             Import
                         </Button>
 
-                        <Button variant="contained" size="small" disableElevation>
+                        <Button variant="contained" size="small" disableElevation sx={{textTransform: "capitalize"}}>
                             Export
                         </Button>
                     </Stack>
@@ -163,21 +165,23 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 <Stack direction="row" justifyContent="space-between">
                     <Stack direction="row" paddingX={1} spacing={10}>
                         <Stack direction="row" spacing={2}>
-                            <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ENTITIES}</Button>
-                            <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ATTRIBUTES}</Button>
-                            <Button variant="contained" disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.RELATIONSHIPS}</Button>
+                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ENTITIES}</Button>
+                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ATTRIBUTES}</Button>
+                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.RELATIONSHIPS}</Button>
                         </Stack>
 
                         <Stack direction="row" spacing={2}>
-                            <Button variant="contained" disableElevation onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary1</Button>
-                            <Button variant="contained" disableElevation onClick={() => { setTabValue('2'); onSummaryDescriptionsClick() }}>Summary2</Button>
-                            <Button variant="contained" disableElevation onClick={onHighlightSelectedItems}>Highlight</Button>
+                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary1</Button>
+                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('2'); onSummaryDescriptionsClick() }}>Summary2</Button>
+                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={onHighlightSelectedItems}>Highlight</Button>
                         </Stack>
                     </Stack>
 
                     <Stack direction="row" spacing={2}>
                         <Button variant="contained" size="small" disableElevation
-                            onClick={() => OnClickAddNode(insertedNodeNameText)}>
+                            onClick={() => OnClickAddNode(insertedNodeNameText)}
+                            sx={{textTransform: "capitalize"}}
+                            >
                                 Add node
                         </Button>
 
@@ -205,10 +209,10 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
             <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange}>
-                        <Tab label="Main" value="0" />
-                        <Tab label="Summary 1" value="1" />
-                        <Tab label="Summary 2" value="2" />
-                        <Tab label="Settings" value="3" />
+                        <Tab sx={{textTransform: "capitalize"}} label="Main" value="0" />
+                        <Tab sx={{textTransform: "capitalize"}} label="Summary 1" value="1" />
+                        <Tab sx={{textTransform: "capitalize"}} label="Summary 2" value="2" />
+                        <Tab sx={{textTransform: "capitalize"}} label="Settings" value="3" />
                     </TabList>
                 </Box>
 

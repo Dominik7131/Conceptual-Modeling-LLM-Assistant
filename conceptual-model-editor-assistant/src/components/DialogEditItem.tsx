@@ -77,7 +77,7 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                     />
                     { !isRegeneratedText ?
                         ( (isLoading && fieldToLoad === field) ? <CircularProgress sx={{position: 'relative', right: '3px', top: '5px'}} size={"30px"} /> :
-                        <IconButton color="primary" size="small" onClick={() => onPlus(editedItem.name, field)}>
+                        <IconButton disabled={field !== Field.DESCRIPTION} color="primary" size="small" onClick={() => onPlus(editedItem.name, field)}>
                             <AddIcon/> 
                         </IconButton>)
                         :

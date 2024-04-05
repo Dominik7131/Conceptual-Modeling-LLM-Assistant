@@ -7,6 +7,7 @@ import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
 import { Button, Divider, Stack, Typography } from '@mui/material';
 import { Attribute, Entity, Field, Item, ItemType, OriginalTextIndexesItem, Relationship, UserChoice } from '../interfaces';
+import AddIcon from '@mui/icons-material/Add';
 
 
 const useConceptualModel = () =>
@@ -618,7 +619,6 @@ const useConceptualModel = () =>
       {
         entityName = entity.name.substring(0, 12) + "..."
       }
-
 
       return (
         <>
