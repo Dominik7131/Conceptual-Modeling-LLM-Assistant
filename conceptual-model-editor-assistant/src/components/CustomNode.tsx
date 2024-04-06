@@ -36,8 +36,8 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
     return (
         <Box sx={{backgroundColor: "white", border: selected ? borderSelected : borderNonSelected }}>
 
-          <Handle type="target" position={Position.Top} />
-          <Handle type="source" position={Position.Bottom} />
+          <Handle type="target" position={Position.Top} style={{ background: selected ? primaryColor : "black" }} />
+          <Handle type="source" position={Position.Bottom} style={{ background: selected ? primaryColor : "black" }} />
 
           <Button size="small" fullWidth={true}
             sx={{ color: selected ? primaryColor : "black", fontSize: "17px", textTransform: 'capitalize',

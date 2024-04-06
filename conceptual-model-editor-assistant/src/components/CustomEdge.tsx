@@ -22,6 +22,9 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
     strokeColor = primaryColor
   }
 
+  const borderNonSelected = "1px solid black"
+  const borderSelected = `1px solid ${primaryColor}`
+
   const relationship : Relationship = {
     ID: data.ID, type: ItemType.RELATIONSHIP, name: (label as string), description: data.description,
     source: source, target: target, cardinality: data.cardinality, inference: data.inference, inferenceIndexes: data.inferenceIndexes
@@ -29,12 +32,12 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} style={{stroke: strokeColor, strokeWidth: "2px"}} />
+      <BaseEdge id={id} path={edgePath} style={{stroke: selected ? primaryColor : "black", strokeWidth: "1px"}} />
       <EdgeLabelRenderer>
         <Button className="nodrag nopan" color="primary" variant="outlined" size="small"
-                sx={{color: selected ? primaryColor : "black", background: "white", paddingX: "30px", textTransform: "capitalize",
-                     position: "absolute", transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-                     pointerEvents: "all", height: "30px", "&:hover": {backgroundColor: "white"}}}
+                sx={{ color: selected ? primaryColor : "black", background: "white", paddingX: "30px", textTransform: "capitalize",
+                     border: selected ? borderSelected : borderNonSelected, position: "absolute", transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+                     pointerEvents: "all", height: "30px", borderRadius: "30px", "&:hover": {backgroundColor: "white"}}}
                 
                 onMouseEnter={() => setIsHovered(_ => true)} 
                 onMouseLeave={() => setIsHovered(_ => false)}
