@@ -97,27 +97,27 @@ const useConceptualModel = () =>
         //               relationships: [
         //                 {"name": "manufactures", "source_entity": "manufacturer", "target_entity": "road vehicle", "inference": ""}]}
 
-        const input: SerializedConceptualModel = { "entities": [
-          {name: "Student", "description": "", inferenceIndexes: [], "attributes": [
-            {"ID": 0, "name": "name1", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
-            {"ID": 1, "name": "name2", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
-            {"ID": 2, "name": "name3", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
-          ]}],
-          "relationships": []
-        }
+        // const input: SerializedConceptualModel = { "entities": [
+        //   {name: "Student", "description": "", inferenceIndexes: [], "attributes": [
+        //     {"ID": 0, "name": "name1", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
+        //     {"ID": 1, "name": "name2", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
+        //     {"ID": 2, "name": "name3", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
+        //   ]}],
+        //   "relationships": []
+        // }
           
-        // const input = { "entities": [
-        //     {name: "Student", "description": "A student entity representing individuals enrolled in courses.", inferenceIndexes: [], "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
-        //     {name: "Course", "description": "A course entity representing educational modules.", inferenceIndexes: [], "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
-        //     {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", inferenceIndexes: [], "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "int", "description": "The price of staying in the dormitory."}]},
-        //     {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", inferenceIndexes: [], "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
-        //   "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", inferenceIndexes: [], "source_entity": "student", "target_entity": "course"},
-        //                     {"name": "accommodated in", "inference": "students can be accommodated in dormitories", inferenceIndexes: [], "source_entity": "student", "target_entity": "dormitory"},
-        //                     {"name": "has", "inference": "each course can have one or more professors", inferenceIndexes: [], "source_entity": "course", "target_entity": "professor"},
-        //                     {"name": "is-a", inferenceIndexes: [], "source_entity": "student", "target_entity": "person"}
-        //                   ]}
+        const input : SerializedConceptualModel = { "entities": [
+            {name: "Student", "description": "A student entity representing individuals enrolled in courses.", inferenceIndexes: [], "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
+            {name: "Course", "description": "A course entity representing educational modules.", inferenceIndexes: [], "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
+            {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", inferenceIndexes: [], "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "int", "description": "The price of staying in the dormitory."}]},
+            {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", inferenceIndexes: [], "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
+          "relationships": [{ID: 0, type: ItemType.RELATIONSHIP, name: "enrolled in", description: "", inference: "Students can be enrolled in any number of courses", inferenceIndexes: [], "source": "student", "target": "course", cardinality: ""},
+                            {ID: 1, type: ItemType.RELATIONSHIP, "name": "accommodated in", description: "", "inference": "students can be accommodated in dormitories", inferenceIndexes: [], "source": "student", "target": "dormitory", cardinality: ""},
+                            {ID: 2, type: ItemType.RELATIONSHIP, "name": "has", description: "", inference: "each course can have one or more professors", inferenceIndexes: [], "source": "course", "target": "professor", cardinality: ""},
+                            {ID: 3, type: ItemType.RELATIONSHIP, "name": "is-a", description: "", inference: "", inferenceIndexes: [], "source": "student", "target": "person", cardinality: ""}
+                          ]}
 
-        const incrementX = 300
+        const incrementX = 600
         const incrementY = 350
         let positionX = 100
         let positionY = 100
@@ -900,8 +900,7 @@ const useConceptualModel = () =>
         }
       }
 
-      const entityObject : Entity = { [Field.ID]: 0, [Field.NAME]: nodeID, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: []}
-      const newNode = { id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: { attributes: attributes } }
+      const newNode: Node = { id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: { attributes: attributes, onEdit: onEditItem } }
       setNodes(previousNodes => {
         return [...previousNodes, newNode]
       })
@@ -1078,7 +1077,7 @@ const useConceptualModel = () =>
   
       if (!isTargetNodeCreated)
       {
-        const newNode = { id: targetNodeID, type: "customNode", position: { x: 500, y: 100 }, data: { attributes: []} }
+        const newNode = { id: targetNodeID, type: "customNode", position: { x: 500, y: 100 }, data: { attributes: [], onEdit: onEditItem} }
   
         setNodes(previousNodes => 
           {

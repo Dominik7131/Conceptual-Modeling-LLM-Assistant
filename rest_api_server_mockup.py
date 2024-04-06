@@ -114,13 +114,13 @@ def merge_original_texts():
 
     body_data = request.get_json()
     original_text_indexes_object = body_data["originalTextIndexesObject"]
-    print(f"Received: {original_text_indexes_object}\n")
+    # print(f"Received: {original_text_indexes_object}\n")
 
     parsed_original_text_indexes_object = [(item['indexes'][0], item['indexes'][1], item['label']) for item in original_text_indexes_object]
-    print(f"Parsed object: {parsed_original_text_indexes_object}\n")
+    # print(f"Parsed object: {parsed_original_text_indexes_object}\n")
     result = TextUtility.merge_original_texts(parsed_original_text_indexes_object)
 
-    print(f"{result}\n")
+    # print(f"{result}\n")
     return result
 
 

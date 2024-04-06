@@ -1,3 +1,6 @@
+
+export const primaryColor = "#2196f3"
+
 export const enum UserChoice
 {
   ENTITIES = "entities",

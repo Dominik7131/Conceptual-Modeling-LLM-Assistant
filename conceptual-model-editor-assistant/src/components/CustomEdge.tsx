@@ -1,5 +1,5 @@
-import { BaseEdge, EdgeLabelRenderer, EdgeProps, getStraightPath } from 'reactflow';
-import { ItemType, Relationship } from '../interfaces';
+import { BaseEdge, EdgeLabelRenderer, EdgeProps, getBezierPath, getStraightPath } from 'reactflow';
+import { ItemType, Relationship, primaryColor } from '../interfaces';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
@@ -9,16 +9,17 @@ import { Typography } from '@mui/material';
 
 // Inspiration: https://reactflow.dev/learn/customization/custom-edges
 // List of available props: https://reactflow.dev/api-reference/types/edge-props
-export default function CustomEdge ({ id, sourceX, sourceY, targetX, targetY, source, target, selected, label, data }: EdgeProps) : JSX.Element
+export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targetPosition, targetX, targetY, source, target, selected, label, data }: EdgeProps) : JSX.Element
 {
   const [isHovered, setIsHovered] = useState<boolean>(false)
-  const [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
+  // const [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
+  const [edgePath, labelX, labelY] = getBezierPath({sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition});
 
   let strokeColor = "black"
 
   if (selected)
   {
-    strokeColor = "#2196f3"
+    strokeColor = primaryColor
   }
 
   const relationship : Relationship = {
@@ -31,17 +32,22 @@ export default function CustomEdge ({ id, sourceX, sourceY, targetX, targetY, so
       <BaseEdge id={id} path={edgePath} style={{stroke: strokeColor, strokeWidth: "2px"}} />
       <EdgeLabelRenderer>
         <Button className="nodrag nopan" color="primary" variant="outlined" size="small"
-                sx={{background: "white", color: "black", paddingX: "30px", textTransform: "capitalize", position: "absolute", transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-                pointerEvents: "all", "&:hover": {backgroundColor: "white"}}}
-                // onClick={() => data.onEdit(relationship)}
+                sx={{color: selected ? primaryColor : "black", background: "white", paddingX: "30px", textTransform: "capitalize",
+                     position: "absolute", transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+                     pointerEvents: "all", height: "30px", "&:hover": {backgroundColor: "white"}}}
+                
                 onMouseEnter={() => setIsHovered(_ => true)} 
                 onMouseLeave={() => setIsHovered(_ => false)}
                 >
                 { label }
-                { isHovered &&
-                  <Typography color="primary" onClick={() => data.onEdit(relationship)}>
-                      <EditIcon/> 
-                  </Typography>}
+
+                <Typography
+                  color={selected ? primaryColor : "black"}
+                  onClick={() => data.onEdit(relationship)}
+                  sx={{ display: isHovered ? "inline" : "none",  position: "absolute", right: 3, top: 3 }}
+                >
+                  <EditIcon sx={{ width: "20px", height: "20px" }}/> 
+                </Typography>
         </Button>
       </EdgeLabelRenderer>
     </>
