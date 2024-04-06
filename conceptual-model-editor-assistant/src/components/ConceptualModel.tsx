@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import ReactFlow, { Node, Edge, OnConnect, OnNodesChange, OnEdgesChange, MiniMap, Controls, Background, EdgeProps } from 'reactflow';
+import ReactFlow, { Node, Edge, OnConnect, OnNodesChange, OnEdgesChange, MiniMap, Controls, Background, EdgeProps, NodeTypes } from 'reactflow';
 import CustomEdge from './CustomEdge';
 import { Item } from '../interfaces';
 
@@ -11,6 +11,7 @@ interface Props
   onEdgesChange : OnEdgesChange,
   onConnect : OnConnect,
   sidebarWidthPercentage : number
+  nodeTypes : NodeTypes
 }
 
 
@@ -20,7 +21,7 @@ const edgeTypes =
 }
 
 
-const ConceptualModel: React.FC<Props> = ({nodes, edges, onNodesChange, onEdgesChange, onConnect, sidebarWidthPercentage}) =>
+const ConceptualModel: React.FC<Props> = ({nodes, edges, onNodesChange, onEdgesChange, onConnect, sidebarWidthPercentage, nodeTypes}) =>
 {
   const heightPx = 560
 
@@ -34,6 +35,7 @@ const ConceptualModel: React.FC<Props> = ({nodes, edges, onNodesChange, onEdgesC
                 onNodesChange={onNodesChange}
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
+                nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}>
                 <MiniMap nodeStrokeWidth={3} zoomable pannable />
                 <Controls />

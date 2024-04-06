@@ -151,8 +151,15 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                             </Button>
                     }
                     
-                    <Button onClick={() => { {onSave(editedItem, item, isSuggestedItem)}; onClose()}}>Save</Button>
-                    <Button onClick={() => onClose()}>Cancel</Button>
+                    <Button
+                        onClick={() => { {onSave(editedItem, item, isSuggestedItem)}; onClose()}}>
+                        Save
+                    </Button>
+
+                    <Button
+                        onClick={() => onClose()}>
+                        Cancel
+                    </Button>
                 </ButtonGroup>
             </DialogActions>
         </Dialog>

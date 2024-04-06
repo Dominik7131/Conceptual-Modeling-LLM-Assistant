@@ -6,8 +6,14 @@ import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
 import { Button, Divider, Stack, Typography } from '@mui/material';
-import { Attribute, Entity, Field, Item, ItemType, OriginalTextIndexesItem, Relationship, UserChoice } from '../interfaces';
+import { Attribute, Entity, Field, Item, ItemType, OriginalTextIndexesItem, Relationship, SerializedConceptualModel, UserChoice } from '../interfaces';
 import AddIcon from '@mui/icons-material/Add';
+import CustomNode from '../components/CustomNode';
+
+
+// Define the nodeTypes outside of the component to prevent re-renderings
+// Or we can use `useMemo` inside the component
+const nodeTypes = { customNode: CustomNode };
 
 
 const useConceptualModel = () =>
@@ -91,16 +97,25 @@ const useConceptualModel = () =>
         //               relationships: [
         //                 {"name": "manufactures", "source_entity": "manufacturer", "target_entity": "road vehicle", "inference": ""}]}
 
-        const input = { "entities": [
-            {name: "Student", "description": "A student entity representing individuals enrolled in courses.", inferenceIndexes: [], "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
-            {name: "Course", "description": "A course entity representing educational modules.", inferenceIndexes: [], "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
-            {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", inferenceIndexes: [], "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "int", "description": "The price of staying in the dormitory."}]},
-            {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", inferenceIndexes: [], "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
-          "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", inferenceIndexes: [], "source_entity": "student", "target_entity": "course"},
-                            {"name": "accommodated in", "inference": "students can be accommodated in dormitories", inferenceIndexes: [], "source_entity": "student", "target_entity": "dormitory"},
-                            {"name": "has", "inference": "each course can have one or more professors", inferenceIndexes: [], "source_entity": "course", "target_entity": "professor"},
-                            {"name": "is-a", inferenceIndexes: [], "source_entity": "student", "target_entity": "person"}
-                          ]}
+        const input: SerializedConceptualModel = { "entities": [
+          {name: "Student", "description": "", inferenceIndexes: [], "attributes": [
+            {"ID": 0, "name": "name1", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
+            {"ID": 1, "name": "name2", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
+            {"ID": 2, "name": "name3", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
+          ]}],
+          "relationships": []
+        }
+          
+        // const input = { "entities": [
+        //     {name: "Student", "description": "A student entity representing individuals enrolled in courses.", inferenceIndexes: [], "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
+        //     {name: "Course", "description": "A course entity representing educational modules.", inferenceIndexes: [], "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
+        //     {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", inferenceIndexes: [], "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "int", "description": "The price of staying in the dormitory."}]},
+        //     {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", inferenceIndexes: [], "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
+        //   "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", inferenceIndexes: [], "source_entity": "student", "target_entity": "course"},
+        //                     {"name": "accommodated in", "inference": "students can be accommodated in dormitories", inferenceIndexes: [], "source_entity": "student", "target_entity": "dormitory"},
+        //                     {"name": "has", "inference": "each course can have one or more professors", inferenceIndexes: [], "source_entity": "course", "target_entity": "professor"},
+        //                     {"name": "is-a", inferenceIndexes: [], "source_entity": "student", "target_entity": "person"}
+        //                   ]}
 
         const incrementX = 300
         const incrementY = 350
@@ -124,8 +139,10 @@ const useConceptualModel = () =>
             [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "",
             [Field.INFERENCE_INDEXES]: entity.inferenceIndexes}
 
-          const newNode : Node = { id: entityNameLowerCase, position: { x: positionX, y: positionY },
-                                   data: { label: createJsxNodeLabel(entityObject, entity.attributes), description: entity.description, attributes: entity.attributes, [Field.INFERENCE_INDEXES]: entityObject.inferenceIndexes } }
+          const newNode : Node = { id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY },
+                                   data: { label: createJsxNodeLabel(entityObject, entity.attributes), description: entity.description,
+                                           attributes: entity.attributes, [Field.INFERENCE_INDEXES]: entityObject.inferenceIndexes,
+                                           onEdit: onEditItem } }
           newNodes.push(newNode)
 
           positionX += incrementX
@@ -139,8 +156,8 @@ const useConceptualModel = () =>
 
         for (const [key, relationship] of Object.entries(input["relationships"]))
         {
-          const newID: string = createEdgeID(relationship.source_entity, relationship.target_entity, relationship.name)
-          const newEdge : Edge = { id: newID, source: relationship.source_entity, target: relationship.target_entity,
+          const newID: string = createEdgeID(relationship.source, relationship.target, relationship.name)
+          const newEdge : Edge = { id: newID, source: relationship.source, target: relationship.target,
                                    label: relationship.name, type: "custom-edge", data: { description: "", inference: relationship.inference, onEdit: onEditItem }}
           newEdges.push(newEdge)
         }
@@ -464,30 +481,30 @@ const useConceptualModel = () =>
   {
     return `${source}-${name}-${target}`
   }
-  
+
+
   const editNodeEntity = (newEntity: Entity, oldEntity: Entity): void =>
   {
     const id: string = oldEntity.name
-    let nodeToUpdate = nodes.find(node => node.id === id)
+    const oldNode = nodes.find(node => node.id === id)
 
-    if (!nodeToUpdate)
+    if (!oldNode)
     {
       return
     }
 
-    console.log("New entity: ", newEntity)
     // Create an updated version of the old entity
-    let nodeToUpdateCopy: Node = { ...nodeToUpdate}
-    nodeToUpdateCopy.id = newEntity.name
-    nodeToUpdateCopy.data.description = newEntity.description
-    nodeToUpdateCopy.data.label = createJsxNodeLabel(newEntity, nodeToUpdate.data.attributes)
+    const newNode: Node = { id: newEntity.name, type: "customNode", position: oldNode.position, data: {
+      [Field.ID]: 0, [Field.DESCRIPTION]: newEntity.description,
+      [Field.INFERENCE]: newEntity.inference, [Field.INFERENCE_INDEXES]: newEntity.inferenceIndexes,
+      attributes: [], onEdit: onEditItem
+    }}
 
     setNodes((nodes) => nodes.map((currentNode : Node) =>
       {
         if (currentNode.id === id)
         {
-          console.log("Updating node: ", nodeToUpdateCopy)
-          return nodeToUpdateCopy
+          return newNode
         }
         else
         {
@@ -500,49 +517,43 @@ const useConceptualModel = () =>
   const editNodeAttribute = (newAttribute: Attribute, oldAttribute: Attribute): void =>
   {
       const id: string = oldAttribute.source
-      let nodeToUpdate = nodes.find(node => node.id === id)
+      const oldNode = nodes.find(node => node.id === id)
   
-      if (!nodeToUpdate)
+      if (!oldNode)
       {
         return
       }
 
-      // Create an updated version of the old attribute
-      let nodeToUpdateCopy: Node = { ...nodeToUpdate}
-      
-      let attributesCopy = [{...nodeToUpdate.data.attributes}]
-
-      // Update the given attribute in `nodeToUpdateCopy.data.attributes`
-      for (let index = 0; index < nodeToUpdate.data.attributes.length; index++)
+      const newAttributes = oldNode.data.attributes.map((attribute: Attribute) =>
       {
-        const attribute = nodeToUpdate.data.attributes[index];
-        if (attribute.name === oldAttribute.name)
+        if (attribute.name == oldAttribute.name)
         {
-          attributesCopy[index] = newAttribute
-          break
+          return newAttribute
         }
-      }
-
-      const entity: Entity = {
-        type: ItemType.ENTITY, name: nodeToUpdate.id, description: nodeToUpdate.data.description, ID: nodeToUpdate.data.id, inference: nodeToUpdate.data.inference,
-        inferenceIndexes: nodeToUpdate.data.inferenceIndexes}
-
-      nodeToUpdateCopy.data.attributes = attributesCopy
-      nodeToUpdateCopy.data.label = createJsxNodeLabel(entity, attributesCopy)
-      
-  
-      setNodes((nodes) => nodes.map((currentNode : Node) =>
+        else
         {
-          if (currentNode.id === id)
-          {
-            console.log("Updating node: ", nodeToUpdateCopy)
-            return nodeToUpdateCopy
-          }
-          else
-          {
-            return currentNode
-          }
-        }))
+          return attribute
+        }
+      })
+
+      const newNode: Node = { id: oldNode.id, type: "customNode", position: oldNode.position, data: {
+        [Field.ID]: 0, [Field.DESCRIPTION]: oldNode.data.description, [Field.INFERENCE]: oldNode.data.inference,
+        [Field.INFERENCE_INDEXES]: oldNode.data.inferenceIndexes,
+        attributes: newAttributes, onEdit: onEditItem
+      }}
+
+  
+      setNodes((nodes) => nodes.map((currentNode: Node) =>
+      {
+        if (currentNode.id === id)
+        {
+          return newNode
+        }
+        else
+        {
+          return currentNode
+        }
+      }))
   }
 
 
@@ -599,26 +610,27 @@ const useConceptualModel = () =>
   const removeNodeAttribute = (attribute: Attribute): void =>
   {
     const nodeID: string = attribute.source
-    let nodeToUpdate = nodes.find(node => node.id === nodeID)
+    let oldNode = nodes.find(node => node.id === nodeID)
 
-    if (!nodeToUpdate)
+    if (!oldNode)
     {
       return 
     }
 
-    const entity: Entity = {
-      [Field.ID]: 0, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: nodeToUpdate.id, [Field.DESCRIPTION]: nodeToUpdate.data.description, 
-      [Field.INFERENCE]: nodeToUpdate.data.inference, [Field.INFERENCE_INDEXES]: nodeToUpdate.data.inferenceIndexes
-    }
+    const newAttributes = oldNode.data.attributes.filter((element: Attribute) => element.name !== attribute.name)
 
-    nodeToUpdate.data.attributes = nodeToUpdate.data.attributes.filter((element: Attribute) => element.name !== attribute.name)
-    nodeToUpdate.data.label = createJsxNodeLabel(entity, nodeToUpdate.data.attributes)
+    const newNode: Node = { id: oldNode.id, type: "customNode", position: oldNode.position, data: {
+      [Field.ID]: 0, [Field.DESCRIPTION]: oldNode.data.description, [Field.INFERENCE]: oldNode.data.inference,
+      [Field.INFERENCE_INDEXES]: oldNode.data.inferenceIndexes,
+      attributes: newAttributes, onEdit: onEditItem
+    }}
+
 
     setNodes((nodes) => nodes.map((currentNode : Node) =>
       {
         if (currentNode.id === nodeID)
         {
-          return (nodeToUpdate as Node)
+          return newNode
         }
         else
         {
@@ -915,7 +927,7 @@ const useConceptualModel = () =>
 
     // useEffect(() =>
     // {
-    //   // console.log("Nodes: ", nodes)
+    //   console.log("Nodes: ", nodes)
     // }, [nodes]);
 
     // useEffect(() =>
@@ -1270,7 +1282,8 @@ const useConceptualModel = () =>
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
         isLoading, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
-        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions, isSuggestedItem, onEditRemove
+        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions,
+        isSuggestedItem, onEditRemove, nodeTypes
     }
 }
 
