@@ -140,7 +140,7 @@ const useConceptualModel = () =>
             [Field.INFERENCE_INDEXES]: entity.inferenceIndexes}
 
           const newNode : Node = { id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY },
-                                   data: { label: createJsxNodeLabel(entityObject, entity.attributes), description: entity.description,
+                                   data: { description: entity.description,
                                            attributes: entity.attributes, [Field.INFERENCE_INDEXES]: entityObject.inferenceIndexes,
                                            onEdit: onEditItem } }
           newNodes.push(newNode)
@@ -497,7 +497,7 @@ const useConceptualModel = () =>
     const newNode: Node = { id: newEntity.name, type: "customNode", position: oldNode.position, data: {
       [Field.ID]: 0, [Field.DESCRIPTION]: newEntity.description,
       [Field.INFERENCE]: newEntity.inference, [Field.INFERENCE_INDEXES]: newEntity.inferenceIndexes,
-      attributes: [], onEdit: onEditItem
+      attributes: oldNode.data.attributes, onEdit: onEditItem
     }}
 
     setNodes((nodes) => nodes.map((currentNode : Node) =>
@@ -832,54 +832,6 @@ const useConceptualModel = () =>
       setIsShowDialogDomainDescription(true)
     }
 
-
-    const createJsxNodeLabel = (entity: Entity, attributes: any[]) : JSX.Element =>
-    {
-      // For now accept attributes as "any[]" to simplify hand-crafted conceptual models for testing
-      // After implementing conceptual models import and export switch to `attributes: Attribute[]`
-
-      const spacesCount: number = entity.name.split(" ").length - 1
-
-      let entityName = entity.name
-
-      if (spacesCount === 0 && entity.name.length > 12)
-      {
-        entityName = entity.name.substring(0, 12) + "..."
-      }
-
-      return (
-        <>
-          {/* <p className="nodeTitle"><strong>{capitalizeString(name)}</strong></p> */}
-
-          <Button size="small" fullWidth={true}
-            sx={{ color: "black", fontSize: "17px", textTransform: 'capitalize' }}
-            onClick={() => onEditItem(entity)}
-            >
-           <strong>{entityName}</strong>
-          </Button>
-
-          {
-            attributes.length > 0 && <Divider sx={{marginX: "-10px"}}></Divider>
-          }
-
-
-
-        <Stack>
-          {attributes.map((attribute : Attribute, index : number) =>
-          (
-              // <span key={`${attribute.name}-${index}`}> +{attribute.name}: {attribute.dataType} <br /> </span>
-              // <span key={`${attribute.name}-${index}`}> +{attribute.name} <br /> </span>
-              <Button size="small" key={`${attribute.name}-${index}`}
-                sx={{ fontSize: "12px", textTransform: 'lowercase'}}
-                onClick={() => onEditItem(attribute)}>
-                +{attribute.name}
-              </Button>
-          ))}
-        </Stack>
-      </>)
-    }
-
-
     useEffect(() =>
     {
       parseSerializedConceptualModel()
@@ -949,7 +901,7 @@ const useConceptualModel = () =>
       }
 
       const entityObject : Entity = { [Field.ID]: 0, [Field.NAME]: nodeID, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: []}
-      const newNode = { id: nodeID, position: { x: positionX, y: positionY }, data: { label: createJsxNodeLabel(entityObject, attributes), attributes: attributes } }
+      const newNode = { id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: { attributes: attributes } }
       setNodes(previousNodes => {
         return [...previousNodes, newNode]
       })
@@ -1080,15 +1032,8 @@ const useConceptualModel = () =>
           return currentNode;
         }
 
-        // console.log("Adding new attribute: ", newAttributeObject)
-
         const newAttributes = [...currentNode.data.attributes, newAttributeObject]
-        const position : XYPosition = { x: currentNode.position.x, y: currentNode.position.y}
-
-
-        const entityObject : Entity = { [Field.ID]: 0, [Field.NAME]: currentNode.id, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: []}
-        const updatedNode : Node = { id: currentNode.id, position: position, data: {label: createJsxNodeLabel(entityObject, newAttributes),
-                                     attributes: newAttributes}}
+        const updatedNode : Node = { id: currentNode.id, type: "customNode", position: currentNode.position, data: { attributes: newAttributes, onEdit: onEditItem }}
   
         return updatedNode
       }));
@@ -1133,8 +1078,7 @@ const useConceptualModel = () =>
   
       if (!isTargetNodeCreated)
       {
-        const entityObject : Entity = { [Field.ID]: 0, [Field.NAME]: targetNodeID, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: []}
-        const newNode = { id: targetNodeID, position: { x: 500, y: 100 }, data: { label: createJsxNodeLabel(entityObject, []), attributes: []} }
+        const newNode = { id: targetNodeID, type: "customNode", position: { x: 500, y: 100 }, data: { attributes: []} }
   
         setNodes(previousNodes => 
           {
