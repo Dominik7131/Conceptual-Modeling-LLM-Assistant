@@ -389,6 +389,24 @@ const useConceptualModel = () =>
       attributes: oldNode.data.attributes, onEdit: onEditItem
     }}
 
+
+    if (newEntity.name !== oldEntity.name)
+    {
+      // Update all edges that connect to the changed source or target entity
+      setEdges((edges) => edges.map((currentEdge: Edge) =>
+      {
+        if (currentEdge.source === oldEntity.name)
+        {
+          return { ...currentEdge, id: createEdgeID(newEntity.name, currentEdge.target, currentEdge.data.label), source: newEntity.name }
+        }
+        else if (currentEdge.target === oldEntity.name)
+        {
+          return { ...currentEdge, id: createEdgeID(currentEdge.source, newEntity.name, currentEdge.data.label), target: newEntity.name }
+        }
+        return currentEdge
+      }))
+    }
+
     setNodes((nodes) => nodes.map((currentNode : Node) =>
       {
         if (currentNode.id === id)
