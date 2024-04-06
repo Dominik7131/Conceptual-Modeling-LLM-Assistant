@@ -1,19 +1,96 @@
 import { useState } from "react";
-import { Field, Item, ItemType, summaryObject } from "../interfaces";
-import { parse } from "path";
+import { Field, Item, ItemType, OriginalTextIndexesItem, summaryObject } from "../interfaces";
 
 
-const useFetchData = () =>
+interface Props
 {
-    // TODO: Insert here methods for fetching data
-    // Probably this hook should receive function what to do on data receive
+  onProcessNonStreamedData : (data: any, itemType: ItemType) => void
+  onProcessStreamedData : (value: any, itemType: ItemType) => void
+  onProcessStreamedDataGeneral : (value: any, itemType: Field) => void
+  onProcessMergedOriginalTexts : (data: any) => void
+}
 
+const useFetchData = ({onProcessNonStreamedData, onProcessStreamedData, onProcessStreamedDataGeneral, onProcessMergedOriginalTexts} : Props) =>
+{
+    // TODO: Split all fetch data methods to a separate files
+
+    const [isLoadingSuggestedItems, setIsLoadingSuggestedItems] = useState<boolean>(false)
+    const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(false)
     const [isLoadingSummary1, setIsLoadingSummary1] = useState<boolean>(false)
     const [isLoadingSummaryDescriptions, setIsLoadingSummaryDescriptions] = useState<boolean>(false)
     const [summaryText, setSummaryText] = useState<string>("")
 
     // TODO: This object should contain descriptions for "entities": array of entities and "relationships": array of relationships
     const [summaryDescriptions, setSummaryDescriptions] = useState<summaryObject>({ entities: [], relationships: []})
+
+
+    const fetchNonStreamedData = (url : string, headers : any, body_data : any, itemType : ItemType) =>
+    {
+        fetch(url, { method: "POST", headers, body: body_data })
+        .then(response => response.json())
+        .then(data => 
+            {
+              onProcessNonStreamedData(data, itemType)
+              
+            })
+        .catch(error => console.log(error))
+        setIsLoadingSuggestedItems(_ => false)
+        return
+    }
+
+    const fetchStreamedData = (url : string, headers : any, bodyData : any, itemType : ItemType) =>
+    {
+      // TODO: add object interface for header and bodyData
+
+      // Fetch the event stream from the server
+      // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
+      fetch(url, { method: "POST", headers, body: bodyData })
+      .then(response =>
+        {
+          setIsLoadingSuggestedItems(_ => true)
+          const stream = response.body; // Get the readable stream from the response body
+
+          if (stream === null)
+          {
+            console.log("Stream is null")
+            setIsLoadingSuggestedItems(_ => false)
+            return
+          }
+
+          const reader = stream.getReader();
+
+          const readChunk = () =>
+          {
+              reader.read()
+                  .then(({value, done}) =>
+                  {
+                      if (done)
+                      {
+                          console.log("Stream finished")
+                          setIsLoadingSuggestedItems(_ => false)
+                          return
+                      }
+
+                      onProcessStreamedData(value, itemType)
+
+                      // Read the next chunk
+                      readChunk();
+                  })
+                  .catch(error =>
+                  {
+                    console.error(error);
+                  });
+          };
+          // Start reading the first chunk
+          readChunk();
+      })
+      .catch(error =>
+      {
+        console.error(error);
+        setIsLoadingSuggestedItems(_ => false)
+        alert("Error: request failed")
+      });
+    }
 
     const fetchSummary = (endpoint : string, headers : any, bodyData : any) =>
     {
@@ -153,7 +230,69 @@ const useFetchData = () =>
       });
     }
 
-    return { isLoadingSummary1, isLoadingSummaryDescriptions, summaryText, summaryDescriptions, fetchSummary, fetchSummaryDescriptions }
+
+    const fetchStreamedDataGeneral = (endpoint : string, headers : any, bodyData : any, attributeName : string, field: Field) =>
+    {
+        setIsLoadingEdit(_ => true)
+
+        fetch(endpoint, { method: "POST", headers, body: bodyData })
+        .then(response =>
+        {
+            const stream = response.body; // Get the readable stream from the response body
+
+            if (stream === null)
+            {
+              console.log("Stream is null")
+              setIsLoadingEdit(_ => false)
+              return
+            }
+
+            const reader = stream.getReader();
+
+            const readChunk = () =>
+            {
+                reader.read()
+                    .then(({value, done}) =>
+                    {
+                        if (done)
+                        {
+                            console.log("Stream finished")
+                            setIsLoadingEdit(_ => false)
+                            return
+                        }
+
+                        onProcessStreamedDataGeneral(value, field)
+                        
+                        readChunk(); 
+                    })
+                    .catch(error =>
+                    {
+                      console.error(error);
+                    });
+            };
+            readChunk(); // Start reading the first chunk
+        })
+        .catch(error =>
+        {
+          console.error(error);
+          setIsLoadingEdit(_ => false)
+          alert("Error: request failed")
+        });
+    }
+  
+    const fetchMergedOriginalTexts = (url: string, headers: any, bodyData: any) =>
+    {
+      fetch(url, { method: "POST", headers, body: bodyData})
+      .then(response => response.json())
+      .then(data => 
+            {
+              onProcessMergedOriginalTexts(data)
+            })
+        .catch(error => console.log(error))
+        return
+    }
+
+    return { isLoadingSuggestedItems, setIsLoadingSuggestedItems, isLoadingSummary1, isLoadingSummaryDescriptions, isLoadingEdit, summaryText, summaryDescriptions, fetchSummary, fetchSummaryDescriptions, fetchNonStreamedData, fetchStreamedData, fetchStreamedDataGeneral, fetchMergedOriginalTexts }
 }
 
 export default useFetchData

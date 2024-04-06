@@ -21,8 +21,6 @@ const useConceptualModel = () =>
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   
-    const [isLoading, setIsLoading] = useState<boolean>(false)
-    const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(false)
     const [fieldToLoad, setFieldToLoad] = useState<Field>(Field.ID)
 
     const [suggestedItems, setSuggestedItems] = useState<Item[]>([])
@@ -51,7 +49,9 @@ const useConceptualModel = () =>
 
     const { capitalizeString } = useUtility()
 
-    const { isLoadingSummary1, isLoadingSummaryDescriptions, summaryText, fetchSummary, fetchSummaryDescriptions, summaryDescriptions } = useFetchData()
+    const { isLoadingSuggestedItems, setIsLoadingSuggestedItems, isLoadingSummary1, isLoadingSummaryDescriptions, isLoadingEdit, summaryText, fetchSummary, fetchSummaryDescriptions, summaryDescriptions, 
+            fetchNonStreamedData, fetchStreamedData, fetchStreamedDataGeneral, fetchMergedOriginalTexts }
+            = useFetchData({ onProcessNonStreamedData, onProcessStreamedData, onProcessStreamedDataGeneral, onProcessMergedOriginalTexts })
 
     let IDToAssign = 0
     const BASE_URL = "http://127.0.0.1:5000/"
@@ -218,185 +218,73 @@ const useConceptualModel = () =>
         return newID
       }
 
-      const fetchNonStreamedData = (url : string, headers : any, body_data : any, itemType : ItemType) =>
-      {
-        fetch(url, { method: "POST", headers, body: body_data })
-        .then(response => response.json())
-        .then(data => 
-            {
-              for (let i = 0; i < data.length; i++)
-              {
-                const ID = assignID()
-                data[i][Field.ID] = ID
-                data[i][Field.TYPE] = itemType
 
-                setSuggestedItems(previousSuggestedItems => {
-                  return [...previousSuggestedItems, data[i]]
-                })
-              }
-            })
-        .catch(error => console.log(error))
-        setIsLoading(_ => false)
-        return
+    function onProcessNonStreamedData(data: any, itemType: ItemType): void
+    {
+      for (let i = 0; i < data.length; i++)
+        {
+          const ID = assignID()
+          data[i][Field.ID] = ID
+          data[i][Field.TYPE] = itemType
+
+          setSuggestedItems(previousSuggestedItems => {
+            return [...previousSuggestedItems, data[i]]
+          })
+        }
     }
 
-
-    const fetchStreamedDataGeneral = (endpoint : string, headers : any, bodyData : any, attributeName : string, field: Field) =>
+    function onProcessStreamedData(value: any, itemType: ItemType): void
     {
-        setIsLoadingEdit(_ => true)
-        setFieldToLoad(field)
+      // Convert the `value` to a string
+      var jsonString = new TextDecoder().decode(value)
+      console.log(jsonString)
+      console.log("\n")
 
-        fetch(endpoint, { method: "POST", headers, body: bodyData })
-        .then(response =>
-        {
-            const stream = response.body; // Get the readable stream from the response body
+      // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
+      const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
 
-            if (stream === null)
-            {
-              console.log("Stream is null")
-              setIsLoadingEdit(_ => false)
-              return
-            }
+      for (let i = 0; i < jsonStringParts.length; i++)
+      {
+        let item : Item = JSON.parse(jsonStringParts[i])
+        item[Field.ID] = assignID()
+        item[Field.TYPE] = itemType
 
-            const reader = stream.getReader();
-
-            const readChunk = () =>
-            {
-                reader.read()
-                    .then(({value, done}) =>
-                    {
-                        if (done)
-                        {
-                            console.log("Stream finished")
-                            setIsLoadingEdit(_ => false)
-                            return
-                        }
-
-                        // Convert the `value` to a string
-                        var jsonString = new TextDecoder().decode(value)
-                        console.log(jsonString)
-                        console.log("\n")
-
-                        const parsedData = JSON.parse(jsonString)
-                        setRegeneratedItem({...regeneratedItem, [field]: parsedData[field]})
-
-                        readChunk(); 
-                    })
-                    .catch(error =>
-                    {
-                      console.error(error);
-                    });
-            };
-            readChunk(); // Start reading the first chunk
+        setSuggestedItems(previousSuggestedItems => {
+          return [...previousSuggestedItems, item]
         })
-        .catch(error =>
-        {
-          console.error(error);
-          setIsLoadingEdit(_ => false)
-          alert("Error: request failed")
-        });
+      }
     }
 
-    const fetchStreamedData = (url : string, headers : any, bodyData : any, itemType : ItemType) =>
+    function onProcessStreamedDataGeneral(value: any, field: Field): void
     {
-      // TODO: add object interface for header and bodyData
+      // Convert the `value` to a string
+      var jsonString = new TextDecoder().decode(value)
+      console.log(jsonString)
+      console.log("\n")
 
-      // Fetch the event stream from the server
-      // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
-      fetch(url, { method: "POST", headers, body: bodyData })
-      .then(response =>
-        {
-          setIsLoading(_ => true)
-          const stream = response.body; // Get the readable stream from the response body
+      const parsedData = JSON.parse(jsonString)
+      setRegeneratedItem({...regeneratedItem, [field]: parsedData[field]})
+    }
 
-          if (stream === null)
-          {
-            console.log("Stream is null")
-            setIsLoading(_ => false)
-            return
-          }
+    function onProcessMergedOriginalTexts(data: any): void
+    {
+      let tooltips : string[] = []
+      let originalTextIndexes : number[] = []
 
-          const reader = stream.getReader();
-
-          const readChunk = () =>
-          {
-              reader.read()
-                  .then(({value, done}) =>
-                  {
-                      if (done)
-                      {
-                          console.log("Stream finished")
-                          setIsLoading(_ => false)
-                          return
-                      }
-
-                      // Convert the `value` to a string
-                      var jsonString = new TextDecoder().decode(value)
-                      console.log(jsonString)
-                      console.log("\n")
-
-                      // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
-                      const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
-
-                      for (let i = 0; i < jsonStringParts.length; i++)
-                      {
-                        let item : Item = JSON.parse(jsonStringParts[i])
-                        item[Field.ID] = assignID()
-                        item[Field.TYPE] = itemType
-
-                        setSuggestedItems(previousSuggestedItems => {
-                          return [...previousSuggestedItems, item]
-                        })
-                      }
-
-                      // Read the next chunk
-                      readChunk();
-                  })
-                  .catch(error =>
-                  {
-                    console.error(error);
-                  });
-          };
-          // Start reading the first chunk
-          readChunk();
-      })
-      .catch(error =>
+      for (let index = 0; index < data.length; index++)
       {
-        console.error(error);
-        setIsLoading(_ => false)
-        alert("Error: request failed")
-      });
+        const element = data[index];
+        originalTextIndexes.push(element[0])
+        originalTextIndexes.push(element[1])
+        tooltips.push(element[2])
+      }
+
+      setInferenceIndexesMockUp(_ => originalTextIndexes)
+      setTooltips(_ => tooltips)
     }
 
-    const fetchMergedOriginalTexts = (input : OriginalTextIndexesItem[]) =>
-    {
-      const endpoint = "merge_original_texts"
-      const url = BASE_URL + endpoint
-      const headers = { "Content-Type": "application/json" }
-      const bodyData = JSON.stringify({ "originalTextIndexesObject": input})
-      console.log("Stringified: ", bodyData)
 
-      fetch(url, { method: "POST", headers, body: bodyData})
-      .then(response => response.json())
-      .then(data => 
-            {
-              let tooltips : string[] = []
-              let originalTextIndexes : number[] = []
-
-              for (let index = 0; index < data.length; index++)
-              {
-                const element = data[index];
-                originalTextIndexes.push(element[0])
-                originalTextIndexes.push(element[1])
-                tooltips.push(element[2])
-              }
-
-              setInferenceIndexesMockUp(_ => originalTextIndexes)
-              setTooltips(_ => tooltips)
-            })
-        .catch(error => console.log(error))
-        return
-    }
+    
 
 
     const onImportButtonClick = () =>
@@ -412,6 +300,7 @@ const useConceptualModel = () =>
       const headers = { "Content-Type": "application/json" }
       const bodyData = JSON.stringify({"attributeName": name, "sourceEntity": sourceEntity, "field": field, "domainDescription": domainDescription})
 
+      setFieldToLoad(field)
       fetchStreamedDataGeneral(endpoint, headers, bodyData, name, field)
     }
 
@@ -642,7 +531,7 @@ const useConceptualModel = () =>
 
     const onPlusButtonClick = (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) =>
     {
-      if (isLoading)
+      if (isLoadingSuggestedItems)
       {
         alert("Another request is already being processed")
         return
@@ -651,7 +540,7 @@ const useConceptualModel = () =>
       const buttonText = event.currentTarget.innerText.toLowerCase()
       setUserChoiceSuggestion(buttonText)
 
-      setIsLoading(_ => true)
+      setIsLoadingSuggestedItems(_ => true)
 
       setSuggestedItems(_ => {return []})
 
@@ -679,7 +568,7 @@ const useConceptualModel = () =>
 
       if (!selectedNodes[0])
       {
-        setIsLoading(_ => false)
+        setIsLoadingSuggestedItems(_ => false)
         alert("No nodes selected")
         return
       }
@@ -826,7 +715,12 @@ const useConceptualModel = () =>
         }
       }
 
-      fetchMergedOriginalTexts(originalTextsIndexesObjects)
+      const endpoint = "merge_original_texts"
+      const url = BASE_URL + endpoint
+      const headers = { "Content-Type": "application/json" }
+      const bodyData = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects})
+
+      fetchMergedOriginalTexts(url, headers, bodyData)
 
 
       setIsShowDialogDomainDescription(true)
@@ -1223,7 +1117,7 @@ const useConceptualModel = () =>
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick,
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
-        isLoading, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
+        isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
         regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions,
         isSuggestedItem, onEditRemove, nodeTypes
