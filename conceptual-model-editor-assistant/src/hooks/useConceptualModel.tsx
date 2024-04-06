@@ -415,7 +415,7 @@ const useConceptualModel = () =>
 
       const newAttributes = oldNode.data.attributes.map((attribute: Attribute) =>
       {
-        if (attribute.name == oldAttribute.name)
+        if (attribute.name === oldAttribute.name)
         {
           return newAttribute
         }

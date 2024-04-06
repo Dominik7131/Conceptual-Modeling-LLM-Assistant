@@ -8,6 +8,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { IconButton, Menu, MenuItem } from '@mui/material';
  
 
 // List of all NodeProps: https://reactflow.dev/api-reference/types/node-props
@@ -32,46 +33,74 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
     {
         entityName = entity.name.substring(0, 12) + "..."
     }
- 
+
+
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl)
+
+    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) =>
+    {
+      setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () =>
+    {
+      setAnchorEl(null)
+    }
+
+
     return (
         <Box sx={{backgroundColor: "white", border: selected ? borderSelected : borderNonSelected }}>
 
-          <Handle type="target" position={Position.Top} style={{ background: selected ? primaryColor : "black" }} />
-          <Handle type="source" position={Position.Bottom} style={{ background: selected ? primaryColor : "black" }} />
+            <Handle type="target" position={Position.Top} style={{ background: selected ? primaryColor : "black" }} />
+            <Handle type="source" position={Position.Bottom} style={{ background: selected ? primaryColor : "black" }} />
 
-          <Button size="small" fullWidth={true}
-            sx={{ color: selected ? primaryColor : "black", fontSize: "17px", textTransform: 'capitalize',
-                  overflow: "hidden", direction: 'ltr' }}
-            // onClick={() => data.onEdit(entity)}
-            onMouseEnter={() => setIsEntityHovered(_ => true)} 
-            onMouseLeave={() => setIsEntityHovered(_ => false)}
-            >
-           <strong>{entityName}</strong>
-            <Typography
-                color={selected ? primaryColor : "black"}
-                onClick={() => data.onEdit(entity)}
-                sx={{ display: isEntityHovered ? "inline" : "none", position: "absolute", right: 2, bottom: 1 }}
+            <Button size="small" fullWidth={true}
+                sx={{ color: selected ? primaryColor : "black", fontSize: "17px", textTransform: 'capitalize',
+                        overflow: "hidden", direction: 'ltr' }}
+                onMouseEnter={() => setIsEntityHovered(_ => true)} 
+                onMouseLeave={() => setIsEntityHovered(_ => false)}
                 >
+                <strong>{entityName}</strong>
 
-                <EditIcon/> 
-            </Typography>
-          </Button>
+                <Typography
+                    id="long-button"
+                    // onClick={() => data.onEdit(entity)}
+                    onClick={handleClick}
+                    sx={{ display: (isEntityHovered || anchorEl) ? "block" : "none", position: "absolute", right: "0px", top: "6px" }}
+                    >
+                    <MoreVertIcon />
+                </Typography>
+            </Button>
 
-          {
-            attributes.length > 0 && <Divider sx={{backgroundColor: selected ? primaryColor : "gray"}}></Divider>
-          }
+            {/* https://mui.com/material-ui/react-menu/ */}
+            <Menu
+                id="basic-menu"
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                MenuListProps={{'aria-labelledby': 'basic-button'}}
+                >
+                <MenuItem onClick={() => { data.onEdit(entity); handleClose(); }}>Edit entity</MenuItem>
+                <MenuItem onClick={handleClose}>Add new attribute</MenuItem>
+                <MenuItem onClick={handleClose}>Suggest attributes</MenuItem>
+            </Menu>
 
 
-        <Stack>
-            {attributes.map((attribute : Attribute, index : number) =>
-            (
-                <Button size="small" key={`${attribute.name}-${index}`}
-                    sx={{ color: selected ? primaryColor : "black", fontSize: "12px", textTransform: 'lowercase'}}
-                    onClick={() => data.onEdit(attribute)}>
-                    +{attribute.name}
-                </Button>
-            ))}
-        </Stack>
+
+
+            { attributes.length > 0 && <Divider sx={{backgroundColor: selected ? primaryColor : "gray"}}></Divider> }
+
+            <Stack>
+                {attributes.map((attribute : Attribute, index : number) =>
+                (
+                    <Button size="small" key={`${attribute.name}-${index}`}
+                        sx={{ color: selected ? primaryColor : "black", fontSize: "12px", textTransform: 'lowercase'}}
+                        onClick={() => data.onEdit(attribute)}>
+                        +{attribute.name}
+                    </Button>
+                ))}
+            </Stack>
         </Box>
 
     )
