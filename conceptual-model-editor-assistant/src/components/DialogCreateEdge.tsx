@@ -33,13 +33,13 @@ const DialogCreateEdge: React.FC<Props> = ({ relationship, isOpened, onClose, on
       <Dialog
         open={isOpened}
         fullWidth={true}
-        maxWidth={'sm'}
+        maxWidth={'md'}
         scroll={'paper'}
         onClose={onClose}
       >
         <DialogTitle sx={{ textAlign: 'center' }}>
           <Stack>
-            Select how to create relationship: { relationship.source }-{ relationship.target }
+            Select how to create relationship with source as "{ relationship.source }" and target as "{ relationship.target }"
           </Stack>
         </DialogTitle>
 

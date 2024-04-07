@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect, XYPosition } from 'reactflow';
+import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 import useUtility from './useUtility';
@@ -111,15 +111,15 @@ const useConceptualModel = () =>
   const parseSerializedConceptualModel = () =>
   {
 
-    // const input = { entities: [
-    //     {name: "Engine", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-    //     {name: "Manufacturer", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-    //     {name: "Natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-    //     {name: "Business natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-    //     {name: "Road vehicle", description: "", [Field.INFERENCE_INDEXES]: [4, 10], attributes: []}],
+    const input = { entities: [
+        {name: "Engine", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+        {name: "Manufacturer", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+        {name: "Natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+        {name: "Business natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
+        {name: "Road vehicle", description: "", [Field.INFERENCE_INDEXES]: [4, 10], attributes: []}],
 
-    //               relationships: [
-    //                 {"name": "manufactures", "source_entity": "manufacturer", "target_entity": "road vehicle", "inference": ""}]}
+                  relationships: [
+                    {"name": "manufactures", "source": "manufacturer", "target": "road vehicle", "inference": ""}]}
 
     // const input: SerializedConceptualModel = { "entities": [
     //   {name: "Student", "description": "", inferenceIndexes: [], "attributes": [
@@ -130,16 +130,16 @@ const useConceptualModel = () =>
     //   "relationships": []
     // }
       
-    const input : SerializedConceptualModel = { "entities": [
-        {name: "Student", "description": "A student entity representing individuals enrolled in courses.", inferenceIndexes: [], "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
-        {name: "Course", "description": "A course entity representing educational modules.", inferenceIndexes: [], "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
-        {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", inferenceIndexes: [], "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "number", "description": "The price of staying in the dormitory."}]},
-        {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", inferenceIndexes: [], "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
-      "relationships": [{ID: 0, type: ItemType.RELATIONSHIP, name: "enrolled in", description: "", inference: "Students can be enrolled in any number of courses", inferenceIndexes: [], "source": "student", "target": "course", cardinality: ""},
-                        {ID: 1, type: ItemType.RELATIONSHIP, "name": "accommodated in", description: "", "inference": "students can be accommodated in dormitories", inferenceIndexes: [], "source": "student", "target": "dormitory", cardinality: ""},
-                        {ID: 2, type: ItemType.RELATIONSHIP, "name": "has", description: "", inference: "each course can have one or more professors", inferenceIndexes: [], "source": "course", "target": "professor", cardinality: ""},
-                        {ID: 3, type: ItemType.RELATIONSHIP, "name": "is-a", description: "", inference: "", inferenceIndexes: [], "source": "student", "target": "person", cardinality: ""}
-                      ]}
+    // const input : SerializedConceptualModel = { "entities": [
+    //     {name: "Student", "description": "A student entity representing individuals enrolled in courses.", inferenceIndexes: [], "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
+    //     {name: "Course", "description": "A course entity representing educational modules.", inferenceIndexes: [], "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
+    //     {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", inferenceIndexes: [], "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "number", "description": "The price of staying in the dormitory."}]},
+    //     {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", inferenceIndexes: [], "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
+    //   "relationships": [{ID: 0, type: ItemType.RELATIONSHIP, name: "enrolled in", description: "", inference: "Students can be enrolled in any number of courses", inferenceIndexes: [], "source": "student", "target": "course", cardinality: ""},
+    //                     {ID: 1, type: ItemType.RELATIONSHIP, "name": "accommodated in", description: "", "inference": "students can be accommodated in dormitories", inferenceIndexes: [], "source": "student", "target": "dormitory", cardinality: ""},
+    //                     {ID: 2, type: ItemType.RELATIONSHIP, "name": "has", description: "", inference: "each course can have one or more professors", inferenceIndexes: [], "source": "course", "target": "professor", cardinality: ""},
+    //                     {ID: 3, type: ItemType.RELATIONSHIP, "name": "is-a", description: "", inference: "", inferenceIndexes: [], "source": "student", "target": "person", cardinality: ""}
+    //                   ]}
 
     const incrementX = 600
     const incrementY = 350
@@ -608,7 +608,6 @@ const useConceptualModel = () =>
     targetItemName = targetItemName !== null ? targetItemName : ""
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
-
     fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, sourceItemName, itemType)
   }
 
@@ -761,8 +760,12 @@ const useConceptualModel = () =>
 
   useEffect(() =>
   {
+    // Dependency: domain description
+    // Otherwise when suggesting attributes/relationships through function in node.data.suggestItems(...)
+    // The function doesn't know about the newest domain description
+
     parseSerializedConceptualModel()
-  }, []);
+  }, [domainDescription]);
 
 
   useEffect(() =>
@@ -809,10 +812,10 @@ const useConceptualModel = () =>
     //   console.log("Nodes: ", nodes)
     // }, [nodes]);
 
-    useEffect(() =>
-    {
-      console.log("Edges: ", edges)
-    }, [edges]);
+    // useEffect(() =>
+    // {
+    //   console.log("Edges: ", edges)
+    // }, [edges]);
 
 
     const addNode = (nodeID : string, positionX : number, positionY : number, attributes : Attribute[] = []) =>

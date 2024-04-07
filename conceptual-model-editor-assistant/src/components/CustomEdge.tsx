@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { Typography } from '@mui/material';
+import useUtility from '../hooks/useUtility';
 
 
 // Inspiration: https://reactflow.dev/learn/customization/custom-edges
@@ -15,12 +16,8 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
   // const [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
   const [edgePath, labelX, labelY] = getBezierPath({sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition});
 
-  let strokeColor = "black"
+  const { capitalizeString } = useUtility()
 
-  if (selected)
-  {
-    strokeColor = primaryColor
-  }
 
   const borderNonSelected = "1px solid black"
   const borderSelected = `1px solid ${primaryColor}`
@@ -35,14 +32,14 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
       <BaseEdge id={id} path={edgePath} style={{stroke: selected ? primaryColor : "black", strokeWidth: "1px"}} />
       <EdgeLabelRenderer>
         <Button className="nodrag nopan" color="primary" variant="outlined" size="small"
-                sx={{ color: selected ? primaryColor : "black", background: "white", paddingX: "30px", textTransform: "capitalize",
+                sx={{ color: selected ? primaryColor : "black", background: "white", paddingX: "30px", textTransform: "none",
                      border: selected ? borderSelected : borderNonSelected, position: "absolute", transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
                      pointerEvents: "all", height: "30px", borderRadius: "30px", "&:hover": {backgroundColor: "white"}}}
                 
                 onMouseEnter={() => setIsHovered(_ => true)} 
                 onMouseLeave={() => setIsHovered(_ => false)}
                 >
-                { label }
+                { capitalizeString(relationship.name) }
 
                 <Typography
                   color={selected ? primaryColor : "black"}

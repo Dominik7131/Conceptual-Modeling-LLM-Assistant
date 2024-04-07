@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
 
+
 const useDomainDescription = () =>
 {
   const [domainDescription, setDomainDescription] = useState<string>("")
   const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState<boolean>(false)
+  
 
   const onDomainDescriptionChange = (newText : string) =>
   {
-    setDomainDescription(newText)
+    setDomainDescription(_ => newText)
   }
 
   const onIgnoreDomainDescriptionChange = () =>
@@ -22,7 +24,7 @@ const useDomainDescription = () =>
     .then((result) => result.text())
     .then((text) =>
     {
-        setDomainDescription(_ => text)
+      setDomainDescription(_ => text)
     })
     .catch((e) => console.error(e));
   }

@@ -1,47 +1,37 @@
-.highlight {
+/* TODO: Place all css styles into their corresponding place in the code */
+
+.highlight
+{
   background-color: orange;
   position: relative;
   /* display: inline-block; */
   /* border-bottom: 1px dotted black; */
 }
 
-.highlightAttributes {
+.highlightAttributes
+{
   background-color: rgb(0, 179, 255);
 }
 
-.highlightRelationships {
+.highlightRelationships
+{
   /* border-bottom: red 3px solid; */
   /* text-decoration: underline orange 2px; */
   background-color: rgb(255, 242, 0);
 }
 
-.highlightAttributes.highlightRelationships {
+.highlightAttributes.highlightRelationships
+{
   background-color: rgb(124, 236, 124);
 }
 
-.textGray {
+.textGray
+{
   color: gray;
 }
 
-.reactFlowDiv {
+.reactFlowDiv
+{
   width: 80%;
   height: 622px;
-}
-
-div.react-flow__node {
-  /* display: flex; */
-  /* padding: 20px; */
-  width: 180px;
-  text-align: "center";
-}
-
-text.react-flow__edge-text {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-}
-
-/* Selected node */
-.react-flow__node-default.selectable.selected
-{
-  border-width: 5px;
-  border-color: #2196f3;
 }

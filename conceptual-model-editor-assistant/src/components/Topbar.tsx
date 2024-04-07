@@ -24,7 +24,6 @@ interface Props
     onImportButtonClick : () => void
     onSuggestItems : (userChoice: UserChoice, sourceItem: string | null, targetItem: string | null) => void
     onSummaryButtonClick : () => void
-    OnClickAddNode : (nodeName : string) => void
     domainDescription : string
     onDomainDescriptionChange : (newDomainDescriptionText : string) => void
     onHighlightSelectedItems : () => void
@@ -42,7 +41,7 @@ interface Props
 }
 
 
-const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isLoadingSummary1, isLoadingSummaryDescriptions, isIgnoreDomainDescription, sidebarWidthPercentage, onSummaryDescriptionsClick, summaryDescriptions, onAddNewEntity}) =>
+const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, domainDescription, onDomainDescriptionChange, onHighlightSelectedItems, summary, isLoadingSummary1, isLoadingSummaryDescriptions, isIgnoreDomainDescription, sidebarWidthPercentage, onSummaryDescriptionsClick, summaryDescriptions, onAddNewEntity}) =>
 {
     const [isHovered, setIsHovered] = useState<boolean>(false)
     const [tabValue, setTabValue] = useState<string>('0');
@@ -132,21 +131,8 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
     {
         return (
             <>
-                <Stack direction="row" justifyContent="space-between">
-                    <div style={{ flexGrow: 1 }}> </div>
-                    <Stack spacing={1} direction="row"paddingX={1}>
-
-                        <Button variant="contained" size="small" disableElevation sx={{textTransform: "capitalize"}} onClick={() => onImportButtonClick()}>
-                            Import
-                        </Button>
-
-                        <Button variant="contained" size="small" disableElevation sx={{textTransform: "capitalize"}}>
-                            Export
-                        </Button>
-                    </Stack>
-                </Stack>
-
-                <Box component="form" sx={{ '& .MuiTextField-root': { m: 1, width: '98.9%' } }}
+                <Box sx={{ '& .MuiTextField-root': { m: 1, width: '98.9%' } }}
+                    component="form"
                     noValidate
                     autoComplete="off"
                 >
@@ -164,7 +150,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     </TextField>
                 </Box >
                 
-                <Stack direction="row" justifyContent="space-between" paddingX={1}>
+                <Stack direction="row" justifyContent="space-between" paddingX={1} paddingY={"8px"}>
                     <Stack direction="row" spacing={2}>
                         <Button variant="contained" sx={{textTransform: "none"}} disableElevation onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}>{ capitalizeString("Suggest entities") }</Button>
                         <Button variant="contained" sx={{textTransform: "none"}} disableElevation onClick={onAddNewEntity}>{ capitalizeString("Add new entity") }</Button>
@@ -174,6 +160,16 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                         <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary 1</Button>
                         <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('2'); onSummaryDescriptionsClick() }}>Summary 2</Button>
                         <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={onHighlightSelectedItems}>Highlight</Button>
+                    </Stack>
+
+                    <Stack direction="row" spacing={2}>
+                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} onClick={() => onImportButtonClick()}>
+                            Import
+                        </Button>
+
+                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}}>
+                            Export
+                        </Button>
                     </Stack>
                 </Stack>
             </>
@@ -186,7 +182,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
     };
 
     const topBarWidth = 100 - sidebarWidthPercentage
-    const heightPx = 387
+    const heightPx = 360
 
     return (
         <Box sx={{ width: `${topBarWidth}%`, height: `${heightPx}px`, overflow: 'auto', typography: 'body1' }}>
@@ -201,7 +197,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 </Box>
 
                 <TabPanel value="0">
-                    {showMainLayout()}
+                    { showMainLayout() }
                 </TabPanel>
 
                 <TabPanel value="1">
@@ -233,6 +229,8 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                         <Divider></Divider>
                         <p></p>
 
+                        
+
                         <FormControlLabel label="Ignore domain description"
                             control={
                                 <Checkbox checked={isIgnoreDomainDescription} onChange={onIgnoreDomainDescriptionChange}/>
@@ -252,6 +250,8 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     </Stack>
                 </TabPanel>
             </TabContext>
+
+            <Divider sx={{bottom: "585px"}} absolute={true} ></Divider>
         </Box>
     )
 }

@@ -13,7 +13,7 @@ import { Relationship } from './interfaces';
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, summaryText,
-    OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
+    domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
     isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, onEditSuggestion, onHighlightSingleItem,
     isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
     regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick,
@@ -32,7 +32,6 @@ function App()
         onImportButtonClick={onImportButtonClick}
         onSuggestItems={onSuggestItems}
         onSummaryButtonClick={onSummaryButtonClick}
-        OnClickAddNode={OnClickAddNode}
         domainDescription={domainDescription}
         onDomainDescriptionChange={onDomainDescriptionChange}
         onHighlightSelectedItems={onHighlightSelectedItems}

@@ -54,7 +54,7 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
 
 
     return (
-        <Box sx={{backgroundColor: "white", border: selected ? borderSelected : borderNonSelected }}>
+        <Box sx={{ width: "180px", textAlign: "center", backgroundColor: "white", border: selected ? borderSelected : borderNonSelected }}>
 
             <Handle type="target" position={Position.Top} style={{ background: selected ? primaryColor : "black" }} />
             <Handle type="source" position={Position.Bottom} style={{ background: selected ? primaryColor : "black" }} />
@@ -89,8 +89,8 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
                 >
                 <MenuItem onClick={() => { data.onEdit(entity); handleClose(); }}>Edit entity</MenuItem>
                 <MenuItem onClick={() => { data.onAddNewAttribute(entity); handleClose(); }}>Add new attribute</MenuItem>
-                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.ATTRIBUTES, entity, null); handleClose(); }}>Suggest attributes</MenuItem>
-                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.RELATIONSHIPS, entity, null); handleClose(); }}>Suggest relationships</MenuItem>
+                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.ATTRIBUTES, entity.name, null); handleClose(); }}>Suggest attributes</MenuItem>
+                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.RELATIONSHIPS, entity.name, null); handleClose(); }}>Suggest relationships</MenuItem>
             </Menu>
 
 
