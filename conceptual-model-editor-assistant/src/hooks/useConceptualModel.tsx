@@ -48,8 +48,8 @@ const useConceptualModel = () =>
   const { capitalizeString } = useUtility()
 
   const { isLoadingSuggestedItems, isLoadingSummary1, isLoadingSummaryDescriptions, isLoadingEdit, summaryText, fetchSummary, fetchSummaryDescriptions, summaryDescriptions, 
-          fetchNonStreamedData, fetchStreamedData, fetchStreamedDataGeneral, fetchMergedOriginalTexts }
-          = useFetchData({ onProcessNonStreamedData, onProcessStreamedData, onProcessStreamedDataGeneral, onProcessMergedOriginalTexts })
+          fetchStreamedData, fetchStreamedDataGeneral, fetchMergedOriginalTexts }
+          = useFetchData({ onProcessStreamedData, onProcessStreamedDataGeneral, onProcessMergedOriginalTexts })
 
   let IDToAssign = 0
 
@@ -57,7 +57,6 @@ const useConceptualModel = () =>
   const SUGGEST_ITEMS_ENDPOINT = "suggest"
   const SUGGEST_ITEMS_URL = BASE_URL + SUGGEST_ITEMS_ENDPOINT
   const HEADER = { "Content-Type": "application/json" }
-  const IS_FETCH_STREAM_DATA = true
 
 
   const onConnect : OnConnect = useCallback((params) => { console.log("Edge connected"); setEdges((edge) => addEdge(params, edge)) },
@@ -221,20 +220,6 @@ const useConceptualModel = () =>
       return newID
     }
 
-
-    function onProcessNonStreamedData(data: any, itemType: ItemType): void
-    {
-      for (let i = 0; i < data.length; i++)
-      {
-        const ID = assignID()
-        data[i][Field.ID] = ID
-        data[i][Field.TYPE] = itemType
-
-        setSuggestedItems(previousSuggestedItems => {
-          return [...previousSuggestedItems, data[i]]
-        })
-      }
-    }
 
     function onProcessStreamedData(value: any, itemType: ItemType): void
     {
@@ -585,15 +570,8 @@ const useConceptualModel = () =>
     const targetItemName = targetItem !== null ? targetItem.name : ""
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
-    
-    if (!IS_FETCH_STREAM_DATA)
-    {
-      fetchNonStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, itemType)
-    }
-    else
-    {
-      fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, itemType)
-    }
+
+    fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, itemType)
   }
 
 

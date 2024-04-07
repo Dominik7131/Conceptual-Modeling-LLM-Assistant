@@ -4,13 +4,12 @@ import { Field, Item, ItemType, OriginalTextIndexesItem, summaryObject } from ".
 
 interface Props
 {
-  onProcessNonStreamedData : (data: any, itemType: ItemType) => void
   onProcessStreamedData : (value: any, itemType: ItemType) => void
   onProcessStreamedDataGeneral : (value: any, itemType: Field) => void
   onProcessMergedOriginalTexts : (data: any) => void
 }
 
-const useFetchData = ({onProcessNonStreamedData, onProcessStreamedData, onProcessStreamedDataGeneral, onProcessMergedOriginalTexts} : Props) =>
+const useFetchData = ({onProcessStreamedData, onProcessStreamedDataGeneral, onProcessMergedOriginalTexts} : Props) =>
 {
     // TODO: Split all fetch data methods to a separate files
 
@@ -23,22 +22,6 @@ const useFetchData = ({onProcessNonStreamedData, onProcessStreamedData, onProces
     // TODO: This object should contain descriptions for "entities": array of entities and "relationships": array of relationships
     const [summaryDescriptions, setSummaryDescriptions] = useState<summaryObject>({ entities: [], relationships: []})
 
-
-    const fetchNonStreamedData = (url : string, headers : any, body_data : any, itemType : ItemType) =>
-    {
-      setIsLoadingSuggestedItems(_ => true)
-
-      fetch(url, { method: "POST", headers, body: body_data })
-      .then(response => response.json())
-      .then(data => 
-          {
-            onProcessNonStreamedData(data, itemType)
-            
-          })
-      .catch(error => console.log(error))
-      setIsLoadingSuggestedItems(_ => false)
-      return
-    }
 
     const fetchStreamedData = (url : string, headers : any, bodyData : any, itemType : ItemType) =>
     {
@@ -297,7 +280,9 @@ const useFetchData = ({onProcessNonStreamedData, onProcessStreamedData, onProces
         return
     }
 
-    return { isLoadingSuggestedItems, setIsLoadingSuggestedItems, isLoadingSummary1, isLoadingSummaryDescriptions, isLoadingEdit, summaryText, summaryDescriptions, fetchSummary, fetchSummaryDescriptions, fetchNonStreamedData, fetchStreamedData, fetchStreamedDataGeneral, fetchMergedOriginalTexts }
+    return { isLoadingSuggestedItems, setIsLoadingSuggestedItems, isLoadingSummary1, isLoadingSummaryDescriptions, isLoadingEdit,
+      summaryText, summaryDescriptions, fetchSummary, fetchSummaryDescriptions, fetchStreamedData, fetchStreamedDataGeneral,
+      fetchMergedOriginalTexts }
 }
 
 export default useFetchData
