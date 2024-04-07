@@ -24,6 +24,8 @@ interface Props
     isLoading : boolean
     fieldToLoad : Field
     isOpened : boolean
+    isDisableSave : boolean
+    isDisableChange : boolean
     onClose : () => void
     onSave : (editedItem: Item, oldItem: Item, isSuggestedItem: boolean) => void
     onPlus : (itemName: string, field: Field) => void
@@ -34,7 +36,7 @@ interface Props
     onConfirmRegeneratedText : (field : Field) => void
 }
 
-const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isOpened, isLoading, fieldToLoad, isSuggestedItem, onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText, onRemove} : Props) =>
+const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isOpened, isLoading, fieldToLoad, isSuggestedItem, onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText, onRemove, isDisableSave, isDisableChange} : Props) =>
 {
     const attribute = editedItem as Attribute
     const relationship = editedItem as Relationship
@@ -129,14 +131,14 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
 
                     {
                         isSuggestedItem ?
-                        <Button onClick={() => { onAddItem(editedItem, false); onClose()}}>Add</Button>
+                        <Button onClick={() => { onAddItem(editedItem, false) }}>Add</Button>
                         :
                         <Button onClick={() => { onRemove(item); onClose()}}>Remove</Button>
                     }
                     
 
                     {
-                        isSuggestedItem && isAttribute &&
+                        isSuggestedItem && !isDisableChange && isAttribute &&
                             <Button
                                 onClick={ () => onAddItem(item, true)}>
                                 Change to relationship
@@ -144,17 +146,19 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                     }
 
                     {
-                        isSuggestedItem && isRelationship &&
+                        isSuggestedItem && !isDisableChange && isRelationship &&
                             <Button
                                 onClick={ () => onAddItem(item, true)}>
                                 Change to attribute
                             </Button>
                     }
                     
-                    <Button
-                        onClick={() => { {onSave(editedItem, item, isSuggestedItem)}; onClose()}}>
-                        Save
-                    </Button>
+                    { !isDisableSave &&
+                        <Button
+                            onClick={() => {onSave(editedItem, item, isSuggestedItem)}}>
+                            Save
+                        </Button>
+                    }
 
                     <Button
                         onClick={() => onClose()}>

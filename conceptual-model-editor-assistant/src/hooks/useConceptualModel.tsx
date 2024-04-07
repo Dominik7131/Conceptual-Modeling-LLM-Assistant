@@ -30,6 +30,8 @@ const useConceptualModel = () =>
   const [editedSuggestedItem, setEditedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
   const [regeneratedItem, setRegeneratedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
   const [isSuggestedItem, setIsSuggestedItem] = useState(true)
+  const [isDisableSave, setIsDisableSave] = useState(true)
+  const [isDisableChange, setIsDisableChange] = useState(true)
 
   const [isMultiSelection, setIsMultiSelection] = useState<boolean>(false);
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
@@ -221,7 +223,7 @@ const useConceptualModel = () =>
     }
 
 
-    function onProcessStreamedData(value: any, itemType: ItemType): void
+    function onProcessStreamedData(value: any, sourceEntityName: string, itemType: ItemType): void
     {
       // Convert the `value` to a string
       var jsonString = new TextDecoder().decode(value)
@@ -236,6 +238,15 @@ const useConceptualModel = () =>
         let item : Item = JSON.parse(jsonStringParts[i])
         item[Field.ID] = assignID()
         item[Field.TYPE] = itemType
+
+        if (itemType === ItemType.ATTRIBUTE)
+        {
+          (item as Attribute)[Field.SOURCE_ENTITY] = sourceEntityName
+        }
+        else if (itemType === ItemType.RELATIONSHIP)
+        {
+          (item as Relationship)[Field.SOURCE_ENTITY] = sourceEntityName
+        }
 
         setSuggestedItems(previousSuggestedItems => {
           return [...previousSuggestedItems, item]
@@ -298,6 +309,14 @@ const useConceptualModel = () =>
 
   const onEditSave = (newItem: Item, oldItem: Item, isSuggestedItem: boolean): void =>
   {
+    if (!newItem.name)
+    {
+      alert("Name cannot be empty")
+      return
+    }
+
+    setIsShowDialogEdit(_ => false)
+
     if (isSuggestedItem)
     {
       // TODO: instead of selectedSuggestedItem have only ID saved
@@ -377,13 +396,7 @@ const useConceptualModel = () =>
     const newData = {
       ...oldNode.data, description: newEntity.description, inference: newEntity.inference, inference_indexes: newEntity.inferenceIndexes
     }
-
     const newNode: Node = {...oldNode, id: newEntity.name, data: newData}
-    // const newNode: Node = { id: newEntity.name, type: "customNode", position: oldNode.position, data: {
-    //   [Field.ID]: 0, [Field.DESCRIPTION]: newEntity.description,
-    //   [Field.INFERENCE]: newEntity.inference, [Field.INFERENCE_INDEXES]: newEntity.inferenceIndexes,
-    //   attributes: oldNode.data.attributes, onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
-    // }}
 
 
     if (newEntity.name !== oldEntity.name)
@@ -519,11 +532,14 @@ const useConceptualModel = () =>
 
     const newAttributes = oldNode.data.attributes.filter((element: Attribute) => element.name !== attribute.name)
 
-    const newNode: Node = { id: oldNode.id, type: "customNode", position: oldNode.position, data: {
-      [Field.ID]: 0, [Field.DESCRIPTION]: oldNode.data.description, [Field.INFERENCE]: oldNode.data.inference,
-      [Field.INFERENCE_INDEXES]: oldNode.data.inferenceIndexes,
-      attributes: newAttributes, onEdit: onEditItem
-    }}
+    // const newNode: Node = { id: oldNode.id, type: "customNode", position: oldNode.position, data: {
+    //   [Field.ID]: 0, [Field.DESCRIPTION]: oldNode.data.description, [Field.INFERENCE]: oldNode.data.inference,
+    //   [Field.INFERENCE_INDEXES]: oldNode.data.inferenceIndexes,
+    //   attributes: newAttributes, onEdit: onEditItem
+    // }}
+
+    const newData = { ...oldNode.data, attributes: newAttributes }
+    const newNode = { ...oldNode, data: newData }
 
 
     setNodes((nodes) => nodes.map((currentNode : Node) =>
@@ -571,7 +587,7 @@ const useConceptualModel = () =>
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
 
-    fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, itemType)
+    fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, sourceItemName, itemType)
   }
 
 
@@ -583,6 +599,8 @@ const useConceptualModel = () =>
     }
 
     setIsSuggestedItem(_ => true)
+    setIsDisableSave(_ => true)
+    setIsDisableChange(_ => true)
     setSelectedSuggestedItem(_ => blankEntity)
     setEditedSuggestedItem(_ => blankEntity)
 
@@ -598,6 +616,8 @@ const useConceptualModel = () =>
     }
 
     setIsSuggestedItem(_ => true)
+    setIsDisableSave(_ => true)
+    setIsDisableChange(_ => true)
     setSelectedSuggestedItem(_ => blankAttribute)
     setEditedSuggestedItem(_ => blankAttribute)
 
@@ -764,6 +784,12 @@ const useConceptualModel = () =>
 
     const addNode = (nodeID : string, positionX : number, positionY : number, attributes : Attribute[] = []) =>
     {
+      if (!nodeID)
+      {
+        alert("Node name is empty")
+        return
+      }
+
       // Do not add a new node if it already exists
       for (let i = 0; i < nodes.length; i++)
       {
@@ -792,15 +818,19 @@ const useConceptualModel = () =>
     const onDialogDomainDescriptionClose = () =>
     {
       setIsShowDialogDomainDescription(false)
-    }
-
-    
+    }    
 
 
     const onAddItem = (item : Item, addAsDifferent : boolean = false) =>
     {
       if (item.type === ItemType.ENTITY)
       {
+        if (!item.name)
+        {
+          alert("Entity name cannot be empty")
+          return
+        }
+
         onAddEntity(item as Entity)
       }
       else if (item.type === ItemType.ATTRIBUTE)
@@ -831,12 +861,13 @@ const useConceptualModel = () =>
       {
        console.log("Unknown item type: ", item.type)
       }
+
+      setIsShowDialogEdit(false)
     }
 
 
     const onAddEntity = (entity: Entity) =>
     {
-      console.log("adding entities")
       addNode(entity.name, 66, 66)
     }
 
@@ -1033,6 +1064,8 @@ const useConceptualModel = () =>
     const onEditSuggestion = (itemID: number) : void =>
     {
       setIsSuggestedItem(_ => true)
+      setIsDisableSave(_ => false)
+      setIsDisableChange(_ => false)
       setSelectedSuggestedItem(_ => suggestedItems[itemID])
       setEditedSuggestedItem(_ => suggestedItems[itemID])
 
@@ -1043,6 +1076,8 @@ const useConceptualModel = () =>
     const onEditItem = (item: Item) : void =>
     {
       setIsSuggestedItem(_ => false)
+      setIsDisableSave(_ => false)
+      setIsDisableChange(_ => false)
       setSelectedSuggestedItem(_ => item)
       setEditedSuggestedItem(_ => item)
 
@@ -1057,7 +1092,7 @@ const useConceptualModel = () =>
     }
 
 
-    const onShowInference = (itemID : number) =>
+    const onHighlightSingleItem = (itemID : number) =>
     {
       // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
       // TODO: probably move this function into file `useInferenceIndexes.tsx`
@@ -1081,21 +1116,19 @@ const useConceptualModel = () =>
       // Create tooltips for highlighted original text
       let tooltip = ""
 
-      // TODO: as an argument in this function get sourceEntity
-      const capitalizedSourceEntity : string = "placeholder" //capitalizeString(sourceEntity)
+      const capitalizedSourceEntity: string = capitalizeString((suggestedItem as Attribute).source)
 
-      if (userChoiceSuggestion === UserChoice.ENTITIES)
+      if (suggestedItem.type === ItemType.ENTITY)
       {
-        tooltip = capitalizedSourceEntity
+        tooltip = `Entity: ${capitalizedSourceEntity}`
       }
-      else if (userChoiceSuggestion === UserChoice.ATTRIBUTES)
+      else if (suggestedItem.type === ItemType.ATTRIBUTE)
       {
         tooltip = `${capitalizedSourceEntity}: ${suggestedItem.name}`
       }
-      else if (userChoiceSuggestion === UserChoice.RELATIONSHIPS)
+      else if (suggestedItem.type === ItemType.RELATIONSHIP)
       {
-        // tooltip = `${capitalizedSourceEntity}-${targetEntity}: ${suggestedItem.name}`
-        tooltip = "relationship-placeholder"
+        tooltip = `${capitalizedSourceEntity} - ${suggestedItem.name} - ${(suggestedItem as Relationship).target}`
       }
 
       let newTooltips : string[] = Array(suggestedItem.inferenceIndexes.length).fill(tooltip)
@@ -1105,10 +1138,10 @@ const useConceptualModel = () =>
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick,
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
-        isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
+        isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onHighlightSingleItem,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
         regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions,
-        isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity
+        isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange
     }
 }
 

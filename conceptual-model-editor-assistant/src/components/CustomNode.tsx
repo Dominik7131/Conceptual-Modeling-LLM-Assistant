@@ -8,13 +8,16 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
+import useUtility from '../hooks/useUtility';
  
 
 // List of all NodeProps: https://reactflow.dev/api-reference/types/node-props
 export default function TextUpdaterNode({ id, selected, data } : NodeProps)
 {
     const [isEntityHovered, setIsEntityHovered] = useState<boolean>(false)
+
+    const { capitalizeString } = useUtility()
     
     const entity: Entity = {
         [Field.ID]: 0, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: id, [Field.DESCRIPTION]: data.description,
@@ -28,11 +31,12 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
 
     // If the entity name is too long then display only the beginning of it with three dots at the end
     const spacesCount: number = entity.name.split(" ").length - 1
-    let entityName = entity.name
+    let entityName = capitalizeString(entity.name)
     if (spacesCount === 0 && entity.name.length > 12)
     {
         entityName = entity.name.substring(0, 12) + "..."
     }
+
 
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -55,23 +59,25 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
             <Handle type="target" position={Position.Top} style={{ background: selected ? primaryColor : "black" }} />
             <Handle type="source" position={Position.Bottom} style={{ background: selected ? primaryColor : "black" }} />
 
-            <Button size="small" fullWidth={true}
-                sx={{ color: selected ? primaryColor : "black", fontSize: "17px", textTransform: 'capitalize',
-                        overflow: "hidden", direction: 'ltr' }}
-                onMouseEnter={() => setIsEntityHovered(_ => true)} 
-                onMouseLeave={() => setIsEntityHovered(_ => false)}
-                >
-                <strong>{entityName}</strong>
-
-                <Typography
-                    id="long-button"
-                    // onClick={() => data.onEdit(entity)}
-                    onClick={handleClick}
-                    sx={{ display: (isEntityHovered || anchorEl) ? "block" : "none", position: "absolute", right: "0px", top: "6px" }}
+            <Tooltip title={entityName} enterDelay={500}>
+                <Button size="small" fullWidth={true}
+                    sx={{ color: selected ? primaryColor : "black", fontSize: "17px", textTransform: 'none',
+                          overflow: "hidden", direction: 'ltr' }}
+                    onMouseEnter={() => setIsEntityHovered(_ => true)} 
+                    onMouseLeave={() => setIsEntityHovered(_ => false)}
                     >
-                    <MoreVertIcon />
-                </Typography>
-            </Button>
+                    <strong>{entityName}</strong>
+
+                    <Typography
+                        id="long-button"
+                        // onClick={() => data.onEdit(entity)}
+                        onClick={handleClick}
+                        sx={{ display: (isEntityHovered || anchorEl) ? "block" : "none", position: "absolute", right: "0px", top: "6px" }}
+                        >
+                        <MoreVertIcon />
+                    </Typography>
+                </Button>
+            </Tooltip>
 
             {/* https://mui.com/material-ui/react-menu/ */}
             <Menu

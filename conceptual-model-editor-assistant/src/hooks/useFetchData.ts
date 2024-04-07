@@ -4,7 +4,7 @@ import { Field, Item, ItemType, OriginalTextIndexesItem, summaryObject } from ".
 
 interface Props
 {
-  onProcessStreamedData : (value: any, itemType: ItemType) => void
+  onProcessStreamedData : (value: any, sourceEntityName: string, itemType: ItemType) => void
   onProcessStreamedDataGeneral : (value: any, itemType: Field) => void
   onProcessMergedOriginalTexts : (data: any) => void
 }
@@ -23,7 +23,7 @@ const useFetchData = ({onProcessStreamedData, onProcessStreamedDataGeneral, onPr
     const [summaryDescriptions, setSummaryDescriptions] = useState<summaryObject>({ entities: [], relationships: []})
 
 
-    const fetchStreamedData = (url : string, headers : any, bodyData : any, itemType : ItemType) =>
+    const fetchStreamedData = (url : string, headers : any, bodyData : any, sourceEntityName: string, itemType : ItemType) =>
     {
       // TODO: add object interface for header and bodyData
 
@@ -59,7 +59,7 @@ const useFetchData = ({onProcessStreamedData, onProcessStreamedDataGeneral, onPr
                           return
                       }
 
-                      onProcessStreamedData(value, itemType)
+                      onProcessStreamedData(value, sourceEntityName, itemType)
 
                       // Read the next chunk
                       readChunk();

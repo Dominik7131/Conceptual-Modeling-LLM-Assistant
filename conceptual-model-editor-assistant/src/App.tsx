@@ -12,10 +12,10 @@ function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, summaryText,
     OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
-    isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
+    isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onHighlightSingleItem,
     isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
     regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick,
-    summaryDescriptions, isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity
+    summaryDescriptions, isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -57,7 +57,7 @@ function App()
         items={suggestedItems}
         onAddItem={onAddItem}
         onEditSuggestion={onEditSuggestion}
-        onShowInference={onShowInference}
+        onHighlightSingleItem={onHighlightSingleItem}
         sidebarWidthPercentage={sideBarWidthPercentage}
         isSidebarOpen={isSidebarOpen}
         onToggleSideBarCollapse={onToggleSideBarCollapse}
@@ -89,6 +89,8 @@ function App()
         onItemEdit={onItemEdit}
         onConfirmRegeneratedText={onConfirmRegeneratedText}
         onRemove={onEditRemove}
+        isDisableSave={isDisableSave}
+        isDisableChange={isDisableChange}
       />
 
     </>

@@ -17,13 +17,13 @@ interface Props
     items : Item[]
     onAddItem : (item : Item, addAsDifferent : boolean) => void
     onEditSuggestion : (itemID : number, itemType : ItemType) => void
-    onShowInference : (itemID : number) => void
+    onHighlightSingleItem : (itemID : number) => void
     sidebarWidthPercentage : number
     isSidebarOpen : boolean
     onToggleSideBarCollapse : () => void
 }
 
-const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion, onShowInference, sidebarWidthPercentage, isSidebarOpen, onToggleSideBarCollapse}) =>
+const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion, onHighlightSingleItem, sidebarWidthPercentage, isSidebarOpen, onToggleSideBarCollapse}) =>
 {
     const showTextOnSidebar = () =>
     {
@@ -47,7 +47,7 @@ const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion
             <ButtonGroup fullWidth sx={{ marginTop: 1 }} variant="outlined" size="small">
                 <Button onClick={() => onAddItem(item, false)}> Add </Button>
                 <Button onClick={() => onEditSuggestion(item.ID, item.type)}> Edit </Button>
-                <Button onClick={() => onShowInference(item.ID)}> Highlight </Button>
+                <Button onClick={() => onHighlightSingleItem(item.ID)}> Highlight </Button>
             </ButtonGroup>
         )
 

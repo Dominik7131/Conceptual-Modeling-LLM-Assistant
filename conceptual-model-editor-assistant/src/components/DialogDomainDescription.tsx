@@ -43,7 +43,7 @@ const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened,
 
     return (
       <>
-        <Typography variant="h5"> Entity: TODO: Get better title</Typography>
+        <Typography variant="h5"> Entity: not implemented </Typography>
         <Typography variant="h5"> {getUserChoiceSingular(userChoiceSuggestion)}: {itemName}</Typography>
       </>)
   }

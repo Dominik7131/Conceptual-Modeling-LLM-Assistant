@@ -166,13 +166,13 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 
                 <Stack direction="row" justifyContent="space-between" paddingX={1}>
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}>Suggest entities</Button>
-                        <Button variant="contained" size="small" disableElevation onClick={onAddNewEntity} sx={{textTransform: "capitalize"}}>Add new entity</Button>
+                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}>{ capitalizeString("Suggest entities") }</Button>
+                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation onClick={onAddNewEntity}>{ capitalizeString("Add new entity") }</Button>
                     </Stack>
 
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary1</Button>
-                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('2'); onSummaryDescriptionsClick() }}>Summary2</Button>
+                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary 1</Button>
+                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('2'); onSummaryDescriptionsClick() }}>Summary 2</Button>
                         <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={onHighlightSelectedItems}>Highlight</Button>
                     </Stack>
                 </Stack>
@@ -246,8 +246,9 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                         <Typography id="input-slider" gutterBottom>
                             Temperature
                         </Typography>
-                        <Slider aria-label="Temperature" defaultValue={0} valueLabelDisplay="auto"
-                                shiftStep={0.1} step={0.1} marks min={0} max={1}/>
+                        <Slider aria-label="Temperature" defaultValue={0} valueLabelDisplay="auto" 
+                                shiftStep={0.1} step={0.1} marks min={0} max={2}
+                                sx={{ width: "200px" }}/>
                     </Stack>
                 </TabPanel>
             </TabContext>
