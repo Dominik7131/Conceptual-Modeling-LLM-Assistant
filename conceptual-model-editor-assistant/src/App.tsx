@@ -6,16 +6,18 @@ import { ReactFlowProvider } from 'reactflow';
 import useLayoutSize from './hooks/useLayoutSize';
 import DialogDomainDescription from './components/DialogDomainDescription';
 import DialogEditItem from './components/DialogEditItem';
+import DialogCreateEdge from './components/DialogCreateEdge';
 
 
 function App()
 {
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, summaryText,
     OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
-    isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onHighlightSingleItem,
+    isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, onEditSuggestion, onHighlightSingleItem,
     isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
     regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick,
-    summaryDescriptions, isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange
+    summaryDescriptions, isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange, onDialogCreateEdgeClose,
+    isShowCreateEdgeDialog
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -69,7 +71,6 @@ function App()
         inferenceIndexes={inferenceIndexesMockUp}
         onClose={onDialogDomainDescriptionClose}
         itemName={selectedSuggestedItem.name}
-        userChoiceSuggestion={userChoiceSuggestion}
         tooltips={tooltips}
       />
 
@@ -91,6 +92,11 @@ function App()
         onRemove={onEditRemove}
         isDisableSave={isDisableSave}
         isDisableChange={isDisableChange}
+      />
+
+      <DialogCreateEdge
+        isOpened={isShowCreateEdgeDialog}
+        onClose={onDialogCreateEdgeClose}
       />
 
     </>

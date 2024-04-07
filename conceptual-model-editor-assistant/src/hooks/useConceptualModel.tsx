@@ -25,6 +25,7 @@ const useConceptualModel = () =>
   const [fieldToLoad, setFieldToLoad] = useState<Field>(Field.ID)
 
   const [suggestedItems, setSuggestedItems] = useState<Item[]>([])
+
   // TODO: Do not use initial invalid item, instead make a type: Item | null
   const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
   const [editedSuggestedItem, setEditedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
@@ -39,11 +40,10 @@ const useConceptualModel = () =>
 
   const [isShowDialogDomainDescription, setIsShowDialogDomainDescription] = useState<boolean>(false)
   const [isShowDialogEdit, setIsShowDialogEdit] = useState<boolean>(false)
+  const [isShowCreateEdgeDialog, setIsShowCreateEdgeDialog] = useState<boolean>(false)
 
   const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([])
   const [tooltips, setTooltips] = useState<string[]>([])
-
-  const [userChoiceSuggestion, setUserChoiceSuggestion] = useState<string>("")
 
   const { domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
 
@@ -61,9 +61,18 @@ const useConceptualModel = () =>
   const HEADER = { "Content-Type": "application/json" }
 
 
-  const onConnect : OnConnect = useCallback((params) => { console.log("Edge connected"); setEdges((edge) => addEdge(params, edge)) },
-      [setEdges],
-    );
+  const onConnect : OnConnect = useCallback((params) =>
+  { 
+    const sourceEntity = params.source
+    const targetEntity = params.target
+
+    console.log("Connecting from-to: ", sourceEntity, targetEntity)
+
+    setIsShowCreateEdgeDialog(_ => true)
+
+    // setEdges((edge) => addEdge(params, edge))
+
+  }, [setEdges]);
   
   const onChange = useCallback(({ nodes, edges } : { nodes : Node[], edges : Edge[]}) =>
   {
@@ -112,7 +121,7 @@ const useConceptualModel = () =>
     const input : SerializedConceptualModel = { "entities": [
         {name: "Student", "description": "A student entity representing individuals enrolled in courses.", inferenceIndexes: [], "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
         {name: "Course", "description": "A course entity representing educational modules.", inferenceIndexes: [], "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
-        {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", inferenceIndexes: [], "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "int", "description": "The price of staying in the dormitory."}]},
+        {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", inferenceIndexes: [], "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "number", "description": "The price of staying in the dormitory."}]},
         {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", inferenceIndexes: [], "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
       "relationships": [{ID: 0, type: ItemType.RELATIONSHIP, name: "enrolled in", description: "", inference: "Students can be enrolled in any number of courses", inferenceIndexes: [], "source": "student", "target": "course", cardinality: ""},
                         {ID: 1, type: ItemType.RELATIONSHIP, "name": "accommodated in", description: "", "inference": "students can be accommodated in dormitories", inferenceIndexes: [], "source": "student", "target": "dormitory", cardinality: ""},
@@ -1057,7 +1066,12 @@ const useConceptualModel = () =>
     const onEditClose = () =>
     {
       onClearRegeneratedItem(null, true)
-      setIsShowDialogEdit(false)
+      setIsShowDialogEdit(_ => false)
+    }
+
+    const onDialogCreateEdgeClose = () =>
+    {
+      setIsShowCreateEdgeDialog(_ => false)
     }
 
 
@@ -1138,10 +1152,10 @@ const useConceptualModel = () =>
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick,
         summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
-        isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onHighlightSingleItem,
+        isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, onEditSuggestion, onHighlightSingleItem,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
         regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions,
-        isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange
+        isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange, onDialogCreateEdgeClose, isShowCreateEdgeDialog
     }
 }
 
