@@ -82,7 +82,7 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
                 MenuListProps={{'aria-labelledby': 'basic-button'}}
                 >
                 <MenuItem onClick={() => { data.onEdit(entity); handleClose(); }}>Edit entity</MenuItem>
-                <MenuItem onClick={handleClose}>Add new attribute</MenuItem>
+                <MenuItem onClick={() => { data.onAddNewAttribute(entity); handleClose(); }}>Add new attribute</MenuItem>
                 <MenuItem onClick={() => { data.onSuggestItems(UserChoice.ATTRIBUTES, entity, null); handleClose(); }}>Suggest attributes</MenuItem>
                 <MenuItem onClick={() => { data.onSuggestItems(UserChoice.RELATIONSHIPS, entity, null); handleClose(); }}>Suggest relationships</MenuItem>
             </Menu>

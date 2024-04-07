@@ -60,8 +60,7 @@ const useConceptualModel = () =>
   const IS_FETCH_STREAM_DATA = true
 
 
-  const onConnect : OnConnect = useCallback(
-      (params) => setEdges((edge) => addEdge(params, edge)),
+  const onConnect : OnConnect = useCallback((params) => { console.log("Edge connected"); setEdges((edge) => addEdge(params, edge)) },
       [setEdges],
     );
   
@@ -142,10 +141,11 @@ const useConceptualModel = () =>
         [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "",
         [Field.INFERENCE_INDEXES]: entity.inferenceIndexes}
 
-      const newNode : Node = { id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY },
-                                data: { description: entity.description,
-                                        attributes: entity.attributes, [Field.INFERENCE_INDEXES]: entityObject.inferenceIndexes,
-                                        onEdit: onEditItem, onSuggestItems: onSuggestItems } }
+      const newNode : Node = {
+        id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY }, data: { description: entity.description,
+        attributes: entity.attributes, [Field.INFERENCE_INDEXES]: entityObject.inferenceIndexes,
+        onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute }}
+
       newNodes.push(newNode)
 
       positionX += incrementX
@@ -319,13 +319,13 @@ const useConceptualModel = () =>
       setSelectedSuggestedItem(newItem)
 
       setSuggestedItems(suggestedItems.map(item => 
+      {
+        if (item.ID === newItem.ID)
         {
-          if (item.ID === newItem.ID)
-          {
-            return newItem
-          }
-          return item
-        }))
+          return newItem
+        }
+        return item
+      }))
       
       return
     }
@@ -389,11 +389,16 @@ const useConceptualModel = () =>
     }
 
     // Create an updated version of the old entity
-    const newNode: Node = { id: newEntity.name, type: "customNode", position: oldNode.position, data: {
-      [Field.ID]: 0, [Field.DESCRIPTION]: newEntity.description,
-      [Field.INFERENCE]: newEntity.inference, [Field.INFERENCE_INDEXES]: newEntity.inferenceIndexes,
-      attributes: oldNode.data.attributes, onEdit: onEditItem
-    }}
+    const newData = {
+      ...oldNode.data, description: newEntity.description, inference: newEntity.inference, inference_indexes: newEntity.inferenceIndexes
+    }
+
+    const newNode: Node = {...oldNode, id: newEntity.name, data: newData}
+    // const newNode: Node = { id: newEntity.name, type: "customNode", position: oldNode.position, data: {
+    //   [Field.ID]: 0, [Field.DESCRIPTION]: newEntity.description,
+    //   [Field.INFERENCE]: newEntity.inference, [Field.INFERENCE_INDEXES]: newEntity.inferenceIndexes,
+    //   attributes: oldNode.data.attributes, onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
+    // }}
 
 
     if (newEntity.name !== oldEntity.name)
@@ -449,11 +454,8 @@ const useConceptualModel = () =>
         }
       })
 
-      const newNode: Node = { id: oldNode.id, type: "customNode", position: oldNode.position, data: {
-        [Field.ID]: 0, [Field.DESCRIPTION]: oldNode.data.description, [Field.INFERENCE]: oldNode.data.inference,
-        [Field.INFERENCE_INDEXES]: oldNode.data.inferenceIndexes,
-        attributes: newAttributes, onEdit: onEditItem
-      }}
+      const newData = { ...oldNode.data, attributes: newAttributes}
+      const newNode: Node = { ...oldNode, data: newData}
 
   
       setNodes((nodes) => nodes.map((currentNode: Node) =>
@@ -592,6 +594,36 @@ const useConceptualModel = () =>
     {
       fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, itemType)
     }
+  }
+
+
+  const onAddNewEntity = () : void =>
+  {
+    const blankEntity: Entity = {
+      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: [],
+      [Field.TYPE]: ItemType.ENTITY,
+    }
+
+    setIsSuggestedItem(_ => true)
+    setSelectedSuggestedItem(_ => blankEntity)
+    setEditedSuggestedItem(_ => blankEntity)
+
+    setIsShowDialogEdit(true)
+  }
+
+
+  const onAddNewAttribute = (entity: Entity) : void =>
+  {
+    const blankAttribute: Attribute = {
+      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: [],
+      [Field.TYPE]: ItemType.ATTRIBUTE, [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: entity.name
+    }
+
+    setIsSuggestedItem(_ => true)
+    setSelectedSuggestedItem(_ => blankAttribute)
+    setEditedSuggestedItem(_ => blankAttribute)
+
+    setIsShowDialogEdit(true)
   }
 
 
@@ -764,7 +796,9 @@ const useConceptualModel = () =>
         }
       }
 
-      const newNode: Node = { id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: { attributes: attributes, onEdit: onEditItem } }
+      const newNode: Node = {
+        id: nodeID, type: "customNode", position: { x: positionX, y: positionY },
+        data: { attributes: attributes, onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute } }
       setNodes(previousNodes => {
         return [...previousNodes, newNode]
       })
@@ -781,6 +815,8 @@ const useConceptualModel = () =>
     {
       setIsShowDialogDomainDescription(false)
     }
+
+    
 
 
     const onAddItem = (item : Item, addAsDifferent : boolean = false) =>
@@ -895,9 +931,10 @@ const useConceptualModel = () =>
           return currentNode;
         }
 
-        const newAttributes = [...currentNode.data.attributes, newAttributeObject]
-        const updatedNode : Node = { id: currentNode.id, type: "customNode", position: currentNode.position, data: { attributes: newAttributes, onEdit: onEditItem }}
-  
+        const newAttributes = [...currentNode.data.attributes, newAttributeObject]  
+        const newData = { ...currentNode.data, attributes: newAttributes }
+        const updatedNode: Node = {...currentNode, data: newData}
+
         return updatedNode
       }));
     }
@@ -1093,7 +1130,7 @@ const useConceptualModel = () =>
         isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
         regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions,
-        isSuggestedItem, onEditRemove, nodeTypes
+        isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity
     }
 }
 

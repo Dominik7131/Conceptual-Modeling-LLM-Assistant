@@ -15,7 +15,7 @@ function App()
     isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
     isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
     regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick,
-    summaryDescriptions, isSuggestedItem, onEditRemove, nodeTypes
+    summaryDescriptions, isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -39,6 +39,7 @@ function App()
         onSummaryDescriptionsClick={onSummaryDescriptionsClick}
         summaryDescriptions={summaryDescriptions}
         sidebarWidthPercentage={sideBarWidthPercentage}
+        onAddNewEntity={onAddNewEntity}
       />
 
       <ConceptualModel

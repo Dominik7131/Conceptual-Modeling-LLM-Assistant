@@ -37,10 +37,12 @@ interface Props
     summaryDescriptions : summaryObject
 
     sidebarWidthPercentage : number
+
+    onAddNewEntity : () => void
 }
 
 
-const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isLoadingSummary1, isLoadingSummaryDescriptions, isIgnoreDomainDescription, sidebarWidthPercentage, onSummaryDescriptionsClick, summaryDescriptions}) =>
+const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isLoadingSummary1, isLoadingSummaryDescriptions, isIgnoreDomainDescription, sidebarWidthPercentage, onSummaryDescriptionsClick, summaryDescriptions, onAddNewEntity}) =>
 {
     const [isHovered, setIsHovered] = useState<boolean>(false)
     const [tabValue, setTabValue] = useState<string>('0');
@@ -162,34 +164,16 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                     </TextField>
                 </Box >
                 
-                <Stack direction="row" justifyContent="space-between">
-                    <Stack direction="row" paddingX={1} spacing={10}>
-                        <Stack direction="row" spacing={2}>
-                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}>{UserChoice.ENTITIES}</Button>
-                            {/* <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={(event) => onSuggestItems(UserChoice.ATTRIBUTES, null, null)}>{UserChoice.ATTRIBUTES}</Button> */}
-                            {/* <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={(event) => onSuggestItems(UserChoice.RELATIONSHIPS, null, null)}>{UserChoice.RELATIONSHIPS}</Button> */}
-                        </Stack>
-
-                        <Stack direction="row" spacing={2}>
-                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary1</Button>
-                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('2'); onSummaryDescriptionsClick() }}>Summary2</Button>
-                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={onHighlightSelectedItems}>Highlight</Button>
-                        </Stack>
+                <Stack direction="row" justifyContent="space-between" paddingX={1}>
+                    <Stack direction="row" spacing={2}>
+                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}>Suggest entities</Button>
+                        <Button variant="contained" size="small" disableElevation onClick={onAddNewEntity} sx={{textTransform: "capitalize"}}>Add new entity</Button>
                     </Stack>
 
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" size="small" disableElevation
-                            onClick={() => OnClickAddNode(insertedNodeNameText)}
-                            sx={{textTransform: "capitalize"}}
-                            >
-                                Add node
-                        </Button>
-
-                        <TextField variant="standard" placeholder="Insert node name to add"
-                            value={insertedNodeNameText}
-                            rows={1}
-                            onChange={(event) => setInsertedNodeNameText(event.target.value)}>
-                        </TextField>
+                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary1</Button>
+                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('2'); onSummaryDescriptionsClick() }}>Summary2</Button>
+                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={onHighlightSelectedItems}>Highlight</Button>
                     </Stack>
                 </Stack>
             </>
