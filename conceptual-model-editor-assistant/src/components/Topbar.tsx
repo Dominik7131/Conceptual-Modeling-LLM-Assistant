@@ -22,7 +22,7 @@ interface Props
     onIgnoreDomainDescriptionChange : () => void
     isIgnoreDomainDescription : boolean
     onImportButtonClick : () => void
-    onSuggestItems : (userChoice: UserChoice, sourceItem: Item | null, targetItem: Item | null) => void
+    onSuggestItems : (userChoice: UserChoice, sourceItem: string | null, targetItem: string | null) => void
     onSummaryButtonClick : () => void
     OnClickAddNode : (nodeName : string) => void
     domainDescription : string

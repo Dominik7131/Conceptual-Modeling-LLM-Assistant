@@ -63,10 +63,22 @@ const useConceptualModel = () =>
 
   const onConnect : OnConnect = useCallback((params) =>
   { 
-    const sourceEntity = params.source
-    const targetEntity = params.target
+    const sourceEntityName = params.source
+    const targetEntityName = params.target
 
-    console.log("Connecting from-to: ", sourceEntity, targetEntity)
+    if (!sourceEntityName || !targetEntityName)
+    {
+      return 
+    }
+
+    const blankRelationship: Relationship = {
+      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: [],
+      [Field.TYPE]: ItemType.RELATIONSHIP, [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntityName,
+      [Field.TARGET_ENTITY]: targetEntityName
+    }
+
+    setSelectedSuggestedItem(_ => blankRelationship)
+    setEditedSuggestedItem(_ => blankRelationship)
 
     setIsShowCreateEdgeDialog(_ => true)
 
@@ -483,31 +495,32 @@ const useConceptualModel = () =>
   {
     // Find the right edge based on the old ID
     const id: string = createEdgeID(oldRelationship.source, oldRelationship.target, oldRelationship.name)
-    let edgeToUpdate = edges.find(edge => edge.id === id)
+    let oldEdge = edges.find(edge => edge.id === id)
 
-    if (!edgeToUpdate)
+    if (!oldEdge)
     {
       return
     }
 
     // Create an updated version of the old edge
-    let edgeToUpdateCopy: Edge = { ...edgeToUpdate}
-    edgeToUpdateCopy.id = createEdgeID(newRelationship.source, newRelationship.target, newRelationship.name)
-    edgeToUpdateCopy.label = newRelationship.name
-    edgeToUpdateCopy.data.description = newRelationship.description
-    edgeToUpdateCopy.data.cardinality = newRelationship.cardinality
+    let newEdge: Edge = { ...oldEdge}
+    newEdge.id = createEdgeID(newRelationship.source, newRelationship.target, newRelationship.name)
+    newEdge.label = newRelationship.name
+    newEdge.data.description = newRelationship.description
+    newEdge.data.cardinality = newRelationship.cardinality
+    newEdge.data.inference = newRelationship.inference
 
     // TODO: Is the user allowed to change source and target?
     // If the source/target does not exist we need to create a new node
-    edgeToUpdateCopy.source = newRelationship.source
-    edgeToUpdateCopy.target = newRelationship.target
+    newEdge.source = newRelationship.source
+    newEdge.target = newRelationship.target
 
 
     setEdges((edges) => edges.map((currentEdge : Edge) =>
       {
         if (currentEdge.id === id)
         {
-          return edgeToUpdateCopy
+          return newEdge
         }
         else
         {
@@ -565,7 +578,7 @@ const useConceptualModel = () =>
   }
 
 
-  const onSuggestItems = (userChoice: UserChoice, sourceItem: Item | null, targetItem: Item | null): void =>
+  const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
   {
     if (isLoadingSuggestedItems)
     {
@@ -591,8 +604,8 @@ const useConceptualModel = () =>
     console.log("Item type: ", itemType)
 
 
-    const sourceItemName = sourceItem !== null ? sourceItem.name : ""
-    const targetItemName = targetItem !== null ? targetItem.name : ""
+    sourceItemName = sourceItemName !== null ? sourceItemName : ""
+    targetItemName = targetItemName !== null ? targetItemName : ""
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
 
@@ -617,11 +630,11 @@ const useConceptualModel = () =>
   }
 
 
-  const onAddNewAttribute = (entity: Entity) : void =>
+  const onAddNewAttribute = (sourceEntity: Entity) : void =>
   {
     const blankAttribute: Attribute = {
       [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: [],
-      [Field.TYPE]: ItemType.ATTRIBUTE, [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: entity.name
+      [Field.TYPE]: ItemType.ATTRIBUTE, [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntity.name
     }
 
     setIsSuggestedItem(_ => true)
@@ -631,6 +644,17 @@ const useConceptualModel = () =>
     setEditedSuggestedItem(_ => blankAttribute)
 
     setIsShowDialogEdit(true)
+  }
+
+
+  const onAddNewRelationship = () : void =>
+  {
+    setIsSuggestedItem(_ => true)
+    setIsDisableSave(_ => true)
+    setIsDisableChange(_ => true)
+
+    setIsShowDialogEdit(true)
+    setIsShowCreateEdgeDialog(false)
   }
 
 
@@ -785,10 +809,10 @@ const useConceptualModel = () =>
     //   console.log("Nodes: ", nodes)
     // }, [nodes]);
 
-    // useEffect(() =>
-    // {
-    //   console.log("Edges: ", edges)
-    // }, [edges]);
+    useEffect(() =>
+    {
+      console.log("Edges: ", edges)
+    }, [edges]);
 
 
     const addNode = (nodeID : string, positionX : number, positionY : number, attributes : Attribute[] = []) =>
@@ -832,6 +856,8 @@ const useConceptualModel = () =>
 
     const onAddItem = (item : Item, addAsDifferent : boolean = false) =>
     {
+      console.log("Adding: ", item)
+
       if (item.type === ItemType.ENTITY)
       {
         if (!item.name)
@@ -956,11 +982,12 @@ const useConceptualModel = () =>
         return updatedNode
       }));
     }
-    
-    const onAddRelationshipsToNodes = (relationshipObject : Relationship) =>
+
+
+    const onAddRelationshipsToNodes = (relationship : Relationship) =>
     {
-      let sourceNodeID = relationshipObject.source?.toLowerCase()
-      let targetNodeID = relationshipObject.target?.toLowerCase()
+      let sourceNodeID = relationship.source?.toLowerCase()
+      let targetNodeID = relationship.target?.toLowerCase()
 
       // TODO: Try to find a way to make the code more compact
       if (!sourceNodeID)
@@ -973,7 +1000,8 @@ const useConceptualModel = () =>
       }
   
       // Return if the edge is already existing
-      const newEdgeID = `${sourceNodeID},${targetNodeID}`
+      const newEdgeID = createEdgeID(sourceNodeID, targetNodeID, relationship.name) //`${sourceNodeID},${targetNodeID}`
+      
       for (let i = 0; i < edges.length; i++)
       {
         if (edges[i].id.toLowerCase() === newEdgeID)
@@ -1007,18 +1035,16 @@ const useConceptualModel = () =>
         {
           if (node.id === targetNodeID)
           {
-            console.log("Adding a new node")
             return node
           }
           return node
         }));
       }
   
-      console.log("Adding a new edge")
       const newEdge : Edge = {
-        id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationshipObject.name, data: {
-          onEdit: onEditItem, [Field.NAME]: relationshipObject.name, [Field.DESCRIPTION]: relationshipObject.description, [Field.INFERENCE]: relationshipObject.inference,
-          [Field.INFERENCE_INDEXES]: relationshipObject.inferenceIndexes }
+        id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: {
+          onEdit: onEditItem, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: relationship.description, [Field.INFERENCE]: relationship.inference,
+          [Field.INFERENCE_INDEXES]: relationship.inferenceIndexes }
       }
   
       setEdges(previousEdges =>
@@ -1155,7 +1181,8 @@ const useConceptualModel = () =>
         isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, onEditSuggestion, onHighlightSingleItem,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
         regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions,
-        isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange, onDialogCreateEdgeClose, isShowCreateEdgeDialog
+        isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange, onDialogCreateEdgeClose,
+        isShowCreateEdgeDialog, onAddNewRelationship
     }
 }
 

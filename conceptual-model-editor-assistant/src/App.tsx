@@ -7,6 +7,7 @@ import useLayoutSize from './hooks/useLayoutSize';
 import DialogDomainDescription from './components/DialogDomainDescription';
 import DialogEditItem from './components/DialogEditItem';
 import DialogCreateEdge from './components/DialogCreateEdge';
+import { Relationship } from './interfaces';
 
 
 function App()
@@ -17,7 +18,7 @@ function App()
     isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
     regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick,
     summaryDescriptions, isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange, onDialogCreateEdgeClose,
-    isShowCreateEdgeDialog
+    isShowCreateEdgeDialog, onAddNewRelationship
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -97,6 +98,9 @@ function App()
       <DialogCreateEdge
         isOpened={isShowCreateEdgeDialog}
         onClose={onDialogCreateEdgeClose}
+        onAddNewRelationship={onAddNewRelationship}
+        relationship={selectedSuggestedItem as Relationship}
+        onSuggestItems={onSuggestItems}
       />
 
     </>
