@@ -6,7 +6,7 @@ import TextField from '@mui/material/TextField';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { Attribute, UserChoice, summaryObject } from "../interfaces";
+import { Attribute, Item, UserChoice, summaryObject } from "../interfaces";
 import Tooltip from '@mui/material/Tooltip';
 import { CircularProgress, Divider, FormControl, FormLabel, List, ListItem, ListItemText, Radio, RadioGroup, Slider, Tab, Tabs, Typography } from "@mui/material";
 import { Node } from 'reactflow';
@@ -22,7 +22,7 @@ interface Props
     onIgnoreDomainDescriptionChange : () => void
     isIgnoreDomainDescription : boolean
     onImportButtonClick : () => void
-    onPlusButtonClick : (event : React.MouseEvent<HTMLButtonElement, MouseEvent>) => void
+    onSuggestItems : (userChoice: UserChoice, sourceItem: Item | null, targetItem: Item | null) => void
     onSummaryButtonClick : () => void
     OnClickAddNode : (nodeName : string) => void
     domainDescription : string
@@ -40,7 +40,7 @@ interface Props
 }
 
 
-const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isLoadingSummary1, isLoadingSummaryDescriptions, isIgnoreDomainDescription, sidebarWidthPercentage, onSummaryDescriptionsClick, summaryDescriptions}) =>
+const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, domainDescription, OnClickAddNode, onDomainDescriptionChange, onHighlightSelectedItems, summary, isLoadingSummary1, isLoadingSummaryDescriptions, isIgnoreDomainDescription, sidebarWidthPercentage, onSummaryDescriptionsClick, summaryDescriptions}) =>
 {
     const [isHovered, setIsHovered] = useState<boolean>(false)
     const [tabValue, setTabValue] = useState<string>('0');
@@ -165,9 +165,9 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 <Stack direction="row" justifyContent="space-between">
                     <Stack direction="row" paddingX={1} spacing={10}>
                         <Stack direction="row" spacing={2}>
-                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ENTITIES}</Button>
-                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.ATTRIBUTES}</Button>
-                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={(event) => onPlusButtonClick(event)}>{UserChoice.RELATIONSHIPS}</Button>
+                            <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}>{UserChoice.ENTITIES}</Button>
+                            {/* <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={(event) => onSuggestItems(UserChoice.ATTRIBUTES, null, null)}>{UserChoice.ATTRIBUTES}</Button> */}
+                            {/* <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={(event) => onSuggestItems(UserChoice.RELATIONSHIPS, null, null)}>{UserChoice.RELATIONSHIPS}</Button> */}
                         </Stack>
 
                         <Stack direction="row" spacing={2}>

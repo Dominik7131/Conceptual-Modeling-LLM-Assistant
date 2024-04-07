@@ -26,16 +26,18 @@ const useFetchData = ({onProcessNonStreamedData, onProcessStreamedData, onProces
 
     const fetchNonStreamedData = (url : string, headers : any, body_data : any, itemType : ItemType) =>
     {
-        fetch(url, { method: "POST", headers, body: body_data })
-        .then(response => response.json())
-        .then(data => 
-            {
-              onProcessNonStreamedData(data, itemType)
-              
-            })
-        .catch(error => console.log(error))
-        setIsLoadingSuggestedItems(_ => false)
-        return
+      setIsLoadingSuggestedItems(_ => true)
+
+      fetch(url, { method: "POST", headers, body: body_data })
+      .then(response => response.json())
+      .then(data => 
+          {
+            onProcessNonStreamedData(data, itemType)
+            
+          })
+      .catch(error => console.log(error))
+      setIsLoadingSuggestedItems(_ => false)
+      return
     }
 
     const fetchStreamedData = (url : string, headers : any, bodyData : any, itemType : ItemType) =>
@@ -44,6 +46,9 @@ const useFetchData = ({onProcessNonStreamedData, onProcessStreamedData, onProces
 
       // Fetch the event stream from the server
       // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
+
+      setIsLoadingSuggestedItems(_ => true)
+      
       fetch(url, { method: "POST", headers, body: bodyData })
       .then(response =>
         {

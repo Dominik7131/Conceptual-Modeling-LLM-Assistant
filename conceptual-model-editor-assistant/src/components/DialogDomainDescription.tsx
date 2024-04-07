@@ -21,12 +21,11 @@ interface Props
   inferenceIndexes : number[]
   onClose : () => void
   itemName : string
-  selectedEntityName : string
   userChoiceSuggestion : string
   tooltips : string[]
 }
 
-const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened, inferenceIndexes, onClose, itemName, selectedEntityName, userChoiceSuggestion, tooltips } : Props) =>
+const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened, inferenceIndexes, onClose, itemName, userChoiceSuggestion, tooltips } : Props) =>
 {
   const { capitalizeString, getUserChoiceSingular } = useUtility()
 
@@ -44,7 +43,7 @@ const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened,
 
     return (
       <>
-        <Typography variant="h5"> Entity: {selectedEntityName}</Typography>
+        <Typography variant="h5"> Entity: TODO: Get better title</Typography>
         <Typography variant="h5"> {getUserChoiceSingular(userChoiceSuggestion)}: {itemName}</Typography>
       </>)
   }

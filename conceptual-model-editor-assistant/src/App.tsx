@@ -10,10 +10,10 @@ import DialogEditItem from './components/DialogEditItem';
 
 function App()
 {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onPlusButtonClick, onSummaryButtonClick, summaryText,
+  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, summaryText,
     OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
     isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, userChoiceSuggestion, onEditSuggestion, onShowInference,
-    isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, sourceEntity, tooltips, onAddItem,
+    isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
     regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick,
     summaryDescriptions, isSuggestedItem, onEditRemove, nodeTypes
   } = useConceptualModel()
@@ -27,7 +27,7 @@ function App()
         onIgnoreDomainDescriptionChange={onIgnoreDomainDescriptionChange}
         isIgnoreDomainDescription={isIgnoreDomainDescription}
         onImportButtonClick={onImportButtonClick}
-        onPlusButtonClick={onPlusButtonClick}
+        onSuggestItems={onSuggestItems}
         onSummaryButtonClick={onSummaryButtonClick}
         OnClickAddNode={OnClickAddNode}
         domainDescription={domainDescription}
@@ -68,7 +68,6 @@ function App()
         inferenceIndexes={inferenceIndexesMockUp}
         onClose={onDialogDomainDescriptionClose}
         itemName={selectedSuggestedItem.name}
-        selectedEntityName={sourceEntity}
         userChoiceSuggestion={userChoiceSuggestion}
         tooltips={tooltips}
       />

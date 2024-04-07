@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { useCallback, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { Attribute, Entity, Field, ItemType, primaryColor } from '../interfaces';
+import { Attribute, Entity, Field, ItemType, UserChoice, primaryColor } from '../interfaces';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -83,7 +83,8 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
                 >
                 <MenuItem onClick={() => { data.onEdit(entity); handleClose(); }}>Edit entity</MenuItem>
                 <MenuItem onClick={handleClose}>Add new attribute</MenuItem>
-                <MenuItem onClick={handleClose}>Suggest attributes</MenuItem>
+                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.ATTRIBUTES, entity, null); handleClose(); }}>Suggest attributes</MenuItem>
+                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.RELATIONSHIPS, entity, null); handleClose(); }}>Suggest relationships</MenuItem>
             </Menu>
 
 
