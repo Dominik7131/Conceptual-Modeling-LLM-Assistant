@@ -1,5 +1,5 @@
 import { BaseEdge, EdgeLabelRenderer, EdgeProps, getBezierPath, getStraightPath } from 'reactflow';
-import { ItemType, Relationship, primaryColor } from '../interfaces';
+import { Field, ItemType, Relationship, primaryColor } from '../interfaces';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,8 +23,9 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
   const borderSelected = `1px solid ${primaryColor}`
 
   const relationship : Relationship = {
-    ID: data.ID, type: ItemType.RELATIONSHIP, name: (label as string), description: data.description,
-    source: source, target: target, cardinality: data.cardinality, inference: data.inference, inferenceIndexes: data.inferenceIndexes
+    [Field.ID]: data.ID, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: (label as string), [Field.DESCRIPTION]: data[Field.DESCRIPTION],
+    [Field.SOURCE_ENTITY]: source, [Field.TARGET_ENTITY]: target, [Field.CARDINALITY]: data[Field.CARDINALITY],
+    [Field.ORIGINAL_TEXT]: data[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: data[Field.ORIGINAL_TEXT_INDEXES]
   }
 
   return (

@@ -44,7 +44,7 @@ const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened,
   }));
 
 
-  const highlightInference = () =>
+  const highlightOriginalText = () =>
   {
       let start = 0
       let texts = []
@@ -65,7 +65,7 @@ const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened,
                   index % 2 === 0 ? <span key={index}>{text}</span> :
                   <HtmlTooltip title={<Typography color="inherit">{getTooltip(index)}</Typography>} arrow key={index}>
                     <HoverSpan
-                      id={`highlightedInference-${index}`}
+                      id={`highlightedOriginalText-${index}`}
                       className="highlight"
                       key={index}
                       // sx={{transition: 'color 0.3s ease', '&:hover': { color: "#ffffff", background: "blue" }}}
@@ -115,7 +115,7 @@ const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened,
 
         <DialogContent dividers={true}>
           <DialogContentText>
-            { highlightInference() }
+            { highlightOriginalText() }
           </DialogContentText>
         </DialogContent>
 

@@ -27,9 +27,9 @@ const useConceptualModel = () =>
   const [suggestedItems, setSuggestedItems] = useState<Item[]>([])
 
   // TODO: Do not use initial invalid item, instead make a type: Item | null
-  const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
-  const [editedSuggestedItem, setEditedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
-  const [regeneratedItem, setRegeneratedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: []})
+  const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: []})
+  const [editedSuggestedItem, setEditedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: []})
+  const [regeneratedItem, setRegeneratedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: []})
   const [isSuggestedItem, setIsSuggestedItem] = useState(true)
   const [isDisableSave, setIsDisableSave] = useState(true)
   const [isDisableChange, setIsDisableChange] = useState(true)
@@ -42,7 +42,7 @@ const useConceptualModel = () =>
   const [isShowDialogEdit, setIsShowDialogEdit] = useState<boolean>(false)
   const [isShowCreateEdgeDialog, setIsShowCreateEdgeDialog] = useState<boolean>(false)
 
-  const [inferenceIndexesMockUp, setInferenceIndexesMockUp] = useState<number[]>([])
+  const [originalTextIndexesMockUp, setoriginalTextIndexesMockUp] = useState<number[]>([])
   const [tooltips, setTooltips] = useState<string[]>([])
 
   const { domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
@@ -75,7 +75,7 @@ const useConceptualModel = () =>
     }
 
     const blankRelationship: Relationship = {
-      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: [],
+      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
       [Field.TYPE]: ItemType.RELATIONSHIP, [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntityName,
       [Field.TARGET_ENTITY]: targetEntityName
     }
@@ -115,33 +115,33 @@ const useConceptualModel = () =>
   {
 
     const input = { entities: [
-        {name: "Engine", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-        {name: "Manufacturer", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-        {name: "Natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-        {name: "Business natural person", description: "", [Field.INFERENCE_INDEXES]: [], attributes: []},
-        {name: "Road vehicle", description: "", [Field.INFERENCE_INDEXES]: [4, 10], attributes: []}],
+        {name: "Engine", description: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
+        {name: "Manufacturer", description: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
+        {name: "Natural person", description: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
+        {name: "Business natural person", description: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
+        {name: "Road vehicle", description: "", [Field.ORIGINAL_TEXT_INDEXES]: [4, 10], attributes: []}],
 
                   relationships: [
-                    {"name": "manufactures", "source": "manufacturer", "target": "road vehicle", "inference": ""}]}
+                    {"name": "manufactures", "source": "manufacturer", "target": "road vehicle", "originalText": "s"}]}
 
     // const input: SerializedConceptualModel = { "entities": [
-    //   {name: "Student", "description": "", inferenceIndexes: [], "attributes": [
-    //     {"ID": 0, "name": "name1", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
-    //     {"ID": 1, "name": "name2", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
-    //     {"ID": 2, "name": "name3", "inference": "student has a name", "dataType": "string", "description": "The name of the student."},
+    //   {name: "Student", "description": "", originalTextIndexes: [], "attributes": [
+    //     {"ID": 0, "name": "name1", "originalText": "student has a name", "dataType": "string", "description": "The name of the student."},
+    //     {"ID": 1, "name": "name2", "originalText": "student has a name", "dataType": "string", "description": "The name of the student."},
+    //     {"ID": 2, "name": "name3", "originalText": "student has a name", "dataType": "string", "description": "The name of the student."},
     //   ]}],
     //   "relationships": []
     // }
       
     // const input : SerializedConceptualModel = { "entities": [
-    //     {name: "Student", "description": "A student entity representing individuals enrolled in courses.", inferenceIndexes: [], "attributes": [{"ID": 0, "name": "name", "inference": "student has a name", "dataType": "string", "description": "The name of the student."}]},
-    //     {name: "Course", "description": "A course entity representing educational modules.", inferenceIndexes: [], "attributes": [{"ID": 1, "name": "name", "inference": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "inference": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
-    //     {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", inferenceIndexes: [], "attributes": [{"ID": 3,"name": "price", "inference": "each dormitory has a price", "dataType": "number", "description": "The price of staying in the dormitory."}]},
-    //     {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", inferenceIndexes: [], "attributes": [{"ID": 4, "name": "name", "inference": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
-    //   "relationships": [{ID: 0, type: ItemType.RELATIONSHIP, name: "enrolled in", description: "", inference: "Students can be enrolled in any number of courses", inferenceIndexes: [], "source": "student", "target": "course", cardinality: ""},
-    //                     {ID: 1, type: ItemType.RELATIONSHIP, "name": "accommodated in", description: "", "inference": "students can be accommodated in dormitories", inferenceIndexes: [], "source": "student", "target": "dormitory", cardinality: ""},
-    //                     {ID: 2, type: ItemType.RELATIONSHIP, "name": "has", description: "", inference: "each course can have one or more professors", inferenceIndexes: [], "source": "course", "target": "professor", cardinality: ""},
-    //                     {ID: 3, type: ItemType.RELATIONSHIP, "name": "is-a", description: "", inference: "", inferenceIndexes: [], "source": "student", "target": "person", cardinality: ""}
+    //     {name: "Student", "description": "A student entity representing individuals enrolled in courses.", originalTextIndexes: [], "attributes": [{"ID": 0, "name": "name", "originalText": "student has a name", "dataType": "string", "description": "The name of the student."}]},
+    //     {name: "Course", "description": "A course entity representing educational modules.", originalTextIndexes: [], "attributes": [{"ID": 1, "name": "name", "originalText": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "originalText": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
+    //     {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", originalTextIndexes: [], "attributes": [{"ID": 3,"name": "price", "originalText": "each dormitory has a price", "dataType": "number", "description": "The price of staying in the dormitory."}]},
+    //     {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", originalTextIndexes: [], "attributes": [{"ID": 4, "name": "name", "originalText": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
+    //   "relationships": [{ID: 0, type: ItemType.RELATIONSHIP, name: "enrolled in", description: "", originalText: "Students can be enrolled in any number of courses", originalTextIndexes: [], "source": "student", "target": "course", cardinality: ""},
+    //                     {ID: 1, type: ItemType.RELATIONSHIP, "name": "accommodated in", description: "", "originalText": "students can be accommodated in dormitories", originalTextIndexes: [], "source": "student", "target": "dormitory", cardinality: ""},
+    //                     {ID: 2, type: ItemType.RELATIONSHIP, "name": "has", description: "", originalText: "each course can have one or more professors", originalTextIndexes: [], "source": "course", "target": "professor", cardinality: ""},
+    //                     {ID: 3, type: ItemType.RELATIONSHIP, "name": "is-a", description: "", originalText: "", originalTextIndexes: [], "source": "student", "target": "person", cardinality: ""}
     //                   ]}
 
     const incrementX = 500
@@ -163,12 +163,12 @@ const useConceptualModel = () =>
       }
 
       const entityObject : Entity = {
-        [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.INFERENCE]: "",
-        [Field.INFERENCE_INDEXES]: entity.inferenceIndexes}
+        [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "",
+        [Field.ORIGINAL_TEXT_INDEXES]: entity.originalTextIndexes}
 
       const newNode : Node = {
         id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY }, data: { description: entity.description,
-        attributes: entity.attributes, [Field.INFERENCE_INDEXES]: entityObject.inferenceIndexes,
+        attributes: entity.attributes, [Field.ORIGINAL_TEXT_INDEXES]: entityObject.originalTextIndexes,
         onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute }}
 
       newNodes.push(newNode)
@@ -185,8 +185,11 @@ const useConceptualModel = () =>
     for (const [key, relationship] of Object.entries(input["relationships"]))
     {
       const newID: string = createEdgeID(relationship.source, relationship.target, relationship.name)
-      const newEdge : Edge = { id: newID, source: relationship.source, target: relationship.target,
-                                label: relationship.name, type: "custom-edge", data: { description: "", inference: relationship.inference, onEdit: onEditItem }}
+      const newEdge : Edge = {
+        id: newID, source: relationship.source, target: relationship.target, label: relationship.name, type: "custom-edge",
+        data: { description: "", originalText: relationship.originalText, onEdit: onEditItem }
+      }
+
       newEdges.push(newEdge)
     }
     
@@ -212,7 +215,7 @@ const useConceptualModel = () =>
         }
         else
         {
-          attributes.push({[Field.NAME]: attribute.name, [Field.INFERENCE]: attribute.inference})
+          attributes.push({[Field.NAME]: attribute.name, [Field.ORIGINAL_TEXT]: attribute.originalText})
         }
       }
 
@@ -228,7 +231,7 @@ const useConceptualModel = () =>
       }
       else
       {
-        relationships.push({[Field.NAME]: edge.label, [Field.INFERENCE]: edge.data.inference, "sourceEntity": edge.source, "targetEntity": edge.target})
+        relationships.push({[Field.NAME]: edge.label, [Field.ORIGINAL_TEXT]: edge.data.originalText, "sourceEntity": edge.source, "targetEntity": edge.target})
       }
     }
 
@@ -302,7 +305,7 @@ const useConceptualModel = () =>
         tooltips.push(element[2])
       }
 
-      setInferenceIndexesMockUp(_ => originalTextIndexes)
+      setoriginalTextIndexesMockUp(_ => originalTextIndexes)
       setTooltips(_ => tooltips)
     }
 
@@ -429,7 +432,7 @@ const useConceptualModel = () =>
 
     // Create an updated version of the old entity
     const newData = {
-      ...oldNode.data, description: newEntity.description, inference: newEntity.inference, inference_indexes: newEntity.inferenceIndexes
+      ...oldNode.data, description: newEntity.description, originalText: newEntity.originalText, originalTextIndexes: newEntity.originalTextIndexes
     }
     const newNode: Node = {...oldNode, id: newEntity.name, data: newData}
 
@@ -508,8 +511,8 @@ const useConceptualModel = () =>
   const editEdgeRelationship = (newRelationship: Relationship, oldRelationship : Relationship): void =>
   {
     // Find the right edge based on the old ID
-    const id: string = createEdgeID(oldRelationship.source, oldRelationship.target, oldRelationship.name)
-    let oldEdge = edges.find(edge => edge.id === id)
+    const oldID: string = createEdgeID(oldRelationship.source, oldRelationship.target, oldRelationship.name)
+    let oldEdge = edges.find(edge => edge.id === oldID)
 
     if (!oldEdge)
     {
@@ -517,30 +520,30 @@ const useConceptualModel = () =>
     }
 
     // Create an updated version of the old edge
-    let newEdge: Edge = { ...oldEdge}
-    newEdge.id = createEdgeID(newRelationship.source, newRelationship.target, newRelationship.name)
-    newEdge.label = newRelationship.name
-    newEdge.data.description = newRelationship.description
-    newEdge.data.cardinality = newRelationship.cardinality
-    newEdge.data.inference = newRelationship.inference
+    const newData = {
+      ...oldEdge.data, description: newRelationship.description, cardinality: newRelationship.cardinality,
+      originalText: newRelationship.originalText}
+
+    const newID = createEdgeID(newRelationship.source, newRelationship.target, newRelationship.name)
 
     // TODO: Is the user allowed to change source and target?
     // If the source/target does not exist we need to create a new node
-    newEdge.source = newRelationship.source
-    newEdge.target = newRelationship.target
+    let newEdge: Edge = { ...oldEdge, id: newID, label: newRelationship.name, source: newRelationship.source,
+      target: newRelationship.target, data: newData}
 
+    console.log("New edge: ", newEdge)
 
     setEdges((edges) => edges.map((currentEdge : Edge) =>
+    {
+      if (currentEdge.id === oldID)
       {
-        if (currentEdge.id === id)
-        {
-          return newEdge
-        }
-        else
-        {
-          return currentEdge
-        }
-      }))
+        return newEdge
+      }
+      else
+      {
+        return currentEdge
+      }
+    }))
   }
 
 
@@ -622,7 +625,7 @@ const useConceptualModel = () =>
   const onAddNewEntity = () : void =>
   {
     const blankEntity: Entity = {
-      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: [],
+      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
       [Field.TYPE]: ItemType.ENTITY,
     }
 
@@ -639,7 +642,7 @@ const useConceptualModel = () =>
   const onAddNewAttribute = (sourceEntity: Entity) : void =>
   {
     const blankAttribute: Attribute = {
-      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.INFERENCE]: "", [Field.INFERENCE_INDEXES]: [],
+      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
       [Field.TYPE]: ItemType.ATTRIBUTE, [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntity.name
     }
 
@@ -705,32 +708,32 @@ const useConceptualModel = () =>
       {
         const element = selectedNodes[i].data.attributes[j];
 
-        if (!element.inferenceIndexes)
+        if (!element.originalTextIndexes)
         {
           continue
         }
 
         // Process each original text indexes for the given attribute
-        for (let k = 0; k < element.inferenceIndexes.length; k += 2)
+        for (let k = 0; k < element.originalTextIndexes.length; k += 2)
         {
-          const ii1: number = element.inferenceIndexes[k]
-          const ii2: number = element.inferenceIndexes[k + 1]
+          const ii1: number = element.originalTextIndexes[k]
+          const ii2: number = element.originalTextIndexes[k + 1]
 
           originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${entityName}: ${element.name}`} )
         }
       }
 
 
-      if (!selectedNodes[i].data.inferenceIndexes)
+      if (!selectedNodes[i].data.originalTextIndexes)
       {
         continue
       }
 
       // Process each original text indexes for the given entity 
-      for (let k = 0; k < selectedNodes[i].data.inferenceIndexes.length; k += 2)
+      for (let k = 0; k < selectedNodes[i].data.originalTextIndexes.length; k += 2)
       {
-        const ii1 : number = selectedNodes[i].data.inferenceIndexes[k]
-        const ii2 : number = selectedNodes[i].data.inferenceIndexes[k + 1]
+        const ii1 : number = selectedNodes[i].data.originalTextIndexes[k]
+        const ii2 : number = selectedNodes[i].data.originalTextIndexes[k + 1]
 
         originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Entity: ${selectedNodes[i].id}`} )
       }
@@ -739,16 +742,16 @@ const useConceptualModel = () =>
     // Process also all selected edges
     for (let i = 0; i < selectedEdges.length; i++)
     {
-      if (!selectedEdges[i].data.inferenceIndexes)
+      if (!selectedEdges[i].data.originalTextIndexes)
       {
         continue
       }
 
       // Process each original text indexes for the given edge 
-      for (let k = 0; k < selectedEdges[i].data.inferenceIndexes.length; k += 2)
+      for (let k = 0; k < selectedEdges[i].data.originalTextIndexes.length; k += 2)
       {
-        const ii1 : number = selectedEdges[i].data.inferenceIndexes[k]
-        const ii2 : number = selectedEdges[i].data.inferenceIndexes[k + 1]
+        const ii1 : number = selectedEdges[i].data.originalTextIndexes[k]
+        const ii2 : number = selectedEdges[i].data.originalTextIndexes[k + 1]
 
         originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${selectedEdges[i].source} – ${selectedEdges[i].data.name} – ${selectedEdges[i].target}`} )
       }
@@ -796,14 +799,14 @@ const useConceptualModel = () =>
       return
     }
 
-    // Scroll down to the first highlighted inference in the dialog
+    // Scroll down to the first highlighted original text in the dialog
     // We need to wait for few miliseconds to let the dialog render
     // TODO: Try to come up with solution that doesn't need any hardcoded timeout
     const delay = async () =>
     {
       await new Promise(resolve => setTimeout(resolve, 200));
 
-      let highlightedText = document.getElementById("highlightedInference-1")
+      let highlightedText = document.getElementById("highlightedOriginalText-1")
       // console.log("Trying to scroll", highlightedText)
 
       if (highlightedText)
@@ -884,7 +887,7 @@ const useConceptualModel = () =>
 
     const newNode: Node = {
       id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
-      data: { [Field.DESCRIPTION]: entity.description, [Field.INFERENCE]: entity.inference, [Field.INFERENCE_INDEXES]: [], attributes: [], 
+      data: { [Field.DESCRIPTION]: entity.description, [Field.ORIGINAL_TEXT]: entity.originalText, [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: [], 
         onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute } }
 
     setNodes(previousNodes => {
@@ -947,7 +950,7 @@ const useConceptualModel = () =>
 
       const relationship : Relationship = {
         ID: oldAttribute.ID, type: ItemType.RELATIONSHIP, name: "", description: oldAttribute.description,
-        inference: oldAttribute.inference, inferenceIndexes: oldAttribute.inferenceIndexes, source: oldAttribute.source,
+        originalText: oldAttribute.originalText, originalTextIndexes: oldAttribute.originalTextIndexes, source: oldAttribute.source,
         target: oldAttribute.name, cardinality: ""}
 
       setSelectedSuggestedItem(_ => relationship)
@@ -959,7 +962,7 @@ const useConceptualModel = () =>
 
       const attribute : Attribute = {
         ID: oldRelationship.ID, type: ItemType.ATTRIBUTE, name: oldRelationship.target, description: oldRelationship.description,
-        dataType: "string", inference: oldRelationship.inference, inferenceIndexes: oldRelationship.inferenceIndexes,
+        dataType: "string", originalText: oldRelationship.originalText, originalTextIndexes: oldRelationship.originalTextIndexes,
         cardinality: "", source: oldRelationship.source
       }
 
@@ -1075,8 +1078,9 @@ const useConceptualModel = () =>
 
     // TODO: Make function to create edge (or edge data) from a relationship
     const edgeData = {
-      [Field.NAME]: relationship.name, [Field.DESCRIPTION]: relationship.description, [Field.INFERENCE]: relationship.inference,
-      [Field.INFERENCE_INDEXES]: relationship.inferenceIndexes, [Field.CARDINALITY]: relationship.cardinality, onEdit: onEditItem
+      [Field.NAME]: relationship[Field.NAME], [Field.DESCRIPTION]: relationship[Field.DESCRIPTION],
+      [Field.ORIGINAL_TEXT]: relationship[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: relationship[Field.ORIGINAL_TEXT_INDEXES],
+      [Field.CARDINALITY]: relationship[Field.CARDINALITY], onEdit: onEditItem
     }
 
     const newEdge : Edge = {
@@ -1094,8 +1098,8 @@ const useConceptualModel = () =>
     {
       if (isClearAll)
       {
-        setEditedSuggestedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: "", cardinality: ""})
-        setRegeneratedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: "", cardinality: ""})
+        setEditedSuggestedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: [], dataType: "", cardinality: ""})
+        setRegeneratedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: [], dataType: "", cardinality: ""})
       }
 
       if (!field)
@@ -1169,7 +1173,7 @@ const useConceptualModel = () =>
     const onHighlightSingleItem = (itemID : number) =>
     {
       // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
-      // TODO: probably move this function into file `useInferenceIndexes.tsx`
+      // TODO: probably move this function into file `useoriginalTextIndexes.tsx`
 
       setIsShowDialogDomainDescription(_ => true)
 
@@ -1185,7 +1189,7 @@ const useConceptualModel = () =>
 
       setSelectedSuggestedItem(suggestedItem)
 
-      setInferenceIndexesMockUp(_ => suggestedItem.inferenceIndexes)
+      setoriginalTextIndexesMockUp(_ => suggestedItem.originalTextIndexes)
 
       // Create tooltips for highlighted original text
       let tooltip = ""
@@ -1205,13 +1209,13 @@ const useConceptualModel = () =>
         tooltip = `${capitalizedSourceEntity} - ${suggestedItem.name} - ${(suggestedItem as Relationship).target}`
       }
 
-      let newTooltips : string[] = Array(suggestedItem.inferenceIndexes.length).fill(tooltip)
+      let newTooltips : string[] = Array(suggestedItem.originalTextIndexes.length).fill(tooltip)
       setTooltips(newTooltips)
     }
     
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick,
-        summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, inferenceIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
+        summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, originalTextIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
         isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, onEditSuggestion, onHighlightSingleItem,
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
         regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions,

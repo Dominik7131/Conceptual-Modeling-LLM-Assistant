@@ -22,8 +22,8 @@ export const enum Field
   TYPE = "type",
   NAME = "name",
   DESCRIPTION = "description",
-  INFERENCE = "inference",
-  INFERENCE_INDEXES = "inferenceIndexes",
+  ORIGINAL_TEXT = "originalText",
+  ORIGINAL_TEXT_INDEXES = "originalTextIndexes",
   DATA_TYPE = "dataType",
   CARDINALITY = "cardinality",
   SOURCE_ENTITY = "source",
@@ -60,8 +60,8 @@ interface BaseItem
   ID: number
   name: string
   description: string
-  inference: string
-  inferenceIndexes: number[]
+  originalText: string
+  originalTextIndexes: number[]
 }
 
 export interface Entity extends BaseItem { }

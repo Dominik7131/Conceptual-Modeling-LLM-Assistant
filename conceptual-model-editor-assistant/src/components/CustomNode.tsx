@@ -21,7 +21,7 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
     
     const entity: Entity = {
         [Field.ID]: 0, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: id, [Field.DESCRIPTION]: data.description,
-        [Field.INFERENCE]: data.inference, [Field.INFERENCE_INDEXES]: data.inference_indexes
+        [Field.ORIGINAL_TEXT]: data.inference, [Field.ORIGINAL_TEXT_INDEXES]: data.inference_indexes
     }
 
     const attributes = data.attributes

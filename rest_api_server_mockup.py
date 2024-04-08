@@ -30,13 +30,13 @@ def suggest():
         def generate_mock_up():
             # time.sleep(2)
             if user_choice == "attributes" or user_choice == "entity":
-                yield '{"inference": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "inferenceIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
+                yield '{"originalText": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "originalTextIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
                 # time.sleep(2)
-                yield '{"inference": "the fuel type of the road vehicle", "name": "fuel type", "inferenceIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
+                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
                 # time.sleep(2)
             else:
-                yield '{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "inferenceIndexes": [10,20], "source": "student", "target": "course"}\n'
-                yield '{"name": "accommodated in", "inference": "students can be accommodated in dormitories", "inferenceIndexes": [20,100], "source": "student", "target": "dormitory"}\n'
+                yield '{"name": "enrolled in", "originalText": "Students can be enrolled in any number of courses", "originalTextIndexes": [10,20], "source": "student", "target": "course"}\n'
+                yield '{"name": "accommodated in", "originalText": "students can be accommodated in dormitories", "originalTextIndexes": [20,100], "source": "student", "target": "dormitory"}\n'
         return generate_mock_up()
 
 
@@ -86,7 +86,7 @@ def get_only():
             dictionary = { field: "Regenerated name" }
         elif field == "description":
             dictionary = { field: "The engine type attribute of a road vehicle refers to the specific classification assigned by the manufacturer to denote the kind of engine installed in the vehicle. It encompasses various types such as internal combustion engines or other alternative propulsion systems. This attribute provides crucial information about the power source and characteristics of the engine, aiding in regulatory compliance, maintenance, and performance assessment."}
-        elif field == "inference":
+        elif field == "originalText":
             dictionary = { field: "Regenerated original text" }
         elif field == "dataType":
             dictionary = { field: "Regenerated data type" }
@@ -144,7 +144,7 @@ def merge_original_texts():
 @app.route('/test', methods=['GET'])
 @cross_origin()
 def test():
-    dictionary = {"name": "rest-api-response", "inference": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "data_type": "string"}
+    dictionary = {"name": "rest-api-response", "originalText": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "data_type": "string"}
     return json.dumps(dictionary)
 
 
@@ -173,11 +173,11 @@ def create_suggest_mockup(entity, user_choice, domain_description):
                     ]
                 return dictionary
             else:
-                dictionary1 = json.dumps({"name": "name", "inference": "student has a name", "data_type": "string"})
+                dictionary1 = json.dumps({"name": "name", "originalText": "student has a name", "data_type": "string"})
                 return [dictionary1]
         else:
-            dictionary1 = json.dumps({"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"})
-            dictionary2 = json.dumps({"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"})
+            dictionary1 = json.dumps({"name": "enrolled in", "originalText": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"})
+            dictionary2 = json.dumps({"name": "accommodated in", "originalText": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"})
 
             return [dictionary1, dictionary2]
     
@@ -193,12 +193,12 @@ def create_suggest_mockup(entity, user_choice, domain_description):
                 ]
                 return dictionary
             else:
-                dictionary1 = json.dumps({"name": "name", "inference": "courses have a name", "data_type": "string"})
-                dictionary2 = json.dumps({"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"})
+                dictionary1 = json.dumps({"name": "name", "originalText": "courses have a name", "data_type": "string"})
+                dictionary2 = json.dumps({"name": "number of credits", "originalText": "courses have a specific number of credits", "data_type": "string"})
                 return [dictionary1, dictionary2]
         else:
-            dictionary1 = json.dumps({"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"})
-            dictionary2 = json.dumps({"name": "aggregates", "inference": "for a course to exist, it must aggregate at least, five students", "source_entity": "course", "target_entity": "student"})
+            dictionary1 = json.dumps({"name": "has", "originalText": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"})
+            dictionary2 = json.dumps({"name": "aggregates", "originalText": "for a course to exist, it must aggregate at least, five students", "source_entity": "course", "target_entity": "student"})
             return [dictionary1, dictionary2]
     
     elif entity == "professor":
@@ -213,10 +213,10 @@ def create_suggest_mockup(entity, user_choice, domain_description):
                 ]
                 return dictionary
             else:
-                dictionary1 = json.dumps({"name": "name", "inference": "professors, who have a name", "data_type": "string"})
+                dictionary1 = json.dumps({"name": "name", "originalText": "professors, who have a name", "data_type": "string"})
                 return [dictionary1]
         else:
-            dictionary1 = json.dumps({"name": "can participate in", "inference": "Professors could pariticipate in any number of courses", "source_entity": "professor", "target_entity": "course"})
+            dictionary1 = json.dumps({"name": "can participate in", "originalText": "Professors could pariticipate in any number of courses", "source_entity": "professor", "target_entity": "course"})
             return [dictionary1]
     
     elif entity == "dormitory":
@@ -231,10 +231,10 @@ def create_suggest_mockup(entity, user_choice, domain_description):
                 ]
                 return dictionary
             else:
-                dictionary1 = json.dumps({"name": "price", "inference": "each dormitory has a price", "data_type": "int"})
+                dictionary1 = json.dumps({"name": "price", "originalText": "each dormitory has a price", "data_type": "int"})
                 return [dictionary1]
         else:
-            dictionary1 = json.dumps({"name": "has", "inference": "students can be accomodated in dormitories", "source_entity": "dormitory", "target_entity": "student"})
+            dictionary1 = json.dumps({"name": "has", "originalText": "students can be accomodated in dormitories", "source_entity": "dormitory", "target_entity": "student"})
             return [dictionary1]
 
 

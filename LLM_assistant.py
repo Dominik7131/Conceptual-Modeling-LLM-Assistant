@@ -207,10 +207,10 @@ class LLMAssistant:
                     completed_item["dataType"] = "string"
 
             # Remove attributes in which their inferred text does not contain the given entity
-            # is_inference = "inference" in completed_item
-            # if is_inference and user_input_entity1 not in completed_item['inference'].lower():
-                # completed_item['name'] = "(Deleted: Source entity is not contained in the inference) " + completed_item['name']
-                # logging.warning("Source entity is not contained in the inference")
+            # is_originalText = "originalText" in completed_item
+            # if is_originalText and user_input_entity1 not in completed_item['originalText'].lower():
+                # completed_item['name'] = "(Deleted: Source entity is not contained in the original text) " + completed_item['name']
+                # logging.warning("Source entity is not contained in the original text")
                 # is_item_ok = True
 
 
@@ -466,16 +466,16 @@ class LLMAssistant:
                     continue
                 suggested_entities.append(suggestion_dictionary['name'])
 
-                # Set inference to find all occurencies of the entity name in the domain description
-                item['inference'] = suggestion_dictionary['name']
+                # Set original text to find all occurencies of the entity name in the domain description
+                item['originalText'] = suggestion_dictionary['name']
 
-            # Find inference indexes for `item['inference']` in `domain_description`
-            if 'inference' in item:
-                inference = item['inference']
-                inference_indexes, _, _ = TextUtility.find_text_in_domain_description(inference, domain_description)
-                suggestion_dictionary['inferenceIndexes'] = inference_indexes
+            # Find originalText indexes for `item['originalText']` in `domain_description`
+            if 'originalText' in item:
+                original_text = item['originalText']
+                original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(original_text, domain_description)
+                suggestion_dictionary['originalTextIndexes'] = original_text_indexes
             else:
-                logging.warn(f"Warning: inference not in item: {item}")
+                logging.warn(f"Warning: original text not in item: {item}")
 
             json_item = json.dumps(suggestion_dictionary)
             yield f"{json_item}\n"

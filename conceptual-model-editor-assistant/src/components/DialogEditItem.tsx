@@ -45,6 +45,8 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
     const isAttribute = item.type === ItemType.ATTRIBUTE
     const isRelationship = item.type === ItemType.RELATIONSHIP
 
+    console.log("item, edited item: ", item, editedItem)
+
 
     const showEditField = (label : string, field : Field, value : string) =>
     {
@@ -105,24 +107,24 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
 
             <DialogContent>
 
-                { showEditField(ItemFieldUIName.NAME, Field.NAME, editedItem.name) } 
-                { showEditField(ItemFieldUIName.ORIGINAL_TEXT, Field.INFERENCE, editedItem.inference) }
-                { showEditField(ItemFieldUIName.DESCRIPTION, Field.DESCRIPTION, editedItem.description) }
+                { showEditField(ItemFieldUIName.NAME, Field.NAME, editedItem[Field.NAME]) } 
+                { showEditField(ItemFieldUIName.ORIGINAL_TEXT, Field.ORIGINAL_TEXT, editedItem[Field.ORIGINAL_TEXT]) }
+                { showEditField(ItemFieldUIName.DESCRIPTION, Field.DESCRIPTION, editedItem[Field.DESCRIPTION]) }
 
                 { 
                     isAttribute &&
                     <>
-                        { showEditField(ItemFieldUIName.DATA_TYPE, Field.DATA_TYPE, attribute.dataType) }
-                        { showEditField(ItemFieldUIName.CARDINALITY, Field.CARDINALITY, attribute.cardinality) }
+                        { showEditField(ItemFieldUIName.DATA_TYPE, Field.DATA_TYPE, attribute[Field.DATA_TYPE]) }
+                        { showEditField(ItemFieldUIName.CARDINALITY, Field.CARDINALITY, attribute[Field.CARDINALITY]) }
                     </>
                 }
 
                 {
                     isRelationship &&
                     <>
-                        { showEditField(ItemFieldUIName.SOURCE_ENTITY, Field.SOURCE_ENTITY, relationship.source) }
-                        { showEditField(ItemFieldUIName.TARGET_ENTITY, Field.TARGET_ENTITY, relationship.target) }
-                        { showEditField(ItemFieldUIName.CARDINALITY, Field.CARDINALITY, relationship.cardinality) }
+                        { showEditField(ItemFieldUIName.SOURCE_ENTITY, Field.SOURCE_ENTITY, relationship[Field.SOURCE_ENTITY]) }
+                        { showEditField(ItemFieldUIName.TARGET_ENTITY, Field.TARGET_ENTITY, relationship[Field.TARGET_ENTITY]) }
+                        { showEditField(ItemFieldUIName.CARDINALITY, Field.CARDINALITY, relationship[Field.CARDINALITY]) }
                     </>
                 }
 

@@ -7,7 +7,7 @@ import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Attribute, Entity, Item, ItemFieldUIName, ItemType, Relationship, UserChoice } from '../interfaces';
+import { Attribute, Entity, Field, Item, ItemFieldUIName, ItemType, Relationship, UserChoice } from '../interfaces';
 import Box from '@mui/material/Box';
 
 
@@ -63,23 +63,23 @@ const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion
 
         return (
             <ListItemText>
-                <Typography> <strong>{ ItemFieldUIName.NAME }:</strong> { item.name } </Typography>
-                <Typography> <strong>{ ItemFieldUIName.ORIGINAL_TEXT }:</strong> { item.inference } </Typography>
+                <Typography> <strong>{ ItemFieldUIName.NAME }:</strong> { item[Field.NAME] } </Typography>
+                <Typography> <strong>{ ItemFieldUIName.ORIGINAL_TEXT }:</strong> { item[Field.ORIGINAL_TEXT] } </Typography>
 
                 {
                     isAttribute &&
                     <>
-                        <Typography> <strong>{ ItemFieldUIName.DATA_TYPE }:</strong> { attribute.dataType } </Typography>
-                        <Typography> <strong>{ ItemFieldUIName.CARDINALITY }:</strong> { attribute.cardinality } </Typography>
+                        <Typography> <strong>{ ItemFieldUIName.DATA_TYPE }:</strong> { attribute[Field.DATA_TYPE] } </Typography>
+                        <Typography> <strong>{ ItemFieldUIName.CARDINALITY }:</strong> { attribute[Field.CARDINALITY] } </Typography>
                     </>
                 }
 
                 {
                     isRelationship &&
                     <>
-                        <Typography> <strong> { ItemFieldUIName.SOURCE_ENTITY }:</strong> { relationship.source } </Typography>
-                        <Typography> <strong> { ItemFieldUIName.TARGET_ENTITY }:</strong> { relationship.target } </Typography>
-                        <Typography> <strong> { ItemFieldUIName.CARDINALITY }:</strong> { relationship.cardinality } </Typography>
+                        <Typography> <strong> { ItemFieldUIName.SOURCE_ENTITY }:</strong> { relationship[Field.SOURCE_ENTITY] } </Typography>
+                        <Typography> <strong> { ItemFieldUIName.TARGET_ENTITY }:</strong> { relationship[Field.TARGET_ENTITY] } </Typography>
+                        <Typography> <strong> { ItemFieldUIName.CARDINALITY }:</strong> { relationship[Field.CARDINALITY] } </Typography>
                     </>
                 }
 
