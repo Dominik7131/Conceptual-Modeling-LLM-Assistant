@@ -30,13 +30,16 @@ def suggest():
 @cross_origin()
 
 def get_attribute_description():
-    body_data = request.get_json()
-    sourceEntity = body_data["sourceEntity"]
-    attribute_name = body_data["attributeName"]
-    domain_description = body_data["domainDescription"]
-    field = body_data["field"]
 
-    return llm_assistant.get_field_content(attribute_name, sourceEntity, domain_description, field)
+    body_data = request.get_json()
+    source_entity = body_data["sourceEntity"]
+    target_entity = body_data["targetEntity"]
+    name = body_data["name"]
+    field = body_data["field"]
+    domain_description = body_data["domainDescription"]
+    user_choice = body_data["userChoice"]
+
+    return llm_assistant.get_field_content(name, source_entity, domain_description, field)
 
 
 @app.route('/summary1', methods=['POST'])
