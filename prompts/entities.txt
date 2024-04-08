@@ -1,0 +1,22 @@
+Solely based on the following context extract all class names for a UML diagram. Output each class name in JSON format.
+
+EXAMPLE START
+
+Solely based on the given context extract all class names for a UML diagram.
+This is the given context:
+"A road vehicle is a motorised or non-motorised vehicle"
+
+Output:
+name: road vehicle
+JSON: {"name": "road vehicle"}
+
+name: motorised vehicle
+JSON: {"name": "motorised vehicle"}
+
+name: non-motorised vehicle
+JSON: {"name": "non-motorised vehicle"}
+
+EXAMPLE END
+
+This is the following context:
+"{domain_description}"

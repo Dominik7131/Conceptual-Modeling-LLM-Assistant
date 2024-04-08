@@ -1,5 +1,5 @@
 from llama_cpp import Llama
-from text_utility import TextUtility, UserChoice, DataType
+from text_utility import PromptFileSymbols, TextUtility, UserChoice, DataType
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
 import logging
@@ -379,153 +379,30 @@ class LLMAssistant:
         return
 
 
-    def __create_prompt(self, user_choice, entity1, entity2, is_domain_description, count_items_to_suggest, relevant_texts):
+    def __create_prompt(self, user_choice, source_entity="", target_entity="", relevant_texts = "", is_domain_description_=True,
+                        items_count_to_suggest = 5, isChainOfThoughts = True, conceptual_model = {}, field = "",
+                        attribute_name="", relationship_name=""):
 
-        # TODO: Load prompts from JSON file and do something like this: prompt = prompt_file['user_choice']['is_domain_description']
-        # JSON file structure example: { "attributes": { "is_domain_description" : "prompt1", "is_not_domain_description": "prompt2" } }
-        # If we need to substitute `entity1` then the JSON file can contain as string ENTITY1 and we will call prompt.replace("ENTITY1", entity1)
+        replacements = {
+            PromptFileSymbols.SOURCE_ENTITY.value: source_entity,
+            PromptFileSymbols.TARGET_ENTITY.value: target_entity,
+            PromptFileSymbols.DOMAIN_DESCRIPTION.value: relevant_texts,
+            PromptFileSymbols.ITEMS_COUNT_TO_SUGGEST.value: items_count_to_suggest,
+            PromptFileSymbols.CONCEPTUAL_MODEL.value: conceptual_model,
+            PromptFileSymbols.ATTRIBUTE_NAME: attribute_name,
+            PromptFileSymbols.RELATIONSHIP_NAME: relationship_name,
+        }
 
-        # TODO: Probably make separate class for parsing as this is one component of the whole LLM-assistant logic
+        # Build corresponding file name
+        prompt_file_name = f"{user_choice}"
+        if field != "":
+            prompt_file_name += f"-{field}"
+        prompt_file_name += ".txt"
 
-        if user_choice == UserChoice.ATTRIBUTES.value:
-            if not is_domain_description:
-                prompt = f'What attributes does the entity: "{entity1}" have? Output exactly {count_items_to_suggest} attributes in JSON format like this: '
-                prompt += '{"description": "attribute description", "name": "attribute name"}.'
-            else:
-                prompt = f'Solely based on the following context which attributes does the entity: "{entity1}" have? '
-                
-                if IS_CHAIN_OF_THOUGHTS:
-                    #prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
-                    prompt += """For each attribute output its name and copy the part of the given context containing this attribute and data type and then output this attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name, "dataType": "data type of the attribute"}.
-
-EXAMPLE START
-
-Solely based on the following context which attributes does the entity: "natural person" have?
-This is the given context:
-"If the person is a natural person, his name, or, where applicable, first and last names and his birth number, if any, and, where applicable, his date of birth shall be entered."
-
-Output:
-Name: name
-Context: "If the person is a natural person, his name"
-Data type: string
-JSON object: {"inference": "If the person is a natural person, his name", "name": "name", "dataType": "string"}
-
-Name: first name
-Context: "If the person is a natural person ... first names"
-Data type: string
-JSON object: {"inference": "If the person is a natural person ... first names", "name": "first name", "dataType": "string"}
-
-Name: last name
-Context: "If the person is a natural person ... last names"
-Data type: string
-JSON object: {"inference": "If the person is a natural person ... last names", "name": "last name", "dataType": "string"}
-
-Name: birth number
-Context: "If the person is a natural person ... his birth number"
-Data type: integer
-JSON object: {"inference": "If the person is a natural person ... his birth number", "name": "birth number", "dataType": "integer"}
-
-Name: birth date
-Context: "If the person is a natural person ... his date of birth"
-Data type: date
-JSON object: {"inference": "If the person is a natural person ... his date of birth", "name": "birth date", "dataType": "date"}
-
-EXAMPLE END"""
-
-                    # prompt += 'First for each attribute output its name and copy the part of the given context containing this attribute. After outputting all attributes output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name", "dataType": "data type of the attribute", "cardinality": "cardinality of the attribute"}.'
-                else:
-                    prompt += 'Output each single attribute in JSON object like this: {"inference": "copy the part of the given context containing this attribute", "name": "attribute name"}.'
-
-
-        elif user_choice == UserChoice.RELATIONSHIPS.value:
-            if not is_domain_description:
-                prompt = f'Which relationships does the entity: "{entity1}" have? Output exactly {count_items_to_suggest} relationships in JSON format like this: '
-                prompt += '{"description": "relationship description", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
-
-            else:
-                if IS_RELATIONSHIPS_IS_A:
-                    prompt = f'Solely based on the following context which is-a relationships does the entity: "{entity1}" have? First output all possible is-a relationships for the entity "{entity1}". Then output only those is-a relationships which you are certain about in JSON format like this: '
-                    prompt += '{"inference": "copy the part of the given context containing this is-a relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
-
-                else:
-                    prompt = f'Solely based on the given context which relationships does the entity: "{entity1}" have? '
-                    prompt += 'For each relationship output its name and source entity and target entity and copy the part of the given context containing this relationship in JSON object like this: {"inference": "copy the part of the given context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}'
-
-                    prompt += '\n\nEXAMPLE START\n\nSolely based on the given context which relationships does the entity: "professor" have?\nThis is the given context:\n"Students have a name. Professors have a name. Professors teach students. Students have assigned homework from professors."\n\nOutput:\nname: teach\ninference: Professors teach students\nsource entity: professor\ntarget entity: student\nJSON object: {"inference": "Professors teach students", "name": "teach", "source": "professor", "target": "student"}\n\nname: has assigned homework from\ninference: Students have assigned homework from professors\nsource entity: professor\ntarget entity: student\nJSON object: {"inference": "Students have assigned homework from professors", "name": "has assigned homework from", "source": "student", "target": "professor"}\n\nEXAMPLE END'
-
-
-                    # if IS_CHAIN_OF_THOUGHTS:
-                    #     prompt += 'First for each relationship output its name and copy the part of the given context containing this relationship. After outputting all relationships output each relationship in JSON object like this: {"inference": "copy the part of the given context containing this relationship", "name": "relationship name"}.'
-                    # else:
-                    #     prompt += 'Output each single relationship in JSON object like this: {"inference": "copy the part of the given context containing this relationship", "name": "relationship name"}.'
-
-
-        elif user_choice == UserChoice.RELATIONSHIPS2.value:
-            if not is_domain_description:
-                prompt = f'What relationships are between the entity "{entity1}" and the entity "{entity2}"? Output exactly {count_items_to_suggest} relationships in JSON format like this: '
-                prompt += '{"description": "relationship description", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
-
-            else:
-                prompt = f'Solely based on the given context which relationships are explicitly between the source entity "{entity1}" and the target entity "{entity2}"? '
-                prompt += 'For each relationship output its name and copy the part of the given context containing this relationship in JSON object like this: {"inference": "copy the part of the given context containing this relationship", "name": "relationship name", "source": "' + entity1 + '", "target": "' + entity1 + '"}'
-
-                prompt += """\n
-EXAMPLE START
-
-Solely based on the given context which relationships are between the source entity "professor" and the target entity "student"?
-This is the given context:
-"Professors teach and mentor students. Professors assign homework to students."
-
-Output:
-name: teach
-inference: "Professors teach and mentor students"
-JSON object: {"name": "teach", "inference": "Professors teach and mentor students", "source": "professor", "target": "student"}
-
-name: mentor
-inference: "Professors teach and mentor students"
-JSON object: {"name": "mentor", "inference": "Professors teach and mentor students", "source": "professor", "target": "student"}
-
-name: assign homework to students
-inference: "Professors assign homework to students"
-JSON object: {"name": "assign homework to students", "inference": "Professors assign homework to students", "source": "professor", "target": "student"}
-
-EXAMPLE END
-                """
-
-                # prompt += f'\n\nEXAMPLE START\nSolely based on the given context which relationships are between the entity "{entity1}" and the entity "{entity2}"?\nThis is the given context:\n"{entity1.capitalize()} is in relationship with {entity2}. {entity2.capitalize()} is in some other relationship with {entity1}."\n'
-
-                # prompt += 'Output:\nname: is in relationship with\ncontext: "' + entity1 + ' is in relationship with ' + entity2 + '"\nsource entity: ' + entity1 + '\ntarget entity: ' + entity2 + '\nJSON object: {"inference": "' + entity1 + ' is in relationship with ' + entity2 + '", "name": "is in relationship with", "source": "' + entity1 + '", "target": "' + entity2 + '"}\n\nname: is in some other relationship with\ncontext: "' + entity2 + ' is in relationship with ' + entity1 + '"\nsource entity: ' + entity2 + '\ntarget entity: ' + entity1 + '\nJSON object: {"inference": "' + entity2 + ' is in some other relationship with ' + entity1 + '", "name": "is in some other relationship with", "source": "' + entity2 + '", "target": "' + entity1 + '"}\nEXAMPLE END'
-
-        elif user_choice == UserChoice.ENTITIES.value:
-            if IS_CHAIN_OF_THOUGHTS:
-                prompt = """Solely based on the given context extract all classes for a UML diagram. For each class output its name and then output this class in JSON object.
-
-EXAMPLE START
-
-This is the given context:
-"A road vehicle is a motorised or non-motorised vehicle"
-
-Output:
-name: road vehicle
-JSON object: {"name": "road vehicle"}
-
-name: motorised vehicle
-JSON object: {"name": "motorised vehicle"}
-
-name: non-motorised vehicle
-JSON object: {"name": "non-motorised vehicle"}
-
-EXAMPLE END
-"""
-
-            else:
-                prompt = """Solely based on the given context extract all entities. Output each entity in JSON object like this: {"name": "entity name"}."""
-        else:
-            raise ValueError(f"Error: Encountered undefined user choice while creating prompt: {user_choice}")
-
-
-        if is_domain_description:
-            prompt += f'\n\nThis is the given context:\n"{relevant_texts}"'
+        with open(prompt_file_name, 'r') as file:
+            original_prompt = file.read()
+        
+        prompt = TextUtility.multireplace(original_prompt, replacements)
 
         return prompt
 
@@ -558,7 +435,8 @@ EXAMPLE END
             logging.warn("No relevant texts found.")
             return
 
-        prompt = self.__create_prompt(user_choice, source_entity, target_entity, is_domain_description, count_items_to_suggest, relevant_texts)
+        prompt = self.__create_prompt(user_choice=user_choice, source_entity=source_entity, target_entity=target_entity,
+                                      is_domain_description=is_domain_description, items_count_to_suggest=count_items_to_suggest, relevant_texts=relevant_texts)
         
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
@@ -605,6 +483,8 @@ EXAMPLE END
     def get_field_content(self, attribute_name, source_entity, domain_description, field):
         source_entity = source_entity.strip()
 
+        prompt = self.__create_prompt(user_choice=UserChoice.ONLY_DESCRIPTION.value, source_entity=source_entity, relevant_texts=domain_description, field=field)
+
         # For simplicity right now generate content only for "description" field
         prompt = f'Solely based on the given context provide description for the attribute: "{attribute_name}" of the entity: "{source_entity}" and output it in this JSON object: '
         prompt += '{"description": "..."}.\n\n'
@@ -628,24 +508,8 @@ EXAMPLE END
 
 
     def summarize_conceptual_model1(self, conceptual_model, domain_description):
-
-        # conceptual_model = { "entities": [
-        #     {"name": "Student", "attributes": [{"name": "name", "inference": "student has a name", "data_type": "string"}]},
-        #     {"name": "Course", "attributes": [{"name": "name", "inference": "courses have a name", "data_type": "string"}, {"name": "number of credits", "inference": "courses have a specific number of credits", "data_type": "string"}]},
-        #     {"name": "Dormitory", "attributes": [{"name": "price", "inference": "each dormitory has a price", "data_type": "int"}]},
-        #     {"name": "Professor", "attributes": [{"name": "name", "inference": "professors, who have a name", "data_type": "string"}]}],
-        #   "relationships": [{"name": "enrolled in", "inference": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"},
-        #                     {"name": "accommodated in", "inference": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"},
-        #                     {"name": "has", "inference": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"},
-        #                     {"name": "is-a", "source_entity": "student", "target_entity": "person"}
-        #                   ]}
         
-        prompt = f"Solely based on the given conceptual model detaily summarize each given entity, attribute and relationship and output the whole result in this JSON object: "
-        prompt += '{"summary": "plain text summary of the given conceptual model"}\n\n'
-
-        prompt += f'This is the given conceptual model:\n"{conceptual_model}"\n\n'
-
-        # prompt += f'This is the given context:\n"{domain_description}"'
+        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY1.value, conceptual_model=conceptual_model, relevant_texts=domain_description)
 
         self.messages = []
         new_messages = self.messages.copy()
@@ -662,37 +526,11 @@ EXAMPLE END
 
             json_item = json.dumps(dictionary)
             yield f"{json_item}\n"
-    
+
 
     def summarize_conceptual_model2(self, conceptual_model, domain_description):
 
-        prompt = """Solely based on the given context generate description for each given entity, attribute and relationship in the same JSON format as the example shows.
-
-EXAMPLE START
-
-Given entities, attributes and relationships:
-{"entities": [{"name": "student", "attributes": [{"name": "name"}]}, {"name": "course", "attributes": [{"name": "name"}, {"name": "number of credits"}]}, {"name": "professor", "attributes": [{"name": "name"}]}, {"name": "dormitory", "attributes": [{"name": "price"}]}],
-"relationships": [{"name": "has", "sourceEntity": "course", "targetEntity": "professor"}, {"name": "enrolled in", "sourceEntity": "student", "targetEntity": "course"}, {"name": "accommodated in", "sourceEntity": "student", "targetEntity": "dormitory"}]}
-
-Given context:
-"We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."
-
-Output:
-
-{"entity": "student", "description": "A student entity represents an individual enrolled in an educational institution", "attributes": [{"name": "name", "description": "The name of the student"}]}
-{"entity": "course", "description": "A course entity representing educational modules", "attributes": [{"name": "name", "description": "The name of the course"}, {"name": "number of credits", "description": "The number of credits assigned to the course"}]}
-{"entity": "professor", "description": "A professor entity representing instructors teaching courses", "attributes": [{"name": "name", "description": "The name of the professor"}]}
-{"entity": "dormitory", "description": "A dormitory entity representing residential facilities for students", "attributes": [{"name": "name", "description": "The price of staying in the dormitory"}]}
-
-{"relationship": "has", "sourceEntity": "course", "targetEntity": "professor", "description": "Courses have professors who teach them"}
-{"relationship": "enrolled in", "sourceEntity": "student", "targetEntity": "course", "description": "Students can be enrolled in any number of courses"}
-{"relationship": "accommodated in", "sourceEntity": "student", "targetEntity": "dormitory", "description": "Students can be accommodated in dormitories"}
-
-EXAMPLE END\n
-"""
-
-        prompt += f"Given entities, attributes and relationships:\n{conceptual_model}\n\n"
-        prompt += f'Given context:\n"{domain_description}"'
+        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY2.value, conceptual_model=conceptual_model, relevant_texts=domain_description)
 
         self.messages = []
         new_messages = self.messages.copy()
