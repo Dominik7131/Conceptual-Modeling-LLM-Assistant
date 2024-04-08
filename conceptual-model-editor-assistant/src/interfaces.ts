@@ -44,10 +44,31 @@ export const enum ItemFieldUIName
   TARGET_ENTITY = "Target entity"
 }
 
-export interface summaryObject
+export interface SummaryObject
 {
-  entities: any[],
+  entities: any[]
   relationships: any[]
+}
+
+export interface NodeData
+{
+  [Field.DESCRIPTION]: string
+  [Field.ORIGINAL_TEXT]: string
+  [Field.ORIGINAL_TEXT_INDEXES]: number[]
+  attributes: Attribute[]
+  onEdit: (item: Item) => void
+  onSuggestItems: (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null) => void
+  onAddNewAttribute: (sourceEntity: Entity) => void
+}
+
+export interface EdgeData
+{
+  [Field.ID]: number
+  [Field.DESCRIPTION]: string
+  [Field.ORIGINAL_TEXT]: string
+  [Field.ORIGINAL_TEXT_INDEXES]: number[]
+  [Field.CARDINALITY]: string
+  onEdit: (item: Item) => void
 }
 
 export type Item = Entity | Attribute | Relationship

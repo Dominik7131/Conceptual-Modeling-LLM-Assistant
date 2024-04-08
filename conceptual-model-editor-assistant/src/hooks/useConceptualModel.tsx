@@ -6,7 +6,7 @@ import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
 import { Button, Divider, Stack, Typography } from '@mui/material';
-import { Attribute, Entity, Field, Item, ItemType, OriginalTextIndexesItem, Relationship, SerializedConceptualModel, UserChoice } from '../interfaces';
+import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, SerializedConceptualModel, UserChoice } from '../interfaces';
 import AddIcon from '@mui/icons-material/Add';
 import CustomNode from '../components/CustomNode';
 import { ImageTwoTone } from '@mui/icons-material';
@@ -115,11 +115,11 @@ const useConceptualModel = () =>
   {
 
     const input = { entities: [
-        {name: "Engine", description: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
-        {name: "Manufacturer", description: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
-        {name: "Natural person", description: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
-        {name: "Business natural person", description: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
-        {name: "Road vehicle", description: "", [Field.ORIGINAL_TEXT_INDEXES]: [4, 10], attributes: []}],
+        {name: "Engine", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
+        {name: "Manufacturer", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
+        {name: "Natural person", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
+        {name: "Business natural person", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
+        {name: "Road vehicle", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [4, 10], attributes: []}],
 
                   relationships: [
                     {"name": "manufactures", "source": "manufacturer", "target": "road vehicle", "originalText": "s"}]}
@@ -164,12 +164,16 @@ const useConceptualModel = () =>
 
       const entityObject : Entity = {
         [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "",
-        [Field.ORIGINAL_TEXT_INDEXES]: entity.originalTextIndexes}
+        [Field.ORIGINAL_TEXT_INDEXES]: entity[Field.ORIGINAL_TEXT_INDEXES]}
 
+      const nodeData : NodeData = {
+        [Field.DESCRIPTION]: entity.description, [Field.ORIGINAL_TEXT]: entity.originalText,
+        [Field.ORIGINAL_TEXT_INDEXES]: entity.originalTextIndexes, attributes: entity.attributes,
+        onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute 
+      }
       const newNode : Node = {
-        id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY }, data: { description: entity.description,
-        attributes: entity.attributes, [Field.ORIGINAL_TEXT_INDEXES]: entityObject.originalTextIndexes,
-        onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute }}
+        id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData
+      }
 
       newNodes.push(newNode)
 
@@ -431,7 +435,7 @@ const useConceptualModel = () =>
     }
 
     // Create an updated version of the old entity
-    const newData = {
+    const newData : NodeData = {
       ...oldNode.data, description: newEntity.description, originalText: newEntity.originalText, originalTextIndexes: newEntity.originalTextIndexes
     }
     const newNode: Node = {...oldNode, id: newEntity.name, data: newData}
@@ -490,7 +494,7 @@ const useConceptualModel = () =>
         }
       })
 
-      const newData = { ...oldNode.data, attributes: newAttributes}
+      const newData: NodeData = { ...oldNode.data, attributes: newAttributes}
       const newNode: Node = { ...oldNode, data: newData}
 
   
@@ -520,7 +524,7 @@ const useConceptualModel = () =>
     }
 
     // Create an updated version of the old edge
-    const newData = {
+    const newData: EdgeData = {
       ...oldEdge.data, description: newRelationship.description, cardinality: newRelationship.cardinality,
       originalText: newRelationship.originalText}
 
@@ -530,8 +534,6 @@ const useConceptualModel = () =>
     // If the source/target does not exist we need to create a new node
     let newEdge: Edge = { ...oldEdge, id: newID, label: newRelationship.name, source: newRelationship.source,
       target: newRelationship.target, data: newData}
-
-    console.log("New edge: ", newEdge)
 
     setEdges((edges) => edges.map((currentEdge : Edge) =>
     {
@@ -570,7 +572,7 @@ const useConceptualModel = () =>
     }
 
     const newAttributes = oldNode.data.attributes.filter((element: Attribute) => element.name !== attribute.name)
-    const newData = { ...oldNode.data, attributes: newAttributes }
+    const newData: NodeData = { ...oldNode.data, attributes: newAttributes }
     const newNode = { ...oldNode, data: newData }
 
 
@@ -848,9 +850,12 @@ const useConceptualModel = () =>
 
   const createNode = (nodeID: string, positionX: number, positionY: number): Node =>
   {
+    const data : NodeData = {
+      [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
+      attributes: [], onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
+    }
     const newNode: Node = {
-      id: nodeID, type: "customNode", position: { x: positionX, y: positionY },
-      data: { attributes: [], onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute }
+      id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: data
     }
     
     return newNode
@@ -1018,7 +1023,7 @@ const useConceptualModel = () =>
       }
 
       const newAttributes = [...currentNode.data.attributes, attribute]  
-      const newData = { ...currentNode.data, attributes: newAttributes }
+      const newData : NodeData = { ...currentNode.data, attributes: newAttributes }
       const updatedNode: Node = {...currentNode, data: newData}
 
       return updatedNode
@@ -1077,8 +1082,8 @@ const useConceptualModel = () =>
     }
 
     // TODO: Make function to create edge (or edge data) from a relationship
-    const edgeData = {
-      [Field.NAME]: relationship[Field.NAME], [Field.DESCRIPTION]: relationship[Field.DESCRIPTION],
+    const edgeData: EdgeData = {
+      [Field.ID]: relationship.ID, [Field.DESCRIPTION]: relationship[Field.DESCRIPTION],
       [Field.ORIGINAL_TEXT]: relationship[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: relationship[Field.ORIGINAL_TEXT_INDEXES],
       [Field.CARDINALITY]: relationship[Field.CARDINALITY], onEdit: onEditItem
     }

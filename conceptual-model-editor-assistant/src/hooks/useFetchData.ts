@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Field, Item, ItemType, OriginalTextIndexesItem, summaryObject } from "../interfaces";
+import { Field, Item, ItemType, OriginalTextIndexesItem, SummaryObject } from "../interfaces";
 
 
 interface Props
@@ -20,7 +20,7 @@ const useFetchData = ({onProcessStreamedData, onProcessStreamedDataGeneral, onPr
     const [summaryText, setSummaryText] = useState<string>("")
 
     // TODO: This object should contain descriptions for "entities": array of entities and "relationships": array of relationships
-    const [summaryDescriptions, setSummaryDescriptions] = useState<summaryObject>({ entities: [], relationships: []})
+    const [summaryDescriptions, setSummaryDescriptions] = useState<SummaryObject>({ entities: [], relationships: []})
 
 
     const fetchStreamedData = (url : string, headers : any, bodyData : any, sourceEntityName: string, itemType : ItemType) =>

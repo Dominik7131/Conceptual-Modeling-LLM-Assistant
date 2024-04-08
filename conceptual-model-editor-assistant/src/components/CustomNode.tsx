@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { useCallback, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { Attribute, Entity, Field, ItemType, UserChoice, primaryColor } from '../interfaces';
+import { Attribute, Entity, Field, ItemType, NodeData, UserChoice, primaryColor } from '../interfaces';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -18,10 +18,12 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
     const [isEntityHovered, setIsEntityHovered] = useState<boolean>(false)
 
     const { capitalizeString } = useUtility()
+
+    const nodeData = data as NodeData
     
     const entity: Entity = {
-        [Field.ID]: 0, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: id, [Field.DESCRIPTION]: data.description,
-        [Field.ORIGINAL_TEXT]: data.inference, [Field.ORIGINAL_TEXT_INDEXES]: data.inference_indexes
+        [Field.ID]: 0, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: id, [Field.DESCRIPTION]: nodeData[Field.DESCRIPTION],
+        [Field.ORIGINAL_TEXT]: nodeData[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: nodeData[Field.ORIGINAL_TEXT_INDEXES]
     }
 
     const attributes = data.attributes

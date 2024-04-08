@@ -45,8 +45,6 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
     const isAttribute = item.type === ItemType.ATTRIBUTE
     const isRelationship = item.type === ItemType.RELATIONSHIP
 
-    console.log("item, edited item: ", item, editedItem)
-
 
     const showEditField = (label : string, field : Field, value : string) =>
     {
