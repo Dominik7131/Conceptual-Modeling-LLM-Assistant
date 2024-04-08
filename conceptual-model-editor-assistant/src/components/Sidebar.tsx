@@ -15,7 +15,7 @@ interface Props
 {
     isLoading : boolean
     items : Item[]
-    onAddItem : (item : Item, addAsDifferent : boolean) => void
+    onAddItem : (item : Item) => void
     onEditSuggestion : (itemID : number, itemType : ItemType) => void
     onHighlightSingleItem : (itemID : number) => void
     sidebarWidthPercentage : number
@@ -45,7 +45,7 @@ const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion
     {
         return (
             <ButtonGroup fullWidth sx={{ marginTop: 1 }} variant="outlined" size="small">
-                <Button onClick={() => onAddItem(item, false)}> Add </Button>
+                <Button onClick={() => onAddItem(item)}> Add </Button>
                 <Button onClick={() => onEditSuggestion(item.ID, item.type)}> Edit </Button>
                 <Button onClick={() => onHighlightSingleItem(item.ID)}> Highlight </Button>
             </ButtonGroup>

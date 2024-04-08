@@ -567,13 +567,6 @@ const useConceptualModel = () =>
     }
 
     const newAttributes = oldNode.data.attributes.filter((element: Attribute) => element.name !== attribute.name)
-
-    // const newNode: Node = { id: oldNode.id, type: "customNode", position: oldNode.position, data: {
-    //   [Field.ID]: 0, [Field.DESCRIPTION]: oldNode.data.description, [Field.INFERENCE]: oldNode.data.inference,
-    //   [Field.INFERENCE_INDEXES]: oldNode.data.inferenceIndexes,
-    //   attributes: newAttributes, onEdit: onEditItem
-    // }}
-
     const newData = { ...oldNode.data, attributes: newAttributes }
     const newNode = { ...oldNode, data: newData }
 
@@ -850,7 +843,18 @@ const useConceptualModel = () =>
   }
 
 
-  const addNode = (nodeID : string, positionX : number, positionY : number, attributes : Attribute[] = []) =>
+  const createNode = (nodeID: string, positionX: number, positionY: number): Node =>
+  {
+    const newNode: Node = {
+      id: nodeID, type: "customNode", position: { x: positionX, y: positionY },
+      data: { attributes: [], onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute }
+    }
+    
+    return newNode
+  }
+
+
+  const addNode = (nodeID: string, positionX: number, positionY: number, attributes: Attribute[] = []) =>
   {
     if (!nodeID)
     {
@@ -863,9 +867,7 @@ const useConceptualModel = () =>
       return
     }
 
-    const newNode: Node = {
-      id: nodeID, type: "customNode", position: { x: positionX, y: positionY },
-      data: { attributes: attributes, onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute } }
+    const newNode: Node = createNode(nodeID, positionX, positionY)
 
     setNodes(previousNodes => {
       return [...previousNodes, newNode]
@@ -905,6 +907,8 @@ const useConceptualModel = () =>
 
   const onAddItem = (item : Item) =>
   {
+    console.log("Adding this item: ", item)
+
     if (item.type === ItemType.ENTITY)
     {
       if (!item.name)
@@ -917,13 +921,11 @@ const useConceptualModel = () =>
     }
     else if (item.type === ItemType.ATTRIBUTE)
     {
-      const attribute = item as Attribute
-      onAddAttributesToNode(attribute)
+      onAddAttributesToNode(item as Attribute)
     }
     else if (item.type === ItemType.RELATIONSHIP)
     {
-      const relationship = item as Relationship
-      onAddRelationshipsToNodes(relationship)
+      onAddRelationshipsToNodes(item as Relationship)
     }
     else
     {
@@ -996,17 +998,11 @@ const useConceptualModel = () =>
         return currentNode;
       }
 
-      const newAttributeObject : Attribute = {
-        [Field.ID]: attribute.ID, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: attribute.name, [Field.DESCRIPTION]: "",
-        [Field.INFERENCE]: attribute.inference, [Field.INFERENCE_INDEXES]: attribute.inferenceIndexes, [Field.DATA_TYPE]: attribute.dataType,
-        [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: currentNode.id
-      }
-
       // If the node already contains the selected attribute do not add anything
       let isAttributePresent = false
-      currentNode.data.attributes.forEach((attribute : Attribute) =>
+      currentNode.data.attributes.forEach((currentAttribute : Attribute) =>
       {
-        if (attribute.name === newAttributeObject.name)
+        if (currentAttribute.name === attribute.name)
         {
           isAttributePresent = true
         }
@@ -1018,7 +1014,7 @@ const useConceptualModel = () =>
         return currentNode;
       }
 
-      const newAttributes = [...currentNode.data.attributes, newAttributeObject]  
+      const newAttributes = [...currentNode.data.attributes, attribute]  
       const newData = { ...currentNode.data, attributes: newAttributes }
       const updatedNode: Node = {...currentNode, data: newData}
 
@@ -1027,52 +1023,45 @@ const useConceptualModel = () =>
   }
 
 
-  const onAddRelationshipsToNodes = (relationship : Relationship) =>
+  const doesEdgeAlreadyExist = (edgeID: string): boolean =>
+  {
+    for (let i = 0; i < edges.length; i++)
+    {
+      if (edges[i].id === edgeID)
+      {
+        return true
+      }
+    }
+    
+    return false
+  }
+
+
+  const onAddRelationshipsToNodes = (relationship : Relationship): void =>
   {
     let sourceNodeID = relationship.source?.toLowerCase()
     let targetNodeID = relationship.target?.toLowerCase()
 
-    // TODO: Try to find a way to make the code more compact
-    if (!sourceNodeID)
+    if (!sourceNodeID) { sourceNodeID = "" }
+    if (!targetNodeID) { targetNodeID = "" }
+
+    const newEdgeID = createEdgeID(sourceNodeID, targetNodeID, relationship.name)
+    if (doesEdgeAlreadyExist(newEdgeID))
     {
-      sourceNodeID = ""
-    }
-    if (!targetNodeID)
-    {
-      targetNodeID = ""
+      return 
     }
 
-    // Return if the edge is already existing
-    const newEdgeID = createEdgeID(sourceNodeID, targetNodeID, relationship.name) //`${sourceNodeID},${targetNodeID}`
-    
-    for (let i = 0; i < edges.length; i++)
-    {
-      if (edges[i].id.toLowerCase() === newEdgeID)
-      {
-        console.log("Edge is already existing")
-        return
-      }
-    }
-    
-    // Check if the target node is already existing
-    let isTargetNodeCreated = false
-    for (let i = 0; i < nodes.length; i++)
-    {
-      if (targetNodeID === nodes[i].id.toLowerCase())
-      {
-        isTargetNodeCreated = true
-        break
-      }
-    }
+    const isTargetNodeCreated: boolean = doesNodeAlreadyExist(targetNodeID)
 
     if (!isTargetNodeCreated)
     {
-      const newNode = { id: targetNodeID, type: "customNode", position: { x: 500, y: 100 }, data: { attributes: [], onEdit: onEditItem} }
+      // TODO: Try to come up with a better node position
+      const newNode: Node = createNode(targetNodeID, 500, 100)
 
       setNodes(previousNodes => 
-        {
-          return [...previousNodes, newNode]
-        })
+      {
+        return [...previousNodes, newNode]
+      })
       
       setNodes((nodes) => nodes.map((node) =>
       {
@@ -1084,16 +1073,20 @@ const useConceptualModel = () =>
       }));
     }
 
+    // TODO: Make function to create edge (or edge data) from a relationship
+    const edgeData = {
+      [Field.NAME]: relationship.name, [Field.DESCRIPTION]: relationship.description, [Field.INFERENCE]: relationship.inference,
+      [Field.INFERENCE_INDEXES]: relationship.inferenceIndexes, [Field.CARDINALITY]: relationship.cardinality, onEdit: onEditItem
+    }
+
     const newEdge : Edge = {
-      id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: {
-        onEdit: onEditItem, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: relationship.description, [Field.INFERENCE]: relationship.inference,
-        [Field.INFERENCE_INDEXES]: relationship.inferenceIndexes }
+      id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: edgeData
     }
 
     setEdges(previousEdges =>
-      {
-        return [...previousEdges, newEdge]
-      })
+    {
+      return [...previousEdges, newEdge]
+    })
   }
 
 
@@ -1101,7 +1094,6 @@ const useConceptualModel = () =>
     {
       if (isClearAll)
       {
-        // console.log("Clearing all")
         setEditedSuggestedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: "", cardinality: ""})
         setRegeneratedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", inference: "", inferenceIndexes: [], dataType: "", cardinality: ""})
       }
@@ -1120,7 +1112,6 @@ const useConceptualModel = () =>
 
     const onConfirmRegeneratedText = (field : Field) =>
     {
-
       if (regeneratedItem.hasOwnProperty(field))
       {
         // Set type to "any" because Typescript doesn't recognise that we already did the check
