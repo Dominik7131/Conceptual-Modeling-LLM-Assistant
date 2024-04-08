@@ -99,11 +99,28 @@ def get_only():
 
         yield json.dumps(dictionary)
 
+
     body_data = request.get_json()
     source_entity = body_data["sourceEntity"]
-    attribute_name = body_data["attributeName"]
+    target_entity = body_data["targetEntity"]
+    name = body_data["name"]
     field = body_data["field"]
     domain_description = body_data["domainDescription"]
+    userChoice = body_data["userChoice"]
+
+    # For entity we need:
+    # - entity name
+
+    # For attribute we need:
+    # - attribute name
+    # - source entity name
+
+    # For relationship we need:
+    # - relationship name
+    # - source entity name
+    # - target entity name
+
+    # The llm_assistant needs to get userChoice to know how to edit the prompt
 
     return generator_function(field)
 

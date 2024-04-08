@@ -59,25 +59,23 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
             <Handle type="target" position={Position.Top} style={{ background: selected ? primaryColor : "black" }} />
             <Handle type="source" position={Position.Bottom} style={{ background: selected ? primaryColor : "black" }} />
 
-            <Tooltip title={entityName} enterDelay={500}>
-                <Button size="small" fullWidth={true}
-                    sx={{ color: selected ? primaryColor : "black", fontSize: "17px", textTransform: 'none',
-                          overflow: "hidden", direction: 'ltr' }}
-                    onMouseEnter={() => setIsEntityHovered(_ => true)} 
-                    onMouseLeave={() => setIsEntityHovered(_ => false)}
-                    >
-                    <strong>{entityName}</strong>
+            <Button size="small" fullWidth={true}
+                sx={{ color: selected ? primaryColor : "black", fontSize: "17px", textTransform: 'none',
+                        overflow: "hidden", direction: 'ltr' }}
+                onMouseEnter={() => setIsEntityHovered(_ => true)} 
+                onMouseLeave={() => setIsEntityHovered(_ => false)}
+                >
+                <strong>{entityName}</strong>
 
-                    <Typography
-                        id="long-button"
-                        // onClick={() => data.onEdit(entity)}
-                        onClick={handleClick}
-                        sx={{ display: (isEntityHovered || anchorEl) ? "block" : "none", position: "absolute", right: "0px", top: "6px" }}
-                        >
-                        <MoreVertIcon />
-                    </Typography>
-                </Button>
-            </Tooltip>
+                <Typography
+                    id="long-button"
+                    // onClick={() => data.onEdit(entity)}
+                    onClick={handleClick}
+                    sx={{ display: (isEntityHovered || anchorEl) ? "block" : "none", position: "absolute", right: "0px", top: "6px" }}
+                    >
+                    <MoreVertIcon />
+                </Typography>
+            </Button>
 
             {/* https://mui.com/material-ui/react-menu/ */}
             <Menu

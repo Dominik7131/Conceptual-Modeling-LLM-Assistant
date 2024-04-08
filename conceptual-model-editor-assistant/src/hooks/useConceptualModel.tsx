@@ -60,6 +60,9 @@ const useConceptualModel = () =>
   const SUGGEST_ITEMS_URL = BASE_URL + SUGGEST_ITEMS_ENDPOINT
   const HEADER = { "Content-Type": "application/json" }
 
+  const EDIT_ITEM_ENDPOINT = "getOnly"
+  const EDIT_ITEM_URL = BASE_URL + EDIT_ITEM_ENDPOINT
+
 
   const onConnect : OnConnect = useCallback((params) =>
   { 
@@ -141,8 +144,8 @@ const useConceptualModel = () =>
     //                     {ID: 3, type: ItemType.RELATIONSHIP, "name": "is-a", description: "", inference: "", inferenceIndexes: [], "source": "student", "target": "person", cardinality: ""}
     //                   ]}
 
-    const incrementX = 600
-    const incrementY = 350
+    const incrementX = 500
+    const incrementY = 200
     let positionX = 100
     let positionY = 100
     let newNodes : Node[] = []
@@ -313,18 +316,29 @@ const useConceptualModel = () =>
     }
 
 
-    const onEditPlus = (name: string, field: Field) =>
+    const onEditPlus = (itemType: ItemType, name: string, sourceEntity: string, targetEntity: string, field: Field) =>
     {
-      alert("Implement the right source entity")
-      return
+      let userChoice = UserChoice.ENTITIES
 
-      // const endpointName = "getOnly"
-      // const endpoint = BASE_URL + endpointName
-      // const headers = { "Content-Type": "application/json" }
-      // const bodyData = JSON.stringify({"attributeName": name, "sourceEntity": sourceEntity, "field": field, "domainDescription": domainDescription})
+      if (itemType === ItemType.ATTRIBUTE)
+      {
+        userChoice = UserChoice.ATTRIBUTES 
+      }
+      else if (itemType === ItemType.RELATIONSHIP)
+      {
+        userChoice = UserChoice.RELATIONSHIPS
+      }
 
-      // setFieldToLoad(field)
-      // fetchStreamedDataGeneral(endpoint, headers, bodyData, name, field)
+      if (!sourceEntity) { sourceEntity = "" }
+      if (!targetEntity) { targetEntity = "" }
+
+      const bodyData = JSON.stringify({
+        "name": name, "sourceEntity": sourceEntity, "targetEntity": targetEntity, "field": field, "userChoice": userChoice,
+        "domainDescription": domainDescription
+      })
+
+      setFieldToLoad(field)
+      fetchStreamedDataGeneral(EDIT_ITEM_URL, HEADER, bodyData, name, field)
     }
 
 
@@ -764,6 +778,9 @@ const useConceptualModel = () =>
     // Otherwise when suggesting attributes/relationships through function in node.data.suggestItems(...)
     // The function doesn't know about the newest domain description
 
+    // Note: But now when domain description changes it resets our whole conceptual model
+    // Also when adding a new entities and then changing domain description these entities won't get updated
+
     parseSerializedConceptualModel()
   }, [domainDescription]);
 
@@ -818,243 +835,266 @@ const useConceptualModel = () =>
     // }, [edges]);
 
 
-    const addNode = (nodeID : string, positionX : number, positionY : number, attributes : Attribute[] = []) =>
+  const doesNodeAlreadyExist = (nodeID: string): boolean =>
+  {
+    for (let i = 0; i < nodes.length; i++)
     {
-      if (!nodeID)
+      if (nodes[i].id === nodeID)
       {
-        alert("Node name is empty")
+        console.log("Node already exists")
+        return true
+      }
+    }
+
+    return false
+  }
+
+
+  const addNode = (nodeID : string, positionX : number, positionY : number, attributes : Attribute[] = []) =>
+  {
+    if (!nodeID)
+    {
+      alert("Node name is empty")
+      return
+    }
+
+    if (doesNodeAlreadyExist(nodeID))
+    {
+      return
+    }
+
+    const newNode: Node = {
+      id: nodeID, type: "customNode", position: { x: positionX, y: positionY },
+      data: { attributes: attributes, onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute } }
+
+    setNodes(previousNodes => {
+      return [...previousNodes, newNode]
+    })
+  }
+
+
+  const addNodeEntity = (entity: Entity, positionX: number, positionY: number) =>
+  {
+    if (doesNodeAlreadyExist(entity.name))
+    {
+      return
+    }
+
+    const newNode: Node = {
+      id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
+      data: { [Field.DESCRIPTION]: entity.description, [Field.INFERENCE]: entity.inference, [Field.INFERENCE_INDEXES]: [], attributes: [], 
+        onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute } }
+
+    setNodes(previousNodes => {
+      return [...previousNodes, newNode]
+    })
+  }
+
+
+  const onOverlayDomainDescriptionOpen = () =>
+  {
+    setIsShowDialogDomainDescription(true)
+  }
+
+
+  const onDialogDomainDescriptionClose = () =>
+  {
+    setIsShowDialogDomainDescription(false)
+  }    
+
+
+  const onAddItem = (item : Item) =>
+  {
+    if (item.type === ItemType.ENTITY)
+    {
+      if (!item.name)
+      {
+        alert("Entity name cannot be empty")
         return
       }
 
-      // Do not add a new node if it already exists
-      for (let i = 0; i < nodes.length; i++)
-      {
-        if (nodes[i].id === nodeID)
-        {
-          console.log("Node already exists")
-          return
-        }
-      }
-
-      const newNode: Node = {
-        id: nodeID, type: "customNode", position: { x: positionX, y: positionY },
-        data: { attributes: attributes, onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute } }
-      setNodes(previousNodes => {
-        return [...previousNodes, newNode]
-      })
+      onAddEntity(item as Entity)
+    }
+    else if (item.type === ItemType.ATTRIBUTE)
+    {
+      const attribute = item as Attribute
+      onAddAttributesToNode(attribute)
+    }
+    else if (item.type === ItemType.RELATIONSHIP)
+    {
+      const relationship = item as Relationship
+      onAddRelationshipsToNodes(relationship)
+    }
+    else
+    {
+      console.log("Unknown item type: ", item.type)
     }
 
+    setIsShowDialogEdit(false)
+  }
 
-    const onOverlayDomainDescriptionOpen = () =>
+
+  const onChangeItemType = (item: Item): void =>
+  {
+    // If the item is attribute then transform it into relationship
+    // Otherwise transform relationsip into attribute
+
+    if (item.type === ItemType.ATTRIBUTE)
     {
-      setIsShowDialogDomainDescription(true)
+      const oldAttribute = item as Attribute
+
+      const relationship : Relationship = {
+        ID: oldAttribute.ID, type: ItemType.RELATIONSHIP, name: "", description: oldAttribute.description,
+        inference: oldAttribute.inference, inferenceIndexes: oldAttribute.inferenceIndexes, source: oldAttribute.source,
+        target: oldAttribute.name, cardinality: ""}
+
+      setSelectedSuggestedItem(_ => relationship)
+      setEditedSuggestedItem(_ => relationship)
     }
-
-
-    const onDialogDomainDescriptionClose = () =>
+    else
     {
-      setIsShowDialogDomainDescription(false)
-    }    
+      const oldRelationship = item as Relationship
 
-
-    const onAddItem = (item : Item, addAsDifferent : boolean = false) =>
-    {
-      console.log("Adding: ", item)
-
-      if (item.type === ItemType.ENTITY)
-      {
-        if (!item.name)
-        {
-          alert("Entity name cannot be empty")
-          return
-        }
-
-        onAddEntity(item as Entity)
-      }
-      else if (item.type === ItemType.ATTRIBUTE)
-      {
-        const attribute = item as Attribute
-        if (addAsDifferent)
-        {
-          onAddAsRelationship(attribute)
-        }
-        else
-        {
-          onAddAttributesToNode(attribute)
-        }
-      }
-      else if (item.type === ItemType.RELATIONSHIP)
-      {
-        const relationship = item as Relationship
-        if (addAsDifferent)
-        {
-          onAddAsAttribute(relationship)
-        }
-        else
-        {
-          onAddRelationshipsToNodes(relationship)
-        }
-      }
-      else
-      {
-       console.log("Unknown item type: ", item.type)
-      }
-
-      setIsShowDialogEdit(false)
-    }
-
-
-    const onAddEntity = (entity: Entity) =>
-    {
-      addNode(entity.name, 66, 66)
-    }
-
-
-    const onAddAsRelationship = (attribute: Attribute) =>
-    {
-      const relationship : Relationship = {ID: attribute.ID, type: ItemType.RELATIONSHIP, name: "", description: attribute.description, inference: attribute.inference, inferenceIndexes: attribute.inferenceIndexes, 
-                                            source: attribute.source, target: attribute.name, cardinality: ""}
-      
-      setSelectedSuggestedItem(relationship)
-      setIsShowDialogEdit(true)
-    }
-
-
-    const onAddAsAttribute = (relationship : Relationship) =>
-    {
       const attribute : Attribute = {
-        ID: relationship.ID, type: ItemType.ATTRIBUTE, name: relationship.target, description: relationship.description,
-        dataType: "string", inference: relationship.inference, inferenceIndexes: relationship.inferenceIndexes,
-        cardinality: "", source: relationship.source
+        ID: oldRelationship.ID, type: ItemType.ATTRIBUTE, name: oldRelationship.target, description: oldRelationship.description,
+        dataType: "string", inference: oldRelationship.inference, inferenceIndexes: oldRelationship.inferenceIndexes,
+        cardinality: "", source: oldRelationship.source
       }
 
-      setSelectedSuggestedItem(attribute)
-      setIsShowDialogEdit(true)
+      setSelectedSuggestedItem(_ => attribute)
+      setEditedSuggestedItem(_ => attribute)
+    }
+  }
+
+
+  const onAddEntity = (entity: Entity) =>
+  {
+    addNodeEntity(entity, 66, 66)
+  }
+
+
+  const OnClickAddNode = (nodeName : string) =>
+  {
+    if (!nodeName)
+    {
+      return
     }
 
-
-    const OnClickAddNode = (nodeName : string) =>
+    addNode(nodeName.toLowerCase(), 0, 0, [])
+  }
+  
+  
+  const onAddAttributesToNode = (attribute : Attribute) : void =>
+  {    
+    const nodeID = attribute.source
+    
+    setNodes((nodes) => nodes.map((currentNode : Node) =>
     {
-      if (!nodeName)
+      // Skip nodes which are not getting a new attribute
+      if (currentNode.id !== nodeID)
       {
+        return currentNode;
+      }
+
+      const newAttributeObject : Attribute = {
+        [Field.ID]: attribute.ID, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: attribute.name, [Field.DESCRIPTION]: "",
+        [Field.INFERENCE]: attribute.inference, [Field.INFERENCE_INDEXES]: attribute.inferenceIndexes, [Field.DATA_TYPE]: attribute.dataType,
+        [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: currentNode.id
+      }
+
+      // If the node already contains the selected attribute do not add anything
+      let isAttributePresent = false
+      currentNode.data.attributes.forEach((attribute : Attribute) =>
+      {
+        if (attribute.name === newAttributeObject.name)
+        {
+          isAttributePresent = true
+        }
+      })
+
+      if (isAttributePresent)
+      {
+        console.log("Attribute is already present")
+        return currentNode;
+      }
+
+      const newAttributes = [...currentNode.data.attributes, newAttributeObject]  
+      const newData = { ...currentNode.data, attributes: newAttributes }
+      const updatedNode: Node = {...currentNode, data: newData}
+
+      return updatedNode
+    }));
+  }
+
+
+  const onAddRelationshipsToNodes = (relationship : Relationship) =>
+  {
+    let sourceNodeID = relationship.source?.toLowerCase()
+    let targetNodeID = relationship.target?.toLowerCase()
+
+    // TODO: Try to find a way to make the code more compact
+    if (!sourceNodeID)
+    {
+      sourceNodeID = ""
+    }
+    if (!targetNodeID)
+    {
+      targetNodeID = ""
+    }
+
+    // Return if the edge is already existing
+    const newEdgeID = createEdgeID(sourceNodeID, targetNodeID, relationship.name) //`${sourceNodeID},${targetNodeID}`
+    
+    for (let i = 0; i < edges.length; i++)
+    {
+      if (edges[i].id.toLowerCase() === newEdgeID)
+      {
+        console.log("Edge is already existing")
         return
       }
-
-      addNode(nodeName.toLowerCase(), 0, 0, [])
     }
     
-    
-    const onAddAttributesToNode = (attribute : Attribute) : void =>
-    {    
-      const nodeID = attribute.source
-      
-      setNodes((nodes) => nodes.map((currentNode : Node) =>
+    // Check if the target node is already existing
+    let isTargetNodeCreated = false
+    for (let i = 0; i < nodes.length; i++)
+    {
+      if (targetNodeID === nodes[i].id.toLowerCase())
       {
-        // Skip nodes which are not getting a new attribute
-        if (currentNode.id !== nodeID)
-        {
-          return currentNode;
-        }
+        isTargetNodeCreated = true
+        break
+      }
+    }
 
-        const newAttributeObject : Attribute = {
-          [Field.ID]: attribute.ID, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: attribute.name, [Field.DESCRIPTION]: "",
-          [Field.INFERENCE]: attribute.inference, [Field.INFERENCE_INDEXES]: attribute.inferenceIndexes, [Field.DATA_TYPE]: attribute.dataType,
-          [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: currentNode.id
-        }
-  
-        // If the node already contains the selected attribute do not add anything
-        let isAttributePresent = false
-        currentNode.data.attributes.forEach((attribute : Attribute) =>
+    if (!isTargetNodeCreated)
+    {
+      const newNode = { id: targetNodeID, type: "customNode", position: { x: 500, y: 100 }, data: { attributes: [], onEdit: onEditItem} }
+
+      setNodes(previousNodes => 
         {
-          if (attribute.name === newAttributeObject.name)
-          {
-            isAttributePresent = true
-          }
+          return [...previousNodes, newNode]
         })
-  
-        if (isAttributePresent)
+      
+      setNodes((nodes) => nodes.map((node) =>
+      {
+        if (node.id === targetNodeID)
         {
-          console.log("Attribute is already present")
-          return currentNode;
+          return node
         }
-
-        const newAttributes = [...currentNode.data.attributes, newAttributeObject]  
-        const newData = { ...currentNode.data, attributes: newAttributes }
-        const updatedNode: Node = {...currentNode, data: newData}
-
-        return updatedNode
+        return node
       }));
     }
 
-
-    const onAddRelationshipsToNodes = (relationship : Relationship) =>
-    {
-      let sourceNodeID = relationship.source?.toLowerCase()
-      let targetNodeID = relationship.target?.toLowerCase()
-
-      // TODO: Try to find a way to make the code more compact
-      if (!sourceNodeID)
-      {
-        sourceNodeID = ""
-      }
-      if (!targetNodeID)
-      {
-        targetNodeID = ""
-      }
-  
-      // Return if the edge is already existing
-      const newEdgeID = createEdgeID(sourceNodeID, targetNodeID, relationship.name) //`${sourceNodeID},${targetNodeID}`
-      
-      for (let i = 0; i < edges.length; i++)
-      {
-        if (edges[i].id.toLowerCase() === newEdgeID)
-        {
-          console.log("Edge is already existing")
-          return
-        }
-      }
-      
-      // Check if the target node is already existing
-      let isTargetNodeCreated = false
-      for (let i = 0; i < nodes.length; i++)
-      {
-        if (targetNodeID === nodes[i].id.toLowerCase())
-        {
-          isTargetNodeCreated = true
-          break
-        }
-      }
-  
-      if (!isTargetNodeCreated)
-      {
-        const newNode = { id: targetNodeID, type: "customNode", position: { x: 500, y: 100 }, data: { attributes: [], onEdit: onEditItem} }
-  
-        setNodes(previousNodes => 
-          {
-            return [...previousNodes, newNode]
-          })
-        
-        setNodes((nodes) => nodes.map((node) =>
-        {
-          if (node.id === targetNodeID)
-          {
-            return node
-          }
-          return node
-        }));
-      }
-  
-      const newEdge : Edge = {
-        id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: {
-          onEdit: onEditItem, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: relationship.description, [Field.INFERENCE]: relationship.inference,
-          [Field.INFERENCE_INDEXES]: relationship.inferenceIndexes }
-      }
-  
-      setEdges(previousEdges =>
-        {
-          return [...previousEdges, newEdge]
-        })
+    const newEdge : Edge = {
+      id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: {
+        onEdit: onEditItem, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: relationship.description, [Field.INFERENCE]: relationship.inference,
+        [Field.INFERENCE_INDEXES]: relationship.inferenceIndexes }
     }
+
+    setEdges(previousEdges =>
+      {
+        return [...previousEdges, newEdge]
+      })
+  }
 
 
     const onClearRegeneratedItem = (field: Field | null, isClearAll: boolean) : void=>
@@ -1185,7 +1225,7 @@ const useConceptualModel = () =>
         isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
         regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions,
         isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange, onDialogCreateEdgeClose,
-        isShowCreateEdgeDialog, onAddNewRelationship
+        isShowCreateEdgeDialog, onAddNewRelationship, onChangeItemType
     }
 }
 

@@ -28,15 +28,16 @@ interface Props
     isDisableChange : boolean
     onClose : () => void
     onSave : (editedItem: Item, oldItem: Item, isSuggestedItem: boolean) => void
-    onPlus : (itemName: string, field: Field) => void
-    onAddItem : (item: Item, addAsDifferent: boolean) => void
+    onPlus : (itemType: ItemType, name: string, sourceEntity: string, targetEntity: string, field: Field) => void
+    onAddItem : (item: Item) => void
     onClearSuggestion : (field: Field, clearAll: boolean) => void
     onItemEdit : (field: Field, newValue: string) => void
     onRemove : (item: Item) => void
     onConfirmRegeneratedText : (field : Field) => void
+    onChangeItemType : (item: Item) => void
 }
 
-const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isOpened, isLoading, fieldToLoad, isSuggestedItem, onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText, onRemove, isDisableSave, isDisableChange} : Props) =>
+const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isOpened, isLoading, fieldToLoad, isSuggestedItem, onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText, onRemove, isDisableSave, isDisableChange, onChangeItemType} : Props) =>
 {
     const attribute = editedItem as Attribute
     const relationship = editedItem as Relationship
@@ -80,7 +81,7 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                     />
                     { !isRegeneratedText ?
                         ( (isLoading && fieldToLoad === field) ? <CircularProgress sx={{position: 'relative', right: '3px', top: '5px'}} size={"30px"} /> :
-                        <IconButton disabled={field !== Field.DESCRIPTION} color="primary" size="small" onClick={() => onPlus(editedItem.name, field)}>
+                        <IconButton disabled={field !== Field.DESCRIPTION} color="primary" size="small" onClick={() => onPlus(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
                             <AddIcon/> 
                         </IconButton>)
                         :
@@ -132,7 +133,7 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
 
                     {
                         isSuggestedItem ?
-                        <Button onClick={() => { onAddItem(editedItem, false) }}>Add</Button>
+                        <Button onClick={() => { onAddItem(editedItem) }}>Add</Button>
                         :
                         <Button onClick={() => { onRemove(item); onClose()}}>Remove</Button>
                     }
@@ -141,7 +142,7 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                     {
                         isSuggestedItem && !isDisableChange && isAttribute &&
                             <Button
-                                onClick={ () => onAddItem(item, true)}>
+                                onClick={ () => onChangeItemType(item)}>
                                 Change to relationship
                             </Button>
                     }
@@ -149,7 +150,7 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                     {
                         isSuggestedItem && !isDisableChange && isRelationship &&
                             <Button
-                                onClick={ () => onAddItem(item, true)}>
+                                onClick={ () => onChangeItemType(item)}>
                                 Change to attribute
                             </Button>
                     }

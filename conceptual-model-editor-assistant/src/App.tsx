@@ -18,7 +18,7 @@ function App()
     isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
     regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick,
     summaryDescriptions, isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange, onDialogCreateEdgeClose,
-    isShowCreateEdgeDialog, onAddNewRelationship
+    isShowCreateEdgeDialog, onAddNewRelationship, onChangeItemType
   } = useConceptualModel()
 
   const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
@@ -92,6 +92,7 @@ function App()
         onRemove={onEditRemove}
         isDisableSave={isDisableSave}
         isDisableChange={isDisableChange}
+        onChangeItemType={onChangeItemType}
       />
 
       <DialogCreateEdge

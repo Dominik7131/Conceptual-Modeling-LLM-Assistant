@@ -167,7 +167,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                             Import
                         </Button>
 
-                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}}>
+                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} onClick={() => console.log("Not implemented")}>
                             Export
                         </Button>
                     </Stack>
@@ -251,7 +251,7 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 </TabPanel>
             </TabContext>
 
-            <Divider sx={{bottom: "585px"}} absolute={true} ></Divider>
+            <Divider sx={{bottom: "600px"}} absolute={true} ></Divider>
         </Box>
     )
 }
