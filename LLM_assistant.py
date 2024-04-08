@@ -380,7 +380,7 @@ class LLMAssistant:
 
 
     def __create_prompt(self, user_choice, source_entity="", target_entity="", relevant_texts = "", is_domain_description_=True,
-                        items_count_to_suggest = 5, isChainOfThoughts = True, conceptual_model = {}, field = "",
+                        items_count_to_suggest = 5, isChainOfThoughts = True, conceptual_model = {}, field_name = "",
                         attribute_name="", relationship_name=""):
 
         replacements = {
@@ -391,12 +391,13 @@ class LLMAssistant:
             PromptFileSymbols.CONCEPTUAL_MODEL.value: conceptual_model,
             PromptFileSymbols.ATTRIBUTE_NAME: attribute_name,
             PromptFileSymbols.RELATIONSHIP_NAME: relationship_name,
+            PromptFileSymbols.FIELD_NAME: field_name,
         }
 
         # Build corresponding file name
         prompt_file_name = f"{user_choice}"
-        if field != "":
-            prompt_file_name += f"-{field}"
+        if field_name != "":
+            prompt_file_name += f"-{field_name}"
         prompt_file_name += ".txt"
 
         with open(prompt_file_name, 'r') as file:
@@ -480,10 +481,11 @@ class LLMAssistant:
             yield f"{json_item}\n"
     
 
-    def get_field_content(self, attribute_name, source_entity, domain_description, field):
+    def get_field_content(self, attribute_name, source_entity, domain_description, field_name):
         source_entity = source_entity.strip()
 
-        prompt = self.__create_prompt(user_choice=UserChoice.ONLY_DESCRIPTION.value, source_entity=source_entity, relevant_texts=domain_description, field=field)
+        prompt = self.__create_prompt(user_choice=UserChoice.ONLY_DESCRIPTION.value, source_entity=source_entity,
+                                      relevant_texts=domain_description, field_name=field_name)
 
         # For simplicity right now generate content only for "description" field
         prompt = f'Solely based on the given context provide description for the attribute: "{attribute_name}" of the entity: "{source_entity}" and output it in this JSON object: '

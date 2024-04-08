@@ -41,6 +41,7 @@ class PromptFileSymbols(Enum):
     CONCEPTUAL_MODEL = "{conceptual_model}"
     ATTRIBUTE_NAME = "{attribute_name}"
     RELATIONSHIP_NAME = "{relationship_name}"
+    FIELD_NAME = "{field_name}"
 
 
 ATTRIBUTES_STRING = "attributes"

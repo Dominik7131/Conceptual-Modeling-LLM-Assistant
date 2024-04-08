@@ -1,4 +1,4 @@
-Solely based on the given context which relationships does the entity: "{entity1}" have?
+Solely based on the given context which relationships does the entity: "{source_entity}" have?
 
 For each relationship output its name and source entity and target entity and copy the part of the given context containing this relationship in JSON object like this: {"originalText": "copy the part of the given context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}
 
@@ -26,4 +26,4 @@ EXAMPLE END
 
 
 This is the given context:
-"{relevant_texts}"
+"{domain_description}"
