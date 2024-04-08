@@ -34,12 +34,11 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
     // If the entity name is too long then display only the beginning of it with three dots at the end
     const spacesCount: number = entity.name.split(" ").length - 1
     let entityName = capitalizeString(entity.name)
-    if (spacesCount === 0 && entity.name.length > 12)
+    if (spacesCount === 0 && entityName.length > 12)
     {
-        entityName = entity.name.substring(0, 12) + "..."
+        entityName = entityName.substring(0, 12) + "..."
     }
-
-
+    
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)

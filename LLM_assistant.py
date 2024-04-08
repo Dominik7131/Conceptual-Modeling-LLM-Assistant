@@ -379,7 +379,7 @@ class LLMAssistant:
         return
 
 
-    def __create_prompt(self, user_choice, source_entity="", target_entity="", relevant_texts = "", is_domain_description_=True,
+    def __create_prompt(self, user_choice, source_entity="", target_entity="", relevant_texts = "", is_domain_description=True,
                         items_count_to_suggest = 5, isChainOfThoughts = True, conceptual_model = {}, field_name = "",
                         attribute_name="", relationship_name=""):
 
@@ -388,16 +388,14 @@ class LLMAssistant:
             PromptFileSymbols.TARGET_ENTITY.value: target_entity,
             PromptFileSymbols.DOMAIN_DESCRIPTION.value: relevant_texts,
             PromptFileSymbols.ITEMS_COUNT_TO_SUGGEST.value: items_count_to_suggest,
-            PromptFileSymbols.CONCEPTUAL_MODEL.value: conceptual_model,
-            PromptFileSymbols.ATTRIBUTE_NAME: attribute_name,
-            PromptFileSymbols.RELATIONSHIP_NAME: relationship_name,
-            PromptFileSymbols.FIELD_NAME: field_name,
+            PromptFileSymbols.CONCEPTUAL_MODEL.value: json.dumps(conceptual_model),
+            PromptFileSymbols.ATTRIBUTE_NAME.value: attribute_name,
+            PromptFileSymbols.RELATIONSHIP_NAME.value: relationship_name,
+            PromptFileSymbols.FIELD_NAME.value: field_name,
         }
 
         # Build corresponding file name
-        prompt_file_name = f"{user_choice}"
-        if field_name != "":
-            prompt_file_name += f"-{field_name}"
+        prompt_file_name = f"prompts/{user_choice}"
         prompt_file_name += ".txt"
 
         with open(prompt_file_name, 'r') as file:

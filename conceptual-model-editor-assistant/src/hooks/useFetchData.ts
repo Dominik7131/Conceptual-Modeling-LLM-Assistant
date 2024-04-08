@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Field, Item, ItemType, OriginalTextIndexesItem, SummaryObject } from "../interfaces";
+import { Field, ItemType, SummaryObject } from "../interfaces";
 
 
 interface Props

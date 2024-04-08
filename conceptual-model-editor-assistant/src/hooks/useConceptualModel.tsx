@@ -613,9 +613,6 @@ const useConceptualModel = () =>
       itemType = ItemType.RELATIONSHIP
     }
 
-    console.log("Item type: ", itemType)
-
-
     sourceItemName = sourceItemName !== null ? sourceItemName : ""
     targetItemName = targetItemName !== null ? targetItemName : ""
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
@@ -872,6 +869,7 @@ const useConceptualModel = () =>
 
     if (doesNodeAlreadyExist(nodeID))
     {
+      alert(`Node '${nodeID}' already exists`)
       return
     }
 
@@ -887,13 +885,18 @@ const useConceptualModel = () =>
   {
     if (doesNodeAlreadyExist(entity.name))
     {
+      alert(`Node '${entity.name}' already exists`)
       return
+    }
+
+    const nodeData: NodeData = {
+      [Field.DESCRIPTION]: entity[Field.DESCRIPTION], [Field.ORIGINAL_TEXT]: entity[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: [], 
+      onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
     }
 
     const newNode: Node = {
       id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
-      data: { [Field.DESCRIPTION]: entity.description, [Field.ORIGINAL_TEXT]: entity.originalText, [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: [], 
-        onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute } }
+      data: nodeData }
 
     setNodes(previousNodes => {
       return [...previousNodes, newNode]
