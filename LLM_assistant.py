@@ -1,3 +1,4 @@
+import os
 from llama_cpp import Llama
 from text_utility import PromptFileSymbols, TextUtility, UserChoice, DataType
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
@@ -8,7 +9,6 @@ import json
 
 ITEMS_COUNT = 5
 IS_SYSTEM_MSG = False
-IS_CONCEPTUAL_MODEL_DEFINITION = False
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
 IS_CHAIN_OF_THOUGHTS = True
@@ -19,6 +19,10 @@ IS_STOP_GENERATING_OUTPUT = False
 CONFIG_FILE_PATH = "llm-config.json"
 TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
 LOG_FILE_PATH = f"{TIMESTAMP}-log.txt"
+
+PROMPT_DIRECTORY = "prompts"
+SYSTEM_PROMPT_DIRECTORY = os.path.join(PROMPT_DIRECTORY, "system")
+
 
 DEFINED_DATA_TYPES = [DataType.STRING.value, DataType.NUMBER.value, DataType.TIME.value, DataType.BOOLEAN.value]
 
@@ -54,84 +58,31 @@ class LLMAssistant:
             self.deleted_items = []
 
 
-    def __append_default_messages_for_suggestions(self, user_choice, is_domain_description=False):
-        system = ""
-        if user_choice == UserChoice.ATTRIBUTES.value:
-            if not is_domain_description:
-                system = "You are an expert at generating attributes for a given entity."
-            else:
-                #system = "You are creating a conceptual model which consists of entities, their attributes and relationships in between the entities. You will be given an entity, text and description of JSON format. Your task is to output attributes of the given entity solely based on the given text in the described JSON format. Be careful that some relationships can look like an attributes. Do not output any explanation. Do not ouput anything else."
-                # system = "You are an expert at extracting attributes for a given entity solely based on a given text in context of creating conceptual model in software engineering."
-                system = "You are an expert at extracting attributes in JSON format for a given entity solely based on a given context."
+    def __create_system_prompt(self, user_choice, is_domain_description):
+
+        prompt_file_name = f"{user_choice}"
+        if is_domain_description:
+            prompt_file_name += "-dd"
+        prompt_file_name += ".txt"
+
+        prompt_file_path = os.path.join(SYSTEM_PROMPT_DIRECTORY, prompt_file_name)
+
+        with open(prompt_file_name, 'r') as file:
+            system_prompt = file.read()
+        
+        return system_prompt
 
 
-        elif user_choice == UserChoice.RELATIONSHIPS.value:
+    def __append_default_messages(self, user_choice, is_domain_description=False):
 
-            if not is_domain_description:
-                system = "You are an expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name always make sure that the described short meaningful sentence can be created."
-            else:
-                #system = "You are an expert at extracting relationships for a given entity solely based on a given text in context of creating conceptual model in software engineering."
-                #system = "You are creating a conceptual model which consists of entities and their relationships. "
-                #system += "Each relationship is between exactly two entities, we will describe them as the source entity and the target entity. "
-                #system += "Each relationship has a name in a verb form such that when you insert this verb in between the source entity and the target entity in this order a short meaningful sentence is created. "
-                #system += "Always make sure that the short meaningful sentence indeed makes sense. Be very careful when creating the short meaningful sentence: the source entity must come first then follows the relationship name and then follows the target entity name which ends the sentence. Always check that this order holds."
-                #system += " You will be given a source entity and your goal is to solely based on the given text to find a relationships between this source entity and some new target entity."
-
-                #system = "You are an expert at creating a conceptual model which consists of entities and their relationships solely based on a given text. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
-
-                if IS_RELATIONSHIPS_IS_A:
-                    system = "You are an expert at extracting is-a relationships in JSON format for a given entity solely based on a given context."
-                else:
-                    #system = "You are an expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will denote them as the source entity and the target entity. Both entities are represented as nouns in singular. Each relationship has a name such that when you insert it in between the source entity and the target entity in this order a short meaningful sentence is created. When you come up with a new relationship name and a new target entity always make sure that the described short meaningful sentence can be created."
-                    system = "You are an expert at extracting relationships in JSON format for a given entity solely based on a given context."
-
-
-        elif user_choice == UserChoice.RELATIONSHIPS2.value:
-            if not is_domain_description:
-                system = "You are an expert at generating relationships in between two given entities."
-            else:
-                system = "You are an expert at creating a conceptual model which consists of entities and their relationships. Each relationship is between exactly two entities, we will describe them as the source entity and the target entity. Each relationship has a name in a verb form such that when you insert this verb in between the source entity and the target entity in this order a short meaningful sentence is created. Always make sure that the short meaningful sentence indeed makes sense. Be very careful when creating the short meaningful sentence: the source entity must come first then follows the relationship name and then follows the target entity name which ends the sentence. Always check that this order holds."
-                # system = "You are an expert at extracting relationships for an UML diagram in JSON format for two given entities solely based on a given context."
-
-
-        elif user_choice == UserChoice.ENTITIES.value:
-            if not is_domain_description:
-                system = "You are an expert at generating entities in JSON format."
-            else:
-                system = "You are an expert at extracting class names for a UML diagram in JSON format solely based on a given context."
-
+        if IS_SYSTEM_MSG:
+            system_prompt = self.__create_system_prompt(user_choice, is_domain_description)
         else:
-            raise ValueError(f"Error: Unknown user choice: {user_choice}")
+            system_prompt = ""
 
-        if not IS_SYSTEM_MSG:
-            system = ""
-
-        self.messages.append({"role": "system", "content": system})
-
-        user_first_msg = "What is the definition of conceptual model in software engineering?"
-        assistent_first_msg = "In software engineering, a conceptual model is a high-level representation of a system or problem domain that helps to organize and understand the key concepts, relationships, and constraints involved. It provides a framework for thinking about the problem space and can be used as a starting point for further analysis, design, and development. \
-            A conceptual model typically includes: \
-            Entities: The objects or concepts that are relevant to the problem domain. These may include users, systems, processes, data, etc. \
-            Relationships: The connections between entities, such as associations, dependencies, or compositions. \
-            Attributes: The characteristics or properties of entities and relationships."
-
-        if IS_CONCEPTUAL_MODEL_DEFINITION:
-            self.messages.append({"role": "user", "content": user_first_msg})
-            self.messages.append({"role": "assistant", "content": assistent_first_msg})
-
+        self.messages.append({"role": "system", "content": system_prompt})
         self._are_default_messages_appended = True
         return
-    
-
-    def __append_default_messages_for_summaries(self):
-
-        #system = "You are an expert at describing conceptual models which are in JSON format."
-        system = "You are an expert at generating domain description solely based on given conceptual model which is in JSON format."
-
-        if not IS_SYSTEM_MSG:
-            system = ""
-
-        self.messages.append({"role": "system", "content": system})
 
 
     # Returns (parsed_item, is_item_ok)
@@ -417,7 +368,7 @@ class LLMAssistant:
         is_domain_description = domain_description != ""
 
         self.messages = []
-        self.__append_default_messages_for_suggestions(user_choice=user_choice, is_domain_description=is_domain_description)        
+        self.__append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION and user_choice != UserChoice.ENTITIES.value:
             relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
@@ -446,7 +397,7 @@ class LLMAssistant:
 
         items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=source_entity, user_input_entity2=target_entity)
 
-        # TODO: Test if this works
+        # TODO: Test if this can prevent some errors
         # try:
         #     items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=source_entity, user_input_entity2=target_entity)
         # finally:
