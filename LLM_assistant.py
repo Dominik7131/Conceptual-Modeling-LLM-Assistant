@@ -334,6 +334,23 @@ class LLMAssistant:
                         items_count_to_suggest = 5, isChainOfThoughts = True, conceptual_model = {}, field_name = "",
                         attribute_name="", relationship_name=""):
 
+
+        # Build corresponding file name
+        prompt_file_name = f"{user_choice}"
+
+        if field_name != "":
+            prompt_file_name += f"-{field_name}"
+
+        if is_domain_description:
+            prompt_file_name += "-dd"
+
+        prompt_file_name += ".txt"
+        prompt_file_path = os.path.join(PROMPT_DIRECTORY, prompt_file_name)
+
+        with open(prompt_file_path, 'r') as file:
+            original_prompt = file.read()
+
+
         replacements = {
             PromptFileSymbols.SOURCE_ENTITY.value: source_entity,
             PromptFileSymbols.TARGET_ENTITY.value: target_entity,
@@ -344,14 +361,8 @@ class LLMAssistant:
             PromptFileSymbols.RELATIONSHIP_NAME.value: relationship_name,
             PromptFileSymbols.FIELD_NAME.value: field_name,
         }
-
-        # Build corresponding file name
-        prompt_file_name = f"prompts/{user_choice}"
-        prompt_file_name += ".txt"
-
-        with open(prompt_file_name, 'r') as file:
-            original_prompt = file.read()
         
+        # Substitute all special symbols in the given prompt
         prompt = TextUtility.multireplace(original_prompt, replacements)
 
         return prompt
