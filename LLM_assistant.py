@@ -334,7 +334,6 @@ class LLMAssistant:
                         items_count_to_suggest = 5, isChainOfThoughts = True, conceptual_model = {}, field_name = "",
                         attribute_name="", relationship_name=""):
 
-
         # Build corresponding file name
         prompt_file_name = f"{user_choice}"
 
@@ -381,6 +380,7 @@ class LLMAssistant:
         self.messages = []
         self.__append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
 
+        # TODO: Use method __get_relevant_texts but first somehow add this condition: "user_choice != UserChoice.ENTITIES.value" 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION and user_choice != UserChoice.ENTITIES.value:
             relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
 
@@ -441,16 +441,29 @@ class LLMAssistant:
             yield f"{json_item}\n"
     
 
-    def get_field_content(self, attribute_name, source_entity, domain_description, field_name):
+    def __get_relevant_texts(self, source_entity, domain_description):
+
+        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
+            relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
+
+            result = ""
+            for text in relevant_texts:
+                result += f"{text}\n"
+            
+            relevant_texts = result.rstrip() # Remove trailing new line
+        else:
+            relevant_texts = domain_description
+        
+        return relevant_texts
+
+
+    def generate_single_field(self, user_choice, name, source_entity, target_entity, domain_description, field_name):
         source_entity = source_entity.strip()
+        
+        relevant_texts = self.__get_relevant_texts(source_entity=source_entity, domain_description=domain_description)
 
-        prompt = self.__create_prompt(user_choice=UserChoice.ONLY_DESCRIPTION.value, source_entity=source_entity,
-                                      relevant_texts=domain_description, field_name=field_name)
-
-        # For simplicity right now generate content only for "description" field
-        prompt = f'Solely based on the given context provide description for the attribute: "{attribute_name}" of the entity: "{source_entity}" and output it in this JSON object: '
-        prompt += '{"description": "..."}.\n\n'
-        prompt += f'This is the given context:\n"{domain_description}"'
+        prompt = self.__create_prompt(user_choice=user_choice, source_entity=source_entity, target_entity=target_entity, 
+                                      attribute_name=name, relevant_texts=relevant_texts, field_name=field_name)
 
         self.messages = []
         new_messages = self.messages.copy()

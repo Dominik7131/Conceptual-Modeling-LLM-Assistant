@@ -336,6 +336,11 @@ const useConceptualModel = () =>
         userChoice = UserChoice.RELATIONSHIPS
       }
 
+      if (userChoice === UserChoice.ENTITIES)
+      {
+        sourceEntity = name
+      }
+
       if (!sourceEntity) { sourceEntity = "" }
       if (!targetEntity) { targetEntity = "" }
 
@@ -686,11 +691,10 @@ const useConceptualModel = () =>
     }
 
     const endpoint = BASE_URL + "summary2"
-    const headers = { "Content-Type": "application/json" }
     const conceptualModel = convertConceptualModelToJSON(true)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
-    fetchSummaryDescriptions(endpoint, headers, bodyData)
+    fetchSummaryDescriptions(endpoint, HEADER, bodyData)
   }
 
 
@@ -778,6 +782,30 @@ const useConceptualModel = () =>
 
     parseSerializedConceptualModel()
   }, [domainDescription]);
+
+  useEffect(() =>
+  {
+    if (selectedNodes.length === 0)
+    {
+      return 
+    }
+
+    // If the nodes update then also update selected nodes to work with the updated version of the nodes
+    setSelectedNodes((selectedNodes) => selectedNodes.map((currentSelectedNode : Node) =>
+    {
+      const node = nodes.find(node => node.id === currentSelectedNode.id)
+
+      if (!node)
+      {
+        return currentSelectedNode
+      }
+      else
+      {
+        return node
+      }
+    }));
+
+  }, [nodes]);
 
 
   useEffect(() =>

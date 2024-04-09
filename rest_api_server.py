@@ -28,8 +28,7 @@ def suggest():
 
 @app.route('/getOnly', methods=['POST'])
 @cross_origin()
-
-def get_attribute_description():
+def generate_single_field():
 
     body_data = request.get_json()
     source_entity = body_data["sourceEntity"]
@@ -39,7 +38,7 @@ def get_attribute_description():
     domain_description = body_data["domainDescription"]
     user_choice = body_data["userChoice"]
 
-    return llm_assistant.get_field_content(name, source_entity, domain_description, field)
+    return llm_assistant.generate_single_field(user_choice, name, source_entity, target_entity, domain_description, field)
 
 
 @app.route('/summary1', methods=['POST'])
