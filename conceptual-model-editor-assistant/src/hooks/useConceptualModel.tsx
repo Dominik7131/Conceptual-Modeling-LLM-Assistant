@@ -777,7 +777,7 @@ const useConceptualModel = () =>
     // Note: But now when domain description changes it resets our whole conceptual model
     // Also when adding a new entities and then changing domain description these entities won't get updated
 
-    // parseSerializedConceptualModel()
+    parseSerializedConceptualModel()
   }, [domainDescription]);
 
   useEffect(() =>

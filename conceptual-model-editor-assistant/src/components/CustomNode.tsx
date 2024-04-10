@@ -7,9 +7,13 @@ import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { IconButton, Menu, MenuItem, Tooltip } from '@mui/material';
+import { IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import useUtility from '../hooks/useUtility';
+
+
  
 
 // List of all NodeProps: https://reactflow.dev/api-reference/types/node-props
@@ -86,10 +90,33 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
                 onClose={handleClose}
                 MenuListProps={{'aria-labelledby': 'basic-button'}}
                 >
-                <MenuItem onClick={() => { data.onEdit(entity); handleClose(); }}>Edit entity</MenuItem>
-                <MenuItem onClick={() => { data.onAddNewAttribute(entity); handleClose(); }}>Add new attribute</MenuItem>
-                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.ATTRIBUTES, entity.name, null); handleClose(); }}>Suggest attributes</MenuItem>
-                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.RELATIONSHIPS, entity.name, null); handleClose(); }}>Suggest relationships</MenuItem>
+                <MenuItem onClick={() => { data.onEdit(entity); handleClose(); }}>
+                    <ListItemIcon>
+                        <EditIcon fontSize="small" />
+                    </ListItemIcon>
+                        Edit entity
+                </MenuItem>
+                <MenuItem onClick={() => { data.onAddNewAttribute(entity); handleClose(); }}>
+                    <ListItemIcon>
+                        <AddIcon fontSize="small" />
+                    </ListItemIcon>
+                        Add new attribute
+                </MenuItem>
+
+
+                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.ATTRIBUTES, entity.name, null); handleClose(); }}>
+                    <ListItemIcon>
+                        <AutoFixHighIcon fontSize="small" />
+                    </ListItemIcon>
+                        Suggest attributes
+                </MenuItem>
+                
+                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.RELATIONSHIPS, entity.name, null); handleClose(); }}>
+                    <ListItemIcon>
+                        <AutoFixHighIcon fontSize="small" />
+                    </ListItemIcon>
+                        Suggest relationships
+                    </MenuItem>
             </Menu>
 
 
@@ -103,7 +130,7 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
                     <Button size="small" key={`${attribute.name}-${index}`}
                         sx={{ color: selected ? primaryColor : "black", fontSize: "12px", textTransform: 'lowercase'}}
                         onClick={() => data.onEdit(attribute)}>
-                        +{attribute.name}
+                        {attribute.name}
                     </Button>
                 ))}
             </Stack>

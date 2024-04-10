@@ -15,6 +15,10 @@ import TabPanel from '@mui/lab/TabPanel';
 import TabList from "@mui/lab/TabList";
 import TabContext from '@mui/lab/TabContext';
 import AddIcon from '@mui/icons-material/Add';
+import HighlightIcon from '@mui/icons-material/Highlight';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import UploadIcon from '@mui/icons-material/Upload';
+import DownloadIcon from '@mui/icons-material/Download';
 
 
 interface Props
@@ -152,22 +156,22 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
                 
                 <Stack direction="row" justifyContent="space-between" paddingX={1} paddingY={"8px"}>
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}>{ capitalizeString("Suggest entities") }</Button>
-                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation onClick={onAddNewEntity}>{ capitalizeString("Add new entity") }</Button>
+                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}>{ capitalizeString("Suggest entities") }</Button>
+                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<AddIcon/>} onClick={onAddNewEntity}>{ capitalizeString("Add new entity") }</Button>
                     </Stack>
 
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary 1</Button>
-                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={() => { setTabValue('2'); onSummaryDescriptionsClick() }}>Summary 2</Button>
-                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation onClick={onHighlightSelectedItems}>Highlight</Button>
+                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary 1</Button>
+                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={() => { setTabValue('2'); onSummaryDescriptionsClick() }}>Summary 2</Button>
+                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<HighlightIcon/>} onClick={onHighlightSelectedItems}>{capitalizeString("Highlight original text")}</Button>
                     </Stack>
 
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} onClick={() => onImportButtonClick()}>
+                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} startIcon={<UploadIcon/>} onClick={() => onImportButtonClick()}>
                             Import
                         </Button>
 
-                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} onClick={() => console.log("Not implemented")}>
+                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} startIcon={<DownloadIcon/>} onClick={() => console.log("Not implemented")}>
                             Export
                         </Button>
                     </Stack>

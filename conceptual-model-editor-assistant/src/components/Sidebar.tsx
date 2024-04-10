@@ -9,6 +9,9 @@ import Stack from '@mui/material/Stack';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Attribute, Entity, Field, Item, ItemFieldUIName, ItemType, Relationship, UserChoice } from '../interfaces';
 import Box from '@mui/material/Box';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import HighlightIcon from '@mui/icons-material/Highlight';
 
 
 interface Props
@@ -45,9 +48,9 @@ const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion
     {
         return (
             <ButtonGroup fullWidth sx={{ marginTop: 1 }} variant="outlined" size="small">
-                <Button onClick={() => onAddItem(item)}> Add </Button>
-                <Button onClick={() => onEditSuggestion(item.ID, item.type)}> Edit </Button>
-                <Button onClick={() => onHighlightSingleItem(item.ID)}> Highlight </Button>
+                <Button startIcon={<AddIcon/>} onClick={() => onAddItem(item)}> Add </Button>
+                <Button startIcon={<EditIcon/>} onClick={() => onEditSuggestion(item.ID, item.type)}> Edit </Button>
+                <Button startIcon={<HighlightIcon/>} onClick={() => onHighlightSingleItem(item.ID)}> Highlight </Button>
             </ButtonGroup>
         )
 

@@ -6,13 +6,14 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
 import { Attribute, Field, Item, ItemFieldUIName, ItemType, Relationship } from '../interfaces';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
+import AddIcon from '@mui/icons-material/Add';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 
 interface Props
@@ -82,7 +83,7 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                     { !isRegeneratedText ?
                         ( (isLoading && fieldToLoad === field) ? <CircularProgress sx={{position: 'relative', right: '3px', top: '5px'}} size={"30px"} /> :
                         <IconButton disabled={field !== Field.DESCRIPTION} color="primary" size="small" onClick={() => onPlus(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
-                            <AddIcon/> 
+                            <AutoFixHighIcon/>
                         </IconButton>)
                         :
                         <Stack direction="row">
@@ -133,15 +134,15 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
 
                     {
                         isSuggestedItem ?
-                        <Button onClick={() => { onAddItem(editedItem) }}>Add</Button>
+                        <Button variant="contained" color="success" onClick={() => { onAddItem(editedItem) }}>Add</Button>
                         :
-                        <Button onClick={() => { onRemove(item); onClose()}}>Remove</Button>
+                        <Button variant="contained" color="error" onClick={() => { onRemove(item); onClose()}}>Remove</Button>
                     }
                     
 
                     {
                         isSuggestedItem && !isDisableChange && isAttribute &&
-                            <Button
+                            <Button variant="contained"
                                 onClick={ () => onChangeItemType(item)}>
                                 Change to relationship
                             </Button>
@@ -149,7 +150,7 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
 
                     {
                         isSuggestedItem && !isDisableChange && isRelationship &&
-                            <Button
+                            <Button variant="contained"
                                 onClick={ () => onChangeItemType(item)}>
                                 Change to attribute
                             </Button>
@@ -157,12 +158,15 @@ const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isO
                     
                     { !isDisableSave &&
                         <Button
+                            variant="contained"
                             onClick={() => {onSave(editedItem, item, isSuggestedItem)}}>
                             Save
                         </Button>
                     }
 
                     <Button
+                        variant="contained"
+                        // sx={{ color: "gray", borderColor: "gray", outlineColor: "gray" }}
                         onClick={() => onClose()}>
                         Cancel
                     </Button>

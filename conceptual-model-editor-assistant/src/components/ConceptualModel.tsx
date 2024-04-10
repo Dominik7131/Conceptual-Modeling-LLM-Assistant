@@ -23,7 +23,7 @@ const edgeTypes =
 
 const ConceptualModel: React.FC<Props> = ({nodes, edges, onNodesChange, onEdgesChange, onConnect, sidebarWidthPercentage, nodeTypes}) =>
 {
-  const heightPx = 560
+  const heightPx = 587
 
   // Define custom edge type for selected state
 
