@@ -12,6 +12,8 @@ import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
 import { Item, Relationship, UserChoice } from '../interfaces';
 import useUtility from '../hooks/useUtility';
 import { styled } from '@mui/system';
+import AddIcon from '@mui/icons-material/Add';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 
 
 interface Props
@@ -47,6 +49,7 @@ const DialogCreateEdge: React.FC<Props> = ({ relationship, isOpened, onClose, on
 
             <Stack direction="row" sx={{justifyContent:'space-around'}}>
                 <Button
+                  startIcon={<AddIcon/>}
                   variant="outlined"
                   sx={{textTransform: "capitalize"}}
                   onClick={() => { onAddNewRelationship() } }
@@ -55,6 +58,7 @@ const DialogCreateEdge: React.FC<Props> = ({ relationship, isOpened, onClose, on
                 </Button>
 
                 <Button
+                  startIcon={<AutoFixHighIcon/>}
                   variant="outlined"
                   sx={{textTransform: "capitalize"}}
                   onClick={() => { onSuggestItems(UserChoice.RELATIONSHIPS2, relationship.source, relationship.target); onClose() } }
