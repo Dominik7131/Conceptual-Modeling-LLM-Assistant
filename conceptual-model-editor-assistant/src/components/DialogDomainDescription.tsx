@@ -20,11 +20,10 @@ interface Props
   isOpened : boolean
   inferenceIndexes : number[]
   onClose : () => void
-  itemName : string
   tooltips : string[]
 }
 
-const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened, inferenceIndexes, onClose, itemName, tooltips } : Props) =>
+const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened, inferenceIndexes, onClose, tooltips } : Props) =>
 {
   const { capitalizeString, getUserChoiceSingular } = useUtility()
 

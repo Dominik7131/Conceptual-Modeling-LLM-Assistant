@@ -70,7 +70,6 @@ function App()
         isOpened={isShowDialogDomainDescription}
         inferenceIndexes={originalTextIndexesMockUp}
         onClose={onDialogDomainDescriptionClose}
-        itemName={selectedSuggestedItem.name}
         tooltips={tooltips}
       />
 

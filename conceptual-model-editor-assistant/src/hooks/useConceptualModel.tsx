@@ -314,9 +314,6 @@ const useConceptualModel = () =>
     }
 
 
-    
-
-
     const onImportButtonClick = () =>
     {
       parseSerializedConceptualModel()
@@ -780,7 +777,7 @@ const useConceptualModel = () =>
     // Note: But now when domain description changes it resets our whole conceptual model
     // Also when adding a new entities and then changing domain description these entities won't get updated
 
-    parseSerializedConceptualModel()
+    // parseSerializedConceptualModel()
   }, [domainDescription]);
 
   useEffect(() =>
@@ -1177,11 +1174,19 @@ const useConceptualModel = () =>
 
     const onEditSuggestion = (itemID: number) : void =>
     {
+      const suggestedItem = suggestedItems.find(item => item.ID === itemID)
+
+      if (!suggestedItem)
+      {
+        alert("Error: unknown item ID")
+        return
+      }
+
       setIsSuggestedItem(_ => true)
       setIsDisableSave(_ => false)
       setIsDisableChange(_ => false)
-      setSelectedSuggestedItem(_ => suggestedItems[itemID])
-      setEditedSuggestedItem(_ => suggestedItems[itemID])
+      setSelectedSuggestedItem(_ => suggestedItem)
+      setEditedSuggestedItem(_ => suggestedItem)
 
       setIsShowDialogEdit(true)
     }
