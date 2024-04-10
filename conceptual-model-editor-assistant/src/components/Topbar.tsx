@@ -19,25 +19,19 @@ import HighlightIcon from '@mui/icons-material/Highlight';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
+import { useRecoilValue } from "recoil";
+import { domainDescriptionState, isIgnoreDomainDescriptionState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState } from "../atoms";
 
 
 interface Props
 {
     onIgnoreDomainDescriptionChange : () => void
-    isIgnoreDomainDescription : boolean
     onImportButtonClick : () => void
     onSuggestItems : (userChoice: UserChoice, sourceItem: string | null, targetItem: string | null) => void
     onSummaryButtonClick : () => void
-    domainDescription : string
     onDomainDescriptionChange : (newDomainDescriptionText : string) => void
-    onHighlightSelectedItems : () => void
-
-    isLoadingSummary1 : boolean
-    isLoadingSummaryDescriptions : boolean
-    summary : string
-    
+    onHighlightSelectedItems : () => void    
     onSummaryDescriptionsClick : () => void
-    summaryDescriptions : SummaryObject
 
     sidebarWidthPercentage : number
 
@@ -45,8 +39,16 @@ interface Props
 }
 
 
-const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, domainDescription, onDomainDescriptionChange, onHighlightSelectedItems, summary, isLoadingSummary1, isLoadingSummaryDescriptions, isIgnoreDomainDescription, sidebarWidthPercentage, onSummaryDescriptionsClick, summaryDescriptions, onAddNewEntity}) =>
+const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, onDomainDescriptionChange, onHighlightSelectedItems, sidebarWidthPercentage, onSummaryDescriptionsClick, onAddNewEntity}) =>
 {
+    const domainDescription = useRecoilValue(domainDescriptionState)
+    const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+
+    const isLoadingSummary1 = useRecoilValue(isLoadingSummary1State)
+    const isLoadingSummaryDescriptions = useRecoilValue(isLoadingSummaryDescriptionsState)
+    const summary = useRecoilValue(summaryTextState)
+    const summaryDescriptions = useRecoilValue(summaryDescriptionsState)
+
     const [isHovered, setIsHovered] = useState<boolean>(false)
     const [tabValue, setTabValue] = useState<string>('0');
     const [insertedNodeNameText, setInsertedNodeNameText] = useState<string>("")

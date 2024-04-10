@@ -12,21 +12,24 @@ import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
 import { UserChoice } from '../interfaces';
 import useUtility from '../hooks/useUtility';
 import { styled } from '@mui/system';
+import { domainDescriptionState, isShowHighlightDialog, originalTextIndexesListState, tooltipsState } from '../atoms';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 
-interface Props
+
+const HighlightDialog: React.FC = () =>
 {
-  domainDescription : string
-  isOpened : boolean
-  inferenceIndexes : number[]
-  onClose : () => void
-  tooltips : string[]
-}
+  const [isOpened, setIsOpened] = useRecoilState(isShowHighlightDialog)
+  const domainDescription = useRecoilValue(domainDescriptionState)
 
-const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened, inferenceIndexes, onClose, tooltips } : Props) =>
-{
-  const { capitalizeString, getUserChoiceSingular } = useUtility()
+  const inferenceIndexes = useRecoilValue(originalTextIndexesListState)
+  const tooltips = useRecoilValue(tooltipsState)
 
+
+  const onClose = () =>
+  {
+    setIsOpened(_ => false)
+  }
  
   const getTooltip = (index : number) =>
   {
@@ -134,4 +137,4 @@ const DialogDomainDescription: React.FC<Props> = ({ domainDescription, isOpened,
     </> )
 }
 
-export default DialogDomainDescription
+export default HighlightDialog

@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react"
+import { useRecoilState } from "recoil";
+import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms";
 
 
 const useDomainDescription = () =>
 {
-  const [domainDescription, setDomainDescription] = useState<string>("")
-  const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useState<boolean>(false)
+  const [domainDescription, setDomainDescription] = useRecoilState(domainDescriptionState);
+  const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useRecoilState(isIgnoreDomainDescriptionState);
   
 
   const onDomainDescriptionChange = (newText : string) =>

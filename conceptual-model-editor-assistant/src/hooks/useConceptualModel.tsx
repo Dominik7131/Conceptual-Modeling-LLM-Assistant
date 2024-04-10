@@ -5,11 +5,10 @@ import 'reactflow/dist/style.css';
 import useUtility from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
-import { Button, Divider, Stack, Typography } from '@mui/material';
-import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, SerializedConceptualModel, UserChoice } from '../interfaces';
-import AddIcon from '@mui/icons-material/Add';
+import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, UserChoice } from '../interfaces';
 import CustomNode from '../components/CustomNode';
-import { ImageTwoTone } from '@mui/icons-material';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingSuggestedItemsState, isShowCreateEdgeDialog, isShowEditDialog, isShowHighlightDialog, isSuggestedItemState, originalTextIndexesListState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from '../atoms';
 
 
 // Define the nodeTypes outside of the component to prevent re-renderings
@@ -22,35 +21,37 @@ const useConceptualModel = () =>
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const [fieldToLoad, setFieldToLoad] = useState<Field>(Field.ID)
+  const [suggestedItems, setSuggestedItems] = useRecoilState<Item[]>(suggestedItemsState)
+  const [selectedSuggestedItem, setSelectedSuggestedItem] = useRecoilState<Item>(selectedSuggestedItemState)
+  const [editedSuggestedItem, setEditedSuggestedItem] = useRecoilState<Item>(editedSuggestedItemState)
+  const [regeneratedItem, setRegeneratedItem] = useRecoilState<Item>(regeneratedItemState)
 
-  const [suggestedItems, setSuggestedItems] = useState<Item[]>([])
+  const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
+  const setIsDisableSave = useSetRecoilState(isDisableSaveState)
+  const setIsDisableChange = useSetRecoilState(isDisableChangeState)
 
-  // TODO: Do not use initial invalid item, instead make a type: Item | null
-  const [selectedSuggestedItem, setSelectedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: []})
-  const [editedSuggestedItem, setEditedSuggestedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: []})
-  const [regeneratedItem, setRegeneratedItem] = useState<Item>({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: []})
-  const [isSuggestedItem, setIsSuggestedItem] = useState(true)
-  const [isDisableSave, setIsDisableSave] = useState(true)
-  const [isDisableChange, setIsDisableChange] = useState(true)
+  const setFieldToLoad = useSetRecoilState(fieldToLoadState)
 
-  const [isMultiSelection, setIsMultiSelection] = useState<boolean>(false);
-  const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
-  const [selectedEdges, setSelectedEdges] = useState<Edge[]>([]);
+  const isLoadingSuggestedItems = useRecoilValue(isLoadingSuggestedItemsState)
 
-  const [isShowDialogDomainDescription, setIsShowDialogDomainDescription] = useState<boolean>(false)
-  const [isShowDialogEdit, setIsShowDialogEdit] = useState<boolean>(false)
-  const [isShowCreateEdgeDialog, setIsShowCreateEdgeDialog] = useState<boolean>(false)
 
-  const [originalTextIndexesMockUp, setoriginalTextIndexesMockUp] = useState<number[]>([])
-  const [tooltips, setTooltips] = useState<string[]>([])
+  // TODO: selectedNodes should be computed from the nodes
+  const [selectedNodes, setSelectedNodes] = useState<Node[]>([])
+  // TODO: selectedEdges should be computed from the edges
+  const [selectedEdges, setSelectedEdges] = useState<Edge[]>([])
+
+  const setIsShowEditDialog = useSetRecoilState(isShowEditDialog)
+  const setIsShowHighlightDialog = useSetRecoilState(isShowHighlightDialog)
+  const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialog)
+
+  const setoriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
+  const setTooltips = useSetRecoilState(tooltipsState)
 
   const { domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
 
   const { capitalizeString } = useUtility()
 
-  const { isLoadingSuggestedItems, isLoadingSummary1, isLoadingSummaryDescriptions, isLoadingEdit, summaryText, fetchSummary, fetchSummaryDescriptions, summaryDescriptions, 
-          fetchStreamedData, fetchStreamedDataGeneral, fetchMergedOriginalTexts }
+  const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData, fetchStreamedDataGeneral, fetchMergedOriginalTexts }
           = useFetchData({ onProcessStreamedData, onProcessStreamedDataGeneral, onProcessMergedOriginalTexts })
 
   let IDToAssign = 0
@@ -93,17 +94,6 @@ const useConceptualModel = () =>
   {
     setSelectedNodes(nodes)
     setSelectedEdges(edges)
-
-    if (nodes[1])
-    {
-      //console.log("Selected more than 1 node: ", nodes[0], nodes[1])
-      setIsMultiSelection(true)
-    }
-    else
-    {
-      setIsMultiSelection(false)
-    }
-
   }, []);
     
   // On nodes/edges selection: https://codesandbox.io/p/sandbox/elegant-silence-gtg683?file=%2Fsrc%2FFlow.tsx%3A81%2C1
@@ -309,7 +299,7 @@ const useConceptualModel = () =>
         tooltips.push(element[2])
       }
 
-      setoriginalTextIndexesMockUp(_ => originalTextIndexes)
+      setoriginalTextIndexesList(_ => originalTextIndexes)
       setTooltips(_ => tooltips)
     }
 
@@ -359,12 +349,12 @@ const useConceptualModel = () =>
       return
     }
 
-    setIsShowDialogEdit(_ => false)
+    setIsShowEditDialog(_ => false)
 
     if (isSuggestedItem)
     {
       // TODO: instead of selectedSuggestedItem have only ID saved
-      setSelectedSuggestedItem(newItem)
+      setSelectedSuggestedItem(_ => newItem)
 
       setSuggestedItems(suggestedItems.map(item => 
       {
@@ -636,7 +626,7 @@ const useConceptualModel = () =>
     setSelectedSuggestedItem(_ => blankEntity)
     setEditedSuggestedItem(_ => blankEntity)
 
-    setIsShowDialogEdit(true)
+    setIsShowEditDialog(true)
   }
 
 
@@ -653,7 +643,7 @@ const useConceptualModel = () =>
     setSelectedSuggestedItem(_ => blankAttribute)
     setEditedSuggestedItem(_ => blankAttribute)
 
-    setIsShowDialogEdit(true)
+    setIsShowEditDialog(true)
   }
 
 
@@ -663,7 +653,7 @@ const useConceptualModel = () =>
     setIsDisableSave(_ => true)
     setIsDisableChange(_ => true)
 
-    setIsShowDialogEdit(true)
+    setIsShowEditDialog(true)
     setIsShowCreateEdgeDialog(false)
   }
 
@@ -765,7 +755,7 @@ const useConceptualModel = () =>
     fetchMergedOriginalTexts(url, headers, bodyData)
 
 
-    setIsShowDialogDomainDescription(true)
+    setIsShowHighlightDialog(true)
   }
 
   useEffect(() =>
@@ -818,7 +808,7 @@ const useConceptualModel = () =>
 
   useEffect(() =>
   {
-    if (!isShowDialogDomainDescription)
+    if (!setIsShowHighlightDialog)
     {
       return
     }
@@ -841,7 +831,7 @@ const useConceptualModel = () =>
 
     delay()
 
-  }, [isShowDialogDomainDescription])
+  }, [setIsShowHighlightDialog])
 
 
     // useEffect(() =>
@@ -931,15 +921,8 @@ const useConceptualModel = () =>
 
   const onOverlayDomainDescriptionOpen = () =>
   {
-    setIsShowDialogDomainDescription(true)
+    setIsShowHighlightDialog(true)
   }
-
-
-  const onDialogDomainDescriptionClose = () =>
-  {
-    setIsShowDialogDomainDescription(false)
-  }    
-
 
   const onAddItem = (item : Item) =>
   {
@@ -968,7 +951,7 @@ const useConceptualModel = () =>
       console.log("Unknown item type: ", item.type)
     }
 
-    setIsShowDialogEdit(false)
+    setIsShowEditDialog(false)
   }
 
 
@@ -1163,7 +1146,7 @@ const useConceptualModel = () =>
     const onEditClose = () =>
     {
       onClearRegeneratedItem(null, true)
-      setIsShowDialogEdit(_ => false)
+      setIsShowEditDialog(_ => false)
     }
 
     const onDialogCreateEdgeClose = () =>
@@ -1188,7 +1171,7 @@ const useConceptualModel = () =>
       setSelectedSuggestedItem(_ => suggestedItem)
       setEditedSuggestedItem(_ => suggestedItem)
 
-      setIsShowDialogEdit(true)
+      setIsShowEditDialog(true)
     }
 
 
@@ -1200,7 +1183,7 @@ const useConceptualModel = () =>
       setSelectedSuggestedItem(_ => item)
       setEditedSuggestedItem(_ => item)
 
-      setIsShowDialogEdit(true)
+      setIsShowEditDialog(true)
     }
 
 
@@ -1216,7 +1199,7 @@ const useConceptualModel = () =>
       // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
       // TODO: probably move this function into file `useoriginalTextIndexes.tsx`
 
-      setIsShowDialogDomainDescription(_ => true)
+      setIsShowHighlightDialog(_ => true)
 
       // Find the suggested item with ID: itemID
 
@@ -1230,7 +1213,7 @@ const useConceptualModel = () =>
 
       setSelectedSuggestedItem(suggestedItem)
 
-      setoriginalTextIndexesMockUp(_ => suggestedItem.originalTextIndexes)
+      setoriginalTextIndexesList(_ => suggestedItem.originalTextIndexes)
 
       // Create tooltips for highlighted original text
       let tooltip = ""
@@ -1256,12 +1239,12 @@ const useConceptualModel = () =>
     
     
     return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick,
-        summaryText, capitalizeString, OnClickAddNode, domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, originalTextIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
-        isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, onEditSuggestion, onHighlightSingleItem,
-        isShowDialogDomainDescription, onOverlayDomainDescriptionOpen, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
-        regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick, summaryDescriptions,
-        isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange, onDialogCreateEdgeClose,
-        isShowCreateEdgeDialog, onAddNewRelationship, onChangeItemType
+        capitalizeString, OnClickAddNode, onDomainDescriptionChange, onEditClose, onEditPlus, onEditSave,
+        onEditSuggestion, onHighlightSingleItem,
+        onOverlayDomainDescriptionOpen, onHighlightSelectedItems, onAddItem,
+        onClearRegeneratedItem, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick,
+        onEditRemove, nodeTypes, onAddNewEntity, onDialogCreateEdgeClose,
+        onAddNewRelationship, onChangeItemType
     }
 }
 

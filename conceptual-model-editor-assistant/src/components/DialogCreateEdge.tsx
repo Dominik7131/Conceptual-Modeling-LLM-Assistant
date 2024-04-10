@@ -14,19 +14,21 @@ import useUtility from '../hooks/useUtility';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import { isShowCreateEdgeDialog, selectedSuggestedItemState } from '../atoms';
+import { useRecoilValue } from 'recoil';
 
 
 interface Props
 {
-  relationship: Relationship
-  isOpened: boolean
   onClose: () => void
   onAddNewRelationship: () => void
   onSuggestItems: (userChoice: UserChoice, sourceItem: string | null, targetItem: string | null) => void
 }
 
-const DialogCreateEdge: React.FC<Props> = ({ relationship, isOpened, onClose, onAddNewRelationship, onSuggestItems } : Props) =>
+const DialogCreateEdge: React.FC<Props> = ({ onClose, onAddNewRelationship, onSuggestItems } : Props) =>
 {
+  const isOpened = useRecoilValue(isShowCreateEdgeDialog)
+  const relationship = useRecoilValue(selectedSuggestedItemState) as Relationship
   const { capitalizeString, getUserChoiceSingular } = useUtility()
 
 

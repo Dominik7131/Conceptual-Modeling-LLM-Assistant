@@ -14,19 +14,12 @@ import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import { useRecoilValue } from 'recoil';
+import { editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialog, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from '../atoms';
 
 
 interface Props
 {
-    item : Item
-    editedItem : Item
-    regeneratedItem : Item
-    isSuggestedItem : boolean
-    isLoading : boolean
-    fieldToLoad : Field
-    isOpened : boolean
-    isDisableSave : boolean
-    isDisableChange : boolean
     onClose : () => void
     onSave : (editedItem: Item, oldItem: Item, isSuggestedItem: boolean) => void
     onPlus : (itemType: ItemType, name: string, sourceEntity: string, targetEntity: string, field: Field) => void
@@ -38,8 +31,19 @@ interface Props
     onChangeItemType : (item: Item) => void
 }
 
-const DialogEditItem: React.FC<Props> = ({item, editedItem, regeneratedItem, isOpened, isLoading, fieldToLoad, isSuggestedItem, onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText, onRemove, isDisableSave, isDisableChange, onChangeItemType} : Props) =>
+const DialogEditItem: React.FC<Props> = ({onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText, onRemove, onChangeItemType} : Props) =>
 {
+    const isOpened = useRecoilValue(isShowEditDialog)
+    const fieldToLoad = useRecoilValue(fieldToLoadState)
+
+    const item = useRecoilValue(selectedSuggestedItemState)
+    const editedItem = useRecoilValue(editedSuggestedItemState)
+    const regeneratedItem = useRecoilValue(regeneratedItemState)
+    const isSuggestedItem = useRecoilValue(isSuggestedItemState)
+    const isLoading = useRecoilValue(isLoadingEditState)
+    const isDisableSave = useRecoilValue(isDisableSaveState)
+    const isDisableChange = useRecoilValue(isDisableChangeState)
+
     const attribute = editedItem as Attribute
     const relationship = editedItem as Relationship
 

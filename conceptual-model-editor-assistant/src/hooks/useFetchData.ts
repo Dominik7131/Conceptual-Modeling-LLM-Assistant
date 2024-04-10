@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Field, ItemType, SummaryObject } from "../interfaces";
+import { useSetRecoilState } from "recoil";
+import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState } from "../atoms";
 
 
 interface Props
@@ -12,15 +14,14 @@ interface Props
 const useFetchData = ({onProcessStreamedData, onProcessStreamedDataGeneral, onProcessMergedOriginalTexts} : Props) =>
 {
     // TODO: Split all fetch data methods to a separate files
+    // But first implement fetching with axios library
+    const setIsLoadingSuggestedItems = useSetRecoilState(isLoadingSuggestedItemsState)
+    const setIsLoadingEdit = useSetRecoilState(isLoadingEditState)
+    const setIsLoadingSummary1 = useSetRecoilState(isLoadingSummary1State)
+    const setIsLoadingSummaryDescriptions = useSetRecoilState(isLoadingSummaryDescriptionsState)
 
-    const [isLoadingSuggestedItems, setIsLoadingSuggestedItems] = useState<boolean>(false)
-    const [isLoadingEdit, setIsLoadingEdit] = useState<boolean>(false)
-    const [isLoadingSummary1, setIsLoadingSummary1] = useState<boolean>(false)
-    const [isLoadingSummaryDescriptions, setIsLoadingSummaryDescriptions] = useState<boolean>(false)
-    const [summaryText, setSummaryText] = useState<string>("")
-
-    // TODO: This object should contain descriptions for "entities": array of entities and "relationships": array of relationships
-    const [summaryDescriptions, setSummaryDescriptions] = useState<SummaryObject>({ entities: [], relationships: []})
+    const setSummaryText = useSetRecoilState(summaryTextState)
+    const setSummaryDescriptions = useSetRecoilState(summaryDescriptionsState)
 
 
     const fetchStreamedData = (url : string, headers : any, bodyData : any, sourceEntityName: string, itemType : ItemType) =>
@@ -280,9 +281,8 @@ const useFetchData = ({onProcessStreamedData, onProcessStreamedDataGeneral, onPr
         return
     }
 
-    return { isLoadingSuggestedItems, setIsLoadingSuggestedItems, isLoadingSummary1, isLoadingSummaryDescriptions, isLoadingEdit,
-      summaryText, summaryDescriptions, fetchSummary, fetchSummaryDescriptions, fetchStreamedData, fetchStreamedDataGeneral,
-      fetchMergedOriginalTexts }
+    return { fetchSummary, fetchSummaryDescriptions,
+      fetchStreamedData, fetchStreamedDataGeneral, fetchMergedOriginalTexts }
 }
 
 export default useFetchData

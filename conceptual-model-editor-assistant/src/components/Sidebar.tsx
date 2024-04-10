@@ -12,22 +12,27 @@ import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightIcon from '@mui/icons-material/Highlight';
+import { useRecoilValue } from 'recoil';
+import { isLoadingSuggestedItemsState, isSidebarOpenState, suggestedItemsState } from '../atoms';
 
 
 interface Props
 {
-    isLoading : boolean
-    items : Item[]
     onAddItem : (item : Item) => void
     onEditSuggestion : (itemID : number, itemType : ItemType) => void
     onHighlightSingleItem : (itemID : number) => void
     sidebarWidthPercentage : number
-    isSidebarOpen : boolean
     onToggleSideBarCollapse : () => void
 }
 
-const Sidebar: React.FC<Props> = ({isLoading, items, onAddItem, onEditSuggestion, onHighlightSingleItem, sidebarWidthPercentage, isSidebarOpen, onToggleSideBarCollapse}) =>
+const Sidebar: React.FC<Props> = ({ onAddItem, onEditSuggestion, onHighlightSingleItem, sidebarWidthPercentage, onToggleSideBarCollapse}) =>
 {
+    const items = useRecoilValue(suggestedItemsState)
+    const isLoading = useRecoilValue(isLoadingSuggestedItemsState)
+    const isSidebarOpen = useRecoilValue(isSidebarOpenState)
+
+    console.log("Rerender")
+
     const showTextOnSidebar = () =>
     {
         return (

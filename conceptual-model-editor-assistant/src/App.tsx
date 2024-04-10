@@ -4,42 +4,35 @@ import SideBar from './components/Sidebar';
 import useConceptualModel from './hooks/useConceptualModel'
 import { ReactFlowProvider } from 'reactflow';
 import useLayoutSize from './hooks/useLayoutSize';
-import DialogDomainDescription from './components/DialogDomainDescription';
+import HighlightDialog from './components/DialogDomainDescription';
 import DialogEditItem from './components/DialogEditItem';
 import DialogCreateEdge from './components/DialogCreateEdge';
 import { Relationship } from './interfaces';
+import { RecoilRoot } from 'recoil';
 
 
 function App()
 {
-  const { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, summaryText,
-    domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, originalTextIndexesMockUp, isShowDialogEdit, onEditClose, onEditPlus, onEditSave,
-    isLoadingSuggestedItems, suggestedItems, selectedSuggestedItem, editedSuggestedItem, onEditSuggestion, onHighlightSingleItem,
-    isShowDialogDomainDescription, onDialogDomainDescriptionClose, onHighlightSelectedItems, selectedNodes, tooltips, onAddItem,
-    regeneratedItem, onClearRegeneratedItem, isLoadingEdit, isLoadingSummary1, isLoadingSummaryDescriptions, fieldToLoad, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick,
-    summaryDescriptions, isSuggestedItem, onEditRemove, nodeTypes, onAddNewEntity, isDisableSave, isDisableChange, onDialogCreateEdgeClose,
-    isShowCreateEdgeDialog, onAddNewRelationship, onChangeItemType
+  const { nodes, edges, nodeTypes, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick,
+    onDomainDescriptionChange, onEditClose, onEditPlus, onEditSave, onEditSuggestion, onHighlightSingleItem,
+    onHighlightSelectedItems, onAddItem, onClearRegeneratedItem, onItemEdit, onConfirmRegeneratedText,
+    onSummaryDescriptionsClick,onEditRemove, onAddNewEntity, onDialogCreateEdgeClose,
+    onAddNewRelationship, onChangeItemType
   } = useConceptualModel()
 
-  const { isSidebarOpen, sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
+  const { sideBarWidthPercentage, onToggleSideBarCollapse } = useLayoutSize()
 
 
   return (
     <>
       <Topbar
         onIgnoreDomainDescriptionChange={onIgnoreDomainDescriptionChange}
-        isIgnoreDomainDescription={isIgnoreDomainDescription}
         onImportButtonClick={onImportButtonClick}
         onSuggestItems={onSuggestItems}
         onSummaryButtonClick={onSummaryButtonClick}
-        domainDescription={domainDescription}
         onDomainDescriptionChange={onDomainDescriptionChange}
         onHighlightSelectedItems={onHighlightSelectedItems}
-        summary={summaryText}
-        isLoadingSummary1={isLoadingSummary1}
-        isLoadingSummaryDescriptions={isLoadingSummaryDescriptions}
         onSummaryDescriptionsClick={onSummaryDescriptionsClick}
-        summaryDescriptions={summaryDescriptions}
         sidebarWidthPercentage={sideBarWidthPercentage}
         onAddNewEntity={onAddNewEntity}
       />
@@ -55,32 +48,16 @@ function App()
       />
 
       <SideBar
-        isLoading={isLoadingSuggestedItems}
-        items={suggestedItems}
         onAddItem={onAddItem}
         onEditSuggestion={onEditSuggestion}
         onHighlightSingleItem={onHighlightSingleItem}
         sidebarWidthPercentage={sideBarWidthPercentage}
-        isSidebarOpen={isSidebarOpen}
         onToggleSideBarCollapse={onToggleSideBarCollapse}
       />
 
-      <DialogDomainDescription
-        domainDescription={domainDescription}
-        isOpened={isShowDialogDomainDescription}
-        inferenceIndexes={originalTextIndexesMockUp}
-        onClose={onDialogDomainDescriptionClose}
-        tooltips={tooltips}
-      />
+      <HighlightDialog/>
 
       <DialogEditItem
-        item={selectedSuggestedItem}
-        editedItem={editedSuggestedItem}
-        regeneratedItem={regeneratedItem}
-        isLoading={isLoadingEdit}
-        fieldToLoad={fieldToLoad}
-        isOpened={isShowDialogEdit}
-        isSuggestedItem={isSuggestedItem}
         onClose={onEditClose}
         onPlus={onEditPlus}
         onSave={onEditSave}
@@ -89,26 +66,23 @@ function App()
         onItemEdit={onItemEdit}
         onConfirmRegeneratedText={onConfirmRegeneratedText}
         onRemove={onEditRemove}
-        isDisableSave={isDisableSave}
-        isDisableChange={isDisableChange}
         onChangeItemType={onChangeItemType}
       />
 
       <DialogCreateEdge
-        isOpened={isShowCreateEdgeDialog}
         onClose={onDialogCreateEdgeClose}
         onAddNewRelationship={onAddNewRelationship}
-        relationship={selectedSuggestedItem as Relationship}
         onSuggestItems={onSuggestItems}
       />
-
-    </>
+      </>
   );
 }
 
 const application = () => (
   <ReactFlowProvider>
-    <App />
+    <RecoilRoot>
+      <App />
+    </RecoilRoot>
   </ReactFlowProvider>
 );
 
