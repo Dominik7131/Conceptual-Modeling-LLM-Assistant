@@ -2,16 +2,6 @@ import { UserChoice } from "../interfaces"
 
 const useUtility = () =>
 {
-    const capitalizeString = (inputString : string) =>
-    {
-      if (!inputString)
-      {
-        return ""
-      }
-
-      return inputString.charAt(0).toUpperCase() + inputString.slice(1)
-    }
-
     const getUserChoiceSingular = (userChoice : string) =>
     {
       if (!userChoice)
@@ -30,3 +20,22 @@ const useUtility = () =>
 }
 
 export default useUtility
+
+
+export const createEdgeID = (source: string, target: string, name: string): string =>
+{
+  return `${source}-${name}-${target}`
+}
+
+export const capitalizeString = (inputString : string) =>
+{
+  if (!inputString)
+  {
+    return ""
+  }
+
+  return inputString.charAt(0).toUpperCase() + inputString.slice(1)
+}
+
+export const BASE_URL = "http://127.0.0.1:5000/"
+export const HEADER = { "Content-Type": "application/json" }

@@ -13,23 +13,18 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightIcon from '@mui/icons-material/Highlight';
 import { useRecoilValue } from 'recoil';
-import { isLoadingSuggestedItemsState, isSidebarOpenState, suggestedItemsState } from '../atoms';
+import { isLoadingSuggestedItemsState, isSidebarOpenState, sidebarWidthPercentageState, suggestedItemsState } from '../atoms';
+import useConceptualModel from '../hooks/useConceptualModel';
 
 
-interface Props
-{
-    onAddItem : (item : Item) => void
-    onEditSuggestion : (itemID : number, itemType : ItemType) => void
-    onHighlightSingleItem : (itemID : number) => void
-    sidebarWidthPercentage : number
-    onToggleSideBarCollapse : () => void
-}
-
-const Sidebar: React.FC<Props> = ({ onAddItem, onEditSuggestion, onHighlightSingleItem, sidebarWidthPercentage, onToggleSideBarCollapse}) =>
+const Sidebar: React.FC = () =>
 {
     const items = useRecoilValue(suggestedItemsState)
     const isLoading = useRecoilValue(isLoadingSuggestedItemsState)
     const isSidebarOpen = useRecoilValue(isSidebarOpenState)
+    const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
+
+    const { onAddItem, onEditSuggestion, onHighlightSingleItem } = useConceptualModel()
 
     console.log("Rerender")
 
@@ -54,7 +49,7 @@ const Sidebar: React.FC<Props> = ({ onAddItem, onEditSuggestion, onHighlightSing
         return (
             <ButtonGroup fullWidth sx={{ marginTop: 1 }} variant="outlined" size="small">
                 <Button startIcon={<AddIcon/>} onClick={() => onAddItem(item)}> Add </Button>
-                <Button startIcon={<EditIcon/>} onClick={() => onEditSuggestion(item.ID, item.type)}> Edit </Button>
+                <Button startIcon={<EditIcon/>} onClick={() => onEditSuggestion(item.ID)}> Edit </Button>
                 <Button startIcon={<HighlightIcon/>} onClick={() => onHighlightSingleItem(item.ID)}> Highlight </Button>
             </ButtonGroup>
         )

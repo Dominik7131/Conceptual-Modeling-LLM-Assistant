@@ -2,37 +2,32 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import useUtility from './useUtility';
+import useUtility, { BASE_URL, HEADER, createEdgeID } from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, UserChoice } from '../interfaces';
-import CustomNode from '../components/CustomNode';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingSuggestedItemsState, isShowCreateEdgeDialog, isShowEditDialog, isShowHighlightDialog, isSuggestedItemState, originalTextIndexesListState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from '../atoms';
-
-
-// Define the nodeTypes outside of the component to prevent re-renderings
-// Or we can use `useMemo` inside the component
-const nodeTypes = { customNode: CustomNode };
+import { domainDescriptionState, edgesState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingSuggestedItemsState, isShowCreateEdgeDialog, isShowEditDialog, isShowHighlightDialog, isSuggestedItemState, nodesState, originalTextIndexesListState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from '../atoms';
 
 
 const useConceptualModel = () =>
 {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  // const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  // const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes] = useRecoilState(nodesState)
+  const [edges, setEdges] = useRecoilState(edgesState)
 
-  const [suggestedItems, setSuggestedItems] = useRecoilState<Item[]>(suggestedItemsState)
+  const [suggestedItems, setSuggestedItems] = useRecoilState(suggestedItemsState)
   const [selectedSuggestedItem, setSelectedSuggestedItem] = useRecoilState<Item>(selectedSuggestedItemState)
   const [editedSuggestedItem, setEditedSuggestedItem] = useRecoilState<Item>(editedSuggestedItemState)
-  const [regeneratedItem, setRegeneratedItem] = useRecoilState<Item>(regeneratedItemState)
 
   const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
   const setIsDisableSave = useSetRecoilState(isDisableSaveState)
   const setIsDisableChange = useSetRecoilState(isDisableChangeState)
 
-  const setFieldToLoad = useSetRecoilState(fieldToLoadState)
-
   const isLoadingSuggestedItems = useRecoilValue(isLoadingSuggestedItemsState)
+
+  const domainDescription = useRecoilValue(domainDescriptionState)
 
 
   // TODO: selectedNodes should be computed from the nodes
@@ -47,48 +42,22 @@ const useConceptualModel = () =>
   const setoriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
   const setTooltips = useSetRecoilState(tooltipsState)
 
-  const { domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
+  const { isIgnoreDomainDescription, onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
 
   const { capitalizeString } = useUtility()
 
-  const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData, fetchStreamedDataGeneral, fetchMergedOriginalTexts }
-          = useFetchData({ onProcessStreamedData, onProcessStreamedDataGeneral, onProcessMergedOriginalTexts })
+  const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData, fetchMergedOriginalTexts }
+          = useFetchData({ onProcessStreamedData, onProcessMergedOriginalTexts })
 
   let IDToAssign = 0
 
-  const BASE_URL = "http://127.0.0.1:5000/"
+
   const SUGGEST_ITEMS_ENDPOINT = "suggest"
   const SUGGEST_ITEMS_URL = BASE_URL + SUGGEST_ITEMS_ENDPOINT
-  const HEADER = { "Content-Type": "application/json" }
-
-  const EDIT_ITEM_ENDPOINT = "getOnly"
-  const EDIT_ITEM_URL = BASE_URL + EDIT_ITEM_ENDPOINT
+  
 
 
-  const onConnect : OnConnect = useCallback((params) =>
-  { 
-    const sourceEntityName = params.source
-    const targetEntityName = params.target
-
-    if (!sourceEntityName || !targetEntityName)
-    {
-      return 
-    }
-
-    const blankRelationship: Relationship = {
-      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-      [Field.TYPE]: ItemType.RELATIONSHIP, [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntityName,
-      [Field.TARGET_ENTITY]: targetEntityName
-    }
-
-    setSelectedSuggestedItem(_ => blankRelationship)
-    setEditedSuggestedItem(_ => blankRelationship)
-
-    setIsShowCreateEdgeDialog(_ => true)
-
-    // setEdges((edge) => addEdge(params, edge))
-
-  }, [setEdges]);
+  
   
   const onChange = useCallback(({ nodes, edges } : { nodes : Node[], edges : Edge[]}) =>
   {
@@ -275,17 +244,6 @@ const useConceptualModel = () =>
       }
     }
 
-    function onProcessStreamedDataGeneral(value: any, field: Field): void
-    {
-      // Convert the `value` to a string
-      var jsonString = new TextDecoder().decode(value)
-      console.log(jsonString)
-      console.log("\n")
-
-      const parsedData = JSON.parse(jsonString)
-      setRegeneratedItem({...regeneratedItem, [field]: parsedData[field]})
-    }
-
     function onProcessMergedOriginalTexts(data: any): void
     {
       let tooltips : string[] = []
@@ -304,282 +262,16 @@ const useConceptualModel = () =>
     }
 
 
-    const onImportButtonClick = () =>
-    {
-      parseSerializedConceptualModel()
-    }
-
-
-    const onEditPlus = (itemType: ItemType, name: string, sourceEntity: string, targetEntity: string, field: Field) =>
-    {
-      let userChoice = UserChoice.ENTITIES
-
-      if (itemType === ItemType.ATTRIBUTE)
-      {
-        userChoice = UserChoice.ATTRIBUTES 
-      }
-      else if (itemType === ItemType.RELATIONSHIP)
-      {
-        userChoice = UserChoice.RELATIONSHIPS
-      }
-
-      if (userChoice === UserChoice.ENTITIES)
-      {
-        sourceEntity = name
-      }
-
-      if (!sourceEntity) { sourceEntity = "" }
-      if (!targetEntity) { targetEntity = "" }
-
-      const bodyData = JSON.stringify({
-        "name": name, "sourceEntity": sourceEntity, "targetEntity": targetEntity, "field": field, "userChoice": userChoice,
-        "domainDescription": domainDescription
-      })
-
-      setFieldToLoad(field)
-      fetchStreamedDataGeneral(EDIT_ITEM_URL, HEADER, bodyData, name, field)
-    }
-
-
-  const onEditSave = (newItem: Item, oldItem: Item, isSuggestedItem: boolean): void =>
+  const onImportButtonClick = () =>
   {
-    if (!newItem.name)
-    {
-      alert("Name cannot be empty")
-      return
-    }
-
-    setIsShowEditDialog(_ => false)
-
-    if (isSuggestedItem)
-    {
-      // TODO: instead of selectedSuggestedItem have only ID saved
-      setSelectedSuggestedItem(_ => newItem)
-
-      setSuggestedItems(suggestedItems.map(item => 
-      {
-        if (item.ID === newItem.ID)
-        {
-          return newItem
-        }
-        return item
-      }))
-      
-      return
-    }
-
-    if (newItem.type === ItemType.ENTITY)
-    {
-      editNodeEntity(newItem as Entity, oldItem as Entity)
-    }
-    else if (newItem.type === ItemType.ATTRIBUTE)
-    {
-      editNodeAttribute(newItem as Attribute, oldItem as Attribute)
-    }
-    else if (newItem.type === ItemType.RELATIONSHIP)
-    {
-      editEdgeRelationship(newItem as Relationship, oldItem as Relationship)
-    }
-    else
-    {
-      alert("Unknown action")
-    }
+    parseSerializedConceptualModel()
   }
 
-  const onEditRemove = (item: Item): void =>
-  {
-    if (item.type === ItemType.ENTITY)
-    {
-      const nodeID = item.name
-      removeNode(nodeID)
-    }
-    else if (item.type === ItemType.ATTRIBUTE)
-    {
-      removeNodeAttribute(item as Attribute)
-    }
-    else if (item.type === ItemType.RELATIONSHIP)
-    {
-      const relationship: Relationship = (item as Relationship)
-      const edgeID = createEdgeID(relationship.source, relationship.target, relationship.name)
-      removeEdge(edgeID)
-    }
-    else
-    {
-      alert("Unknown action")
-    }
-  }
 
   
-  const createEdgeID = (source: string, target: string, name: string): string =>
-  {
-    return `${source}-${name}-${target}`
-  }
 
 
-  const editNodeEntity = (newEntity: Entity, oldEntity: Entity): void =>
-  {
-    const id: string = oldEntity.name
-    const oldNode = nodes.find(node => node.id === id)
 
-    if (!oldNode)
-    {
-      return
-    }
-
-    // Create an updated version of the old entity
-    const newData : NodeData = {
-      ...oldNode.data, description: newEntity.description, originalText: newEntity.originalText, originalTextIndexes: newEntity.originalTextIndexes
-    }
-    const newNode: Node = {...oldNode, id: newEntity.name, data: newData}
-
-
-    if (newEntity.name !== oldEntity.name)
-    {
-      // Update all edges that connect to the changed source or target entity
-      setEdges((edges) => edges.map((currentEdge: Edge) =>
-      {
-        if (currentEdge.source === oldEntity.name)
-        {
-          return { ...currentEdge, id: createEdgeID(newEntity.name, currentEdge.target, currentEdge.data.label), source: newEntity.name }
-        }
-        else if (currentEdge.target === oldEntity.name)
-        {
-          return { ...currentEdge, id: createEdgeID(currentEdge.source, newEntity.name, currentEdge.data.label), target: newEntity.name }
-        }
-        return currentEdge
-      }))
-    }
-
-    setNodes((nodes) => nodes.map((currentNode : Node) =>
-      {
-        if (currentNode.id === id)
-        {
-          return newNode
-        }
-        else
-        {
-          return currentNode
-        }
-      }))
-  }
-
-
-  const editNodeAttribute = (newAttribute: Attribute, oldAttribute: Attribute): void =>
-  {
-      const id: string = oldAttribute.source
-      const oldNode = nodes.find(node => node.id === id)
-  
-      if (!oldNode)
-      {
-        return
-      }
-
-      const newAttributes = oldNode.data.attributes.map((attribute: Attribute) =>
-      {
-        if (attribute.name === oldAttribute.name)
-        {
-          return newAttribute
-        }
-        else
-        {
-          return attribute
-        }
-      })
-
-      const newData: NodeData = { ...oldNode.data, attributes: newAttributes}
-      const newNode: Node = { ...oldNode, data: newData}
-
-  
-      setNodes((nodes) => nodes.map((currentNode: Node) =>
-      {
-        if (currentNode.id === id)
-        {
-          return newNode
-        }
-        else
-        {
-          return currentNode
-        }
-      }))
-  }
-
-
-  const editEdgeRelationship = (newRelationship: Relationship, oldRelationship : Relationship): void =>
-  {
-    // Find the right edge based on the old ID
-    const oldID: string = createEdgeID(oldRelationship.source, oldRelationship.target, oldRelationship.name)
-    let oldEdge = edges.find(edge => edge.id === oldID)
-
-    if (!oldEdge)
-    {
-      return
-    }
-
-    // Create an updated version of the old edge
-    const newData: EdgeData = {
-      ...oldEdge.data, description: newRelationship.description, cardinality: newRelationship.cardinality,
-      originalText: newRelationship.originalText}
-
-    const newID = createEdgeID(newRelationship.source, newRelationship.target, newRelationship.name)
-
-    // TODO: Is the user allowed to change source and target?
-    // If the source/target does not exist we need to create a new node
-    let newEdge: Edge = { ...oldEdge, id: newID, label: newRelationship.name, source: newRelationship.source,
-      target: newRelationship.target, data: newData}
-
-    setEdges((edges) => edges.map((currentEdge : Edge) =>
-    {
-      if (currentEdge.id === oldID)
-      {
-        return newEdge
-      }
-      else
-      {
-        return currentEdge
-      }
-    }))
-  }
-
-
-  const removeNode = (nodeID: string): void =>
-  {
-    setNodes(nodes.filter(node => node.id !== nodeID))
-  }
-
-
-  const removeEdge = (edgeID: string): void =>
-  {
-    setEdges(edges.filter(edge => edge.id !== edgeID))
-  }
-
-
-  const removeNodeAttribute = (attribute: Attribute): void =>
-  {
-    const nodeID: string = attribute.source
-    let oldNode = nodes.find(node => node.id === nodeID)
-
-    if (!oldNode)
-    {
-      return 
-    }
-
-    const newAttributes = oldNode.data.attributes.filter((element: Attribute) => element.name !== attribute.name)
-    const newData: NodeData = { ...oldNode.data, attributes: newAttributes }
-    const newNode = { ...oldNode, data: newData }
-
-
-    setNodes((nodes) => nodes.map((currentNode : Node) =>
-      {
-        if (currentNode.id === nodeID)
-        {
-          return newNode
-        }
-        else
-        {
-          return currentNode
-        }
-      }))
-  }
 
 
   const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
@@ -898,99 +590,31 @@ const useConceptualModel = () =>
 
   const addNodeEntity = (entity: Entity, positionX: number, positionY: number) =>
   {
-    if (doesNodeAlreadyExist(entity.name))
-    {
-      alert(`Node '${entity.name}' already exists`)
-      return
-    }
-
-    const nodeData: NodeData = {
-      [Field.DESCRIPTION]: entity[Field.DESCRIPTION], [Field.ORIGINAL_TEXT]: entity[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: [], 
-      onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
-    }
-
-    const newNode: Node = {
-      id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
-      data: nodeData }
-
-    setNodes(previousNodes => {
-      return [...previousNodes, newNode]
-    })
+      if (doesNodeAlreadyExist(entity.name))
+      {
+          alert(`Node '${entity.name}' already exists`)
+          return
+      }
+  
+      const nodeData: NodeData = {
+          [Field.DESCRIPTION]: entity[Field.DESCRIPTION], [Field.ORIGINAL_TEXT]: entity[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: [], 
+          onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
+      }
+  
+      const newNode: Node = {
+          id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
+          data: nodeData
+      }
+  
+      setNodes(previousNodes => {
+          return [...previousNodes, newNode]
+      })
   }
 
 
   const onOverlayDomainDescriptionOpen = () =>
   {
     setIsShowHighlightDialog(true)
-  }
-
-  const onAddItem = (item : Item) =>
-  {
-    console.log("Adding this item: ", item)
-
-    if (item.type === ItemType.ENTITY)
-    {
-      if (!item.name)
-      {
-        alert("Entity name cannot be empty")
-        return
-      }
-
-      onAddEntity(item as Entity)
-    }
-    else if (item.type === ItemType.ATTRIBUTE)
-    {
-      onAddAttributesToNode(item as Attribute)
-    }
-    else if (item.type === ItemType.RELATIONSHIP)
-    {
-      onAddRelationshipsToNodes(item as Relationship)
-    }
-    else
-    {
-      console.log("Unknown item type: ", item.type)
-    }
-
-    setIsShowEditDialog(false)
-  }
-
-
-  const onChangeItemType = (item: Item): void =>
-  {
-    // If the item is attribute then transform it into relationship
-    // Otherwise transform relationsip into attribute
-
-    if (item.type === ItemType.ATTRIBUTE)
-    {
-      const oldAttribute = item as Attribute
-
-      const relationship : Relationship = {
-        ID: oldAttribute.ID, type: ItemType.RELATIONSHIP, name: "", description: oldAttribute.description,
-        originalText: oldAttribute.originalText, originalTextIndexes: oldAttribute.originalTextIndexes, source: oldAttribute.source,
-        target: oldAttribute.name, cardinality: ""}
-
-      setSelectedSuggestedItem(_ => relationship)
-      setEditedSuggestedItem(_ => relationship)
-    }
-    else
-    {
-      const oldRelationship = item as Relationship
-
-      const attribute : Attribute = {
-        ID: oldRelationship.ID, type: ItemType.ATTRIBUTE, name: oldRelationship.target, description: oldRelationship.description,
-        dataType: "string", originalText: oldRelationship.originalText, originalTextIndexes: oldRelationship.originalTextIndexes,
-        cardinality: "", source: oldRelationship.source
-      }
-
-      setSelectedSuggestedItem(_ => attribute)
-      setEditedSuggestedItem(_ => attribute)
-    }
-  }
-
-
-  const onAddEntity = (entity: Entity) =>
-  {
-    addNodeEntity(entity, 66, 66)
   }
 
 
@@ -1110,49 +734,8 @@ const useConceptualModel = () =>
   }
 
 
-    const onClearRegeneratedItem = (field: Field | null, isClearAll: boolean) : void=>
-    {
-      if (isClearAll)
-      {
-        setEditedSuggestedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: [], dataType: "", cardinality: ""})
-        setRegeneratedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: [], dataType: "", cardinality: ""})
-      }
+    
 
-      if (!field)
-      {
-        return
-      }
-
-      if (regeneratedItem.hasOwnProperty(field))
-      {
-        setRegeneratedItem({...regeneratedItem, [field]: "" })
-      }
-    }
-
-
-    const onConfirmRegeneratedText = (field : Field) =>
-    {
-      if (regeneratedItem.hasOwnProperty(field))
-      {
-        // Set type to "any" because Typescript doesn't recognise that we already did the check
-        // Otherwise we need to write an if-statement for each field of type Item
-        setEditedSuggestedItem({...editedSuggestedItem, [field]: (regeneratedItem as any)[field]})
-      }
-
-      onClearRegeneratedItem(field, false)
-    }
-
-
-    const onEditClose = () =>
-    {
-      onClearRegeneratedItem(null, true)
-      setIsShowEditDialog(_ => false)
-    }
-
-    const onDialogCreateEdgeClose = () =>
-    {
-      setIsShowCreateEdgeDialog(_ => false)
-    }
 
 
     const onEditSuggestion = (itemID: number) : void =>
@@ -1187,11 +770,35 @@ const useConceptualModel = () =>
     }
 
 
-
-    const onItemEdit = (field: Field, newValue : string) : void =>
+    const onAddItem = (item : Item) =>
     {
-      setEditedSuggestedItem({...editedSuggestedItem, [field]: newValue})
+      console.log("Adding this item: ", item)
+  
+      if (item.type === ItemType.ENTITY)
+      {
+        if (!item.name)
+        {
+            alert("Entity name cannot be empty")
+            return
+        }
+
+        addNodeEntity(item as Entity, 66, 66)
+      }
+      else if (item.type === ItemType.ATTRIBUTE)
+      {
+        onAddAttributesToNode(item as Attribute)
+      }
+      else if (item.type === ItemType.RELATIONSHIP)
+      {
+        onAddRelationshipsToNodes(item as Relationship)
+      }
+      else
+      {
+        console.log("Unknown item type: ", item.type)
+      }
+  
     }
+
 
 
     const onHighlightSingleItem = (itemID : number) =>
@@ -1238,13 +845,10 @@ const useConceptualModel = () =>
     }
     
     
-    return { nodes, edges, onNodesChange, onEdgesChange, onConnect, onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick,
-        capitalizeString, OnClickAddNode, onDomainDescriptionChange, onEditClose, onEditPlus, onEditSave,
-        onEditSuggestion, onHighlightSingleItem,
-        onOverlayDomainDescriptionOpen, onHighlightSelectedItems, onAddItem,
-        onClearRegeneratedItem, onItemEdit, onConfirmRegeneratedText, onSummaryDescriptionsClick,
-        onEditRemove, nodeTypes, onAddNewEntity, onDialogCreateEdgeClose,
-        onAddNewRelationship, onChangeItemType
+    return { onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick,
+        capitalizeString, OnClickAddNode, onDomainDescriptionChange, onEditSuggestion, onHighlightSingleItem,
+        onOverlayDomainDescriptionOpen, onHighlightSelectedItems, onSummaryDescriptionsClick,
+        onAddNewEntity, onAddNewRelationship, onAddItem
     }
 }
 

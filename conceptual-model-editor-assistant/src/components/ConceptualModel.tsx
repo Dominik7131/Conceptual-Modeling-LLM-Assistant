@@ -1,28 +1,61 @@
 import Stack from '@mui/material/Stack';
-import ReactFlow, { Node, Edge, OnConnect, OnNodesChange, OnEdgesChange, MiniMap, Controls, Background, EdgeProps, NodeTypes } from 'reactflow';
+import ReactFlow, { Node, Edge, OnConnect, OnNodesChange, OnEdgesChange, MiniMap, Controls, Background, EdgeProps, NodeTypes, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from 'reactflow';
+import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
-import { Item } from '../interfaces';
+import { Field, Item, ItemType, Relationship } from '../interfaces';
+import { edgesState, editedSuggestedItemState, isShowCreateEdgeDialog, nodesState, selectedSuggestedItemState, sidebarWidthPercentageState } from '../atoms';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useCallback } from 'react';
 
-interface Props
+const nodeTypes = { customNode: CustomNode };
+
+const edgeTypes = { 'custom-edge': CustomEdge }
+
+
+const ConceptualModel: React.FC = () =>
 {
-  nodes : Node[],
-  edges : Edge[],
-  onNodesChange : OnNodesChange,
-  onEdgesChange : OnEdgesChange,
-  onConnect : OnConnect,
-  sidebarWidthPercentage : number
-  nodeTypes : NodeTypes
-}
+  const [nodes, setNodes] = useRecoilState(nodesState)
+  const [edges, setEdges] = useRecoilState(edgesState)
 
+  const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
+  const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
+  const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialog)
 
-const edgeTypes =
-{
-  'custom-edge': CustomEdge
-}
+  const onNodesChange = useCallback(
+    (changes: NodeChange[]) => setNodes((currentNodes) => applyNodeChanges(changes, currentNodes)),
+    [],
+  )
+  const onEdgesChange = useCallback(
+    (changes: EdgeChange[]) => setEdges((currentEdges) => applyEdgeChanges(changes, currentEdges)),
+    [],
+  )
 
+  // TODO: Put this logic in a custom hook
+  const onConnect : OnConnect = useCallback((params) =>
+  { 
+    const sourceEntityName = params.source
+    const targetEntityName = params.target
 
-const ConceptualModel: React.FC<Props> = ({nodes, edges, onNodesChange, onEdgesChange, onConnect, sidebarWidthPercentage, nodeTypes}) =>
-{
+    if (!sourceEntityName || !targetEntityName)
+    {
+      return 
+    }
+
+    const blankRelationship: Relationship = {
+      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
+      [Field.TYPE]: ItemType.RELATIONSHIP, [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntityName,
+      [Field.TARGET_ENTITY]: targetEntityName
+    }
+
+    setSelectedSuggestedItem(_ => blankRelationship)
+    setEditedSuggestedItem(_ => blankRelationship)
+
+    setIsShowCreateEdgeDialog(_ => true)
+
+  }, [setEdges]);
+
+  const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
+
   const heightPx = 587
 
   // Define custom edge type for selected state

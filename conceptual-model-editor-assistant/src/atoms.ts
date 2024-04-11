@@ -1,5 +1,6 @@
 import { atom } from 'recoil'
 import { Field, Item, ItemType, SummaryObject } from './interfaces';
+import { Node, Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow';
 
 
 export const isShowEditDialog = atom({
@@ -119,3 +120,21 @@ export const isSidebarOpenState = atom({
     key: 'isSidebarOpenState',
     default: true,
 });
+
+
+export const sidebarWidthPercentageState = atom({
+    key: 'sidebarWidthPercentageState',
+    default: 20,
+});
+
+
+export const nodesState = atom<Node[]>({
+    key: 'nodesState',
+    default: [],
+});
+
+export const edgesState = atom<Edge[]>({
+    key: 'edgesState',
+    default: [],
+});
+

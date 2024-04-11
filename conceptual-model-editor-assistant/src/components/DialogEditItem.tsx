@@ -15,23 +15,17 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useRecoilValue } from 'recoil';
-import { editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialog, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from '../atoms';
+import { domainDescriptionState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialog, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from '../atoms';
+import useEditItemDialog from '../hooks/useEditItemDialog';
 
 
 interface Props
 {
-    onClose : () => void
-    onSave : (editedItem: Item, oldItem: Item, isSuggestedItem: boolean) => void
-    onPlus : (itemType: ItemType, name: string, sourceEntity: string, targetEntity: string, field: Field) => void
-    onAddItem : (item: Item) => void
     onClearSuggestion : (field: Field, clearAll: boolean) => void
-    onItemEdit : (field: Field, newValue: string) => void
-    onRemove : (item: Item) => void
     onConfirmRegeneratedText : (field : Field) => void
-    onChangeItemType : (item: Item) => void
 }
 
-const DialogEditItem: React.FC<Props> = ({onClose, onSave, onPlus, onAddItem, onClearSuggestion, onItemEdit, onConfirmRegeneratedText, onRemove, onChangeItemType} : Props) =>
+const DialogEditItem: React.FC = () =>
 {
     const isOpened = useRecoilValue(isShowEditDialog)
     const fieldToLoad = useRecoilValue(fieldToLoadState)
@@ -43,6 +37,8 @@ const DialogEditItem: React.FC<Props> = ({onClose, onSave, onPlus, onAddItem, on
     const isLoading = useRecoilValue(isLoadingEditState)
     const isDisableSave = useRecoilValue(isDisableSaveState)
     const isDisableChange = useRecoilValue(isDisableChangeState)
+
+    const { onAddItem, onSave, onClose, onRemove, onItemEdit, onGenerateField, onConfirmRegeneratedText, onClearRegeneratedItem, onChangeItemType } = useEditItemDialog()
 
     const attribute = editedItem as Attribute
     const relationship = editedItem as Relationship
@@ -86,7 +82,7 @@ const DialogEditItem: React.FC<Props> = ({onClose, onSave, onPlus, onAddItem, on
                     />
                     { !isRegeneratedText ?
                         ( (isLoading && fieldToLoad === field) ? <CircularProgress sx={{position: 'relative', right: '3px', top: '5px'}} size={"30px"} /> :
-                        <IconButton disabled={field !== Field.DESCRIPTION} color="primary" size="small" onClick={() => onPlus(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
+                        <IconButton disabled={field !== Field.DESCRIPTION} color="primary" size="small" onClick={() => onGenerateField(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
                             <AutoFixHighIcon/>
                         </IconButton>)
                         :
@@ -94,7 +90,7 @@ const DialogEditItem: React.FC<Props> = ({onClose, onSave, onPlus, onAddItem, on
                             <IconButton onClick={() => onConfirmRegeneratedText(field)}>
                                 <CheckIcon color="success"/>
                             </IconButton>
-                            <IconButton onClick={() => { onClearSuggestion(field, false) }}>
+                            <IconButton onClick={() => { onClearRegeneratedItem(field, false) }}>
                                 <CloseIcon color="error"/>
                             </IconButton>
                         </Stack>
@@ -138,7 +134,7 @@ const DialogEditItem: React.FC<Props> = ({onClose, onSave, onPlus, onAddItem, on
 
                     {
                         isSuggestedItem ?
-                        <Button variant="contained" color="success" onClick={() => { onAddItem(editedItem) }}>Add</Button>
+                        <Button variant="contained" color="success" onClick={() => { onAddItem(editedItem); onClose() }}>Add</Button>
                         :
                         <Button variant="contained" color="error" onClick={() => { onRemove(item); onClose()}}>Remove</Button>
                     }

@@ -7,16 +7,14 @@ import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummary1Stat
 interface Props
 {
   onProcessStreamedData : (value: any, sourceEntityName: string, itemType: ItemType) => void
-  onProcessStreamedDataGeneral : (value: any, itemType: Field) => void
   onProcessMergedOriginalTexts : (data: any) => void
 }
 
-const useFetchData = ({onProcessStreamedData, onProcessStreamedDataGeneral, onProcessMergedOriginalTexts} : Props) =>
+const useFetchData = ({onProcessStreamedData, onProcessMergedOriginalTexts} : Props) =>
 {
     // TODO: Split all fetch data methods to a separate files
     // But first implement fetching with axios library
     const setIsLoadingSuggestedItems = useSetRecoilState(isLoadingSuggestedItemsState)
-    const setIsLoadingEdit = useSetRecoilState(isLoadingEditState)
     const setIsLoadingSummary1 = useSetRecoilState(isLoadingSummary1State)
     const setIsLoadingSummaryDescriptions = useSetRecoilState(isLoadingSummaryDescriptionsState)
 
@@ -218,56 +216,6 @@ const useFetchData = ({onProcessStreamedData, onProcessStreamedDataGeneral, onPr
         alert("Error: request failed")
       });
     }
-
-
-    const fetchStreamedDataGeneral = (endpoint : string, headers : any, bodyData : any, attributeName : string, field: Field) =>
-    {
-        setIsLoadingEdit(_ => true)
-
-        fetch(endpoint, { method: "POST", headers, body: bodyData })
-        .then(response =>
-        {
-            const stream = response.body; // Get the readable stream from the response body
-
-            if (stream === null)
-            {
-              console.log("Stream is null")
-              setIsLoadingEdit(_ => false)
-              return
-            }
-
-            const reader = stream.getReader();
-
-            const readChunk = () =>
-            {
-                reader.read()
-                    .then(({value, done}) =>
-                    {
-                        if (done)
-                        {
-                            console.log("Stream finished")
-                            setIsLoadingEdit(_ => false)
-                            return
-                        }
-
-                        onProcessStreamedDataGeneral(value, field)
-                        
-                        readChunk(); 
-                    })
-                    .catch(error =>
-                    {
-                      console.error(error);
-                    });
-            };
-            readChunk(); // Start reading the first chunk
-        })
-        .catch(error =>
-        {
-          console.error(error);
-          setIsLoadingEdit(_ => false)
-          alert("Error: request failed")
-        });
-    }
   
     const fetchMergedOriginalTexts = (url: string, headers: any, bodyData: any) =>
     {
@@ -281,8 +229,7 @@ const useFetchData = ({onProcessStreamedData, onProcessStreamedDataGeneral, onPr
         return
     }
 
-    return { fetchSummary, fetchSummaryDescriptions,
-      fetchStreamedData, fetchStreamedDataGeneral, fetchMergedOriginalTexts }
+    return { fetchSummary, fetchSummaryDescriptions, fetchStreamedData, fetchMergedOriginalTexts }
 }
 
 export default useFetchData

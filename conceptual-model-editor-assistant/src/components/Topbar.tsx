@@ -10,7 +10,7 @@ import { Attribute, Item, UserChoice, SummaryObject } from "../interfaces";
 import Tooltip from '@mui/material/Tooltip';
 import { CircularProgress, Divider, FormControl, FormLabel, List, ListItem, ListItemText, Radio, RadioGroup, Slider, Tab, Tabs, Typography } from "@mui/material";
 import { Node } from 'reactflow';
-import useUtility from "../hooks/useUtility";
+import useUtility, { capitalizeString } from "../hooks/useUtility";
 import TabPanel from '@mui/lab/TabPanel';
 import TabList from "@mui/lab/TabList";
 import TabContext from '@mui/lab/TabContext';
@@ -20,29 +20,16 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useRecoilValue } from "recoil";
-import { domainDescriptionState, isIgnoreDomainDescriptionState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState } from "../atoms";
+import { domainDescriptionState, isIgnoreDomainDescriptionState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, sidebarWidthPercentageState, summaryDescriptionsState, summaryTextState } from "../atoms";
+import useConceptualModel from "../hooks/useConceptualModel";
+import useDomainDescription from "../hooks/useDomainDescription";
 
 
-interface Props
-{
-    onIgnoreDomainDescriptionChange : () => void
-    onImportButtonClick : () => void
-    onSuggestItems : (userChoice: UserChoice, sourceItem: string | null, targetItem: string | null) => void
-    onSummaryButtonClick : () => void
-    onDomainDescriptionChange : (newDomainDescriptionText : string) => void
-    onHighlightSelectedItems : () => void    
-    onSummaryDescriptionsClick : () => void
-
-    sidebarWidthPercentage : number
-
-    onAddNewEntity : () => void
-}
-
-
-const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, onDomainDescriptionChange, onHighlightSelectedItems, sidebarWidthPercentage, onSummaryDescriptionsClick, onAddNewEntity}) =>
+const Topbar: React.FC = () =>
 {
     const domainDescription = useRecoilValue(domainDescriptionState)
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+    const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
 
     const isLoadingSummary1 = useRecoilValue(isLoadingSummary1State)
     const isLoadingSummaryDescriptions = useRecoilValue(isLoadingSummaryDescriptionsState)
@@ -53,7 +40,8 @@ const Topbar: React.FC<Props> = ({onIgnoreDomainDescriptionChange, onImportButto
     const [tabValue, setTabValue] = useState<string>('0');
     const [insertedNodeNameText, setInsertedNodeNameText] = useState<string>("")
 
-    const { capitalizeString } = useUtility()
+    const { onAddNewEntity, onImportButtonClick, onSuggestItems, onSummaryButtonClick, onHighlightSelectedItems, onSummaryDescriptionsClick } = useConceptualModel()
+    const { onIgnoreDomainDescriptionChange, onDomainDescriptionChange } = useDomainDescription()
 
     const showSummary1 = () =>
     {

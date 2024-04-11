@@ -16,20 +16,17 @@ import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { isShowCreateEdgeDialog, selectedSuggestedItemState } from '../atoms';
 import { useRecoilValue } from 'recoil';
+import useCreateEdgeDialog from '../hooks/useCreateEdgeDialog';
+import useConceptualModel from '../hooks/useConceptualModel';
 
 
-interface Props
-{
-  onClose: () => void
-  onAddNewRelationship: () => void
-  onSuggestItems: (userChoice: UserChoice, sourceItem: string | null, targetItem: string | null) => void
-}
-
-const DialogCreateEdge: React.FC<Props> = ({ onClose, onAddNewRelationship, onSuggestItems } : Props) =>
+const DialogCreateEdge: React.FC = () =>
 {
   const isOpened = useRecoilValue(isShowCreateEdgeDialog)
   const relationship = useRecoilValue(selectedSuggestedItemState) as Relationship
-  const { capitalizeString, getUserChoiceSingular } = useUtility()
+
+  const { onClose } = useCreateEdgeDialog()
+  const { onAddNewRelationship, onSuggestItems } = useConceptualModel()
 
 
   return (
