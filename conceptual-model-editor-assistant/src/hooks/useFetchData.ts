@@ -217,7 +217,8 @@ const useFetchData = ({onProcessStreamedData, onProcessMergedOriginalTexts} : Pr
         alert("Error: request failed")
       });
     }
-  
+
+
     const fetchMergedOriginalTexts = (url: string, headers: any, bodyData: any) =>
     {
       fetch(url, { method: "POST", headers, body: bodyData})

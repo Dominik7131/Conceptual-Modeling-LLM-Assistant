@@ -38,6 +38,8 @@ def generate_single_field():
     domain_description = body_data["domainDescription"]
     user_choice = body_data["userChoice"]
 
+    print(field)
+
     return llm_assistant.generate_single_field(user_choice, name, source_entity, target_entity, domain_description, field)
 
 

@@ -82,7 +82,7 @@ const DialogEditItem: React.FC = () =>
                     />
                     { !isRegeneratedText ?
                         ( (isLoading && fieldToLoad === field) ? <CircularProgress sx={{position: 'relative', right: '3px', top: '5px'}} size={"30px"} /> :
-                        <IconButton disabled={field !== Field.DESCRIPTION} color="primary" size="small" onClick={() => onGenerateField(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
+                        <IconButton disabled={field == Field.NAME} color="primary" size="small" onClick={() => onGenerateField(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
                             <AutoFixHighIcon/>
                         </IconButton>)
                         :

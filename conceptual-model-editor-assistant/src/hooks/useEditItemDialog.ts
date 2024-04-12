@@ -11,7 +11,7 @@ const useEditItemDialog = () =>
     const setSuggestedItems = useSetRecoilState(suggestedItemsState)
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
-    const setRegeneratedItem = useSetRecoilState(regeneratedItemState)
+    const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
 
     const setNodes = useSetRecoilState(nodesState)
     const setEdges = useSetRecoilState(edgesState)
@@ -225,19 +225,15 @@ const useEditItemDialog = () =>
     
     const onConfirmRegeneratedText = (field : Field) =>
     {
-        setRegeneratedItem((regeneratedItem: Item) =>
+        setEditedSuggestedItem((editedItem: Item) =>
         {
-            setEditedSuggestedItem((editedItem: Item) =>
+            // Set type to "any" because Typescript doesn't recognise that we already did the check
+            // Otherwise we need to write an if-statement for each field of type Item
+            if (regeneratedItem.hasOwnProperty(field))
             {
-                // Set type to "any" because Typescript doesn't recognise that we already did the check
-                // Otherwise we need to write an if-statement for each field of type Item
-                if (regeneratedItem.hasOwnProperty(field))
-                {
-                    return {...editedItem, [field]: (regeneratedItem as any)[field]}
-                }
-                return editedItem
-            })
-            return regeneratedItem
+                return {...editedItem, [field]: (regeneratedItem as any)[field]}
+            }
+            return editedItem
         })
 
         onClearRegeneratedItem(field, false)

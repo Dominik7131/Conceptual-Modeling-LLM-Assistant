@@ -10,7 +10,6 @@ class UserChoice(Enum):
     RELATIONSHIPS = "relationships"
     RELATIONSHIPS2 = "relationships2"
     ENTITIES = "entities"
-    ONLY_DESCRIPTION = "description"
     SUMMARY1 = "summary1"
     SUMMARY2 = "summary2"
 
@@ -23,13 +22,13 @@ class DataType(Enum):
 
 
 class Field(Enum):
-    NAME = "name",
-    DESCRIPTION = "description",
-    ORIGINAL_TEXT = "originalText",
-    ORIGINAL_TEXT_INDEXES = "originalTextIndexes",
-    DATA_TYPE = "dataType",
-    CARDINALITY = "cardinality",
-    SOURCE_ENTITY = "sourceEntity",
+    NAME = "name"
+    DESCRIPTION = "description"
+    ORIGINAL_TEXT = "originalText"
+    ORIGINAL_TEXT_INDEXES = "originalTextIndexes"
+    DATA_TYPE = "dataType"
+    CARDINALITY = "cardinality"
+    SOURCE_ENTITY = "sourceEntity"
     TARGET_ENTITY = "targetEntity"
 
 
