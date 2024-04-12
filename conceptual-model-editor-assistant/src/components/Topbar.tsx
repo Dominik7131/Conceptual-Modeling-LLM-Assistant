@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
@@ -42,6 +42,7 @@ const Topbar: React.FC = () =>
 
     const { onAddNewEntity, onImportButtonClick, onSuggestItems, onSummaryButtonClick, onHighlightSelectedItems, onSummaryDescriptionsClick } = useConceptualModel()
     const { onIgnoreDomainDescriptionChange, onDomainDescriptionChange } = useDomainDescription()
+
 
     const showSummary1 = () =>
     {

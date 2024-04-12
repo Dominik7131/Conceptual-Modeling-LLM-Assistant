@@ -47,7 +47,6 @@ const useConceptualModel = () =>
 
   let IDToAssign = 0
 
-
   const SUGGEST_ITEMS_ENDPOINT = "suggest"
   const SUGGEST_ITEMS_URL = BASE_URL + SUGGEST_ITEMS_ENDPOINT
   
@@ -262,14 +261,10 @@ const useConceptualModel = () =>
   }
 
 
-  
-
-
-
-
-
   const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
   {
+    // TODO: isLoadingSuggestedItems is not being set correctly
+    // Possible reason: useConceptualModel hook is being instantiated more than 1 time and the instances are probably not synchronized?
     if (isLoadingSuggestedItems)
     {
       alert("Another request is already being processed")
@@ -294,6 +289,7 @@ const useConceptualModel = () =>
     sourceItemName = sourceItemName !== null ? sourceItemName : ""
     targetItemName = targetItemName !== null ? targetItemName : ""
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
+    console.log("Body data: ", bodyData)
 
     fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, sourceItemName, itemType)
   }
@@ -464,7 +460,7 @@ const useConceptualModel = () =>
     // Also when adding a new entities and then changing domain description these entities won't get updated
 
     parseSerializedConceptualModel()
-  }, [domainDescription])
+  }, [domainDescription, isIgnoreDomainDescription])
 
 
   useEffect(() =>

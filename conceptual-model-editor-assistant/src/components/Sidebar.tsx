@@ -15,6 +15,7 @@ import HighlightIcon from '@mui/icons-material/Highlight';
 import { useRecoilValue } from 'recoil';
 import { isLoadingSuggestedItemsState, isSidebarOpenState, sidebarWidthPercentageState, suggestedItemsState } from '../atoms';
 import useConceptualModel from '../hooks/useConceptualModel';
+import { useEffect } from 'react';
 
 
 const Sidebar: React.FC = () =>
@@ -25,6 +26,8 @@ const Sidebar: React.FC = () =>
     const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
 
     const { onAddItem, onEditSuggestion, onHighlightSingleItem } = useConceptualModel()
+
+
 
 
     const showTextOnSidebar = () =>

@@ -79,6 +79,7 @@ const useFetchData = ({onProcessStreamedData, onProcessMergedOriginalTexts} : Pr
       });
     }
 
+
     const fetchSummary = (endpoint : string, headers : any, bodyData : any) =>
     {
       setIsLoadingSummary1(_ => true)
