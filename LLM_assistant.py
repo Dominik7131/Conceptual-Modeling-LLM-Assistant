@@ -354,11 +354,10 @@ class LLMAssistant:
             PromptFileSymbols.SOURCE_ENTITY.value: source_entity,
             PromptFileSymbols.TARGET_ENTITY.value: target_entity,
             PromptFileSymbols.DOMAIN_DESCRIPTION.value: relevant_texts,
-            PromptFileSymbols.ITEMS_COUNT_TO_SUGGEST.value: items_count_to_suggest,
+            PromptFileSymbols.ITEMS_COUNT_TO_SUGGEST.value: str(items_count_to_suggest),
             PromptFileSymbols.CONCEPTUAL_MODEL.value: json.dumps(conceptual_model),
             PromptFileSymbols.ATTRIBUTE_NAME.value: attribute_name,
             PromptFileSymbols.RELATIONSHIP_NAME.value: relationship_name,
-            PromptFileSymbols.FIELD_NAME.value: field_name,
         }
         
         # Substitute all special symbols in the given prompt
