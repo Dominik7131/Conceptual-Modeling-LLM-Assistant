@@ -1,0 +1,2 @@
+What attributes does the entity: "{source_entity}" have? Output exactly {items_count} attributes in JSON format like this:
+{"description": "attribute description", "name": "attribute name"}.
