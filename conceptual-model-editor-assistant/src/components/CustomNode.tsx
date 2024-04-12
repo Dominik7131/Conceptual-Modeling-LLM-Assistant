@@ -11,6 +11,9 @@ import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
+import ModeStandbyIcon from '@mui/icons-material/ModeStandby';
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+
 import useUtility from '../hooks/useUtility';
 
 
@@ -57,12 +60,45 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
       setAnchorEl(null)
     }
 
+    const HandleStyleCheck = {
+        top: {
+          right: -10,
+          top: -20,
+          background: "#555",
+          minWidth: 20,
+          height: 20,
+          borderRadius: 4,
+          placeItems: "center",
+          display: "grid",
+          color: "#fff",
+          zIndex: 2
+        },
+        bottom: {
+          right: -10,
+          top: 43,
+          background: "#555",
+          minWidth: 20,
+          height: 20,
+          borderRadius: 4,
+          placeItems: "center",
+          display: "grid",
+          color: "#fff",
+          zIndex: 2
+        }
+      };
+
 
     return (
         <Box sx={{ width: "180px", textAlign: "center", backgroundColor: "white", border: selected ? borderSelected : borderNonSelected }}>
 
-            <Handle type="target" position={Position.Top} style={{ background: selected ? primaryColor : "black" }} />
-            <Handle type="source" position={Position.Bottom} style={{ background: selected ? primaryColor : "black" }} />
+            <Handle type="target" position={Position.Top} style={{ background: selected ? primaryColor : "black" }}>
+                {/* <Typography style={{ color: selected ? primaryColor : "black", position: "absolute", top: "-10px", left: "-1px", pointerEvents: "none"}}>x</Typography> */}
+                {/* <HighlightOffIcon color='action' sx={{ marginLeft: "-8px", marginTop: "-10px", color: "black"}} style={{ width: 22, height: 22,  pointerEvents: "none" }} /> */}
+            </Handle>
+
+            <Handle type="source" position={Position.Bottom} style={{ background: selected ? primaryColor : "black" }}>
+                {/* <ModeStandbyIcon color='action' sx={{ marginLeft: "-8px", marginTop: "-10px", color: "black"}} style={{ width: 22, height: 22,  pointerEvents: "none" }} /> */}
+            </Handle>
 
             <Button size="small" fullWidth={true}
                 sx={{ color: selected ? primaryColor : "black", fontSize: "17px", textTransform: 'none',

@@ -715,7 +715,7 @@ const useConceptualModel = () =>
     setEditedSuggestedItem(_ => suggestedItem as Item)
     setIsSuggestedItem(_ => true)
 
-    setIsDisableSave(_ => false)
+    setIsDisableSave(_ => true)
     setIsDisableChange(_ => false)
     setIsShowEditDialog(true)
   }

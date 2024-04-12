@@ -28,8 +28,6 @@ const Sidebar: React.FC = () =>
     const { onAddItem, onEditSuggestion, onHighlightSingleItem } = useConceptualModel()
 
 
-
-
     const showTextOnSidebar = () =>
     {
         return (

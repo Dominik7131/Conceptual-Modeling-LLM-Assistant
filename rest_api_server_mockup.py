@@ -89,7 +89,7 @@ def get_only():
         elif field == "originalText":
             dictionary = { field: "Regenerated original text" }
         elif field == "dataType":
-            dictionary = { field: "Regenerated data type" }
+            dictionary = { field: "string" }
         elif field == "cardinality":
             dictionary = { field: "1..*"}
         elif field == "source":
