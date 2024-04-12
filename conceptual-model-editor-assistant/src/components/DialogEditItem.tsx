@@ -15,7 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useRecoilValue } from 'recoil';
-import { domainDescriptionState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialog, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from '../atoms';
+import { domainDescriptionState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from '../atoms';
 import useEditItemDialog from '../hooks/useEditItemDialog';
 
 
@@ -27,7 +27,7 @@ interface Props
 
 const DialogEditItem: React.FC = () =>
 {
-    const isOpened = useRecoilValue(isShowEditDialog)
+    const isOpened = useRecoilValue(isShowEditDialogState)
     const fieldToLoad = useRecoilValue(fieldToLoadState)
 
     const item = useRecoilValue(selectedSuggestedItemState)

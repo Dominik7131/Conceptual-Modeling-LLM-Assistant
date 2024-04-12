@@ -14,7 +14,10 @@ function App()
     <RecoilRoot>
       <Topbar/>
 
-      <ConceptualModel/>
+      <ReactFlowProvider>
+        <ConceptualModel/>
+      </ReactFlowProvider>
+
 
       <SideBar/>
 

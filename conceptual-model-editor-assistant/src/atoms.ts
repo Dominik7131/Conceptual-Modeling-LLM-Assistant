@@ -3,18 +3,18 @@ import { Field, Item, ItemType, SummaryObject } from './interfaces';
 import { Node, Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow';
 
 
-export const isShowEditDialog = atom({
-    key: 'isShowDialogEdit',
+export const isShowEditDialogState = atom({
+    key: 'isShowEditDialogState',
     default: false,
 });
 
-export const isShowHighlightDialog = atom({
-    key: 'isShowDialogHighlight',
+export const isShowHighlightDialogState = atom({
+    key: 'isShowHighlightDialogState',
     default: false,
 });
 
-export const isShowCreateEdgeDialog = atom({
-    key: 'isShowCreateEdgeDialog',
+export const isShowCreateEdgeDialogState = atom({
+    key: 'isShowCreateEdgeDialogState',
     default: false,
 });
 
@@ -135,6 +135,16 @@ export const nodesState = atom<Node[]>({
 
 export const edgesState = atom<Edge[]>({
     key: 'edgesState',
+    default: [],
+});
+
+export const selectedNodesState = atom<Node[]>({
+    key: 'selectedNodesState',
+    default: [],
+});
+
+export const selectedEdgesState = atom<Edge[]>({
+    key: 'selectedEdgesState',
     default: [],
 });
 

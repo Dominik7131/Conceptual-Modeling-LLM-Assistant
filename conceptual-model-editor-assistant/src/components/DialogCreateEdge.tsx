@@ -14,7 +14,7 @@ import useUtility from '../hooks/useUtility';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import { isShowCreateEdgeDialog, selectedSuggestedItemState } from '../atoms';
+import { isShowCreateEdgeDialogState, selectedSuggestedItemState } from '../atoms';
 import { useRecoilValue } from 'recoil';
 import useCreateEdgeDialog from '../hooks/useCreateEdgeDialog';
 import useConceptualModel from '../hooks/useConceptualModel';
@@ -22,7 +22,7 @@ import useConceptualModel from '../hooks/useConceptualModel';
 
 const DialogCreateEdge: React.FC = () =>
 {
-  const isOpened = useRecoilValue(isShowCreateEdgeDialog)
+  const isOpened = useRecoilValue(isShowCreateEdgeDialogState)
   const relationship = useRecoilValue(selectedSuggestedItemState) as Relationship
 
   const { onClose } = useCreateEdgeDialog()

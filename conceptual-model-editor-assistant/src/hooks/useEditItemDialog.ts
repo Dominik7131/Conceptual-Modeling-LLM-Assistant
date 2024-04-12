@@ -1,5 +1,5 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { domainDescriptionState, edgesState, editedSuggestedItemState, fieldToLoadState, isLoadingEditState, isShowEditDialog, nodesState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from "../atoms"
+import { domainDescriptionState, edgesState, editedSuggestedItemState, fieldToLoadState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from "../atoms"
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
 import { BASE_URL, HEADER, createEdgeID } from "./useUtility";
@@ -7,7 +7,7 @@ import useConceptualModel from "./useConceptualModel";
 
 const useEditItemDialog = () =>
 {
-    const setIsOpened = useSetRecoilState(isShowEditDialog)
+    const setIsOpened = useSetRecoilState(isShowEditDialogState)
     const setSuggestedItems = useSetRecoilState(suggestedItemsState)
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
@@ -188,7 +188,7 @@ const useEditItemDialog = () =>
                 let newEdge: Edge = {
                     ...currentEdge, id: newID, label: newRelationship.name, source: newRelationship.source, target: newRelationship.target, data: newData
                 }
-                
+
                 return newEdge
             }
             else

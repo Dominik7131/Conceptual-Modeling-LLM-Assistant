@@ -12,14 +12,14 @@ import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
 import { UserChoice } from '../interfaces';
 import useUtility from '../hooks/useUtility';
 import { styled } from '@mui/system';
-import { domainDescriptionState, isShowHighlightDialog, originalTextIndexesListState, tooltipsState } from '../atoms';
+import { domainDescriptionState, isShowHighlightDialogState, originalTextIndexesListState, tooltipsState } from '../atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 
 
 const HighlightDialog: React.FC = () =>
 {
-  const [isOpened, setIsOpened] = useRecoilState(isShowHighlightDialog)
+  const [isOpened, setIsOpened] = useRecoilState(isShowHighlightDialogState)
   const domainDescription = useRecoilValue(domainDescriptionState)
 
   const inferenceIndexes = useRecoilValue(originalTextIndexesListState)

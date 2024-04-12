@@ -26,7 +26,6 @@ const Sidebar: React.FC = () =>
 
     const { onAddItem, onEditSuggestion, onHighlightSingleItem } = useConceptualModel()
 
-    console.log("Rerender")
 
     const showTextOnSidebar = () =>
     {

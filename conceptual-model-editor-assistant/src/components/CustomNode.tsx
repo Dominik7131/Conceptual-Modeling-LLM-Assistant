@@ -128,6 +128,7 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
                 {attributes.map((attribute : Attribute, index : number) =>
                 (
                     <Button size="small" key={`${attribute.name}-${index}`}
+                        style={{justifyContent: "flex-start"}}
                         sx={{ color: selected ? primaryColor : "black", fontSize: "12px", textTransform: 'lowercase'}}
                         onClick={() => data.onEdit(attribute)}>
                         {attribute.name}

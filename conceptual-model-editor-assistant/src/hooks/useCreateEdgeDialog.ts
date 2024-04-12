@@ -1,9 +1,10 @@
 import { useSetRecoilState } from "recoil"
-import { isShowCreateEdgeDialog } from "../atoms"
+import { isShowCreateEdgeDialogState } from "../atoms"
+
 
 const useCreateEdgeDialog = () =>
 {
-    const setIsOpened = useSetRecoilState(isShowCreateEdgeDialog)
+    const setIsOpened = useSetRecoilState(isShowCreateEdgeDialogState)
 
     const onClose = (): void =>
     {
