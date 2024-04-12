@@ -8,13 +8,13 @@ import useConceptualModel from "./useConceptualModel";
 const useEditItemDialog = () =>
 {
     const setIsOpened = useSetRecoilState(isShowEditDialog)
-    const [suggestedItems, setSuggestedItems] = useRecoilState(suggestedItemsState)
-    const [selectedSuggestedItem, setSelectedSuggestedItem] = useRecoilState(selectedSuggestedItemState)
-    const [editedSuggestedItem, setEditedSuggestedItem] = useRecoilState(editedSuggestedItemState)
-    const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
+    const setSuggestedItems = useSetRecoilState(suggestedItemsState)
+    const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
+    const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
+    const setRegeneratedItem = useSetRecoilState(regeneratedItemState)
 
-    const [nodes, setNodes] = useRecoilState(nodesState)
-    const [edges, setEdges] = useRecoilState(edgesState)
+    const setNodes = useSetRecoilState(nodesState)
+    const setEdges = useSetRecoilState(edgesState)
 
     const domainDescription = useRecoilValue(domainDescriptionState)
     const setFieldToLoad = useSetRecoilState(fieldToLoadState)
@@ -48,11 +48,11 @@ const useEditItemDialog = () =>
             // TODO: instead of selectedSuggestedItem have only ID saved
             setSelectedSuggestedItem(_ => newItem)
         
-            setSuggestedItems(suggestedItems.map(item => 
+            setSuggestedItems((previousItems: Item[]) => previousItems.map((item: Item) =>
             {
                 if (item.ID === newItem.ID)
                 {
-                return newItem
+                    return newItem
                 }
                 return item
             }))
@@ -80,54 +80,49 @@ const useEditItemDialog = () =>
 
     const onItemEdit = (field: Field, newValue : string) : void =>
     {
-        setEditedSuggestedItem({...editedSuggestedItem, [field]: newValue})
+        setEditedSuggestedItem((previousItem: Item) =>
+        { 
+            return { ...previousItem, [field]: newValue }
+        })
     }
 
 
     const editNodeEntity = (newEntity: Entity, oldEntity: Entity): void =>
     {
-        const id: string = oldEntity.name
-        const oldNode = nodes.find(node => node.id === id)
-    
-        if (!oldNode)
-        {
-        return
-        }
-    
-        // Create an updated version of the old entity
-        const newData : NodeData = {
-        ...oldNode.data, description: newEntity.description, originalText: newEntity.originalText, originalTextIndexes: newEntity.originalTextIndexes
-        }
-        const newNode: Node = {...oldNode, id: newEntity.name, data: newData}
-    
+        const id: string = oldEntity.name    
     
         if (newEntity.name !== oldEntity.name)
         {
-        // Update all edges that connect to the changed source or target entity
-        setEdges((edges) => edges.map((currentEdge: Edge) =>
-        {
-            if (currentEdge.source === oldEntity.name)
+            // Update all edges that connect to the changed source or target entity
+            setEdges((edges) => edges.map((currentEdge: Edge) =>
             {
-            return { ...currentEdge, id: createEdgeID(newEntity.name, currentEdge.target, currentEdge.data.label), source: newEntity.name }
-            }
-            else if (currentEdge.target === oldEntity.name)
-            {
-            return { ...currentEdge, id: createEdgeID(currentEdge.source, newEntity.name, currentEdge.data.label), target: newEntity.name }
-            }
-            return currentEdge
-        }))
+                if (currentEdge.source === oldEntity.name)
+                {
+                    return { ...currentEdge, id: createEdgeID(newEntity.name, currentEdge.target, currentEdge.data.label), source: newEntity.name }
+                }
+                else if (currentEdge.target === oldEntity.name)
+                {
+                    return { ...currentEdge, id: createEdgeID(currentEdge.source, newEntity.name, currentEdge.data.label), target: newEntity.name }
+                }
+                    return currentEdge
+            }))
         }
     
-        setNodes((nodes) => nodes.map((currentNode : Node) =>
+        setNodes((nodes: Node[]) => nodes.map((currentNode : Node) =>
         {
-        if (currentNode.id === id)
-        {
-            return newNode
-        }
-        else
-        {
-            return currentNode
-        }
+            if (currentNode.id === id)
+            {
+                const newData : NodeData = {
+                    ...currentNode.data, description: newEntity.description, originalText: newEntity.originalText, originalTextIndexes: newEntity.originalTextIndexes
+                }
+                const newNode: Node = {...currentNode, id: newEntity.name, data: newData}
+
+                return newNode
+            }
+            else
+            {
+                return currentNode
+            }
         }))
     }
       
@@ -135,33 +130,25 @@ const useEditItemDialog = () =>
     const editNodeAttribute = (newAttribute: Attribute, oldAttribute: Attribute): void =>
     {
         const id: string = oldAttribute.source
-        const oldNode = nodes.find(node => node.id === id)
     
-        if (!oldNode)
-        {
-            return
-        }
-    
-        const newAttributes = oldNode.data.attributes.map((attribute: Attribute) =>
-        {
-            if (attribute.name === oldAttribute.name)
-            {
-            return newAttribute
-            }
-            else
-            {
-            return attribute
-            }
-        })
-    
-        const newData: NodeData = { ...oldNode.data, attributes: newAttributes}
-        const newNode: Node = { ...oldNode, data: newData}
-    
-    
-        setNodes((nodes) => nodes.map((currentNode: Node) =>
+        setNodes((nodes: Node[]) => nodes.map((currentNode: Node) =>
         {
             if (currentNode.id === id)
             {
+                const newAttributes = currentNode.data.attributes.map((attribute: Attribute) =>
+                {
+                    if (attribute.name === oldAttribute.name)
+                    {
+                        return newAttribute
+                    }
+                    else
+                    {
+                        return attribute
+                    }
+                })
+
+                const newData: NodeData = { ...currentNode.data, attributes: newAttributes}
+                const newNode: Node = { ...currentNode, data: newData}
                 return newNode
             }
             else
@@ -176,35 +163,38 @@ const useEditItemDialog = () =>
     {
         // Find the right edge based on the old ID
         const oldID: string = createEdgeID(oldRelationship.source, oldRelationship.target, oldRelationship.name)
-        let oldEdge = edges.find(edge => edge.id === oldID)
+        // let oldEdge = edges.find(edge => edge.id === oldID)
     
-        if (!oldEdge)
-        {
-        return
-        }
+        // if (!oldEdge)
+        // {
+        //     return
+        // }
     
-        // Create an updated version of the old edge
-        const newData: EdgeData = {
-        ...oldEdge.data, description: newRelationship.description, cardinality: newRelationship.cardinality,
-        originalText: newRelationship.originalText}
-    
-        const newID = createEdgeID(newRelationship.source, newRelationship.target, newRelationship.name)
-    
-        // TODO: Is the user allowed to change source and target?
-        // If the source/target does not exist we need to create a new node
-        let newEdge: Edge = { ...oldEdge, id: newID, label: newRelationship.name, source: newRelationship.source,
-        target: newRelationship.target, data: newData}
+
     
         setEdges((edges) => edges.map((currentEdge : Edge) =>
         {
-        if (currentEdge.id === oldID)
-        {
-            return newEdge
-        }
-        else
-        {
-            return currentEdge
-        }
+            if (currentEdge.id === oldID)
+            {
+                const newData: EdgeData = {
+                    ...currentEdge.data, description: newRelationship.description, cardinality: newRelationship.cardinality,
+                    originalText: newRelationship.originalText
+                }
+                
+                const newID = createEdgeID(newRelationship.source, newRelationship.target, newRelationship.name)
+                
+                // TODO: Is the user allowed to change source and target?
+                // If the source/target does not exist we need to create a new node
+                let newEdge: Edge = {
+                    ...currentEdge, id: newID, label: newRelationship.name, source: newRelationship.source, target: newRelationship.target, data: newData
+                }
+                
+                return newEdge
+            }
+            else
+            {
+                return currentEdge
+            }
         }))
     }
 
@@ -221,21 +211,34 @@ const useEditItemDialog = () =>
             return
         }
 
-        if (regeneratedItem.hasOwnProperty(field))
+        setRegeneratedItem((previousRegeneratedItem: Item) =>
         {
-            setRegeneratedItem({...regeneratedItem, [field]: "" })
-        }
+            if (previousRegeneratedItem.hasOwnProperty(field))
+            {
+                return { ...previousRegeneratedItem, [field]: ""}   
+            }
+            
+            return previousRegeneratedItem
+        })
     }
     
     
     const onConfirmRegeneratedText = (field : Field) =>
     {
-        if (regeneratedItem.hasOwnProperty(field))
+        setRegeneratedItem((regeneratedItem: Item) =>
         {
-            // Set type to "any" because Typescript doesn't recognise that we already did the check
-            // Otherwise we need to write an if-statement for each field of type Item
-            setEditedSuggestedItem({...editedSuggestedItem, [field]: (regeneratedItem as any)[field]})
-        }
+            setEditedSuggestedItem((editedItem: Item) =>
+            {
+                // Set type to "any" because Typescript doesn't recognise that we already did the check
+                // Otherwise we need to write an if-statement for each field of type Item
+                if (regeneratedItem.hasOwnProperty(field))
+                {
+                    return {...editedItem, [field]: (regeneratedItem as any)[field]}
+                }
+                return editedItem
+            })
+            return regeneratedItem
+        })
 
         onClearRegeneratedItem(field, false)
     }
@@ -247,22 +250,22 @@ const useEditItemDialog = () =>
 
         if (itemType === ItemType.ATTRIBUTE)
         {
-        userChoice = UserChoice.ATTRIBUTES 
+            userChoice = UserChoice.ATTRIBUTES 
         }
         else if (itemType === ItemType.RELATIONSHIP)
         {
-        userChoice = UserChoice.RELATIONSHIPS
+            userChoice = UserChoice.RELATIONSHIPS
         }
 
         if (userChoice === UserChoice.ENTITIES)
         {
-        sourceEntity = name
+            sourceEntity = name
         }
 
         if (!sourceEntity) { sourceEntity = "" }
         if (!targetEntity) { targetEntity = "" }
 
-            const bodyData = JSON.stringify({
+        const bodyData = JSON.stringify({
             "name": name, "sourceEntity": sourceEntity, "targetEntity": targetEntity, "field": field, "userChoice": userChoice,
             "domainDescription": domainDescription
         })
@@ -271,7 +274,8 @@ const useEditItemDialog = () =>
         fetchStreamedDataGeneral(bodyData, name, field)
     }
 
-    const fetchStreamedDataGeneral = (bodyData : any, attributeName : string, field: Field) =>
+    // TODO: Put this fetch-function into a separate file
+    const fetchStreamedDataGeneral = (bodyData: any, attributeName: string, field: Field) =>
     {
         setIsLoadingEdit(_ => true)
 
@@ -323,13 +327,16 @@ const useEditItemDialog = () =>
 
     function onProcessStreamedDataGeneral(value: any, field: Field): void
     {
-      // Convert the `value` to a string
-      var jsonString = new TextDecoder().decode(value)
-      console.log(jsonString)
-      console.log("\n")
+        // Convert the `value` to a string
+        var jsonString = new TextDecoder().decode(value)
+        console.log(jsonString)
+        console.log("\n")
 
-      const parsedData = JSON.parse(jsonString)
-      setRegeneratedItem({...regeneratedItem, [field]: parsedData[field]})
+        const parsedData = JSON.parse(jsonString)
+        setRegeneratedItem((regeneratedItem) =>
+        {
+            return {...regeneratedItem, [field]: parsedData[field]}
+        })
     }
 
 
@@ -391,40 +398,32 @@ const useEditItemDialog = () =>
 
     const removeNode = (nodeID: string): void =>
     {
-        setNodes(nodes.filter(node => node.id !== nodeID))
+        setNodes((previousNodes) => previousNodes.filter(node => node.id !== nodeID))
     }
     
     
     const removeEdge = (edgeID: string): void =>
     {
-        setEdges(edges.filter(edge => edge.id !== edgeID))
+        setEdges((edges: Edge[]) => edges.filter(edge => edge.id !== edgeID))
     }
     
     
     const removeNodeAttribute = (attribute: Attribute): void =>
     {
         const nodeID: string = attribute.source
-        let oldNode = nodes.find(node => node.id === nodeID)
-    
-        if (!oldNode)
-        {
-          return
-        }
-    
-        const newAttributes = oldNode.data.attributes.filter((element: Attribute) => element.name !== attribute.name)
-        const newData: NodeData = { ...oldNode.data, attributes: newAttributes }
-        const newNode = { ...oldNode, data: newData }
-    
     
         setNodes((nodes) => nodes.map((currentNode : Node) =>
         {
             if (currentNode.id === nodeID)
             {
-            return newNode
+                const newAttributes = currentNode.data.attributes.filter((element: Attribute) => element.name !== attribute.name)
+                const newData: NodeData = { ...currentNode.data, attributes: newAttributes }
+                const newNode = { ...currentNode, data: newData }
+                return newNode
             }
             else
             {
-            return currentNode
+                return currentNode
             }
         }))
     }

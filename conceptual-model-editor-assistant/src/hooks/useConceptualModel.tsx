@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useNodesState, useEdgesState, addEdge, Node, Edge, useOnSelectionChange, OnConnect } from 'reactflow';
+import { Node, Edge, useOnSelectionChange } from 'reactflow';
 
 import 'reactflow/dist/style.css';
 import useUtility, { BASE_URL, HEADER, createEdgeID } from './useUtility';
@@ -14,12 +14,13 @@ const useConceptualModel = () =>
 {
   // const [nodes, setNodes, onNodesChange] = useNodesState([]);
   // const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const [nodes, setNodes] = useRecoilState(nodesState)
-  const [edges, setEdges] = useRecoilState(edgesState)
+  // const [nodes, setNodes] = useRecoilState(nodesState)
+  const setNodes = useSetRecoilState(nodesState)
+  const setEdges = useSetRecoilState(edgesState)
 
-  const [suggestedItems, setSuggestedItems] = useRecoilState(suggestedItemsState)
-  const [selectedSuggestedItem, setSelectedSuggestedItem] = useRecoilState<Item>(selectedSuggestedItemState)
-  const [editedSuggestedItem, setEditedSuggestedItem] = useRecoilState<Item>(editedSuggestedItemState)
+  const setSuggestedItems = useSetRecoilState(suggestedItemsState)
+  const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
+  const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
 
   const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
   const setIsDisableSave = useSetRecoilState(isDisableSaveState)
@@ -30,9 +31,9 @@ const useConceptualModel = () =>
   const domainDescription = useRecoilValue(domainDescriptionState)
 
 
-  // TODO: selectedNodes should be computed from the nodes
+  // TODO: selectedNodes should be derived from the nodes
   const [selectedNodes, setSelectedNodes] = useState<Node[]>([])
-  // TODO: selectedEdges should be computed from the edges
+  // TODO: selectedEdges should be derived from the edges
   const [selectedEdges, setSelectedEdges] = useState<Edge[]>([])
 
   const setIsShowEditDialog = useSetRecoilState(isShowEditDialog)
@@ -59,16 +60,16 @@ const useConceptualModel = () =>
 
   
   
-  const onChange = useCallback(({ nodes, edges } : { nodes : Node[], edges : Edge[]}) =>
-  {
-    setSelectedNodes(nodes)
-    setSelectedEdges(edges)
-  }, []);
+  // const onChange = useCallback(({ nodes, edges } : { nodes : Node[], edges : Edge[]}) =>
+  // {
+  //   setSelectedNodes(nodes)
+  //   setSelectedEdges(edges)
+  // }, []);
     
-  // On nodes/edges selection: https://codesandbox.io/p/sandbox/elegant-silence-gtg683?file=%2Fsrc%2FFlow.tsx%3A81%2C1
-  useOnSelectionChange({
-    onChange
-  });
+  // // On nodes/edges selection: https://codesandbox.io/p/sandbox/elegant-silence-gtg683?file=%2Fsrc%2FFlow.tsx%3A81%2C1
+  // useOnSelectionChange({
+  //   onChange
+  // });
 
   const parseSerializedConceptualModel = () =>
   {
@@ -462,40 +463,29 @@ const useConceptualModel = () =>
     parseSerializedConceptualModel()
   }, [domainDescription]);
 
-  useEffect(() =>
-  {
-    if (selectedNodes.length === 0)
-    {
-      return 
-    }
+  // useEffect(() =>
+  // {
+  //   if (selectedNodes.length === 0)
+  //   {
+  //     return 
+  //   }
 
-    // If the nodes update then also update selected nodes to work with the updated version of the nodes
-    setSelectedNodes((selectedNodes) => selectedNodes.map((currentSelectedNode : Node) =>
-    {
-      const node = nodes.find(node => node.id === currentSelectedNode.id)
+  //   // If the nodes update then also update selected nodes to work with the updated version of the nodes
+  //   setSelectedNodes((selectedNodes) => selectedNodes.map((currentSelectedNode : Node) =>
+  //   {
+  //     const node = nodes.find(node => node.id === currentSelectedNode.id)
 
-      if (!node)
-      {
-        return currentSelectedNode
-      }
-      else
-      {
-        return node
-      }
-    }));
+  //     if (!node)
+  //     {
+  //       return currentSelectedNode
+  //     }
+  //     else
+  //     {
+  //       return node
+  //     }
+  //   }));
 
-  }, [nodes]);
-
-
-  useEffect(() =>
-  {
-    let domainDescriptionText = document.getElementById("domainDescriptionText")
-
-    if (!domainDescriptionText)
-    {
-      return
-    }
-  }, [isIgnoreDomainDescription]);
+  // }, [nodes]);
 
 
   useEffect(() =>
@@ -539,16 +529,17 @@ const useConceptualModel = () =>
 
   const doesNodeAlreadyExist = (nodeID: string): boolean =>
   {
-    for (let i = 0; i < nodes.length; i++)
-    {
-      if (nodes[i].id === nodeID)
-      {
-        console.log("Node already exists")
-        return true
-      }
-    }
-
     return false
+    // for (let i = 0; i < nodes.length; i++)
+    // {
+    //   if (nodes[i].id === nodeID)
+    //   {
+    //     console.log("Node already exists")
+    //     return true
+    //   }
+    // }
+
+    // return false
   }
 
 
@@ -618,7 +609,7 @@ const useConceptualModel = () =>
   }
 
 
-  const OnClickAddNode = (nodeName : string) =>
+  const onClickAddNode = (nodeName : string) =>
   {
     if (!nodeName)
     {
@@ -668,15 +659,18 @@ const useConceptualModel = () =>
 
   const doesEdgeAlreadyExist = (edgeID: string): boolean =>
   {
-    for (let i = 0; i < edges.length; i++)
+    let result = false
+
+    setEdges((edges: Edge[]) => edges.map((edge: Edge) =>
     {
-      if (edges[i].id === edgeID)
+      if (edge.id === edgeID)
       {
-        return true
+        result = true 
       }
-    }
-    
-    return false
+      return edge
+    }))
+
+    return result
   }
 
 
@@ -733,123 +727,138 @@ const useConceptualModel = () =>
     })
   }
 
+  const onEditSuggestion = (itemID: number) : void =>
+  {
+    let suggestedItem: Item | null = null
 
-    
-
-
-
-    const onEditSuggestion = (itemID: number) : void =>
+    setSuggestedItems((items: Item[]) => items.map((item: Item) =>
     {
-      const suggestedItem = suggestedItems.find(item => item.ID === itemID)
-
-      if (!suggestedItem)
+      if (item.ID === itemID)
       {
-        alert("Error: unknown item ID")
+        suggestedItem = item
+      }
+
+      return item
+    }))
+
+
+    if (!suggestedItem)
+    {
+      throw new Error("Accessed invalid itemID")
+    }
+
+    setSelectedSuggestedItem(_ => suggestedItem as Item)
+    setEditedSuggestedItem(_ => suggestedItem as Item)
+    setIsSuggestedItem(_ => true)
+
+    setIsDisableSave(_ => false)
+    setIsDisableChange(_ => false)
+    setIsShowEditDialog(true)
+  }
+
+
+  const onEditItem = (item: Item) : void =>
+  {
+    setIsSuggestedItem(_ => false)
+    setIsDisableSave(_ => false)
+    setIsDisableChange(_ => false)
+    setSelectedSuggestedItem(_ => item)
+    setEditedSuggestedItem(_ => item)
+
+    setIsShowEditDialog(true)
+  }
+
+
+  const onAddItem = (item : Item) =>
+  {
+    console.log("Adding this item: ", item)
+
+    if (item.type === ItemType.ENTITY)
+    {
+      if (!item.name)
+      {
+        alert("Entity name cannot be empty")
         return
       }
 
-      setIsSuggestedItem(_ => true)
-      setIsDisableSave(_ => false)
-      setIsDisableChange(_ => false)
-      setSelectedSuggestedItem(_ => suggestedItem)
-      setEditedSuggestedItem(_ => suggestedItem)
-
-      setIsShowEditDialog(true)
+      addNodeEntity(item as Entity, 66, 66)
     }
-
-
-    const onEditItem = (item: Item) : void =>
+    else if (item.type === ItemType.ATTRIBUTE)
     {
-      setIsSuggestedItem(_ => false)
-      setIsDisableSave(_ => false)
-      setIsDisableChange(_ => false)
-      setSelectedSuggestedItem(_ => item)
-      setEditedSuggestedItem(_ => item)
-
-      setIsShowEditDialog(true)
+      onAddAttributesToNode(item as Attribute)
     }
-
-
-    const onAddItem = (item : Item) =>
+    else if (item.type === ItemType.RELATIONSHIP)
     {
-      console.log("Adding this item: ", item)
-  
-      if (item.type === ItemType.ENTITY)
-      {
-        if (!item.name)
-        {
-            alert("Entity name cannot be empty")
-            return
-        }
-
-        addNodeEntity(item as Entity, 66, 66)
-      }
-      else if (item.type === ItemType.ATTRIBUTE)
-      {
-        onAddAttributesToNode(item as Attribute)
-      }
-      else if (item.type === ItemType.RELATIONSHIP)
-      {
-        onAddRelationshipsToNodes(item as Relationship)
-      }
-      else
-      {
-        console.log("Unknown item type: ", item.type)
-      }
-  
+      onAddRelationshipsToNodes(item as Relationship)
     }
-
-
-
-    const onHighlightSingleItem = (itemID : number) =>
+    else
     {
-      // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
-      // TODO: probably move this function into file `useoriginalTextIndexes.tsx`
-
-      setIsShowHighlightDialog(_ => true)
-
-      // Find the suggested item with ID: itemID
-
-      const suggestedItem : Item | undefined = suggestedItems.find(item => item.ID === itemID);
-
-      if (!suggestedItem)
-      {
-        alert("Error: Suggested item not found by the given ID")
-        return
-      }
-
-      setSelectedSuggestedItem(suggestedItem)
-
-      setoriginalTextIndexesList(_ => suggestedItem.originalTextIndexes)
-
-      // Create tooltips for highlighted original text
-      let tooltip = ""
-
-      const capitalizedSourceEntity: string = capitalizeString((suggestedItem as Attribute).source)
-
-      if (suggestedItem.type === ItemType.ENTITY)
-      {
-        tooltip = `Entity: ${capitalizedSourceEntity}`
-      }
-      else if (suggestedItem.type === ItemType.ATTRIBUTE)
-      {
-        tooltip = `${capitalizedSourceEntity}: ${suggestedItem.name}`
-      }
-      else if (suggestedItem.type === ItemType.RELATIONSHIP)
-      {
-        tooltip = `${capitalizedSourceEntity} - ${suggestedItem.name} - ${(suggestedItem as Relationship).target}`
-      }
-
-      let newTooltips : string[] = Array(suggestedItem.originalTextIndexes.length).fill(tooltip)
-      setTooltips(newTooltips)
+      console.log("Unknown item type: ", item.type)
     }
+  }
+
+
+
+  const onHighlightSingleItem = (itemID : number) =>
+  {
+    // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
+    // TODO: probably move this function into file `useoriginalTextIndexes.tsx`
+
+    setIsShowHighlightDialog(_ => true)
+
+    // Find the suggested item with ID: itemID
+
+    let suggestedItem: Item | null = null
+
+    setSuggestedItems((items: Item[]) => items.map((item: Item) =>
+    {
+      if (item.ID === itemID)
+      {
+        suggestedItem = item
+      }
+
+      return item
+    }))
+
+
+    if (!suggestedItem)
+    {
+      throw new Error("Accessed invalid itemID")
+    }
+
+    suggestedItem = suggestedItem as Item
+    
+    setSelectedSuggestedItem(_ => suggestedItem as Item)
+    setoriginalTextIndexesList(_ => (suggestedItem as Item)[Field.ORIGINAL_TEXT_INDEXES])
+
+    // Create tooltips for highlighted original text
+    let tooltip = ""
+
+    const capitalizedSourceEntity: string = capitalizeString((suggestedItem as Attribute).source)
+
+    if (suggestedItem.type === ItemType.ENTITY)
+    {
+      tooltip = `Entity: ${capitalizedSourceEntity}`
+    }
+    else if (suggestedItem.type === ItemType.ATTRIBUTE)
+    {
+      tooltip = `${capitalizedSourceEntity}: ${suggestedItem.name}`
+    }
+    else if (suggestedItem.type === ItemType.RELATIONSHIP)
+    {
+      tooltip = `${capitalizedSourceEntity} - ${suggestedItem.name} - ${(suggestedItem as Relationship).target}`
+    }
+
+    let newTooltips : string[] = Array(suggestedItem.originalTextIndexes.length).fill(tooltip)
+    setTooltips(_ => newTooltips)
+  }
     
     
-    return { onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick,
-        capitalizeString, OnClickAddNode, onDomainDescriptionChange, onEditSuggestion, onHighlightSingleItem,
-        onOverlayDomainDescriptionOpen, onHighlightSelectedItems, onSummaryDescriptionsClick,
-        onAddNewEntity, onAddNewRelationship, onAddItem
-    }
+  return {
+    onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, capitalizeString,
+    onClickAddNode, onDomainDescriptionChange, onEditSuggestion, onHighlightSingleItem, onOverlayDomainDescriptionOpen, onHighlightSelectedItems,
+    onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem
+  }
 }
 
 export default useConceptualModel

@@ -11,7 +11,7 @@ import { RecoilRoot } from 'recoil';
 function App()
 {
   return (
-    <>
+    <RecoilRoot>
       <Topbar/>
 
       <ConceptualModel/>
@@ -23,16 +23,9 @@ function App()
       <DialogEditItem/>
 
       <DialogCreateEdge/>
-    </>
+    </RecoilRoot>
   );
 }
 
-const application = () => (
-  <ReactFlowProvider>
-    <RecoilRoot>
-      <App />
-    </RecoilRoot>
-  </ReactFlowProvider>
-);
 
-export default application
+export default App;
