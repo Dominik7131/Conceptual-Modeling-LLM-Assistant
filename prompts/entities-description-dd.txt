@@ -1,5 +1,5 @@
 Solely based on the given context provide description for the entity: "{source_entity}" and output it in this JSON object:
-{"{field_name}": "..."}.
+{"description": "..."}.
 
 		
 This is the given context:

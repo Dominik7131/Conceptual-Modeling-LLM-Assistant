@@ -1,2 +1,2 @@
-Output {items_count} entities that are usually in a conceptual model. Output these entities in a JSON format like this:
+Output exactly {items_count} random entities in a JSON format like this:
 {"description": "entity description", "name": "entity name"}.
