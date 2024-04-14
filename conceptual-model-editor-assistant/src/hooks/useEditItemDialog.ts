@@ -22,8 +22,6 @@ const useEditItemDialog = () =>
 
     const setIsLoadingEdit = useSetRecoilState(isLoadingEditState)
 
-    const { onAddItem } = useConceptualModel()
-
     const EDIT_ITEM_ENDPOINT = "getOnly"
     const EDIT_ITEM_URL = BASE_URL + EDIT_ITEM_ENDPOINT
 
@@ -425,7 +423,7 @@ const useEditItemDialog = () =>
         }))
     }
 
-    return { onAddItem, onSave, onClose, onGenerateField, onRemove, onItemEdit, onConfirmRegeneratedText, onChangeItemType, onClearRegeneratedItem }
+    return { onSave, onClose, onGenerateField, onRemove, onItemEdit, onConfirmRegeneratedText, onChangeItemType, onClearRegeneratedItem }
 }
 
 export default useEditItemDialog

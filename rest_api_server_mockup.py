@@ -267,4 +267,4 @@ def create_summary_mockup(entities : list[str]) -> list[dict]:
 
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(port=5000, threaded=True)

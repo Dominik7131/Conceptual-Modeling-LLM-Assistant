@@ -251,8 +251,7 @@ const useConceptualModel = () =>
 
   const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
   {
-    // TODO: isLoadingSuggestedItems is not being set correctly
-    // Possible reason: useConceptualModel hook is being instantiated more than 1 time and the instances are probably not synchronized?
+    // TODO: isLoadingSuggestedItemsState atom is not syncrhonized?
     if (isLoadingSuggestedItems)
     {
       alert("Another request is already being processed")
@@ -543,22 +542,22 @@ const useConceptualModel = () =>
   {
       if (doesNodeAlreadyExist(entity.name))
       {
-          alert(`Node '${entity.name}' already exists`)
-          return
+        alert(`Node '${entity.name}' already exists`)
+        return
       }
   
       const nodeData: NodeData = {
-          [Field.DESCRIPTION]: entity[Field.DESCRIPTION], [Field.ORIGINAL_TEXT]: entity[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: [], 
-          onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
+        [Field.DESCRIPTION]: entity[Field.DESCRIPTION], [Field.ORIGINAL_TEXT]: entity[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: [], 
+        onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
       }
   
       const newNode: Node = {
-          id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
-          data: nodeData
+        id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
+        data: nodeData
       }
   
       setNodes(previousNodes => {
-          return [...previousNodes, newNode]
+        return [...previousNodes, newNode]
       })
   }
 

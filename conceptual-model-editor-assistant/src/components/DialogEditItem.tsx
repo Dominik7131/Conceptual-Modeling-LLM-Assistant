@@ -17,13 +17,8 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useRecoilValue } from 'recoil';
 import { domainDescriptionState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from '../atoms';
 import useEditItemDialog from '../hooks/useEditItemDialog';
+import useConceptualModel from '../hooks/useConceptualModel';
 
-
-interface Props
-{
-    onClearSuggestion : (field: Field, clearAll: boolean) => void
-    onConfirmRegeneratedText : (field : Field) => void
-}
 
 const DialogEditItem: React.FC = () =>
 {
@@ -38,7 +33,8 @@ const DialogEditItem: React.FC = () =>
     const isDisableSave = useRecoilValue(isDisableSaveState)
     const isDisableChange = useRecoilValue(isDisableChangeState)
 
-    const { onAddItem, onSave, onClose, onRemove, onItemEdit, onGenerateField, onConfirmRegeneratedText, onClearRegeneratedItem, onChangeItemType } = useEditItemDialog()
+    const { onAddItem } = useConceptualModel()
+    const { onSave, onClose, onRemove, onItemEdit, onGenerateField, onConfirmRegeneratedText, onClearRegeneratedItem, onChangeItemType } = useEditItemDialog()
 
     const attribute = editedItem as Attribute
     const relationship = editedItem as Relationship

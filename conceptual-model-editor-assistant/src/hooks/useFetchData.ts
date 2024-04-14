@@ -3,6 +3,8 @@ import { Field, ItemType, SummaryObject } from "../interfaces";
 import { useSetRecoilState } from "recoil";
 import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState } from "../atoms";
 
+import axios from 'axios';
+
 
 interface Props
 {
