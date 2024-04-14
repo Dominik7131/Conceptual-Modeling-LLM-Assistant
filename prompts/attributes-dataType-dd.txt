@@ -1,0 +1,6 @@
+Solely based on the given context provide data type for the attribute: "{attribute_name}" of the entity: "{source_entity}" and output it in this JSON object:
+{"dataType": "..."}.
+
+
+This is the given context:
+"{domain_description}"
