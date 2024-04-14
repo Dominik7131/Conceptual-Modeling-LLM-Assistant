@@ -1,6 +1,6 @@
-import { atom } from 'recoil'
+import { atom, selector } from 'recoil'
 import { Field, Item, ItemType, SummaryObject } from './interfaces';
-import { Node, Edge, OnConnect, OnEdgesChange, OnNodesChange } from 'reactflow';
+import { Node, Edge } from 'reactflow';
 
 
 export const isShowEditDialogState = atom({
@@ -133,18 +133,29 @@ export const nodesState = atom<Node[]>({
     default: [],
 });
 
+
+// Possible optimization: save only indexes of the selected nodes
+export const selectedNodesState = selector<Node[]>({
+    key: "selectedNodesState",
+    get: ({get}) =>
+    {
+        const nodes = get(nodesState)
+        return nodes.filter((node) => node.selected)   
+    }
+})
+
 export const edgesState = atom<Edge[]>({
     key: 'edgesState',
     default: [],
 });
 
-export const selectedNodesState = atom<Node[]>({
-    key: 'selectedNodesState',
-    default: [],
-});
 
-export const selectedEdgesState = atom<Edge[]>({
-    key: 'selectedEdgesState',
-    default: [],
-});
+export const selectedEdgesState = selector<Edge[]>({
+    key: "selectedEdgesState",
+    get: ({get}) =>
+    {
+        const edges = get(edgesState)
+        return edges.filter((edge) => edge.selected)
+    }
+})
 

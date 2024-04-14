@@ -38,7 +38,6 @@ const Topbar: React.FC = () =>
 
     const [isHovered, setIsHovered] = useState<boolean>(false)
     const [tabValue, setTabValue] = useState<string>('0');
-    const [insertedNodeNameText, setInsertedNodeNameText] = useState<string>("")
 
     const { onAddNewEntity, onImportButtonClick, onSuggestItems, onSummaryButtonClick, onHighlightSelectedItems, onSummaryDescriptionsClick } = useConceptualModel()
     const { onIgnoreDomainDescriptionChange, onDomainDescriptionChange } = useDomainDescription()
@@ -122,6 +121,16 @@ const Topbar: React.FC = () =>
         
     }
 
+    const handleSummaryDescriptionClick = () =>
+    {
+        const isSummaryDescription: boolean = onSummaryDescriptionsClick()
+
+        if (isSummaryDescription)
+        {
+            setTabValue('2'); 
+        }
+    }
+
     const showMainLayout = () =>
     {
         return (
@@ -153,7 +162,7 @@ const Topbar: React.FC = () =>
 
                     <Stack direction="row" spacing={2}>
                         <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary 1</Button>
-                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={() => { setTabValue('2'); onSummaryDescriptionsClick() }}>Summary 2</Button>
+                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={ handleSummaryDescriptionClick }>Summary 2</Button>
                         <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<HighlightIcon/>} onClick={onHighlightSelectedItems}>{capitalizeString("Highlight original text")}</Button>
                     </Stack>
 

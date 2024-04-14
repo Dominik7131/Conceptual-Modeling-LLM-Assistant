@@ -64,13 +64,13 @@ def summary2():
     conceptual_model = body_data["conceptualModel"]
 
     def generate_mock_up():
-        time.sleep(2)
+        time.sleep(1)
         yield '{"entity": "engine","description": "An engine entity represents the power source of a vehicle.","attributes": [{"name": "engine type","description": "The type of engine, such as internal combustion, electric, etc."},{"name": "engine power","description": "The power output of the engine, typically measured in kilowatts (kW)."},{"name": "fuel type","description": "The type of fuel used by the engine, such as gasoline, diesel, electricity, etc."}]}\n'
-        time.sleep(2)
+        time.sleep(1)
         yield '{"relationship": "has", "sourceEntity": "course", "targetEntity": "professor", "description": "Courses have professors who teach them"}\n'
-        time.sleep(2)
+        time.sleep(1)
         yield '{"relationship": "enrolled in", "sourceEntity": "student", "targetEntity": "course", "description": "Students can be enrolled in any number of courses"}\n'
-        time.sleep(2)
+        time.sleep(1)
         yield '{"relationship": "accommodated in", "sourceEntity": "student", "targetEntity": "dormitory", "description": "Students can be accommodated in dormitories"}\n'
         return
 

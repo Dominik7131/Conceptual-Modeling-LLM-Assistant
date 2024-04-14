@@ -7,7 +7,7 @@ import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingSuggestedItemsState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, regeneratedItemState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from '../atoms';
+import { domainDescriptionState, edgesState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isLoadingSuggestedItemsState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, regeneratedItemState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from '../atoms';
 
 
 const useConceptualModel = () =>
@@ -25,11 +25,9 @@ const useConceptualModel = () =>
 
   const isLoadingSuggestedItems = useRecoilValue(isLoadingSuggestedItemsState)
 
-  const domainDescription = useRecoilValue(domainDescriptionState)
-
-
-  const setSelectedNodes = useSetRecoilState(selectedNodesState)
-  const setSelectedEdges = useSetRecoilState(selectedEdgesState)
+  const nodes = useRecoilValue(nodesState)
+  const selectedNodes = useRecoilValue(selectedNodesState)
+  const selectedEdges = useRecoilValue(selectedEdgesState)
 
   const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
   const setIsShowHighlightDialog = useSetRecoilState(isShowHighlightDialogState)
@@ -38,7 +36,9 @@ const useConceptualModel = () =>
   const setoriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
   const setTooltips = useSetRecoilState(tooltipsState)
 
-  const { isIgnoreDomainDescription, onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
+  const domainDescription = useRecoilValue(domainDescriptionState)
+  const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+  const { onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
 
   const { capitalizeString } = useUtility()
 
@@ -148,51 +148,39 @@ const useConceptualModel = () =>
       entities: []
     };
 
-    // Is this an anti-pattern?
-    // I need to iterate over `selectedNodes` however if I use them then the button calling this functions
-    // gets re-rendered every time a node is moved.
-    // So instead I use `setSelectedNodes` to get the current `selectedNodes`
-    setSelectedNodes((selectedNodes: Node[]) => selectedNodes.map((selectedNode: Node) =>
+    for (let node of selectedNodes)
     {
-      for (let node of selectedNodes)
-      {
-        let attributes = []
-        for (let attribute of node.data.attributes)
-        {
-          if (isOnlyNames)
-          {
-            attributes.push({[Field.NAME]: attribute.name})
-          }
-          else
-          {
-            attributes.push({[Field.NAME]: attribute.name, [Field.ORIGINAL_TEXT]: attribute.originalText})
-          }
-        }
-        result.entities.push({[Field.NAME]: node.id, attributes: attributes})
-      }
-
-      return selectedNode
-    }))
-
-
-    setSelectedEdges((selectedEdges: Edge[]) => selectedEdges.map((selectedEdge: Edge) =>
-    {
-      let relationships = []
-      for (let edge of selectedEdges)
+      let attributes = []
+      for (let attribute of node.data.attributes)
       {
         if (isOnlyNames)
         {
-          relationships.push({[Field.NAME]: edge.label, "sourceEntity": edge.source, "targetEntity": edge.target})
+          attributes.push({[Field.NAME]: attribute.name})
         }
         else
         {
-          relationships.push({[Field.NAME]: edge.label, [Field.ORIGINAL_TEXT]: edge.data.originalText, "sourceEntity": edge.source, "targetEntity": edge.target})
+          attributes.push({[Field.NAME]: attribute.name, [Field.ORIGINAL_TEXT]: attribute.originalText})
         }
       }
-      result.relationships = relationships
 
-      return selectedEdge
-    }))
+      result.entities.push({[Field.NAME]: node.id, attributes: attributes})
+    }
+
+
+    let relationships = []
+    for (let edge of selectedEdges)
+    {
+      if (isOnlyNames)
+      {
+        relationships.push({[Field.NAME]: edge.label, "sourceEntity": edge.source, "targetEntity": edge.target})
+      }
+      else
+      {
+        relationships.push({[Field.NAME]: edge.label, [Field.ORIGINAL_TEXT]: edge.data.originalText, "sourceEntity": edge.source, "targetEntity": edge.target})
+      }
+    }
+
+    result.relationships = relationships
 
     return result
   }
@@ -351,20 +339,12 @@ const useConceptualModel = () =>
   }
 
 
-  const onSummaryDescriptionsClick = () : void =>
+  const onSummaryDescriptionsClick = () : boolean =>
   {
-    let selectedNodesLength = 0
-    setSelectedNodes((selectedNodes =>
-    {
-      console.log("SN: ", selectedNodes)
-      selectedNodesLength = selectedNodes.length
-      return selectedNodes
-    }))
-
-    if (selectedNodesLength === 0)
+    if (selectedNodes.length === 0)
     {
       alert("Nothing was selected")
-      return
+      return false
     }
 
     const endpoint = BASE_URL + "summary2"
@@ -372,94 +352,111 @@ const useConceptualModel = () =>
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
     fetchSummaryDescriptions(endpoint, HEADER, bodyData)
+    return true
   }
 
 
-  const onHighlightSelectedItems = () =>
+  const onHighlightSelectedItems = (): void =>
   {
-    alert("This code needs to be fixed")
-    
-    // let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []
+    let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []
 
     // Process all selected nodes
-    // for (let i = 0; i < selectedNodes.length; i++)
-    // {
-    //   // Process each attribute for the given entity
-    //   const entityName: string = capitalizeString(selectedNodes[i].id)
-    //   for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
-    //   {
-    //     const element = selectedNodes[i].data.attributes[j];
+    for (let i = 0; i < selectedNodes.length; i++)
+    {
+      // Process each attribute for the given entity
+      const entityName: string = capitalizeString(selectedNodes[i].id)
+      for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
+      {
+        const element = selectedNodes[i].data.attributes[j];
 
-    //     if (!element.originalTextIndexes)
-    //     {
-    //       continue
-    //     }
+        if (!element.originalTextIndexes)
+        {
+          continue
+        }
 
-    //     // Process each original text indexes for the given attribute
-    //     for (let k = 0; k < element.originalTextIndexes.length; k += 2)
-    //     {
-    //       const ii1: number = element.originalTextIndexes[k]
-    //       const ii2: number = element.originalTextIndexes[k + 1]
+        // Process each original text indexes for the given attribute
+        for (let k = 0; k < element.originalTextIndexes.length; k += 2)
+        {
+          const ii1: number = element.originalTextIndexes[k]
+          const ii2: number = element.originalTextIndexes[k + 1]
 
-    //       originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${entityName}: ${element.name}`} )
-    //     }
-    //   }
-
-
-    //   if (!selectedNodes[i].data.originalTextIndexes)
-    //   {
-    //     continue
-    //   }
-
-    //   // Process each original text indexes for the given entity 
-    //   for (let k = 0; k < selectedNodes[i].data.originalTextIndexes.length; k += 2)
-    //   {
-    //     const ii1 : number = selectedNodes[i].data.originalTextIndexes[k]
-    //     const ii2 : number = selectedNodes[i].data.originalTextIndexes[k + 1]
-
-    //     originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Entity: ${selectedNodes[i].id}`} )
-    //   }
-    // }
-
-    // // Process also all selected edges
-    // for (let i = 0; i < selectedEdges.length; i++)
-    // {
-    //   if (!selectedEdges[i].data.originalTextIndexes)
-    //   {
-    //     continue
-    //   }
-
-    //   // Process each original text indexes for the given edge 
-    //   for (let k = 0; k < selectedEdges[i].data.originalTextIndexes.length; k += 2)
-    //   {
-    //     const ii1 : number = selectedEdges[i].data.originalTextIndexes[k]
-    //     const ii2 : number = selectedEdges[i].data.originalTextIndexes[k + 1]
-
-    //     originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${selectedEdges[i].source} – ${selectedEdges[i].data.name} – ${selectedEdges[i].target}`} )
-    //   }
-    // }
-
-    // const endpoint = "merge_original_texts"
-    // const url = BASE_URL + endpoint
-    // const headers = { "Content-Type": "application/json" }
-    // const bodyData = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects})
-
-    // fetchMergedOriginalTexts(url, headers, bodyData)
+          originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${entityName}: ${element.name}`} )
+        }
+      }
 
 
-    // setIsShowHighlightDialog(true)
+      if (!selectedNodes[i].data.originalTextIndexes)
+      {
+        continue
+      }
+
+      // Process each original text indexes for the given entity 
+      for (let k = 0; k < selectedNodes[i].data.originalTextIndexes.length; k += 2)
+      {
+        const ii1 : number = selectedNodes[i].data.originalTextIndexes[k]
+        const ii2 : number = selectedNodes[i].data.originalTextIndexes[k + 1]
+
+        originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Entity: ${selectedNodes[i].id}`} )
+      }
+    }
+
+    // Process also all selected edges
+    for (let i = 0; i < selectedEdges.length; i++)
+    {
+      if (!selectedEdges[i].data.originalTextIndexes)
+      {
+        continue
+      }
+
+      // Process each original text indexes for the given edge 
+      for (let k = 0; k < selectedEdges[i].data.originalTextIndexes.length; k += 2)
+      {
+        const ii1 : number = selectedEdges[i].data.originalTextIndexes[k]
+        const ii2 : number = selectedEdges[i].data.originalTextIndexes[k + 1]
+
+        originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${selectedEdges[i].source} – ${selectedEdges[i].data.name} – ${selectedEdges[i].target}`} )
+      }
+    }
+
+    const endpoint = "merge_original_texts"
+    const url = BASE_URL + endpoint
+    const headers = { "Content-Type": "application/json" }
+    const bodyData = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects})
+
+    fetchMergedOriginalTexts(url, headers, bodyData)
+
+
+    setIsShowHighlightDialog(true)
   }
+
+
+  const updateNodes = () =>
+  {
+    setNodes((nodes) => nodes.map((currentNode : Node) =>
+    {
+      const updatedData = { ...currentNode.data, onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute }
+      const updatedNode: Node = { ...currentNode, data: updatedData }
+      return updatedNode
+    }))
+  }
+
+  const updateEdges = () =>
+  {
+    setEdges((edges) => edges.map((currentEdge : Edge) =>
+    {
+      const updatedData = { ...currentEdge.data, onEdit: onEditItem }
+      const updatedEdge: Edge = { ...currentEdge, data: updatedData }
+      return updatedEdge
+    }))
+  }
+
 
   useEffect(() =>
   {
-    // Dependency: domain description
-    // Otherwise when suggesting attributes/relationships through function in node.data.suggestItems(...)
-    // The function doesn't know about the newest domain description
-
-    // Note: But now when domain description changes it resets our whole conceptual model
-    // Also when adding a new entities and then changing domain description these entities won't get updated
-
-    parseSerializedConceptualModel()
+    // TODO: Let the functions inside the `data` of nodes and edges update automatically on every re-render
+    // of the component `ConceptualModel` without an useEffect hook
+    updateNodes()
+    updateEdges()
   }, [domainDescription, isIgnoreDomainDescription])
 
 
@@ -493,17 +490,16 @@ const useConceptualModel = () =>
 
   const doesNodeAlreadyExist = (nodeID: string): boolean =>
   {
-    return false
-    // for (let i = 0; i < nodes.length; i++)
-    // {
-    //   if (nodes[i].id === nodeID)
-    //   {
-    //     console.log("Node already exists")
-    //     return true
-    //   }
-    // }
+    for (let i = 0; i < nodes.length; i++)
+    {
+      if (nodes[i].id === nodeID)
+      {
+        console.log("Node already exists")
+        return true
+      }
+    }
 
-    // return false
+    return false
   }
 
 
@@ -819,6 +815,7 @@ const useConceptualModel = () =>
     
     
   return {
+    parseSerializedConceptualModel, 
     onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, capitalizeString,
     onClickAddNode, onDomainDescriptionChange, onEditSuggestion, onHighlightSingleItem, onOverlayDomainDescriptionOpen, onHighlightSelectedItems,
     onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem

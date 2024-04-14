@@ -53,7 +53,7 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) =>
     {
       setAnchorEl(event.currentTarget);
-    };
+    }
 
     const handleClose = () =>
     {

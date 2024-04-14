@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react"
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms";
 
 
 const useDomainDescription = () =>
 {
-  const [domainDescription, setDomainDescription] = useRecoilState(domainDescriptionState);
-  const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useRecoilState(isIgnoreDomainDescriptionState);
+  const setDomainDescription = useSetRecoilState(domainDescriptionState);
+  const setIsIgnoreDomainDescription = useSetRecoilState(isIgnoreDomainDescriptionState);
   
 
   const onDomainDescriptionChange = (newText : string) =>
@@ -36,7 +36,7 @@ const useDomainDescription = () =>
     loadDomainDescriptionFromFile()
   }, []);
 
-  return { domainDescription, isIgnoreDomainDescription, onDomainDescriptionChange, onIgnoreDomainDescriptionChange }
+  return { onDomainDescriptionChange, onIgnoreDomainDescriptionChange }
 }
 
 export default useDomainDescription
