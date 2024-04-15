@@ -36,10 +36,9 @@ const Topbar: React.FC = () =>
     const summary = useRecoilValue(summaryTextState)
     const summaryDescriptions = useRecoilValue(summaryDescriptionsState)
 
-    const [isHovered, setIsHovered] = useState<boolean>(false)
     const [tabValue, setTabValue] = useState<string>('0');
 
-    const { onAddNewEntity, onImportButtonClick, onSuggestItems, onSummaryButtonClick, onHighlightSelectedItems, onSummaryDescriptionsClick } = useConceptualModel()
+    const { onAddNewEntity, onSuggestItems, onSummaryButtonClick, onHighlightSelectedItems, onSummaryDescriptionsClick, onExport } = useConceptualModel()
     const { onIgnoreDomainDescriptionChange, onDomainDescriptionChange } = useDomainDescription()
 
 
@@ -169,7 +168,7 @@ const Topbar: React.FC = () =>
                     <Stack direction="row" spacing={2}>
                         <FileUploader/>
 
-                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} startIcon={<DownloadIcon/>} onClick={() => console.log("Not implemented")}>
+                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} startIcon={<DownloadIcon/>} onClick={onExport}>
                             Export
                         </Button>
                     </Stack>

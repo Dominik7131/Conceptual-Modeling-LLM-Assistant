@@ -165,6 +165,29 @@ const useConceptualModel = () =>
     setEdges(() => { return newEdges })
   }
 
+  const convertConceptualModelToJson = (): string =>
+  {
+    // Iterate over each node to get all "classes" and "attributes"
+
+    // Iterate over each edge to get all "relationships" and "generalizations"
+    return '{"classes": [{"iri": "engine-iri", "title": "engine", "description": ""}]}'
+  }
+
+
+  const onExport = () =>
+  {
+    const content = convertConceptualModelToJson()
+    const blob = new Blob([content], { type: 'text/plain' })
+    const url = URL.createObjectURL(blob)
+    
+    const link = document.createElement('a')
+    link.href = url
+    link.download = "export.json"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
 
   const parseSerializedConceptualModel = () =>
   {
@@ -932,7 +955,7 @@ const useConceptualModel = () =>
     parseSerializedConceptualModel, 
     onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, capitalizeString,
     onClickAddNode, onDomainDescriptionChange, onEditSuggestion, onHighlightSingleItem, onOverlayDomainDescriptionOpen, onHighlightSelectedItems,
-    onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem, onImport
+    onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem, onImport, onExport
   }
 }
 
