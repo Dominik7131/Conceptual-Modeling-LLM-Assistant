@@ -425,7 +425,6 @@ const useConceptualModel = () =>
     sourceItemName = sourceItemName !== null ? sourceItemName : ""
     targetItemName = targetItemName !== null ? targetItemName : ""
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
-    console.log("Body data: ", bodyData)
 
     fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, sourceItemName, itemType)
   }

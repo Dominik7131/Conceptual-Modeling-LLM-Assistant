@@ -1,10 +1,10 @@
 import os
-from llama_cpp import Llama
 from text_utility import Field, PromptFileSymbols, TextUtility, UserChoice, DataType
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
 import logging
 import json
+import openai
 
 
 ITEMS_COUNT = 5
@@ -16,12 +16,13 @@ IS_RELATIONSHIPS_IS_A = False
 
 IS_STOP_GENERATING_OUTPUT = False
 
-CONFIG_FILE_PATH = "llm-config.json"
 TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
 LOG_FILE_PATH = f"{TIMESTAMP}-log.txt"
 
 PROMPT_DIRECTORY = "prompts"
 SYSTEM_PROMPT_DIRECTORY = os.path.join(PROMPT_DIRECTORY, "system")
+
+LLM_BACKEND_URL = "http://localhost:8080/v1"
 
 
 DEFINED_DATA_TYPES = [DataType.STRING.value, DataType.NUMBER.value, DataType.TIME.value, DataType.BOOLEAN.value]
@@ -30,19 +31,9 @@ logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE
 
 
 class LLMAssistant:
-    def __init__(self):
-        # Larger batch_size will process the prompt faster but will require more memory.
-        # If you have enough GPU memory to fit the model, setting threads=1 can improve performance.
+    def __init__(self):   
 
-        with open(CONFIG_FILE_PATH, 'r') as file:
-            config = json.load(file)
-    
-        model_path = config['model_path']
-        model_type = config['model_type']
-        context_size = config['context_size']
-        n_batch = config['n_batch']
-
-        self.llm = Llama(model_path=model_path, chat_format=model_type, n_gpu_layers=-1, n_ctx=context_size, n_batch=n_batch, verbose=True)
+        self.client = openai.OpenAI(base_url=LLM_BACKEND_URL, api_key = "sk-no-key-required")
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             # Assumption: domain description never changes
@@ -50,7 +41,8 @@ class LLMAssistant:
             self.relevant_text_finder = RelevantTextFinderLemmatization()
         
         self.debug_info = self.DebugInfo()
-    
+
+
     class DebugInfo:
         def __init__(self):
             self.prompt = ""
@@ -67,7 +59,7 @@ class LLMAssistant:
 
         prompt_file_path = os.path.join(SYSTEM_PROMPT_DIRECTORY, prompt_file_name)
 
-        with open(prompt_file_name, 'r') as file:
+        with open(prompt_file_path, 'r') as file:
             system_prompt = file.read()
         
         return system_prompt
@@ -234,7 +226,8 @@ class LLMAssistant:
     def __parse_streamed_output(self, messages, user_choice, source_entity, target_entity="", field_name=""):
         self.debug_info = self.DebugInfo() # Reset debug info
 
-        self.llm.reset()
+        # TODO: Do we need to specify the model name?
+        output = self.client.chat.completions.create(messages=messages, model="llama-2-7b-chat.Q4_K_M.gguf", stream=True, temperature=0)
 
         items = []
         item = ""
@@ -243,24 +236,13 @@ class LLMAssistant:
         self.end_parsing_prematurely = False
         opened_curly_brackets_count = 0
 
-        # For debugging purposes generate whole text first because there might be some bug on my side when parsing text on the fly
-        is_generate_content_first = False
-
-        if is_generate_content_first:
-            output = self.llm.create_chat_completion(messages=messages, temperature=0)
-            logging.debug(f"Output: {output}\n")
-            output = output['choices'][0]['message']['content']
-        else:
-            output = self.llm.create_chat_completion(messages=messages, temperature=0, stream=True)
-
 
         for text in output:
 
-            if not is_generate_content_first:
-                if not 'content' in text['choices'][0]['delta']:
-                    continue
-                text = text['choices'][0]['delta']['content']
+            if text.choices[0].delta.content is None:
+                continue
 
+            text = text.choices[0].delta.content
 
             self.debug_info.assistant_message += text
 
@@ -344,7 +326,7 @@ class LLMAssistant:
         if is_domain_description:
             prompt_file_name += "-dd"
         
-        if is_chain_of_thoughts:
+        if field_name == "" and is_chain_of_thoughts:
             prompt_file_name += "-cot"
 
         prompt_file_name += ".txt"
@@ -534,4 +516,3 @@ class LLMAssistant:
             json_item = json.dumps(dictionary)
             print(f"Yielding: {json_item}")
             yield f"{json_item}\n"
-    

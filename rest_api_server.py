@@ -8,6 +8,7 @@ import time
 app = Flask(__name__)
 llm_assistant = None
 
+# TODO: Maybe I am not setting the response header correctly?
 # CORS error from frontend solution: https://stackoverflow.com/a/33091782
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type' 
@@ -37,8 +38,6 @@ def generate_single_field():
     field = body_data["field"]
     domain_description = body_data["domainDescription"]
     user_choice = body_data["userChoice"]
-
-    print(field)
 
     return llm_assistant.generate_single_field(user_choice, name, source_entity, target_entity, domain_description, field)
 
@@ -81,4 +80,4 @@ def merge_original_texts():
 if __name__ == '__main__':
     llm_assistant = LLMAssistant()
 
-    app.run(port=5000) # host="0.0.0.0"
+    app.run(port=5000, threaded=True) # host="0.0.0.0"
