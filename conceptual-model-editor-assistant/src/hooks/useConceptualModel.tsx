@@ -5,7 +5,7 @@ import 'reactflow/dist/style.css';
 import useUtility, { BASE_URL, HEADER, createEdgeID } from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
-import { Attribute, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, UserChoice } from '../interfaces';
+import { Attribute, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, RelationshipJson, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { domainDescriptionState, edgesState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isLoadingSuggestedItemsState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, regeneratedItemState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from '../atoms';
 
@@ -97,7 +97,7 @@ const useConceptualModel = () =>
     setNodes(() => { return newNodes })
 
 
-    for (const [key, attribute] of Object.entries(conceptualModelJson.attributes))
+    for (const [_, attribute] of Object.entries(conceptualModelJson.attributes))
     {
       const sourceEntityLowerCase = attribute.domain.toLowerCase()
       const attributeNameLowerCase = attribute.title.toLowerCase()
@@ -120,22 +120,47 @@ const useConceptualModel = () =>
       }
     }
   
-    for (const [key, relationship] of Object.entries(conceptualModelJson.relationships))
+    for (const [_, relationship] of Object.entries(conceptualModelJson.relationships))
     {
       // const newRelationship: Relationship = { }
       const relationshipNameLowerCase = relationship.title.toLowerCase()
       const sourceEntityLowerCase = relationship.domain.toLowerCase()
       const targetEntityLowerCase = relationship.range.toLowerCase()
 
+      const edgeData: EdgeData = {
+        [Field.ID]: 0, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
+        onEdit: onEditItem
+      }
+
       const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, relationshipNameLowerCase)
       const newEdge : Edge = {
-        id: newID, source: relationship.source, target: relationship.target, label: relationship.name, type: "custom-edge",
-        data: { description: "", originalText: relationship.originalText, onEdit: onEditItem }
+        id: newID, source: sourceEntityLowerCase, target: targetEntityLowerCase, label: relationshipNameLowerCase, type: "custom-edge",
+        data: edgeData
       }
+
       newEdges.push(newEdge)
     }
 
-    // TODO: handle generalizations
+    for (const [_, relationship] of Object.entries(conceptualModelJson.generalizations))
+    {
+      // const newRelationship: Relationship = { }
+      const relationshipNameLowerCase = relationship.title.toLowerCase()
+      const sourceEntityLowerCase = relationship.specialClass.toLowerCase()
+      const targetEntityLowerCase = relationship.generalClass.toLowerCase()
+
+      const edgeData: EdgeData = {
+        [Field.ID]: 0, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
+        onEdit: onEditItem
+      }
+
+      const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, relationshipNameLowerCase)
+      const newEdge : Edge = {
+        id: newID, source: sourceEntityLowerCase, target: targetEntityLowerCase, label: relationshipNameLowerCase, type: "custom-edge",
+        data: edgeData
+      }
+
+      newEdges.push(newEdge)
+    }
 
     setEdges(() => { return newEdges })
   }

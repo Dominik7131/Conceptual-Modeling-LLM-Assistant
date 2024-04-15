@@ -133,11 +133,11 @@ interface DomainRangeJson
   rangeCardinality: "optional-one" | "one" | "many"
 }
 
-export interface AttributesJson extends ItemJson, DomainRangeJson { }
+export interface AttributeJson extends ItemJson, DomainRangeJson { }
 
-export interface RelationshipsJson extends ItemJson, DomainRangeJson { }
+export interface RelationshipJson extends ItemJson, DomainRangeJson { }
 
-export interface GeneralizationsJson extends ItemJson
+export interface GeneralizationJson extends ItemJson
 {
   generalClass: string
   specialClass: string
@@ -146,7 +146,7 @@ export interface GeneralizationsJson extends ItemJson
 export interface ConceptualModelJson
 {
   classes: ClassesJson[]
-  attributes: any[]
-  relationships: any[]
-  generalizations: any[]
+  attributes: AttributeJson[]
+  relationships: RelationshipJson[]
+  generalizations: GeneralizationJson[]
 }
