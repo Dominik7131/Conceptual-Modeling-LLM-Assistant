@@ -20,8 +20,6 @@ const useEditItemDialog = () =>
     const domainDescription = useRecoilValue(domainDescriptionState)
     const setFieldToLoad = useSetRecoilState(fieldToLoadState)
 
-    const setIsLoadingEdit = useSetRecoilState(isLoadingEditState)
-
     const EDIT_ITEM_ENDPOINT = "getOnly"
     const EDIT_ITEM_URL = BASE_URL + EDIT_ITEM_ENDPOINT
 
@@ -271,15 +269,13 @@ const useEditItemDialog = () =>
             "domainDescription": domainDescription
         })
 
-        setFieldToLoad(field)
+        setFieldToLoad(fieldsToLoad => [...fieldsToLoad, field])
         fetchStreamedDataGeneral(bodyData, name, field)
     }
 
     // TODO: Put this fetch-function into a separate file
     const fetchStreamedDataGeneral = (bodyData: any, attributeName: string, field: Field) =>
     {
-        setIsLoadingEdit(_ => true)
-
         fetch(EDIT_ITEM_URL, { method: "POST", headers: HEADER, body: bodyData })
         .then(response =>
         {
@@ -288,7 +284,7 @@ const useEditItemDialog = () =>
             if (stream === null)
             {
                 console.log("Stream is null")
-                setIsLoadingEdit(_ => false)
+                setFieldToLoad(fields => fields.filter(currentField => currentField !== field))
                 return
             }
 
@@ -302,25 +298,25 @@ const useEditItemDialog = () =>
                         if (done)
                         {
                             console.log("Stream finished")
-                            setIsLoadingEdit(_ => false)
+                            setFieldToLoad(fields => fields.filter(currentField => currentField !== field))
                             return
                         }
 
                         onProcessStreamedDataGeneral(value, field)
                         
-                        readChunk(); 
+                        readChunk()
                     })
                     .catch(error =>
                     {
                         console.error(error);
-                    });
-            };
-            readChunk(); // Start reading the first chunk
+                        setFieldToLoad(fields => fields.filter(currentField => currentField !== field))
+                    })
+            }
+            readChunk() // Start reading the first chunk
         })
         .catch(error =>
         {
             console.error(error);
-            setIsLoadingEdit(_ => false)
             alert("Error: request failed")
         });
     }

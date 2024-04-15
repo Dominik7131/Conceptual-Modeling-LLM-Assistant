@@ -34,9 +34,9 @@ export const domainDescriptionState = atom({
     default: "",
 });
 
-export const fieldToLoadState = atom<Field>({
+export const fieldToLoadState = atom<Field[]>({
     key: 'fieldToLoadState',
-    default: Field.ID,
+    default: [],
 });
 
 

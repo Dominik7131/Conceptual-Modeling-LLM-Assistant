@@ -1,21 +1,18 @@
 import { useState } from "react";
 import { Field, ItemType, SummaryObject } from "../interfaces";
 import { useSetRecoilState } from "recoil";
-import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState } from "../atoms";
-
-import axios from 'axios';
+import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, suggestedItemsState, summaryDescriptionsState, summaryTextState } from "../atoms";
 
 
 interface Props
 {
-  onProcessStreamedData : (value: any, sourceEntityName: string, itemType: ItemType) => void
-  onProcessMergedOriginalTexts : (data: any) => void
+  onProcessStreamedData: (value: any, sourceEntityName: string, itemType: ItemType) => void
+  onProcessMergedOriginalTexts: (data: any) => void
 }
 
-const useFetchData = ({onProcessStreamedData, onProcessMergedOriginalTexts} : Props) =>
+const useFetchData = ({onProcessStreamedData, onProcessMergedOriginalTexts}: Props) =>
 {
     // TODO: Split all fetch data methods to a separate files
-    // But first implement fetching with axios library
     const setIsLoadingSuggestedItems = useSetRecoilState(isLoadingSuggestedItemsState)
     const setIsLoadingSummary1 = useSetRecoilState(isLoadingSummary1State)
     const setIsLoadingSummaryDescriptions = useSetRecoilState(isLoadingSummaryDescriptionsState)
@@ -23,8 +20,10 @@ const useFetchData = ({onProcessStreamedData, onProcessMergedOriginalTexts} : Pr
     const setSummaryText = useSetRecoilState(summaryTextState)
     const setSummaryDescriptions = useSetRecoilState(summaryDescriptionsState)
 
+    const setSuggestedItems = useSetRecoilState(suggestedItemsState)
 
-    const fetchStreamedData = (url : string, headers : any, bodyData : any, sourceEntityName: string, itemType : ItemType) =>
+
+    const fetchStreamedData = (url: string, headers: any, bodyData: any, sourceEntityName: string, itemType: ItemType) =>
     {
       // TODO: add object interface for header and bodyData
 
@@ -32,10 +31,16 @@ const useFetchData = ({onProcessStreamedData, onProcessMergedOriginalTexts} : Pr
       // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
 
       setIsLoadingSuggestedItems(_ => true)
+
+      const controller = new AbortController()
+      const signal = controller.signal
       
-      fetch(url, { method: "POST", headers, body: bodyData })
+      fetch(url, { method: "POST", headers, body: bodyData, signal: signal })
       .then(response =>
         {
+          // Reset all suggested items
+          setSuggestedItems(_ => [])
+
           setIsLoadingSuggestedItems(_ => true)
           const stream = response.body; // Get the readable stream from the response body
 
@@ -63,7 +68,7 @@ const useFetchData = ({onProcessStreamedData, onProcessMergedOriginalTexts} : Pr
                       onProcessStreamedData(value, sourceEntityName, itemType)
 
                       // Read the next chunk
-                      readChunk();
+                      readChunk()
                   })
                   .catch(error =>
                   {

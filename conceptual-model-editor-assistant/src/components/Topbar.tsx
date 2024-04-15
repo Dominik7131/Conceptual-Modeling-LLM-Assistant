@@ -177,7 +177,7 @@ const Topbar: React.FC = () =>
         )
     }
 
-    const handleChange = (newValue: string) =>
+    const handleChange = (event: React.SyntheticEvent, newValue: string) =>
     {
         setTabValue(newValue);
     }
@@ -189,7 +189,7 @@ const Topbar: React.FC = () =>
         <Box sx={{ width: `${topBarWidth}%`, height: `${heightPx}px`, overflow: 'auto', typography: 'body1' }}>
             <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList onChange={() => handleChange}>
+                    <TabList onChange={ handleChange }>
                         <Tab sx={{textTransform: "capitalize"}} label="Main" value="0" />
                         <Tab sx={{textTransform: "capitalize"}} label="Summary 1" value="1" />
                         <Tab sx={{textTransform: "capitalize"}} label="Summary 2" value="2" />

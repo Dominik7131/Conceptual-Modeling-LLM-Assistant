@@ -5,9 +5,9 @@ import 'reactflow/dist/style.css';
 import useUtility, { BASE_URL, HEADER, createEdgeID } from './useUtility';
 import useDomainDescription from './useDomainDescription';
 import useFetchData from './useFetchData';
-import { Attribute, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, RelationshipJson, UserChoice } from '../interfaces';
+import { Attribute, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isLoadingSuggestedItemsState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, regeneratedItemState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from '../atoms';
+import { domainDescriptionState, edgesState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from '../atoms';
 
 
 const useConceptualModel = () =>
@@ -22,8 +22,6 @@ const useConceptualModel = () =>
   const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
   const setIsDisableSave = useSetRecoilState(isDisableSaveState)
   const setIsDisableChange = useSetRecoilState(isDisableChangeState)
-
-  const isLoadingSuggestedItems = useRecoilValue(isLoadingSuggestedItemsState)
 
   const nodes = useRecoilValue(nodesState)
   const selectedNodes = useRecoilValue(selectedNodesState)
@@ -400,16 +398,6 @@ const useConceptualModel = () =>
 
   const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
   {
-    // TODO: isLoadingSuggestedItemsState atom is not syncrhonized?
-    if (isLoadingSuggestedItems)
-    {
-      alert("Another request is already being processed")
-      return
-    }
-
-    // Reset all suggested items
-    setSuggestedItems(_ => [])
-
     const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
 
     let itemType = ItemType.ENTITY
@@ -639,7 +627,7 @@ const useConceptualModel = () =>
   {
     for (let i = 0; i < nodes.length; i++)
     {
-      if (nodes[i].id === nodeID)
+      if (nodes[i].id === nodeID.toLowerCase())
       {
         console.log("Node already exists")
         return true
