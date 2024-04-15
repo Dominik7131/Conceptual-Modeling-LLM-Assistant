@@ -52,9 +52,7 @@ export interface SummaryObject
 
 export interface NodeData
 {
-  [Field.DESCRIPTION]: string
-  [Field.ORIGINAL_TEXT]: string
-  [Field.ORIGINAL_TEXT_INDEXES]: number[]
+  entity: Entity
   attributes: Attribute[]
   onEdit: (item: Item) => void
   onSuggestItems: (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null) => void
@@ -63,11 +61,7 @@ export interface NodeData
 
 export interface EdgeData
 {
-  [Field.ID]: number
-  [Field.DESCRIPTION]: string
-  [Field.ORIGINAL_TEXT]: string
-  [Field.ORIGINAL_TEXT_INDEXES]: number[]
-  [Field.CARDINALITY]: string
+  relationship: Relationship
   onEdit: (item: Item) => void
 }
 

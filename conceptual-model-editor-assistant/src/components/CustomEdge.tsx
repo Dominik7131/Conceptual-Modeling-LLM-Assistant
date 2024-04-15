@@ -10,7 +10,7 @@ import useUtility from '../hooks/useUtility';
 
 // Inspiration: https://reactflow.dev/learn/customization/custom-edges
 // List of available props: https://reactflow.dev/api-reference/types/edge-props
-export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targetPosition, targetX, targetY, source, target, selected, label, data }: EdgeProps) : JSX.Element
+export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targetPosition, targetX, targetY, selected, data }: EdgeProps) : JSX.Element
 {
   const [isHovered, setIsHovered] = useState<boolean>(false)
   // const [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
@@ -18,17 +18,13 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
 
   const { capitalizeString } = useUtility()
 
-  const edgeData : EdgeData = data as EdgeData
+  const edgeData: EdgeData = data as EdgeData
+  const relationship: Relationship = edgeData.relationship
 
 
   const borderNonSelected = "1px solid black"
   const borderSelected = `1px solid ${primaryColor}`
 
-  const relationship : Relationship = {
-    [Field.ID]: edgeData[Field.ID], [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: (label as string), [Field.DESCRIPTION]: edgeData[Field.DESCRIPTION],
-    [Field.SOURCE_ENTITY]: source, [Field.TARGET_ENTITY]: target, [Field.CARDINALITY]: edgeData[Field.CARDINALITY],
-    [Field.ORIGINAL_TEXT]: edgeData[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: edgeData[Field.ORIGINAL_TEXT_INDEXES]
-  }
 
   return (
     <>
@@ -42,7 +38,7 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
                 onMouseEnter={() => setIsHovered(_ => true)} 
                 onMouseLeave={() => setIsHovered(_ => false)}
                 >
-                { capitalizeString(relationship.name) }
+                { capitalizeString(relationship[Field.NAME]) }
 
                 <Typography
                   color={selected ? primaryColor : "black"}

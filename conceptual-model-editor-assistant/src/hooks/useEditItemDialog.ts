@@ -97,13 +97,29 @@ const useEditItemDialog = () =>
             {
                 if (currentEdge.source === oldEntity.name)
                 {
-                    return { ...currentEdge, id: createEdgeID(newEntity.name, currentEdge.target, currentEdge.data.label), source: newEntity.name }
+                    const newRelationship: Relationship = { ...currentEdge.data.relationship, source: newEntity.name }
+                    const newEdgeData: EdgeData = { ...currentEdge.data, relationship: newRelationship }
+                    const edgeID = createEdgeID(newEntity.name, currentEdge.target, currentEdge.data.relationship.name)
+                    const updatedEdge: Edge = {
+                        ...currentEdge, id:edgeID, source: newEntity.name, data: newEdgeData
+                    }
+
+                    return updatedEdge
                 }
                 else if (currentEdge.target === oldEntity.name)
                 {
-                    return { ...currentEdge, id: createEdgeID(currentEdge.source, newEntity.name, currentEdge.data.label), target: newEntity.name }
+                    const newRelationship: Relationship = { ...currentEdge.data.relationship, target: newEntity.name }
+                    const newEdgeData: EdgeData = { ...currentEdge.data, relationship: newRelationship }
+                    const edgeID = createEdgeID(currentEdge.source, newEntity.name, currentEdge.data.relationship.name)
+                    const updatedEdge: Edge = {
+                        ...currentEdge, id:edgeID, target: newEntity.name, data: newEdgeData
+                    }
+
+                    console.log(updatedEdge)
+
+                    return updatedEdge
                 }
-                    return currentEdge
+                return currentEdge
             }))
         }
     
@@ -111,9 +127,7 @@ const useEditItemDialog = () =>
         {
             if (currentNode.id === id)
             {
-                const newData : NodeData = {
-                    ...currentNode.data, description: newEntity.description, originalText: newEntity.originalText, originalTextIndexes: newEntity.originalTextIndexes
-                }
+                const newData: NodeData = { ...currentNode.data, entity: newEntity }
                 const newNode: Node = {...currentNode, id: newEntity.name, data: newData}
 
                 return newNode
@@ -160,33 +174,25 @@ const useEditItemDialog = () =>
     
     const editEdgeRelationship = (newRelationship: Relationship, oldRelationship : Relationship): void =>
     {
-        // Find the right edge based on the old ID
+        // Find the edge to update based on the old ID
         const oldID: string = createEdgeID(oldRelationship.source, oldRelationship.target, oldRelationship.name)
-        // let oldEdge = edges.find(edge => edge.id === oldID)
-    
-        // if (!oldEdge)
-        // {
-        //     return
-        // }
-    
 
-    
+        console.log("OldID: ", oldID)
+
         setEdges((edges) => edges.map((currentEdge : Edge) =>
         {
             if (currentEdge.id === oldID)
             {
-                const newData: EdgeData = {
-                    ...currentEdge.data, description: newRelationship.description, cardinality: newRelationship.cardinality,
-                    originalText: newRelationship.originalText
-                }
-                
+                const newData: EdgeData = { ...currentEdge.data, relationship: newRelationship }
                 const newID = createEdgeID(newRelationship.source, newRelationship.target, newRelationship.name)
                 
                 // TODO: Is the user allowed to change source and target?
                 // If the source/target does not exist we need to create a new node
                 let newEdge: Edge = {
-                    ...currentEdge, id: newID, label: newRelationship.name, source: newRelationship.source, target: newRelationship.target, data: newData
+                    ...currentEdge, id: newID, source: newRelationship.source, target: newRelationship.target, data: newData
                 }
+
+                console.log("Edited edge: ", newEdge)
 
                 return newEdge
             }

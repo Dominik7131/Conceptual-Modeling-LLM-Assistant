@@ -75,7 +75,7 @@ const useConceptualModel = () =>
       }
 
       const nodeData : NodeData = {
-        [Field.DESCRIPTION]: entity.description, attributes: [], [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
+        entity: newEntity, attributes: [],
         onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute 
       }
 
@@ -123,39 +123,49 @@ const useConceptualModel = () =>
     for (const [_, relationship] of Object.entries(conceptualModelJson.relationships))
     {
       // const newRelationship: Relationship = { }
-      const relationshipNameLowerCase = relationship.title.toLowerCase()
+      const nameLowerCase = relationship.title.toLowerCase()
       const sourceEntityLowerCase = relationship.domain.toLowerCase()
       const targetEntityLowerCase = relationship.range.toLowerCase()
 
-      const edgeData: EdgeData = {
-        [Field.ID]: 0, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-        onEdit: onEditItem
+      const newRelationship: Relationship = {
+        [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: nameLowerCase, [Field.DESCRIPTION]: "",
+        [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
+        [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
       }
 
-      const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, relationshipNameLowerCase)
+      const edgeData: EdgeData = {
+        relationship: newRelationship, onEdit: onEditItem
+      }
+
+      const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, nameLowerCase)
       const newEdge : Edge = {
-        id: newID, source: sourceEntityLowerCase, target: targetEntityLowerCase, label: relationshipNameLowerCase, type: "custom-edge",
+        id: newID, source: sourceEntityLowerCase, target: targetEntityLowerCase, type: "custom-edge",
         data: edgeData
       }
 
       newEdges.push(newEdge)
     }
 
-    for (const [_, relationship] of Object.entries(conceptualModelJson.generalizations))
+    for (const [_, generalization] of Object.entries(conceptualModelJson.generalizations))
     {
       // const newRelationship: Relationship = { }
-      const relationshipNameLowerCase = relationship.title.toLowerCase()
-      const sourceEntityLowerCase = relationship.specialClass.toLowerCase()
-      const targetEntityLowerCase = relationship.generalClass.toLowerCase()
+      const nameLowerCase = generalization.title.toLowerCase()
+      const sourceEntityLowerCase = generalization.specialClass.toLowerCase()
+      const targetEntityLowerCase = generalization.generalClass.toLowerCase()
 
-      const edgeData: EdgeData = {
-        [Field.ID]: 0, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-        onEdit: onEditItem
+      const newRelationship: Relationship = {
+        [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: nameLowerCase, [Field.DESCRIPTION]: "",
+        [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
+        [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
       }
 
-      const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, relationshipNameLowerCase)
+      const edgeData: EdgeData = {
+        relationship: newRelationship, onEdit: onEditItem
+      }
+
+      const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, nameLowerCase)
       const newEdge : Edge = {
-        id: newID, source: sourceEntityLowerCase, target: targetEntityLowerCase, label: relationshipNameLowerCase, type: "custom-edge",
+        id: newID, source: sourceEntityLowerCase, target: targetEntityLowerCase, type: "custom-edge",
         data: edgeData
       }
 
@@ -192,7 +202,6 @@ const useConceptualModel = () =>
 
   const parseSerializedConceptualModel = () =>
   {
-
     const input = { entities: [
         {name: "Engine", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
         {name: "Manufacturer", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
@@ -241,13 +250,12 @@ const useConceptualModel = () =>
         (entity.attributes[index] as any).source = entityNameLowerCase
       }
 
-      const entityObject : Entity = {
+      const newEntity : Entity = {
         [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "",
         [Field.ORIGINAL_TEXT_INDEXES]: entity[Field.ORIGINAL_TEXT_INDEXES]}
 
       const nodeData : NodeData = {
-        [Field.DESCRIPTION]: entity.description, [Field.ORIGINAL_TEXT]: entity.originalText,
-        [Field.ORIGINAL_TEXT_INDEXES]: entity.originalTextIndexes, attributes: entity.attributes,
+        entity: newEntity, attributes: entity.attributes,
         onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute 
       }
       const newNode : Node = {
@@ -268,9 +276,17 @@ const useConceptualModel = () =>
     for (const [key, relationship] of Object.entries(input["relationships"]))
     {
       const newID: string = createEdgeID(relationship.source, relationship.target, relationship.name)
-      const newEdge : Edge = {
-        id: newID, source: relationship.source, target: relationship.target, label: relationship.name, type: "custom-edge",
-        data: { description: "", originalText: relationship.originalText, onEdit: onEditItem }
+
+      const newRelationship: Relationship = {
+        [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: "",
+        [Field.SOURCE_ENTITY]: relationship.source, [Field.TARGET_ENTITY]: relationship.target,
+        [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT]: relationship.originalText, [Field.ORIGINAL_TEXT_INDEXES]: []
+      }
+      const edgeData: EdgeData = { relationship: newRelationship, onEdit: onEditItem }
+
+      const newEdge: Edge = {
+        id: newID, source: relationship.source, target: relationship.target, type: "custom-edge",
+        data: edgeData
       }
 
       newEdges.push(newEdge)
@@ -311,11 +327,11 @@ const useConceptualModel = () =>
     {
       if (isOnlyNames)
       {
-        relationships.push({[Field.NAME]: edge.label, "sourceEntity": edge.source, "targetEntity": edge.target})
+        relationships.push({[Field.NAME]: edge.data.relationship.name, "sourceEntity": edge.source, "targetEntity": edge.target})
       }
       else
       {
-        relationships.push({[Field.NAME]: edge.label, [Field.ORIGINAL_TEXT]: edge.data.originalText, "sourceEntity": edge.source, "targetEntity": edge.target})
+        relationships.push({[Field.NAME]: edge.data.relationship.name, [Field.ORIGINAL_TEXT]: edge.data.originalText, "sourceEntity": edge.source, "targetEntity": edge.target})
       }
     }
 
@@ -364,27 +380,21 @@ const useConceptualModel = () =>
       }
     }
 
-    function onProcessMergedOriginalTexts(data: any): void
+  function onProcessMergedOriginalTexts(data: any): void
+  {
+    let tooltips : string[] = []
+    let originalTextIndexes : number[] = []
+
+    for (let index = 0; index < data.length; index++)
     {
-      let tooltips : string[] = []
-      let originalTextIndexes : number[] = []
-
-      for (let index = 0; index < data.length; index++)
-      {
-        const element = data[index];
-        originalTextIndexes.push(element[0])
-        originalTextIndexes.push(element[1])
-        tooltips.push(element[2])
-      }
-
-      setoriginalTextIndexesList(_ => originalTextIndexes)
-      setTooltips(_ => tooltips)
+      const element = data[index];
+      originalTextIndexes.push(element[0])
+      originalTextIndexes.push(element[1])
+      tooltips.push(element[2])
     }
 
-
-  const onImportButtonClick = () =>
-  {
-    parseSerializedConceptualModel()
+    setoriginalTextIndexesList(_ => originalTextIndexes)
+    setTooltips(_ => tooltips)
   }
 
 
@@ -643,12 +653,18 @@ const useConceptualModel = () =>
 
   const createNode = (nodeID: string, positionX: number, positionY: number): Node =>
   {
-    const data : NodeData = {
-      [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-      attributes: [], onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
+    const newEntity: Entity = {
+      [Field.ID]: 0, [Field.NAME]: nodeID, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "",
+      [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
     }
+
+    const nodeData: NodeData = {
+      entity: newEntity, attributes: [],
+      onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
+    }
+
     const newNode: Node = {
-      id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: data
+      id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData
     }
     
     return newNode
@@ -686,7 +702,7 @@ const useConceptualModel = () =>
       }
   
       const nodeData: NodeData = {
-        [Field.DESCRIPTION]: entity[Field.DESCRIPTION], [Field.ORIGINAL_TEXT]: entity[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: [], 
+        entity: entity, attributes: [],
         onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
       }
   
@@ -808,12 +824,7 @@ const useConceptualModel = () =>
       }));
     }
 
-    // TODO: Make function to create edge (or edge data) from a relationship
-    const edgeData: EdgeData = {
-      [Field.ID]: relationship.ID, [Field.DESCRIPTION]: relationship[Field.DESCRIPTION],
-      [Field.ORIGINAL_TEXT]: relationship[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: relationship[Field.ORIGINAL_TEXT_INDEXES],
-      [Field.CARDINALITY]: relationship[Field.CARDINALITY], onEdit: onEditItem
-    }
+    const edgeData: EdgeData = { relationship: relationship, onEdit: onEditItem }
 
     const newEdge : Edge = {
       id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: edgeData
@@ -855,7 +866,7 @@ const useConceptualModel = () =>
   }
 
 
-  const onEditItem = (item: Item) : void =>
+  function onEditItem(item: Item) : void
   {
     setIsSuggestedItem(_ => false)
     setIsDisableSave(_ => false)
@@ -953,8 +964,8 @@ const useConceptualModel = () =>
     
     
   return {
-    parseSerializedConceptualModel, 
-    onIgnoreDomainDescriptionChange, onImportButtonClick, onSuggestItems, onSummaryButtonClick, capitalizeString,
+    parseSerializedConceptualModel,
+    onIgnoreDomainDescriptionChange, onSuggestItems, onSummaryButtonClick, capitalizeString,
     onClickAddNode, onDomainDescriptionChange, onEditSuggestion, onHighlightSingleItem, onOverlayDomainDescriptionOpen, onHighlightSelectedItems,
     onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem, onImport, onExport
   }

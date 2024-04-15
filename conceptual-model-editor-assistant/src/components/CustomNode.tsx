@@ -26,12 +26,8 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
 
     const { capitalizeString } = useUtility()
 
-    const nodeData = data as NodeData
-    
-    const entity: Entity = {
-        [Field.ID]: 0, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: id, [Field.DESCRIPTION]: nodeData[Field.DESCRIPTION],
-        [Field.ORIGINAL_TEXT]: nodeData[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: nodeData[Field.ORIGINAL_TEXT_INDEXES]
-    }
+    const nodeData: NodeData = data as NodeData
+    const entity: Entity = nodeData.entity
 
     const attributes: Attribute[] = nodeData.attributes
 
