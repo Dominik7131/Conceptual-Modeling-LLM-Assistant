@@ -33,7 +33,7 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
         [Field.ORIGINAL_TEXT]: nodeData[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: nodeData[Field.ORIGINAL_TEXT_INDEXES]
     }
 
-    const attributes = data.attributes
+    const attributes: Attribute[] = nodeData.attributes
 
     const borderNonSelected = "1px solid black"
     const borderSelected = `1px solid ${primaryColor}`
@@ -110,7 +110,7 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
 
                 <Typography
                     id="long-button"
-                    // onClick={() => data.onEdit(entity)}
+                    // onClick={() => nodeData.onEdit(entity)}
                     onClick={handleClick}
                     sx={{ display: (isEntityHovered || anchorEl) ? "block" : "none", position: "absolute", right: "0px", top: "6px" }}
                     >
@@ -126,13 +126,13 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
                 onClose={handleClose}
                 MenuListProps={{'aria-labelledby': 'basic-button'}}
                 >
-                <MenuItem onClick={() => { data.onEdit(entity); handleClose(); }}>
+                <MenuItem onClick={() => { nodeData.onEdit(entity); handleClose(); }}>
                     <ListItemIcon>
                         <EditIcon fontSize="small" />
                     </ListItemIcon>
                         Edit entity
                 </MenuItem>
-                <MenuItem onClick={() => { data.onAddNewAttribute(entity); handleClose(); }}>
+                <MenuItem onClick={() => { nodeData.onAddNewAttribute(entity); handleClose(); }}>
                     <ListItemIcon>
                         <AddIcon fontSize="small" />
                     </ListItemIcon>
@@ -140,14 +140,14 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
                 </MenuItem>
 
 
-                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.ATTRIBUTES, entity.name, null); handleClose(); }}>
+                <MenuItem onClick={() => { nodeData.onSuggestItems(UserChoice.ATTRIBUTES, entity.name, null); handleClose(); }}>
                     <ListItemIcon>
                         <AutoFixHighIcon fontSize="small" />
                     </ListItemIcon>
                         Suggest attributes
                 </MenuItem>
                 
-                <MenuItem onClick={() => { data.onSuggestItems(UserChoice.RELATIONSHIPS, entity.name, null); handleClose(); }}>
+                <MenuItem onClick={() => { nodeData.onSuggestItems(UserChoice.RELATIONSHIPS, entity.name, null); handleClose(); }}>
                     <ListItemIcon>
                         <AutoFixHighIcon fontSize="small" />
                     </ListItemIcon>
@@ -166,8 +166,8 @@ export default function TextUpdaterNode({ id, selected, data } : NodeProps)
                     <Button size="small" key={`${attribute.name}-${index}`}
                         style={{justifyContent: "flex-start"}}
                         sx={{ color: selected ? primaryColor : "black", fontSize: "12px", textTransform: 'lowercase'}}
-                        onClick={() => data.onEdit(attribute)}>
-                        {attribute.name}
+                        onClick={() => nodeData.onEdit(attribute)}>
+                        { attribute.name }
                     </Button>
                 ))}
             </Stack>

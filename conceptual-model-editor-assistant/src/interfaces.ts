@@ -113,3 +113,40 @@ export interface SerializedConceptualModel
   entities: any[] // TODO: Provide correct type
   relationships: Relationship[]
 }
+
+export interface ItemJson
+{
+  iri: string
+  title: string
+  description: string
+}
+
+interface ClassesJson extends ItemJson { }
+
+interface DomainRangeJson
+{
+  // TODO: Why do we have "target entity" in attributes?
+  // Isn't that going to be always empty string?
+  domain: string
+  domainCardinality: "optional-one" | "one" | "many"
+  range: string
+  rangeCardinality: "optional-one" | "one" | "many"
+}
+
+export interface AttributesJson extends ItemJson, DomainRangeJson { }
+
+export interface RelationshipsJson extends ItemJson, DomainRangeJson { }
+
+export interface GeneralizationsJson extends ItemJson
+{
+  generalClass: string
+  specialClass: string
+}
+
+export interface ConceptualModelJson
+{
+  classes: ClassesJson[]
+  attributes: any[]
+  relationships: any[]
+  generalizations: any[]
+}

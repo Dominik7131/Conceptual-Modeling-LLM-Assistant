@@ -17,12 +17,12 @@ import TabContext from '@mui/lab/TabContext';
 import AddIcon from '@mui/icons-material/Add';
 import HighlightIcon from '@mui/icons-material/Highlight';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import UploadIcon from '@mui/icons-material/Upload';
 import DownloadIcon from '@mui/icons-material/Download';
 import { useRecoilValue } from "recoil";
 import { domainDescriptionState, isIgnoreDomainDescriptionState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, sidebarWidthPercentageState, summaryDescriptionsState, summaryTextState } from "../atoms";
 import useConceptualModel from "../hooks/useConceptualModel";
 import useDomainDescription from "../hooks/useDomainDescription";
+import FileUploader from "./FileUploader";
 
 
 const Topbar: React.FC = () =>
@@ -167,9 +167,7 @@ const Topbar: React.FC = () =>
                     </Stack>
 
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} startIcon={<UploadIcon/>} onClick={() => onImportButtonClick()}>
-                            Import
-                        </Button>
+                        <FileUploader/>
 
                         <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} startIcon={<DownloadIcon/>} onClick={() => console.log("Not implemented")}>
                             Export
@@ -180,10 +178,10 @@ const Topbar: React.FC = () =>
         )
     }
 
-    const handleChange = (event: React.SyntheticEvent, newValue: string) =>
+    const handleChange = (newValue: string) =>
     {
         setTabValue(newValue);
-    };
+    }
 
     const topBarWidth = 100 - sidebarWidthPercentage
     const heightPx = 360
@@ -192,7 +190,7 @@ const Topbar: React.FC = () =>
         <Box sx={{ width: `${topBarWidth}%`, height: `${heightPx}px`, overflow: 'auto', typography: 'body1' }}>
             <TabContext value={tabValue}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                    <TabList onChange={handleChange}>
+                    <TabList onChange={() => handleChange}>
                         <Tab sx={{textTransform: "capitalize"}} label="Main" value="0" />
                         <Tab sx={{textTransform: "capitalize"}} label="Summary 1" value="1" />
                         <Tab sx={{textTransform: "capitalize"}} label="Summary 2" value="2" />
