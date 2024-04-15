@@ -27,6 +27,7 @@ def suggest():
     return llm_assistant.suggest(source_entity, target_entity, user_choice, 5, conceptual_model=[], domain_description=domain_description)
 
 
+
 @app.route('/getOnly', methods=['POST'])
 @cross_origin()
 def generate_single_field():
@@ -70,12 +71,13 @@ def merge_original_texts():
 
     body_data = request.get_json()
     original_text_indexes_object = body_data["originalTextIndexesObject"]
-    print(f"Received: {original_text_indexes_object}\n")
+    # print(f"Received: {original_text_indexes_object}\n")
 
     parsed_original_text_indexes_object = [(item['indexes'][0], item['indexes'][1], item['label']) for item in original_text_indexes_object]
     result = TextUtility.merge_original_texts(parsed_original_text_indexes_object)
 
     return result
+
 
 if __name__ == '__main__':
     llm_assistant = LLMAssistant()

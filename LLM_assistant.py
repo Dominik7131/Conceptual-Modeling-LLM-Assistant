@@ -8,7 +8,7 @@ import openai
 
 
 ITEMS_COUNT = 5
-IS_SYSTEM_MSG = False
+IS_SYSTEM_MSG = True
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
 IS_CHAIN_OF_THOUGHTS = True
@@ -326,7 +326,8 @@ class LLMAssistant:
         if is_domain_description:
             prompt_file_name += "-dd"
         
-        if field_name == "" and is_chain_of_thoughts:
+        is_basic_user_choice = user_choice == UserChoice.ENTITIES or user_choice == UserChoice.ATTRIBUTES or user_choice == UserChoice.RELATIONSHIPS
+        if field_name == "" and is_basic_user_choice and is_chain_of_thoughts:
             prompt_file_name += "-cot"
 
         prompt_file_name += ".txt"
@@ -466,10 +467,8 @@ class LLMAssistant:
 
 
             if field_name == Field.ORIGINAL_TEXT.value:
-                print("oti")
                 original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(dictionary[Field.ORIGINAL_TEXT.value], domain_description)
                 dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
-                print(f"OTI: {original_text_indexes}")
             
             json_item = json.dumps(dictionary)
             yield f"{json_item}\n"
