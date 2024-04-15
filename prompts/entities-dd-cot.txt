@@ -8,9 +8,14 @@ This is the given context:
 "A road vehicle is a motorised or non-motorised vehicle"
 
 Output:
-{"name": "road vehicle"}
-{"name": "motorised vehicle"}
-{"name": "non-motorised vehicle"}
+name: road vehicle
+JSON: {"name": "road vehicle"}
+
+name: motorised vehicle
+JSON: {"name": "motorised vehicle"}
+
+name: non-motorised vehicle
+JSON: {"name": "non-motorised vehicle"}
 
 EXAMPLE END
 

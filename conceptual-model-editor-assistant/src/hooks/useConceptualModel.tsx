@@ -167,9 +167,10 @@ const useConceptualModel = () =>
 
   const convertConceptualModelToJson = (): string =>
   {
-    // Iterate over each node to get all "classes" and "attributes"
+    // TODO: Iterate over each node to get all "classes" and "attributes"
 
-    // Iterate over each edge to get all "relationships" and "generalizations"
+    // TODO: Iterate over each edge to get all "relationships" and "generalizations"
+
     return '{"classes": [{"iri": "engine-iri", "title": "engine", "description": ""}]}'
   }
 

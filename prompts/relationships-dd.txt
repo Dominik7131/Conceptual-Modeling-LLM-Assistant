@@ -1,6 +1,7 @@
 Solely based on the given context which relationships does the entity: "{source_entity}" have?
 
-For each relationship output its name and source entity and target entity and copy the part of the given context containing this relationship in JSON object like this: {"originalText": "copy the part of the given context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}
+Output each relationship in JSON object like this: {"originalText": "copy the part of the given context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}
+
 
 EXAMPLE START
 
@@ -10,17 +11,8 @@ This is the given context:
 "Students have a name. Professors have a name. Professors teach students. Students have assigned homework from professors."
 
 Output:
-name: teach
-originalText: Professors teach students
-source entity: professor
-target entity: student
-JSON object: {"originalText": "Professors teach students", "name": "teach", "source": "professor", "target": "student"}
-
-name: has assigned homework from
-originalText: Students have assigned homework from professors
-source entity: professor
-target entity: student
-JSON object: {"originalText": "Students have assigned homework from professors", "name": "has assigned homework from", "source": "student", "target": "professor"}
+{"originalText": "Professors teach students", "name": "teach", "source": "professor", "target": "student"}
+{"originalText": "Students have assigned homework from professors", "name": "has assigned homework from", "source": "student", "target": "professor"}
 
 EXAMPLE END
 

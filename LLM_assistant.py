@@ -332,7 +332,7 @@ class LLMAssistant:
 
 
     def __create_prompt(self, user_choice, source_entity="", target_entity="", relevant_texts = "", is_domain_description=True,
-                        items_count_to_suggest = 5, isChainOfThoughts = True, conceptual_model = {}, field_name = "",
+                        items_count_to_suggest = 5, is_chain_of_thoughts = True, conceptual_model = {}, field_name = "",
                         attribute_name="", relationship_name=""):
 
         # Build corresponding file name
@@ -343,6 +343,9 @@ class LLMAssistant:
 
         if is_domain_description:
             prompt_file_name += "-dd"
+        
+        if is_chain_of_thoughts:
+            prompt_file_name += "-cot"
 
         prompt_file_name += ".txt"
         prompt_file_path = os.path.join(PROMPT_DIRECTORY, prompt_file_name)
