@@ -405,7 +405,7 @@ class LLMAssistant:
             # Find originalText indexes for `item['originalText']` in `domain_description`
             if 'originalText' in item:
                 original_text = item['originalText']
-                original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(original_text, domain_description)
+                original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(original_text, domain_description, user_choice)
                 suggestion_dictionary['originalTextIndexes'] = original_text_indexes
             else:
                 logging.warn(f"Warning: original text not in item: {item}")
@@ -454,7 +454,7 @@ class LLMAssistant:
 
 
             if field_name == Field.ORIGINAL_TEXT.value:
-                original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(dictionary[Field.ORIGINAL_TEXT.value], domain_description)
+                original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(dictionary[Field.ORIGINAL_TEXT.value], domain_description, user_choice)
                 dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
             
             json_item = json.dumps(dictionary)

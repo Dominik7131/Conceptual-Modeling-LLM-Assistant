@@ -427,8 +427,7 @@ class TextUtility:
         return sentences
     
 
-    def find_text_in_domain_description(inference, domain_description):
-        # TODO: Add domain description as an method argument
+    def find_text_in_domain_description(inference, domain_description, user_choice):
 
         # Convert all text to lower-case as LLM sometimes does not generate case-sensitive inference
         domain_description = domain_description.lower()
@@ -460,7 +459,7 @@ class TextUtility:
             # Relevant sentece = sentence that contains all lemmas in `inference_part` (probably except brackets, punctuation etc.)        
             if is_inference_found:
                 inference_parts_found += 1
-            else:
+            elif not user_choice == UserChoice.ENTITIES.value:
                 new_result = TextUtility.findSubstrings(inference_part, domain_description)
                 if new_result:
                     is_inference_found = True
@@ -471,7 +470,8 @@ class TextUtility:
 
 
         # TODO: Fix bug with too many inference indexes
-        if len(result) > 10:
+        # Do not limit number of outputs if we are suggesting entities
+        if not user_choice == UserChoice.ENTITIES.value and len(result) > 10:
             result = []
 
         return result, inference_parts_found, inference_parts_total
@@ -667,3 +667,5 @@ class TextUtility:
                 i += 1
 
         return input
+
+        
