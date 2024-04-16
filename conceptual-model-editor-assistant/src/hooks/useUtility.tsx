@@ -44,7 +44,7 @@ export const doesNodeAlreadyExist = (nodes: Node[], nodeID: string): boolean =>
 {
   for (let i = 0; i < nodes.length; i++)
   {
-    if (nodes[i].id === nodeID.toLowerCase())
+    if (nodes[i].id === nodeID)
     {
       return true
     }
@@ -68,6 +68,21 @@ export const doesEdgeAlreadyExist = (edges: Edge[], edgeID: string): boolean =>
 
   return false
 }
+
+
+export const getNodeByID = (nodes: Node[], nodeID: string): Node | null =>
+{
+  for (let i = 0; i < nodes.length; i++)
+  {
+    if (nodes[i].id === nodeID)
+    {
+      return nodes[i]
+    }
+  }
+  
+  return null
+}
+
 
 export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
 export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"

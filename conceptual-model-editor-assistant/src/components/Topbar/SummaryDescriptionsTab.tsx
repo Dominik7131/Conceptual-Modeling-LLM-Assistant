@@ -1,8 +1,9 @@
-import { Button, Typography, CircularProgress } from "@mui/material"
+import { Button, Typography, CircularProgress, IconButton } from "@mui/material"
 import { useRecoilValue } from "recoil"
-import { isLoadingSummaryDescriptionsState, summaryDescriptionsState } from "../../atoms"
+import { edgesState, isLoadingSummaryDescriptionsState, nodesState, summaryDescriptionsState } from "../../atoms"
 import { capitalizeString } from "../../hooks/useUtility"
 import { Attribute } from "../../interfaces"
+import CheckIcon from '@mui/icons-material/Check';
 
 
 
@@ -10,6 +11,14 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
 {
     const summaryDescriptions = useRecoilValue(summaryDescriptionsState)
     const isLoadingSummaryDescriptions = useRecoilValue(isLoadingSummaryDescriptionsState)
+
+    // const nodes = useRecoilValue(nodesState)
+    // const edges = useRecoilValue(edgesState)
+
+    // TODO: make function that returns objects with descriptions
+    // - if the description is already present in the entity/attribute/relationship then this
+    //   otherwise the new suggested description
+
 
     // previous implementation: https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/4b71b1e6f62792f586e35b3baac58a4d8d9c10c5/conceptual-model-editor-assistant/src/components/Topbar.tsx
         
@@ -40,14 +49,24 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
             {
                 summaryDescriptions.entities.map((entity) =>
                     <Typography component="span">
-                        <li><strong>{capitalizeString(entity.entity)}</strong>: {entity.description}</li>
+                        <li>
+                            <strong>{capitalizeString(entity.entity)}</strong>: {entity.description}
+                            {/* <IconButton>
+                                <CheckIcon color="success"/>
+                            </IconButton> */}
+                        </li>
                         { entity.attributes.length > 0 && 
                             <ul>
                                 <p></p>
                                 <li><strong>Attributes</strong></li>
                                 <ul>
                                     {entity.attributes.map((attribute : Attribute) =>
-                                        <li><strong>{attribute.name}</strong>: {attribute.description}</li>
+                                        <li>
+                                            <strong>{attribute.name}</strong>: {attribute.description}
+                                            {/* <IconButton>
+                                                <CheckIcon color="success"/>
+                                            </IconButton> */}
+                                        </li>
                                     )}
                                 </ul>
                             </ul>
@@ -68,7 +87,10 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
                 summaryDescriptions.relationships.map((relationship) =>
                     <Typography component="span">
                         <li>
-                            <strong>{capitalizeString(relationship.sourceEntity)}</strong> {relationship.relationship} <strong>{capitalizeString(relationship.targetEntity)}</strong>: {relationship.description}
+                            <strong> { capitalizeString(relationship.sourceEntity) }</strong> {relationship.relationship} <strong>{capitalizeString(relationship.targetEntity)}</strong>: {relationship.description}
+                            {/* <IconButton>
+                                <CheckIcon color="success"/>
+                            </IconButton> */}
                         </li>
                     </Typography>
                 )
