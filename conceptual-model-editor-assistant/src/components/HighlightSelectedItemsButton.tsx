@@ -2,7 +2,7 @@ import { Button } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
 import { isShowHighlightDialogState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from "../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { Attribute, Field, Item, ItemType, OriginalTextIndexesItem } from "../interfaces";
+import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../interfaces";
 import { BASE_URL, capitalizeString } from "../hooks/useUtility";
 
 
@@ -23,6 +23,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
         .then(response => response.json())
         .then(data => 
         {
+            // TODO: Specify `data` type
             onProcessMergedOriginalTexts(data)
         })
         .catch(error => console.log(error))
@@ -55,38 +56,42 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
         // Process all selected nodes
         for (let i = 0; i < selectedNodes.length; i++)
         {
+            const nodeData: NodeData = selectedNodes[i].data
+
             // Process each attribute for the given entity
             const entityName: string = capitalizeString(selectedNodes[i].id)
-            for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
+            for (let j = 0; j < nodeData.attributes.length; j++)
             {
-                const element = selectedNodes[i].data.attributes[j];
+                const attribute = nodeData.attributes[j]
+                const originalTextIndexes = attribute.originalTextIndexes
         
-                if (!element.originalTextIndexes)
+                if (!attribute.originalTextIndexes)
                 {
                     continue
                 }
         
                 // Process each original text indexes for the given attribute
-                for (let k = 0; k < element.originalTextIndexes.length; k += 2)
+                for (let k = 0; k < originalTextIndexes.length; k += 2)
                 {
-                const ii1: number = element.originalTextIndexes[k]
-                const ii2: number = element.originalTextIndexes[k + 1]
-        
-                originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${entityName}: ${element.name}`} )
+                    const ii1: number = originalTextIndexes[k]
+                    const ii2: number = originalTextIndexes[k + 1]
+            
+                    originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${entityName}: ${attribute.name}`} )
                 }
             }
-        
-        
-            if (!selectedNodes[i].data.originalTextIndexes)
+
+            const originalTextIndexes = nodeData.entity.originalTextIndexes
+
+            if (!originalTextIndexes)
             {
                 continue
             }
         
             // Process each original text indexes for the given entity 
-            for (let k = 0; k < selectedNodes[i].data.originalTextIndexes.length; k += 2)
+            for (let k = 0; k < originalTextIndexes.length; k += 2)
             {
-                const ii1 : number = selectedNodes[i].data.originalTextIndexes[k]
-                const ii2 : number = selectedNodes[i].data.originalTextIndexes[k + 1]
+                const ii1 : number = originalTextIndexes[k]
+                const ii2 : number = originalTextIndexes[k + 1]
         
                 originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Entity: ${selectedNodes[i].id}`} )
             }
@@ -95,18 +100,23 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
         // Process also all selected edges
         for (let i = 0; i < selectedEdges.length; i++)
         {
-            if (!selectedEdges[i].data.originalTextIndexes)
+            const edgeData: EdgeData = selectedEdges[i].data
+            const originalTextIndexes = edgeData.relationship.originalTextIndexes
+            
+            if (!originalTextIndexes)
             {
                 continue
             }
         
             // Process each original text indexes for the given edge 
-            for (let k = 0; k < selectedEdges[i].data.originalTextIndexes.length; k += 2)
+            for (let k = 0; k < originalTextIndexes.length; k += 2)
             {
-                const ii1 : number = selectedEdges[i].data.originalTextIndexes[k]
-                const ii2 : number = selectedEdges[i].data.originalTextIndexes[k + 1]
+                const ii1 : number = originalTextIndexes[k]
+                const ii2 : number = originalTextIndexes[k + 1]
         
-                originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${selectedEdges[i].source} – ${selectedEdges[i].data.name} – ${selectedEdges[i].target}`} )
+                originalTextsIndexesObjects.push({
+                    indexes: [ii1, ii2], label: `${selectedEdges[i].source} – ${edgeData.relationship.name} – ${selectedEdges[i].target}`
+                })
             }
         }
     
