@@ -11,7 +11,6 @@ ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
-IS_CHAIN_OF_THOUGHTS = True
 IS_RELATIONSHIPS_IS_A = False
 
 IS_STOP_GENERATING_OUTPUT = False
@@ -326,8 +325,7 @@ class LLMAssistant:
         if is_domain_description:
             prompt_file_name += "-dd"
         
-        is_basic_user_choice = user_choice == UserChoice.ENTITIES or user_choice == UserChoice.ATTRIBUTES or user_choice == UserChoice.RELATIONSHIPS
-        if field_name == "" and is_basic_user_choice and is_chain_of_thoughts:
+        if is_chain_of_thoughts:
             prompt_file_name += "-cot"
 
         prompt_file_name += ".txt"
@@ -383,7 +381,8 @@ class LLMAssistant:
             return
 
         prompt = self.__create_prompt(user_choice=user_choice, source_entity=source_entity, target_entity=target_entity,
-                                      is_domain_description=is_domain_description, items_count_to_suggest=count_items_to_suggest, relevant_texts=relevant_texts)
+            is_domain_description=is_domain_description, items_count_to_suggest=count_items_to_suggest, relevant_texts=relevant_texts,
+            is_chain_of_thoughts=True)
         
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
@@ -449,7 +448,7 @@ class LLMAssistant:
         relevant_texts = self.__get_relevant_texts(source_entity=source_entity, domain_description=domain_description)
 
         prompt = self.__create_prompt(user_choice=user_choice, source_entity=source_entity, target_entity=target_entity, 
-                                      attribute_name=name, relevant_texts=relevant_texts, field_name=field_name)
+            attribute_name=name, relevant_texts=relevant_texts, field_name=field_name, is_chain_of_thoughts=False)
 
         self.messages = []
         new_messages = self.messages.copy()
@@ -476,7 +475,8 @@ class LLMAssistant:
 
     def summarize_conceptual_model1(self, conceptual_model, domain_description):
         
-        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY1.value, conceptual_model=conceptual_model, relevant_texts=domain_description)
+        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY1.value, conceptual_model=conceptual_model,
+            relevant_texts=domain_description, is_chain_of_thoughts=False)
 
         self.messages = []
         new_messages = self.messages.copy()
@@ -497,7 +497,8 @@ class LLMAssistant:
 
     def summarize_conceptual_model2(self, conceptual_model, domain_description):
 
-        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY2.value, conceptual_model=conceptual_model, relevant_texts=domain_description)
+        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY2.value, conceptual_model=conceptual_model, 
+            relevant_texts=domain_description, is_chain_of_thoughts=False)
 
         self.messages = []
         new_messages = self.messages.copy()
