@@ -28,7 +28,6 @@ import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
 
 const Topbar: React.FC = () =>
 {
-    const domainDescription = useRecoilValue(domainDescriptionState)
     const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useRecoilState(isIgnoreDomainDescriptionState)
 
     const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
@@ -39,6 +38,9 @@ const Topbar: React.FC = () =>
     const summaryDescriptions = useRecoilValue(summaryDescriptionsState)
 
     const [tabValue, setTabValue] = useState<string>('0');
+
+    const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
+    const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 
     const { onAddNewEntity, onSuggestItems, onSummaryButtonClick, onSummaryDescriptionsClick, onExport } = useConceptualModel()
 
@@ -144,8 +146,8 @@ const Topbar: React.FC = () =>
                     </Stack>
 
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary 1</Button>
-                        <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={ handleSummaryDescriptionClick }>Summary 2</Button>
+                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={() => { setTabValue('1'); onSummaryButtonClick() }}> { SUMMARY_PLAIN_TEXT_NAME }</Button>
+                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={ handleSummaryDescriptionClick }> { SUMMARY_DESCRIPTIONS_NAME }</Button>
                         <HighlightSelectedItemsButton/>
                     </Stack>
 
@@ -163,7 +165,7 @@ const Topbar: React.FC = () =>
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) =>
     {
-        setTabValue(newValue);
+        setTabValue(newValue)
     }
 
     const topBarWidth = 100 - sidebarWidthPercentage
@@ -175,9 +177,10 @@ const Topbar: React.FC = () =>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={ handleChange }>
                         <Tab sx={{textTransform: "capitalize"}} label="Main" value="0" />
-                        <Tab sx={{textTransform: "capitalize"}} label="Summary 1" value="1" />
-                        <Tab sx={{textTransform: "capitalize"}} label="Summary 2" value="2" />
+                        <Tab sx={{textTransform: "none"}} label={SUMMARY_PLAIN_TEXT_NAME} value="1" />
+                        <Tab sx={{textTransform: "none"}} label={SUMMARY_DESCRIPTIONS_NAME} value="2" />
                         <Tab sx={{textTransform: "capitalize"}} label="Settings" value="3" />
+                        <Tab sx={{textTransform: "capitalize"}} label="Server info" value="4" />
                     </TabList>
                 </Box>
 
@@ -243,4 +246,4 @@ const Topbar: React.FC = () =>
     )
 }
 
-export default Topbar;
+export default Topbar
