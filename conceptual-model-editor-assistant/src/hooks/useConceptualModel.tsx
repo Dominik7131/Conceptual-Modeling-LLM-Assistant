@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Node, Edge } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { BASE_URL, HEADER, capitalizeString, createEdgeID } from './useUtility';
+import { BASE_URL, HEADER, capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist } from './useUtility';
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -11,8 +11,11 @@ import { domainDescriptionState, edgesState, editedSuggestedItemState, isDisable
 
 const useConceptualModel = () =>
 {
-  const setNodes = useSetRecoilState(nodesState)
-  const setEdges = useSetRecoilState(edgesState)
+  const [nodes, setNodes] = useRecoilState(nodesState)
+  const [edges, setEdges] = useRecoilState(edgesState)
+
+  const selectedNodes = useRecoilValue(selectedNodesState)
+  const selectedEdges = useRecoilValue(selectedEdgesState)
 
   const setSuggestedItems = useSetRecoilState(suggestedItemsState)
   const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
@@ -22,9 +25,9 @@ const useConceptualModel = () =>
   const setIsDisableSave = useSetRecoilState(isDisableSaveState)
   const setIsDisableChange = useSetRecoilState(isDisableChangeState)
 
-  const nodes = useRecoilValue(nodesState)
-  const selectedNodes = useRecoilValue(selectedNodesState)
-  const selectedEdges = useRecoilValue(selectedEdgesState)
+
+
+
 
   const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
   const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialogState)
@@ -309,20 +312,6 @@ const useConceptualModel = () =>
     return true
   }
 
-  const doesNodeAlreadyExist = (nodeID: string): boolean =>
-  {
-    for (let i = 0; i < nodes.length; i++)
-    {
-      if (nodes[i].id === nodeID.toLowerCase())
-      {
-        console.log("Node already exists")
-        return true
-      }
-    }
-
-    return false
-  }
-
 
   const createNode = (nodeID: string, positionX: number, positionY: number): Node =>
   {
@@ -347,7 +336,7 @@ const useConceptualModel = () =>
       return
     }
 
-    if (doesNodeAlreadyExist(nodeID))
+    if (doesNodeAlreadyExist(nodes, nodeID))
     {
       alert(`Node '${nodeID}' already exists`)
       return
@@ -363,7 +352,7 @@ const useConceptualModel = () =>
 
   const addNodeEntity = (entity: Entity, positionX: number, positionY: number) =>
   {
-      if (doesNodeAlreadyExist(entity.name))
+      if (doesNodeAlreadyExist(nodes, entity.name))
       {
         alert(`Node '${entity.name}' already exists`)
         return
@@ -430,23 +419,6 @@ const useConceptualModel = () =>
   }
 
 
-  const doesEdgeAlreadyExist = (edgeID: string): boolean =>
-  {
-    let result = false
-
-    setEdges((edges: Edge[]) => edges.map((edge: Edge) =>
-    {
-      if (edge.id === edgeID)
-      {
-        result = true 
-      }
-      return edge
-    }))
-
-    return result
-  }
-
-
   const onAddRelationshipsToNodes = (relationship : Relationship): void =>
   {
     let sourceNodeID = relationship.source?.toLowerCase()
@@ -456,12 +428,12 @@ const useConceptualModel = () =>
     if (!targetNodeID) { targetNodeID = "" }
 
     const newEdgeID = createEdgeID(sourceNodeID, targetNodeID, relationship.name)
-    if (doesEdgeAlreadyExist(newEdgeID))
+    if (doesEdgeAlreadyExist(edges, newEdgeID))
     {
-      return 
+      return
     }
 
-    const isTargetNodeCreated: boolean = doesNodeAlreadyExist(targetNodeID)
+    const isTargetNodeCreated: boolean = doesNodeAlreadyExist(nodes, targetNodeID)
 
     if (!isTargetNodeCreated)
     {

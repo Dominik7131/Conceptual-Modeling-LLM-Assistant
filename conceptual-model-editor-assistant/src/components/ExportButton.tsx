@@ -11,6 +11,8 @@ const ExportButton: React.FC = (): JSX.Element =>
     const nodes = useRecoilValue(nodesState)
     const edges = useRecoilValue(edgesState)
 
+    const EXPORT_FILE_NAME = "export.json"
+
 
     const onExport = () =>
     {
@@ -22,7 +24,7 @@ const ExportButton: React.FC = (): JSX.Element =>
         
         const link = document.createElement('a')
         link.href = url
-        link.download = "export.json"
+        link.download = EXPORT_FILE_NAME
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
