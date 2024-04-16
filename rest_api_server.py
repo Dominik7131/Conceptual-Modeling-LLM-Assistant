@@ -43,9 +43,9 @@ def generate_single_field():
     return llm_assistant.generate_single_field(user_choice, name, source_entity, target_entity, domain_description, field)
 
 
-@app.route('/summary1', methods=['POST'])
+@app.route('/summary_plain_text', methods=['POST'])
 @cross_origin()
-def summary1():
+def summary_plain_text():
 
     body_data = request.get_json()
     domain_description = body_data["domainDescription"]
@@ -54,9 +54,9 @@ def summary1():
     return llm_assistant.summarize_conceptual_model_plain_text(conceptual_model, domain_description)
 
 
-@app.route('/summary2', methods=['POST'])
+@app.route('/summary_descriptions', methods=['POST'])
 @cross_origin()
-def summary2():
+def summary_descriptions():
 
     body_data = request.get_json()
     domain_description = body_data["domainDescription"]

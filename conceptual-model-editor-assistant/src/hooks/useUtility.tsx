@@ -74,8 +74,8 @@ const BASE_URL = "http://127.0.0.1:5000/"
 export const HEADER = { "Content-Type": "application/json" }
 
 const SUGGEST_ITEMS_ENDPOINT = "suggest"
-const SUMMARY_PLAIN_TEXT_ENDPOINT = "summary1"
-const SUMMARY_DESCRIPTIONS_ENDPOINT = "summary2"
+const SUMMARY_PLAIN_TEXT_ENDPOINT = "summary_plain_text"
+const SUMMARY_DESCRIPTIONS_ENDPOINT = "summary_descriptions"
 const EDIT_ITEM_ENDPOINT = "getOnly"
 const MERGE_ORIGINAL_TEXT_ENDPOINT = "merge_original_texts"
 
