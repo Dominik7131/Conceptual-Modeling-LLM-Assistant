@@ -1,6 +1,6 @@
 import { Box, TextField } from "@mui/material"
 import { useRecoilState, useRecoilValue } from "recoil"
-import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms"
+import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms"
 import { useEffect } from "react"
 
 
