@@ -1,4 +1,6 @@
 import os
+
+import requests
 from text_utility import Field, PromptFileSymbols, TextUtility, UserChoice, DataType
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
@@ -12,8 +14,6 @@ IS_SYSTEM_MSG = True
 IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
 IS_RELATIONSHIPS_IS_A = False
-
-IS_STOP_GENERATING_OUTPUT = False
 
 TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
 LOG_FILE_PATH = f"{TIMESTAMP}-log.txt"
@@ -105,7 +105,7 @@ class LLMAssistant:
             return
 
         
-        if user_choice == UserChoice.SUMMARY1.value:
+        if user_choice == UserChoice.SUMMARY_PLAIN_TEXT.value:
             is_item_ok = "summary" in completed_item
 
             if not is_item_ok:
@@ -114,7 +114,7 @@ class LLMAssistant:
             yield completed_item, is_item_ok
             return
 
-        elif user_choice == UserChoice.SUMMARY2.value:
+        elif user_choice == UserChoice.SUMMARY_DESCRIPTIONS.value:
             yield completed_item, is_item_ok
             return
 
@@ -223,10 +223,10 @@ class LLMAssistant:
 
 
     def __parse_streamed_output(self, messages, user_choice, source_entity, target_entity="", field_name=""):
+
         self.debug_info = self.DebugInfo() # Reset debug info
 
-        # TODO: Do we need to specify the model name?
-        output = self.client.chat.completions.create(messages=messages, model="llama-2-7b-chat.Q4_K_M.gguf", stream=True, temperature=0)
+        output = self.client.chat.completions.create(messages=messages, model="", stream=True, temperature=0)
 
         items = []
         item = ""
@@ -244,10 +244,6 @@ class LLMAssistant:
             text = text.choices[0].delta.content
 
             self.debug_info.assistant_message += text
-
-            if IS_STOP_GENERATING_OUTPUT:
-                logging.debug("Stopping generating output")
-                return
 
             for char in text:
                 if char == '{':
@@ -289,8 +285,6 @@ class LLMAssistant:
                     item = ""
                 
                 last_char = char
-        
-        #logging.debug(f"-- End of LLM output generation --")
 
         if IS_IGNORE_DOMAIN_DESCRIPTION and len(items) != ITEMS_COUNT:
             logging.debug(f"Incorrect amount of items\n- expected: {ITEMS_COUNT}\n- actual: {len(items)}")
@@ -308,7 +302,7 @@ class LLMAssistant:
                 else:
                     self.debug_info.deleted_items.append(completed_item)
         
-        logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
+        # logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
         return
 
 
@@ -352,7 +346,6 @@ class LLMAssistant:
 
 
     def suggest(self, source_entity, target_entity, user_choice, count_items_to_suggest, conceptual_model, domain_description):
-        global IS_STOP_GENERATING_OUTPUT
 
         source_entity = source_entity.strip()
 
@@ -393,11 +386,6 @@ class LLMAssistant:
 
         items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, source_entity=source_entity, target_entity=target_entity)
 
-        # TODO: Test if this can prevent some errors
-        # try:
-        #     items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, user_input_entity1=source_entity, user_input_entity2=target_entity)
-        # finally:
-        #     IS_STOP_GENERATING_OUTPUT = True
 
         if user_choice == UserChoice.ENTITIES.value:
             suggested_entities = []
@@ -473,9 +461,9 @@ class LLMAssistant:
             yield f"{json_item}\n"
 
 
-    def summarize_conceptual_model1(self, conceptual_model, domain_description):
+    def summarize_conceptual_model_plain_text(self, conceptual_model, domain_description):
         
-        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY1.value, conceptual_model=conceptual_model,
+        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY_PLAIN_TEXT.value, conceptual_model=conceptual_model,
             relevant_texts=domain_description, is_chain_of_thoughts=False)
 
         self.messages = []
@@ -486,7 +474,7 @@ class LLMAssistant:
 
         logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
-        items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY1.value, "")
+        items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY_PLAIN_TEXT.value, "")
 
         for item in items_iterator:
             dictionary = json.loads(json.dumps(item))
@@ -495,9 +483,9 @@ class LLMAssistant:
             yield f"{json_item}\n"
 
 
-    def summarize_conceptual_model2(self, conceptual_model, domain_description):
+    def summarize_conceptual_model_descriptions(self, conceptual_model, domain_description):
 
-        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY2.value, conceptual_model=conceptual_model, 
+        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY_DESCRIPTIONS.value, conceptual_model=conceptual_model, 
             relevant_texts=domain_description, is_chain_of_thoughts=False)
 
         self.messages = []
@@ -508,7 +496,7 @@ class LLMAssistant:
 
         logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
-        items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY2.value, "")
+        items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY_DESCRIPTIONS.value, "")
 
         for item in items_iterator:
             dictionary = json.loads(json.dumps(item))

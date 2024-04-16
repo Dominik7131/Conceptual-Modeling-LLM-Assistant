@@ -51,7 +51,7 @@ def summary1():
     domain_description = body_data["domainDescription"]
     conceptual_model = body_data["conceptualModel"]
 
-    return llm_assistant.summarize_conceptual_model1(conceptual_model, domain_description)
+    return llm_assistant.summarize_conceptual_model_plain_text(conceptual_model, domain_description)
 
 
 @app.route('/summary2', methods=['POST'])
@@ -62,7 +62,7 @@ def summary2():
     domain_description = body_data["domainDescription"]
     conceptual_model = body_data["conceptualModel"]
 
-    return llm_assistant.summarize_conceptual_model2(conceptual_model, domain_description)
+    return llm_assistant.summarize_conceptual_model_descriptions(conceptual_model, domain_description)
 
 
 @app.route('/merge_original_texts', methods=['POST'])

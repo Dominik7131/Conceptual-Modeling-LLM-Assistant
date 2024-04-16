@@ -10,8 +10,8 @@ class UserChoice(Enum):
     RELATIONSHIPS = "relationships"
     RELATIONSHIPS2 = "relationships2"
     ENTITIES = "entities"
-    SUMMARY1 = "summary1"
-    SUMMARY2 = "summary2"
+    SUMMARY_PLAIN_TEXT = "summary-plain-text"
+    SUMMARY_DESCRIPTIONS = "summary-descriptions"
 
 
 class DataType(Enum):
@@ -667,5 +667,3 @@ class TextUtility:
                 i += 1
 
         return input
-
-        
