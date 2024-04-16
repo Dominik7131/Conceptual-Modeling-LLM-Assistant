@@ -6,7 +6,7 @@ import { Attribute } from "../../interfaces"
 
 
 
-const SummaryDescriptions: React.FC = (): JSX.Element =>
+const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
 {
     const summaryDescriptions = useRecoilValue(summaryDescriptionsState)
     const isLoadingSummaryDescriptions = useRecoilValue(isLoadingSummaryDescriptionsState)
@@ -81,4 +81,4 @@ const SummaryDescriptions: React.FC = (): JSX.Element =>
 }
 
 
-export default SummaryDescriptions
+export default SummaryDescriptionsTab

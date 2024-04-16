@@ -4,8 +4,8 @@ import TabPanel from '@mui/lab/TabPanel';
 import TabContext from '@mui/lab/TabContext';
 import { useRecoilValue } from "recoil";
 import { sidebarWidthPercentageState, topbarTabValueState } from "../../atoms";
-import SummaryDescriptions from "./SummaryDescriptions";
-import SummaryPlainText from "./SummaryPlainText";
+import SummaryDescriptionsTab from "./SummaryDescriptionsTab";
+import SummaryPlainTextTab from "./SummaryPlainTextTab";
 import TopbarButtons from "./ControlButtons";
 import SettingsTab from "./SettingsTab";
 import Tabs from "./Tabs";
@@ -31,11 +31,11 @@ const Topbar: React.FC = () =>
                 </TabPanel>
 
                 <TabPanel value="1">
-                    <SummaryPlainText/>
+                    <SummaryPlainTextTab/>
                 </TabPanel>
 
                 <TabPanel value="2">
-                    <SummaryDescriptions/>                    
+                    <SummaryDescriptionsTab/>                    
                 </TabPanel>
 
                 <TabPanel value="3">

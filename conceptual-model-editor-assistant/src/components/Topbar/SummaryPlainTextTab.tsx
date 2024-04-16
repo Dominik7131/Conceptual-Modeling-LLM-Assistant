@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil"
 import { isLoadingSummaryPlainTextState, summaryTextState } from "../../atoms"
 
 
-const SummaryPlainText: React.FC = (): JSX.Element =>
+const SummaryPlainTextTab: React.FC = (): JSX.Element =>
 {
     const summary = useRecoilValue(summaryTextState)
     const isLoadingSummaryPlainText = useRecoilValue(isLoadingSummaryPlainTextState)
@@ -17,4 +17,4 @@ const SummaryPlainText: React.FC = (): JSX.Element =>
     )
 }
 
-export default SummaryPlainText
+export default SummaryPlainTextTab
