@@ -1,11 +1,11 @@
-import { BaseEdge, EdgeLabelRenderer, EdgeProps, getBezierPath, getStraightPath } from 'reactflow';
+import { BaseEdge, EdgeLabelRenderer, EdgeProps, MarkerType, getBezierPath, getMarkerEnd, getStraightPath } from 'reactflow';
 import { EdgeData, Field, ItemType, Relationship, primaryColor } from '../interfaces';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { Typography } from '@mui/material';
-import useUtility, { capitalizeString } from '../hooks/useUtility';
+import useUtility, { capitalizeString, clipName } from '../hooks/useUtility';
 import useConceptualModel from '../hooks/useConceptualModel';
 
 
@@ -39,7 +39,7 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
                 onMouseEnter={() => setIsHovered(_ => true)} 
                 onMouseLeave={() => setIsHovered(_ => false)}
                 >
-                { capitalizeString(relationship[Field.NAME]) }
+                { capitalizeString( clipName(relationship[Field.NAME])) }
 
                 <Typography
                   color={selected ? primaryColor : "black"}

@@ -13,7 +13,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import ModeStandbyIcon from '@mui/icons-material/ModeStandby';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import useUtility, { capitalizeString } from '../hooks/useUtility';
+import useUtility, { capitalizeString, clipName } from '../hooks/useUtility';
 import useConceptualModel from '../hooks/useConceptualModel';
 
 
@@ -34,13 +34,12 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
     const borderSelected = `1px solid ${primaryColor}`
 
     // If the entity name is too long then display only the beginning of it with three dots at the end
-    const spacesCount: number = entity.name.split(" ").length - 1
-    let entityName = capitalizeString(entity.name)
+    const spacesCount: number = entity[Field.NAME].split(" ").length - 1
+    let entityName = capitalizeString(entity[Field.NAME])
     if (spacesCount === 0 && entityName.length > 12)
     {
         entityName = entityName.substring(0, 12) + "..."
-    }
-    
+    }    
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
@@ -57,30 +56,13 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
 
     const HandleStyleCheck = {
         top: {
-          right: -10,
-          top: -20,
-          background: "#555",
-          minWidth: 20,
-          height: 20,
-          borderRadius: 4,
-          placeItems: "center",
-          display: "grid",
-          color: "#fff",
-          zIndex: 2
+          right: -10, top: -20, background: "#555", minWidth: 20, height: 20, borderRadius: 4, placeItems: "center", display: "grid",
+          color: "#fff", zIndex: 2
         },
-        bottom: {
-          right: -10,
-          top: 43,
-          background: "#555",
-          minWidth: 20,
-          height: 20,
-          borderRadius: 4,
-          placeItems: "center",
-          display: "grid",
-          color: "#fff",
-          zIndex: 2
+        bottom: { right: -10, top: 43, background: "#555", minWidth: 20, height: 20, borderRadius: 4, placeItems: "center",
+        display: "grid", color: "#fff", zIndex: 2
         }
-      };
+    }
 
 
     return (
@@ -134,14 +116,14 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                 </MenuItem>
 
 
-                <MenuItem onClick={() => { onSuggestItems(UserChoice.ATTRIBUTES, entity.name, null); handleClose(); }}>
+                <MenuItem onClick={() => { onSuggestItems(UserChoice.ATTRIBUTES, entity[Field.NAME], null); handleClose(); }}>
                     <ListItemIcon>
                         <AutoFixHighIcon fontSize="small" />
                     </ListItemIcon>
                         Suggest attributes
                 </MenuItem>
                 
-                <MenuItem onClick={() => { onSuggestItems(UserChoice.RELATIONSHIPS, entity.name, null); handleClose(); }}>
+                <MenuItem onClick={() => { onSuggestItems(UserChoice.RELATIONSHIPS, entity[Field.NAME], null); handleClose(); }}>
                     <ListItemIcon>
                         <AutoFixHighIcon fontSize="small" />
                     </ListItemIcon>
@@ -155,13 +137,13 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
             { attributes.length > 0 && <Divider sx={{backgroundColor: selected ? primaryColor : "gray"}}></Divider> }
 
             <Stack>
-                {attributes.map((attribute : Attribute, index : number) =>
+                {attributes.map((attribute: Attribute, index: number) =>
                 (
-                    <Button size="small" key={`${attribute.name}-${index}`}
+                    <Button size="small" key={`${attribute[Field.NAME]}-${index}`}
                         style={{justifyContent: "flex-start"}}
                         sx={{ color: selected ? primaryColor : "black", fontSize: "12px", textTransform: 'lowercase'}}
                         onClick={() => onEditItem(attribute)}>
-                        { attribute.name }
+                        { clipName(attribute[Field.NAME]) }
                     </Button>
                 ))}
             </Stack>

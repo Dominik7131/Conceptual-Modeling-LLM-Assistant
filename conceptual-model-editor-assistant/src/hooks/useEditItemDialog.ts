@@ -1,5 +1,5 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { domainDescriptionState, edgesState, editedSuggestedItemState, fieldToLoadState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from "../atoms"
+import { domainDescriptionState, edgesState, editDialogWarningMsgState, editedSuggestedItemState, fieldToLoadState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from "../atoms"
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
 import { EDIT_ITEM_URL, HEADER, createEdgeID } from "./useUtility";
@@ -20,18 +20,21 @@ const useEditItemDialog = () =>
     const domainDescription = useRecoilValue(domainDescriptionState)
     const setFieldToLoad = useSetRecoilState(fieldToLoadState)
 
+    const setWarningMessage = useSetRecoilState(editDialogWarningMsgState)   
+
 
     const onClose = (): void =>
     {
         onClearRegeneratedItem(null, true)
         setIsOpened(_ => false)
+        setWarningMessage(_ => "")
     }
 
     const onSave = (newItem: Item, oldItem: Item, isSuggestedItem: boolean): void =>
     {
         if (!newItem.name)
         {
-            alert("Name cannot be empty")
+            setWarningMessage(_ => "Name cannot be empty")
             return
         }
     
@@ -297,7 +300,7 @@ const useEditItemDialog = () =>
                 return
             }
 
-            const reader = stream.getReader();
+            const reader = stream.getReader()
 
             const readChunk = () =>
             {
@@ -327,7 +330,7 @@ const useEditItemDialog = () =>
         {
             console.error(error);
             alert("Error: request failed")
-        });
+        })
     }
 
 
@@ -350,31 +353,33 @@ const useEditItemDialog = () =>
     {
         // If the item is attribute then transform it into relationship
         // Otherwise transform relationsip into attribute
+
+        setWarningMessage(_ => "")
     
         if (item.type === ItemType.ATTRIBUTE)
         {
-        const oldAttribute = item as Attribute
-    
-        const relationship : Relationship = {
-            ID: oldAttribute.ID, type: ItemType.RELATIONSHIP, name: "", description: oldAttribute.description,
-            originalText: oldAttribute.originalText, originalTextIndexes: oldAttribute.originalTextIndexes, source: oldAttribute.source,
-            target: oldAttribute.name, cardinality: ""}
-    
-        setSelectedSuggestedItem(_ => relationship)
-        setEditedSuggestedItem(_ => relationship)
+            const oldAttribute = item as Attribute
+        
+            const relationship : Relationship = {
+                ID: oldAttribute.ID, type: ItemType.RELATIONSHIP, name: "", description: oldAttribute.description,
+                originalText: oldAttribute.originalText, originalTextIndexes: oldAttribute.originalTextIndexes, source: oldAttribute.source,
+                target: oldAttribute.name, cardinality: ""}
+        
+            setSelectedSuggestedItem(_ => relationship)
+            setEditedSuggestedItem(_ => relationship)
         }
         else
         {
-        const oldRelationship = item as Relationship
-    
-        const attribute : Attribute = {
-            ID: oldRelationship.ID, type: ItemType.ATTRIBUTE, name: oldRelationship.target, description: oldRelationship.description,
-            dataType: "string", originalText: oldRelationship.originalText, originalTextIndexes: oldRelationship.originalTextIndexes,
-            cardinality: "", source: oldRelationship.source
-        }
-    
-        setSelectedSuggestedItem(_ => attribute)
-        setEditedSuggestedItem(_ => attribute)
+            const oldRelationship = item as Relationship
+        
+            const attribute : Attribute = {
+                ID: oldRelationship.ID, type: ItemType.ATTRIBUTE, name: oldRelationship.target, description: oldRelationship.description,
+                dataType: "string", originalText: oldRelationship.originalText, originalTextIndexes: oldRelationship.originalTextIndexes,
+                cardinality: "", source: oldRelationship.source
+            }
+        
+            setSelectedSuggestedItem(_ => attribute)
+            setEditedSuggestedItem(_ => attribute)
         }
     }
     

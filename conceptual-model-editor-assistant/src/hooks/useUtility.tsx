@@ -84,6 +84,17 @@ export const getNodeByID = (nodes: Node[], nodeID: string): Node | null =>
 }
 
 
+export const clipName = (name: string): string =>
+{
+    if (name.length > 12)
+    {
+        const newName = name.substring(0, 12) + "..."
+        return newName
+    }
+    return name
+}
+
+
 export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
 export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 

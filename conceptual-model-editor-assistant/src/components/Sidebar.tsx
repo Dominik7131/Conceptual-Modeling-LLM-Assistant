@@ -16,6 +16,7 @@ import { isLoadingSuggestedItemsState, isSidebarOpenState, sidebarWidthPercentag
 import useConceptualModel from '../hooks/useConceptualModel';
 import { useEffect } from 'react';
 import HighlightSingleItemButton from './HighlightSingleItemButton';
+import useEditItemDialog from '../hooks/useEditItemDialog';
 
 
 const Sidebar: React.FC = () =>

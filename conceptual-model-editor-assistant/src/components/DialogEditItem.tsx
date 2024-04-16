@@ -15,9 +15,10 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useRecoilValue } from 'recoil';
-import { domainDescriptionState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from '../atoms';
+import { domainDescriptionState, editDialogWarningMsgState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from '../atoms';
 import useEditItemDialog from '../hooks/useEditItemDialog';
 import useConceptualModel from '../hooks/useConceptualModel';
+import Alert from '@mui/material/Alert';
 
 
 const DialogEditItem: React.FC = () =>
@@ -33,6 +34,8 @@ const DialogEditItem: React.FC = () =>
     const isDisableSave = useRecoilValue(isDisableSaveState)
     const isDisableChange = useRecoilValue(isDisableChangeState)
 
+    const warningMessage = useRecoilValue(editDialogWarningMsgState)
+
     const { onAddItem } = useConceptualModel()
     const { onSave, onClose, onRemove, onItemEdit, onGenerateField, onConfirmRegeneratedText, onClearRegeneratedItem, onChangeItemType } = useEditItemDialog()
 
@@ -41,6 +44,16 @@ const DialogEditItem: React.FC = () =>
 
     const isAttribute = item.type === ItemType.ATTRIBUTE
     const isRelationship = item.type === ItemType.RELATIONSHIP
+
+
+    const handleAdd = (item: Item): void =>
+    {
+        const result = onAddItem(item)
+        if (result)
+        {
+            onClose()
+        }
+    }
 
 
     const showEditField = (label : string, field : Field, value : string) =>
@@ -98,6 +111,13 @@ const DialogEditItem: React.FC = () =>
     return (
         <Dialog open={isOpened} fullWidth={true} maxWidth={'xl'} onClose={onClose}>
 
+            {
+                warningMessage != "" &&
+                <Alert variant="outlined" severity="warning" sx={{marginX:"20px", marginTop: "20px"}}>
+                    { warningMessage }
+                </Alert>
+            }
+            
             <DialogTitle> Edit </DialogTitle>
 
             <DialogContent>
@@ -130,7 +150,7 @@ const DialogEditItem: React.FC = () =>
 
                     {
                         isSuggestedItem ?
-                        <Button variant="contained" color="success" onClick={() => { onAddItem(editedItem); onClose() }}>Add</Button>
+                        <Button variant="contained" color="success" onClick={() => { handleAdd(editedItem) }}>Add</Button>
                         :
                         <Button variant="contained" color="error" onClick={() => { onRemove(item); onClose()}}>Remove</Button>
                     }

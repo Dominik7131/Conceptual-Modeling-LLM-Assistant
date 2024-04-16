@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { Node, Edge } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { SUMMARY_PLAIN_TEXT_URL, capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist } from './useUtility';
+import { capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist } from './useUtility';
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState, topbarTabValueState } from '../atoms';
+import { domainDescriptionState, edgesState, editDialogWarningMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState, topbarTabValueState } from '../atoms';
 
 
 const useConceptualModel = () =>
@@ -33,6 +33,8 @@ const useConceptualModel = () =>
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
 
   const setTabValue = useSetRecoilState(topbarTabValueState)
+
+  const setWarningMessage = useSetRecoilState(editDialogWarningMsgState)
 
   const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData } = useFetchData({ onProcessStreamedData })
 
@@ -135,7 +137,7 @@ const useConceptualModel = () =>
   {
     let result: { [key: string]: any } = {
       entities: []
-    };
+    }
 
     for (let node of selectedNodes)
     {
@@ -343,7 +345,8 @@ const useConceptualModel = () =>
 
     if (doesNodeAlreadyExist(nodes, nodeID))
     {
-      alert(`Node '${nodeID}' already exists`)
+      const alertMessage = `Node '${nodeID}' already exists`
+      setWarningMessage(_ => alertMessage)
       return
     }
 
@@ -355,24 +358,27 @@ const useConceptualModel = () =>
   }
 
 
-  const addNodeEntity = (entity: Entity, positionX: number, positionY: number) =>
+  const addNodeEntity = (entity: Entity, positionX: number, positionY: number): boolean =>
   {
-      if (doesNodeAlreadyExist(nodes, entity.name))
-      {
-        alert(`Node '${entity.name}' already exists`)
-        return
-      }
-  
-      const nodeData: NodeData = { entity: entity, attributes: [] }
-  
-      const newNode: Node = {
-        id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
-        data: nodeData
-      }
-  
-      setNodes(previousNodes => {
-        return [...previousNodes, newNode]
-      })
+    if (doesNodeAlreadyExist(nodes, entity.name))
+    {
+      const alertMessage = `Node '${entity.name}' already exists`
+      setWarningMessage(_ => alertMessage)
+      return false
+    }
+
+    const nodeData: NodeData = { entity: entity, attributes: [] }
+
+    const newNode: Node = {
+      id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
+      data: nodeData
+    }
+
+    setNodes(previousNodes => {
+      return [...previousNodes, newNode]
+    })
+
+    return true
   }
 
 
@@ -387,20 +393,20 @@ const useConceptualModel = () =>
   }
   
   
-  const onAddAttributesToNode = (attribute : Attribute) : void =>
+  const onAddAttributesToNode = (attribute : Attribute) =>
   {    
     const nodeID = attribute.source
+    let isAttributePresent = false
     
     setNodes((nodes) => nodes.map((currentNode : Node) =>
     {
       // Skip nodes which are not getting a new attribute
       if (currentNode.id !== nodeID)
       {
-        return currentNode;
+        return currentNode
       }
 
       // If the node already contains the selected attribute do not add anything
-      let isAttributePresent = false
       currentNode.data.attributes.forEach((currentAttribute : Attribute) =>
       {
         if (currentAttribute.name === attribute.name)
@@ -411,8 +417,7 @@ const useConceptualModel = () =>
 
       if (isAttributePresent)
       {
-        console.log("Attribute is already present")
-        return currentNode;
+        return currentNode
       }
 
       const newAttributes = [...currentNode.data.attributes, attribute]  
@@ -421,6 +426,8 @@ const useConceptualModel = () =>
 
       return updatedNode
     }));
+
+    return isAttributePresent
   }
 
 
@@ -514,23 +521,31 @@ const useConceptualModel = () =>
   }
 
 
-  const onAddItem = (item: Item) =>
+  const onAddItem = (item: Item): boolean =>
   {
-    console.log("Adding this item: ", item)
+    if (item.name === "")
+    {
+      const warningMessage = "Name cannot be empty"
+      setWarningMessage(_ => warningMessage)
+      return false
+    }
+
 
     if (item.type === ItemType.ENTITY)
     {
-      if (!item.name)
-      {
-        alert("Entity name cannot be empty")
-        return
-      }
-
-      addNodeEntity(item as Entity, 66, 66)
+      return addNodeEntity(item as Entity, 66, 66)
     }
     else if (item.type === ItemType.ATTRIBUTE)
     {
-      onAddAttributesToNode(item as Attribute)
+      const result = onAddAttributesToNode(item as Attribute)
+      if (!result)
+      {
+        const warningMessage = "Attribute is already present"
+        setWarningMessage(_ => warningMessage)
+
+        // TODO: Return false
+        // However, strict mode in reacts adds one attribute and then complains about the same attribute being already present
+      }
     }
     else if (item.type === ItemType.RELATIONSHIP)
     {
@@ -539,7 +554,9 @@ const useConceptualModel = () =>
     else
     {
       console.log("Unknown item type: ", item.type)
+      return false
     }
+    return true
   }
     
     
