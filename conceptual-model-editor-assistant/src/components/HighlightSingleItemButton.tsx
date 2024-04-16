@@ -55,7 +55,7 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }):JSX.Element =>
     
         if (suggestedItem.type === ItemType.ENTITY)
         {
-            tooltip = `Entity: ${capitalizedSourceEntity}`
+            tooltip = `Entity: ${suggestedItem.name}`
         }
         else if (suggestedItem.type === ItemType.ATTRIBUTE)
         {

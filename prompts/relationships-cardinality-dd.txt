@@ -1,0 +1,6 @@
+Solely based on the given context provide cardinality for the relationship: "{relationship_name}" of the entity: "{source_entity}" and output it in this JSON object:
+{"cardinality": "..."}.
+
+		
+This is the given context:
+"{domain_description}"

@@ -175,7 +175,6 @@ const Topbar: React.FC = () =>
                         <Tab sx={{textTransform: "none"}} label={SUMMARY_PLAIN_TEXT_NAME} value="1" />
                         <Tab sx={{textTransform: "none"}} label={SUMMARY_DESCRIPTIONS_NAME} value="2" />
                         <Tab sx={{textTransform: "capitalize"}} label="Settings" value="3" />
-                        <Tab sx={{textTransform: "capitalize"}} label="Server info" value="4" />
                     </TabList>
                 </Box>
 

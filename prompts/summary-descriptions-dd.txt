@@ -1,4 +1,6 @@
-Solely based on the given context generate description for each given entity, attribute and relationship in the same JSON format as the example shows.
+Solely based on the given context generate description only for the given entities, attributes and relationships in JSON format like this:
+{"entity": "...", "description": "...", "attributes": [{"name": "...", "description": "..."}]}
+{"relationship": "...", "sourceEntity": "...", "targetEntity": "...", "description": "..."}
 
 EXAMPLE START
 
@@ -9,8 +11,7 @@ Given entities, attributes and relationships:
 Given context:
 "We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."
 
-Output:
-
+Output that you should generate:
 {"entity": "student", "description": "A student entity represents an individual enrolled in an educational institution", "attributes": [{"name": "name", "description": "The name of the student"}]}
 {"entity": "course", "description": "A course entity representing educational modules", "attributes": [{"name": "name", "description": "The name of the course"}, {"name": "number of credits", "description": "The number of credits assigned to the course"}]}
 {"entity": "professor", "description": "A professor entity representing instructors teaching courses", "attributes": [{"name": "name", "description": "The name of the professor"}]}
@@ -24,7 +25,7 @@ EXAMPLE END
 
 
 Given entities, attributes and relationships:
-{conceptual_model}"
+"{conceptual_model}"
 
 
 Given context:

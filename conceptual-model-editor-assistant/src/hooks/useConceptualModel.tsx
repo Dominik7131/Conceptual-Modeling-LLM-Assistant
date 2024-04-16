@@ -215,6 +215,9 @@ const useConceptualModel = () =>
   {
     const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
 
+    // Clear all previous suggested items
+    setSuggestedItems(_ => [])
+
     let itemType = ItemType.ENTITY
     if (userChoice === UserChoice.ATTRIBUTES)
     {
