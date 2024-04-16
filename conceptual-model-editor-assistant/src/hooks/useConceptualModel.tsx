@@ -4,7 +4,7 @@ import { Node, Edge } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { BASE_URL, HEADER, capitalizeString, createEdgeID } from './useUtility';
 import useFetchData from './useFetchData';
-import { Attribute, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, UserChoice } from '../interfaces';
+import { Attribute, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { domainDescriptionState, edgesState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from '../atoms';
 
@@ -27,11 +27,7 @@ const useConceptualModel = () =>
   const selectedEdges = useRecoilValue(selectedEdgesState)
 
   const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
-  const setIsShowHighlightDialog = useSetRecoilState(isShowHighlightDialogState)
   const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialogState)
-
-  const setoriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
-  const setTooltips = useSetRecoilState(tooltipsState)
 
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
