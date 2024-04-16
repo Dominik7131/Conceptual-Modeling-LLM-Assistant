@@ -72,10 +72,7 @@ const useConceptualModel = () =>
         [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
       }
 
-      const nodeData : NodeData = {
-        entity: newEntity, attributes: [],
-        onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute 
-      }
+      const nodeData : NodeData = { entity: newEntity, attributes: [] }
 
       const newNode : Node = {
         id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData
@@ -131,9 +128,7 @@ const useConceptualModel = () =>
         [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
       }
 
-      const edgeData: EdgeData = {
-        relationship: newRelationship, onEdit: onEditItem
-      }
+      const edgeData: EdgeData = { relationship: newRelationship }
 
       const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, nameLowerCase)
       const newEdge : Edge = {
@@ -157,9 +152,7 @@ const useConceptualModel = () =>
         [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
       }
 
-      const edgeData: EdgeData = {
-        relationship: newRelationship, onEdit: onEditItem
-      }
+      const edgeData: EdgeData = { relationship: newRelationship }
 
       const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, nameLowerCase)
       const newEdge : Edge = {
@@ -252,13 +245,8 @@ const useConceptualModel = () =>
         [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "",
         [Field.ORIGINAL_TEXT_INDEXES]: entity[Field.ORIGINAL_TEXT_INDEXES]}
 
-      const nodeData : NodeData = {
-        entity: newEntity, attributes: entity.attributes,
-        onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute 
-      }
-      const newNode : Node = {
-        id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData
-      }
+      const nodeData : NodeData = { entity: newEntity, attributes: entity.attributes }
+      const newNode : Node = { id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
 
       newNodes.push(newNode)
 
@@ -280,7 +268,7 @@ const useConceptualModel = () =>
         [Field.SOURCE_ENTITY]: relationship.source, [Field.TARGET_ENTITY]: relationship.target,
         [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT]: relationship.originalText, [Field.ORIGINAL_TEXT_INDEXES]: []
       }
-      const edgeData: EdgeData = { relationship: newRelationship, onEdit: onEditItem }
+      const edgeData: EdgeData = { relationship: newRelationship }
 
       const newEdge: Edge = {
         id: newID, source: relationship.source, target: relationship.target, type: "custom-edge",
@@ -351,8 +339,6 @@ const useConceptualModel = () =>
     {
       // Convert the `value` to a string
       var jsonString = new TextDecoder().decode(value)
-      console.log(jsonString)
-      console.log("\n")
 
       // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
       const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
@@ -414,6 +400,7 @@ const useConceptualModel = () =>
     targetItemName = targetItemName !== null ? targetItemName : ""
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
+    console.log("DD: ", currentDomainDescription)
     fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, sourceItemName, itemType)
   }
 
@@ -569,7 +556,8 @@ const useConceptualModel = () =>
   {
     setNodes((nodes) => nodes.map((currentNode : Node) =>
     {
-      const updatedData = { ...currentNode.data, onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute }
+      console.log(currentNode)
+      const updatedData = { ...currentNode.data }
       const updatedNode: Node = { ...currentNode, data: updatedData }
       return updatedNode
     }))
@@ -579,7 +567,7 @@ const useConceptualModel = () =>
   {
     setEdges((edges) => edges.map((currentEdge : Edge) =>
     {
-      const updatedData = { ...currentEdge.data, onEdit: onEditItem }
+      const updatedData = { ...currentEdge.data }
       const updatedEdge: Edge = { ...currentEdge, data: updatedData }
       return updatedEdge
     }))
@@ -645,14 +633,9 @@ const useConceptualModel = () =>
       [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
     }
 
-    const nodeData: NodeData = {
-      entity: newEntity, attributes: [],
-      onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
-    }
+    const nodeData: NodeData = { entity: newEntity, attributes: [] }
 
-    const newNode: Node = {
-      id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData
-    }
+    const newNode: Node = { id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
     
     return newNode
   }
@@ -688,10 +671,7 @@ const useConceptualModel = () =>
         return
       }
   
-      const nodeData: NodeData = {
-        entity: entity, attributes: [],
-        onEdit: onEditItem, onSuggestItems: onSuggestItems, onAddNewAttribute: onAddNewAttribute
-      }
+      const nodeData: NodeData = { entity: entity, attributes: [] }
   
       const newNode: Node = {
         id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
@@ -811,7 +791,7 @@ const useConceptualModel = () =>
       }));
     }
 
-    const edgeData: EdgeData = { relationship: relationship, onEdit: onEditItem }
+    const edgeData: EdgeData = { relationship: relationship }
 
     const newEdge : Edge = {
       id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: edgeData
@@ -853,7 +833,7 @@ const useConceptualModel = () =>
   }
 
 
-  function onEditItem(item: Item) : void
+  function onEditItem(item: Item): void
   {
     setIsSuggestedItem(_ => false)
     setIsDisableSave(_ => false)
@@ -865,7 +845,7 @@ const useConceptualModel = () =>
   }
 
 
-  const onAddItem = (item : Item) =>
+  const onAddItem = (item: Item) =>
   {
     console.log("Adding this item: ", item)
 
@@ -951,7 +931,7 @@ const useConceptualModel = () =>
     
     
   return {
-    parseSerializedConceptualModel,
+    parseSerializedConceptualModel, onEditItem, onAddNewAttribute,
     onIgnoreDomainDescriptionChange, onSuggestItems, onSummaryButtonClick, capitalizeString,
     onClickAddNode, onDomainDescriptionChange, onEditSuggestion, onHighlightSingleItem, onOverlayDomainDescriptionOpen, onHighlightSelectedItems,
     onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem, onImport, onExport

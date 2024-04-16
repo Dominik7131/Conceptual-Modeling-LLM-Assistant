@@ -54,15 +54,11 @@ export interface NodeData
 {
   entity: Entity
   attributes: Attribute[]
-  onEdit: (item: Item) => void
-  onSuggestItems: (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null) => void
-  onAddNewAttribute: (sourceEntity: Entity) => void
 }
 
 export interface EdgeData
 {
   relationship: Relationship
-  onEdit: (item: Item) => void
 }
 
 export type Item = Entity | Attribute | Relationship

@@ -5,7 +5,8 @@ import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { Typography } from '@mui/material';
-import useUtility from '../hooks/useUtility';
+import useUtility, { capitalizeString } from '../hooks/useUtility';
+import useConceptualModel from '../hooks/useConceptualModel';
 
 
 // Inspiration: https://reactflow.dev/learn/customization/custom-edges
@@ -16,7 +17,7 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
   // const [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
   const [edgePath, labelX, labelY] = getBezierPath({sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition});
 
-  const { capitalizeString } = useUtility()
+  const { onEditItem } = useConceptualModel()
 
   const edgeData: EdgeData = data as EdgeData
   const relationship: Relationship = edgeData.relationship
@@ -42,7 +43,7 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
 
                 <Typography
                   color={selected ? primaryColor : "black"}
-                  onClick={() => data.onEdit(relationship)}
+                  onClick={() => onEditItem(relationship)}
                   sx={{ display: isHovered ? "inline" : "none",  position: "absolute", right: 3, top: 3 }}
                 >
                   <EditIcon sx={{ width: "20px", height: "20px" }}/> 
