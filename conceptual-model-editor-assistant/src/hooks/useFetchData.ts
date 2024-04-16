@@ -7,10 +7,9 @@ import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummary1Stat
 interface Props
 {
   onProcessStreamedData: (value: any, sourceEntityName: string, itemType: ItemType) => void
-  onProcessMergedOriginalTexts: (data: any) => void
 }
 
-const useFetchData = ({onProcessStreamedData, onProcessMergedOriginalTexts}: Props) =>
+const useFetchData = ({ onProcessStreamedData }: Props) =>
 {
     // TODO: Split all fetch data methods to a separate files
     const setIsLoadingSuggestedItems = useSetRecoilState(isLoadingSuggestedItemsState)
@@ -226,19 +225,9 @@ const useFetchData = ({onProcessStreamedData, onProcessMergedOriginalTexts}: Pro
     }
 
 
-    const fetchMergedOriginalTexts = (url: string, headers: any, bodyData: any) =>
-    {
-      fetch(url, { method: "POST", headers, body: bodyData})
-      .then(response => response.json())
-      .then(data => 
-            {
-              onProcessMergedOriginalTexts(data)
-            })
-        .catch(error => console.log(error))
-        return
-    }
 
-    return { fetchSummary, fetchSummaryDescriptions, fetchStreamedData, fetchMergedOriginalTexts }
+
+    return { fetchSummary, fetchSummaryDescriptions, fetchStreamedData }
 }
 
 export default useFetchData

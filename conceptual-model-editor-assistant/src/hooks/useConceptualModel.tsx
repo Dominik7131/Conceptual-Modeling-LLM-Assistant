@@ -36,8 +36,7 @@ const useConceptualModel = () =>
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
 
-  const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData, fetchMergedOriginalTexts }
-          = useFetchData({ onProcessStreamedData, onProcessMergedOriginalTexts })
+  const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData } = useFetchData({ onProcessStreamedData })
 
   let IDToAssign = 0
 
@@ -360,23 +359,6 @@ const useConceptualModel = () =>
       }
     }
 
-  function onProcessMergedOriginalTexts(data: any): void
-  {
-    let tooltips : string[] = []
-    let originalTextIndexes : number[] = []
-
-    for (let index = 0; index < data.length; index++)
-    {
-      const element = data[index];
-      originalTextIndexes.push(element[0])
-      originalTextIndexes.push(element[1])
-      tooltips.push(element[2])
-    }
-
-    setoriginalTextIndexesList(_ => originalTextIndexes)
-    setTooltips(_ => tooltips)
-  }
-
 
   const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
   {
@@ -472,81 +454,6 @@ const useConceptualModel = () =>
     return true
   }
 
-
-  const onHighlightSelectedItems = (): void =>
-  {
-    let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []
-
-    // Process all selected nodes
-    for (let i = 0; i < selectedNodes.length; i++)
-    {
-      // Process each attribute for the given entity
-      const entityName: string = capitalizeString(selectedNodes[i].id)
-      for (let j = 0; j < selectedNodes[i].data.attributes.length; j++)
-      {
-        const element = selectedNodes[i].data.attributes[j];
-
-        if (!element.originalTextIndexes)
-        {
-          continue
-        }
-
-        // Process each original text indexes for the given attribute
-        for (let k = 0; k < element.originalTextIndexes.length; k += 2)
-        {
-          const ii1: number = element.originalTextIndexes[k]
-          const ii2: number = element.originalTextIndexes[k + 1]
-
-          originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${entityName}: ${element.name}`} )
-        }
-      }
-
-
-      if (!selectedNodes[i].data.originalTextIndexes)
-      {
-        continue
-      }
-
-      // Process each original text indexes for the given entity 
-      for (let k = 0; k < selectedNodes[i].data.originalTextIndexes.length; k += 2)
-      {
-        const ii1 : number = selectedNodes[i].data.originalTextIndexes[k]
-        const ii2 : number = selectedNodes[i].data.originalTextIndexes[k + 1]
-
-        originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Entity: ${selectedNodes[i].id}`} )
-      }
-    }
-
-    // Process also all selected edges
-    for (let i = 0; i < selectedEdges.length; i++)
-    {
-      if (!selectedEdges[i].data.originalTextIndexes)
-      {
-        continue
-      }
-
-      // Process each original text indexes for the given edge 
-      for (let k = 0; k < selectedEdges[i].data.originalTextIndexes.length; k += 2)
-      {
-        const ii1 : number = selectedEdges[i].data.originalTextIndexes[k]
-        const ii2 : number = selectedEdges[i].data.originalTextIndexes[k + 1]
-
-        originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${selectedEdges[i].source} – ${selectedEdges[i].data.name} – ${selectedEdges[i].target}`} )
-      }
-    }
-
-    const endpoint = "merge_original_texts"
-    const url = BASE_URL + endpoint
-    const headers = { "Content-Type": "application/json" }
-    const bodyData = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects})
-
-    fetchMergedOriginalTexts(url, headers, bodyData)
-
-
-    setIsShowHighlightDialog(true)
-  }
-
-
   const doesNodeAlreadyExist = (nodeID: string): boolean =>
   {
     for (let i = 0; i < nodes.length; i++)
@@ -617,12 +524,6 @@ const useConceptualModel = () =>
       setNodes(previousNodes => {
         return [...previousNodes, newNode]
       })
-  }
-
-
-  const onOverlayDomainDescriptionOpen = () =>
-  {
-    setIsShowHighlightDialog(true)
   }
 
 
@@ -808,69 +709,11 @@ const useConceptualModel = () =>
       console.log("Unknown item type: ", item.type)
     }
   }
-
-
-
-  const onHighlightSingleItem = (itemID : number) =>
-  {
-    // TODO: probably add to method argument "isAttribute" similar to `editSuggestion` method in Sidebar.tsx
-    // TODO: probably move this function into file `useoriginalTextIndexes.tsx`
-
-    setIsShowHighlightDialog(_ => true)
-
-    // Find the suggested item with ID: itemID
-
-    let suggestedItem: Item | null = null
-
-    setSuggestedItems((items: Item[]) => items.map((item: Item) =>
-    {
-      if (item.ID === itemID)
-      {
-        suggestedItem = item
-      }
-
-      return item
-    }))
-
-
-    if (!suggestedItem)
-    {
-      throw new Error("Accessed invalid itemID")
-    }
-
-    suggestedItem = suggestedItem as Item
-    
-    setSelectedSuggestedItem(_ => suggestedItem as Item)
-    setoriginalTextIndexesList(_ => (suggestedItem as Item)[Field.ORIGINAL_TEXT_INDEXES])
-
-    // Create tooltips for highlighted original text
-    let tooltip = ""
-
-    const capitalizedSourceEntity: string = capitalizeString((suggestedItem as Attribute).source)
-
-    if (suggestedItem.type === ItemType.ENTITY)
-    {
-      tooltip = `Entity: ${capitalizedSourceEntity}`
-    }
-    else if (suggestedItem.type === ItemType.ATTRIBUTE)
-    {
-      tooltip = `${capitalizedSourceEntity}: ${suggestedItem.name}`
-    }
-    else if (suggestedItem.type === ItemType.RELATIONSHIP)
-    {
-      tooltip = `${capitalizedSourceEntity} - ${suggestedItem.name} - ${(suggestedItem as Relationship).target}`
-    }
-
-    let newTooltips : string[] = Array(suggestedItem.originalTextIndexes.length).fill(tooltip)
-    setTooltips(_ => newTooltips)
-  }
     
     
   return {
-    parseSerializedConceptualModel, onEditItem, onAddNewAttribute,
-    onSuggestItems, onSummaryButtonClick, capitalizeString,
-    onClickAddNode, onEditSuggestion, onHighlightSingleItem, onOverlayDomainDescriptionOpen, onHighlightSelectedItems,
-    onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem, onImport, onExport
+    parseSerializedConceptualModel, onEditItem, onAddNewAttribute, onSuggestItems, onSummaryButtonClick, capitalizeString,
+    onClickAddNode, onEditSuggestion, onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem, onImport, onExport
   }
 }
 

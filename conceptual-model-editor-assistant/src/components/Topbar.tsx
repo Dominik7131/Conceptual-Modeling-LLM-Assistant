@@ -18,18 +18,19 @@ import AddIcon from '@mui/icons-material/Add';
 import HighlightIcon from '@mui/icons-material/Highlight';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import DownloadIcon from '@mui/icons-material/Download';
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { domainDescriptionState, isIgnoreDomainDescriptionState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, sidebarWidthPercentageState, summaryDescriptionsState, summaryTextState } from "../atoms";
 import useConceptualModel from "../hooks/useConceptualModel";
-import useDomainDescription from "../hooks/useDomainDescription";
 import FileUploader from "./FileUploader";
 import DomainDescriptionTextArea from "./DomainDescriptionTextArea";
+import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
 
 
 const Topbar: React.FC = () =>
 {
     const domainDescription = useRecoilValue(domainDescriptionState)
-    const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+    const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useRecoilState(isIgnoreDomainDescriptionState)
+
     const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
 
     const isLoadingSummary1 = useRecoilValue(isLoadingSummary1State)
@@ -39,8 +40,7 @@ const Topbar: React.FC = () =>
 
     const [tabValue, setTabValue] = useState<string>('0');
 
-    const { onAddNewEntity, onSuggestItems, onSummaryButtonClick, onHighlightSelectedItems, onSummaryDescriptionsClick, onExport } = useConceptualModel()
-    const { onIgnoreDomainDescriptionChange } = useDomainDescription()
+    const { onAddNewEntity, onSuggestItems, onSummaryButtonClick, onSummaryDescriptionsClick, onExport } = useConceptualModel()
 
 
     const showSummary1 = () =>
@@ -146,7 +146,7 @@ const Topbar: React.FC = () =>
                     <Stack direction="row" spacing={2}>
                         <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={() => { setTabValue('1'); onSummaryButtonClick() }}>Summary 1</Button>
                         <Button variant="contained" sx={{textTransform: "capitalize"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={ handleSummaryDescriptionClick }>Summary 2</Button>
-                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<HighlightIcon/>} onClick={onHighlightSelectedItems}>{capitalizeString("Highlight original text")}</Button>
+                        <HighlightSelectedItemsButton/>
                     </Stack>
 
                     <Stack direction="row" spacing={2}>
@@ -218,7 +218,9 @@ const Topbar: React.FC = () =>
 
                         <FormControlLabel label="Ignore domain description"
                             control={
-                                <Checkbox checked={isIgnoreDomainDescription} onChange={onIgnoreDomainDescriptionChange}/>
+                                <Checkbox
+                                    checked={isIgnoreDomainDescription}
+                                    onChange={() => setIsIgnoreDomainDescription(previousValue => !previousValue)}/>
                                 }/>
                         
                         <p></p>

@@ -9,8 +9,6 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import { useEffect, useRef, useState } from 'react';
 import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
-import { UserChoice } from '../interfaces';
-import useUtility from '../hooks/useUtility';
 import { styled } from '@mui/system';
 import { domainDescriptionState, isShowHighlightDialogState, originalTextIndexesListState, tooltipsState } from '../atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -51,7 +49,6 @@ const HighlightDialog: React.FC = () =>
     }
 
     delay()
-
   }, [isShowHighlightDialog])
 
 

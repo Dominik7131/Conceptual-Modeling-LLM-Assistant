@@ -11,11 +11,11 @@ import { Attribute, Entity, Field, Item, ItemFieldUIName, ItemType, Relationship
 import Box from '@mui/material/Box';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
-import HighlightIcon from '@mui/icons-material/Highlight';
 import { useRecoilValue } from 'recoil';
 import { isLoadingSuggestedItemsState, isSidebarOpenState, sidebarWidthPercentageState, suggestedItemsState } from '../atoms';
 import useConceptualModel from '../hooks/useConceptualModel';
 import { useEffect } from 'react';
+import HighlightSingleItemButton from './HighlightSingleItemButton';
 
 
 const Sidebar: React.FC = () =>
@@ -25,7 +25,7 @@ const Sidebar: React.FC = () =>
     const isSidebarOpen = useRecoilValue(isSidebarOpenState)
     const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
 
-    const { onAddItem, onEditSuggestion, onHighlightSingleItem } = useConceptualModel()
+    const { onAddItem, onEditSuggestion } = useConceptualModel()
 
 
     const showTextOnSidebar = () =>
@@ -50,7 +50,7 @@ const Sidebar: React.FC = () =>
             <ButtonGroup fullWidth sx={{ marginTop: 1 }} variant="outlined" size="small">
                 <Button startIcon={<AddIcon/>} onClick={() => onAddItem(item)}> Add </Button>
                 <Button startIcon={<EditIcon/>} onClick={() => onEditSuggestion(item.ID)}> Edit </Button>
-                <Button startIcon={<HighlightIcon/>} onClick={() => onHighlightSingleItem(item.ID)}> Highlight </Button>
+                <HighlightSingleItemButton item={item}/>
             </ButtonGroup>
         )
 
