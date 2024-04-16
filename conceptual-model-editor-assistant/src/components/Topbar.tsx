@@ -2,8 +2,6 @@ import { useEffect, useState } from "react"
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { Attribute, Item, UserChoice, SummaryObject } from "../interfaces";
@@ -17,13 +15,13 @@ import TabContext from '@mui/lab/TabContext';
 import AddIcon from '@mui/icons-material/Add';
 import HighlightIcon from '@mui/icons-material/Highlight';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import DownloadIcon from '@mui/icons-material/Download';
 import { useRecoilState, useRecoilValue } from "recoil";
 import { domainDescriptionState, isIgnoreDomainDescriptionState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, sidebarWidthPercentageState, summaryDescriptionsState, summaryTextState } from "../atoms";
 import useConceptualModel from "../hooks/useConceptualModel";
-import FileUploader from "./FileUploader";
 import DomainDescriptionTextArea from "./DomainDescriptionTextArea";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
+import ImportButton from "./ImportButton";
+import ExportButton from "./ExportButton";
 
 
 const Topbar: React.FC = () =>
@@ -42,7 +40,7 @@ const Topbar: React.FC = () =>
     const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
     const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 
-    const { onAddNewEntity, onSuggestItems, onSummaryButtonClick, onSummaryDescriptionsClick, onExport } = useConceptualModel()
+    const { onAddNewEntity, onSuggestItems, onSummaryButtonClick, onSummaryDescriptionsClick } = useConceptualModel()
 
 
     const showSummary1 = () =>
@@ -141,8 +139,8 @@ const Topbar: React.FC = () =>
                 
                 <Stack direction="row" justifyContent="space-between" paddingX={1} paddingY={"8px"}>
                     <Stack direction="row" spacing={2}>
-                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}>{ capitalizeString("Suggest entities") }</Button>
-                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<AddIcon/>} onClick={onAddNewEntity}>{ capitalizeString("Add new entity") }</Button>
+                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<AutoFixHighIcon/>} onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}> Suggest entities </Button>
+                        <Button variant="contained" sx={{textTransform: "none"}} disableElevation startIcon={<AddIcon/>} onClick={onAddNewEntity}> Add new entity </Button>
                     </Stack>
 
                     <Stack direction="row" spacing={2}>
@@ -152,11 +150,8 @@ const Topbar: React.FC = () =>
                     </Stack>
 
                     <Stack direction="row" spacing={2}>
-                        <FileUploader/>
-
-                        <Button variant="contained" disableElevation sx={{textTransform: "capitalize"}} startIcon={<DownloadIcon/>} onClick={onExport}>
-                            Export
-                        </Button>
+                        <ImportButton/>
+                        <ExportButton/>
                     </Stack>
                 </Stack>
             </>

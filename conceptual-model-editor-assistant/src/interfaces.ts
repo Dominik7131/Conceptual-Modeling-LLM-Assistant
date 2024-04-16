@@ -111,7 +111,7 @@ export interface ItemJson
   description: string
 }
 
-interface ClassesJson extends ItemJson { }
+export interface EntityJson extends ItemJson { }
 
 interface DomainRangeJson
 {
@@ -135,7 +135,7 @@ export interface GeneralizationJson extends ItemJson
 
 export interface ConceptualModelJson
 {
-  classes: ClassesJson[]
+  classes: EntityJson[]
   attributes: AttributeJson[]
   relationships: RelationshipJson[]
   generalizations: GeneralizationJson[]
