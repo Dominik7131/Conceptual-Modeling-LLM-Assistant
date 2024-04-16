@@ -70,5 +70,17 @@ export const doesEdgeAlreadyExist = (edges: Edge[], edgeID: string): boolean =>
 }
 
 
-export const BASE_URL = "http://127.0.0.1:5000/"
+const BASE_URL = "http://127.0.0.1:5000/"
 export const HEADER = { "Content-Type": "application/json" }
+
+const SUGGEST_ITEMS_ENDPOINT = "suggest"
+const SUMMARY_PLAIN_TEXT_ENDPOINT = "summary1"
+const SUMMARY_DESCRIPTIONS_ENDPOINT = "summary2"
+const EDIT_ITEM_ENDPOINT = "getOnly"
+const MERGE_ORIGINAL_TEXT_ENDPOINT = "merge_original_texts"
+
+export const SUGGEST_ITEMS_URL = BASE_URL + SUGGEST_ITEMS_ENDPOINT
+export const SUMMARY_PLAIN_TEXT_URL = BASE_URL + SUMMARY_PLAIN_TEXT_ENDPOINT
+export const SUMMARY_DESCRIPTIONS_URL = BASE_URL + SUMMARY_DESCRIPTIONS_ENDPOINT
+export const EDIT_ITEM_URL = BASE_URL + EDIT_ITEM_ENDPOINT
+export const MERGE_ORIGINAL_TEXT_URL = BASE_URL + MERGE_ORIGINAL_TEXT_ENDPOINT

@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Node, Edge } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { BASE_URL, HEADER, capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist } from './useUtility';
+import { SUMMARY_PLAIN_TEXT_URL, capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist } from './useUtility';
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -26,9 +26,6 @@ const useConceptualModel = () =>
   const setIsDisableChange = useSetRecoilState(isDisableChangeState)
 
 
-
-
-
   const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
   const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialogState)
 
@@ -38,10 +35,6 @@ const useConceptualModel = () =>
   const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData } = useFetchData({ onProcessStreamedData })
 
   let IDToAssign = 0
-
-  const SUGGEST_ITEMS_ENDPOINT = "suggest"
-  const SUGGEST_ITEMS_URL = BASE_URL + SUGGEST_ITEMS_ENDPOINT
-  
 
 
   const parseSerializedConceptualModel = () =>
@@ -236,7 +229,7 @@ const useConceptualModel = () =>
     targetItemName = targetItemName !== null ? targetItemName : ""
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
-    fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, sourceItemName, itemType)
+    fetchStreamedData(bodyData, sourceItemName, itemType)
   }
 
 
@@ -287,12 +280,12 @@ const useConceptualModel = () =>
 
   const onSummaryButtonClick = () : void =>
   {
-    const endpoint = BASE_URL + "summary1"
+    const url = SUMMARY_PLAIN_TEXT_URL
     const headers = { "Content-Type": "application/json" }
     const conceptualModel = convertConceptualModelToJSON(false)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
-    fetchSummary(endpoint, headers, bodyData)
+    fetchSummary(bodyData)
   }
 
 
@@ -303,12 +296,10 @@ const useConceptualModel = () =>
       alert("Nothing was selected")
       return false
     }
-
-    const endpoint = BASE_URL + "summary2"
     const conceptualModel = convertConceptualModelToJSON(true)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
-    fetchSummaryDescriptions(endpoint, HEADER, bodyData)
+    fetchSummaryDescriptions(bodyData)
     return true
   }
 

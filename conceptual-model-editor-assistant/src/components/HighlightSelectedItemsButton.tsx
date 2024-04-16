@@ -3,7 +3,7 @@ import HighlightIcon from '@mui/icons-material/Highlight';
 import { isShowHighlightDialogState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from "../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../interfaces";
-import { BASE_URL, capitalizeString } from "../hooks/useUtility";
+import { HEADER, MERGE_ORIGINAL_TEXT_URL, capitalizeString } from "../hooks/useUtility";
 
 
 const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
@@ -17,9 +17,9 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
 
 
     // TODO: Put this fetch logic into a separate file
-    const fetchMergedOriginalTexts = (url: string, headers: any, bodyData: any) =>
+    const fetchMergedOriginalTexts = (bodyData: any) =>
     {
-        fetch(url, { method: "POST", headers, body: bodyData})
+        fetch(MERGE_ORIGINAL_TEXT_URL, { method: "POST", headers: HEADER, body: bodyData})
         .then(response => response.json())
         .then(data => 
         {
@@ -119,13 +119,12 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                 })
             }
         }
-    
-        const endpoint = "merge_original_texts"
-        const url = BASE_URL + endpoint
+
+        const url = MERGE_ORIGINAL_TEXT_URL
         const headers = { "Content-Type": "application/json" }
         const bodyData = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects})
     
-        fetchMergedOriginalTexts(url, headers, bodyData)
+        fetchMergedOriginalTexts(bodyData)
         setIsShowHighlightDialog(true)
     }
 

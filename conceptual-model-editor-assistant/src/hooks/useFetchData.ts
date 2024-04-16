@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Field, ItemType, SummaryObject } from "../interfaces";
 import { useSetRecoilState } from "recoil";
 import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, suggestedItemsState, summaryDescriptionsState, summaryTextState } from "../atoms";
+import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL } from "./useUtility";
 
 
 interface Props
@@ -22,7 +23,7 @@ const useFetchData = ({ onProcessStreamedData }: Props) =>
     const setSuggestedItems = useSetRecoilState(suggestedItemsState)
 
 
-    const fetchStreamedData = (url: string, headers: any, bodyData: any, sourceEntityName: string, itemType: ItemType) =>
+    const fetchStreamedData = (bodyData: any, sourceEntityName: string, itemType: ItemType) =>
     {
       // TODO: add object interface for header and bodyData
 
@@ -34,7 +35,7 @@ const useFetchData = ({ onProcessStreamedData }: Props) =>
       const controller = new AbortController()
       const signal = controller.signal
       
-      fetch(url, { method: "POST", headers, body: bodyData, signal: signal })
+      fetch(SUGGEST_ITEMS_URL, { method: "POST", headers: HEADER, body: bodyData, signal: signal })
       .then(response =>
         {
           // Reset all suggested items
@@ -86,11 +87,11 @@ const useFetchData = ({ onProcessStreamedData }: Props) =>
     }
 
 
-    const fetchSummary = (endpoint : string, headers : any, bodyData : any) =>
+    const fetchSummaryPlainText = (bodyData : any) =>
     {
       setIsLoadingSummary1(_ => true)
 
-      fetch(endpoint, { method: "POST", headers, body: bodyData })
+      fetch(SUMMARY_PLAIN_TEXT_URL, { method: "POST", headers: HEADER, body: bodyData })
       .then(response =>
       {
           const stream = response.body; // Get the readable stream from the response body
@@ -141,13 +142,13 @@ const useFetchData = ({ onProcessStreamedData }: Props) =>
       });
     }
 
-    const fetchSummaryDescriptions = (endpoint : string, headers : any, bodyData : any) =>
+    const fetchSummaryDescriptions = (bodyData : any) =>
     {
       setIsLoadingSummaryDescriptions(_ => true)
 
       setSummaryDescriptions({entities: [], relationships: []})
 
-      fetch(endpoint, { method: "POST", headers, body: bodyData })
+      fetch(SUMMARY_DESCRIPTIONS_URL, { method: "POST", headers: HEADER, body: bodyData })
       .then(response =>
       {
           const stream = response.body; // Get the readable stream from the response body
@@ -227,7 +228,7 @@ const useFetchData = ({ onProcessStreamedData }: Props) =>
 
 
 
-    return { fetchSummary, fetchSummaryDescriptions, fetchStreamedData }
+    return { fetchSummary: fetchSummaryPlainText, fetchSummaryDescriptions, fetchStreamedData }
 }
 
 export default useFetchData

@@ -2,7 +2,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { domainDescriptionState, edgesState, editedSuggestedItemState, fieldToLoadState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from "../atoms"
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
-import { BASE_URL, HEADER, createEdgeID } from "./useUtility";
+import { EDIT_ITEM_URL, HEADER, createEdgeID } from "./useUtility";
 import useConceptualModel from "./useConceptualModel";
 
 
@@ -19,9 +19,6 @@ const useEditItemDialog = () =>
 
     const domainDescription = useRecoilValue(domainDescriptionState)
     const setFieldToLoad = useSetRecoilState(fieldToLoadState)
-
-    const EDIT_ITEM_ENDPOINT = "getOnly"
-    const EDIT_ITEM_URL = BASE_URL + EDIT_ITEM_ENDPOINT
 
 
     const onClose = (): void =>
