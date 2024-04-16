@@ -125,7 +125,19 @@ const useEditItemDialog = () =>
         {
             if (currentNode.id === id)
             {
-                const newData: NodeData = { ...currentNode.data, entity: newEntity }
+                let newAttributes = currentNode.data.attributes
+
+                // For each attribute update their source entity if the name of the entity changed
+                if (currentNode.id !== newEntity.name)
+                {                   
+                    newAttributes = currentNode.data.attributes.map((attribute: Attribute) =>
+                    {
+                        return { ...attribute, [Field.SOURCE_ENTITY]: newEntity.name }
+                    })
+                }
+
+
+                const newData: NodeData = { ...currentNode.data, entity: newEntity, attributes: newAttributes }
                 const newNode: Node = {...currentNode, id: newEntity.name, data: newData}
 
                 return newNode
