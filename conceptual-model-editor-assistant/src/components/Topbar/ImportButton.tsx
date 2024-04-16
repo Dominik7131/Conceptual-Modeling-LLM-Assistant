@@ -1,12 +1,12 @@
 import { ChangeEvent } from "react";
 import Button from "@mui/material/Button";
 import UploadIcon from '@mui/icons-material/Upload';
-import { Attribute, ConceptualModelJson, Entity, Field, ItemType, NodeData, EdgeData, Relationship } from "../interfaces";
+import { Attribute, ConceptualModelJson, Entity, Field, ItemType, NodeData, EdgeData, Relationship } from "../../interfaces";
 import { useSetRecoilState } from "recoil";
-import { edgesState, nodesState } from "../atoms";
+import { edgesState, nodesState } from "../../atoms";
 import { Node, Edge } from 'reactflow';
-import useConceptualModel from "../hooks/useConceptualModel";
-import { createEdgeID } from "../hooks/useUtility";
+import useConceptualModel from "../../hooks/useConceptualModel";
+import { createEdgeID } from "../../hooks/useUtility";
 
 
 const ImportButton: React.FC = () =>

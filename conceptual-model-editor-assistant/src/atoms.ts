@@ -94,8 +94,8 @@ export const isLoadingEditState = atom({
     default: false,
 });
 
-export const isLoadingSummary1State = atom({
-    key: 'isLoadingSummary1State',
+export const isLoadingSummaryPlainTextState = atom({
+    key: 'isLoadingSummaryPlainTextState',
     default: false,
 });
 
@@ -147,7 +147,7 @@ export const selectedNodesState = selector<Node[]>({
 export const edgesState = atom<Edge[]>({
     key: 'edgesState',
     default: [],
-});
+})
 
 
 export const selectedEdgesState = selector<Edge[]>({
@@ -159,3 +159,8 @@ export const selectedEdgesState = selector<Edge[]>({
     }
 })
 
+
+export const topbarTabValueState = atom({
+    key: 'topbarTabValueState',
+    default: "0",
+})

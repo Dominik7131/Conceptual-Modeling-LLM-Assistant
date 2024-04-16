@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Field, ItemType, SummaryObject } from "../interfaces";
 import { useSetRecoilState } from "recoil";
-import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummary1State, isLoadingSummaryDescriptionsState, suggestedItemsState, summaryDescriptionsState, summaryTextState } from "../atoms";
+import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, suggestedItemsState, summaryDescriptionsState, summaryTextState } from "../atoms";
 import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL } from "./useUtility";
 
 
@@ -14,7 +14,7 @@ const useFetchData = ({ onProcessStreamedData }: Props) =>
 {
     // TODO: Split all fetch data methods to a separate files
     const setIsLoadingSuggestedItems = useSetRecoilState(isLoadingSuggestedItemsState)
-    const setIsLoadingSummary1 = useSetRecoilState(isLoadingSummary1State)
+    const setIsLoadingSummary1 = useSetRecoilState(isLoadingSummaryPlainTextState)
     const setIsLoadingSummaryDescriptions = useSetRecoilState(isLoadingSummaryDescriptionsState)
 
     const setSummaryText = useSetRecoilState(summaryTextState)

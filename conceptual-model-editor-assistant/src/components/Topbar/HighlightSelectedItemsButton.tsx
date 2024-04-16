@@ -1,9 +1,9 @@
 import { Button } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
-import { isShowHighlightDialogState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from "../atoms";
+import { isShowHighlightDialogState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../interfaces";
-import { HEADER, MERGE_ORIGINAL_TEXT_URL, capitalizeString } from "../hooks/useUtility";
+import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../../interfaces";
+import { HEADER, MERGE_ORIGINAL_TEXT_URL, capitalizeString } from "../../hooks/useUtility";
 
 
 const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>

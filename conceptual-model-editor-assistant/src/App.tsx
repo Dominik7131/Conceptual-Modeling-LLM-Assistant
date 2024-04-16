@@ -1,5 +1,5 @@
 import ConceptualModel from './components/ConceptualModel';
-import Topbar from './components/Topbar'
+import Topbar from './components/Topbar/Topbar'
 import SideBar from './components/Sidebar';
 import { ReactFlowProvider } from 'reactflow';
 import HighlightDialog from './components/DialogDomainDescription';

@@ -6,7 +6,7 @@ import { SUMMARY_PLAIN_TEXT_URL, capitalizeString, createEdgeID, doesEdgeAlready
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from '../atoms';
+import { domainDescriptionState, edgesState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState, topbarTabValueState } from '../atoms';
 
 
 const useConceptualModel = () =>
@@ -31,6 +31,8 @@ const useConceptualModel = () =>
 
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+
+  const setTabValue = useSetRecoilState(topbarTabValueState)
 
   const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData } = useFetchData({ onProcessStreamedData })
 
@@ -270,7 +272,7 @@ const useConceptualModel = () =>
   }
 
 
-  const onAddNewRelationship = () : void =>
+  const onAddNewRelationship = (): void =>
   {
     setIsSuggestedItem(_ => true)
     setIsDisableSave(_ => true)
@@ -281,10 +283,16 @@ const useConceptualModel = () =>
   }
 
 
-  const onSummaryButtonClick = () : void =>
+  const onSummaryPlainTextClick = (): void =>
   {
-    const url = SUMMARY_PLAIN_TEXT_URL
-    const headers = { "Content-Type": "application/json" }
+    if (selectedNodes.length === 0)
+    {
+      alert("Nothing was selected")
+      return
+    }
+
+    setTabValue("1")
+
     const conceptualModel = convertConceptualModelToJSON(false)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
@@ -292,18 +300,21 @@ const useConceptualModel = () =>
   }
 
 
-  const onSummaryDescriptionsClick = () : boolean =>
+  const onSummaryDescriptionsClick = (): void =>
   {
     if (selectedNodes.length === 0)
     {
       alert("Nothing was selected")
-      return false
+      return
     }
+
+    setTabValue("2")
+
     const conceptualModel = convertConceptualModelToJSON(true)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
     fetchSummaryDescriptions(bodyData)
-    return true
+    return
   }
 
 
@@ -533,7 +544,7 @@ const useConceptualModel = () =>
     
     
   return {
-    parseSerializedConceptualModel, onEditItem, onAddNewAttribute, onSuggestItems, onSummaryButtonClick, capitalizeString,
+    parseSerializedConceptualModel, onEditItem, onAddNewAttribute, onSuggestItems, onSummaryPlainTextClick, capitalizeString,
     onClickAddNode, onEditSuggestion, onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem, onAddAttributesToNode
   }
 }

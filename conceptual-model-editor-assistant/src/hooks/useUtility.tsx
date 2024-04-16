@@ -69,6 +69,8 @@ export const doesEdgeAlreadyExist = (edges: Edge[], edgeID: string): boolean =>
   return false
 }
 
+export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
+export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 
 const BASE_URL = "http://127.0.0.1:5000/"
 export const HEADER = { "Content-Type": "application/json" }
