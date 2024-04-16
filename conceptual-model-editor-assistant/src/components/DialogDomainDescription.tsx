@@ -24,6 +24,35 @@ const HighlightDialog: React.FC = () =>
 
   const inferenceIndexes = useRecoilValue(originalTextIndexesListState)
   const tooltips = useRecoilValue(tooltipsState)
+  const isShowHighlightDialog = useRecoilValue(isShowHighlightDialogState)
+
+
+  // TODO: Do not use `useEffect`, this should be solved with Ref to the highlighted text
+  useEffect(() =>
+  {
+    if (!isShowHighlightDialog)
+    {
+      return
+    }
+
+    // Scroll down to the first highlighted original text in the dialog
+    // We need to wait for few miliseconds to let the dialog render
+    const delay = async () =>
+    {
+      await new Promise(resolve => setTimeout(resolve, 200));
+
+      let highlightedText = document.getElementById("highlightedOriginalText-1")
+      // console.log("Trying to scroll", highlightedText)
+
+      if (highlightedText)
+      {
+        highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
+      }
+    }
+
+    delay()
+
+  }, [isShowHighlightDialog])
 
 
   const onClose = () =>
@@ -83,16 +112,14 @@ const HighlightDialog: React.FC = () =>
   // Tooltip from https://mui.com/material-ui/react-tooltip/#customization
   const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
       <Tooltip {...props} classes={{ popper: className }} />
-    ))(({ theme }) => ({
-      [`& .${tooltipClasses.tooltip}`]: {
-        // backgroundColor: '#f5f5f9',
+      ))(() => ({
+      [`& .${tooltipClasses.tooltip}`]:
+      {
         backgroundColor: '#6d6d6d',
-        // color: 'rgba(0, 0, 0, 0.87)',
         color: '#ffffff',
         maxWidth: "100%",
-        // border: '1px solid #dadde9',
       },
-    }));
+    }))
 
 
   return (
@@ -126,6 +153,7 @@ const HighlightDialog: React.FC = () =>
           {/* <Button onClick={() => {
 
             let highlightedText = document.getElementById("highlightedInference-1")
+            console.log(highlightedText)
             if (highlightedText)
             {
               highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})

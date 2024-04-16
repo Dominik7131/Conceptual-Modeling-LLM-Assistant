@@ -396,7 +396,6 @@ const useConceptualModel = () =>
     targetItemName = targetItemName !== null ? targetItemName : ""
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
-    console.log("DD: ", currentDomainDescription)
     fetchStreamedData(SUGGEST_ITEMS_URL, HEADER, bodyData, sourceItemName, itemType)
   }
 
@@ -546,34 +545,6 @@ const useConceptualModel = () =>
 
     setIsShowHighlightDialog(true)
   }
-
-
-  useEffect(() =>
-  {
-    if (!setIsShowHighlightDialog)
-    {
-      return
-    }
-
-    // Scroll down to the first highlighted original text in the dialog
-    // We need to wait for few miliseconds to let the dialog render
-    // TODO: Try to come up with solution that doesn't need any hardcoded timeout
-    const delay = async () =>
-    {
-      await new Promise(resolve => setTimeout(resolve, 400));
-
-      let highlightedText = document.getElementById("highlightedOriginalText-1")
-      // console.log("Trying to scroll", highlightedText)
-
-      if (highlightedText)
-      {
-        highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
-      }
-    }
-
-    delay()
-
-  }, [setIsShowHighlightDialog])
 
 
   const doesNodeAlreadyExist = (nodeID: string): boolean =>

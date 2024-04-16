@@ -12,7 +12,6 @@ const DomainDescriptionTextArea: React.FC = ():JSX.Element =>
 
     const loadDomainDescriptionFromFile = () =>
     {
-        console.log("Loading domain description from file")
         const domainDescriptionFileName = "input.txt"
 
         fetch(domainDescriptionFileName)
@@ -49,7 +48,6 @@ const DomainDescriptionTextArea: React.FC = ():JSX.Element =>
                 disabled={isIgnoreDomainDescription}
                 multiline
                 rows={7}
-                maxRows={7}
                 onChange={event => setDomainDescription(_ => event.target.value)}
                 value={domainDescription}
                 spellCheck="false">
