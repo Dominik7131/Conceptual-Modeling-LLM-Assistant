@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Node, Edge } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import useUtility, { BASE_URL, HEADER, createEdgeID } from './useUtility';
-import useDomainDescription from './useDomainDescription';
+import { BASE_URL, HEADER, capitalizeString, createEdgeID } from './useUtility';
 import useFetchData from './useFetchData';
 import { Attribute, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, NodeData, OriginalTextIndexesItem, Relationship, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -36,9 +35,6 @@ const useConceptualModel = () =>
 
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
-  const { onDomainDescriptionChange, onIgnoreDomainDescriptionChange } = useDomainDescription()
-
-  const { capitalizeString } = useUtility()
 
   const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData, fetchMergedOriginalTexts }
           = useFetchData({ onProcessStreamedData, onProcessMergedOriginalTexts })
@@ -552,36 +548,6 @@ const useConceptualModel = () =>
   }
 
 
-  const updateNodes = () =>
-  {
-    setNodes((nodes) => nodes.map((currentNode : Node) =>
-    {
-      const updatedData = { ...currentNode.data }
-      const updatedNode: Node = { ...currentNode, data: updatedData }
-      return updatedNode
-    }))
-  }
-
-  const updateEdges = () =>
-  {
-    setEdges((edges) => edges.map((currentEdge : Edge) =>
-    {
-      const updatedData = { ...currentEdge.data }
-      const updatedEdge: Edge = { ...currentEdge, data: updatedData }
-      return updatedEdge
-    }))
-  }
-
-
-  useEffect(() =>
-  {
-    // TODO: Let the functions inside the `data` of nodes and edges update automatically on every re-render
-    // of the component `ConceptualModel` without an useEffect hook
-    updateNodes()
-    updateEdges()
-  }, [domainDescription, isIgnoreDomainDescription])
-
-
   useEffect(() =>
   {
     if (!setIsShowHighlightDialog)
@@ -594,7 +560,7 @@ const useConceptualModel = () =>
     // TODO: Try to come up with solution that doesn't need any hardcoded timeout
     const delay = async () =>
     {
-      await new Promise(resolve => setTimeout(resolve, 200));
+      await new Promise(resolve => setTimeout(resolve, 400));
 
       let highlightedText = document.getElementById("highlightedOriginalText-1")
       // console.log("Trying to scroll", highlightedText)
@@ -931,8 +897,8 @@ const useConceptualModel = () =>
     
   return {
     parseSerializedConceptualModel, onEditItem, onAddNewAttribute,
-    onIgnoreDomainDescriptionChange, onSuggestItems, onSummaryButtonClick, capitalizeString,
-    onClickAddNode, onDomainDescriptionChange, onEditSuggestion, onHighlightSingleItem, onOverlayDomainDescriptionOpen, onHighlightSelectedItems,
+    onSuggestItems, onSummaryButtonClick, capitalizeString,
+    onClickAddNode, onEditSuggestion, onHighlightSingleItem, onOverlayDomainDescriptionOpen, onHighlightSelectedItems,
     onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem, onImport, onExport
   }
 }

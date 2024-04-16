@@ -5,21 +5,14 @@ import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms
 
 const useDomainDescription = () =>
 {
-  const setDomainDescription = useSetRecoilState(domainDescriptionState);
   const setIsIgnoreDomainDescription = useSetRecoilState(isIgnoreDomainDescriptionState);
-  
-
-  const onDomainDescriptionChange = (newText : string) =>
-  {
-    setDomainDescription(_ => newText)
-  }
 
   const onIgnoreDomainDescriptionChange = () =>
   {
     setIsIgnoreDomainDescription(previousValue => !previousValue)
   }
 
-  return { onDomainDescriptionChange, onIgnoreDomainDescriptionChange }
+  return { onIgnoreDomainDescriptionChange }
 }
 
 export default useDomainDescription
