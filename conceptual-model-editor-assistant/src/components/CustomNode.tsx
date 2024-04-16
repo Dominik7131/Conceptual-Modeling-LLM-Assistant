@@ -13,7 +13,6 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import ModeStandbyIcon from '@mui/icons-material/ModeStandby';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-
 import useUtility, { capitalizeString } from '../hooks/useUtility';
 import useConceptualModel from '../hooks/useConceptualModel';
 

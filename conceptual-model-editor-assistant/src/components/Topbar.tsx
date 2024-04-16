@@ -23,6 +23,7 @@ import { domainDescriptionState, isIgnoreDomainDescriptionState, isLoadingSummar
 import useConceptualModel from "../hooks/useConceptualModel";
 import useDomainDescription from "../hooks/useDomainDescription";
 import FileUploader from "./FileUploader";
+import DomainDescriptionTextArea from "./DomainDescriptionTextArea";
 
 
 const Topbar: React.FC = () =>
@@ -39,7 +40,7 @@ const Topbar: React.FC = () =>
     const [tabValue, setTabValue] = useState<string>('0');
 
     const { onAddNewEntity, onSuggestItems, onSummaryButtonClick, onHighlightSelectedItems, onSummaryDescriptionsClick, onExport } = useConceptualModel()
-    const { onIgnoreDomainDescriptionChange, onDomainDescriptionChange } = useDomainDescription()
+    const { onIgnoreDomainDescriptionChange } = useDomainDescription()
 
 
     const showSummary1 = () =>
@@ -134,24 +135,7 @@ const Topbar: React.FC = () =>
     {
         return (
             <>
-                <Box sx={{ '& .MuiTextField-root': { m: 1, width: '98.9%' } }}
-                    component="form"
-                    noValidate
-                    autoComplete="off"
-                >
-                    <TextField
-                        id="domain description"
-                        name="domain description"
-                        label="Domain description"
-                        variant="outlined"
-                        disabled={isIgnoreDomainDescription}
-                        multiline
-                        maxRows={7}
-                        onChange={event => onDomainDescriptionChange(event.target.value)}
-                        value={domainDescription}
-                        spellCheck="false">
-                    </TextField>
-                </Box >
+                <DomainDescriptionTextArea/>
                 
                 <Stack direction="row" justifyContent="space-between" paddingX={1} paddingY={"8px"}>
                     <Stack direction="row" spacing={2}>

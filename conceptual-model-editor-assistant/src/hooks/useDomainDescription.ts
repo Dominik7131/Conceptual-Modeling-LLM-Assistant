@@ -19,23 +19,6 @@ const useDomainDescription = () =>
     setIsIgnoreDomainDescription(previousValue => !previousValue)
   }
 
-  const loadDomainDescriptionFromFile = () =>
-  {
-    const domainDescriptionFileName = "input.txt"
-    fetch(domainDescriptionFileName)
-    .then((result) => result.text())
-    .then((text) =>
-    {
-      setDomainDescription(_ => text)
-    })
-    .catch((e) => console.error(e));
-  }
-
-  useEffect(() =>
-  {
-    loadDomainDescriptionFromFile()
-  }, []);
-
   return { onDomainDescriptionChange, onIgnoreDomainDescriptionChange }
 }
 

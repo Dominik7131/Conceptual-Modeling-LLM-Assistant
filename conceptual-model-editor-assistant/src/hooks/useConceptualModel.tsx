@@ -556,7 +556,6 @@ const useConceptualModel = () =>
   {
     setNodes((nodes) => nodes.map((currentNode : Node) =>
     {
-      console.log(currentNode)
       const updatedData = { ...currentNode.data }
       const updatedNode: Node = { ...currentNode, data: updatedData }
       return updatedNode
