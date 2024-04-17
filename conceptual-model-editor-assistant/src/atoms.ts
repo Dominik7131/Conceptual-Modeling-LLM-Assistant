@@ -166,6 +166,12 @@ export const topbarTabValueState = atom({
 })
 
 
+export const sidebarTabValueState = atom({
+    key: 'sidebarTabValueState',
+    default: "0",
+})
+
+
 export const editDialogWarningMsgState = atom({
     key: 'editDialogWarningMsgState',
     default: "",

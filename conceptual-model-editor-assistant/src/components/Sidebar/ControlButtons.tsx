@@ -18,12 +18,14 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
         <ButtonGroup fullWidth sx={{ marginTop: 1 }} variant="outlined" size="small">
 
             <Button
+                color="secondary"
                 startIcon={<AddIcon/>}
                 onClick={() => onAddItem(item)}>
                     Add
             </Button>
 
             <Button
+                color="secondary"
                 startIcon={<EditIcon/>}
                 onClick={() => onEditSuggestion(item.ID)}>
                     Edit

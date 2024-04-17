@@ -72,6 +72,7 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
 
     return (
         <Button
+            color="secondary"
             startIcon={<HighlightIcon/>}
             onClick={() => onHighlightSingleItem(item.ID)}>
                 Highlight
