@@ -16,8 +16,9 @@ const Topbar: React.FC = () =>
     const tabValue = useRecoilValue(topbarTabValueState)
 
     const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
-    const topBarWidth = 100 - sidebarWidthPercentage
-    const heightPx = 360
+    const offset = 0.4 // For some reason the topbar's right side does not end exactly where the sidebar starts
+    const topBarWidth = 100 - sidebarWidthPercentage + offset
+    const heightPx = 361
 
 
     return (
@@ -43,12 +44,6 @@ const Topbar: React.FC = () =>
                     <SettingsTab/>
                 </TabPanel>
             </TabContext>
-
-            <Divider
-                sx={{bottom: "600px"}}
-                absolute={true}>
-            </Divider>
-
         </Box>
     )
 }
