@@ -1,9 +1,9 @@
 import { Button } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
-import { isShowHighlightDialogState, originalTextIndexesListState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from "../atoms";
+import { isShowHighlightDialogState, originalTextIndexesListState, selectedSuggestedItemState, suggestedItemsState, tooltipsState } from "../../atoms";
 import { useSetRecoilState } from "recoil";
-import { Attribute, Field, Item, ItemType, Relationship } from "../interfaces";
-import { capitalizeString } from "../hooks/useUtility";
+import { Attribute, Field, Item, ItemType, Relationship } from "../../interfaces";
+import { capitalizeString } from "../../hooks/useUtility";
 
 
 interface Props
@@ -11,7 +11,7 @@ interface Props
     item: Item
 }
 
-const HighlightSingleItemButton: React.FC<Props> = ({ item }):JSX.Element =>
+const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
 {
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setIsShowHighlightDialog = useSetRecoilState(isShowHighlightDialogState)

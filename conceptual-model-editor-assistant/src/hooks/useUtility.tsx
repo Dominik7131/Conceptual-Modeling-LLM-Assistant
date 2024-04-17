@@ -86,7 +86,7 @@ export const getNodeByID = (nodes: Node[], nodeID: string): Node | null =>
 
 export const clipName = (name: string): string =>
 {
-    if (name.length > 12)
+    if (name.length > 18)
     {
         const newName = name.substring(0, 12) + "..."
         return newName

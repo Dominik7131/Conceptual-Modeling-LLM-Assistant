@@ -1,6 +1,6 @@
 import ConceptualModel from './components/ConceptualModel';
 import Topbar from './components/Topbar/Topbar'
-import SideBar from './components/Sidebar';
+import SideBar from './components/Sidebar/Sidebar';
 import { ReactFlowProvider } from 'reactflow';
 import HighlightDialog from './components/DialogDomainDescription';
 import DialogEditItem from './components/DialogEditItem';
