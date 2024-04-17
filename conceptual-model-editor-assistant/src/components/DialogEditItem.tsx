@@ -91,7 +91,7 @@ const DialogEditItem: React.FC = () =>
                     />
                     { !isRegeneratedText ?
                         ( (fieldToLoad.includes(field)) ? <CircularProgress sx={{position: 'relative', right: '3px', top: '5px'}} size={"30px"} /> :
-                        <IconButton disabled={field == Field.NAME} color="primary" size="small" onClick={() => onGenerateField(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
+                        <IconButton disabled={field === Field.NAME} color="primary" size="small" onClick={() => onGenerateField(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
                             <AutoFixHighIcon/>
                         </IconButton>)
                         :
@@ -108,17 +108,24 @@ const DialogEditItem: React.FC = () =>
         )
     }
 
+
+    const showDialogTitle = (item: Item): JSX.Element =>
+    {
+        return <Typography variant="h5" component="span"> Editing {item.type}: <strong>{item.name}</strong> </Typography>
+    }
+
+
     return (
         <Dialog open={isOpened} fullWidth={true} maxWidth={'xl'} onClose={onClose}>
 
             {
-                warningMessage != "" &&
+                warningMessage !== "" &&
                 <Alert variant="outlined" severity="warning" sx={{marginX:"20px", marginTop: "20px"}}>
                     { warningMessage }
                 </Alert>
             }
             
-            <DialogTitle> Edit </DialogTitle>
+            <DialogTitle> { showDialogTitle(item) } </DialogTitle> 
 
             <DialogContent>
 

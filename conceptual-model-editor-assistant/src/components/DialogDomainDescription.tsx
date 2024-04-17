@@ -10,8 +10,9 @@ import Alert from '@mui/material/Alert';
 import { useEffect, useRef, useState } from 'react';
 import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
 import { styled } from '@mui/system';
-import { domainDescriptionState, isShowHighlightDialogState, originalTextIndexesListState, tooltipsState } from '../atoms';
+import { domainDescriptionState, isShowHighlightDialogState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from '../atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { Item } from '../interfaces';
 
 
 
@@ -23,6 +24,8 @@ const HighlightDialog: React.FC = () =>
   const inferenceIndexes = useRecoilValue(originalTextIndexesListState)
   const tooltips = useRecoilValue(tooltipsState)
   const isShowHighlightDialog = useRecoilValue(isShowHighlightDialogState)
+
+  const selectedItem = useRecoilValue(selectedSuggestedItemState)
 
 
   // TODO: Do not use `useEffect`, this should be solved with Ref to the highlighted text
@@ -69,7 +72,7 @@ const HighlightDialog: React.FC = () =>
     '&:hover': {
       background: "#77dae6"
     },
-  }));
+  }))
 
 
   const highlightOriginalText = () =>
@@ -119,6 +122,13 @@ const HighlightDialog: React.FC = () =>
     }))
 
 
+
+  const showTitle = (): JSX.Element =>
+  {
+    return <Typography variant="h5" component="span"> Selected {selectedItem.type}: <strong>{selectedItem.name}</strong> </Typography>
+  }
+
+
   return (
     <>
       <Dialog
@@ -130,12 +140,13 @@ const HighlightDialog: React.FC = () =>
       >
         <DialogTitle>
           <Stack spacing={2}>
+
             { inferenceIndexes.length === 0 &&
               <Alert variant="outlined" severity="warning">
                 Unable to find original text in domain description
               </Alert>}
-            <Typography variant="h5">Domain description</Typography>
-            {/* <Typography variant="body1">{showSelectedSuggestion()}</Typography> */}
+            <Typography variant="h5"> { showTitle() } </Typography>
+
           </Stack>
         </DialogTitle>
 

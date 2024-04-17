@@ -54,39 +54,26 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
       setAnchorEl(null)
     }
 
-    const HandleStyleCheck = {
-        top: {
-          right: -10, top: -20, background: "#555", minWidth: 20, height: 20, borderRadius: 4, placeItems: "center", display: "grid",
-          color: "#fff", zIndex: 2
-        },
-        bottom: { right: -10, top: 43, background: "#555", minWidth: 20, height: 20, borderRadius: 4, placeItems: "center",
-        display: "grid", color: "#fff", zIndex: 2
-        }
-    }
+    const handleOffset = 7
 
 
     return (
-        <Box sx={{ width: "180px", textAlign: "center", backgroundColor: "white", border: selected ? borderSelected : borderNonSelected }}>
+        <Box sx={{ width: "180px", textAlign: "center", backgroundColor: "white", border: (selected || isEntityHovered) ? borderSelected : borderNonSelected}}>
 
-            <Handle type="source" position={Position.Top} style={{ background: selected ? primaryColor : "black" }}>
-                {/* <Typography> t </Typography> */}
-                {/* <Typography style={{ color: selected ? primaryColor : "black", position: "absolute", top: "-10px", left: "-1px", pointerEvents: "none"}}>x</Typography> */}
-                {/* <HighlightOffIcon color='action' sx={{ marginLeft: "-8px", marginTop: "-10px", color: "black"}} style={{ width: 22, height: 22,  pointerEvents: "none" }} /> */}
+            <Handle type="source" position={Position.Top} style={{ top: `-${handleOffset}px`, background: selected ? primaryColor : "black" }}>
+                { isEntityHovered && <Typography fontSize="13px" color={selected ? primaryColor : "black"}> s </Typography> }
             </Handle>
 
-            <Handle type="source" position={Position.Bottom} style={{ background: selected ? primaryColor : "black" }}>
-                {/* <Typography> s </Typography> */}
-                {/* <ModeStandbyIcon color='action' sx={{ marginLeft: "-8px", marginTop: "-10px", color: "black"}} style={{ width: 22, height: 22,  pointerEvents: "none" }} /> */}
+            <Handle type="source" position={Position.Bottom} style={{ bottom: `-${handleOffset}px`, background: selected ? primaryColor : "black" }}>
+                { isEntityHovered && <Typography fontSize="13px" color={selected ? primaryColor : "black"}> s </Typography> }
             </Handle>
 
-            <Handle type="target" position={Position.Left} style={{ background: selected ? primaryColor : "black" }}>
-                {/* <Typography> s </Typography> */}
-                {/* <ModeStandbyIcon color='action' sx={{ marginLeft: "-8px", marginTop: "-10px", color: "black"}} style={{ width: 22, height: 22,  pointerEvents: "none" }} /> */}
+            <Handle type="target" position={Position.Left} style={{ left: `-${handleOffset}px`, background: selected ? primaryColor : "black" }}>
+                { isEntityHovered && <Typography fontSize="13px" color={selected ? primaryColor : "black"} sx={{ marginY: "3px"}}> t </Typography> }
             </Handle>
 
-            <Handle type="target" position={Position.Right} style={{ background: selected ? primaryColor : "black" }}>
-                {/* <Typography> s </Typography> */}
-                {/* <ModeStandbyIcon color='action' sx={{ marginLeft: "-8px", marginTop: "-10px", color: "black"}} style={{ width: 22, height: 22,  pointerEvents: "none" }} /> */}
+            <Handle type="target" position={Position.Right} style={{ right: `-${handleOffset}px`, background: selected ? primaryColor : "black" }}>
+                { isEntityHovered && <Typography fontSize="13px" color={selected ? primaryColor : "black"} sx={{ marginY: "3px"}}> t </Typography> }
             </Handle>
 
             <Button size="small" fullWidth={true}
@@ -154,7 +141,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                         style={{justifyContent: "flex-start"}}
                         sx={{ color: selected ? primaryColor : "black", fontSize: "12px", textTransform: 'lowercase'}}
                         onClick={() => onEditItem(attribute)}>
-                        { clipName(attribute[Field.NAME]) }
+                        - { clipName(attribute[Field.NAME]) }
                     </Button>
                 ))}
             </Stack>

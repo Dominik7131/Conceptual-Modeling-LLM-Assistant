@@ -37,7 +37,7 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
         <Button className="nodrag nopan" color="primary" variant="outlined" size="small"
                 sx={{ color: selected ? primaryColor : "black", background: "white", paddingX: "30px", textTransform: "none",
                      border: selected ? borderSelected : borderNonSelected, position: "absolute", transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-                     pointerEvents: "all", height: "30px", borderRadius: "30px", "&:hover": {backgroundColor: "white"}}}
+                     pointerEvents: "all", minHeight: "30px", borderRadius: "30px", "&:hover": {backgroundColor: "white"}}}
                 
                 onMouseEnter={() => setIsHovered(_ => true)} 
                 onMouseLeave={() => setIsHovered(_ => false)}
