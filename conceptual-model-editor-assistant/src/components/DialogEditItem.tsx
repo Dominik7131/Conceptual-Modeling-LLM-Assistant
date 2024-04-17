@@ -15,7 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useRecoilValue } from 'recoil';
-import { domainDescriptionState, editDialogWarningMsgState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from '../atoms';
+import { domainDescriptionState, editDialogWarningMsgState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState } from '../atoms';
 import useEditItemDialog from '../hooks/useEditItemDialog';
 import useConceptualModel from '../hooks/useConceptualModel';
 import Alert from '@mui/material/Alert';
@@ -175,7 +175,7 @@ const DialogEditItem: React.FC = () =>
                     { !isDisableSave &&
                         <Button
                             variant="contained"
-                            onClick={() => {onSave(editedItem, item, isSuggestedItem)}}>
+                            onClick={() => {onSave(editedItem, item)}}>
                             Save
                         </Button>
                     }

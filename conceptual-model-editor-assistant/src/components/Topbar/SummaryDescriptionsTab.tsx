@@ -42,7 +42,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
     return (
         <>
             {
-                summaryDescriptions.entities.length > 0 && <p>Entities and attributes:</p>
+                summaryDescriptions.entities.length > 0 && <Typography>Entities and attributes:</Typography>
             }
             
             <ul>
@@ -79,7 +79,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
             </ul>
 
             {
-                summaryDescriptions.relationships.length > 0 && <p>Relationships:</p>
+                summaryDescriptions.relationships.length > 0 && <Typography>Relationships:</Typography>
             }
 
             <ul>

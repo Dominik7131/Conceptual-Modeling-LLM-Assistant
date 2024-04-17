@@ -1,15 +1,13 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { domainDescriptionState, edgesState, editDialogWarningMsgState, editedSuggestedItemState, fieldToLoadState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState, suggestedItemsState } from "../atoms"
+import { domainDescriptionState, edgesState, editDialogWarningMsgState, editedSuggestedItemState, fieldToLoadState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
 import { EDIT_ITEM_URL, HEADER, createEdgeID } from "./useUtility";
-import useConceptualModel from "./useConceptualModel";
 
 
 const useEditItemDialog = () =>
 {
     const setIsOpened = useSetRecoilState(isShowEditDialogState)
-    const setSuggestedItems = useSetRecoilState(suggestedItemsState)
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
     const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
@@ -30,7 +28,7 @@ const useEditItemDialog = () =>
         setWarningMessage(_ => "")
     }
 
-    const onSave = (newItem: Item, oldItem: Item, isSuggestedItem: boolean): void =>
+    const onSave = (newItem: Item, oldItem: Item): void =>
     {
         if (!newItem.name)
         {
@@ -39,23 +37,6 @@ const useEditItemDialog = () =>
         }
     
         setIsOpened(_ => false)
-    
-        if (isSuggestedItem)
-        {
-            // TODO: instead of selectedSuggestedItem have only ID saved
-            setSelectedSuggestedItem(_ => newItem)
-        
-            setSuggestedItems((previousItems: Item[]) => previousItems.map((item: Item) =>
-            {
-                if (item.ID === newItem.ID)
-                {
-                    return newItem
-                }
-                return item
-            }))
-            
-            return
-        }
     
         if (newItem.type === ItemType.ENTITY)
         {

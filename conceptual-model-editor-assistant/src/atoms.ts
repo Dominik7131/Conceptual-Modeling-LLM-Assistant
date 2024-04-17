@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil'
-import { Field, Item, ItemType, SummaryObject } from './interfaces';
+import { Attribute, Entity, Field, Item, ItemType, Relationship, SummaryObject } from './interfaces';
 import { Node, Edge } from 'reactflow';
 
 
@@ -19,10 +19,21 @@ export const isShowCreateEdgeDialogState = atom({
 });
 
 
-export const suggestedItemsState = atom<Item[]>({
-    key: 'suggestedItems',
+export const suggestedEntitiesState = atom<Entity[]>({
+    key: 'suggestedEntitiesState',
     default: [],
 });
+
+export const suggestedAttributesState = atom<Attribute[]>({
+    key: 'suggestedAttributesState',
+    default: [],
+});
+
+export const suggestedRelationshipsState = atom<Relationship[]>({
+    key: 'suggestedRelationshipsState',
+    default: [],
+});
+
 
 export const isIgnoreDomainDescriptionState = atom({
     key: 'isIgnoreDomainDescriptionState',

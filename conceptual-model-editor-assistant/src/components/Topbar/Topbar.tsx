@@ -21,9 +21,10 @@ const Topbar: React.FC = () =>
 
 
     return (
-        <Box sx={{ width: `${topBarWidth}%`, height: `${heightPx}px`, overflow: 'auto', typography: 'body1' }}>
+        <Box sx={{ width: `${topBarWidth}%`, height: `${heightPx}px`, overflow: 'auto' }}>
 
             <TabContext value={tabValue}>
+                
                 <Tabs/>
 
                 <TabPanel value="0">

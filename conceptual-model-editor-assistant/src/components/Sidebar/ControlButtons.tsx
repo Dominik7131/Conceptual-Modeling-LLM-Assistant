@@ -27,7 +27,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
             <Button
                 color="secondary"
                 startIcon={<EditIcon/>}
-                onClick={() => onEditSuggestion(item.ID)}>
+                onClick={() => onEditSuggestion(item.ID, item.type)}>
                     Edit
             </Button>
 

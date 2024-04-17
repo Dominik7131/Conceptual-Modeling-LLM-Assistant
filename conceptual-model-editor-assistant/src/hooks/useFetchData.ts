@@ -1,16 +1,17 @@
 import { useState } from "react";
 import { Field, ItemType, SummaryObject } from "../interfaces";
 import { useSetRecoilState } from "recoil";
-import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, suggestedItemsState, summaryDescriptionsState, summaryTextState } from "../atoms";
+import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState } from "../atoms";
 import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL } from "./useUtility";
 
 
 interface Props
 {
+  onClearSuggestedItems: (itemType: ItemType) => void
   onProcessStreamedData: (value: any, sourceEntityName: string, itemType: ItemType) => void
 }
 
-const useFetchData = ({ onProcessStreamedData }: Props) =>
+const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =>
 {
     // TODO: Split all fetch data methods to a separate files
     const setIsLoadingSuggestedItems = useSetRecoilState(isLoadingSuggestedItemsState)
@@ -19,8 +20,6 @@ const useFetchData = ({ onProcessStreamedData }: Props) =>
 
     const setSummaryText = useSetRecoilState(summaryTextState)
     const setSummaryDescriptions = useSetRecoilState(summaryDescriptionsState)
-
-    const setSuggestedItems = useSetRecoilState(suggestedItemsState)
 
 
     const fetchStreamedData = (bodyData: any, sourceEntityName: string, itemType: ItemType) =>
@@ -39,10 +38,10 @@ const useFetchData = ({ onProcessStreamedData }: Props) =>
       .then(response =>
         {
           // Reset all suggested items
-          setSuggestedItems(_ => [])
+          onClearSuggestedItems(itemType)
 
           setIsLoadingSuggestedItems(_ => true)
-          const stream = response.body; // Get the readable stream from the response body
+          const stream = response.body // Get the readable stream from the response body
 
           if (stream === null)
           {
@@ -51,7 +50,7 @@ const useFetchData = ({ onProcessStreamedData }: Props) =>
             return
           }
 
-          const reader = stream.getReader();
+          const reader = stream.getReader()
 
           const readChunk = () =>
           {

@@ -1,4 +1,4 @@
-import { UserChoice } from "../interfaces"
+import { ItemType, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
 
 
@@ -86,12 +86,33 @@ export const getNodeByID = (nodes: Node[], nodeID: string): Node | null =>
 
 export const clipName = (name: string): string =>
 {
-    if (name.length > 18)
-    {
-        const newName = name.substring(0, 12) + "..."
-        return newName
-    }
-    return name
+  if (name.length > 18)
+  {
+      const newName = name.substring(0, 12) + "..."
+      return newName
+  }
+  return name
+}
+
+
+export const userChoiceToItemType = (userChoice: UserChoice): ItemType =>
+{
+  if (userChoice === UserChoice.ENTITIES)
+  {
+    return ItemType.ENTITY 
+  }
+
+  if (userChoice === UserChoice.ATTRIBUTES)
+  {
+    return ItemType.ATTRIBUTE
+  }
+
+  if (userChoice === UserChoice.RELATIONSHIPS || userChoice === UserChoice.RELATIONSHIPS2)
+  {
+    return ItemType.RELATIONSHIP
+  }
+
+  throw Error(`Unexpected user choice: ${userChoice}`)
 }
 
 

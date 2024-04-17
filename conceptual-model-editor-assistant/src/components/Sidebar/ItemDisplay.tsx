@@ -1,4 +1,4 @@
-import { ListItemText, Typography } from "@mui/material"
+import { ListItemText, Stack, Typography } from "@mui/material"
 import { Attribute, Field, Item, ItemFieldUIName, ItemType, Relationship } from "../../interfaces"
 import ControlButtons from "./ControlButtons"
 
@@ -18,7 +18,7 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
 
 
     return (
-        <ListItemText>
+        <Stack marginTop={"15px"}>
             <Typography> <strong>{ ItemFieldUIName.NAME }:</strong> { item[Field.NAME] } </Typography>
             <Typography> <strong>{ ItemFieldUIName.ORIGINAL_TEXT }:</strong> { item[Field.ORIGINAL_TEXT] } </Typography>
 
@@ -40,8 +40,7 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
             }
 
             <ControlButtons item={item}/>
-
-        </ListItemText>
+        </Stack>
     )
 }
 

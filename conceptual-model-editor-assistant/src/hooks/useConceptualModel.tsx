@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { Node, Edge } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist } from './useUtility';
+import { capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editDialogWarningMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, suggestedItemsState, tooltipsState, topbarTabValueState } from '../atoms';
+import { domainDescriptionState, edgesState, editDialogWarningMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarTabValueState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
 
 
 const useConceptualModel = () =>
@@ -17,7 +17,10 @@ const useConceptualModel = () =>
   const selectedNodes = useRecoilValue(selectedNodesState)
   const selectedEdges = useRecoilValue(selectedEdgesState)
 
-  const setSuggestedItems = useSetRecoilState(suggestedItemsState)
+  const [suggestedEntities, setSuggestedEntities] = useRecoilState(suggestedEntitiesState)
+  const [suggestedAttributes, setSuggestedAttributes] = useRecoilState(suggestedAttributesState)
+  const [suggestedRelationships, setSuggestedRelationships] = useRecoilState(suggestedRelationshipsState)
+
   const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
   const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
 
@@ -32,11 +35,12 @@ const useConceptualModel = () =>
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
 
-  const setTabValue = useSetRecoilState(topbarTabValueState)
+  const setTopbarTabValue = useSetRecoilState(topbarTabValueState)
+  const setSidebarTab = useSetRecoilState(sidebarTabValueState)
 
   const setWarningMessage = useSetRecoilState(editDialogWarningMsgState)
 
-  const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData } = useFetchData({ onProcessStreamedData })
+  const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData } = useFetchData({ onClearSuggestedItems, onProcessStreamedData })
 
   let IDToAssign = 0
 
@@ -199,38 +203,75 @@ const useConceptualModel = () =>
         item[Field.ID] = assignID()
         item[Field.TYPE] = itemType
 
+        if (itemType === ItemType.ENTITY)
+        {
+          setSuggestedEntities(previousSuggestedItems => {
+            return [...previousSuggestedItems, item]
+          })
+        }
+
         if (itemType === ItemType.ATTRIBUTE)
         {
-          (item as Attribute)[Field.SOURCE_ENTITY] = sourceEntityName
+          let attribute: Attribute = item as Attribute
+          attribute[Field.SOURCE_ENTITY] = sourceEntityName
+
+          setSuggestedAttributes(previousSuggestedItems => {
+            return [...previousSuggestedItems, attribute]
+          })
         }
         else if (itemType === ItemType.RELATIONSHIP)
         {
-          (item as Relationship)[Field.SOURCE_ENTITY] = sourceEntityName
-        }
+          let relationship: Relationship = item as Relationship
+          relationship[Field.SOURCE_ENTITY] = sourceEntityName
 
-        setSuggestedItems(previousSuggestedItems => {
-          return [...previousSuggestedItems, item]
-        })
+          setSuggestedRelationships(previousSuggestedItems => {
+            return [...previousSuggestedItems, relationship]
+          })
+        }
       }
     }
+  
+  function onClearSuggestedItems(itemType: ItemType): void
+  {
+    if (itemType === ItemType.ENTITY)
+    {
+      setSuggestedEntities(_ => [])
+    }
+    else if (itemType === ItemType.ATTRIBUTE)
+    {
+      setSuggestedAttributes(_ => [])
+    }
+    else if (itemType === ItemType.RELATIONSHIP)
+    {
+      setSuggestedRelationships(_ => [])
+    }
+  }
+
+  const changeSidebarTab = (itemType: ItemType) =>
+  {
+    if (itemType === ItemType.ENTITY)
+    {
+      setSidebarTab(_ => "0")
+    }
+    else if (itemType === ItemType.ATTRIBUTE)
+    {
+      setSidebarTab(_ => "1")
+    }
+    else if (itemType === ItemType.RELATIONSHIP)
+    {
+      setSidebarTab(_ => "2")
+    }
+  }
 
 
   const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
   {
     const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
 
-    // Clear all previous suggested items
-    setSuggestedItems(_ => [])
+    const itemType: ItemType = userChoiceToItemType(userChoice)
 
-    let itemType = ItemType.ENTITY
-    if (userChoice === UserChoice.ATTRIBUTES)
-    {
-      itemType = ItemType.ATTRIBUTE
-    }
-    else if (userChoice === UserChoice.RELATIONSHIPS || userChoice === UserChoice.RELATIONSHIPS2)
-    {
-      itemType = ItemType.RELATIONSHIP
-    }
+    onClearSuggestedItems(itemType)
+    changeSidebarTab(itemType)
 
     sourceItemName = sourceItemName !== null ? sourceItemName : ""
     targetItemName = targetItemName !== null ? targetItemName : ""
@@ -293,7 +334,7 @@ const useConceptualModel = () =>
       return
     }
 
-    setTabValue("1")
+    setTopbarTabValue("1")
 
     const conceptualModel = convertConceptualModelToJSON(false)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
@@ -310,7 +351,7 @@ const useConceptualModel = () =>
       return
     }
 
-    setTabValue("2")
+    setTopbarTabValue("2")
 
     const conceptualModel = convertConceptualModelToJSON(true)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
@@ -479,24 +520,26 @@ const useConceptualModel = () =>
     })
   }
 
-  const onEditSuggestion = (itemID: number) : void =>
+  const onEditSuggestion = (itemID: number, itemType: ItemType): void =>
   {
-    let suggestedItem: Item | null = null
+    let suggestedItem: Item | undefined = undefined
 
-    setSuggestedItems((items: Item[]) => items.map((item: Item) =>
+    if (itemType === ItemType.ENTITY)
     {
-      if (item.ID === itemID)
-      {
-        suggestedItem = item
-      }
-
-      return item
-    }))
-
+      suggestedItem = suggestedEntities.find(entity => entity.ID === itemID)
+    }
+    else if (itemType === ItemType.ATTRIBUTE)
+    {
+      suggestedItem = suggestedAttributes.find(attribute => attribute.ID === itemID)
+    }
+    else if (itemType === ItemType.RELATIONSHIP)
+    {
+      suggestedItem = suggestedRelationships.find(relationship => relationship.ID === itemID)
+    }
 
     if (!suggestedItem)
     {
-      throw new Error("Accessed invalid itemID")
+      throw new Error("Invalid itemID")
     }
 
     setSelectedSuggestedItem(_ => suggestedItem as Item)
