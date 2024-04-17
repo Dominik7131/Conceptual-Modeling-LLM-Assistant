@@ -4,9 +4,9 @@ import { Node, Edge } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
+import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, ItemsMessage, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editDialogWarningMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarTabValueState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
+import { domainDescriptionState, edgesState, editDialogWarningMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
 
 
 const useConceptualModel = () =>
@@ -20,6 +20,8 @@ const useConceptualModel = () =>
   const [suggestedEntities, setSuggestedEntities] = useRecoilState(suggestedEntitiesState)
   const [suggestedAttributes, setSuggestedAttributes] = useRecoilState(suggestedAttributesState)
   const [suggestedRelationships, setSuggestedRelationships] = useRecoilState(suggestedRelationshipsState)
+
+  const setSidebarTitles = useSetRecoilState(sidebarTitlesState)
 
   const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
   const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
@@ -264,17 +266,45 @@ const useConceptualModel = () =>
   }
 
 
+  const changeSidebarTitles = (userChoice: UserChoice, sourceItemName: string, targetItemName: string): void =>
+  {
+    if (userChoice === UserChoice.ENTITIES)
+    {
+      const message = ""
+      setSidebarTitles((title: ItemsMessage) => { return { ...title, entities: message} })
+    }
+    else if (userChoice === UserChoice.ATTRIBUTES)
+    {
+      const message = `Selected entity: ${sourceItemName}`
+      setSidebarTitles((title: ItemsMessage) => { return { ...title, attributes: message} })
+    }
+    else if (userChoice === UserChoice.RELATIONSHIPS)
+    {
+      const message = `Selected entity: ${sourceItemName}`
+      setSidebarTitles((title: ItemsMessage) => { return { ...title, relationships: message} })
+    }
+    else if (userChoice === UserChoice.RELATIONSHIPS2)
+    {
+      const message = `Source entity: ${sourceItemName}\nTarget entity: ${targetItemName}`
+      setSidebarTitles((title: ItemsMessage) => { return { ...title, relationships: message} })
+    }
+  }
+
+
   const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
   {
     const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
+
+    sourceItemName = sourceItemName !== null ? sourceItemName : ""
+    targetItemName = targetItemName !== null ? targetItemName : ""
 
     const itemType: ItemType = userChoiceToItemType(userChoice)
 
     onClearSuggestedItems(itemType)
     changeSidebarTab(itemType)
+    changeSidebarTitles(userChoice, sourceItemName, targetItemName)
 
-    sourceItemName = sourceItemName !== null ? sourceItemName : ""
-    targetItemName = targetItemName !== null ? targetItemName : ""
+
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
     fetchStreamedData(bodyData, sourceItemName, itemType)

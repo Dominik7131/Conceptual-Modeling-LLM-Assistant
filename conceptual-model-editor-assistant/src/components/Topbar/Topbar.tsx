@@ -16,8 +16,7 @@ const Topbar: React.FC = () =>
     const tabValue = useRecoilValue(topbarTabValueState)
 
     const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
-    const offset = 0.4 // For some reason the topbar's right side does not end exactly where the sidebar starts
-    const topBarWidth = 100 - sidebarWidthPercentage + offset
+    const topBarWidth = 100 - sidebarWidthPercentage
     const heightPx = 361
 
 

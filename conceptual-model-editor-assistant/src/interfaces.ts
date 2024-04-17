@@ -117,6 +117,11 @@ interface DomainRangeJson
 {
   // TODO: Why do we have "target entity" in attributes?
   // Isn't that going to be always empty string?
+  // Optional-one: 0..1
+  // One: 1..1
+  // Many: 1..*
+  // Is optional-many (0..*) missing?
+  // Is many-many (*..*) missing
   domain: string
   domainCardinality: "optional-one" | "one" | "many"
   range: string
@@ -139,4 +144,12 @@ export interface ConceptualModelJson
   attributes: AttributeJson[]
   relationships: RelationshipJson[]
   generalizations: GeneralizationJson[]
+}
+
+
+export interface ItemsMessage
+{
+  entities: string
+  attributes: string
+  relationships: string
 }

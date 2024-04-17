@@ -1,5 +1,4 @@
-import { Box, CircularProgress, Divider, Drawer, ListItem, Stack, Typography } from "@mui/material"
-import List from '@mui/material/List';
+import { Box, CircularProgress, Divider, ListItem, Stack, Typography } from "@mui/material"
 import { Item } from "../../interfaces"
 import ItemDisplay from "./ItemDisplay"
 
@@ -15,14 +14,14 @@ const Suggestions: React.FC<Props> = ({ items, isLoading, title }): JSX.Element 
 {
     return (
 
-        <Stack marginX="-20px">
+        <Stack marginY="-15px" marginX="-20px" style={{ whiteSpace: 'pre-line' }}>
             { title &&
                 <Stack>
                     <Typography
                         sx={{ display: 'flex', justifyContent:"center"}}
                         variant="body1"
                         gutterBottom>
-                            <strong> Source entity: { title } </strong>
+                            <strong> { title } </strong>
                     </Typography>
 
                     <Divider></Divider>

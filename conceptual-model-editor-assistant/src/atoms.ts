@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil'
-import { Attribute, Entity, Field, Item, ItemType, Relationship, SummaryObject } from './interfaces';
+import { Attribute, Entity, Field, Item, ItemType, ItemsMessage, Relationship, SummaryObject } from './interfaces';
 import { Node, Edge } from 'reactflow';
 
 
@@ -32,6 +32,12 @@ export const suggestedAttributesState = atom<Attribute[]>({
 export const suggestedRelationshipsState = atom<Relationship[]>({
     key: 'suggestedRelationshipsState',
     default: [],
+});
+
+
+export const sidebarTitlesState = atom<ItemsMessage>({
+    key: 'sidebarTitlesState',
+    default: { entities: "", attributes: "", relationships: "" },
 });
 
 
