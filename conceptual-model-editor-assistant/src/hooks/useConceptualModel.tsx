@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Node, Edge, MarkerType, getMarkerEnd } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { CUSTOM_EDGE_MARKER, capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist, userChoiceToItemType } from './useUtility';
+import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, ItemsMessage, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -122,7 +122,7 @@ const useConceptualModel = () =>
       const newRelationship: Relationship = {
         [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: "",
         [Field.SOURCE_ENTITY]: relationship.source, [Field.TARGET_ENTITY]: relationship.target,
-        [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT]: relationship.originalText, [Field.ORIGINAL_TEXT_INDEXES]: []
+        [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: relationship.originalText, [Field.ORIGINAL_TEXT_INDEXES]: []
       }
       const edgeData: EdgeData = { relationship: newRelationship }
 
@@ -332,7 +332,7 @@ const useConceptualModel = () =>
   {
     const blankAttribute: Attribute = {
       [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-      [Field.TYPE]: ItemType.ATTRIBUTE, [Field.CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntity.name
+      [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntity.name
     }
 
     setIsSuggestedItem(_ => true)

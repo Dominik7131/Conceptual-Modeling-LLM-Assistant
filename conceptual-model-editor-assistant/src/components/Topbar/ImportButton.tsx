@@ -68,7 +68,7 @@ const ImportButton: React.FC = () =>
             const newAttribute: Attribute = {
                 [Field.ID]: 0, [Field.NAME]: attributeNameLowerCase, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.DESCRIPTION]: attribute.description,
                 [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.SOURCE_ENTITY]: sourceEntityLowerCase,
-                [Field.DATA_TYPE]: "", [Field.CARDINALITY]: attribute.domainCardinality
+                [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: attribute.domainCardinality
             }
         
         
@@ -92,7 +92,7 @@ const ImportButton: React.FC = () =>
             const newRelationship: Relationship = {
                 [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: nameLowerCase, [Field.DESCRIPTION]: relationship.description,
                 [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
-                [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
+                [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
             }
         
             const edgeData: EdgeData = { relationship: newRelationship }
@@ -115,7 +115,7 @@ const ImportButton: React.FC = () =>
             const newRelationship: Relationship = {
                 [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: nameLowerCase, [Field.DESCRIPTION]: "",
                 [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
-                [Field.CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
+                [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
             }
         
             const edgeData: EdgeData = { relationship: newRelationship }

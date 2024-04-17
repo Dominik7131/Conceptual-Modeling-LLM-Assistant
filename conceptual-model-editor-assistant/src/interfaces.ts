@@ -27,8 +27,11 @@ export const enum Field
   DATA_TYPE = "dataType",
   CARDINALITY = "cardinality",
   SOURCE_ENTITY = "source",
-  TARGET_ENTITY = "target"
+  TARGET_ENTITY = "target",
+  SOURCE_CARDINALITY = "sourceCardinality",
+  TARGET_CARDINALITY = "targetCardinality",
 }
+
 
 export const enum ItemFieldUIName
 {
@@ -39,10 +42,13 @@ export const enum ItemFieldUIName
   ORIGINAL_TEXT = "Original text",
   ORIGINAL_TEXT_INDEXES = "Original text indexes",
   DATA_TYPE = "Data type",
-  CARDINALITY = "Cardinality",
   SOURCE_ENTITY = "Source entity",
-  TARGET_ENTITY = "Target entity"
+  TARGET_ENTITY = "Target entity",
+  CARDINALITY = "Cardinality",
+  SOURCE_CARDINALITY = "Source cardinality",
+  TARGET_CARDINALITY = "Target cardinality",
 }
+
 
 export interface SummaryObject
 {
@@ -50,20 +56,25 @@ export interface SummaryObject
   relationships: any[]
 }
 
+
 export interface NodeData
 {
   entity: Entity
   attributes: Attribute[]
 }
 
+
 export interface EdgeData
 {
   relationship: Relationship
 }
 
+
 export type Item = Entity | Attribute | Relationship
 
+
 export type ItemFieldsUnification = keyof Entity | keyof Attribute | keyof Relationship
+
 
 interface BaseItem
 {
@@ -81,14 +92,15 @@ export interface Attribute extends BaseItem
 {
   source: string
   dataType: string
-  cardinality: string
+  sourceCardinality: string
 }
 
 export interface Relationship extends BaseItem
 {
   source: string
   target: string
-  cardinality: string
+  sourceCardinality: string
+  targetCardinality: string
 }
 
 export interface OriginalTextIndexesItem

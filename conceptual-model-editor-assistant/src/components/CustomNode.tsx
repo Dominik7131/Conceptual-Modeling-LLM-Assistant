@@ -68,18 +68,29 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
     return (
         <Box sx={{ width: "180px", textAlign: "center", backgroundColor: "white", border: selected ? borderSelected : borderNonSelected }}>
 
-            <Handle type="target" position={Position.Top} style={{ background: selected ? primaryColor : "black" }}>
+            <Handle type="source" position={Position.Top} style={{ background: selected ? primaryColor : "black" }}>
+                {/* <Typography> t </Typography> */}
                 {/* <Typography style={{ color: selected ? primaryColor : "black", position: "absolute", top: "-10px", left: "-1px", pointerEvents: "none"}}>x</Typography> */}
                 {/* <HighlightOffIcon color='action' sx={{ marginLeft: "-8px", marginTop: "-10px", color: "black"}} style={{ width: 22, height: 22,  pointerEvents: "none" }} /> */}
             </Handle>
 
             <Handle type="source" position={Position.Bottom} style={{ background: selected ? primaryColor : "black" }}>
+                {/* <Typography> s </Typography> */}
+                {/* <ModeStandbyIcon color='action' sx={{ marginLeft: "-8px", marginTop: "-10px", color: "black"}} style={{ width: 22, height: 22,  pointerEvents: "none" }} /> */}
+            </Handle>
+
+            <Handle type="target" position={Position.Left} style={{ background: selected ? primaryColor : "black" }}>
+                {/* <Typography> s </Typography> */}
+                {/* <ModeStandbyIcon color='action' sx={{ marginLeft: "-8px", marginTop: "-10px", color: "black"}} style={{ width: 22, height: 22,  pointerEvents: "none" }} /> */}
+            </Handle>
+
+            <Handle type="target" position={Position.Right} style={{ background: selected ? primaryColor : "black" }}>
+                {/* <Typography> s </Typography> */}
                 {/* <ModeStandbyIcon color='action' sx={{ marginLeft: "-8px", marginTop: "-10px", color: "black"}} style={{ width: 22, height: 22,  pointerEvents: "none" }} /> */}
             </Handle>
 
             <Button size="small" fullWidth={true}
-                sx={{ color: selected ? primaryColor : "black", fontSize: "17px", textTransform: 'none',
-                        overflow: "hidden", direction: 'ltr' }}
+                sx={{ color: selected ? primaryColor : "black", fontSize: "16px", textTransform: 'none', overflow: "hidden", direction: 'ltr' }}
                 onMouseEnter={() => setIsEntityHovered(_ => true)} 
                 onMouseLeave={() => setIsEntityHovered(_ => false)}
                 >

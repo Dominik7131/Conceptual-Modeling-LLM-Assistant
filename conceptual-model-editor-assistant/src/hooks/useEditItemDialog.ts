@@ -194,12 +194,13 @@ const useEditItemDialog = () =>
         }))
     }
 
+
     const onClearRegeneratedItem = (field: Field | null, isClearAll: boolean) : void=>
     {
         if (isClearAll)
         {
-            setEditedSuggestedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: [], dataType: "", cardinality: ""})
-            setRegeneratedItem({ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: [], dataType: "", cardinality: ""})
+            setEditedSuggestedItem({[Field.ID]: -1, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
+            setRegeneratedItem({[Field.ID]: -1, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
         }
 
         if (!field)
@@ -342,9 +343,9 @@ const useEditItemDialog = () =>
             const oldAttribute = item as Attribute
         
             const relationship : Relationship = {
-                ID: oldAttribute.ID, type: ItemType.RELATIONSHIP, name: "", description: oldAttribute.description,
-                originalText: oldAttribute.originalText, originalTextIndexes: oldAttribute.originalTextIndexes, source: oldAttribute.source,
-                target: oldAttribute.name, cardinality: ""}
+                [Field.ID]: oldAttribute.ID, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: "", [Field.DESCRIPTION]: oldAttribute.description,
+                [Field.ORIGINAL_TEXT]: oldAttribute.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldAttribute.originalTextIndexes, [Field.SOURCE_ENTITY]: oldAttribute.source,
+                [Field.TARGET_ENTITY]: oldAttribute.name, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""}
         
             setSelectedSuggestedItem(_ => relationship)
             setEditedSuggestedItem(_ => relationship)
@@ -352,11 +353,11 @@ const useEditItemDialog = () =>
         else
         {
             const oldRelationship = item as Relationship
-        
+
             const attribute : Attribute = {
-                ID: oldRelationship.ID, type: ItemType.ATTRIBUTE, name: oldRelationship.target, description: oldRelationship.description,
-                dataType: "string", originalText: oldRelationship.originalText, originalTextIndexes: oldRelationship.originalTextIndexes,
-                cardinality: "", source: oldRelationship.source
+                [Field.ID]: oldRelationship.ID, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: oldRelationship.target, [Field.DESCRIPTION]: oldRelationship.description,
+                [Field.DATA_TYPE]: "string", [Field.ORIGINAL_TEXT]: oldRelationship.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldRelationship.originalTextIndexes,
+                [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_ENTITY]: oldRelationship.source
             }
         
             setSelectedSuggestedItem(_ => attribute)

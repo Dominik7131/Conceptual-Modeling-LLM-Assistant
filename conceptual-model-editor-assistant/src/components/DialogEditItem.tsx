@@ -130,7 +130,7 @@ const DialogEditItem: React.FC = () =>
                     isAttribute &&
                     <>
                         { showEditField(ItemFieldUIName.DATA_TYPE, Field.DATA_TYPE, attribute[Field.DATA_TYPE]) }
-                        { showEditField(ItemFieldUIName.CARDINALITY, Field.CARDINALITY, attribute[Field.CARDINALITY]) }
+                        { showEditField(ItemFieldUIName.CARDINALITY, Field.CARDINALITY, attribute[Field.SOURCE_CARDINALITY]) }
                     </>
                 }
 
@@ -139,7 +139,8 @@ const DialogEditItem: React.FC = () =>
                     <>
                         { showEditField(ItemFieldUIName.SOURCE_ENTITY, Field.SOURCE_ENTITY, relationship[Field.SOURCE_ENTITY]) }
                         { showEditField(ItemFieldUIName.TARGET_ENTITY, Field.TARGET_ENTITY, relationship[Field.TARGET_ENTITY]) }
-                        { showEditField(ItemFieldUIName.CARDINALITY, Field.CARDINALITY, relationship[Field.CARDINALITY]) }
+                        { showEditField(ItemFieldUIName.SOURCE_CARDINALITY, Field.SOURCE_CARDINALITY, relationship[Field.SOURCE_CARDINALITY]) }
+                        { showEditField(ItemFieldUIName.TARGET_CARDINALITY, Field.TARGET_CARDINALITY, relationship[Field.TARGET_CARDINALITY]) }
                     </>
                 }
 

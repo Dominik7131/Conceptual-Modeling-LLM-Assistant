@@ -1,11 +1,11 @@
-import { BaseEdge, EdgeLabelRenderer, EdgeProps, MarkerType, getBezierPath, getMarkerEnd, getStraightPath } from 'reactflow';
+import { BaseEdge, EdgeLabelRenderer, EdgeProps, MarkerType, getBezierPath, getMarkerEnd, getSimpleBezierPath, getStraightPath } from 'reactflow';
 import { EdgeData, Field, ItemType, Relationship, primaryColor } from '../interfaces';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { Typography } from '@mui/material';
-import useUtility, { CUSTOM_EDGE_MARKER, capitalizeString, clipName } from '../hooks/useUtility';
+import useUtility, { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, clipName } from '../hooks/useUtility';
 import useConceptualModel from '../hooks/useConceptualModel';
 
 
@@ -15,7 +15,8 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
 {
   const [isHovered, setIsHovered] = useState<boolean>(false)
   // const [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
-  const [edgePath, labelX, labelY] = getBezierPath({sourceX, sourceY, sourcePosition, targetX, targetY, targetPosition});
+  // const { sx, sy, tx, ty, sourcePos, targetPos } = getParams(sourceNode, targetNode);
+  const [edgePath, labelX, labelY] = getSimpleBezierPath({sourceX: sourceX, sourceY: sourceY, targetX: targetX, targetY: targetY, sourcePosition: sourcePosition, targetPosition: targetPosition});
 
   const { onEditItem } = useConceptualModel()
 
@@ -26,10 +27,12 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
   const borderNonSelected = "1px solid black"
   const borderSelected = `1px solid ${primaryColor}`
 
+  // console.log(markerEnd)
+  // const markerEndString = "url(#1__color=red&height=40&strokeWidth=0.8&type=arrow&width=40)"
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={{stroke: selected ? primaryColor : "black", strokeWidth: "1px"}} />
+      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={{background: "red", stroke: selected ? primaryColor : "black", strokeWidth: "1px"}}/>
       <EdgeLabelRenderer>
         <Button className="nodrag nopan" color="primary" variant="outlined" size="small"
                 sx={{ color: selected ? primaryColor : "black", background: "white", paddingX: "30px", textTransform: "none",

@@ -117,6 +117,7 @@ export const userChoiceToItemType = (userChoice: UserChoice): ItemType =>
 
 
 export const CUSTOM_EDGE_MARKER: EdgeMarker = { type: MarkerType.Arrow, width: 40, height: 40, color: "black", strokeWidth: 0.8 }
+export const CUSTOM_ISA_EDGE_MARKER: EdgeMarker = { type: MarkerType.ArrowClosed, width: 40, height: 40, color: "black", strokeWidth: 0.8 }
 
 
 export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"

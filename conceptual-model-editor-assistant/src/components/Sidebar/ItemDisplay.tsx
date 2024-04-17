@@ -26,7 +26,7 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
                 isAttribute &&
                 <>
                     <Typography> <strong>{ ItemFieldUIName.DATA_TYPE }:</strong> { attribute[Field.DATA_TYPE] } </Typography>
-                    <Typography> <strong>{ ItemFieldUIName.CARDINALITY }:</strong> { attribute[Field.CARDINALITY] } </Typography>
+                    <Typography> <strong>{ ItemFieldUIName.CARDINALITY }:</strong> { attribute[Field.SOURCE_CARDINALITY] } </Typography>
                 </>
             }
 
@@ -35,7 +35,8 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
                 <>
                     <Typography> <strong> { ItemFieldUIName.SOURCE_ENTITY }:</strong> { relationship[Field.SOURCE_ENTITY] } </Typography>
                     <Typography> <strong> { ItemFieldUIName.TARGET_ENTITY }:</strong> { relationship[Field.TARGET_ENTITY] } </Typography>
-                    <Typography> <strong> { ItemFieldUIName.CARDINALITY }:</strong> { relationship[Field.CARDINALITY] } </Typography>
+                    <Typography> <strong> { ItemFieldUIName.SOURCE_CARDINALITY }:</strong> { relationship[Field.SOURCE_CARDINALITY] } </Typography>
+                    <Typography> <strong> { ItemFieldUIName.TARGET_CARDINALITY }:</strong> { relationship[Field.TARGET_CARDINALITY] } </Typography>
                 </>
             }
 
