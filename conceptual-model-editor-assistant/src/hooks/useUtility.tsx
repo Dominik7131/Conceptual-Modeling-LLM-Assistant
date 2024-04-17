@@ -1,5 +1,5 @@
 import { ItemType, UserChoice } from "../interfaces"
-import { Node, Edge } from 'reactflow';
+import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
 
 
 const useUtility = () =>
@@ -114,6 +114,9 @@ export const userChoiceToItemType = (userChoice: UserChoice): ItemType =>
 
   throw Error(`Unexpected user choice: ${userChoice}`)
 }
+
+
+export const CUSTOM_EDGE_MARKER: EdgeMarker = { type: MarkerType.Arrow, width: 40, height: 40, color: "black", strokeWidth: 0.8 }
 
 
 export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"

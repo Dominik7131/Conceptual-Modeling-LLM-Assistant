@@ -5,13 +5,13 @@ import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { Typography } from '@mui/material';
-import useUtility, { capitalizeString, clipName } from '../hooks/useUtility';
+import useUtility, { CUSTOM_EDGE_MARKER, capitalizeString, clipName } from '../hooks/useUtility';
 import useConceptualModel from '../hooks/useConceptualModel';
 
 
 // Inspiration: https://reactflow.dev/learn/customization/custom-edges
 // List of available props: https://reactflow.dev/api-reference/types/edge-props
-export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targetPosition, targetX, targetY, selected, data }: EdgeProps) : JSX.Element
+export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targetPosition, targetX, targetY, selected, data, markerEnd }: EdgeProps) : JSX.Element
 {
   const [isHovered, setIsHovered] = useState<boolean>(false)
   // const [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
@@ -29,7 +29,7 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} style={{stroke: selected ? primaryColor : "black", strokeWidth: "1px"}} />
+      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={{stroke: selected ? primaryColor : "black", strokeWidth: "1px"}} />
       <EdgeLabelRenderer>
         <Button className="nodrag nopan" color="primary" variant="outlined" size="small"
                 sx={{ color: selected ? primaryColor : "black", background: "white", paddingX: "30px", textTransform: "none",

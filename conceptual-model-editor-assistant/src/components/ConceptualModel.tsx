@@ -69,7 +69,7 @@ const ConceptualModel: React.FC = () =>
 
   const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
 
-  const heightPx = 587
+  const heightPx = 586
 
   // Define custom edge type for selected state
 

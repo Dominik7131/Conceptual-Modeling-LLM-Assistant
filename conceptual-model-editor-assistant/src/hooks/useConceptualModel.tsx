@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { Node, Edge } from 'reactflow';
+import { Node, Edge, MarkerType, getMarkerEnd } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist, userChoiceToItemType } from './useUtility';
+import { CUSTOM_EDGE_MARKER, capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, ItemsMessage, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -128,7 +128,7 @@ const useConceptualModel = () =>
 
       const newEdge: Edge = {
         id: newID, source: relationship.source, target: relationship.target, type: "custom-edge",
-        data: edgeData
+        data: edgeData, markerEnd: CUSTOM_EDGE_MARKER
       }
 
       newEdges.push(newEdge)
@@ -541,7 +541,8 @@ const useConceptualModel = () =>
     const edgeData: EdgeData = { relationship: relationship }
 
     const newEdge : Edge = {
-      id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: edgeData
+      id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: edgeData,
+      markerEnd: CUSTOM_EDGE_MARKER
     }
 
     setEdges(previousEdges =>

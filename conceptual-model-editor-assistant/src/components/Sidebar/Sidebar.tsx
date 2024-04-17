@@ -33,7 +33,7 @@ const Sidebar: React.FC = () =>
 
     return (
         <Drawer
-            sx={{ flexShrink: 0, '& .MuiDrawer-paper': { width: `${sidebarWidthPercentage}%`, boxSizing: 'border-box'}}}
+            sx={{ flexShrink: 0, '& .MuiDrawer-paper': { width: `${sidebarWidthPercentage}%`}}}
             variant="persistent"
             anchor="right"
             open={isSidebarOpen}
