@@ -6,7 +6,7 @@ import { useSetRecoilState } from "recoil";
 import { edgesState, nodesState } from "../../atoms";
 import { Node, Edge } from 'reactflow';
 import useConceptualModel from "../../hooks/useConceptualModel";
-import { createEdgeID } from "../../hooks/useUtility";
+import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, createEdgeID } from "../../hooks/useUtility";
 
 
 const ImportButton: React.FC = () =>
@@ -19,6 +19,8 @@ const ImportButton: React.FC = () =>
 
     const onImport = (conceptualModelJson: ConceptualModelJson) =>
     {
+        console.log("Importing")
+
         const incrementX = 500
         const incrementY = 200
         let positionX = 100
@@ -36,7 +38,7 @@ const ImportButton: React.FC = () =>
             const entityNameLowerCase = entity.title.toLowerCase()
         
             const newEntity: Entity = {
-                [Field.TYPE]: ItemType.ENTITY, [Field.ID]: 0, [Field.NAME]: entity.title, [Field.DESCRIPTION]: entity.description,
+                [Field.TYPE]: ItemType.ENTITY, [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.DESCRIPTION]: entity.description,
                 [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
             }
         
@@ -92,7 +94,8 @@ const ImportButton: React.FC = () =>
             const newRelationship: Relationship = {
                 [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: nameLowerCase, [Field.DESCRIPTION]: relationship.description,
                 [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
-                [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
+                [Field.SOURCE_CARDINALITY]: relationship.domainCardinality, [Field.TARGET_CARDINALITY]: relationship.rangeCardinality,
+                [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
             }
         
             const edgeData: EdgeData = { relationship: newRelationship }
@@ -100,7 +103,7 @@ const ImportButton: React.FC = () =>
             const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, nameLowerCase)
             const newEdge : Edge = {
                 id: newID, source: sourceEntityLowerCase, target: targetEntityLowerCase, type: "custom-edge",
-                data: edgeData
+                data: edgeData, markerEnd: CUSTOM_EDGE_MARKER
             }
         
             newEdges.push(newEdge)
@@ -123,7 +126,7 @@ const ImportButton: React.FC = () =>
             const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, nameLowerCase)
             const newEdge : Edge = {
                 id: newID, source: sourceEntityLowerCase, target: targetEntityLowerCase, type: "custom-edge",
-                data: edgeData
+                data: edgeData, markerEnd: CUSTOM_ISA_EDGE_MARKER
             }
         
             newEdges.push(newEdge)
@@ -135,8 +138,10 @@ const ImportButton: React.FC = () =>
 
     const handleFileUpload = (changeEvent: ChangeEvent<HTMLInputElement>) =>
     {
+        console.log("Uploading")
         if (!changeEvent.target.files)
         {
+            console.log("Return")
             return
         }
         const file = changeEvent.target.files[0]
@@ -154,6 +159,9 @@ const ImportButton: React.FC = () =>
             onImport(jsonObject)
         }
         reader.readAsText(file)
+
+        // Clear the file name so the "onChange" handler fires again even when the same file is uploaded more than once
+        changeEvent.target.value = ""
     }
 
     return (
