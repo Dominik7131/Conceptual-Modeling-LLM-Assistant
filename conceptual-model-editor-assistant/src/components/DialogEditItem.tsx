@@ -48,7 +48,7 @@ const DialogEditItem: React.FC = () =>
 
     const handleAdd = (item: Item): void =>
     {
-        const result = onAddItem(item)
+        const result = onAddItem(item, false)
         if (result)
         {
             onClose()

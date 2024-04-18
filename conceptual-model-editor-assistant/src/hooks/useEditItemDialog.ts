@@ -67,7 +67,7 @@ const useEditItemDialog = () =>
 
     const editNodeEntity = (newEntity: Entity, oldEntity: Entity): void =>
     {
-        const id: string = oldEntity.name    
+        const id: string = oldEntity.name  
     
         if (newEntity.name !== oldEntity.name)
         {
@@ -101,7 +101,7 @@ const useEditItemDialog = () =>
                 return currentEdge
             }))
         }
-    
+
         setNodes((nodes: Node[]) => nodes.map((currentNode : Node) =>
         {
             if (currentNode.id === id)

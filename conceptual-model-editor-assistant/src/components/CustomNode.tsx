@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { useCallback, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { Attribute, Entity, Field, ItemType, NodeData, UserChoice, primaryColor } from '../interfaces';
+import { Attribute, Entity, Field, ItemType, NodeData, UserChoice, PRIMARY_COLOR } from '../interfaces';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -22,6 +22,8 @@ import useConceptualModel from '../hooks/useConceptualModel';
 export default function TextUpdaterNode({ selected, data } : NodeProps)
 {
     const [isEntityHovered, setIsEntityHovered] = useState<boolean>(false)
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const open = Boolean(anchorEl)
 
     const { onEditItem, onSuggestItems, onAddNewAttribute } = useConceptualModel()
 
@@ -31,18 +33,18 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
     const attributes: Attribute[] = nodeData.attributes
 
     const borderNonSelected = "1px solid black"
-    const borderSelected = `1px solid ${primaryColor}`
+    const borderSelected = `1px solid ${PRIMARY_COLOR}`
 
     // If the entity name is too long then display only the beginning of it with three dots at the end
     const spacesCount: number = entity[Field.NAME].split(" ").length - 1
     let entityName = capitalizeString(entity[Field.NAME])
-    if (spacesCount === 0 && entityName.length > 12)
+    const maxLength = 15
+    if (spacesCount === 0 && entityName.length > maxLength)
     {
-        entityName = entityName.substring(0, 12) + "..."
-    }    
+        entityName = entityName.substring(0, maxLength) + "..."
+    }
 
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-    const open = Boolean(anchorEl)
+
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) =>
     {
@@ -58,30 +60,30 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
 
 
     return (
-        <Box sx={{ width: "180px", textAlign: "center", backgroundColor: "white", border: (selected || isEntityHovered) ? borderSelected : borderNonSelected}}>
+        <Box sx={{ minWidth: "250px", textAlign: "center", backgroundColor: "white", border: (selected || isEntityHovered) ? borderSelected : borderNonSelected}}>
 
-            <Handle type="source" position={Position.Top} style={{ top: `-${handleOffset}px`, background: selected ? primaryColor : "black" }}>
-                { isEntityHovered && <Typography fontSize="13px" color={selected ? primaryColor : "black"}> s </Typography> }
+            <Handle type="source" position={Position.Top} style={{ top: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
+                { isEntityHovered && <Typography fontSize="13px" color={selected ? PRIMARY_COLOR : "black"}> s </Typography> }
             </Handle>
 
-            <Handle type="source" position={Position.Bottom} style={{ bottom: `-${handleOffset}px`, background: selected ? primaryColor : "black" }}>
-                { isEntityHovered && <Typography fontSize="13px" color={selected ? primaryColor : "black"}> s </Typography> }
+            <Handle type="source" position={Position.Bottom} style={{ bottom: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
+                { isEntityHovered && <Typography fontSize="13px" color={selected ? PRIMARY_COLOR : "black"}> s </Typography> }
             </Handle>
 
-            <Handle type="target" position={Position.Left} style={{ left: `-${handleOffset}px`, background: selected ? primaryColor : "black" }}>
-                { isEntityHovered && <Typography fontSize="13px" color={selected ? primaryColor : "black"} sx={{ marginY: "3px"}}> t </Typography> }
+            <Handle type="target" position={Position.Left} style={{ left: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
+                { isEntityHovered && <Typography fontSize="13px" color={selected ? PRIMARY_COLOR : "black"} sx={{ marginY: "3px"}}> t </Typography> }
             </Handle>
 
-            <Handle type="target" position={Position.Right} style={{ right: `-${handleOffset}px`, background: selected ? primaryColor : "black" }}>
-                { isEntityHovered && <Typography fontSize="13px" color={selected ? primaryColor : "black"} sx={{ marginY: "3px"}}> t </Typography> }
+            <Handle type="target" position={Position.Right} style={{ right: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
+                { isEntityHovered && <Typography fontSize="13px" color={selected ? PRIMARY_COLOR : "black"} sx={{ marginY: "3px"}}> t </Typography> }
             </Handle>
 
             <Button size="small" fullWidth={true}
-                sx={{ color: selected ? primaryColor : "black", fontSize: "16px", textTransform: 'none', overflow: "hidden", direction: 'ltr' }}
+                sx={{ color: selected ? PRIMARY_COLOR : "black", fontSize: "16px", textTransform: 'none', overflow: "hidden", direction: 'ltr' }}
                 onMouseEnter={() => setIsEntityHovered(_ => true)} 
                 onMouseLeave={() => setIsEntityHovered(_ => false)}
                 >
-                <strong>{entityName}</strong>
+                <strong>{ clipName(entityName, 18) }</strong>
 
                 <Typography
                     id="long-button"
@@ -132,16 +134,16 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
 
 
 
-            { attributes.length > 0 && <Divider sx={{backgroundColor: selected ? primaryColor : "gray"}}></Divider> }
+            { attributes.length > 0 && <Divider sx={{backgroundColor: selected ? PRIMARY_COLOR : "gray"}}></Divider> }
 
             <Stack>
                 {attributes.map((attribute: Attribute, index: number) =>
                 (
                     <Button size="small" key={`${attribute[Field.NAME]}-${index}`}
                         style={{justifyContent: "flex-start"}}
-                        sx={{ color: selected ? primaryColor : "black", fontSize: "12px", textTransform: 'lowercase'}}
+                        sx={{ color: selected ? PRIMARY_COLOR : "black", fontSize: "12px", textTransform: 'lowercase'}}
                         onClick={() => onEditItem(attribute)}>
-                        - { clipName(attribute[Field.NAME]) }
+                        - { clipName(attribute[Field.NAME], 18) }
                     </Button>
                 ))}
             </Stack>

@@ -1,4 +1,4 @@
-import { ItemType, UserChoice } from "../interfaces"
+import { ItemType, UserChoice, PRIMARY_COLOR } from "../interfaces"
 import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
 
 
@@ -84,12 +84,12 @@ export const getNodeByID = (nodes: Node[], nodeID: string): Node | null =>
 }
 
 
-export const clipName = (name: string): string =>
+export const clipName = (name: string, maxLength: number): string =>
 {
-  if (name.length > 18)
+  if (name.length > maxLength)
   {
-      const newName = name.substring(0, 12) + "..."
-      return newName
+    const newName = name.substring(0, maxLength) + "..."
+    return newName
   }
   return name
 }
@@ -116,8 +116,8 @@ export const userChoiceToItemType = (userChoice: UserChoice): ItemType =>
 }
 
 
-export const CUSTOM_EDGE_MARKER: EdgeMarker = { type: MarkerType.Arrow, width: 40, height: 40, color: "black", strokeWidth: 0.8 }
-export const CUSTOM_ISA_EDGE_MARKER: EdgeMarker = { type: MarkerType.ArrowClosed, width: 40, height: 40, color: "black", strokeWidth: 0.8 }
+export const CUSTOM_EDGE_MARKER: EdgeMarker = { type: MarkerType.Arrow, width: 50, height: 50, strokeWidth: 1 }
+export const CUSTOM_ISA_EDGE_MARKER: EdgeMarker = { type: MarkerType.ArrowClosed, width: 40, height: 40, strokeWidth: 0.8 }
 
 
 export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"

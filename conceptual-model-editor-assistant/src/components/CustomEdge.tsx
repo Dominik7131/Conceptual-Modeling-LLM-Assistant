@@ -1,5 +1,5 @@
 import { BaseEdge, EdgeLabelRenderer, EdgeProps, MarkerType, getBezierPath, getMarkerEnd, getSimpleBezierPath, getStraightPath } from 'reactflow';
-import { EdgeData, Field, ItemType, Relationship, primaryColor } from '../interfaces';
+import { EdgeData, Field, ItemType, Relationship, PRIMARY_COLOR } from '../interfaces';
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
@@ -25,27 +25,27 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
 
 
   const borderNonSelected = "1px solid black"
-  const borderSelected = `1px solid ${primaryColor}`
+  const borderSelected = `1px solid ${PRIMARY_COLOR}`
 
   // console.log(markerEnd)
   // const markerEndString = "url(#1__color=red&height=40&strokeWidth=0.8&type=arrow&width=40)"
 
   return (
     <>
-      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={{background: "red", stroke: selected ? primaryColor : "black", strokeWidth: "1px"}}/>
+      <BaseEdge id={id} path={edgePath} markerEnd={markerEnd} style={{background: "red", stroke: selected ? PRIMARY_COLOR : "black", strokeWidth: "1px"}}/>
       <EdgeLabelRenderer>
         <Button className="nodrag nopan" color="primary" variant="outlined" size="small"
-                sx={{ color: selected ? primaryColor : "black", background: "white", paddingX: "30px", textTransform: "none",
+                sx={{ color: selected ? PRIMARY_COLOR : "black", background: "white", paddingX: "30px", textTransform: "none",
                      border: selected ? borderSelected : borderNonSelected, position: "absolute", transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
                      pointerEvents: "all", minHeight: "30px", borderRadius: "30px", "&:hover": {backgroundColor: "white"}}}
                 
                 onMouseEnter={() => setIsHovered(_ => true)} 
                 onMouseLeave={() => setIsHovered(_ => false)}
                 >
-                { capitalizeString( clipName(relationship[Field.NAME])) }
+                { capitalizeString( clipName(relationship[Field.NAME], 18)) }
 
                 <Typography
-                  color={selected ? primaryColor : "black"}
+                  color={selected ? PRIMARY_COLOR : "black"}
                   onClick={() => onEditItem(relationship)}
                   sx={{ display: isHovered ? "inline" : "none",  position: "absolute", right: 3, top: 3 }}
                 >

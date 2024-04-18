@@ -70,6 +70,7 @@ const ExportButton: React.FC = (): JSX.Element =>
             const relationship: Relationship = edgeData.relationship
         
             // TODO: Probably add new field into Relationships to remember if the relationship is a relationship or a generalization
+            // TODO: If cardinality is not specified then return null
             if (relationship.name !== "is-a")
             {
                 const newRelationshipJson: RelationshipJson = {

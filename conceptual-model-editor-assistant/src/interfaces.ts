@@ -1,5 +1,5 @@
 
-export const primaryColor = "#2196f3"
+export const PRIMARY_COLOR = "#2196f3"
 
 export const enum UserChoice
 {

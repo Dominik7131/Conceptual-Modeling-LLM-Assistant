@@ -465,10 +465,11 @@ const useConceptualModel = () =>
   
   
   const onAddAttributesToNode = (attribute : Attribute) =>
-  {    
+  {
     const nodeID = attribute.source
     let isAttributePresent = false
     
+
     setNodes((nodes) => nodes.map((currentNode : Node) =>
     {
       // Skip nodes which are not getting a new attribute
@@ -488,17 +489,16 @@ const useConceptualModel = () =>
 
       if (isAttributePresent)
       {
-        return currentNode
+        return currentNode 
       }
-
       const newAttributes = [...currentNode.data.attributes, attribute]  
       const newData : NodeData = { ...currentNode.data, attributes: newAttributes }
       const updatedNode: Node = {...currentNode, data: newData}
 
       return updatedNode
-    }));
+    }))
 
-    return isAttributePresent
+    return !isAttributePresent
   }
 
 
@@ -553,6 +553,7 @@ const useConceptualModel = () =>
 
   const onEditSuggestion = (itemID: number, itemType: ItemType): void =>
   {
+    console.log("x")
     let suggestedItem: Item | undefined = undefined
 
     if (itemType === ItemType.ENTITY)
@@ -595,8 +596,9 @@ const useConceptualModel = () =>
   }
 
 
-  const onAddItem = (item: Item): boolean =>
+  const onAddItem = (item: Item, isItemFromSidebar: boolean): boolean =>
   {
+
     if (item.name === "")
     {
       const warningMessage = "Name cannot be empty"
@@ -612,13 +614,19 @@ const useConceptualModel = () =>
     else if (item.type === ItemType.ATTRIBUTE)
     {
       const result = onAddAttributesToNode(item as Attribute)
+
       if (!result)
       {
-        const warningMessage = "Attribute is already present"
-        setWarningMessage(_ => warningMessage)
-
-        // TODO: Return false
-        // However, strict mode in reacts adds one attribute and then complains about the same attribute being already present
+        const warningMessage = `Entity "${(item as Attribute)[Field.SOURCE_ENTITY]}" already contains attribute "${item.name}"`
+        if (isItemFromSidebar)
+        {
+          alert(warningMessage)
+        }
+        else
+        {
+          setWarningMessage(_ => warningMessage)
+        }
+        return false
       }
     }
     else if (item.type === ItemType.RELATIONSHIP)
