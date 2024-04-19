@@ -57,6 +57,7 @@ const ImportJSONButton: React.FC<Props> = ({ onImport }) =>
     return (
         <Button
             variant="contained"
+            color="secondary"
             disableElevation
             sx={{ textTransform: "none" }}
             startIcon={ <UploadIcon/> }

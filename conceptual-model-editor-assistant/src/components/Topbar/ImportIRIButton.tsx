@@ -27,6 +27,7 @@ const ImportIRIButton: React.FC<Props> = ({ onImport }): JSX.Element =>
         <>
             <Button
                 variant="contained"
+                color="secondary"
                 disableElevation
                 sx={{ textTransform: "none" }}
                 startIcon={ <UploadIcon/> }

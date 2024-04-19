@@ -1,4 +1,4 @@
-import { Box, Tab } from "@mui/material"
+import { Box, Button, Tab } from "@mui/material"
 import { topbarTabValueState } from "../../atoms"
 import { useSetRecoilState } from "recoil"
 import { TabList } from "@mui/lab"
@@ -16,12 +16,13 @@ const Tabs: React.FC = (): JSX.Element =>
 
 
     return (
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent:"center" }}>
             <TabList onChange={ handleChange }>
-                <Tab sx={{textTransform: "capitalize"}} label="Main" value="0" />
+                <Tab sx={{textTransform: "none"}} label="Main" value="0" />
                 <Tab sx={{textTransform: "none"}} label={SUMMARY_PLAIN_TEXT_NAME} value="1" />
                 <Tab sx={{textTransform: "none"}} label={SUMMARY_DESCRIPTIONS_NAME} value="2" />
-                <Tab sx={{textTransform: "capitalize"}} label="Settings" value="3" />
+                <Tab sx={{textTransform: "none"}} label="Import & Export" value="3" />
+                <Tab sx={{textTransform: "none"}} label="Settings" value="4" />
             </TabList>
         </Box>
     )

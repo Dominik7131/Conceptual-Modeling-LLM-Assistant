@@ -9,6 +9,7 @@ import SummaryPlainTextTab from "./SummaryPlainTextTab";
 import TopbarButtons from "./ControlButtons";
 import SettingsTab from "./SettingsTab";
 import Tabs from "./Tabs";
+import ImportTab from './ImportTab';
 
 
 
@@ -41,6 +42,10 @@ const Topbar: React.FC = () =>
                 </TabPanel>
 
                 <TabPanel value="3">
+                    <ImportTab/>
+                </TabPanel>
+
+                <TabPanel value="4">
                     <SettingsTab/>
                 </TabPanel>
             </TabContext>

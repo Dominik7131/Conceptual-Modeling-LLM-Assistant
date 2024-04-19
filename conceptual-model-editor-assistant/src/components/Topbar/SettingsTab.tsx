@@ -35,7 +35,7 @@ const SettingsTab: React.FC = (): JSX.Element =>
             <p></p>
 
             {/* {TODO: Make something more like this: https://mui.com/material-ui/react-slider/#slider-with-input-field} */}
-            <Typography
+            {/* <Typography
                 id="input-slider"
                 gutterBottom>
                     Temperature
@@ -52,7 +52,7 @@ const SettingsTab: React.FC = (): JSX.Element =>
                 min={0}
                 max={2}
                 sx={{ width: "200px" }}>
-            </Slider>
+            </Slider> */}
         </Stack>
     )
 }
