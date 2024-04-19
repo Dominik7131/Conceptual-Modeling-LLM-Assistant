@@ -1,79 +1,79 @@
-Entity: vehicle
+Entity: road vehicle
+1) is not listed as missing
+- inference: the road vehicle is not listed as missing
+- data_type: boolean
+- cardinality: 
+
+2) is not listed as stolen
+- inference: the road vehicle is not listed as stolen
+- data_type: boolean
+- cardinality: 
+
+
+Entity: motorised vehicle
 1) category
 - inference: vehicle category
 - data_type: string
 - cardinality: 
 
-
-Entity: road vehicle
-1) purpose
+2) purpose
 - inference: the purpose for which the road vehicle is intended
 - data_type: string
 - cardinality: 
 
-2) factory mark
+3) factory mark
 - inference: the manufacturer's factory mark as specified by the road vehicle manufacturer
 - data_type: string
 - cardinality: 
 
-3) trade name
+4) trade name
 - inference: the trade name if specified by the road vehicle manufacturer
 - data_type: string
 - cardinality: 
 
-4) vehicle identification number
+5) vehicle identification number
 - inference: the vehicle identification number (VIN) of the road vehicle
 - data_type: string
 - cardinality: 
 
-5) chassis serial number
+6) chassis serial number
 - inference: the chassis serial number of the road vehicle
 - data_type: string
 - cardinality: 
 
-6) number of seats
+7) number of seats
 - inference: for a road vehicle it is stated: number of seats
 - data_type: integer
 - cardinality: 
 
-7) number of standing places
+8) number of standing places
 - inference: for a road vehicle it is stated: number of standing places
 - data_type: integer
 - cardinality: 
 
-8) number of beds
+9) number of beds
 - inference: for a road vehicle it is stated: number of beds
 - data_type: integer
 - cardinality: 
 
-9) dimensions of loading area
+10) dimensions of loading area
 - inference: for a road vehicle it is stated: dimensions of the loading area
 - data_type: number
 - cardinality: 
 
-10) volume of box
+11) volume of box
 - inference: for a road vehicle it is stated: volume of the box
 - data_type: number
 - cardinality: 
 
-11) volume of tank
+12) volume of tank
 - inference: for a road vehicle it is stated: volume of the tank
 - data_type: number
 - cardinality: 
 
-12) overall dimension
+13) overall dimension
 - inference: the overall dimensions of the road vehicle
 - data_type: number
-- cardinality: 
-
-13) is not listed as missing
-- inference: the road vehicle is not listed as missing
-- data_type: boolean
-- cardinality: 
-
-14) is not listed as stolen
-- inference: the road vehicle is not listed as stolen
-- data_type: boolean
 - cardinality: 
 
 
