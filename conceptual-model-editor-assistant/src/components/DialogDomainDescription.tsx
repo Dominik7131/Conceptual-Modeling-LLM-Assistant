@@ -10,7 +10,7 @@ import Alert from '@mui/material/Alert';
 import { useEffect, useRef, useState } from 'react';
 import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
 import { styled } from '@mui/system';
-import { domainDescriptionState, isShowHighlightDialogState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from '../atoms';
+import { domainDescriptionState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from '../atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { Item } from '../interfaces';
 
@@ -26,6 +26,8 @@ const HighlightDialog: React.FC = () =>
   const isShowHighlightDialog = useRecoilValue(isShowHighlightDialogState)
 
   const selectedItem = useRecoilValue(selectedSuggestedItemState)
+
+  const isShowTitleDialogDomainDescription = useRecoilValue(isShowTitleDialogDomainDescriptionState)
 
 
   // TODO: Do not use `useEffect`, this should be solved with Ref to the highlighted text
@@ -122,13 +124,6 @@ const HighlightDialog: React.FC = () =>
     }))
 
 
-
-  const showTitle = (): JSX.Element =>
-  {
-    return <Typography variant="h5" component="span"> Selected {selectedItem.type}: <strong>{selectedItem.name}</strong> </Typography>
-  }
-
-
   return (
     <>
       <Dialog
@@ -144,8 +139,12 @@ const HighlightDialog: React.FC = () =>
             { inferenceIndexes.length === 0 &&
               <Alert variant="outlined" severity="warning">
                 Unable to find original text in domain description
-              </Alert>}
-            <Typography variant="h5"> { showTitle() } </Typography>
+              </Alert>
+            }
+
+            {  isShowTitleDialogDomainDescription ?
+                <Typography variant="h5"> Selected {selectedItem.type}: <strong>{selectedItem.name}</strong> </Typography>
+              : <Typography variant="h5"> Highlighting selected items in domain description </Typography> }
 
           </Stack>
         </DialogTitle>

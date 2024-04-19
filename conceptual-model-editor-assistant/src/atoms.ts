@@ -217,3 +217,9 @@ export const isDialogEnterIRIOpenedState = atom({
     key: 'isDialogEnterIRIOpenedState',
     default: false,
 })
+
+
+export const isShowTitleDialogDomainDescriptionState = atom({
+    key: 'isShowTitleDialogDomainDescriptionState',
+    default: true,
+})

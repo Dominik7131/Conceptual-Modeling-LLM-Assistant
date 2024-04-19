@@ -1,6 +1,6 @@
 import { Button } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
-import { isShowHighlightDialogState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
+import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../../interfaces";
 import { HEADER, MERGE_ORIGINAL_TEXT_URL, capitalizeString } from "../../hooks/useUtility";
@@ -14,6 +14,8 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
     const setIsShowHighlightDialog = useSetRecoilState(isShowHighlightDialogState)
     const setoriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
     const setTooltips = useSetRecoilState(tooltipsState)
+    const setIsShowTitleDialogDomainDescription = useSetRecoilState(isShowTitleDialogDomainDescriptionState)
+
 
 
     // TODO: Put this fetch logic into a separate file
@@ -51,6 +53,8 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
 
     const onHighlightSelectedItems = (): void =>
     {
+        setIsShowTitleDialogDomainDescription(false)
+
         let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []
     
         // Process all selected nodes
@@ -135,7 +139,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
             variant="contained"
             sx={{textTransform: "none"}}
             disableElevation 
-            onClick={onHighlightSelectedItems}>
+            onClick={ onHighlightSelectedItems }>
                 { capitalizeString("Highlight original text") }
         </Button>
 
