@@ -20,24 +20,39 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
     return (
         <Stack marginTop={"15px"}>
             <Typography> <strong>{ ItemFieldUIName.NAME }:</strong> { item[Field.NAME] } </Typography>
-            <Typography> <strong>{ ItemFieldUIName.ORIGINAL_TEXT }:</strong> { item[Field.ORIGINAL_TEXT] } </Typography>
 
             {
-                isAttribute &&
-                <>
-                    <Typography> <strong>{ ItemFieldUIName.DATA_TYPE }:</strong> { attribute[Field.DATA_TYPE] } </Typography>
-                    <Typography> <strong>{ ItemFieldUIName.CARDINALITY }:</strong> { attribute[Field.SOURCE_CARDINALITY] } </Typography>
-                </>
+                item[Field.ORIGINAL_TEXT] &&
+                    <Typography> <strong>{ ItemFieldUIName.ORIGINAL_TEXT }:</strong> { item[Field.ORIGINAL_TEXT] } </Typography>
             }
 
             {
-                isRelationship &&
-                <>
+                isAttribute && attribute[Field.DATA_TYPE] &&
+                    <Typography> <strong>{ ItemFieldUIName.DATA_TYPE }:</strong> { attribute[Field.DATA_TYPE] } </Typography>
+            }
+
+            {
+                isAttribute && attribute[Field.SOURCE_CARDINALITY] &&
+                    <Typography> <strong>{ ItemFieldUIName.CARDINALITY }:</strong> { attribute[Field.SOURCE_CARDINALITY] } </Typography>
+            }
+
+            {
+                isRelationship && relationship[Field.SOURCE_ENTITY] &&
                     <Typography> <strong> { ItemFieldUIName.SOURCE_ENTITY }:</strong> { relationship[Field.SOURCE_ENTITY] } </Typography>
+            }
+
+            {
+                isRelationship && relationship[Field.TARGET_ENTITY] &&
                     <Typography> <strong> { ItemFieldUIName.TARGET_ENTITY }:</strong> { relationship[Field.TARGET_ENTITY] } </Typography>
+            }
+
+            {
+                isRelationship && relationship[Field.SOURCE_CARDINALITY] &&
                     <Typography> <strong> { ItemFieldUIName.SOURCE_CARDINALITY }:</strong> { relationship[Field.SOURCE_CARDINALITY] } </Typography>
+            }
+
+            { isRelationship && relationship[Field.TARGET_CARDINALITY] &&
                     <Typography> <strong> { ItemFieldUIName.TARGET_CARDINALITY }:</strong> { relationship[Field.TARGET_CARDINALITY] } </Typography>
-                </>
             }
 
             <ControlButtons item={item}/>

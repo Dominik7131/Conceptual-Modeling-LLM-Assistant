@@ -1,4 +1,4 @@
-import { ItemType, UserChoice, PRIMARY_COLOR } from "../interfaces"
+import { ItemType, UserChoice } from "../interfaces"
 import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
 
 

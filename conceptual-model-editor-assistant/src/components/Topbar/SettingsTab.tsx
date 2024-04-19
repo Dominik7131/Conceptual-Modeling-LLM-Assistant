@@ -12,9 +12,9 @@ const SettingsTab: React.FC = (): JSX.Element =>
         <Stack>
             <FormLabel > Domain description filtering </FormLabel >
             <RadioGroup row defaultValue="Syntactit">
-                <FormControlLabel value="None" control={<Radio />} label="None" />
-                <FormControlLabel value="Semantic" control={<Radio />} label="Semantic" />
-                <FormControlLabel value="Syntactit" control={<Radio />} label="Syntactic" />
+                <FormControlLabel disabled value="None" control={<Radio />} label="None" />
+                <FormControlLabel disabled value="Semantic" control={<Radio />} label="Semantic" />
+                <FormControlLabel disabled value="Syntactit" control={<Radio />} label="Syntactic" />
             </RadioGroup>
 
             <p></p>
@@ -42,6 +42,7 @@ const SettingsTab: React.FC = (): JSX.Element =>
             </Typography>
 
             <Slider
+                disabled
                 aria-label="Temperature"
                 defaultValue={0}
                 valueLabelDisplay="auto" 
