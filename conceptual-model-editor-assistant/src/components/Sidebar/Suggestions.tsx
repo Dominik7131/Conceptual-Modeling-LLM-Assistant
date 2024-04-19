@@ -1,21 +1,23 @@
 import { Alert, Box, CircularProgress, Divider, ListItem, Stack, Typography } from "@mui/material"
-import { Item } from "../../interfaces"
+import { Item, ItemType } from "../../interfaces"
 import ItemDisplay from "./ItemDisplay"
 import ControlButtons from "./ControlButtons"
 import { useRecoilValue } from "recoil"
-import { sidebarErrorMsgState } from "../../atoms"
+import { itemTypesToLoadState, sidebarErrorMsgState } from "../../atoms"
 
 interface Props
 {
     items: Item[]
-    isLoading: boolean
     title: string
+    itemType: ItemType
 }
 
 
-const Suggestion: React.FC<Props> = ({ items, isLoading, title }): JSX.Element =>
+const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =>
 {
     const errorMessage = useRecoilValue(sidebarErrorMsgState)
+    const itemTypesToLoad = useRecoilValue(itemTypesToLoadState)
+
 
     return (
 
@@ -54,9 +56,9 @@ const Suggestion: React.FC<Props> = ({ items, isLoading, title }): JSX.Element =
                 )
             }
 
-            { isLoading &&
+            { itemTypesToLoad.includes(itemType) &&
                 <Box
-                    sx={{ display: 'flex', justifyContent:"center", marginTop: "10px"}}>
+                    sx={{ display: 'flex', justifyContent:"center", marginTop: "20px"}}>
                     <CircularProgress />
                 </Box>
             }
@@ -64,4 +66,4 @@ const Suggestion: React.FC<Props> = ({ items, isLoading, title }): JSX.Element =
     )
 }
 
-export default Suggestion
+export default Suggestions

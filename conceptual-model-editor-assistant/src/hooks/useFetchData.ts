@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Field, ItemType, SummaryObject } from "../interfaces";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState } from "../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState } from "../atoms";
 import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL } from "./useUtility";
 
 
@@ -14,7 +14,7 @@ interface Props
 const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =>
 {
     // TODO: Split all fetch data methods to a separate files
-    const setIsLoadingSuggestedItems = useSetRecoilState(isLoadingSuggestedItemsState)
+    const [itemTypesToLoad, setItemTypesToLoad] = useRecoilState(itemTypesToLoadState)
     const setIsLoadingSummary1 = useSetRecoilState(isLoadingSummaryPlainTextState)
     const setIsLoadingSummaryDescriptions = useSetRecoilState(isLoadingSummaryDescriptionsState)
 
@@ -31,7 +31,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
       // Fetch the event stream from the server
       // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
 
-      setIsLoadingSuggestedItems(_ => true)
+      setItemTypesToLoad(previousItems => [...previousItems, itemType])
       setErrorMessage("")
 
       const controller = new AbortController()
@@ -44,13 +44,17 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
           onClearSuggestedItems(itemType)
           setErrorMessage("")
 
-          setIsLoadingSuggestedItems(_ => true)
+          if (!itemTypesToLoad.includes(itemType))
+          {
+            setItemTypesToLoad(previousItems => [...previousItems, itemType])
+          }
+
           const stream = response.body // Get the readable stream from the response body
 
           if (stream === null)
           {
             console.log("Stream is null")
-            setIsLoadingSuggestedItems(_ => false)
+            setItemTypesToLoad(previousItems => previousItems.filter(currentItemType => currentItemType !== itemType))
             return
           }
 
@@ -64,7 +68,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
                       if (done)
                       {
                           console.log("Stream finished")
-                          setIsLoadingSuggestedItems(_ => false)
+                          setItemTypesToLoad(previousItems => previousItems.filter(currentItemType => currentItemType !== itemType))
                           return
                       }
 
@@ -83,8 +87,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
       })
       .catch(error =>
       {
-        console.error(error)
-        setIsLoadingSuggestedItems(_ => false)
+        setItemTypesToLoad(previousItems => previousItems.filter(currentItemType => currentItemType !== itemType))
         const errorMessage = "Server is not responding"
         setErrorMessage(errorMessage)
       })

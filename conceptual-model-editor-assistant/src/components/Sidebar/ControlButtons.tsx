@@ -22,7 +22,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
 
     
     return (
-        <ButtonGroup fullWidth sx={{ marginTop: 1 }} variant="outlined" size="small">
+        <ButtonGroup fullWidth sx={{ marginTop: 1, minWidth: "320px" }} variant="outlined" size="small">
 
             <Button
                 color="secondary"

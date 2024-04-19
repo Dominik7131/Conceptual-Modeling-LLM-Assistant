@@ -57,6 +57,12 @@ export const fieldToLoadState = atom<Field[]>({
 });
 
 
+export const itemTypesToLoadState = atom<ItemType[]>({
+    key: 'itemTypesToLoadState',
+    default: [],
+});
+
+
 // TODO: Do not use initial invalid item, instead make a type: Item | null
 export const selectedSuggestedItemState = atom<Item>({
     key: 'selectedSuggestedItemState',

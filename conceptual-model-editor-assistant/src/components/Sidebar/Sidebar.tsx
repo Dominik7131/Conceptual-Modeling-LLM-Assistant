@@ -10,7 +10,7 @@ import { Divider, Stack, Tab, Typography } from '@mui/material';
 import { Attribute, Field, Item, ItemType } from '../../interfaces';
 import { TabContext, TabList, TabPanel } from "@mui/lab"
 import Tabs from "./Tabs";
-import Suggestion from './Suggestion';
+import Suggestions from './Suggestions';
 
 
 const Sidebar: React.FC = () =>
@@ -19,7 +19,6 @@ const Sidebar: React.FC = () =>
     const attributes = useRecoilValue(suggestedAttributesState)
     const relationships = useRecoilValue(suggestedRelationshipsState)
 
-    const isLoading = useRecoilValue(isLoadingSuggestedItemsState)
     const isSidebarOpen = useRecoilValue(isSidebarOpenState)
     const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
 
@@ -39,19 +38,19 @@ const Sidebar: React.FC = () =>
             open={isSidebarOpen}
             >
             
-            <TabContext value={tabValue} >
+            <TabContext value={tabValue}>
                 <Tabs/>
 
                 <TabPanel value="0">
-                    <Suggestion items={entities} isLoading={isLoading} title={sidebarTitles.entities}/>
+                    <Suggestions items={entities} title={sidebarTitles.entities} itemType={ItemType.ENTITY}/>
                 </TabPanel>
 
                 <TabPanel value="1">
-                    <Suggestion items={attributes} isLoading={isLoading} title={sidebarTitles.attributes}/>
+                    <Suggestions items={attributes} title={sidebarTitles.attributes} itemType={ItemType.ATTRIBUTE}/>
                 </TabPanel>
 
                 <TabPanel value="2">
-                    <Suggestion items={relationships} isLoading={isLoading} title={sidebarTitles.relationships}/>
+                    <Suggestions items={relationships} title={sidebarTitles.relationships} itemType={ItemType.RELATIONSHIP}/>
                 </TabPanel>
             </TabContext>
             
