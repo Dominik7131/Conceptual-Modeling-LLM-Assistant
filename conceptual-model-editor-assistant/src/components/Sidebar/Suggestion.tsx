@@ -1,6 +1,7 @@
 import { Box, CircularProgress, Divider, ListItem, Stack, Typography } from "@mui/material"
 import { Item } from "../../interfaces"
 import ItemDisplay from "./ItemDisplay"
+import ControlButtons from "./ControlButtons"
 
 interface Props
 {
@@ -14,7 +15,7 @@ const Suggestion: React.FC<Props> = ({ items, isLoading, title }): JSX.Element =
 {
     return (
 
-        <Stack marginY="-15px" marginX="-20px" style={{ whiteSpace: 'pre-line' }}>
+        <Stack style={{ whiteSpace: 'pre-line' }}>
             { title &&
                 <Stack>
                     <Typography
@@ -32,7 +33,10 @@ const Suggestion: React.FC<Props> = ({ items, isLoading, title }): JSX.Element =
             {
                 items.map(item =>
                     <ListItem key={item.ID}>
-                        <ItemDisplay item={item}/>
+                        <Stack>
+                            <ItemDisplay item={item}/>
+                            <ControlButtons item={item}/>
+                        </Stack>
                     </ListItem>
                 )
             }

@@ -54,8 +54,6 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
             { isRelationship && relationship[Field.TARGET_CARDINALITY] &&
                     <Typography> <strong> { ItemFieldUIName.TARGET_CARDINALITY }:</strong> { relationship[Field.TARGET_CARDINALITY] } </Typography>
             }
-
-            <ControlButtons item={item}/>
         </Stack>
     )
 }

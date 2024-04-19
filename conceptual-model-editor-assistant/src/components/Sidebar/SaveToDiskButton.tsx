@@ -48,7 +48,7 @@ const SaveToDiskButton: React.FC<Props> = ({ item }): JSX.Element =>
             <Button
                 color="secondary"
                 startIcon={<MoreVertIcon/>}
-                sx={{ minWidth: "1px", width: "1px", textTransform: "none" }}
+                sx={{ textTransform: "none", maxWidth: "10px" }}
                 onClick={ handleClick }>
             </Button>
 

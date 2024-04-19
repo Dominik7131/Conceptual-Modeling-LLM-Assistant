@@ -10,7 +10,7 @@ import { Divider, Stack, Tab, Typography } from '@mui/material';
 import { Attribute, Field, Item, ItemType } from '../../interfaces';
 import { TabContext, TabList, TabPanel } from "@mui/lab"
 import Tabs from "./Tabs";
-import Suggestions from './Suggestion';
+import Suggestion from './Suggestion';
 
 
 const Sidebar: React.FC = () =>
@@ -33,25 +33,25 @@ const Sidebar: React.FC = () =>
 
     return (
         <Drawer
-            sx={{ flexShrink: 0, '& .MuiDrawer-paper': { width: `${sidebarWidthPercentage}%`}}}
+            sx={{ '& .MuiDrawer-paper': { width: `${sidebarWidthPercentage}%`}, '& .MuiTabPanel-root': { paddingX: 0, marginX: 1 } }}
             variant="persistent"
             anchor="right"
             open={isSidebarOpen}
             >
             
-            <TabContext value={tabValue}>
+            <TabContext value={tabValue} >
                 <Tabs/>
 
                 <TabPanel value="0">
-                    <Suggestions items={entities} isLoading={isLoading} title={sidebarTitles.entities}/>
+                    <Suggestion items={entities} isLoading={isLoading} title={sidebarTitles.entities}/>
                 </TabPanel>
 
                 <TabPanel value="1">
-                    <Suggestions items={attributes} isLoading={isLoading} title={sidebarTitles.attributes}/>
+                    <Suggestion items={attributes} isLoading={isLoading} title={sidebarTitles.attributes}/>
                 </TabPanel>
 
                 <TabPanel value="2">
-                    <Suggestions items={relationships} isLoading={isLoading} title={sidebarTitles.relationships}/>
+                    <Suggestion items={relationships} isLoading={isLoading} title={sidebarTitles.relationships}/>
                 </TabPanel>
             </TabContext>
             
