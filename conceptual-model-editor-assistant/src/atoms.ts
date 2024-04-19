@@ -193,3 +193,15 @@ export const editDialogWarningMsgState = atom({
     key: 'editDialogWarningMsgState',
     default: "",
 })
+
+
+export const importedFileNameState = atom({
+    key: 'importedFileNameState',
+    default: "",
+})
+
+
+export const isDialogEnterIRIOpenedState = atom({
+    key: 'isDialogEnterIRIOpenedState',
+    default: false,
+})

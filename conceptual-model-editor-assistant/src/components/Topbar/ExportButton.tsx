@@ -2,7 +2,7 @@ import { Button } from "@mui/material"
 import DownloadIcon from '@mui/icons-material/Download';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, GeneralizationJson, NodeData, Relationship, RelationshipJson } from "../../interfaces";
 import { Node, Edge } from "reactflow";
-import { edgesState, nodesState } from "../../atoms";
+import { edgesState, importedFileNameState, nodesState } from "../../atoms";
 import { useRecoilValue } from "recoil";
 
 
@@ -11,7 +11,10 @@ const ExportButton: React.FC = (): JSX.Element =>
     const nodes = useRecoilValue(nodesState)
     const edges = useRecoilValue(edgesState)
 
-    const EXPORT_FILE_NAME = "export.json"
+    const importedFileName = useRecoilValue(importedFileNameState)
+
+    const export_name = "export.json"
+    const export_file_name = importedFileName === "" ? export_name : `${importedFileName}-${export_name}`
 
 
     const onExport = () =>
@@ -24,7 +27,7 @@ const ExportButton: React.FC = (): JSX.Element =>
         
         const link = document.createElement('a')
         link.href = url
-        link.download = EXPORT_FILE_NAME
+        link.download = export_file_name
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -100,8 +103,8 @@ const ExportButton: React.FC = (): JSX.Element =>
             variant="contained"
             disableElevation
             sx={{textTransform: "none"}}
-            startIcon={<DownloadIcon/>}
-            onClick={onExport}>
+            startIcon={ <DownloadIcon/> }
+            onClick={ onExport }>
         Export
     </Button>
     )

@@ -158,15 +158,25 @@ const DialogEditItem: React.FC = () =>
 
                     {
                         isSuggestedItem ?
-                        <Button variant="contained" color="success" onClick={() => { handleAdd(editedItem) }}>Add</Button>
+                        <Button
+                            variant="contained"
+                            color="success"
+                            sx={{ textTransform: "none" }}
+                            onClick={() => { handleAdd(editedItem) }}> Add </Button>
                         :
-                        <Button variant="contained" color="error" onClick={() => { onRemove(item); onClose()}}>Remove</Button>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            sx={{ textTransform: "none" }}
+                            onClick={() => { onRemove(item); onClose()}}> Remove </Button>
                     }
                     
 
                     {
                         isSuggestedItem && !isDisableChange && isAttribute &&
-                            <Button variant="contained"
+                            <Button
+                                variant="contained"
+                                sx={{ textTransform: "none" }}
                                 onClick={ () => onChangeItemType(item)}>
                                 Change to relationship
                             </Button>
@@ -174,7 +184,9 @@ const DialogEditItem: React.FC = () =>
 
                     {
                         isSuggestedItem && !isDisableChange && isRelationship &&
-                            <Button variant="contained"
+                            <Button
+                                variant="contained"
+                                sx={{ textTransform: "none" }}
                                 onClick={ () => onChangeItemType(item)}>
                                 Change to attribute
                             </Button>
@@ -183,6 +195,7 @@ const DialogEditItem: React.FC = () =>
                     { !isDisableSave &&
                         <Button
                             variant="contained"
+                            sx={{ textTransform: "none" }}
                             onClick={() => {onSave(editedItem, item)}}>
                             Save
                         </Button>
@@ -190,7 +203,7 @@ const DialogEditItem: React.FC = () =>
 
                     <Button
                         variant="contained"
-                        // sx={{ color: "gray", borderColor: "gray", outlineColor: "gray" }}
+                        sx={{ textTransform: "none" }}
                         onClick={() => onClose()}>
                         Cancel
                     </Button>
