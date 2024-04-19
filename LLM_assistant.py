@@ -502,5 +502,4 @@ class LLMAssistant:
             dictionary = json.loads(json.dumps(item))
 
             json_item = json.dumps(dictionary)
-            print(f"Yielding: {json_item}")
             yield f"{json_item}\n"
