@@ -266,5 +266,24 @@ def create_summary_mockup(entities : list[str]) -> list[dict]:
     return result
 
 
+@app.route('/save_suggestion', methods=['POST'])
+@cross_origin()
+def save_suggestion():
+
+    body_data = request.get_json()
+    domain_description = body_data["domainDescription"]
+    item = body_data["item"]
+    isPositive = body_data["isPositive"]
+
+    completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
+
+    print(completed_item)
+
+    # timestamp = time.strftime('%Y-%m-%d-%H-%M-%S')
+    # with open(f"{timestamp}.json", 'w') as file:
+    #     json.dump(completed_item, file)
+
+    return "Done"
+
 if __name__ == '__main__':
     app.run(port=5000, threaded=True)

@@ -131,11 +131,13 @@ const SUMMARY_PLAIN_TEXT_ENDPOINT = "summary_plain_text"
 const SUMMARY_DESCRIPTIONS_ENDPOINT = "summary_descriptions"
 const EDIT_ITEM_ENDPOINT = "getOnly"
 const MERGE_ORIGINAL_TEXT_ENDPOINT = "merge_original_texts"
+const SAVE_SUGESTION = "save_suggestion"
 
 export const SUGGEST_ITEMS_URL = BASE_URL + SUGGEST_ITEMS_ENDPOINT
 export const SUMMARY_PLAIN_TEXT_URL = BASE_URL + SUMMARY_PLAIN_TEXT_ENDPOINT
 export const SUMMARY_DESCRIPTIONS_URL = BASE_URL + SUMMARY_DESCRIPTIONS_ENDPOINT
 export const EDIT_ITEM_URL = BASE_URL + EDIT_ITEM_ENDPOINT
 export const MERGE_ORIGINAL_TEXT_URL = BASE_URL + MERGE_ORIGINAL_TEXT_ENDPOINT
+export const SAVE_SUGESTION_URL = BASE_URL + SAVE_SUGESTION
 export const JSON_MODEL_FROM_IRI_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
 

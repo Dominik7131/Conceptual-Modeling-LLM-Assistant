@@ -10,7 +10,7 @@ import { Divider, Stack, Tab, Typography } from '@mui/material';
 import { Attribute, Field, Item, ItemType } from '../../interfaces';
 import { TabContext, TabList, TabPanel } from "@mui/lab"
 import Tabs from "./Tabs";
-import Suggestions from './Suggestions';
+import Suggestions from './Suggestion';
 
 
 const Sidebar: React.FC = () =>

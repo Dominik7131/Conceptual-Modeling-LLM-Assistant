@@ -37,7 +37,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
 
             <HighlightSingleItemButton item={item}/>
 
-            <SaveToDiskButton/>
+            <SaveToDiskButton item={item}/>
 
 
         </ButtonGroup>

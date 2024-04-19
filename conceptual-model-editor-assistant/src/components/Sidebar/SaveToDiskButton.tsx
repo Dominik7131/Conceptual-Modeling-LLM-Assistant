@@ -3,12 +3,25 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useState } from "react";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { HEADER, SAVE_SUGESTION_URL } from "../../hooks/useUtility";
+import { Item } from "../../interfaces";
+import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms";
+import { useRecoilValue } from "recoil";
 
 
-const SaveToDiskButton: React.FC = (): JSX.Element =>
+interface Props
+{
+    item: Item
+}
+
+const SaveToDiskButton: React.FC<Props> = ({ item }): JSX.Element =>
 {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
+
+    const domainDescription = useRecoilValue(domainDescriptionState)
+    const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+
 
     const handleClick = (event: React.MouseEvent<HTMLElement>) =>
     {
@@ -20,13 +33,23 @@ const SaveToDiskButton: React.FC = (): JSX.Element =>
         setAnchorEl(null)
     }
 
+    const handleSendReaction = (isPositiveReaction: boolean) =>
+    {
+        const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
+        const suggestionData = { domainDescription: currentDomainDescription, isPositive: isPositiveReaction, item: item }
+
+        fetch(SAVE_SUGESTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+
+        handleClose()
+    }
+
     return (
         <>
             <Button
                 color="secondary"
                 startIcon={<MoreVertIcon/>}
                 sx={{ minWidth: "1px", width: "1px", textTransform: "none" }}
-                onClick={handleClick}>
+                onClick={ handleClick }>
             </Button>
 
             <Menu
@@ -34,11 +57,11 @@ const SaveToDiskButton: React.FC = (): JSX.Element =>
                 aria-labelledby="demo-positioned-button"
                 anchorEl={anchorEl}
                 open={open}
-                onClose={handleClose}
+                onClose={ handleClose }
                 anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}>
 
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={ () => handleSendReaction(true) }>
             <ListItemIcon sx={{display: 'flex', justifyContent:"center"}}>
                 <ThumbUpIcon  color="success" />
             </ListItemIcon>
@@ -46,7 +69,7 @@ const SaveToDiskButton: React.FC = (): JSX.Element =>
 
         <Divider/>
 
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={ () => handleSendReaction(false) }>
             <ListItemIcon sx={{display: 'flex', justifyContent:"center"}}>
                 <ThumbDownIcon color="error"/>
             </ListItemIcon>

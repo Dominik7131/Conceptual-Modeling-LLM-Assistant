@@ -3,10 +3,13 @@ from flask_cors import CORS, cross_origin
 from LLM_assistant import LLMAssistant
 from text_utility import TextUtility
 import json
+import os
 import time
 
 app = Flask(__name__)
 llm_assistant = None
+
+PATH_TO_DATA_STORAGE = "storage"
 
 # TODO: Maybe I am not setting the response header correctly?
 # CORS error from frontend solution: https://stackoverflow.com/a/33091782
@@ -77,6 +80,26 @@ def merge_original_texts():
     result = TextUtility.merge_original_texts(parsed_original_text_indexes_object)
 
     return result
+
+
+@app.route('/save_suggestion', methods=['POST'])
+@cross_origin()
+def save_suggestion():
+
+    body_data = request.get_json()
+    domain_description = body_data["domainDescription"]
+    item = body_data["item"]
+    isPositive = body_data["isPositive"]
+
+    completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
+
+    timestamp = time.strftime('%Y-%m-%d-%H-%M-%S')
+    file_to_write_path = f"{os.join(PATH_TO_DATA_STORAGE, timestamp)}.json"
+
+    with open(file_to_write_path, 'w') as file:
+        json.dump(completed_item, file)
+
+    return "Done"
 
 
 if __name__ == '__main__':

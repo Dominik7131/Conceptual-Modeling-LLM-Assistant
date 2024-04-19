@@ -10,7 +10,7 @@ interface Props
 }
 
 
-const Suggestions: React.FC<Props> = ({ items, isLoading, title }): JSX.Element =>
+const Suggestion: React.FC<Props> = ({ items, isLoading, title }): JSX.Element =>
 {
     return (
 
@@ -47,4 +47,4 @@ const Suggestions: React.FC<Props> = ({ items, isLoading, title }): JSX.Element 
     )
 }
 
-export default Suggestions
+export default Suggestion
