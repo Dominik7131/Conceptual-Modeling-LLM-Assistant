@@ -62,6 +62,7 @@ const DialogEnterIRI: React.FC<Props> = ({ onImport }): JSX.Element =>
                 <Button
                     variant="contained"
                     color="success"
+                    disableElevation
                     sx={{ textTransform: "none" }}
                     onClick={ onEnter }>
                         Enter
@@ -70,6 +71,7 @@ const DialogEnterIRI: React.FC<Props> = ({ onImport }): JSX.Element =>
                 <Button
                     variant="contained"
                     color="error"
+                    disableElevation
                     sx={{ textTransform: "none" }}
                     onClick={ onClose }>
                         Close

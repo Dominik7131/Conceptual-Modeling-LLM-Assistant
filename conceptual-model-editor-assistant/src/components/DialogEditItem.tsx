@@ -15,7 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useRecoilValue } from 'recoil';
-import { domainDescriptionState, editDialogWarningMsgState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState } from '../atoms';
+import { domainDescriptionState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState } from '../atoms';
 import useEditItemDialog from '../hooks/useEditItemDialog';
 import useConceptualModel from '../hooks/useConceptualModel';
 import Alert from '@mui/material/Alert';
@@ -30,11 +30,10 @@ const DialogEditItem: React.FC = () =>
     const editedItem = useRecoilValue(editedSuggestedItemState)
     const regeneratedItem = useRecoilValue(regeneratedItemState)
     const isSuggestedItem = useRecoilValue(isSuggestedItemState)
-    const isLoading = useRecoilValue(isLoadingEditState)
     const isDisableSave = useRecoilValue(isDisableSaveState)
     const isDisableChange = useRecoilValue(isDisableChangeState)
 
-    const warningMessage = useRecoilValue(editDialogWarningMsgState)
+    const errorMessage = useRecoilValue(editDialogErrorMsgState)
 
     const { onAddItem } = useConceptualModel()
     const { onSave, onClose, onRemove, onItemEdit, onGenerateField, onConfirmRegeneratedText, onClearRegeneratedItem, onChangeItemType } = useEditItemDialog()
@@ -116,12 +115,12 @@ const DialogEditItem: React.FC = () =>
 
 
     return (
-        <Dialog open={isOpened} fullWidth={true} maxWidth={'xl'} onClose={onClose}>
+        <Dialog open={isOpened} fullWidth maxWidth={'xl'} onClose={onClose}>
 
             {
-                warningMessage !== "" &&
+                errorMessage !== "" &&
                 <Alert variant="outlined" severity="warning" sx={{marginX:"20px", marginTop: "20px"}}>
-                    { warningMessage }
+                    { errorMessage }
                 </Alert>
             }
             

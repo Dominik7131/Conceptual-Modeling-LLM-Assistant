@@ -93,7 +93,7 @@ const ImportTab: React.FC = (): JSX.Element =>
                 [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: nameLowerCase, [Field.DESCRIPTION]: relationship.description,
                 [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
                 [Field.SOURCE_CARDINALITY]: relationship.domainCardinality, [Field.TARGET_CARDINALITY]: relationship.rangeCardinality,
-                [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
+                [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.IS_GENERALIZATION]: false
             }
         
             const edgeData: EdgeData = { relationship: newRelationship }
@@ -116,7 +116,8 @@ const ImportTab: React.FC = (): JSX.Element =>
             const newRelationship: Relationship = {
                 [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: nameLowerCase, [Field.DESCRIPTION]: "",
                 [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
-                [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
+                [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "",
+                [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.IS_GENERALIZATION]: true
             }
         
             const edgeData: EdgeData = { relationship: newRelationship }

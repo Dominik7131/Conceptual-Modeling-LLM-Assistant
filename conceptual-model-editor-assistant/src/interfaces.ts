@@ -30,6 +30,7 @@ export const enum Field
   TARGET_ENTITY = "target",
   SOURCE_CARDINALITY = "sourceCardinality",
   TARGET_CARDINALITY = "targetCardinality",
+  IS_GENERALIZATION = "isGeneralization",
 }
 
 
@@ -101,6 +102,7 @@ export interface Relationship extends BaseItem
   target: string
   sourceCardinality: string
   targetCardinality: string
+  isGeneralization: boolean
 }
 
 export interface OriginalTextIndexesItem

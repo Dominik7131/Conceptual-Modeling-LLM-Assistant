@@ -1,5 +1,5 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { domainDescriptionState, edgesState, editDialogWarningMsgState, editedSuggestedItemState, fieldToLoadState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
+import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
 import { EDIT_ITEM_URL, HEADER, createEdgeID } from "./useUtility";
@@ -18,7 +18,7 @@ const useEditItemDialog = () =>
     const domainDescription = useRecoilValue(domainDescriptionState)
     const setFieldToLoad = useSetRecoilState(fieldToLoadState)
 
-    const setWarningMessage = useSetRecoilState(editDialogWarningMsgState)   
+    const setWarningMessage = useSetRecoilState(editDialogErrorMsgState)   
 
 
     const onClose = (): void =>
@@ -345,7 +345,7 @@ const useEditItemDialog = () =>
             const relationship : Relationship = {
                 [Field.ID]: oldAttribute.ID, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: "", [Field.DESCRIPTION]: oldAttribute.description,
                 [Field.ORIGINAL_TEXT]: oldAttribute.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldAttribute.originalTextIndexes, [Field.SOURCE_ENTITY]: oldAttribute.source,
-                [Field.TARGET_ENTITY]: oldAttribute.name, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""}
+                [Field.TARGET_ENTITY]: oldAttribute.name, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.IS_GENERALIZATION]: false}
         
             setSelectedSuggestedItem(_ => relationship)
             setEditedSuggestedItem(_ => relationship)

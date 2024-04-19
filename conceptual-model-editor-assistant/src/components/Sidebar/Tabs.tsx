@@ -1,5 +1,5 @@
 import { Box, Tab } from "@mui/material"
-import { sidebarTabValueState } from "../../atoms"
+import { sidebarErrorMsgState, sidebarTabValueState } from "../../atoms"
 import { useSetRecoilState } from "recoil"
 import { TabList } from "@mui/lab"
 
@@ -7,10 +7,11 @@ import { TabList } from "@mui/lab"
 const Tabs: React.FC = (): JSX.Element =>
 {
     const setTabValue = useSetRecoilState(sidebarTabValueState)
-
+    const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) =>
     {
+        setErrorMessage("")
         setTabValue(newValue)
     }
 

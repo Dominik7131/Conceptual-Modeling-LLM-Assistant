@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Field, ItemType, SummaryObject } from "../interfaces";
-import { useSetRecoilState } from "recoil";
-import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState } from "../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState } from "../atoms";
 import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL } from "./useUtility";
 
 
@@ -21,6 +21,8 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
     const setSummaryText = useSetRecoilState(summaryTextState)
     const setSummaryDescriptions = useSetRecoilState(summaryDescriptionsState)
 
+    const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
+
 
     const fetchStreamedData = (bodyData: any, sourceEntityName: string, itemType: ItemType) =>
     {
@@ -30,6 +32,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
       // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
 
       setIsLoadingSuggestedItems(_ => true)
+      setErrorMessage("")
 
       const controller = new AbortController()
       const signal = controller.signal
@@ -39,6 +42,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
         {
           // Reset all suggested items
           onClearSuggestedItems(itemType)
+          setErrorMessage("")
 
           setIsLoadingSuggestedItems(_ => true)
           const stream = response.body // Get the readable stream from the response body
@@ -71,18 +75,19 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
                   })
                   .catch(error =>
                   {
-                    console.error(error);
-                  });
-          };
+                    console.error(error)
+                  })
+          }
           // Start reading the first chunk
-          readChunk();
+          readChunk()
       })
       .catch(error =>
       {
-        console.error(error);
+        console.error(error)
         setIsLoadingSuggestedItems(_ => false)
-        alert("Error: request failed")
-      });
+        const errorMessage = "Server is not responding"
+        setErrorMessage(errorMessage)
+      })
     }
 
 
@@ -93,7 +98,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
       fetch(SUMMARY_PLAIN_TEXT_URL, { method: "POST", headers: HEADER, body: bodyData })
       .then(response =>
       {
-          const stream = response.body; // Get the readable stream from the response body
+          const stream = response.body // Get the readable stream from the response body
 
           if (stream === null)
           {
@@ -102,7 +107,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
             return
           }
 
-          const reader = stream.getReader();
+          const reader = stream.getReader()
 
           const readChunk = () =>
           {
@@ -124,21 +129,21 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
                       console.log("Parsed data:", parsedData)
                       setSummaryText(parsedData["summary"])
 
-                      readChunk(); // Read the next chunk
+                      readChunk() // Read the next chunk
                   })
                   .catch(error =>
                   {
-                    console.error(error);
-                  });
-          };
-          readChunk(); // Start reading the first chunk
+                    console.error(error)
+                  })
+          }
+          readChunk() // Start reading the first chunk
       })
       .catch(error =>
       {
-        console.error(error);
+        console.error(error)
         setIsLoadingSummary1(_ => false)
         alert("Error: request failed")
-      });
+      })
     }
 
     const fetchSummaryDescriptions = (bodyData : any) =>
@@ -150,7 +155,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
       fetch(SUMMARY_DESCRIPTIONS_URL, { method: "POST", headers: HEADER, body: bodyData })
       .then(response =>
       {
-          const stream = response.body; // Get the readable stream from the response body
+          const stream = response.body // Get the readable stream from the response body
 
           if (stream === null)
           {
@@ -159,7 +164,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
             return
           }
 
-          const reader = stream.getReader();
+          const reader = stream.getReader()
 
           const readChunk = () =>
           {
@@ -191,14 +196,14 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
                           setSummaryDescriptions(previousSummary => ({
                             ...previousSummary,
                             entities: [...previousSummary.entities, parsedData],
-                          }));
+                          }))
                         }
                         else if (parsedData.hasOwnProperty("relationship"))
                         {
                           setSummaryDescriptions(previousSummary => ({
                             ...previousSummary,
                             relationships: [...previousSummary.relationships, parsedData],
-                          }));
+                          }))
                         }
                         else
                         {
@@ -207,27 +212,25 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
                       }
 
 
-                      readChunk();
+                      readChunk()
                   })
                   .catch(error =>
                   {
-                    console.error(error);
-                  });
-          };
-          readChunk();
+                    console.error(error)
+                  })
+          }
+          readChunk()
       })
       .catch(error =>
       {
-        console.error(error);
+        console.error(error)
         setIsLoadingSummaryDescriptions(_ => false)
         alert("Error: request failed")
-      });
+      })
     }
 
 
-
-
-    return { fetchSummary: fetchSummaryPlainText, fetchSummaryDescriptions, fetchStreamedData }
+    return { fetchSummaryPlainText, fetchSummaryDescriptions, fetchStreamedData }
 }
 
 export default useFetchData

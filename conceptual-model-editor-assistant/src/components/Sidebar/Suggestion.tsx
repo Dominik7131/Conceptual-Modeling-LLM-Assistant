@@ -1,7 +1,9 @@
-import { Box, CircularProgress, Divider, ListItem, Stack, Typography } from "@mui/material"
+import { Alert, Box, CircularProgress, Divider, ListItem, Stack, Typography } from "@mui/material"
 import { Item } from "../../interfaces"
 import ItemDisplay from "./ItemDisplay"
 import ControlButtons from "./ControlButtons"
+import { useRecoilValue } from "recoil"
+import { sidebarErrorMsgState } from "../../atoms"
 
 interface Props
 {
@@ -13,6 +15,8 @@ interface Props
 
 const Suggestion: React.FC<Props> = ({ items, isLoading, title }): JSX.Element =>
 {
+    const errorMessage = useRecoilValue(sidebarErrorMsgState)
+
     return (
 
         <Stack style={{ whiteSpace: 'pre-line' }}>
@@ -28,6 +32,15 @@ const Suggestion: React.FC<Props> = ({ items, isLoading, title }): JSX.Element =
                     <Divider></Divider>
                 </Stack>
 
+            }
+
+            {
+                errorMessage &&
+                <Typography>
+                    <Alert severity="error">
+                        { errorMessage }
+                    </Alert>
+                </Typography>
             }
 
             {

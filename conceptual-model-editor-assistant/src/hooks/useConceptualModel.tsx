@@ -6,7 +6,7 @@ import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, createEdg
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, ItemsMessage, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editDialogWarningMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
+import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarErrorMsgState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
 
 
 const useConceptualModel = () =>
@@ -40,9 +40,11 @@ const useConceptualModel = () =>
   const setTopbarTabValue = useSetRecoilState(topbarTabValueState)
   const setSidebarTab = useSetRecoilState(sidebarTabValueState)
 
-  const setWarningMessage = useSetRecoilState(editDialogWarningMsgState)
+  const setErrorMessageEditDialog = useSetRecoilState(editDialogErrorMsgState)
+  const setErrorMessageSidebar = useSetRecoilState(sidebarErrorMsgState)
 
-  const { fetchSummary, fetchSummaryDescriptions, fetchStreamedData } = useFetchData({ onClearSuggestedItems, onProcessStreamedData })
+
+  const { fetchSummaryPlainText, fetchSummaryDescriptions, fetchStreamedData } = useFetchData({ onClearSuggestedItems, onProcessStreamedData })
 
   let IDToAssign = 0
 
@@ -122,7 +124,8 @@ const useConceptualModel = () =>
       const newRelationship: Relationship = {
         [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: "",
         [Field.SOURCE_ENTITY]: relationship.source, [Field.TARGET_ENTITY]: relationship.target,
-        [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: relationship.originalText, [Field.ORIGINAL_TEXT_INDEXES]: []
+        [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: relationship.originalText,
+        [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.IS_GENERALIZATION]: false
       }
       const edgeData: EdgeData = { relationship: newRelationship }
 
@@ -369,7 +372,7 @@ const useConceptualModel = () =>
     const conceptualModel = convertConceptualModelToJSON(false)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
-    fetchSummary(bodyData)
+    fetchSummaryPlainText(bodyData)
   }
 
 
@@ -417,7 +420,7 @@ const useConceptualModel = () =>
     if (doesNodeAlreadyExist(nodes, nodeID))
     {
       const alertMessage = `Node '${nodeID}' already exists`
-      setWarningMessage(_ => alertMessage)
+      setErrorMessageEditDialog(_ => alertMessage)
       return
     }
 
@@ -433,8 +436,6 @@ const useConceptualModel = () =>
   {
     if (doesNodeAlreadyExist(nodes, entity.name))
     {
-      const alertMessage = `Node '${entity.name}' already exists`
-      setWarningMessage(_ => alertMessage)
       return false
     }
 
@@ -502,18 +503,31 @@ const useConceptualModel = () =>
   }
 
 
-  const onAddRelationshipsToNodes = (relationship : Relationship): void =>
+  const onAddRelationshipsToNodes = (relationship : Relationship): boolean =>
   {
+    // Returns "true" if the operation was successfull otherwise "false"
+
     let sourceNodeID = relationship.source?.toLowerCase()
     let targetNodeID = relationship.target?.toLowerCase()
 
     if (!sourceNodeID) { sourceNodeID = "" }
     if (!targetNodeID) { targetNodeID = "" }
 
+
+    // Check if the node with ID "relationship.source" already contains edge with node with ID "relationship.target"
+    // const sourceNode: Node | undefined = nodes.find(node => node.id === sourceNodeID)
+    // const targetNode: Node | undefined = nodes.find(node => node.id === targetNodeID)
+
+    const existingEdge: Edge | undefined = edges.find(edge => edge.source === sourceNodeID && edge.target === targetNodeID)
+    if (existingEdge)
+    {
+      return false
+    }
+
     const newEdgeID = createEdgeID(sourceNodeID, targetNodeID, relationship.name)
     if (doesEdgeAlreadyExist(edges, newEdgeID))
     {
-      return
+      return false
     }
 
     const isTargetNodeCreated: boolean = doesNodeAlreadyExist(nodes, targetNodeID)
@@ -535,7 +549,7 @@ const useConceptualModel = () =>
           return node
         }
         return node
-      }));
+      }))
     }
 
     const edgeData: EdgeData = { relationship: relationship }
@@ -549,6 +563,8 @@ const useConceptualModel = () =>
     {
       return [...previousEdges, newEdge]
     })
+
+    return true
   }
 
   const onEditSuggestion = (itemID: number, itemType: ItemType): void =>
@@ -602,36 +618,64 @@ const useConceptualModel = () =>
     if (item.name === "")
     {
       const warningMessage = "Name cannot be empty"
-      setWarningMessage(_ => warningMessage)
+      setErrorMessageEditDialog(_ => warningMessage)
       return false
     }
 
 
     if (item.type === ItemType.ENTITY)
     {
-      return addNodeEntity(item as Entity, 66, 66)
-    }
-    else if (item.type === ItemType.ATTRIBUTE)
-    {
-      const result = onAddAttributesToNode(item as Attribute)
+      const isOperationSuccessful = addNodeEntity(item as Entity, 66, 66)
 
-      if (!result)
+      if (!isOperationSuccessful)
       {
-        const warningMessage = `Entity "${(item as Attribute)[Field.SOURCE_ENTITY]}" already contains attribute "${item.name}"`
+        const message = `Entity "${item.name}" already exists`
+
         if (isItemFromSidebar)
         {
-          alert(warningMessage)
+          setErrorMessageSidebar(message)
         }
         else
         {
-          setWarningMessage(_ => warningMessage)
+          setErrorMessageEditDialog(message)
+        }  
+      }
+    }
+    else if (item.type === ItemType.ATTRIBUTE)
+    {
+      const isOperationSuccessful = onAddAttributesToNode(item as Attribute)
+
+      if (!isOperationSuccessful)
+      {
+        const message = `Entity "${(item as Attribute)[Field.SOURCE_ENTITY]}" already contains attribute "${item.name}"`
+        if (isItemFromSidebar)
+        {
+          setErrorMessageSidebar(message)
+        }
+        else
+        {
+          setErrorMessageEditDialog(message)
         }
         return false
       }
     }
     else if (item.type === ItemType.RELATIONSHIP)
     {
-      onAddRelationshipsToNodes(item as Relationship)
+      const isOperationSuccessful = onAddRelationshipsToNodes(item as Relationship)
+
+      if (!isOperationSuccessful)
+      {
+        const message = `Relationship in between source entity "${(item as Relationship)[Field.SOURCE_ENTITY]}" and target entity "${(item as Relationship)[Field.TARGET_ENTITY]}" already exists`
+        if (isItemFromSidebar)
+        {
+          setErrorMessageSidebar(message)
+        }
+        else
+        {
+          setErrorMessageEditDialog(message)
+        }
+        return false
+      }
     }
     else
     {

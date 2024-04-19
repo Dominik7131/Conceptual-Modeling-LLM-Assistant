@@ -189,8 +189,14 @@ export const sidebarTabValueState = atom({
 })
 
 
-export const editDialogWarningMsgState = atom({
-    key: 'editDialogWarningMsgState',
+export const editDialogErrorMsgState = atom({
+    key: 'editDialogErrorMsgState',
+    default: "",
+})
+
+
+export const sidebarErrorMsgState = atom({
+    key: 'sidebarErrorMsgState',
     default: "",
 })
 

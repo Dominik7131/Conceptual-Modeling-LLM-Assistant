@@ -5,6 +5,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import useConceptualModel from "../../hooks/useConceptualModel";
 import { Item } from "../../interfaces";
 import SaveToDiskButton from "./SaveToDiskButton";
+import { sidebarErrorMsgState } from "../../atoms";
+import { useSetRecoilState } from "recoil";
 
 
 interface Props
@@ -15,6 +17,9 @@ interface Props
 const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
 {
     const { onAddItem, onEditSuggestion } = useConceptualModel()
+
+    const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
+
     
     return (
         <ButtonGroup fullWidth sx={{ marginTop: 1 }} variant="outlined" size="small">
@@ -23,7 +28,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
                 color="secondary"
                 startIcon={<AddIcon/>}
                 sx={{ textTransform: "none" }}
-                onClick={() => onAddItem(item, true)}>
+                onClick={() => { setErrorMessage(""); onAddItem(item, true)} }>
                     Add
             </Button>
 
@@ -31,7 +36,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
                 color="secondary"
                 startIcon={<EditIcon/>}
                 sx={{ textTransform: "none" }}
-                onClick={() => onEditSuggestion(item.ID, item.type)}>
+                onClick={() => { onEditSuggestion(item.ID, item.type) }}>
                     Edit
             </Button>
 
