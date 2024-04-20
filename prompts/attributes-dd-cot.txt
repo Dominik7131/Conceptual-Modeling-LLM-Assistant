@@ -1,6 +1,6 @@
 Solely based on the following context which attributes does the entity: "{source_entity}" have?
 
-For each attribute output its name and copy the part of the given context containing this attribute and data type and then output this attribute in JSON object like this: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name, "dataType": "data type of the attribute"}.
+For each attribute output its name and copy the part of the given context containing this attribute and data type and then output this attribute in JSON object like this: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name", "dataType": "data type of the attribute"}.
 
 EXAMPLE START
 
@@ -27,7 +27,7 @@ JSON object: {"originalText": "If the person is a natural person ... last names"
 Name: birth number
 Context: "If the person is a natural person ... his birth number"
 Data type: integer
-JSON object: {"originalText": "If the person is a natural person ... his birth number", "name": "birth number", "dataType": "integer"}
+JSON object: {"originalText": "If the person is a natural person ... his birth number", "name": "birth number", "dataType": "number"}
 
 Name: birth date
 Context: "If the person is a natural person ... his date of birth"
