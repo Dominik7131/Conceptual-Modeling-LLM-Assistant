@@ -2,17 +2,17 @@ import { useEffect } from 'react';
 import { Node, Edge, MarkerType, getMarkerEnd } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist, userChoiceToItemType } from './useUtility';
+import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, createEdgeID, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, ItemsMessage, NodeData, Relationship, RelationshipJson, SidebarTabs, TopbarTabs, UserChoice } from '../interfaces';
+import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, SidebarTabs, TopbarTabs, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarErrorMsgState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
+import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
 
 
 const useConceptualModel = () =>
 {
-  const [nodes, setNodes] = useRecoilState(nodesState)
-  const [edges, setEdges] = useRecoilState(edgesState)
+  const setNodes = useSetRecoilState(nodesState)
+  const setEdges = useSetRecoilState(edgesState)
 
   const selectedNodes = useRecoilValue(selectedNodesState)
   const selectedEdges = useRecoilValue(selectedEdgesState)
@@ -64,7 +64,7 @@ const useConceptualModel = () =>
     let newNodes : Node[] = []
     let newEdges : Edge[] = []
 
-    for (const [key, entity] of Object.entries(input["entities"]))
+    for (const [, entity] of Object.entries(input["entities"]))
     {
       const entityNameLowerCase = entity.name.toLowerCase()
 
@@ -100,7 +100,7 @@ const useConceptualModel = () =>
       }
     }
 
-    for (const [key, relationship] of Object.entries(input["relationships"]))
+    for (const [, relationship] of Object.entries(input["relationships"]))
     {
       const newID: string = createEdgeID(relationship.source, relationship.target, relationship.name)
 
@@ -374,42 +374,6 @@ const useConceptualModel = () =>
 
     fetchSummaryDescriptions(bodyData)
     return
-  }
-
-
-  const createNode = (nodeID: string, positionX: number, positionY: number): Node =>
-  {
-    const newEntity: Entity = {
-      [Field.ID]: 0, [Field.NAME]: nodeID, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "",
-      [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-    }
-
-    const nodeData: NodeData = { entity: newEntity, attributes: [] }
-
-    const newNode: Node = { id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
-    
-    return newNode
-  }
-
-
-  const addNode = (nodeID: string, positionX: number, positionY: number, attributes: Attribute[] = []) =>
-  {
-    if (!nodeID)
-    {
-      alert("Node name is empty")
-      return
-    }
-
-    if (doesNodeAlreadyExist(nodes, nodeID))
-    {
-      return
-    }
-
-    const newNode: Node = createNode(nodeID, positionX, positionY)
-
-    setNodes(previousNodes => {
-      return [...previousNodes, newNode]
-    })
   }
 
 

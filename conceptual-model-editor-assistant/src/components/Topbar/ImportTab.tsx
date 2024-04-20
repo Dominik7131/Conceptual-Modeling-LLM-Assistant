@@ -65,7 +65,7 @@ const ImportTab: React.FC = (): JSX.Element =>
         setNodes(() => { return newNodes })
     
     
-        for (const [_, attribute] of Object.entries(conceptualModelJson.attributes))
+        for (const [, attribute] of Object.entries(conceptualModelJson.attributes))
         {
             const sourceEntityLowerCase = attribute.domain.toLowerCase()
             const attributeNameLowerCase = attribute.title.toLowerCase()
@@ -88,7 +88,7 @@ const ImportTab: React.FC = (): JSX.Element =>
             }
         }
     
-        for (const [_, relationship] of Object.entries(conceptualModelJson.relationships))
+        for (const [, relationship] of Object.entries(conceptualModelJson.relationships))
         {
             const nameLowerCase = relationship.title.toLowerCase()
             const sourceEntityLowerCase = relationship.domain.toLowerCase()
@@ -112,7 +112,7 @@ const ImportTab: React.FC = (): JSX.Element =>
             newEdges.push(newEdge)
         }
     
-        for (const [_, generalization] of Object.entries(conceptualModelJson.generalizations))
+        for (const [, generalization] of Object.entries(conceptualModelJson.generalizations))
         {
             const nameLowerCase = generalization.title.toLowerCase()
             const sourceEntityLowerCase = generalization.specialClass.toLowerCase()
