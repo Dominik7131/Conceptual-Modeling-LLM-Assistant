@@ -1,0 +1,6 @@
+Solely based on the given context provide cardinality for the attribute: "{attribute_name}" of the entity: "{source_entity}" and output it in this JSON object:
+{"sourceCardinality": "..."}. The cardinality must be one of this elements: ["optional-one", "optional-many", "one-one", "one-many"]. If you are not certain which cardinality to choose output exactly this JSON object: {"sourceCardinality": ""}
+
+
+This is the given context:
+"{domain_description}"
