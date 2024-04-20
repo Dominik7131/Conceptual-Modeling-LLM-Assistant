@@ -11,14 +11,12 @@ llm_assistant = None
 
 PATH_TO_DATA_STORAGE = "storage"
 
-# TODO: Maybe I am not setting the response header correctly?
 # CORS error from frontend solution: https://stackoverflow.com/a/33091782
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type' 
 
 
 @app.route('/suggest', methods=['POST'])
-@cross_origin()
 def suggest():
 
     body_data = request.get_json()
@@ -32,7 +30,6 @@ def suggest():
 
 
 @app.route('/getOnly', methods=['POST'])
-@cross_origin()
 def generate_single_field():
 
     body_data = request.get_json()
@@ -47,7 +44,6 @@ def generate_single_field():
 
 
 @app.route('/summary_plain_text', methods=['POST'])
-@cross_origin()
 def summary_plain_text():
 
     body_data = request.get_json()
@@ -58,7 +54,6 @@ def summary_plain_text():
 
 
 @app.route('/summary_descriptions', methods=['POST'])
-@cross_origin()
 def summary_descriptions():
 
     body_data = request.get_json()
@@ -69,7 +64,6 @@ def summary_descriptions():
 
 
 @app.route('/merge_original_texts', methods=['POST'])
-@cross_origin()
 def merge_original_texts():
 
     body_data = request.get_json()
@@ -83,7 +77,6 @@ def merge_original_texts():
 
 
 @app.route('/save_suggestion', methods=['POST'])
-@cross_origin()
 def save_suggestion():
 
     body_data = request.get_json()

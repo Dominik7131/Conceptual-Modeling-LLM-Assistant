@@ -7,14 +7,13 @@ import time
 app = Flask(__name__)
 llm_assistant = None
 
-# TODO: Try to remove CORS by filling in the header properly
+
 # CORS error from frontend solution: https://stackoverflow.com/a/33091782
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type' 
 
 
 @app.route('/suggest', methods=['POST'])
-@cross_origin()
 def suggest():
     body_data = request.get_json()
     sourceEntity = body_data["sourceEntity"]
@@ -30,35 +29,11 @@ def suggest():
         def generate_mock_up():
             # time.sleep(2)
             if user_choice == "attributes" or user_choice == "entities":
-                yield '{"originalText": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "originalTextIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
+                # yield '{"originalText": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "originalTextIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
                 # time.sleep(2)
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
+                # yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
                 # time.sleep(2)
+                pass
             else:
                 yield '{"name": "enrolled in", "originalText": "Students can be enrolled in any number of courses", "originalTextIndexes": [10,20], "source": "student", "target": "course"}\n'
                 yield '{"name": "accommodated in", "originalText": "students can be accommodated in dormitories", "originalTextIndexes": [20,100], "source": "student", "target": "dormitory"}\n'
@@ -66,7 +41,6 @@ def suggest():
 
 
 @app.route('/summary_plain_text', methods=['POST'])
-@cross_origin()
 def summary_plain_text():
 
     body_data = request.get_json()
@@ -81,7 +55,6 @@ def summary_plain_text():
 
 
 @app.route('/summary_descriptions', methods=['POST'])
-@cross_origin()
 def summary_descriptions():
 
     body_data = request.get_json()
@@ -89,7 +62,7 @@ def summary_descriptions():
     conceptual_model = body_data["conceptualModel"]
 
     def generate_mock_up():
-        time.sleep(1)
+        # time.sleep(1)
         yield '{"entity": "engine","description": "An engine entity represents the power source of a vehicle.","attributes": [{"name": "engine type","description": "The type of engine, such as internal combustion, electric, etc."},{"name": "engine power","description": "The power output of the engine, typically measured in kilowatts (kW)."},{"name": "fuel type","description": "The type of fuel used by the engine, such as gasoline, diesel, electricity, etc."}]}\n'
         time.sleep(1)
         yield '{"relationship": "has", "sourceEntity": "course", "targetEntity": "professor", "description": "Courses have professors who teach them"}\n'
@@ -103,7 +76,6 @@ def summary_descriptions():
 
 
 @app.route('/getOnly', methods=['POST'])
-@cross_origin()
 def get_only():
 
     def generator_function(field):
@@ -126,32 +98,12 @@ def get_only():
 
 
     body_data = request.get_json()
-    source_entity = body_data["sourceEntity"]
-    target_entity = body_data["targetEntity"]
-    name = body_data["name"]
     field = body_data["field"]
-    domain_description = body_data["domainDescription"]
-    userChoice = body_data["userChoice"]
-
-    # For entity we need:
-    # - entity name
-
-    # For attribute we need:
-    # - attribute name
-    # - source entity name
-
-    # For relationship we need:
-    # - relationship name
-    # - source entity name
-    # - target entity name
-
-    # The llm_assistant needs to get userChoice to know how to edit the prompt
 
     return generator_function(field)
 
 
 @app.route('/merge_original_texts', methods=['POST'])
-@cross_origin()
 def merge_original_texts():
 
     body_data = request.get_json()
@@ -164,25 +116,6 @@ def merge_original_texts():
 
     # print(f"{result}\n")
     return result
-
-
-@app.route('/test', methods=['GET'])
-@cross_origin()
-def test():
-    dictionary = {"name": "rest-api-response", "originalText": "lorem ipsum lorem ipsum lorem ipsum lorem ipsum", "data_type": "string"}
-    return json.dumps(dictionary)
-
-
-@app.route('/stream_test')
-@cross_origin()
-def stream_test():
-
-    def generate_items():
-        yield f"Number: {1}\n"
-        yield f"Number: {2}\n"
-        yield f"Number: {3}\n"
-
-    return generate_items()
 
 
 def create_suggest_mockup(entity, user_choice, domain_description):
@@ -292,7 +225,6 @@ def create_summary_mockup(entities : list[str]) -> list[dict]:
 
 
 @app.route('/save_suggestion', methods=['POST'])
-@cross_origin()
 def save_suggestion():
 
     body_data = request.get_json()
@@ -302,13 +234,13 @@ def save_suggestion():
 
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
 
+    timestamp = time.strftime('%Y-%m-%d-%H-%M-%S')
+    print(timestamp)
+    print("Saving to")
     print(completed_item)
 
-    # timestamp = time.strftime('%Y-%m-%d-%H-%M-%S')
-    # with open(f"{timestamp}.json", 'w') as file:
-    #     json.dump(completed_item, file)
-
     return "Done"
+
 
 if __name__ == '__main__':
     app.run(port=5000, threaded=True)
