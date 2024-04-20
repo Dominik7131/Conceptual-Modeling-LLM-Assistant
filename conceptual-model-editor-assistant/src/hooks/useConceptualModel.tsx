@@ -4,7 +4,7 @@ import { Node, Edge, MarkerType, getMarkerEnd } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, createEdgeID, doesEdgeAlreadyExist, doesNodeAlreadyExist, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, ItemsMessage, NodeData, Relationship, RelationshipJson, UserChoice } from '../interfaces';
+import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, Item, ItemType, ItemsMessage, NodeData, Relationship, RelationshipJson, SidebarTabs, TopbarTabs, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isShowHighlightDialogState, isSuggestedItemState, nodesState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarErrorMsgState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
 
@@ -239,15 +239,15 @@ const useConceptualModel = () =>
   {
     if (itemType === ItemType.ENTITY)
     {
-      setSidebarTab(_ => "0")
+      setSidebarTab(SidebarTabs.ENTITIES)
     }
     else if (itemType === ItemType.ATTRIBUTE)
     {
-      setSidebarTab(_ => "1")
+      setSidebarTab(SidebarTabs.ATTRIBUTES)
     }
     else if (itemType === ItemType.RELATIONSHIP)
     {
-      setSidebarTab(_ => "2")
+      setSidebarTab(SidebarTabs.RELATIONSHIPS)
     }
   }
 
@@ -350,7 +350,7 @@ const useConceptualModel = () =>
       return
     }
 
-    setTopbarTabValue("1")
+    setTopbarTabValue(TopbarTabs.SUMMARY_PLAIN_TEXT)
 
     const conceptualModel = convertConceptualModelToJSON(false)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
@@ -367,7 +367,7 @@ const useConceptualModel = () =>
       return
     }
 
-    setTopbarTabValue("2")
+    setTopbarTabValue(TopbarTabs.SUMMARY_DESCRIPTION)
 
     const conceptualModel = convertConceptualModelToJSON(true)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})

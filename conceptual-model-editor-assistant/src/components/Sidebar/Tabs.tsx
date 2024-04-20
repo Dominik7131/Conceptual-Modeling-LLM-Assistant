@@ -2,6 +2,7 @@ import { Box, Tab } from "@mui/material"
 import { sidebarErrorMsgState, sidebarTabValueState } from "../../atoms"
 import { useSetRecoilState } from "recoil"
 import { TabList } from "@mui/lab"
+import { SidebarTabs } from "../../interfaces"
 
 
 const Tabs: React.FC = (): JSX.Element =>
@@ -21,9 +22,9 @@ const Tabs: React.FC = (): JSX.Element =>
             <TabList onChange={ handleChange }
                 indicatorColor="secondary"
                 textColor="secondary">
-                    <Tab sx={{textTransform: "capitalize"}} label="Entities" value="0" />
-                    <Tab sx={{textTransform: "none"}} label="Attributes" value="1" />
-                    <Tab sx={{textTransform: "none"}} label="Relationships" value="2" />
+                    <Tab sx={{textTransform: "capitalize"}} label="Entities" value={SidebarTabs.ENTITIES} />
+                    <Tab sx={{textTransform: "none"}} label="Attributes" value={SidebarTabs.ATTRIBUTES} />
+                    <Tab sx={{textTransform: "none"}} label="Relationships" value={SidebarTabs.RELATIONSHIPS}/>
             </TabList>
         </Box>
     )

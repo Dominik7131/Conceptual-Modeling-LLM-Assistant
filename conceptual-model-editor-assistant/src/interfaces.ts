@@ -51,6 +51,23 @@ export const enum ItemFieldUIName
 }
 
 
+export const enum TopbarTabs
+{
+  MAIN = "0",
+  SUMMARY_PLAIN_TEXT = "1",
+  SUMMARY_DESCRIPTION = "2",
+  IMPORT_EXPORT = "3",
+  SETTINGS = "4"
+}
+
+export const enum SidebarTabs
+{
+  ENTITIES = "0",
+  ATTRIBUTES = "1",
+  RELATIONSHIPS = "2",
+}
+
+
 export interface SummaryObject
 {
   entities: any[]

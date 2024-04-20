@@ -3,6 +3,7 @@ import { topbarTabValueState } from "../../atoms"
 import { useSetRecoilState } from "recoil"
 import { TabList } from "@mui/lab"
 import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME } from "../../hooks/useUtility"
+import { TopbarTabs } from "../../interfaces"
 
 
 const Tabs: React.FC = (): JSX.Element =>
@@ -19,11 +20,11 @@ const Tabs: React.FC = (): JSX.Element =>
     return (
         <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent:"center" }}>
             <TabList onChange={ handleChange }>
-                <Tab sx={{textTransform: "none"}} label="Main" value="0" />
-                <Tab sx={{textTransform: "none"}} label={SUMMARY_PLAIN_TEXT_NAME} value="1" />
-                <Tab sx={{textTransform: "none"}} label={SUMMARY_DESCRIPTIONS_NAME} value="2" />
-                <Tab sx={{textTransform: "none"}} label="Import & Export" value="3" />
-                <Tab sx={{textTransform: "none"}} label="Settings" value="4" />
+                <Tab sx={{textTransform: "none"}} label="Main" value={TopbarTabs.MAIN} />
+                <Tab sx={{textTransform: "none"}} label={SUMMARY_PLAIN_TEXT_NAME} value={TopbarTabs.SUMMARY_PLAIN_TEXT} />
+                <Tab sx={{textTransform: "none"}} label={SUMMARY_DESCRIPTIONS_NAME} value={TopbarTabs.SUMMARY_DESCRIPTION} />
+                <Tab sx={{textTransform: "none"}} label="Import & Export" value={TopbarTabs.IMPORT_EXPORT} />
+                <Tab sx={{textTransform: "none"}} label="Settings" value={TopbarTabs.SETTINGS} />
             </TabList>
         </Box>
     )
