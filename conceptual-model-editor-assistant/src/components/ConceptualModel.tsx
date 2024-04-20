@@ -67,6 +67,7 @@ const ConceptualModel: React.FC = () =>
     parseSerializedConceptualModel()
   }, [])
 
+
   const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
 
   const heightPx = 586
@@ -82,7 +83,8 @@ const ConceptualModel: React.FC = () =>
                 onEdgesChange={onEdgesChange}
                 onConnect={onConnect}
                 nodeTypes={nodeTypes}
-                edgeTypes={edgeTypes}>
+                edgeTypes={edgeTypes}
+                fitView>
                 <MiniMap nodeStrokeWidth={3} zoomable pannable />
                 <Controls />
                 <Background color="black" />

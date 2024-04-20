@@ -1,4 +1,5 @@
-import { ItemType, UserChoice } from "../interfaces"
+import { SetterOrUpdater } from "recoil";
+import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
 import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
 
 
@@ -54,6 +55,23 @@ export const doesNodeAlreadyExist = (nodes: Node[], nodeID: string): boolean =>
 }
 
 
+export const doesNodeAlreadyExistSetter = (setNodes: any, nodeID: string): boolean =>
+{
+  let isNodeAlreadyPresent = false
+
+  setNodes((nodes: Node[]) => nodes.map(currentNode => 
+  {
+    if (nodeID === currentNode.id)
+    {
+      isNodeAlreadyPresent = true
+    }
+    return currentNode
+  }))
+
+  return isNodeAlreadyPresent
+}
+
+
 export const doesEdgeAlreadyExist = (edges: Edge[], edgeID: string): boolean =>
 {
   for (let i = 0; i < edges.length; i++)
@@ -67,6 +85,39 @@ export const doesEdgeAlreadyExist = (edges: Edge[], edgeID: string): boolean =>
   }
 
   return false
+}
+
+
+export const doesEdgeAlreadyExistSetter = (setEdges: any, edgeID: string): boolean =>
+{
+  let isEdgeAlreadyPresent = false
+
+  setEdges((edges: Edge[]) => edges.map(currentEdge => 
+  {
+    if (edgeID === currentEdge.id)
+    {
+      isEdgeAlreadyPresent = true
+    }
+    return currentEdge
+  }))
+
+  return isEdgeAlreadyPresent
+}
+
+export const doesEdgeBetweenNodesAlreadyExistSetter = (setEdges: any, sourceNodeID: string, targetNodeID: string): boolean =>
+{
+  let isEdgeAlreadyPresent = false
+
+  setEdges((edges: Edge[]) => edges.map(currentEdge => 
+  {
+    if (currentEdge.source === sourceNodeID && currentEdge.target === targetNodeID)
+    {
+      isEdgeAlreadyPresent = true
+    }
+    return currentEdge
+  }))
+
+  return isEdgeAlreadyPresent
 }
 
 
@@ -113,6 +164,189 @@ export const userChoiceToItemType = (userChoice: UserChoice): ItemType =>
   }
 
   throw Error(`Unexpected user choice: ${userChoice}`)
+}
+
+
+export const createErrorMessage = (item: Item, setErrorMessage: SetterOrUpdater<string>): void =>
+{
+  let message = ""
+
+  if (item.type === ItemType.ENTITY)
+  {
+    message = `Entity "${item.name}" already exists`
+  }
+  else if (item.type === ItemType.ATTRIBUTE)
+  {
+    message = `Entity "${(item as Attribute)[Field.SOURCE_ENTITY]}" already contains attribute "${item.name}"`
+  }
+  else if (item.type === ItemType.RELATIONSHIP)
+  {
+    message = `Relationship in between source entity "${(item as Relationship)[Field.SOURCE_ENTITY]}" and target entity "${(item as Relationship)[Field.TARGET_ENTITY]}" already exists`
+  }
+
+  setErrorMessage(message)
+}
+
+export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
+{
+  if (item.type === ItemType.ENTITY)
+  {
+    return addEntity(item as Entity, 66, 66, setNodes)
+  }
+  else if (item.type === ItemType.ATTRIBUTE)
+  {
+    return onAddAttributesToNode(item as Attribute, setNodes)
+  }
+  else if (item.type === ItemType.RELATIONSHIP)
+  {
+    return onAddRelationshipsToNodes(item as Relationship, setNodes, setEdges)
+  }
+  else
+  {
+    throw Error("Unknown item type")
+  }
+}
+
+
+export const addEntity = (entity: Entity, positionX: number, positionY: number, setNodes: any): boolean =>
+{
+  if (doesNodeAlreadyExistSetter(setNodes, entity.name))
+  {
+    return false
+  }
+
+  const nodeData: NodeData = { entity: entity, attributes: [] }
+
+  const newNode: Node = {
+    id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
+    data: nodeData
+  }
+
+  setNodes((previousNodes: Node[]) => {
+    return [...previousNodes, newNode]
+  })
+
+  return true
+}
+
+
+const onAddAttributesToNode = (attribute : Attribute, setNodes: any) =>
+{
+  const nodeID = attribute.source
+  let isAttributePresent = false
+  
+
+  setNodes((nodes: Node[]) => nodes.map((currentNode : Node) =>
+  {
+    // Skip nodes which are not getting a new attribute
+    if (currentNode.id !== nodeID)
+    {
+      return currentNode
+    }
+
+    // If the node already contains the selected attribute do not add anything
+    currentNode.data.attributes.forEach((currentAttribute : Attribute) =>
+    {
+      if (currentAttribute.name === attribute.name)
+      {
+        isAttributePresent = true
+      }
+    })
+
+    if (isAttributePresent)
+    {
+      return currentNode 
+    }
+    const newAttributes = [...currentNode.data.attributes, attribute]  
+    const newData : NodeData = { ...currentNode.data, attributes: newAttributes }
+    const updatedNode: Node = {...currentNode, data: newData}
+
+    return updatedNode
+  }))
+
+  return !isAttributePresent
+}
+
+
+const onAddRelationshipsToNodes = (relationship : Relationship, setNodes: any, setEdges: any): boolean =>
+{
+  // Returns "true" if the operation was successfull otherwise "false"
+
+  let sourceNodeID = relationship.source?.toLowerCase()
+  let targetNodeID = relationship.target?.toLowerCase()
+
+  if (!sourceNodeID) { sourceNodeID = "" }
+  if (!targetNodeID) { targetNodeID = "" }
+
+
+  if (doesEdgeBetweenNodesAlreadyExistSetter(setEdges, sourceNodeID, targetNodeID))
+  {
+    return false
+  }
+
+  const newEdgeID = createEdgeID(sourceNodeID, targetNodeID, relationship.name)
+  const isTargetNodeCreated: boolean = doesNodeAlreadyExistSetter(setNodes, targetNodeID)
+
+  if (!isTargetNodeCreated)
+  {
+    // TODO: Try to come up with a better node position
+    const newNode: Node = createNode(targetNodeID, 500, 100)
+
+    setNodes((previousNodes: Node[]) => 
+    {
+      return [...previousNodes, newNode]
+    })
+  }
+
+  const edgeData: EdgeData = { relationship: relationship }
+
+  const newEdge : Edge = {
+    id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: edgeData,
+    markerEnd: CUSTOM_EDGE_MARKER
+  }
+
+  setEdges((previousEdges: Edge[]) =>
+  {
+    return [...previousEdges, newEdge]
+  })
+
+  return true
+}
+
+
+export const createNode = (nodeID: string, positionX: number, positionY: number): Node =>
+{
+  const newEntity: Entity = {
+    [Field.ID]: 0, [Field.NAME]: nodeID, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "",
+    [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
+  }
+
+  const nodeData: NodeData = { entity: newEntity, attributes: [] }
+
+  const newNode: Node = { id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
+  
+  return newNode
+}
+
+
+export const addNode = (nodeID: string, positionX: number, positionY: number, setNodes: any) =>
+{
+  if (!nodeID)
+  {
+    alert("Node name is empty")
+    return
+  }
+
+  if (doesNodeAlreadyExistSetter(setNodes, nodeID))
+  {
+    return
+  }
+
+  const newNode: Node = createNode(nodeID, positionX, positionY)
+
+  setNodes((previousNodes: Node[]) => {
+    return [...previousNodes, newNode]
+  })
 }
 
 

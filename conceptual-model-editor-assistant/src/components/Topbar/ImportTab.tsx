@@ -5,7 +5,7 @@ import ExportButton from "./ExportButton"
 import { Attribute, ConceptualModelJson, Entity, Field, ItemType, NodeData, EdgeData, Relationship } from "../../interfaces";
 import { edgesState, importedFileNameState, nodesState } from "../../atoms";
 import { Node, Edge } from 'reactflow';
-import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, createEdgeID } from "../../hooks/useUtility";
+import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, createEdgeID, onAddItem } from "../../hooks/useUtility";
 import { useSetRecoilState } from "recoil";
 import useConceptualModel from "../../hooks/useConceptualModel";
 
@@ -14,7 +14,6 @@ const ImportTab: React.FC = (): JSX.Element =>
 {
     const setNodes = useSetRecoilState(nodesState)
     const setEdges = useSetRecoilState(edgesState)
-    const { onAddAttributesToNode } = useConceptualModel()
 
 
     const onImport = (conceptualModelJson: ConceptualModelJson) =>
@@ -31,7 +30,7 @@ const ImportTab: React.FC = (): JSX.Element =>
         if (!conceptualModelJson.generalizations) { conceptualModelJson.generalizations = [] }
     
     
-        for (const [key, entity] of Object.entries(conceptualModelJson.classes))
+        for (const [, entity] of Object.entries(conceptualModelJson.classes))
         {
             const entityNameLowerCase = entity.title.toLowerCase()
         
@@ -42,8 +41,14 @@ const ImportTab: React.FC = (): JSX.Element =>
         
             const nodeData : NodeData = { entity: newEntity, attributes: [] }
         
+            const maxRandomValue = 400
+            const randomX = Math.floor(Math.random() * maxRandomValue)
+            const randomY = Math.floor(Math.random() * maxRandomValue)
+            const newPositionX = positionX + randomX
+            const newPositionY = positionY + randomY
+
             const newNode : Node = {
-                id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData
+                id: entityNameLowerCase, type: "customNode", position: { x: newPositionX, y: newPositionY }, data: nodeData
             }
         
             positionX += incrementX
@@ -78,7 +83,7 @@ const ImportTab: React.FC = (): JSX.Element =>
         
                 if (entityName === newAttribute[Field.SOURCE_ENTITY])
                 {
-                    onAddAttributesToNode(newAttribute)
+                    onAddItem(newAttribute, setNodes, setEdges)
                 }
             }
         }

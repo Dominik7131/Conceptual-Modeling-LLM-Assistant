@@ -3,10 +3,11 @@ import HighlightSingleItemButton from "./HighlightSingleItemButton"
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import useConceptualModel from "../../hooks/useConceptualModel";
-import { Item } from "../../interfaces";
+import { Attribute, Field, Item, ItemType, Relationship } from "../../interfaces";
 import SaveToDiskButton from "./SaveToDiskButton";
-import { sidebarErrorMsgState } from "../../atoms";
+import { edgesState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarErrorMsgState } from "../../atoms";
 import { useSetRecoilState } from "recoil";
+import { createErrorMessage, onAddItem } from "../../hooks/useUtility";
 
 
 interface Props
@@ -16,9 +17,49 @@ interface Props
 
 const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
 {
-    const { onAddItem, onEditSuggestion } = useConceptualModel()
+    const setNodes = useSetRecoilState(nodesState)
+    const setEdges = useSetRecoilState(edgesState)
 
     const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
+    const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
+    const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
+    const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
+    const setIsDisableSave = useSetRecoilState(isDisableSaveState)
+    const setIsDisableChange = useSetRecoilState(isDisableChangeState)
+    const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
+
+
+    const handleAddItem = (): void =>
+    {
+        setErrorMessage("")
+
+        if (item.name === "")
+        {
+            const message = "Name cannot be empty"
+            setErrorMessage(_ => message)
+            return
+        }
+
+        const isOperationSuccessful = onAddItem(item, setNodes, setEdges)
+
+        if (isOperationSuccessful)
+        {
+            return
+        }
+
+        createErrorMessage(item, setErrorMessage)
+    }
+
+
+    const handleEditSuggestedItem = (): void =>
+    {
+        setSelectedSuggestedItem(item)
+        setEditedSuggestedItem(item)
+        setIsSuggestedItem(true)
+        setIsDisableSave(true)
+        setIsDisableChange(false)
+        setIsShowEditDialog(true)
+    }
 
     
     return (
@@ -28,7 +69,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
                 color="secondary"
                 startIcon={<AddIcon/>}
                 sx={{ textTransform: "none" }}
-                onClick={() => { setErrorMessage(""); onAddItem(item, true)} }>
+                onClick={ handleAddItem }>
                     Add
             </Button>
 
@@ -36,7 +77,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
                 color="secondary"
                 startIcon={<EditIcon/>}
                 sx={{ textTransform: "none" }}
-                onClick={() => { onEditSuggestion(item.ID, item.type) }}>
+                onClick={ handleEditSuggestedItem }>
                     Edit
             </Button>
 

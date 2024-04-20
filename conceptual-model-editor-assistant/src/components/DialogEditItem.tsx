@@ -14,17 +14,21 @@ import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import { useRecoilValue } from 'recoil';
-import { domainDescriptionState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, regeneratedItemState, selectedSuggestedItemState } from '../atoms';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from '../atoms';
 import useEditItemDialog from '../hooks/useEditItemDialog';
 import useConceptualModel from '../hooks/useConceptualModel';
 import Alert from '@mui/material/Alert';
+import { createErrorMessage, onAddItem } from '../hooks/useUtility';
 
 
 const DialogEditItem: React.FC = () =>
 {
     const isOpened = useRecoilValue(isShowEditDialogState)
     const fieldToLoad = useRecoilValue(fieldToLoadState)
+
+    const setNodes = useSetRecoilState(nodesState)
+    const setEdges = useSetRecoilState(edgesState)
 
     const item = useRecoilValue(selectedSuggestedItemState)
     const editedItem = useRecoilValue(editedSuggestedItemState)
@@ -33,9 +37,8 @@ const DialogEditItem: React.FC = () =>
     const isDisableSave = useRecoilValue(isDisableSaveState)
     const isDisableChange = useRecoilValue(isDisableChangeState)
 
-    const errorMessage = useRecoilValue(editDialogErrorMsgState)
+    const [errorMessage, setErrorMessage] = useRecoilState(editDialogErrorMsgState)
 
-    const { onAddItem } = useConceptualModel()
     const { onSave, onClose, onRemove, onItemEdit, onGenerateField, onConfirmRegeneratedText, onClearRegeneratedItem, onChangeItemType } = useEditItemDialog()
 
     const attribute = editedItem as Attribute
@@ -45,13 +48,24 @@ const DialogEditItem: React.FC = () =>
     const isRelationship = item.type === ItemType.RELATIONSHIP
 
 
-    const handleAdd = (item: Item): void =>
+    const handleAddItem = (item: Item): void =>
     {
-        const result = onAddItem(item, false)
-        if (result)
+        if (item.name === "")
+        {
+            const message = "Name cannot be empty"
+            setErrorMessage(_ => message)
+            return
+        }
+
+        const isOperationSuccessful = onAddItem(item, setNodes, setEdges)
+
+        if (isOperationSuccessful)
         {
             onClose()
+            return
         }
+
+        createErrorMessage(item, setErrorMessage)
     }
 
 
@@ -161,7 +175,7 @@ const DialogEditItem: React.FC = () =>
                             variant="contained"
                             color="success"
                             sx={{ textTransform: "none" }}
-                            onClick={() => { handleAdd(editedItem) }}> Add </Button>
+                            onClick={() => { handleAddItem(editedItem) }}> Add </Button>
                         :
                         <Button
                             variant="contained"

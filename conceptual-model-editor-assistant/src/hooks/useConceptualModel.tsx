@@ -17,9 +17,9 @@ const useConceptualModel = () =>
   const selectedNodes = useRecoilValue(selectedNodesState)
   const selectedEdges = useRecoilValue(selectedEdgesState)
 
-  const [suggestedEntities, setSuggestedEntities] = useRecoilState(suggestedEntitiesState)
-  const [suggestedAttributes, setSuggestedAttributes] = useRecoilState(suggestedAttributesState)
-  const [suggestedRelationships, setSuggestedRelationships] = useRecoilState(suggestedRelationshipsState)
+  const setSuggestedEntities = useSetRecoilState(suggestedEntitiesState)
+  const setSuggestedAttributes = useSetRecoilState(suggestedAttributesState)
+  const setSuggestedRelationships = useSetRecoilState(suggestedRelationshipsState)
 
   const setSidebarTitles = useSetRecoilState(sidebarTitlesState)
 
@@ -30,7 +30,6 @@ const useConceptualModel = () =>
   const setIsDisableSave = useSetRecoilState(isDisableSaveState)
   const setIsDisableChange = useSetRecoilState(isDisableChangeState)
 
-
   const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
   const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialogState)
 
@@ -39,9 +38,6 @@ const useConceptualModel = () =>
 
   const setTopbarTabValue = useSetRecoilState(topbarTabValueState)
   const setSidebarTab = useSetRecoilState(sidebarTabValueState)
-
-  const setErrorMessageEditDialog = useSetRecoilState(editDialogErrorMsgState)
-  const setErrorMessageSidebar = useSetRecoilState(sidebarErrorMsgState)
 
 
   const { fetchSummaryPlainText, fetchSummaryDescriptions, fetchStreamedData } = useFetchData({ onClearSuggestedItems, onProcessStreamedData })
@@ -57,29 +53,9 @@ const useConceptualModel = () =>
         {name: "Natural person", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
         {name: "Business natural person", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
         {name: "Road vehicle", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [4, 10], attributes: []}],
-
                   relationships: [
                     {"name": "manufactures", "source": "manufacturer", "target": "road vehicle", "originalText": "s"}]}
 
-    // const input: SerializedConceptualModel = { "entities": [
-    //   {name: "Student", "description": "", originalTextIndexes: [], "attributes": [
-    //     {"ID": 0, "name": "name1", "originalText": "student has a name", "dataType": "string", "description": "The name of the student."},
-    //     {"ID": 1, "name": "name2", "originalText": "student has a name", "dataType": "string", "description": "The name of the student."},
-    //     {"ID": 2, "name": "name3", "originalText": "student has a name", "dataType": "string", "description": "The name of the student."},
-    //   ]}],
-    //   "relationships": []
-    // }
-      
-    // const input : SerializedConceptualModel = { "entities": [
-    //     {name: "Student", "description": "A student entity representing individuals enrolled in courses.", originalTextIndexes: [], "attributes": [{"ID": 0, "name": "name", "originalText": "student has a name", "dataType": "string", "description": "The name of the student."}]},
-    //     {name: "Course", "description": "A course entity representing educational modules.", originalTextIndexes: [], "attributes": [{"ID": 1, "name": "name", "originalText": "courses have a name", "dataType": "string", "description": "The name of the course."}, {"ID": 2, "name": "number of credits", "originalText": "courses have a specific number of credits", "dataType": "string", "description": "The number of credits assigned to the course."}]},
-    //     {name: "Dormitory", "description": "A professor entity representing instructors teaching courses.", originalTextIndexes: [], "attributes": [{"ID": 3,"name": "price", "originalText": "each dormitory has a price", "dataType": "number", "description": "The price of staying in the dormitory."}]},
-    //     {name: "Professor", "description": "A dormitory entity representing residential facilities for students.", originalTextIndexes: [], "attributes": [{"ID": 4, "name": "name", "originalText": "professors, who have a name", "dataType": "string", "description": "The name of the professor."}]}],
-    //   "relationships": [{ID: 0, type: ItemType.RELATIONSHIP, name: "enrolled in", description: "", originalText: "Students can be enrolled in any number of courses", originalTextIndexes: [], "source": "student", "target": "course", cardinality: ""},
-    //                     {ID: 1, type: ItemType.RELATIONSHIP, "name": "accommodated in", description: "", "originalText": "students can be accommodated in dormitories", originalTextIndexes: [], "source": "student", "target": "dormitory", cardinality: ""},
-    //                     {ID: 2, type: ItemType.RELATIONSHIP, "name": "has", description: "", originalText: "each course can have one or more professors", originalTextIndexes: [], "source": "course", "target": "professor", cardinality: ""},
-    //                     {ID: 3, type: ItemType.RELATIONSHIP, "name": "is-a", description: "", originalText: "", originalTextIndexes: [], "source": "student", "target": "person", cardinality: ""}
-    //                   ]}
 
     const incrementX = 500
     const incrementY = 200
@@ -103,8 +79,15 @@ const useConceptualModel = () =>
         [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "",
         [Field.ORIGINAL_TEXT_INDEXES]: entity[Field.ORIGINAL_TEXT_INDEXES]}
 
+      const maxRandomValue = 200
+      const randomX = Math.floor(Math.random() * maxRandomValue)
+      const randomY = Math.floor(Math.random() * maxRandomValue)
+
+      const newPositionX = positionX + randomX
+      const newPositionY = positionY + randomY
+
       const nodeData : NodeData = { entity: newEntity, attributes: entity.attributes }
-      const newNode : Node = { id: entityNameLowerCase, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
+      const newNode : Node = { id: entityNameLowerCase, type: "customNode", position: { x: newPositionX, y: newPositionY }, data: nodeData }
 
       newNodes.push(newNode)
 
@@ -419,8 +402,6 @@ const useConceptualModel = () =>
 
     if (doesNodeAlreadyExist(nodes, nodeID))
     {
-      const alertMessage = `Node '${nodeID}' already exists`
-      setErrorMessageEditDialog(_ => alertMessage)
       return
     }
 
@@ -429,174 +410,6 @@ const useConceptualModel = () =>
     setNodes(previousNodes => {
       return [...previousNodes, newNode]
     })
-  }
-
-
-  const addNodeEntity = (entity: Entity, positionX: number, positionY: number): boolean =>
-  {
-    if (doesNodeAlreadyExist(nodes, entity.name))
-    {
-      return false
-    }
-
-    const nodeData: NodeData = { entity: entity, attributes: [] }
-
-    const newNode: Node = {
-      id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
-      data: nodeData
-    }
-
-    setNodes(previousNodes => {
-      return [...previousNodes, newNode]
-    })
-
-    return true
-  }
-
-
-  const onClickAddNode = (nodeName : string) =>
-  {
-    if (!nodeName)
-    {
-      return
-    }
-
-    addNode(nodeName.toLowerCase(), 0, 0, [])
-  }
-  
-  
-  const onAddAttributesToNode = (attribute : Attribute) =>
-  {
-    const nodeID = attribute.source
-    let isAttributePresent = false
-    
-
-    setNodes((nodes) => nodes.map((currentNode : Node) =>
-    {
-      // Skip nodes which are not getting a new attribute
-      if (currentNode.id !== nodeID)
-      {
-        return currentNode
-      }
-
-      // If the node already contains the selected attribute do not add anything
-      currentNode.data.attributes.forEach((currentAttribute : Attribute) =>
-      {
-        if (currentAttribute.name === attribute.name)
-        {
-          isAttributePresent = true
-        }
-      })
-
-      if (isAttributePresent)
-      {
-        return currentNode 
-      }
-      const newAttributes = [...currentNode.data.attributes, attribute]  
-      const newData : NodeData = { ...currentNode.data, attributes: newAttributes }
-      const updatedNode: Node = {...currentNode, data: newData}
-
-      return updatedNode
-    }))
-
-    return !isAttributePresent
-  }
-
-
-  const onAddRelationshipsToNodes = (relationship : Relationship): boolean =>
-  {
-    // Returns "true" if the operation was successfull otherwise "false"
-
-    let sourceNodeID = relationship.source?.toLowerCase()
-    let targetNodeID = relationship.target?.toLowerCase()
-
-    if (!sourceNodeID) { sourceNodeID = "" }
-    if (!targetNodeID) { targetNodeID = "" }
-
-
-    // Check if the node with ID "relationship.source" already contains edge with node with ID "relationship.target"
-    // const sourceNode: Node | undefined = nodes.find(node => node.id === sourceNodeID)
-    // const targetNode: Node | undefined = nodes.find(node => node.id === targetNodeID)
-
-    const existingEdge: Edge | undefined = edges.find(edge => edge.source === sourceNodeID && edge.target === targetNodeID)
-    if (existingEdge)
-    {
-      return false
-    }
-
-    const newEdgeID = createEdgeID(sourceNodeID, targetNodeID, relationship.name)
-    if (doesEdgeAlreadyExist(edges, newEdgeID))
-    {
-      return false
-    }
-
-    const isTargetNodeCreated: boolean = doesNodeAlreadyExist(nodes, targetNodeID)
-
-    if (!isTargetNodeCreated)
-    {
-      // TODO: Try to come up with a better node position
-      const newNode: Node = createNode(targetNodeID, 500, 100)
-
-      setNodes(previousNodes => 
-      {
-        return [...previousNodes, newNode]
-      })
-      
-      setNodes((nodes) => nodes.map((node) =>
-      {
-        if (node.id === targetNodeID)
-        {
-          return node
-        }
-        return node
-      }))
-    }
-
-    const edgeData: EdgeData = { relationship: relationship }
-
-    const newEdge : Edge = {
-      id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: edgeData,
-      markerEnd: CUSTOM_EDGE_MARKER
-    }
-
-    setEdges(previousEdges =>
-    {
-      return [...previousEdges, newEdge]
-    })
-
-    return true
-  }
-
-  const onEditSuggestion = (itemID: number, itemType: ItemType): void =>
-  {
-    console.log("x")
-    let suggestedItem: Item | undefined = undefined
-
-    if (itemType === ItemType.ENTITY)
-    {
-      suggestedItem = suggestedEntities.find(entity => entity.ID === itemID)
-    }
-    else if (itemType === ItemType.ATTRIBUTE)
-    {
-      suggestedItem = suggestedAttributes.find(attribute => attribute.ID === itemID)
-    }
-    else if (itemType === ItemType.RELATIONSHIP)
-    {
-      suggestedItem = suggestedRelationships.find(relationship => relationship.ID === itemID)
-    }
-
-    if (!suggestedItem)
-    {
-      throw new Error("Invalid itemID")
-    }
-
-    setSelectedSuggestedItem(_ => suggestedItem as Item)
-    setEditedSuggestedItem(_ => suggestedItem as Item)
-    setIsSuggestedItem(_ => true)
-
-    setIsDisableSave(_ => true)
-    setIsDisableChange(_ => false)
-    setIsShowEditDialog(true)
   }
 
 
@@ -610,85 +423,11 @@ const useConceptualModel = () =>
 
     setIsShowEditDialog(true)
   }
-
-
-  const onAddItem = (item: Item, isItemFromSidebar: boolean): boolean =>
-  {
-
-    if (item.name === "")
-    {
-      const warningMessage = "Name cannot be empty"
-      setErrorMessageEditDialog(_ => warningMessage)
-      return false
-    }
-
-
-    if (item.type === ItemType.ENTITY)
-    {
-      const isOperationSuccessful = addNodeEntity(item as Entity, 66, 66)
-
-      if (!isOperationSuccessful)
-      {
-        const message = `Entity "${item.name}" already exists`
-
-        if (isItemFromSidebar)
-        {
-          setErrorMessageSidebar(message)
-        }
-        else
-        {
-          setErrorMessageEditDialog(message)
-        }  
-      }
-    }
-    else if (item.type === ItemType.ATTRIBUTE)
-    {
-      const isOperationSuccessful = onAddAttributesToNode(item as Attribute)
-
-      if (!isOperationSuccessful)
-      {
-        const message = `Entity "${(item as Attribute)[Field.SOURCE_ENTITY]}" already contains attribute "${item.name}"`
-        if (isItemFromSidebar)
-        {
-          setErrorMessageSidebar(message)
-        }
-        else
-        {
-          setErrorMessageEditDialog(message)
-        }
-        return false
-      }
-    }
-    else if (item.type === ItemType.RELATIONSHIP)
-    {
-      const isOperationSuccessful = onAddRelationshipsToNodes(item as Relationship)
-
-      if (!isOperationSuccessful)
-      {
-        const message = `Relationship in between source entity "${(item as Relationship)[Field.SOURCE_ENTITY]}" and target entity "${(item as Relationship)[Field.TARGET_ENTITY]}" already exists`
-        if (isItemFromSidebar)
-        {
-          setErrorMessageSidebar(message)
-        }
-        else
-        {
-          setErrorMessageEditDialog(message)
-        }
-        return false
-      }
-    }
-    else
-    {
-      console.log("Unknown item type: ", item.type)
-      return false
-    }
-    return true
-  }
     
     
   return {
-    parseSerializedConceptualModel, onEditItem, onAddNewAttribute, onSuggestItems, onSummaryPlainTextClick, capitalizeString,
-    onClickAddNode, onEditSuggestion, onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship, onAddItem, onAddAttributesToNode
+    parseSerializedConceptualModel, onEditItem, onAddNewAttribute, onSuggestItems, onSummaryPlainTextClick,
+    onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship
   }
 }
 

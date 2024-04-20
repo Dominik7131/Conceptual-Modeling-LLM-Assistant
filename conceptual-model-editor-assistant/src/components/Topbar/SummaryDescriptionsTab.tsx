@@ -55,7 +55,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
                                 <CheckIcon color="success"/>
                             </IconButton> */}
                         </li>
-                        { entity.attributes.length > 0 && 
+                        { entity.attributes.length > 0 &&
                             <ul>
                                 <p></p>
                                 <li><strong>Attributes</strong></li>
