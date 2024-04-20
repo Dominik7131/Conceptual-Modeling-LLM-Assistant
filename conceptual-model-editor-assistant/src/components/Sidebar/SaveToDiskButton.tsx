@@ -17,6 +17,7 @@ interface Props
 const SaveToDiskButton: React.FC<Props> = ({ item }): JSX.Element =>
 {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+    const [isClicked, setIsClicked] = useState(false)
     const open = Boolean(anchorEl)
 
     const domainDescription = useRecoilValue(domainDescriptionState)
@@ -40,6 +41,7 @@ const SaveToDiskButton: React.FC<Props> = ({ item }): JSX.Element =>
 
         fetch(SAVE_SUGESTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
 
+        setIsClicked(true)
         handleClose()
     }
 
@@ -61,15 +63,21 @@ const SaveToDiskButton: React.FC<Props> = ({ item }): JSX.Element =>
                 anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'left' }}>
 
-        <MenuItem onClick={ () => handleSendReaction(true) }>
+        <MenuItem
+            disabled={isClicked}
+            onClick={ () => handleSendReaction(true) }>
+
             <ListItemIcon sx={{display: 'flex', justifyContent:"center"}}>
-                <ThumbUpIcon  color="success" />
+                <ThumbUpIcon color="success" />
             </ListItemIcon>
         </MenuItem>
 
         <Divider/>
 
-        <MenuItem onClick={ () => handleSendReaction(false) }>
+        <MenuItem
+            disabled={isClicked}
+            onClick={ () => handleSendReaction(false) }>
+
             <ListItemIcon sx={{display: 'flex', justifyContent:"center"}}>
                 <ThumbDownIcon color="error"/>
             </ListItemIcon>

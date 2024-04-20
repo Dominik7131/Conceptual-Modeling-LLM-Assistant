@@ -16,6 +16,10 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
     const isAttribute = item.type === ItemType.ATTRIBUTE
     const isRelationship = item.type === ItemType.RELATIONSHIP
 
+    // Display original text in gray color if generated original text was not found in domain description
+    const customLightGray = "#b5b5b5"
+    const originalTextColor = item[Field.ORIGINAL_TEXT_INDEXES].length === 0 ? customLightGray : "black"
+
 
     return (
         <Stack marginTop={"15px"}>
@@ -23,7 +27,7 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
 
             {
                 item[Field.ORIGINAL_TEXT] &&
-                    <Typography> <strong>{ ItemFieldUIName.ORIGINAL_TEXT }:</strong> { item[Field.ORIGINAL_TEXT] } </Typography>
+                    <Typography color={originalTextColor}> <strong>{ ItemFieldUIName.ORIGINAL_TEXT }:</strong> { item[Field.ORIGINAL_TEXT] } </Typography>
             }
 
             {

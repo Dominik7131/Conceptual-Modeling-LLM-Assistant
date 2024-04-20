@@ -72,6 +72,7 @@ const useConceptualModel = () =>
       {
         // TODO: Do not use "any"
         (entity.attributes[index] as any).type = ItemType.ATTRIBUTE;
+
         (entity.attributes[index] as any).source = entityNameLowerCase
       }
 
