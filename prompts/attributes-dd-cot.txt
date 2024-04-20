@@ -9,28 +9,28 @@ This is the given context:
 "If the person is a natural person, his name, or, where applicable, first and last names and his birth number, if any, and, where applicable, his date of birth shall be entered."
 
 Output:
-Name: name
 Context: "If the person is a natural person, his name"
+Name: name
 Data type: string
 JSON object: {"originalText": "If the person is a natural person, his name", "name": "name", "dataType": "string"}
 
-Name: first name
 Context: "If the person is a natural person ... first names"
+Name: first name
 Data type: string
 JSON object: {"originalText": "If the person is a natural person ... first names", "name": "first name", "dataType": "string"}
 
-Name: last name
 Context: "If the person is a natural person ... last names"
+Name: last name
 Data type: string
 JSON object: {"originalText": "If the person is a natural person ... last names", "name": "last name", "dataType": "string"}
 
-Name: birth number
 Context: "If the person is a natural person ... his birth number"
-Data type: integer
+Name: birth number
+Data type: number
 JSON object: {"originalText": "If the person is a natural person ... his birth number", "name": "birth number", "dataType": "number"}
 
-Name: birth date
 Context: "If the person is a natural person ... his date of birth"
+Name: birth date
 Data type: date
 JSON object: {"originalText": "If the person is a natural person ... his date of birth", "name": "birth date", "dataType": "date"}
 
