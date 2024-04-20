@@ -38,7 +38,7 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
 
             {
                 errorMessage &&
-                <Typography>
+                <Typography component="span">
                     <Alert severity="error">
                         { errorMessage }
                     </Alert>

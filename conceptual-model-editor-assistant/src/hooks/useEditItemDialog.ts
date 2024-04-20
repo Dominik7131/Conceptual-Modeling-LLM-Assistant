@@ -18,21 +18,21 @@ const useEditItemDialog = () =>
     const domainDescription = useRecoilValue(domainDescriptionState)
     const setFieldToLoad = useSetRecoilState(fieldToLoadState)
 
-    const setWarningMessage = useSetRecoilState(editDialogErrorMsgState)   
+    const setErrorMessage = useSetRecoilState(editDialogErrorMsgState)   
 
 
     const onClose = (): void =>
     {
         onClearRegeneratedItem(null, true)
         setIsOpened(_ => false)
-        setWarningMessage(_ => "")
+        setErrorMessage(_ => "")
     }
 
     const onSave = (newItem: Item, oldItem: Item): void =>
     {
         if (!newItem.name)
         {
-            setWarningMessage(_ => "Name cannot be empty")
+            setErrorMessage(_ => "Name cannot be empty")
             return
         }
     
@@ -263,12 +263,13 @@ const useEditItemDialog = () =>
             "domainDescription": domainDescription
         })
 
+        setErrorMessage("")
         setFieldToLoad(fieldsToLoad => [...fieldsToLoad, field])
-        fetchStreamedDataGeneral(bodyData, name, field)
+        fetchStreamedDataGeneral(bodyData, field)
     }
 
     // TODO: Put this fetch-function into a separate file
-    const fetchStreamedDataGeneral = (bodyData: any, attributeName: string, field: Field) =>
+    const fetchStreamedDataGeneral = (bodyData: any, field: Field) =>
     {
         fetch(EDIT_ITEM_URL, { method: "POST", headers: HEADER, body: bodyData })
         .then(response =>
@@ -302,7 +303,7 @@ const useEditItemDialog = () =>
                     })
                     .catch(error =>
                     {
-                        console.error(error);
+                        console.error(error)
                         setFieldToLoad(fields => fields.filter(currentField => currentField !== field))
                     })
             }
@@ -310,8 +311,10 @@ const useEditItemDialog = () =>
         })
         .catch(error =>
         {
-            console.error(error);
-            alert("Error: request failed")
+            console.error(error)
+            const message = "Server is not responding"
+            setErrorMessage(message)
+            setFieldToLoad(fields => fields.filter(currentField => currentField !== field))
         })
     }
 
@@ -336,7 +339,7 @@ const useEditItemDialog = () =>
         // If the item is attribute then transform it into relationship
         // Otherwise transform relationsip into attribute
 
-        setWarningMessage(_ => "")
+        setErrorMessage(_ => "")
     
         if (item.type === ItemType.ATTRIBUTE)
         {

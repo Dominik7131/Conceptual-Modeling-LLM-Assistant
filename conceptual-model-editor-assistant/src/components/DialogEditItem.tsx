@@ -150,7 +150,7 @@ const DialogEditItem: React.FC = () =>
                     isAttribute &&
                     <>
                         { showEditField(ItemFieldUIName.DATA_TYPE, Field.DATA_TYPE, attribute[Field.DATA_TYPE]) }
-                        { showEditField(ItemFieldUIName.CARDINALITY, Field.CARDINALITY, attribute[Field.SOURCE_CARDINALITY]) }
+                        { showEditField(ItemFieldUIName.CARDINALITY, Field.SOURCE_CARDINALITY, attribute[Field.SOURCE_CARDINALITY]) }
                     </>
                 }
 

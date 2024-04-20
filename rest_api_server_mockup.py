@@ -29,9 +29,9 @@ def suggest():
         def generate_mock_up():
             # time.sleep(2)
             if user_choice == "attributes" or user_choice == "entities":
-                # yield '{"originalText": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "originalTextIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
+                yield '{"originalText": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "originalTextIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
                 # time.sleep(2)
-                # yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
+                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
                 # time.sleep(2)
                 pass
             else:

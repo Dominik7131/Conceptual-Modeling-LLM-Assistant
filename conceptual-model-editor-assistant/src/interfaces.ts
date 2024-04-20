@@ -25,7 +25,6 @@ export const enum Field
   ORIGINAL_TEXT = "originalText",
   ORIGINAL_TEXT_INDEXES = "originalTextIndexes",
   DATA_TYPE = "dataType",
-  CARDINALITY = "cardinality",
   SOURCE_ENTITY = "source",
   TARGET_ENTITY = "target",
   SOURCE_CARDINALITY = "sourceCardinality",

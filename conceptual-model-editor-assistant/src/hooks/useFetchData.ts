@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Field, ItemType, SummaryObject } from "../interfaces";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState } from "../atoms";
+import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedEntitiesState, suggestedAttributesState, suggestedRelationshipsState } from "../atoms";
 import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL } from "./useUtility";
 
 
@@ -36,6 +36,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
 
       const controller = new AbortController()
       const signal = controller.signal
+      let isEmptyResponse = true
       
       fetch(SUGGEST_ITEMS_URL, { method: "POST", headers: HEADER, body: bodyData, signal: signal })
       .then(response =>
@@ -67,11 +68,22 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
                   {
                       if (done)
                       {
-                          console.log("Stream finished")
-                          setItemTypesToLoad(previousItems => previousItems.filter(currentItemType => currentItemType !== itemType))
-                          return
+                        console.log("Stream finished")
+                        setItemTypesToLoad(previousItems => previousItems.filter(currentItemType => currentItemType !== itemType))
+
+                        const isNothingFound = (itemType === ItemType.ENTITY && isEmptyResponse) ||
+                                               (itemType === ItemType.ATTRIBUTE && isEmptyResponse) ||
+                                               (itemType === ItemType.RELATIONSHIP && isEmptyResponse)
+
+                        if (isNothingFound)
+                        {
+                          const message = "No suggestions found"
+                          setErrorMessage(message)
+                        }
+                        return
                       }
 
+                      isEmptyResponse = false
                       onProcessStreamedData(value, sourceEntityName, itemType)
 
                       // Read the next chunk
@@ -87,6 +99,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
       })
       .catch(error =>
       {
+        console.error(error)
         setItemTypesToLoad(previousItems => previousItems.filter(currentItemType => currentItemType !== itemType))
         const errorMessage = "Server is not responding"
         setErrorMessage(errorMessage)
