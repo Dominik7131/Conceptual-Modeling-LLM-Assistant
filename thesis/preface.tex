@@ -1,3 +1,61 @@
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
+When a team is working on any project, it is beneficial to unify the language and define the terms 
+that everyone will use. This is addressed by creating conceptual models. In a nutshell, conceptual 
+models capture entities, their attributes and relationships. However, creating these conceptual 
+models takes a non-trivial amount of time. \\
+
+There has been a lot of recent progress in the development of Large Language Models (LLMs) such 
+as ChatGPT. We hypothesize that these LLMs could be used in such a way as to make it easier for 
+users to create conceptual models. We know that current LLMs are not smart enough to directly 
+create the conceptual model one expects for a given textual description. However, one possible 
+solution is to use an LLM as an assistant, which we see around us a lot today (e.g. Copilot). 
+
+
+\section*{Problem definition}
+
+- main use-case: from given domain description help user to create a conceptual model \\
+
+
+\section*{Possible approaches}
+
+
+\subsection*{training own LLM}
+- cons: requires a ton of resources: money, time, data
+
+
+\subsection*{fine-tuning existing LLM}
+- cons: requires a lot of data
+
+
+\subsection*{prompt engineering of existing LLM}
+- pros: doesn't require that much resources
+
+
+\section*{Selected approach}
+
+- definition of our problems (entities, attributes and relationships extraction) \\
+- (when extracting entities first LLM needs to locate the entity in the text) \\
+
+\section*{How to achieve better results with using an existing LLM}
+- RAG (provide LLM only the part of domain description that contains the wanted info) \\
+- advanced prompt engineering techniques (CoT, ToT, few-shot prompting) \\
+
+
+\section*{Data}
+
+- which data we use for testing
+
+
+\section*{Prompt engineering}
+- subsections: CoT, ToT, few-shot prompting \\
+- CoT can be further divided into more approaches
+
+
+\section*{RAG methods}
+- TODO: brief explanation of what RAG is, how it works and why it works \\
+- RAG approaches: semantic vs. syntactic (more in GAO, Yunfan, et al. Retrieval-augmented generation for large language models: A survey.) \\
+
+
+\section*{Related works}
