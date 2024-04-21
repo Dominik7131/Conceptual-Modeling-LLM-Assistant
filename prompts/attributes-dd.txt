@@ -1,6 +1,6 @@
 Solely based on the following context which attributes does the entity: "{source_entity}" have?
 
-Output each attribute output in JSON object like this: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name, "dataType": "data type of the attribute"}.
+Output each attribute in JSON object like this: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name", "dataType": "data type of the attribute"}.
 
 
 EXAMPLE START
@@ -13,7 +13,7 @@ Output:
 {"originalText": "If the person is a natural person, his name", "name": "name", "dataType": "string"}
 {"originalText": "If the person is a natural person ... first names", "name": "first name", "dataType": "string"}
 {"originalText": "If the person is a natural person ... last names", "name": "last name", "dataType": "string"}
-{"originalText": "If the person is a natural person ... his birth number", "name": "birth number", "dataType": "integer"}
+{"originalText": "If the person is a natural person ... his birth number", "name": "birth number", "dataType": "number"}
 {"originalText": "If the person is a natural person ... his date of birth", "name": "birth date", "dataType": "date"}
 
 EXAMPLE END

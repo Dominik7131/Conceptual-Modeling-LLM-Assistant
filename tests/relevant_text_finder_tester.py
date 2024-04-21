@@ -6,7 +6,7 @@ from text_utility import TextUtility
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 
 PATH_TO_DATA_DIRECTORY = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
-TEST_DATA_FILE_PATH = f"{PATH_TO_DATA_DIRECTORY}relevant_texts.json"
+TEST_DATA_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "relevant_texts.json")
 INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "56-2001-extract-llm-assistant-test-case.txt")
 
 class RAGTester:
@@ -42,14 +42,16 @@ class RAGTester:
     
 
     def output_relevant_text_for_given_entities():
-        entities = ["vehicle type", "motorised vehicle", "structural component", "manufacturer", "vehicle system", "owner", "operator", "natural person", "business natural person", "address", "legal person", "registration", "registration application", "third party insurance", "insurance contract", "policy holder", "insurer", "green card", "technical inspection", "technical inspection report", "defect"]
-
-        chunks, is_bullet_point_list, text_references = RelevantTextFinderLemmatization.load_chunks()
-        print()
+        # entities = ["vehicle type", "motorised vehicle", "structural component", "manufacturer", "vehicle system", "owner", "operator", "natural person", "business natural person", "address", "legal person", "registration", "registration application", "third party insurance", "insurance contract", "policy holder", "insurer", "green card", "technical inspection", "technical inspection report", "defect"]
+        entities = ["motorised vehicle"]
         
+        relevant_text_finder = RelevantTextFinderLemmatization()
+
+        with open(INPUT_DOMAIN_DESCRIPTION_FILE_PATH, 'r') as domain_description_file:
+            domain_description = domain_description_file.read()
+
         for entity in entities:
-            entity_lemmas = RelevantTextFinderLemmatization.get_lemmas(entity)
-            relevant_texts = RelevantTextFinderLemmatization.get(entity_lemmas, chunks, is_bullet_point_list, text_references)
+            relevant_texts = relevant_text_finder.get(entity, domain_description)
             print(f"Entity: {entity}")
             for text in relevant_texts:
                 print(text)
@@ -138,9 +140,9 @@ class RAGTester:
 
 
 def main():
-    RAGTester.test_lemmas_approach()
+    # RAGTester.test_lemmas_approach()
 
-    #RAGTester.output_relevant_text_for_given_entities()
+    RAGTester.output_relevant_text_for_given_entities()
 
 
 if __name__ == "__main__":

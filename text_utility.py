@@ -70,49 +70,6 @@ class TextUtility:
         else:
             raise ValueError(f"Error: Unknown model type '{model_type}'")
         return llm_prompt
-    
-
-    def build_llama2_prompt(messages):
-        # llama2 prompt format: https://huggingface.co/blog/llama2#how-to-prompt-llama-2
-        start_prompt = "<s>[INST] "
-        end_prompt = " [/INST]"
-        conversation = []
-        for index, message in enumerate(messages):
-            if message["role"] == "system" and index == 0:
-                conversation.append(f"<<SYS>>\n{message['content']}\n<</SYS>>\n\n")
-            elif message["role"] == "user":
-                conversation.append(message["content"].strip())
-            else:
-                conversation.append(f" [/INST] {message['content'].strip()} </s><s>[INST] ")
-
-        return start_prompt + "".join(conversation) + end_prompt
-
-
-    def build_openchat_prompt(messages):
-        user_start = "GPT4 Correct User: "
-        #user_start = "GPT4 User: "
-        assistant_start = "GPT4 Correct Assistant:"
-        #assistant_start = "GPT4 Assistant:"
-        end_of_turn = "<|end_of_turn|>"
-
-        result = ""
-        for index, message in enumerate(messages):
-            if message["role"] == "system":
-                if index != 0:
-                    raise ValueError("Error: Non-first system message not implemented")
-                result += message["content"]
-                result += end_of_turn
-    
-            elif message["role"] == "user":
-                result += user_start
-                result += message["content"].strip()
-                result += end_of_turn
-                result += assistant_start
-            else:
-                result += message["content"].strip()
-                result += end_of_turn
-        
-        return result
 
 
     def messages_prettify(messages):
@@ -150,56 +107,6 @@ class TextUtility:
             if "cardinality" in json_item:
                 result += f"- Cardinality: {json_item['cardinality']}\n"
         
-        return result
-
-
-    def build_json(names, descriptions, times_to_repeat, is_elipsis=False):
-
-        positions = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
-
-        result = "["
-        for i in range(times_to_repeat):
-            result += '{'
-            for j in range(len(names)):
-                current_description = descriptions[j].replace('*', positions[i])
-                result += '"' + names[j] + '": ' + current_description
-                if j + 1 < len(names):
-                    result += ', '
-            result += '}'
-            if i + 1 < times_to_repeat:
-                result += ', '
-        
-        if is_elipsis:
-            result += ", ..."
-        result += "]"
-        return result
-    
-
-    def build_json2(names, descriptions, times_to_repeat, is_elipsis=False):
-        # like `build` but as an example show first JSON object, elipsis, last JSON object
-        positions = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
-
-        result = "["
-        for i in range(times_to_repeat):
-            result += '{'
-            for j in range(len(names)):
-                current_description = descriptions[j].replace('*', positions[i])
-                result += '"' + names[j] + '": ' + current_description
-                if j + 1 < len(names):
-                    result += ', '
-            result += '}'
-            if i + 1 < times_to_repeat:
-                result += ', '
-        
-        if is_elipsis:
-            result += ", ... , {"
-            for j in range(len(names)):
-                    current_description = descriptions[j]
-                    result += '"' + names[j] + '": ' + current_description
-                    if j + 1 < len(names):
-                        result += ', '
-
-        result += "}]"
         return result
 
 

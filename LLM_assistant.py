@@ -357,7 +357,7 @@ class LLMAssistant:
         self.messages = []
         self.__append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
 
-        # TODO: Use method __get_relevant_texts but first somehow add this condition: "user_choice != UserChoice.ENTITIES.value" 
+
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION and user_choice != UserChoice.ENTITIES.value:
             relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
 

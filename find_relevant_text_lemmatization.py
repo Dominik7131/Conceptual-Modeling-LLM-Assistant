@@ -34,7 +34,7 @@ class RelevantTextFinderLemmatization:
     def cache_chunks(self):
         with open(CACHED_FILE_PATH, 'w') as file:
             for chunk in self.edited_chunks:
-                lemmas = self.tagger.get_lemmas(chunk)
+                lemmas = self.tagger.get_lemmas_one_by_one(chunk)
                 lemmas_json = json.dumps(lemmas)
                 lemmas_json = '{"lemmas" : ' + lemmas_json + ' }'
 
@@ -47,7 +47,7 @@ class RelevantTextFinderLemmatization:
         is_chunk_included = []
 
         self.load_chunks(domain_description)
-        entity_lemmas = self.tagger.get_lemmas(entity)
+        entity_lemmas = self.tagger.get_lemmas_one_by_one(entity)
 
         if IS_USE_CACHE:
 
@@ -84,7 +84,7 @@ class RelevantTextFinderLemmatization:
 
         for index, chunk in enumerate(self.chunks):
 
-            chunk_lemmas_list = self.tagger.get_lemmas(chunk)
+            chunk_lemmas_list = self.tagger.get_lemmas_one_by_one(chunk)
 
             # Check if entity lemmas are contained in chunk lemmas
             are_entity_lemmas_contained = True
