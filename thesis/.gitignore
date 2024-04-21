@@ -12,3 +12,4 @@ aux/
 *.toc
 *.xmpdata
 *.xmpi
+*.synctex.gz
