@@ -1,38 +1,33 @@
-Solely based on the following context which attributes does the entity: "{source_entity}" have?
+Solely based on the given context which attributes does the entity: "{source_entity}" have?
 
-For each attribute output its name and copy the part of the given context containing this attribute and data type and then output this attribute in JSON object like this: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name", "dataType": "data type of the attribute"}.
+For each attribute output its name and copy the part of the given context containing this attribute and then output this attribute in JSON object like this: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name"}.
 
 EXAMPLE START
 
-Solely based on the following context which attributes does the entity: "natural person" have?
+Solely based on the given context which attributes does the entity: "natural person" have?
 This is the given context:
 "If the person is a natural person, his name, or, where applicable, first and last names and his birth number, if any, and, where applicable, his date of birth shall be entered."
 
 Output:
 Context: "If the person is a natural person, his name"
 Name: name
-Data type: string
-JSON object: {"originalText": "If the person is a natural person, his name", "name": "name", "dataType": "string"}
+JSON object: {"originalText": "If the person is a natural person, his name", "name": "name"}
 
 Context: "If the person is a natural person ... first names"
 Name: first name
-Data type: string
-JSON object: {"originalText": "If the person is a natural person ... first names", "name": "first name", "dataType": "string"}
+JSON object: {"originalText": "If the person is a natural person ... first names", "name": "first name"}
 
 Context: "If the person is a natural person ... last names"
 Name: last name
-Data type: string
-JSON object: {"originalText": "If the person is a natural person ... last names", "name": "last name", "dataType": "string"}
+JSON object: {"originalText": "If the person is a natural person ... last names", "name": "last name"}
 
 Context: "If the person is a natural person ... his birth number"
 Name: birth number
-Data type: number
-JSON object: {"originalText": "If the person is a natural person ... his birth number", "name": "birth number", "dataType": "number"}
+JSON object: {"originalText": "If the person is a natural person ... his birth number", "name": "birth number"}
 
 Context: "If the person is a natural person ... his date of birth"
 Name: birth date
-Data type: date
-JSON object: {"originalText": "If the person is a natural person ... his date of birth", "name": "birth date", "dataType": "date"}
+JSON object: {"originalText": "If the person is a natural person ... his date of birth", "name": "birth date"}
 
 EXAMPLE END
 
