@@ -1,6 +1,5 @@
 import os
 
-import requests
 from text_utility import Field, PromptFileSymbols, TextUtility, UserChoice, DataType
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
