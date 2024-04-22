@@ -198,11 +198,11 @@ export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
   }
   else if (item.type === ItemType.ATTRIBUTE)
   {
-    return onAddAttributesToNode(item as Attribute, setNodes)
+    return onAddAttribute(item as Attribute, setNodes)
   }
   else if (item.type === ItemType.RELATIONSHIP)
   {
-    return onAddRelationshipsToNodes(item as Relationship, setNodes, setEdges)
+    return onAddRelationship(item as Relationship, setNodes, setEdges)
   }
   else
   {
@@ -233,7 +233,7 @@ export const addEntity = (entity: Entity, positionX: number, positionY: number, 
 }
 
 
-const onAddAttributesToNode = (attribute : Attribute, setNodes: any) =>
+const onAddAttribute = (attribute : Attribute, setNodes: any) =>
 {
   const nodeID = attribute.source
   let isAttributePresent = false
@@ -271,7 +271,7 @@ const onAddAttributesToNode = (attribute : Attribute, setNodes: any) =>
 }
 
 
-const onAddRelationshipsToNodes = (relationship : Relationship, setNodes: any, setEdges: any): boolean =>
+const onAddRelationship = (relationship : Relationship, setNodes: any, setEdges: any): boolean =>
 {
   // Returns "true" if the operation was successfull otherwise "false"
 
@@ -303,9 +303,11 @@ const onAddRelationshipsToNodes = (relationship : Relationship, setNodes: any, s
 
   const edgeData: EdgeData = { relationship: relationship }
 
+  const markerEnd = relationship[Field.IS_GENERALIZATION] ? CUSTOM_ISA_EDGE_MARKER : CUSTOM_EDGE_MARKER
+
   const newEdge : Edge = {
     id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: edgeData,
-    markerEnd: CUSTOM_EDGE_MARKER
+    markerEnd: markerEnd
   }
 
   setEdges((previousEdges: Edge[]) =>
