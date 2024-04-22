@@ -2,20 +2,17 @@ import { useEffect } from 'react';
 import { Node, Edge, MarkerType, getMarkerEnd } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, changeTitle, convertConceptualModelToJSON, createEdgeID, userChoiceToItemType } from './useUtility';
+import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, changeSidebarTab, changeTitle, convertConceptualModelToJSON, createEdgeID, onClearSuggestedItems, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, SidebarTabs, TopbarTabs, UserChoice } from '../interfaces';
+import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, Field, ItemType, NodeData, Relationship, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
+import { domainDescriptionState, edgesState, isIgnoreDomainDescriptionState, nodesState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
 
 
 const useConceptualModel = () =>
 {
   const setNodes = useSetRecoilState(nodesState)
   const setEdges = useSetRecoilState(edgesState)
-
-  const selectedNodes = useRecoilValue(selectedNodesState)
-  const selectedEdges = useRecoilValue(selectedEdgesState)
 
   const setSuggestedEntities = useSetRecoilState(suggestedEntitiesState)
   const setSuggestedAttributes = useSetRecoilState(suggestedAttributesState)
@@ -26,16 +23,13 @@ const useConceptualModel = () =>
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
 
-  const setTopbarTabValue = useSetRecoilState(topbarTabValueState)
   const setSidebarTab = useSetRecoilState(sidebarTabValueState)
 
 
-  const { fetchSummaryPlainText, fetchSummaryDescriptions, fetchStreamedData } = useFetchData({ onClearSuggestedItems, onProcessStreamedData })
-
-  let IDToAssign = 0
+  const { fetchStreamedData } = useFetchData()
 
 
-  const parseSerializedConceptualModel = () =>
+  const parseSerializedConceptualModel = (): void =>
   {
     const input = { entities: [
         {name: "Engine", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
@@ -116,90 +110,6 @@ const useConceptualModel = () =>
   }
 
 
-  const assignID = () =>
-  {
-    const newID = IDToAssign
-    IDToAssign += 1
-    return newID
-  }
-
-
-  function onProcessStreamedData(value: any, sourceEntityName: string, itemType: ItemType): void
-  {
-    // Convert the `value` to a string
-    var jsonString = new TextDecoder().decode(value)
-
-    // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
-    const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
-
-    for (let i = 0; i < jsonStringParts.length; i++)
-    {
-      let item : Item = JSON.parse(jsonStringParts[i])
-      item[Field.ID] = assignID()
-      item[Field.TYPE] = itemType
-
-      if (itemType === ItemType.ENTITY)
-      {
-        setSuggestedEntities(previousSuggestedItems => {
-          return [...previousSuggestedItems, item]
-        })
-      }
-
-      if (itemType === ItemType.ATTRIBUTE)
-      {
-        let attribute: Attribute = item as Attribute
-        attribute[Field.SOURCE_ENTITY] = sourceEntityName
-
-        setSuggestedAttributes(previousSuggestedItems => {
-          return [...previousSuggestedItems, attribute]
-        })
-      }
-      else if (itemType === ItemType.RELATIONSHIP)
-      {
-        let relationship: Relationship = item as Relationship
-        relationship[Field.SOURCE_ENTITY] = sourceEntityName
-
-        setSuggestedRelationships(previousSuggestedItems => {
-          return [...previousSuggestedItems, relationship]
-        })
-      }
-    }
-  }
-
-
-  function onClearSuggestedItems(itemType: ItemType): void
-  {
-    if (itemType === ItemType.ENTITY)
-    {
-      setSuggestedEntities(_ => [])
-    }
-    else if (itemType === ItemType.ATTRIBUTE)
-    {
-      setSuggestedAttributes(_ => [])
-    }
-    else if (itemType === ItemType.RELATIONSHIP)
-    {
-      setSuggestedRelationships(_ => [])
-    }
-  }
-
-  const changeSidebarTab = (itemType: ItemType) =>
-  {
-    if (itemType === ItemType.ENTITY)
-    {
-      setSidebarTab(SidebarTabs.ENTITIES)
-    }
-    else if (itemType === ItemType.ATTRIBUTE)
-    {
-      setSidebarTab(SidebarTabs.ATTRIBUTES)
-    }
-    else if (itemType === ItemType.RELATIONSHIP)
-    {
-      setSidebarTab(SidebarTabs.RELATIONSHIPS)
-    }
-  }
-
-
   const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
   {
     const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
@@ -209,8 +119,8 @@ const useConceptualModel = () =>
 
     const itemType: ItemType = userChoiceToItemType(userChoice)
 
-    onClearSuggestedItems(itemType)
-    changeSidebarTab(itemType)
+    onClearSuggestedItems(itemType, setSuggestedEntities, setSuggestedAttributes, setSuggestedRelationships)
+    changeSidebarTab(itemType, setSidebarTab)
     changeTitle(userChoice, sourceItemName, targetItemName, setSidebarTitles)
 
 
@@ -219,43 +129,8 @@ const useConceptualModel = () =>
     fetchStreamedData(bodyData, sourceItemName, itemType)
   }
 
-
-  const onSummaryPlainTextClick = (): void =>
-  {
-    if (selectedNodes.length === 0)
-    {
-      alert("Nothing was selected")
-      return
-    }
-
-    setTopbarTabValue(TopbarTabs.SUMMARY_PLAIN_TEXT)
-
-    const conceptualModel = convertConceptualModelToJSON(selectedNodes, selectedEdges, false)
-    const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
-
-    fetchSummaryPlainText(bodyData)
-  }
-
-
-  const onSummaryDescriptionsClick = (): void =>
-  {
-    if (selectedNodes.length === 0)
-    {
-      alert("Nothing was selected")
-      return
-    }
-
-    setTopbarTabValue(TopbarTabs.SUMMARY_DESCRIPTION)
-
-    const conceptualModel = convertConceptualModelToJSON(selectedNodes, selectedEdges, true)
-    const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
-
-    fetchSummaryDescriptions(bodyData)
-    return
-  }
     
-    
-  return { parseSerializedConceptualModel, onSuggestItems, onSummaryPlainTextClick, onSummaryDescriptionsClick }
+  return { parseSerializedConceptualModel, onSuggestItems }
 }
 
 export default useConceptualModel

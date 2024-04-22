@@ -1,5 +1,5 @@
 import { Alert, Box, CircularProgress, Divider, ListItem, Stack, Typography } from "@mui/material"
-import { Item, ItemType } from "../../interfaces"
+import { Field, Item, ItemType } from "../../interfaces"
 import ItemDisplay from "./ItemDisplay"
 import ControlButtons from "./ControlButtons"
 import { useRecoilValue } from "recoil"
@@ -18,6 +18,15 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
     const errorMessage = useRecoilValue(sidebarErrorMsgState)
     const itemTypesToLoad = useRecoilValue(itemTypesToLoadState)
 
+
+    const createUniqueKey = (name: string, sourceEntity: string, targetEntity: string): string =>
+    {
+        if (!sourceEntity) { sourceEntity = "" }
+        if (!targetEntity) { targetEntity = "" }
+
+        const uniqueKey = `${name}-${sourceEntity}-${targetEntity}`
+        return uniqueKey
+    }
 
     return (
 
@@ -47,7 +56,7 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
 
             {
                 items.map(item =>
-                    <ListItem key={item.ID}>
+                    <ListItem key={ createUniqueKey(item[Field.NAME], (item as any)[Field.SOURCE_ENTITY], (item as any)[Field.TARGET_ENTITY]) }>
                         <Stack>
                             <ItemDisplay item={item}/>
                             <ControlButtons item={item}/>

@@ -4,10 +4,12 @@ import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import useConceptualModel from "../../hooks/useConceptualModel";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
-import { Entity, Field, ItemType, UserChoice } from "../../interfaces";
-import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME } from "../../hooks/useUtility";
-import { useSetRecoilState } from "recoil";
-import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from "../../atoms";
+import { Entity, Field, ItemType, TopbarTabs, UserChoice } from "../../interfaces";
+import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME, convertConceptualModelToJSON } from "../../hooks/useUtility";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { domainDescriptionState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, topbarTabValueState } from "../../atoms";
+import SummaryPlainTextButton from "./SummaryPlainTextButton";
+import SummaryDescriptionsButton from "./SummaryDescriptionsButton";
 
 
 const ControlButtons: React.FC = (): JSX.Element =>
@@ -18,8 +20,8 @@ const ControlButtons: React.FC = (): JSX.Element =>
 
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
-        
-    const { onSuggestItems, onSummaryPlainTextClick, onSummaryDescriptionsClick } = useConceptualModel()
+
+    const { onSuggestItems } = useConceptualModel()
 
 
     const onAddNewEntity = () : void =>
@@ -58,29 +60,16 @@ const ControlButtons: React.FC = (): JSX.Element =>
                         sx={{textTransform: "none"}}
                         disableElevation
                         startIcon={<AddIcon/>}
-                        onClick={onAddNewEntity}>
+                        onClick={ onAddNewEntity }>
                             Add new entity
                     </Button>
                 </Stack>
 
                 <Stack direction="row" spacing={2}>
-                    <Button
-                        variant="contained"
-                        sx={{textTransform: "none"}}
-                        disableElevation
-                        startIcon={<AutoFixHighIcon/>}
-                        onClick={ onSummaryPlainTextClick }>
-                            { SUMMARY_PLAIN_TEXT_NAME }
-                    </Button>
 
-                    <Button
-                        variant="contained"
-                        sx={{textTransform: "none"}}
-                        disableElevation
-                        startIcon={<AutoFixHighIcon/>}
-                        onClick={ onSummaryDescriptionsClick }>
-                            { SUMMARY_DESCRIPTIONS_NAME }
-                    </Button>
+                    <SummaryPlainTextButton/>
+
+                    <SummaryDescriptionsButton/>
                     
                     <HighlightSelectedItemsButton/>
                 </Stack>

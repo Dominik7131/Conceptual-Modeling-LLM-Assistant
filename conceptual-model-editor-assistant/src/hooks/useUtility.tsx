@@ -1,5 +1,5 @@
 import { SetterOrUpdater } from "recoil";
-import { Attribute, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, UserChoice } from "../interfaces"
+import { Attribute, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, SidebarTabs, UserChoice } from "../interfaces"
 import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
 
 
@@ -421,6 +421,43 @@ export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targ
   }
 }
 
+
+export const onClearSuggestedItems = (itemType: ItemType, setSuggestedEntities: any, setSuggestedAttributes: any, setSuggestedRelationships: any): void =>
+{
+  if (itemType === ItemType.ENTITY)
+  {
+    setSuggestedEntities([])
+  }
+  else if (itemType === ItemType.ATTRIBUTE)
+  {
+    setSuggestedAttributes([])
+  }
+  else if (itemType === ItemType.RELATIONSHIP)
+  {
+    setSuggestedRelationships([])
+  }
+}
+
+
+export const changeSidebarTab = (itemType: ItemType, setSidebarTab: any) =>
+{
+  if (itemType === ItemType.ENTITY)
+  {
+    setSidebarTab(SidebarTabs.ENTITIES)
+  }
+  else if (itemType === ItemType.ATTRIBUTE)
+  {
+    setSidebarTab(SidebarTabs.ATTRIBUTES)
+  }
+  else if (itemType === ItemType.RELATIONSHIP)
+  {
+    setSidebarTab(SidebarTabs.RELATIONSHIPS)
+  }
+  else
+  {
+    throw Error(`Received unknown item type: ${itemType}`)
+  }
+}
 
 export const CUSTOM_EDGE_MARKER: EdgeMarker = { type: MarkerType.Arrow, width: 50, height: 50, strokeWidth: 1 }
 export const CUSTOM_ISA_EDGE_MARKER: EdgeMarker = { type: MarkerType.ArrowClosed, width: 40, height: 40, strokeWidth: 0.8 }

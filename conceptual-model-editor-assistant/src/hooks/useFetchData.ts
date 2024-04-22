@@ -1,25 +1,23 @@
 import { useState } from "react";
-import { Field, ItemType, SummaryObject } from "../interfaces";
+import { Attribute, Field, Item, ItemType, Relationship, SummaryObject } from "../interfaces";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedEntitiesState, suggestedAttributesState, suggestedRelationshipsState } from "../atoms";
-import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL } from "./useUtility";
+import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL, onClearSuggestedItems } from "./useUtility";
 
 
-interface Props
+const useFetchData = () =>
 {
-  onClearSuggestedItems: (itemType: ItemType) => void
-  onProcessStreamedData: (value: any, sourceEntityName: string, itemType: ItemType) => void
-}
-
-const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =>
-{
-    // TODO: Split all fetch data methods to a separate files
+    // TODO: Split all fetch data methods into separate files
     const [itemTypesToLoad, setItemTypesToLoad] = useRecoilState(itemTypesToLoadState)
     const setIsLoadingSummary1 = useSetRecoilState(isLoadingSummaryPlainTextState)
     const setIsLoadingSummaryDescriptions = useSetRecoilState(isLoadingSummaryDescriptionsState)
 
     const setSummaryText = useSetRecoilState(summaryTextState)
     const setSummaryDescriptions = useSetRecoilState(summaryDescriptionsState)
+
+    const setSuggestedEntities = useSetRecoilState(suggestedEntitiesState)
+    const setSuggestedAttributes = useSetRecoilState(suggestedAttributesState)
+    const setSuggestedRelationships = useSetRecoilState(suggestedRelationshipsState)
 
     const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
 
@@ -42,7 +40,7 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
       .then(response =>
         {
           // Reset all suggested items
-          onClearSuggestedItems(itemType)
+          onClearSuggestedItems(itemType, setSuggestedEntities, setSuggestedAttributes, setSuggestedRelationships)
           setErrorMessage("")
 
           if (!itemTypesToLoad.includes(itemType))
@@ -107,146 +105,189 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
     }
 
 
-    const fetchSummaryPlainText = (bodyData : any) =>
+  const onProcessStreamedData = (value: any, sourceEntityName: string, itemType: ItemType): void =>
+  {
+    // Convert the `value` to a string
+    var jsonString = new TextDecoder().decode(value)
+
+    // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
+    const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
+
+    for (let i = 0; i < jsonStringParts.length; i++)
     {
-      setIsLoadingSummary1(_ => true)
+      let item : Item = JSON.parse(jsonStringParts[i])
+      item[Field.ID] = 0
+      item[Field.TYPE] = itemType
 
-      fetch(SUMMARY_PLAIN_TEXT_URL, { method: "POST", headers: HEADER, body: bodyData })
-      .then(response =>
+      if (itemType === ItemType.ENTITY)
       {
-          const stream = response.body // Get the readable stream from the response body
+        setSuggestedEntities(previousSuggestedItems => {
+          return [...previousSuggestedItems, item]
+        })
+      }
 
-          if (stream === null)
-          {
-            console.log("Stream is null")
-            setIsLoadingSummary1(_ => false)
-            return
-          }
+      if (itemType === ItemType.ATTRIBUTE)
+      {
+        let attribute: Attribute = item as Attribute
+        attribute[Field.SOURCE_ENTITY] = sourceEntityName
 
-          const reader = stream.getReader()
+        setSuggestedAttributes(previousSuggestedItems => {
+          return [...previousSuggestedItems, attribute]
+        })
+      }
+      else if (itemType === ItemType.RELATIONSHIP)
+      {
+        let relationship: Relationship = item as Relationship
+        relationship[Field.SOURCE_ENTITY] = sourceEntityName
 
-          const readChunk = () =>
-          {
-              reader.read()
-                  .then(({value, done}) =>
-                  {
-                      if (done)
-                      {
-                          console.log("Stream finished")
-                          setIsLoadingSummary1(_ => false)
-                          return
-                      }
+        setSuggestedRelationships(previousSuggestedItems => {
+          return [...previousSuggestedItems, relationship]
+        })
+      }
+    }
+  }
 
-                      // Convert the `value` to a string
-                      var jsonString = new TextDecoder().decode(value)
-                      console.log("JsonString: ", jsonString)
-                      
-                      const parsedData = JSON.parse(jsonString)
+
+  const fetchSummaryPlainText = (bodyData : any) =>
+  {
+    setIsLoadingSummary1(_ => true)
+
+    fetch(SUMMARY_PLAIN_TEXT_URL, { method: "POST", headers: HEADER, body: bodyData })
+    .then(response =>
+    {
+        const stream = response.body // Get the readable stream from the response body
+
+        if (stream === null)
+        {
+          console.log("Stream is null")
+          setIsLoadingSummary1(_ => false)
+          return
+        }
+
+        const reader = stream.getReader()
+
+        const readChunk = () =>
+        {
+            reader.read()
+                .then(({value, done}) =>
+                {
+                    if (done)
+                    {
+                        console.log("Stream finished")
+                        setIsLoadingSummary1(_ => false)
+                        return
+                    }
+
+                    // Convert the `value` to a string
+                    var jsonString = new TextDecoder().decode(value)
+                    console.log("JsonString: ", jsonString)
+                    
+                    const parsedData = JSON.parse(jsonString)
+                    console.log("Parsed data:", parsedData)
+                    setSummaryText(parsedData["summary"])
+
+                    readChunk() // Read the next chunk
+                })
+                .catch(error =>
+                {
+                  console.error(error)
+                })
+        }
+        readChunk() // Start reading the first chunk
+    })
+    .catch(error =>
+    {
+      console.error(error)
+      setIsLoadingSummary1(_ => false)
+      alert("Error: request failed")
+    })
+  }
+
+  const fetchSummaryDescriptions = (bodyData : any) =>
+  {
+    setIsLoadingSummaryDescriptions(_ => true)
+
+    setSummaryDescriptions({entities: [], relationships: []})
+
+    fetch(SUMMARY_DESCRIPTIONS_URL, { method: "POST", headers: HEADER, body: bodyData })
+    .then(response =>
+    {
+        const stream = response.body // Get the readable stream from the response body
+
+        if (stream === null)
+        {
+          console.log("Stream is null")
+          setIsLoadingSummaryDescriptions(_ => false)
+          return
+        }
+
+        const reader = stream.getReader()
+
+        const readChunk = () =>
+        {
+            reader.read()
+                .then(({value, done}) =>
+                {
+                    if (done)
+                    {
+                        console.log("Stream finished")
+                        setIsLoadingSummaryDescriptions(_ => false)
+                        return
+                    }
+
+                    // Convert the `value` to a string
+                    var jsonString = new TextDecoder().decode(value)
+                    console.log("JsonString: ", jsonString)
+
+
+                    // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
+                    const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
+
+                    for (let i = 0; i < jsonStringParts.length; i++)
+                    {
+                      const parsedData = JSON.parse(jsonStringParts[i])
                       console.log("Parsed data:", parsedData)
-                      setSummaryText(parsedData["summary"])
 
-                      readChunk() // Read the next chunk
-                  })
-                  .catch(error =>
-                  {
-                    console.error(error)
-                  })
-          }
-          readChunk() // Start reading the first chunk
-      })
-      .catch(error =>
-      {
-        console.error(error)
-        setIsLoadingSummary1(_ => false)
-        alert("Error: request failed")
-      })
-    }
+                      if (parsedData.hasOwnProperty("entity"))
+                      {
+                        setSummaryDescriptions(previousSummary => ({
+                          ...previousSummary,
+                          entities: [...previousSummary.entities, parsedData],
+                        }))
+                      }
+                      else if (parsedData.hasOwnProperty("relationship"))
+                      {
+                        setSummaryDescriptions(previousSummary => ({
+                          ...previousSummary,
+                          relationships: [...previousSummary.relationships, parsedData],
+                        }))
+                      }
+                      else
+                      {
+                        console.log("Received unknown object: ", parsedData)
+                      }
+                    }
 
-    const fetchSummaryDescriptions = (bodyData : any) =>
+
+                    readChunk()
+                })
+                .catch(error =>
+                {
+                  console.error(error)
+                })
+        }
+        readChunk()
+    })
+    .catch(error =>
     {
-      setIsLoadingSummaryDescriptions(_ => true)
-
-      setSummaryDescriptions({entities: [], relationships: []})
-
-      fetch(SUMMARY_DESCRIPTIONS_URL, { method: "POST", headers: HEADER, body: bodyData })
-      .then(response =>
-      {
-          const stream = response.body // Get the readable stream from the response body
-
-          if (stream === null)
-          {
-            console.log("Stream is null")
-            setIsLoadingSummaryDescriptions(_ => false)
-            return
-          }
-
-          const reader = stream.getReader()
-
-          const readChunk = () =>
-          {
-              reader.read()
-                  .then(({value, done}) =>
-                  {
-                      if (done)
-                      {
-                          console.log("Stream finished")
-                          setIsLoadingSummaryDescriptions(_ => false)
-                          return
-                      }
-
-                      // Convert the `value` to a string
-                      var jsonString = new TextDecoder().decode(value)
-                      console.log("JsonString: ", jsonString)
+      console.error(error)
+      setIsLoadingSummaryDescriptions(_ => false)
+      alert("Error: request failed")
+    })
+  }
 
 
-                      // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
-                      const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
-
-                      for (let i = 0; i < jsonStringParts.length; i++)
-                      {
-                        const parsedData = JSON.parse(jsonStringParts[i])
-                        console.log("Parsed data:", parsedData)
-
-                        if (parsedData.hasOwnProperty("entity"))
-                        {
-                          setSummaryDescriptions(previousSummary => ({
-                            ...previousSummary,
-                            entities: [...previousSummary.entities, parsedData],
-                          }))
-                        }
-                        else if (parsedData.hasOwnProperty("relationship"))
-                        {
-                          setSummaryDescriptions(previousSummary => ({
-                            ...previousSummary,
-                            relationships: [...previousSummary.relationships, parsedData],
-                          }))
-                        }
-                        else
-                        {
-                          console.log("Received unknown object: ", parsedData)
-                        }
-                      }
-
-
-                      readChunk()
-                  })
-                  .catch(error =>
-                  {
-                    console.error(error)
-                  })
-          }
-          readChunk()
-      })
-      .catch(error =>
-      {
-        console.error(error)
-        setIsLoadingSummaryDescriptions(_ => false)
-        alert("Error: request failed")
-      })
-    }
-
-
-    return { fetchSummaryPlainText, fetchSummaryDescriptions, fetchStreamedData }
+  return { fetchSummaryPlainText, fetchSummaryDescriptions, fetchStreamedData }
 }
 
 export default useFetchData
