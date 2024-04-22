@@ -87,12 +87,14 @@ def get_only():
             dictionary = { field: "Regenerated original text" }
         elif field == "dataType":
             dictionary = { field: "string" }
-        elif field == "cardinality":
-            dictionary = { field: "1..*"}
+        elif field == "sourceCardinality" or field == "targetCardinality":
+            dictionary = { field: "one-many"}
         elif field == "source":
             dictionary = { field: "New source entity"}
         elif field == "target":
             dictionary = { field: "New target entity"}
+        else:
+            dictionary = { field: "Some new text"}
 
         yield json.dumps(dictionary)
 
