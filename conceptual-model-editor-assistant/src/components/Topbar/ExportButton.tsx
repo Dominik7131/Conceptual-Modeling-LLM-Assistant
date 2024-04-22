@@ -1,6 +1,6 @@
 import { Button } from "@mui/material"
 import DownloadIcon from '@mui/icons-material/Download';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, GeneralizationJson, NodeData, Relationship, RelationshipJson } from "../../interfaces";
+import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, NodeData, Relationship, RelationshipJson } from "../../interfaces";
 import { Node, Edge } from "reactflow";
 import { edgesState, importedFileNameState, nodesState } from "../../atoms";
 import { useRecoilValue } from "recoil";
@@ -57,8 +57,8 @@ const ExportButton: React.FC = (): JSX.Element =>
                 const attribute: Attribute = attributes[j]
         
                 const newAttributeJson: AttributeJson = {
-                iri: "", title: attribute.name, description: attribute.description, domain: attribute.source, domainCardinality: "optional-one",
-                range: "", rangeCardinality: "optional-one"
+                iri: "", title: attribute.name, description: attribute.description, domain: attribute.source, domainCardinality: "",
+                range: "", rangeCardinality: ""
                 }
         
                 conceptualModel.attributes.push(newAttributeJson)
@@ -74,11 +74,11 @@ const ExportButton: React.FC = (): JSX.Element =>
         
             // TODO: Probably add new field into Relationships to remember if the relationship is a relationship or a generalization
             // TODO: If cardinality is not specified then return null
-            if (relationship.name !== "is-a")
+            if (!relationship[Field.IS_GENERALIZATION])
             {
                 const newRelationshipJson: RelationshipJson = {
-                iri: "", title: relationship.name, description: relationship.description,
-                domain: relationship.source, domainCardinality: "optional-one", range: "", rangeCardinality: "optional-one"
+                    iri: "", title: relationship.name, description: relationship.description,
+                    domain: relationship.source, domainCardinality: "", range: relationship.target, rangeCardinality: ""
                 }
         
                 conceptualModel.relationships.push(newRelationshipJson)
@@ -86,8 +86,8 @@ const ExportButton: React.FC = (): JSX.Element =>
             else
             {
                 const newGeneralizationJson: GeneralizationJson = {
-                iri: "", title: relationship.name, description: relationship.description,
-                specialClass: relationship.source, generalClass: "optional-one"
+                    iri: "", title: relationship.name, description: relationship.description,
+                    specialClass: relationship.source, generalClass: relationship.target
                 }
         
                 conceptualModel.generalizations.push(newGeneralizationJson)

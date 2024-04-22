@@ -3,7 +3,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import { useState } from "react";
 import { ConceptualModelJson } from "../../interfaces";
 import DialogEnterIRI from "./DialogEnterIRI";
-import { isDialogEnterIRIOpenedState } from "../../atoms";
+import { importedFileNameState, isDialogEnterIRIOpenedState } from "../../atoms";
 import { useSetRecoilState } from "recoil";
 
 
@@ -15,11 +15,12 @@ interface Props
 const ImportIRIButton: React.FC<Props> = ({ onImport }): JSX.Element =>
 {
     const setIsOpened = useSetRecoilState(isDialogEnterIRIOpenedState)
-
+    const setImportedFileName = useSetRecoilState(importedFileNameState)
 
     const handleClick = () =>
     {
-        setIsOpened(true)        
+        setIsOpened(true)
+        setImportedFileName("")
     }
 
 

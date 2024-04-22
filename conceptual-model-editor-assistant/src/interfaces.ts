@@ -150,14 +150,13 @@ interface DomainRangeJson
   // TODO: Why do we have "target entity" in attributes?
   // Isn't that going to be always empty string?
   // Optional-one: 0..1
-  // One: 1..1
+  // one-one: 1..1
   // Many: 1..*
   // Is optional-many (0..*) missing?
-  // Is many-many (*..*) missing
   domain: string
-  domainCardinality: "optional-one" | "one" | "many"
+  domainCardinality: "optional-one" | "optional-many" | "one-one" | "one-many" | ""
   range: string
-  rangeCardinality: "optional-one" | "one" | "many"
+  rangeCardinality: "optional-one" | "optional-many" | "one-one" | "one-many" | ""
 }
 
 export interface AttributeJson extends ItemJson, DomainRangeJson { }
