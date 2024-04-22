@@ -159,7 +159,7 @@ const DialogEditItem: React.FC = () =>
                 }
 
                 {
-                    isRelationship && !relationship[Field.IS_GENERALIZATION] &&
+                    isRelationship && relationship[Field.TYPE] !== ItemType.GENERALIZATION &&
                     <>
                         { showEditField(ItemFieldUIName.SOURCE_ENTITY, Field.SOURCE_ENTITY, relationship[Field.SOURCE_ENTITY]) }
                         { showEditField(ItemFieldUIName.TARGET_ENTITY, Field.TARGET_ENTITY, relationship[Field.TARGET_ENTITY]) }
@@ -169,7 +169,7 @@ const DialogEditItem: React.FC = () =>
                 }
 
                 {
-                    isRelationship && relationship[Field.IS_GENERALIZATION] &&
+                    isRelationship && relationship[Field.TYPE] === ItemType.GENERALIZATION &&
                     <>
                         { showEditField(ItemFieldUIName.GENERAl_ENTITY, Field.SOURCE_ENTITY, relationship[Field.SOURCE_ENTITY]) }
                         { showEditField(ItemFieldUIName.SPECIAL_ENTITY, Field.TARGET_ENTITY, relationship[Field.TARGET_ENTITY]) }

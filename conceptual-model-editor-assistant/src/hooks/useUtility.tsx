@@ -303,7 +303,7 @@ const onAddRelationship = (relationship : Relationship, setNodes: any, setEdges:
 
   const edgeData: EdgeData = { relationship: relationship }
 
-  const markerEnd = relationship[Field.IS_GENERALIZATION] ? CUSTOM_ISA_EDGE_MARKER : CUSTOM_EDGE_MARKER
+  const markerEnd = relationship[Field.TYPE] === ItemType.GENERALIZATION ? CUSTOM_ISA_EDGE_MARKER : CUSTOM_EDGE_MARKER
 
   const newEdge : Edge = {
     id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: edgeData,
@@ -451,7 +451,7 @@ export const changeSidebarTab = (itemType: ItemType, setSidebarTab: any) =>
   {
     setSidebarTab(SidebarTabs.ATTRIBUTES)
   }
-  else if (itemType === ItemType.RELATIONSHIP)
+  else if (itemType === ItemType.RELATIONSHIP || itemType === ItemType.GENERALIZATION)
   {
     setSidebarTab(SidebarTabs.RELATIONSHIPS)
   }
@@ -460,6 +460,7 @@ export const changeSidebarTab = (itemType: ItemType, setSidebarTab: any) =>
     throw Error(`Received unknown item type: ${itemType}`)
   }
 }
+
 
 export const CUSTOM_EDGE_MARKER: EdgeMarker = { type: MarkerType.Arrow, width: 50, height: 50, strokeWidth: 1 }
 export const CUSTOM_ISA_EDGE_MARKER: EdgeMarker = { type: MarkerType.ArrowClosed, width: 40, height: 40, strokeWidth: 0.8 }

@@ -40,9 +40,10 @@ const DialogCreateEdge: React.FC = () =>
 
   const handleManuallyAddNewRelationship = (isGeneralization: boolean): void =>
   {
-    const newRelationship = { ...relationship, [Field.IS_GENERALIZATION]: isGeneralization}
-    setSelectedSuggestedItem(newRelationship)
-    setEditedSuggestedItem(newRelationship)
+    const itemType: ItemType = isGeneralization ? ItemType.GENERALIZATION : ItemType.RELATIONSHIP
+    const newObject = { ...relationship, [Field.TYPE]: itemType}
+    setSelectedSuggestedItem(newObject)
+    setEditedSuggestedItem(newObject)
 
     setIsShowEditDialog(true)
     handleClose()

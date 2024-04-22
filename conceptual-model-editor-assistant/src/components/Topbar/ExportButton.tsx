@@ -1,6 +1,6 @@
 import { Button } from "@mui/material"
 import DownloadIcon from '@mui/icons-material/Download';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, NodeData, Relationship, RelationshipJson } from "../../interfaces";
+import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, ItemType, NodeData, Relationship, RelationshipJson } from "../../interfaces";
 import { Node, Edge } from "reactflow";
 import { edgesState, importedFileNameState, nodesState } from "../../atoms";
 import { useRecoilValue } from "recoil";
@@ -74,7 +74,7 @@ const ExportButton: React.FC = (): JSX.Element =>
         
             // TODO: Probably add new field into Relationships to remember if the relationship is a relationship or a generalization
             // TODO: If cardinality is not specified then return null
-            if (!relationship[Field.IS_GENERALIZATION])
+            if (relationship[Field.TYPE] !== ItemType.GENERALIZATION)
             {
                 const newRelationshipJson: RelationshipJson = {
                     iri: "", title: relationship.name, description: relationship.description,

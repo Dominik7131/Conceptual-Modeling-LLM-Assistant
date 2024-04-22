@@ -13,7 +13,8 @@ export const enum ItemType
 {
   ENTITY = "entity",
   ATTRIBUTE = "attribute",
-  RELATIONSHIP = "relationship"
+  RELATIONSHIP = "relationship",
+  GENERALIZATION = "generalization",
 }
 
 export const enum Field
@@ -29,7 +30,6 @@ export const enum Field
   TARGET_ENTITY = "target",
   SOURCE_CARDINALITY = "sourceCardinality",
   TARGET_CARDINALITY = "targetCardinality",
-  IS_GENERALIZATION = "isGeneralization",
 }
 
 
@@ -120,7 +120,6 @@ export interface Relationship extends BaseItem
   target: string
   sourceCardinality: string
   targetCardinality: string
-  isGeneralization: boolean
 }
 
 export interface OriginalTextIndexesItem

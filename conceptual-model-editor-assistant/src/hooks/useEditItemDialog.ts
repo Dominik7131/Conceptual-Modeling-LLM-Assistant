@@ -348,7 +348,8 @@ const useEditItemDialog = () =>
             const relationship : Relationship = {
                 [Field.ID]: oldAttribute.ID, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: "", [Field.DESCRIPTION]: oldAttribute.description,
                 [Field.ORIGINAL_TEXT]: oldAttribute.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldAttribute.originalTextIndexes, [Field.SOURCE_ENTITY]: oldAttribute.source,
-                [Field.TARGET_ENTITY]: oldAttribute.name, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.IS_GENERALIZATION]: false}
+                [Field.TARGET_ENTITY]: oldAttribute.name, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""
+            }
         
             setSelectedSuggestedItem(_ => relationship)
             setEditedSuggestedItem(_ => relationship)

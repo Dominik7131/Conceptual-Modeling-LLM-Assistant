@@ -93,7 +93,7 @@ const useConceptualModel = () =>
         [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: "",
         [Field.SOURCE_ENTITY]: relationship.source, [Field.TARGET_ENTITY]: relationship.target,
         [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: relationship.originalText,
-        [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.IS_GENERALIZATION]: false
+        [Field.ORIGINAL_TEXT_INDEXES]: []
       }
       const edgeData: EdgeData = { relationship: newRelationship }
 

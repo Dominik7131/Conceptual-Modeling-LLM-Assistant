@@ -98,7 +98,7 @@ const ImportTab: React.FC = (): JSX.Element =>
                 [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: nameLowerCase, [Field.DESCRIPTION]: relationship.description,
                 [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
                 [Field.SOURCE_CARDINALITY]: relationship.domainCardinality, [Field.TARGET_CARDINALITY]: relationship.rangeCardinality,
-                [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.IS_GENERALIZATION]: false
+                [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
             }
         
             const edgeData: EdgeData = { relationship: newRelationship }
@@ -118,14 +118,14 @@ const ImportTab: React.FC = (): JSX.Element =>
             const sourceEntityLowerCase = generalization.specialClass.toLowerCase()
             const targetEntityLowerCase = generalization.generalClass.toLowerCase()
         
-            const newRelationship: Relationship = {
-                [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: nameLowerCase, [Field.DESCRIPTION]: "",
+            const newGeneralization: Relationship = {
+                [Field.ID]: 0, [Field.TYPE]: ItemType.GENERALIZATION, [Field.NAME]: nameLowerCase, [Field.DESCRIPTION]: "",
                 [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
                 [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "",
-                [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.IS_GENERALIZATION]: true
+                [Field.ORIGINAL_TEXT_INDEXES]: []
             }
         
-            const edgeData: EdgeData = { relationship: newRelationship }
+            const edgeData: EdgeData = { relationship: newGeneralization }
         
             const newID: string = createEdgeID(sourceEntityLowerCase, targetEntityLowerCase, nameLowerCase)
             const newEdge : Edge = {
