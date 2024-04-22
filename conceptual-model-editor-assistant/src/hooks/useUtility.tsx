@@ -1,5 +1,5 @@
 import { SetterOrUpdater } from "recoil";
-import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
+import { Attribute, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, UserChoice } from "../interfaces"
 import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
 
 
@@ -57,6 +57,9 @@ export const doesNodeAlreadyExist = (nodes: Node[], nodeID: string): boolean =>
 
 export const doesNodeAlreadyExistSetter = (setNodes: any, nodeID: string): boolean =>
 {
+  // It would be better more readable to use `doesNodeAlreadyExist` function however, when not using nodes the component
+  // using this function does not get updated every time a node is changed
+
   let isNodeAlreadyPresent = false
 
   setNodes((nodes: Node[]) => nodes.map(currentNode => 
@@ -347,6 +350,75 @@ export const addNode = (nodeID: string, positionX: number, positionY: number, se
   setNodes((previousNodes: Node[]) => {
     return [...previousNodes, newNode]
   })
+}
+
+
+export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[], isOnlyNames : boolean) =>
+{
+  let result: { [key: string]: any } = {
+    entities: []
+  }
+
+  for (let node of nodes)
+  {
+    let attributes = []
+    for (let attribute of node.data.attributes)
+    {
+      if (isOnlyNames)
+      {
+        attributes.push({[Field.NAME]: attribute.name})
+      }
+      else
+      {
+        attributes.push({[Field.NAME]: attribute.name, [Field.ORIGINAL_TEXT]: attribute.originalText})
+      }
+    }
+
+    result.entities.push({[Field.NAME]: node.id, attributes: attributes})
+  }
+
+
+  let relationships = []
+  for (let edge of edges)
+  {
+    if (isOnlyNames)
+    {
+      relationships.push({[Field.NAME]: edge.data.relationship.name, "sourceEntity": edge.source, "targetEntity": edge.target})
+    }
+    else
+    {
+      relationships.push({[Field.NAME]: edge.data.relationship.name, [Field.ORIGINAL_TEXT]: edge.data.originalText, "sourceEntity": edge.source, "targetEntity": edge.target})
+    }
+  }
+
+  result.relationships = relationships
+
+  return result
+}
+
+
+export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targetItemName: string, setTitle: any): void =>
+{
+  if (userChoice === UserChoice.ENTITIES)
+  {
+    const message = ""
+    setTitle((title: ItemsMessage) => { return { ...title, entities: message} })
+  }
+  else if (userChoice === UserChoice.ATTRIBUTES)
+  {
+    const message = `Selected entity: ${sourceItemName}`
+    setTitle((title: ItemsMessage) => { return { ...title, attributes: message} })
+  }
+  else if (userChoice === UserChoice.RELATIONSHIPS)
+  {
+    const message = `Selected entity: ${sourceItemName}`
+    setTitle((title: ItemsMessage) => { return { ...title, relationships: message} })
+  }
+  else if (userChoice === UserChoice.RELATIONSHIPS2)
+  {
+    const message = `Source entity: ${sourceItemName}\nTarget entity: ${targetItemName}`
+    setTitle((title: ItemsMessage) => { return { ...title, relationships: message} })
+  }
 }
 
 

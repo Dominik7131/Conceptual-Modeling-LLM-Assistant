@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Node, Edge, MarkerType, getMarkerEnd } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, createEdgeID, userChoiceToItemType } from './useUtility';
+import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, changeTitle, convertConceptualModelToJSON, createEdgeID, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, SidebarTabs, TopbarTabs, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -116,100 +116,57 @@ const useConceptualModel = () =>
   }
 
 
-  const convertConceptualModelToJSON = (isOnlyNames : boolean) =>
+  const assignID = () =>
   {
-    let result: { [key: string]: any } = {
-      entities: []
-    }
-
-    for (let node of selectedNodes)
-    {
-      let attributes = []
-      for (let attribute of node.data.attributes)
-      {
-        if (isOnlyNames)
-        {
-          attributes.push({[Field.NAME]: attribute.name})
-        }
-        else
-        {
-          attributes.push({[Field.NAME]: attribute.name, [Field.ORIGINAL_TEXT]: attribute.originalText})
-        }
-      }
-
-      result.entities.push({[Field.NAME]: node.id, attributes: attributes})
-    }
-
-
-    let relationships = []
-    for (let edge of selectedEdges)
-    {
-      if (isOnlyNames)
-      {
-        relationships.push({[Field.NAME]: edge.data.relationship.name, "sourceEntity": edge.source, "targetEntity": edge.target})
-      }
-      else
-      {
-        relationships.push({[Field.NAME]: edge.data.relationship.name, [Field.ORIGINAL_TEXT]: edge.data.originalText, "sourceEntity": edge.source, "targetEntity": edge.target})
-      }
-    }
-
-    result.relationships = relationships
-
-    return result
+    const newID = IDToAssign
+    IDToAssign += 1
+    return newID
   }
 
 
-    const assignID = () =>
+  function onProcessStreamedData(value: any, sourceEntityName: string, itemType: ItemType): void
+  {
+    // Convert the `value` to a string
+    var jsonString = new TextDecoder().decode(value)
+
+    // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
+    const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
+
+    for (let i = 0; i < jsonStringParts.length; i++)
     {
-      const newID = IDToAssign
-      IDToAssign += 1
-      return newID
-    }
+      let item : Item = JSON.parse(jsonStringParts[i])
+      item[Field.ID] = assignID()
+      item[Field.TYPE] = itemType
 
-
-    function onProcessStreamedData(value: any, sourceEntityName: string, itemType: ItemType): void
-    {
-      // Convert the `value` to a string
-      var jsonString = new TextDecoder().decode(value)
-
-      // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
-      const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
-
-      for (let i = 0; i < jsonStringParts.length; i++)
+      if (itemType === ItemType.ENTITY)
       {
-        let item : Item = JSON.parse(jsonStringParts[i])
-        item[Field.ID] = assignID()
-        item[Field.TYPE] = itemType
+        setSuggestedEntities(previousSuggestedItems => {
+          return [...previousSuggestedItems, item]
+        })
+      }
 
-        if (itemType === ItemType.ENTITY)
-        {
-          setSuggestedEntities(previousSuggestedItems => {
-            return [...previousSuggestedItems, item]
-          })
-        }
+      if (itemType === ItemType.ATTRIBUTE)
+      {
+        let attribute: Attribute = item as Attribute
+        attribute[Field.SOURCE_ENTITY] = sourceEntityName
 
-        if (itemType === ItemType.ATTRIBUTE)
-        {
-          let attribute: Attribute = item as Attribute
-          attribute[Field.SOURCE_ENTITY] = sourceEntityName
+        setSuggestedAttributes(previousSuggestedItems => {
+          return [...previousSuggestedItems, attribute]
+        })
+      }
+      else if (itemType === ItemType.RELATIONSHIP)
+      {
+        let relationship: Relationship = item as Relationship
+        relationship[Field.SOURCE_ENTITY] = sourceEntityName
 
-          setSuggestedAttributes(previousSuggestedItems => {
-            return [...previousSuggestedItems, attribute]
-          })
-        }
-        else if (itemType === ItemType.RELATIONSHIP)
-        {
-          let relationship: Relationship = item as Relationship
-          relationship[Field.SOURCE_ENTITY] = sourceEntityName
-
-          setSuggestedRelationships(previousSuggestedItems => {
-            return [...previousSuggestedItems, relationship]
-          })
-        }
+        setSuggestedRelationships(previousSuggestedItems => {
+          return [...previousSuggestedItems, relationship]
+        })
       }
     }
-  
+  }
+
+
   function onClearSuggestedItems(itemType: ItemType): void
   {
     if (itemType === ItemType.ENTITY)
@@ -243,31 +200,6 @@ const useConceptualModel = () =>
   }
 
 
-  const changeSidebarTitles = (userChoice: UserChoice, sourceItemName: string, targetItemName: string): void =>
-  {
-    if (userChoice === UserChoice.ENTITIES)
-    {
-      const message = ""
-      setSidebarTitles((title: ItemsMessage) => { return { ...title, entities: message} })
-    }
-    else if (userChoice === UserChoice.ATTRIBUTES)
-    {
-      const message = `Selected entity: ${sourceItemName}`
-      setSidebarTitles((title: ItemsMessage) => { return { ...title, attributes: message} })
-    }
-    else if (userChoice === UserChoice.RELATIONSHIPS)
-    {
-      const message = `Selected entity: ${sourceItemName}`
-      setSidebarTitles((title: ItemsMessage) => { return { ...title, relationships: message} })
-    }
-    else if (userChoice === UserChoice.RELATIONSHIPS2)
-    {
-      const message = `Source entity: ${sourceItemName}\nTarget entity: ${targetItemName}`
-      setSidebarTitles((title: ItemsMessage) => { return { ...title, relationships: message} })
-    }
-  }
-
-
   const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
   {
     const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
@@ -279,7 +211,7 @@ const useConceptualModel = () =>
 
     onClearSuggestedItems(itemType)
     changeSidebarTab(itemType)
-    changeSidebarTitles(userChoice, sourceItemName, targetItemName)
+    changeTitle(userChoice, sourceItemName, targetItemName, setSidebarTitles)
 
 
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
@@ -298,7 +230,7 @@ const useConceptualModel = () =>
 
     setTopbarTabValue(TopbarTabs.SUMMARY_PLAIN_TEXT)
 
-    const conceptualModel = convertConceptualModelToJSON(false)
+    const conceptualModel = convertConceptualModelToJSON(selectedNodes, selectedEdges, false)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
     fetchSummaryPlainText(bodyData)
@@ -315,7 +247,7 @@ const useConceptualModel = () =>
 
     setTopbarTabValue(TopbarTabs.SUMMARY_DESCRIPTION)
 
-    const conceptualModel = convertConceptualModelToJSON(true)
+    const conceptualModel = convertConceptualModelToJSON(selectedNodes, selectedEdges, true)
     const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": domainDescription})
 
     fetchSummaryDescriptions(bodyData)
