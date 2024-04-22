@@ -15,12 +15,15 @@ import ModeStandbyIcon from '@mui/icons-material/ModeStandby';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import useUtility, { capitalizeString, clipName } from '../hooks/useUtility';
 import useConceptualModel from '../hooks/useConceptualModel';
+import { isSuggestedItemState } from '../atoms';
+import { useSetRecoilState } from 'recoil';
 
 
  
 // List of all NodeProps: https://reactflow.dev/api-reference/types/node-props
 export default function TextUpdaterNode({ selected, data } : NodeProps)
 {
+    const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
     const [isEntityHovered, setIsEntityHovered] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
@@ -87,7 +90,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
 
                 <Typography
                     id="long-button"
-                    onClick={handleClick}
+                    onClick={ handleClick }
                     sx={{ display: (isEntityHovered || anchorEl) ? "block" : "none", position: "absolute", right: "0px", top: "6px" }}
                     >
                     <MoreVertIcon />
@@ -102,7 +105,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                 onClose={handleClose}
                 MenuListProps={{'aria-labelledby': 'basic-button'}}
                 >
-                <MenuItem onClick={() => { onEditItem(entity); handleClose(); }}>
+                <MenuItem onClick={() => { setIsSuggestedItem(false); onEditItem(entity); handleClose(); }}>
                     <ListItemIcon>
                         <EditIcon fontSize="small" />
                     </ListItemIcon>
@@ -142,7 +145,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                     <Button size="small" key={`${attribute[Field.NAME]}-${index}`}
                         style={{justifyContent: "flex-start"}}
                         sx={{ color: selected ? PRIMARY_COLOR : "black", fontSize: "12px", textTransform: 'lowercase'}}
-                        onClick={() => onEditItem(attribute)}>
+                        onClick={() => { setIsSuggestedItem(false); onEditItem(attribute)}}>
                         - { clipName(attribute[Field.NAME], 18) }
                     </Button>
                 ))}

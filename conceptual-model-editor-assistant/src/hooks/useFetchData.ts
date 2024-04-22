@@ -99,9 +99,9 @@ const useFetchData = ({ onClearSuggestedItems, onProcessStreamedData }: Props) =
       })
       .catch(error =>
       {
-        console.error(error)
+        console.log(error)
         setItemTypesToLoad(previousItems => previousItems.filter(currentItemType => currentItemType !== itemType))
-        const errorMessage = "Server is not responding"
+        const errorMessage = `Backend error: ${error}\n\nFor more info check the console.`
         setErrorMessage(errorMessage)
       })
     }

@@ -15,7 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isDisableChangeState, isDisableSaveState, isLoadingEditState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from '../atoms';
+import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from '../atoms';
 import useEditItemDialog from '../hooks/useEditItemDialog';
 import useConceptualModel from '../hooks/useConceptualModel';
 import Alert from '@mui/material/Alert';
@@ -34,8 +34,8 @@ const DialogEditItem: React.FC = () =>
     const editedItem = useRecoilValue(editedSuggestedItemState)
     const regeneratedItem = useRecoilValue(regeneratedItemState)
     const isSuggestedItem = useRecoilValue(isSuggestedItemState)
-    const isDisableSave = useRecoilValue(isDisableSaveState)
-    const isDisableChange = useRecoilValue(isDisableChangeState)
+    const isDisableSave = isSuggestedItem
+    const isDisableChange = !isSuggestedItem
 
     const [errorMessage, setErrorMessage] = useRecoilState(editDialogErrorMsgState)
 
@@ -95,6 +95,8 @@ const DialogEditItem: React.FC = () =>
             color = "black"
         }
 
+        const isDisabledFieldSuggestion = field === Field.NAME || field === Field.SOURCE_ENTITY || field === Field.TARGET_ENTITY
+
         return (
             <Stack direction="row" spacing={4}>
                     <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={label} multiline
@@ -104,7 +106,7 @@ const DialogEditItem: React.FC = () =>
                     />
                     { !isRegeneratedText ?
                         ( (fieldToLoad.includes(field)) ? <CircularProgress sx={{position: 'relative', right: '3px', top: '5px'}} size={"30px"} /> :
-                        <IconButton disabled={field === Field.NAME} color="primary" size="small" onClick={() => onGenerateField(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
+                        <IconButton disabled={isDisabledFieldSuggestion} color="primary" size="small" onClick={() => onGenerateField(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
                             <AutoFixHighIcon/>
                         </IconButton>)
                         :
@@ -155,7 +157,7 @@ const DialogEditItem: React.FC = () =>
                 }
 
                 {
-                    isRelationship &&
+                    isRelationship && !relationship[Field.IS_GENERALIZATION] &&
                     <>
                         { showEditField(ItemFieldUIName.SOURCE_ENTITY, Field.SOURCE_ENTITY, relationship[Field.SOURCE_ENTITY]) }
                         { showEditField(ItemFieldUIName.TARGET_ENTITY, Field.TARGET_ENTITY, relationship[Field.TARGET_ENTITY]) }
@@ -163,6 +165,16 @@ const DialogEditItem: React.FC = () =>
                         { showEditField(ItemFieldUIName.TARGET_CARDINALITY, Field.TARGET_CARDINALITY, relationship[Field.TARGET_CARDINALITY]) }
                     </>
                 }
+
+                {
+                    isRelationship && relationship[Field.IS_GENERALIZATION] &&
+                    <>
+                        { showEditField(ItemFieldUIName.GENERAl_ENTITY, Field.SOURCE_ENTITY, relationship[Field.SOURCE_ENTITY]) }
+                        { showEditField(ItemFieldUIName.SPECIAL_ENTITY, Field.TARGET_ENTITY, relationship[Field.TARGET_ENTITY]) }
+                    </>
+                }
+
+
 
             </DialogContent>
 

@@ -84,16 +84,6 @@ export const isSuggestedItemState = atom({
     default: true,
 });
 
-export const isDisableSaveState = atom({
-    key: 'isDisableSaveState',
-    default: true,
-});
-
-export const isDisableChangeState = atom({
-    key: 'isDisableChangeState',
-    default: true,
-});
-
 
 export const originalTextIndexesListState = atom<number[]>({
     key: 'originalTextIndexesListState',

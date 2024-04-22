@@ -6,7 +6,7 @@ import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, createEdg
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, SidebarTabs, TopbarTabs, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, isDisableChangeState, isDisableSaveState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
+import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isShowCreateEdgeDialogState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
 
 
 const useConceptualModel = () =>
@@ -27,11 +27,8 @@ const useConceptualModel = () =>
   const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
 
   const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
-  const setIsDisableSave = useSetRecoilState(isDisableSaveState)
-  const setIsDisableChange = useSetRecoilState(isDisableChangeState)
 
   const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
-  const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialogState)
 
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
@@ -306,8 +303,6 @@ const useConceptualModel = () =>
     }
 
     setIsSuggestedItem(_ => true)
-    setIsDisableSave(_ => true)
-    setIsDisableChange(_ => true)
     setSelectedSuggestedItem(_ => blankEntity)
     setEditedSuggestedItem(_ => blankEntity)
 
@@ -323,23 +318,10 @@ const useConceptualModel = () =>
     }
 
     setIsSuggestedItem(_ => true)
-    setIsDisableSave(_ => true)
-    setIsDisableChange(_ => true)
     setSelectedSuggestedItem(_ => blankAttribute)
     setEditedSuggestedItem(_ => blankAttribute)
 
     setIsShowEditDialog(true)
-  }
-
-
-  const onAddNewRelationship = (): void =>
-  {
-    setIsSuggestedItem(_ => true)
-    setIsDisableSave(_ => true)
-    setIsDisableChange(_ => true)
-
-    setIsShowEditDialog(true)
-    setIsShowCreateEdgeDialog(false)
   }
 
 
@@ -381,8 +363,6 @@ const useConceptualModel = () =>
   function onEditItem(item: Item): void
   {
     setIsSuggestedItem(_ => false)
-    setIsDisableSave(_ => false)
-    setIsDisableChange(_ => false)
     setSelectedSuggestedItem(_ => item)
     setEditedSuggestedItem(_ => item)
 
@@ -392,7 +372,7 @@ const useConceptualModel = () =>
     
   return {
     parseSerializedConceptualModel, onEditItem, onAddNewAttribute, onSuggestItems, onSummaryPlainTextClick,
-    onSummaryDescriptionsClick, onAddNewEntity, onAddNewRelationship
+    onSummaryDescriptionsClick, onAddNewEntity
   }
 }
 

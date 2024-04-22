@@ -47,6 +47,8 @@ export const enum ItemFieldUIName
   CARDINALITY = "Cardinality",
   SOURCE_CARDINALITY = "Source cardinality",
   TARGET_CARDINALITY = "Target cardinality",
+  GENERAl_ENTITY = "General entity",
+  SPECIAL_ENTITY = "Special entity",
 }
 
 

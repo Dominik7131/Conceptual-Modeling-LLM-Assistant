@@ -37,7 +37,6 @@ const ConceptualModel: React.FC = () =>
   },[],)
 
 
-  // TODO: Put this logic in a custom hook
   const onConnect : OnConnect = useCallback((params) =>
   { 
     const sourceEntityName = params.source
@@ -57,9 +56,8 @@ const ConceptualModel: React.FC = () =>
     setSelectedSuggestedItem(_ => blankRelationship)
     setEditedSuggestedItem(_ => blankRelationship)
 
-    setIsShowCreateEdgeDialog(_ => true)
-
-  }, [setEdges]);
+    setIsShowCreateEdgeDialog(true)
+  }, [])
 
 
   useEffect(() =>
