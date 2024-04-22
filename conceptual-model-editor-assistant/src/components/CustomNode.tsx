@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { useCallback, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { Attribute, Entity, Field, ItemType, NodeData, UserChoice, PRIMARY_COLOR } from '../interfaces';
+import { Attribute, Entity, Field, ItemType, NodeData, UserChoice, PRIMARY_COLOR, Item } from '../interfaces';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -15,7 +15,7 @@ import ModeStandbyIcon from '@mui/icons-material/ModeStandby';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import useUtility, { capitalizeString, clipName } from '../hooks/useUtility';
 import useConceptualModel from '../hooks/useConceptualModel';
-import { isSuggestedItemState } from '../atoms';
+import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../atoms';
 import { useSetRecoilState } from 'recoil';
 
 
@@ -24,11 +24,17 @@ import { useSetRecoilState } from 'recoil';
 export default function TextUpdaterNode({ selected, data } : NodeProps)
 {
     const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
+    const setIsItemInConceptualModel = useSetRecoilState(isItemInConceptualModelState)
+    const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
+
+    const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
+    const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
+
     const [isEntityHovered, setIsEntityHovered] = useState<boolean>(false)
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
     const open = Boolean(anchorEl)
 
-    const { onEditItem, onSuggestItems, onAddNewAttribute } = useConceptualModel()
+    const { onSuggestItems } = useConceptualModel()
 
     const nodeData: NodeData = data as NodeData
     const entity: Entity = nodeData.entity
@@ -51,12 +57,58 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) =>
     {
-      setAnchorEl(event.currentTarget);
+        setAnchorEl(event.currentTarget);
     }
+
 
     const handleClose = () =>
     {
-      setAnchorEl(null)
+        setAnchorEl(null)
+    }
+
+
+    const handleEditEntity = () =>
+    {
+        setIsSuggestedItem(false)
+        setIsItemInConceptualModel(true)
+        onEditItem(entity)
+    }
+
+
+    const handleAddNewAttribute = () =>
+    {
+        setIsSuggestedItem(false)
+        setIsItemInConceptualModel(false)
+
+        const blankAttribute: Attribute = {
+            [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "",
+            [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "",
+            [Field.SOURCE_ENTITY]: entity.name
+        }
+      
+        setSelectedSuggestedItem(blankAttribute)
+        setEditedSuggestedItem(blankAttribute)
+        handleClose()
+        setIsShowEditDialog(true)
+    }
+
+
+    const handleEditAttribute = (attribute: Attribute) =>
+    {
+        setIsSuggestedItem(false)
+        setIsItemInConceptualModel(true)
+        onEditItem(attribute)
+    }
+
+
+    const onEditItem = (item: Item): void =>
+    {
+      setIsSuggestedItem(false)
+      setSelectedSuggestedItem(item)
+      setEditedSuggestedItem(item)
+
+      handleClose()
+      setIsShowEditDialog(true)
     }
 
     const handleOffset = 7
@@ -105,13 +157,13 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                 onClose={handleClose}
                 MenuListProps={{'aria-labelledby': 'basic-button'}}
                 >
-                <MenuItem onClick={() => { setIsSuggestedItem(false); onEditItem(entity); handleClose(); }}>
+                <MenuItem onClick={ handleEditEntity }>
                     <ListItemIcon>
                         <EditIcon fontSize="small" />
                     </ListItemIcon>
                         Edit entity
                 </MenuItem>
-                <MenuItem onClick={() => { onAddNewAttribute(entity); handleClose(); }}>
+                <MenuItem onClick={ handleAddNewAttribute }>
                     <ListItemIcon>
                         <AddIcon fontSize="small" />
                     </ListItemIcon>
@@ -145,7 +197,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                     <Button size="small" key={`${attribute[Field.NAME]}-${index}`}
                         style={{justifyContent: "flex-start"}}
                         sx={{ color: selected ? PRIMARY_COLOR : "black", fontSize: "12px", textTransform: 'lowercase'}}
-                        onClick={() => { setIsSuggestedItem(false); onEditItem(attribute)}}>
+                        onClick={ () => { handleEditAttribute(attribute) }}>
                         - { clipName(attribute[Field.NAME], 18) }
                     </Button>
                 ))}

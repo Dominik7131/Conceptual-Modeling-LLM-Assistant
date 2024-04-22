@@ -7,6 +7,8 @@ import IconButton from '@mui/material/IconButton';
 import { Typography } from '@mui/material';
 import useUtility, { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, clipName } from '../hooks/useUtility';
 import useConceptualModel from '../hooks/useConceptualModel';
+import { useSetRecoilState } from 'recoil';
+import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../atoms';
 
 
 // Inspiration: https://reactflow.dev/learn/customization/custom-edges
@@ -17,8 +19,12 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
   // const [edgePath, labelX, labelY] = getStraightPath({ sourceX, sourceY, targetX, targetY });
   // const { sx, sy, tx, ty, sourcePos, targetPos } = getParams(sourceNode, targetNode);
   const [edgePath, labelX, labelY] = getSimpleBezierPath({sourceX: sourceX, sourceY: sourceY, targetX: targetX, targetY: targetY, sourcePosition: sourcePosition, targetPosition: targetPosition});
-
-  const { onEditItem } = useConceptualModel()
+  const setIsItemInConceptualModel = useSetRecoilState(isItemInConceptualModelState)
+  
+  const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
+  const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
+  const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
+  const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
 
   const edgeData: EdgeData = data as EdgeData
   const relationship: Relationship = edgeData.relationship
@@ -29,6 +35,15 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
 
   // console.log(markerEnd)
   // const markerEndString = "url(#1__color=red&height=40&strokeWidth=0.8&type=arrow&width=40)"
+
+  const handleEditRelationship = (relationship: Relationship) =>
+  {
+    setIsItemInConceptualModel(true)
+    setIsSuggestedItem(false)
+    setSelectedSuggestedItem(relationship)
+    setEditedSuggestedItem(relationship)
+    setIsShowEditDialog(true)
+  }
 
   return (
     <>
@@ -46,7 +61,7 @@ export default function CustomEdge ({ id, sourceX, sourceY, sourcePosition, targ
 
                 <Typography
                   color={selected ? PRIMARY_COLOR : "black"}
-                  onClick={() => onEditItem(relationship)}
+                  onClick={() => handleEditRelationship(relationship)}
                   sx={{ display: isHovered ? "inline" : "none",  position: "absolute", right: 3, top: 3 }}
                 >
                   <EditIcon sx={{ width: "20px", height: "20px" }}/> 

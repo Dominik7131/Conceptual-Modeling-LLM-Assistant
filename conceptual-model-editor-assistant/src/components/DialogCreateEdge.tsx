@@ -24,7 +24,6 @@ const DialogCreateEdge: React.FC = () =>
   const [isOpened, setIsOpened] = useRecoilState(isShowCreateEdgeDialogState)
   const relationship = useRecoilValue(selectedSuggestedItemState) as Relationship
 
-  const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
   const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
 
   const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
@@ -44,8 +43,6 @@ const DialogCreateEdge: React.FC = () =>
     const newRelationship = { ...relationship, [Field.IS_GENERALIZATION]: isGeneralization}
     setSelectedSuggestedItem(newRelationship)
     setEditedSuggestedItem(newRelationship)
-
-    setIsSuggestedItem(_ => true)
 
     setIsShowEditDialog(true)
     handleClose()

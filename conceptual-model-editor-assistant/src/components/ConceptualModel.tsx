@@ -3,7 +3,7 @@ import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyN
 import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
 import { Field, Item, ItemType, Relationship } from '../interfaces';
-import { edgesState, editedSuggestedItemState, isShowCreateEdgeDialogState, nodesState, selectedSuggestedItemState, sidebarWidthPercentageState } from '../atoms';
+import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarWidthPercentageState } from '../atoms';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useCallback, useEffect } from 'react';
 import useConceptualModel from '../hooks/useConceptualModel';
@@ -19,9 +19,13 @@ const ConceptualModel: React.FC = () =>
   const [edges, setEdges] = useRecoilState(edgesState)
 
   const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
-
   const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
+
+  const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
+  const setIsItemInConceptualModel = useSetRecoilState(isItemInConceptualModelState)
+  
   const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialogState)
+
 
   const { parseSerializedConceptualModel } = useConceptualModel()
 
@@ -55,6 +59,9 @@ const ConceptualModel: React.FC = () =>
 
     setSelectedSuggestedItem(_ => blankRelationship)
     setEditedSuggestedItem(_ => blankRelationship)
+
+    setIsSuggestedItem(false)
+    setIsItemInConceptualModel(false)
 
     setIsShowCreateEdgeDialog(true)
   }, [])

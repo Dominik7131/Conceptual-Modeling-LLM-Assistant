@@ -15,7 +15,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from '../atoms';
+import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from '../atoms';
 import useEditItemDialog from '../hooks/useEditItemDialog';
 import useConceptualModel from '../hooks/useConceptualModel';
 import Alert from '@mui/material/Alert';
@@ -34,7 +34,9 @@ const DialogEditItem: React.FC = () =>
     const editedItem = useRecoilValue(editedSuggestedItemState)
     const regeneratedItem = useRecoilValue(regeneratedItemState)
     const isSuggestedItem = useRecoilValue(isSuggestedItemState)
-    const isDisableSave = isSuggestedItem
+    const isItemInConceptualModel = useRecoilValue(isItemInConceptualModelState)
+
+    const isDisableSave = !isItemInConceptualModel
     const isDisableChange = !isSuggestedItem
 
     const [errorMessage, setErrorMessage] = useRecoilState(editDialogErrorMsgState)
@@ -182,18 +184,23 @@ const DialogEditItem: React.FC = () =>
                 <ButtonGroup>
 
                     {
-                        isSuggestedItem ?
-                        <Button
-                            variant="contained"
-                            color="success"
-                            sx={{ textTransform: "none" }}
-                            onClick={() => { handleAddItem(editedItem) }}> Add </Button>
-                        :
+                        isItemInConceptualModel ?
                         <Button
                             variant="contained"
                             color="error"
                             sx={{ textTransform: "none" }}
-                            onClick={() => { onRemove(item); onClose()}}> Remove </Button>
+                            onClick={() => { onRemove(item); onClose()}}>
+                                Remove
+                        </Button>
+                        :
+                        <Button
+                            variant="contained"
+                            color="success"
+                            sx={{ textTransform: "none" }}
+                            onClick={() => { handleAddItem(editedItem) }}>
+                                Add
+                        </Button>
+
                     }
                     
 

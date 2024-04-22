@@ -23,13 +23,6 @@ const useConceptualModel = () =>
 
   const setSidebarTitles = useSetRecoilState(sidebarTitlesState)
 
-  const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
-  const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
-
-  const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
-
-  const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
-
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
 
@@ -295,36 +288,6 @@ const useConceptualModel = () =>
   }
 
 
-  const onAddNewEntity = () : void =>
-  {
-    const blankEntity: Entity = {
-      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-      [Field.TYPE]: ItemType.ENTITY,
-    }
-
-    setIsSuggestedItem(_ => true)
-    setSelectedSuggestedItem(_ => blankEntity)
-    setEditedSuggestedItem(_ => blankEntity)
-
-    setIsShowEditDialog(true)
-  }
-
-
-  const onAddNewAttribute = (sourceEntity: Entity) : void =>
-  {
-    const blankAttribute: Attribute = {
-      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-      [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntity.name
-    }
-
-    setIsSuggestedItem(_ => true)
-    setSelectedSuggestedItem(_ => blankAttribute)
-    setEditedSuggestedItem(_ => blankAttribute)
-
-    setIsShowEditDialog(true)
-  }
-
-
   const onSummaryPlainTextClick = (): void =>
   {
     if (selectedNodes.length === 0)
@@ -358,22 +321,9 @@ const useConceptualModel = () =>
     fetchSummaryDescriptions(bodyData)
     return
   }
-
-
-  function onEditItem(item: Item): void
-  {
-    setIsSuggestedItem(_ => false)
-    setSelectedSuggestedItem(_ => item)
-    setEditedSuggestedItem(_ => item)
-
-    setIsShowEditDialog(true)
-  }
     
     
-  return {
-    parseSerializedConceptualModel, onEditItem, onAddNewAttribute, onSuggestItems, onSummaryPlainTextClick,
-    onSummaryDescriptionsClick, onAddNewEntity
-  }
+  return { parseSerializedConceptualModel, onSuggestItems, onSummaryPlainTextClick, onSummaryDescriptionsClick }
 }
 
 export default useConceptualModel

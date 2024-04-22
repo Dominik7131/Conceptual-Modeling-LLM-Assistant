@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import useConceptualModel from "../../hooks/useConceptualModel";
 import { Attribute, Field, Item, ItemType, Relationship } from "../../interfaces";
 import SaveToDiskButton from "./SaveToDiskButton";
-import { edgesState, editedSuggestedItemState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarErrorMsgState } from "../../atoms";
+import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarErrorMsgState } from "../../atoms";
 import { useSetRecoilState } from "recoil";
 import { createErrorMessage, onAddItem } from "../../hooks/useUtility";
 
@@ -24,6 +24,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
     const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
+    const setIsItemInConceptualModel = useSetRecoilState(isItemInConceptualModelState)
     const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
 
 
@@ -54,6 +55,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
         setSelectedSuggestedItem(item)
         setEditedSuggestedItem(item)
         setIsSuggestedItem(true)
+        setIsItemInConceptualModel(false)
         setIsShowEditDialog(true)
     }
 
