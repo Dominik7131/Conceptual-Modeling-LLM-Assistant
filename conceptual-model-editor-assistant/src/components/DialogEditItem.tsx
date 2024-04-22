@@ -181,7 +181,6 @@ const DialogEditItem: React.FC = () =>
             </DialogContent>
 
             <DialogActions>
-                <ButtonGroup>
 
                     {
                         isItemInConceptualModel ?
@@ -227,6 +226,7 @@ const DialogEditItem: React.FC = () =>
                     { !isDisableSave &&
                         <Button
                             variant="contained"
+                            color="success"
                             sx={{ textTransform: "none" }}
                             onClick={() => {onSave(editedItem, item)}}>
                             Save
@@ -239,7 +239,7 @@ const DialogEditItem: React.FC = () =>
                         onClick={() => onClose()}>
                         Cancel
                     </Button>
-                </ButtonGroup>
+
             </DialogActions>
         </Dialog>
     )
