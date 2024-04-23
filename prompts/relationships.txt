@@ -1,2 +1,2 @@
-Which relationships does the entity: "{source_entity}" have? Output exactly {count_items} relationships in JSON format like this:
+Which relationships does the entity: "{source_entity}" have? Output exactly {items_count} relationships in JSON format like this:
 {"description": "description of the relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}

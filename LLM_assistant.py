@@ -83,6 +83,7 @@ class LLMAssistant:
             item = item.replace('\_', ' ')
 
             completed_item = json.loads(item)
+            print(f"{completed_item}\n\n")
 
         except ValueError:
             logging.error(f"Cannot decode JSON: {item}\n")
@@ -317,6 +318,9 @@ class LLMAssistant:
 
         if is_domain_description:
             prompt_file_name += "-dd"
+        else:
+            # For now disable chain of thoughts if we do not have any domain description
+            is_chain_of_thoughts = False
         
         if is_chain_of_thoughts:
             prompt_file_name += "-cot"
