@@ -162,6 +162,7 @@ class TextUtility:
         if string.isspace():
             return False
         
+        # TODO: Describe why is `can_be_snake_case` needed
         if can_be_snake_case and '_' in string:
             return False
 
@@ -173,6 +174,9 @@ class TextUtility:
 
         # TODO: Convert camel case starting with a small letter
         # E.g.: periodOfInterruptionOfInsurance, dateOfChangeOfInsurance
+
+        if name == "animalID":
+            print("")
 
         if name == "Capitalized Name":
             print("")
@@ -201,7 +205,14 @@ class TextUtility:
                     continue
 
                 if (char.isupper()):
-                    result += ' ' + char.lower()
+                    result += ' '
+                    # If the next word is all in upper-case then make one space and skip it
+                    # E.g. indexURL -> index URL
+                    if (index + 1 < len(name) and name[index + 1].isupper()):
+                        result += name[index:]
+                        break
+                    else:
+                        result += char.lower()
                 else:
                     result += char
 
