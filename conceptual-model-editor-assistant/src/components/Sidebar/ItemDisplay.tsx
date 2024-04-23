@@ -18,7 +18,12 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
 
     // Display original text in gray color if generated original text was not found in domain description
     const customLightGray = "#b5b5b5"
-    const originalTextColor = item[Field.ORIGINAL_TEXT_INDEXES].length === 0 ? customLightGray : "black"
+    let originalTextColor = customLightGray
+
+    if (item[Field.ORIGINAL_TEXT_INDEXES])
+    {
+        originalTextColor = item[Field.ORIGINAL_TEXT_INDEXES].length === 0 ? customLightGray : "black"
+    }
 
 
     return (
@@ -28,6 +33,11 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
             {
                 item[Field.ORIGINAL_TEXT] &&
                     <Typography color={originalTextColor}> <strong>{ ItemFieldUIName.ORIGINAL_TEXT }:</strong> { item[Field.ORIGINAL_TEXT] } </Typography>
+            }
+
+            {
+                item[Field.DESCRIPTION] &&
+                    <Typography> <strong>{ ItemFieldUIName.DESCRIPTION }:</strong> { item[Field.DESCRIPTION] } </Typography>
             }
 
             {

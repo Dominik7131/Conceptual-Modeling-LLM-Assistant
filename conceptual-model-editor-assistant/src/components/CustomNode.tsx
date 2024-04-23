@@ -198,7 +198,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                         style={{justifyContent: "flex-start"}}
                         sx={{ color: selected ? PRIMARY_COLOR : "black", fontSize: "12px", textTransform: 'lowercase'}}
                         onClick={ () => { handleEditAttribute(attribute) }}>
-                        - { clipName(attribute[Field.NAME], 18) }
+                        - { clipName(attribute[Field.NAME], 30) }
                     </Button>
                 ))}
             </Stack>
