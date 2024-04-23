@@ -1,6 +1,6 @@
 import os
 
-from text_utility import Field, PromptFileSymbols, TextUtility, UserChoice, DataType
+from text_utility import LOGGER_NAME, Field, PromptFileSymbols, TextUtility, UserChoice, DataType
 from find_relevant_text_lemmatization import RelevantTextFinderLemmatization
 import time
 import logging
@@ -14,9 +14,7 @@ IS_IGNORE_DOMAIN_DESCRIPTION = False
 TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
 IS_RELATIONSHIPS_IS_A = False
 
-TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
-LOG_DIRECTORY = "logs"
-LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, f"{TIMESTAMP}-log.txt")
+logger = logging.getLogger(LOGGER_NAME)
 
 PROMPT_DIRECTORY = "prompts"
 SYSTEM_PROMPT_DIRECTORY = os.path.join(PROMPT_DIRECTORY, "system")
@@ -26,7 +24,7 @@ LLM_BACKEND_URL = "http://localhost:8080/v1"
 
 DEFINED_DATA_TYPES = [DataType.STRING.value, DataType.NUMBER.value, DataType.TIME.value, DataType.BOOLEAN.value]
 
-logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
+# logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
 
 
 class LLMAssistant:

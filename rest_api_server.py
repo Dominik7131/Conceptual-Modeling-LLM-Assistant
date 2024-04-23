@@ -1,15 +1,24 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from LLM_assistant import LLMAssistant
-from text_utility import TextUtility
+from text_utility import LOGGER_NAME, TextUtility
 import json
 import os
 import time
+import logging
 
 app = Flask(__name__)
 llm_assistant = None
 
-PATH_TO_DATA_STORAGE = "storage"
+TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
+LOG_DIRECTORY = "logs"
+LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, f"{TIMESTAMP}-log.txt")
+
+logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
+logger = logging.getLogger(LOGGER_NAME)
+
+
+STORAGE_DIRECTORY = "storage"
 
 # CORS error from frontend solution: https://stackoverflow.com/a/33091782
 cors = CORS(app)
@@ -86,8 +95,12 @@ def save_suggestion():
 
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
 
+    # TODO: Check storage size
+    # If the storage size > 100MB then print warning and do not store anything
+
+
     timestamp = time.strftime('%Y-%m-%d-%H-%M-%S')
-    file_to_write_path = f"{os.path.join(PATH_TO_DATA_STORAGE, timestamp)}.json"
+    file_to_write_path = f"{os.path.join(STORAGE_DIRECTORY, timestamp)}.json"
 
     with open(file_to_write_path, 'w') as file:
         json.dump(completed_item, file)
@@ -96,6 +109,13 @@ def save_suggestion():
 
 
 if __name__ == '__main__':
+
+    if (not os.path.exists(LOG_DIRECTORY)):
+        os.makedirs(LOG_DIRECTORY)
+    
+    if (not os.path.exists(STORAGE_DIRECTORY)):
+        os.makedirs(STORAGE_DIRECTORY)
+
     llm_assistant = LLMAssistant()
 
     app.run(port=5000, threaded=True) # host="0.0.0.0"

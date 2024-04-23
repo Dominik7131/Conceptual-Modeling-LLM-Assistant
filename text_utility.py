@@ -5,6 +5,9 @@ from difflib import SequenceMatcher
 from enum import Enum
 
 
+LOGGER_NAME = "LLM_logger"
+
+
 class UserChoice(Enum):
     ATTRIBUTES = "attributes"
     RELATIONSHIPS = "relationships"
