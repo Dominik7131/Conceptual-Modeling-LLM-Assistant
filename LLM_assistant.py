@@ -31,7 +31,7 @@ logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE
 class LLMAssistant:
     def __init__(self):   
 
-        self.client = openai.OpenAI(base_url=LLM_BACKEND_URL, api_key = "sk-no-key-required")
+        self.client = openai.OpenAI(base_url=LLM_BACKEND_URL, api_key="sk-no-key-required")
 
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             # Assumption: domain description never changes
