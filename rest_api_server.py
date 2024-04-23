@@ -87,7 +87,7 @@ def save_suggestion():
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
 
     timestamp = time.strftime('%Y-%m-%d-%H-%M-%S')
-    file_to_write_path = f"{os.join(PATH_TO_DATA_STORAGE, timestamp)}.json"
+    file_to_write_path = f"{os.path.join(PATH_TO_DATA_STORAGE, timestamp)}.json"
 
     with open(file_to_write_path, 'w') as file:
         json.dump(completed_item, file)
