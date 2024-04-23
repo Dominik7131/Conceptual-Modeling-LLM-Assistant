@@ -32,7 +32,7 @@ const Sidebar: React.FC = () =>
 
     return (
         <Drawer
-            sx={{ '& .MuiDrawer-paper': { width: `${sidebarWidthPercentage}%`}, '& .MuiTabPanel-root': { paddingX: 0, marginX: 1 } }}
+            sx={{ '& .MuiDrawer-paper': { width: `${sidebarWidthPercentage}%`}, '& .MuiTabPanel-root': { paddingX: "0px", marginX: "3px" } }}
             variant="persistent"
             anchor="right"
             open={isSidebarOpen}

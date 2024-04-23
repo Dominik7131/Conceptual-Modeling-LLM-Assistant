@@ -2,7 +2,6 @@ import { Button, ButtonGroup } from "@mui/material"
 import HighlightSingleItemButton from "./HighlightSingleItemButton"
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
-import useConceptualModel from "../../hooks/useConceptualModel";
 import { Attribute, Field, Item, ItemType, Relationship } from "../../interfaces";
 import SaveToDiskButton from "./SaveToDiskButton";
 import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarErrorMsgState } from "../../atoms";
@@ -61,21 +60,24 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
 
     
     return (
-        <ButtonGroup fullWidth sx={{ marginTop: 1, minWidth: "320px" }} variant="outlined" size="small">
+        <ButtonGroup fullWidth sx={{ marginTop: 1, minWidth: "350px" }} variant="outlined" size="small">
 
             <Button
                 color="secondary"
                 startIcon={<AddIcon/>}
                 sx={{ textTransform: "none" }}
-                onClick={ handleAddItem }>
+                onClick={ handleAddItem }
+                >
                     Add
             </Button>
+            
 
             <Button
                 color="secondary"
                 startIcon={<EditIcon/>}
                 sx={{ textTransform: "none" }}
-                onClick={ handleEditSuggestedItem }>
+                onClick={ handleEditSuggestedItem }
+                >
                     Edit
             </Button>
 
