@@ -43,10 +43,6 @@ def suggest():
 @app.route('/summary_plain_text', methods=['POST'])
 def summary_plain_text():
 
-    body_data = request.get_json()
-    domain_description = body_data["domainDescription"]
-    conceptual_model = body_data["conceptualModel"]
-
     def generate_mock_up():
         yield '{"summary": "The conceptual model includes four main entities: Student, Course, Dormitory, and Professor. The Student entity has a name attribute and can be enrolled in any number of Courses. The Course entity has a name and a number of credits attribute, and can have one or more Professors. The Dormitory entity has a price attribute, and students can be accommodated in it. The Professor entity has a name attribute. Additionally, there is a relationship between Student and Person through an \'is-a\' relationship."}\n'
         return
@@ -56,10 +52,6 @@ def summary_plain_text():
 
 @app.route('/summary_descriptions', methods=['POST'])
 def summary_descriptions():
-
-    body_data = request.get_json()
-    domain_description = body_data["domainDescription"]
-    conceptual_model = body_data["conceptualModel"]
 
     def generate_mock_up():
         # time.sleep(1)

@@ -2,7 +2,7 @@ import { Button } from "@mui/material"
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { SUMMARY_PLAIN_TEXT_NAME, convertConceptualModelToJSON } from "../../hooks/useUtility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { domainDescriptionState, isIgnoreDomainDescriptionState, selectedEdgesState, selectedNodesState, topbarTabValueState } from "../../atoms";
+import { domainDescriptionState, isIgnoreDomainDescriptionState, selectedEdgesState, selectedNodesState, summaryTextState, topbarTabValueState } from "../../atoms";
 import { TopbarTabs } from "../../interfaces";
 import useFetchData from "../../hooks/useFetchData";
 
@@ -13,6 +13,7 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
     const selectedEdges = useRecoilValue(selectedEdgesState)
 
     const setTopbarTab = useSetRecoilState(topbarTabValueState)
+    const setSummaryText = useSetRecoilState(summaryTextState)
 
     const domainDescription = useRecoilValue(domainDescriptionState)
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
@@ -28,6 +29,8 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
             return
         }
 
+        setSummaryText("")
+        
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
 
         setTopbarTab(TopbarTabs.SUMMARY_PLAIN_TEXT)

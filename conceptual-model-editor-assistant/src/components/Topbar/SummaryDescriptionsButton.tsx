@@ -2,7 +2,7 @@ import { Button } from "@mui/material"
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { SUMMARY_DESCRIPTIONS_NAME, convertConceptualModelToJSON } from "../../hooks/useUtility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { domainDescriptionState, isIgnoreDomainDescriptionState, selectedEdgesState, selectedNodesState, topbarTabValueState } from "../../atoms";
+import { domainDescriptionState, isIgnoreDomainDescriptionState, selectedEdgesState, selectedNodesState, summaryDescriptionsState, topbarTabValueState } from "../../atoms";
 import { TopbarTabs } from "../../interfaces";
 import useFetchData from "../../hooks/useFetchData";
 
@@ -13,6 +13,7 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
     const selectedEdges = useRecoilValue(selectedEdgesState)
 
     const setTopbarTab = useSetRecoilState(topbarTabValueState)
+    const setSummaryDescriptions = useSetRecoilState(summaryDescriptionsState)
 
     const domainDescription = useRecoilValue(domainDescriptionState)
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
@@ -27,6 +28,8 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
             alert("Nothing was selected")
             return
         }
+
+        setSummaryDescriptions({entities: [], relationships: []})
 
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
 

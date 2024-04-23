@@ -207,8 +207,6 @@ const useFetchData = () =>
   {
     setIsLoadingSummaryDescriptions(_ => true)
 
-    setSummaryDescriptions({entities: [], relationships: []})
-
     fetch(SUMMARY_DESCRIPTIONS_URL, { method: "POST", headers: HEADER, body: bodyData })
     .then(response =>
     {
