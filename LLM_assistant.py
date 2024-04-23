@@ -15,7 +15,8 @@ TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
 IS_RELATIONSHIPS_IS_A = False
 
 TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
-LOG_FILE_PATH = f"{TIMESTAMP}-log.txt"
+LOG_DIRECTORY = "logs"
+LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, f"{TIMESTAMP}-log.txt")
 
 PROMPT_DIRECTORY = "prompts"
 SYSTEM_PROMPT_DIRECTORY = os.path.join(PROMPT_DIRECTORY, "system")
@@ -83,7 +84,6 @@ class LLMAssistant:
             item = item.replace('\_', ' ')
 
             completed_item = json.loads(item)
-            print(f"{completed_item}\n\n")
 
         except ValueError:
             logging.error(f"Cannot decode JSON: {item}\n")
