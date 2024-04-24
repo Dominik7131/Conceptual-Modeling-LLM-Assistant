@@ -16,9 +16,9 @@ interface Props
     onImport: (conceptualModelJson: ConceptualModelJson) => void
 }
 
-const DialogEnterIRI: React.FC<Props> = ({ onImport }): JSX.Element =>
+const DialogEnterModelID: React.FC<Props> = ({ onImport }): JSX.Element =>
 {
-    const [enteredIRI, setEnteredIRI] = useState("")
+    const [enteredID, setEnteredID] = useState("")
     const [isOpened, setIsOpened] = useRecoilState(isDialogEnterIRIOpenedState)
 
 
@@ -26,7 +26,7 @@ const DialogEnterIRI: React.FC<Props> = ({ onImport }): JSX.Element =>
     {
         onClose()
 
-        fetch(`${JSON_MODEL_FROM_IRI_URL}${enteredIRI}`)
+        fetch(`${JSON_MODEL_FROM_IRI_URL}${enteredID}`)
             .then(response => response.json())
             .then(json => onImport(json))   
     }
@@ -46,15 +46,15 @@ const DialogEnterIRI: React.FC<Props> = ({ onImport }): JSX.Element =>
         >
             <DialogTitle>
                 <Stack spacing={2}>
-                    <Typography variant="h5"> Enter IRI </Typography>
+                    <Typography variant="h5"> Enter model ID </Typography>
                 </Stack>
             </DialogTitle>
 
             <DialogContent dividers={true}>
-                <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={"IRI"} multiline
+                <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={"Model ID"} multiline
                         // sx={{'& textarea': {color: color} }}
-                        onChange={ event => setEnteredIRI(_ => event.target.value) }
-                        value={ enteredIRI }
+                        onChange={ event => setEnteredID(_ => event.target.value) }
+                        value={ enteredID }
                     />
             </DialogContent>
 
@@ -82,4 +82,4 @@ const DialogEnterIRI: React.FC<Props> = ({ onImport }): JSX.Element =>
     )
 }
 
-export default DialogEnterIRI
+export default DialogEnterModelID
