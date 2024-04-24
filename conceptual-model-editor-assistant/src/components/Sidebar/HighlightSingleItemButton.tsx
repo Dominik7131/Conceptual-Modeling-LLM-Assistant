@@ -1,9 +1,9 @@
-import { Button } from "@mui/material"
+import { Button, IconButton, Tooltip } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
 import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { useSetRecoilState } from "recoil";
 import { Attribute, Field, Item, ItemType, Relationship } from "../../interfaces";
-import { capitalizeString } from "../../hooks/useUtility";
+import { SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE, capitalizeString } from "../../hooks/useUtility";
 
 
 interface Props
@@ -49,13 +49,19 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
     }
 
     return (
-        <Button
-            color="secondary"
-            startIcon={<HighlightIcon/>}
-            sx={{ textTransform: "none" }}
-            onClick={() => onHighlightSingleItem()}>
-                Highlight
-        </Button>
+        <Tooltip
+            title="Highlight in domain description"
+            enterDelay={500}
+            leaveDelay={200}>
+
+            <Button
+                color={ SIDEBAR_BUTTON_COLOR }
+                size={ SIDEBAR_BUTTON_SIZE }
+                sx={{ textTransform: "none" }}
+                onClick={() => onHighlightSingleItem()}>
+                    <HighlightIcon/>
+            </Button>
+        </Tooltip>
     )
 }
 

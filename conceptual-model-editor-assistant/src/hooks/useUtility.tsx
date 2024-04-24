@@ -472,6 +472,9 @@ export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 const BASE_URL = "http://127.0.0.1:5000/"
 export const HEADER = { "Content-Type": "application/json" }
 
+export const SIDEBAR_BUTTON_SIZE = "small"
+export const SIDEBAR_BUTTON_COLOR = "secondary"
+
 const SUGGEST_ITEMS_ENDPOINT = "suggest"
 const SUMMARY_PLAIN_TEXT_ENDPOINT = "summary_plain_text"
 const SUMMARY_DESCRIPTIONS_ENDPOINT = "summary_descriptions"
