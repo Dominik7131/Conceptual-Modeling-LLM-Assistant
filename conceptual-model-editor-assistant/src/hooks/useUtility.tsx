@@ -1,6 +1,6 @@
 import { SetterOrUpdater } from "recoil";
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, SidebarTabs, UserChoice } from "../interfaces"
-import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
+import { Node, Edge, MarkerType, EdgeMarker, Position, internalsSymbol } from 'reactflow';
 
 
 const useUtility = () =>
