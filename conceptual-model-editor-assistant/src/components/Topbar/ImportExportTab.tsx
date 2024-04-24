@@ -1,13 +1,15 @@
 import { Stack } from "@mui/material"
-import ImportIRIButton from "./ImportIRIButton"
+import ImportIRIButton from "./ImportFromDataspecerButton"
 import ImportJSONButton from "./ImportJSONButton"
-import ExportButton from "./ExportButton"
+import ExportButton from "./ExportJSONButton"
 import { Attribute, ConceptualModelJson, Entity, Field, ItemType, NodeData, EdgeData, Relationship } from "../../interfaces";
 import { edgesState, importedFileNameState, nodesState } from "../../atoms";
 import { Node, Edge } from 'reactflow';
 import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, createEdgeID, onAddItem } from "../../hooks/useUtility";
 import { useSetRecoilState } from "recoil";
-import useConceptualModel from "../../hooks/useConceptualModel";
+import ExportIntoDataspecerButton from "./ExportIntoDataspecerButton";
+import ExportJSONButton from "./ExportJSONButton";
+import ImportFromDataspecerButton from "./ImportFromDataspecerButton";
 
 
 const ImportTab: React.FC = (): JSX.Element =>
@@ -142,9 +144,12 @@ const ImportTab: React.FC = (): JSX.Element =>
 
     return (
         <Stack direction="row" spacing={2} sx={{ display: 'flex', justifyContent:"center" }}>
-            <ImportIRIButton onImport={ onImport }/>
+            <ImportFromDataspecerButton onImport={ onImport }/>
             <ImportJSONButton onImport={ onImport }/>
-            <ExportButton/>
+
+            <ExportJSONButton/>
+            <ExportIntoDataspecerButton/>
+            
         </Stack>
     )
 }

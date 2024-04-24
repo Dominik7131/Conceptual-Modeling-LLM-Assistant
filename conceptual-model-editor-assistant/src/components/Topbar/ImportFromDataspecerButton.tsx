@@ -12,7 +12,7 @@ interface Props
     onImport: (conceptualModelJson: ConceptualModelJson) => void
 }
 
-const ImportIRIButton: React.FC<Props> = ({ onImport }): JSX.Element =>
+const ImportFromDataspecerButton: React.FC<Props> = ({ onImport }): JSX.Element =>
 {
     const setIsOpened = useSetRecoilState(isDialogEnterIRIOpenedState)
     const setImportedFileName = useSetRecoilState(importedFileNameState)
@@ -28,13 +28,13 @@ const ImportIRIButton: React.FC<Props> = ({ onImport }): JSX.Element =>
         <>
             <Button
                 variant="contained"
-                color="secondary"
+                color="primary"
                 disableElevation
                 sx={{ textTransform: "none" }}
                 startIcon={ <UploadIcon/> }
                 onClick={ handleClick }
             >
-                Import from IRI
+                Import from Dataspecer
             </Button>
 
             <DialogEnterIRI
@@ -44,4 +44,4 @@ const ImportIRIButton: React.FC<Props> = ({ onImport }): JSX.Element =>
     )
 }
 
-export default ImportIRIButton
+export default ImportFromDataspecerButton

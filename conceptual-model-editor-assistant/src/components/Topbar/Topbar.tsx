@@ -9,7 +9,7 @@ import SummaryPlainTextTab from "./SummaryPlainTextTab";
 import TopbarButtons from "./ControlButtons";
 import SettingsTab from "./SettingsTab";
 import Tabs from "./Tabs";
-import ImportTab from './ImportTab';
+import ImportTab from './ImportExportTab';
 
 
 

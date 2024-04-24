@@ -6,7 +6,7 @@ import { edgesState, importedFileNameState, nodesState } from "../../atoms";
 import { useRecoilValue } from "recoil";
 
 
-const ExportButton: React.FC = (): JSX.Element =>
+const ExportJSONButton: React.FC = (): JSX.Element =>
 {
     const nodes = useRecoilValue(nodesState)
     const edges = useRecoilValue(edgesState)
@@ -101,13 +101,14 @@ const ExportButton: React.FC = (): JSX.Element =>
     return (
         <Button
             variant="contained"
+            color="secondary"
             disableElevation
             sx={{textTransform: "none"}}
             startIcon={ <DownloadIcon/> }
             onClick={ onExport }>
-        Export
+        Export into JSON
     </Button>
     )
 }
 
-export default ExportButton
+export default ExportJSONButton
