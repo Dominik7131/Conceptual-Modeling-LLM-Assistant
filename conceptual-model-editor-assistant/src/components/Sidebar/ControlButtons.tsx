@@ -87,12 +87,26 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
             sx={{ marginTop: "15px" }}>
 
             <Tooltip
+                title="Like"
+                enterDelay={500}
+                leaveDelay={200}>
+
+                <Button
+                    size={ SIDEBAR_BUTTON_SIZE }
+                    sx={{ textTransform: "none" }}
+                    disabled={isClicked}
+                    onClick={ () => { handleSendReaction(true) } }
+                    >
+                        <ThumbUpIcon/>
+                </Button>
+            </Tooltip>
+
+            <Tooltip
                 title="Add"
                 enterDelay={500}
                 leaveDelay={200}
                 >
                 <Button
-                    color={ SIDEBAR_BUTTON_COLOR }
                     size={ SIDEBAR_BUTTON_SIZE }
                     sx={{ textTransform: "none" }}
                     onClick={ handleAddItem }
@@ -108,7 +122,6 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
                 leaveDelay={200}
                 >
                 <Button
-                    color={ SIDEBAR_BUTTON_COLOR }
                     size="small"
                     sx={{ textTransform: "none" }}
                     onClick={ handleEditSuggestedItem }
@@ -121,28 +134,11 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
             <HighlightSingleItemButton item={item}/>
 
             <Tooltip
-                title="Like"
-                enterDelay={500}
-                leaveDelay={200}>
-
-                <Button
-                    color={ SIDEBAR_BUTTON_COLOR }
-                    size={ SIDEBAR_BUTTON_SIZE }
-                    sx={{ textTransform: "none" }}
-                    disabled={isClicked}
-                    onClick={ () => { handleSendReaction(true) } }
-                    >
-                        <ThumbUpIcon/>
-                </Button>
-            </Tooltip>
-
-            <Tooltip
                 title="Dislike"
                 enterDelay={500}
                 leaveDelay={200}>
 
                 <Button
-                    color={ SIDEBAR_BUTTON_COLOR }
                     size={ SIDEBAR_BUTTON_SIZE }
                     sx={{ textTransform: "none" }}
                     disabled={isClicked}

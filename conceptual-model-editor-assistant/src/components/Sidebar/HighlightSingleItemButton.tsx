@@ -55,7 +55,6 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
             leaveDelay={200}>
 
             <Button
-                color={ SIDEBAR_BUTTON_COLOR }
                 size={ SIDEBAR_BUTTON_SIZE }
                 sx={{ textTransform: "none" }}
                 onClick={() => onHighlightSingleItem()}>
