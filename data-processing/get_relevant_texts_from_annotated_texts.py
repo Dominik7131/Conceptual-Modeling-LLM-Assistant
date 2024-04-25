@@ -111,8 +111,6 @@ def main():
             with open(output_file_path, 'w') as file:
                 json.dump(test_cases, file)
 
-            print()
-
 
 if __name__ == "__main__":
     main()
