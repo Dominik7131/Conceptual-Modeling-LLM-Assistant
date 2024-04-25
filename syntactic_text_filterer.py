@@ -132,7 +132,7 @@ class SyntacitTextFilterer:
 
 def main():
 
-    # Simple example
+    # Simple usage example
     entity = "green card"
     with open(INPUT_DOMAIN_DESCRIPTION_FILE_PATH, 'r') as domain_description_file:
         domain_description = domain_description_file.read()

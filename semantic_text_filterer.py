@@ -44,7 +44,7 @@ class SemanticTextFilterer:
 
 def main():
 
-    # Simple example of usage
+    # Simple usage example
     path = os.path.join("domain-modeling-benchmark", "domain-models", "farming 97627e23829afb", "domain-description-01.txt")
     with open(path) as file:
         domain_description = file.read()
@@ -52,6 +52,7 @@ def main():
     filterer = SemanticTextFilterer()
     entity = "farmer"
     actual_texts = filterer.get(entity, domain_description)
+    print(actual_texts)
 
 
 if __name__ == "__main__":
