@@ -1,13 +1,31 @@
 import json
 import re
 import os
+import sys
+sys.path.append('.')
+from text_utility import TextUtility
 
 
 DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "domain-models")
-FILE_PATH = os.path.join(DIRECTORY_PATH, "farming 97627e23829afb", "domain-description-01-annotated.txt")
 
 domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb"]
 DOMAIN_DESCRIPTIONS_COUNT = 3
+
+
+def get_entities(model_file_path):
+    
+    entities = []
+
+    with open(model_file_path) as file:
+        lines = file.readlines()
+
+    for line in lines:
+        entity_symbol = "owl:Class"
+        if entity_symbol in line:
+            entity = re.findall(r'<([^>]+)>', line)[0]
+            entities.append(entity)
+    
+    return entities
 
 
 def convert_to_relevant_texts(dictionary, text):
@@ -20,11 +38,16 @@ def convert_to_relevant_texts(dictionary, text):
         while index < len(value):
             sub_text = text[value[index] : value[index + 1]]
             relevant_text = re.sub(r'<[^>]+>', '', sub_text)
-            relevant_texts.append(relevant_text)
+
+            sentences = TextUtility.split_into_sentences(relevant_text)
+            
+            for sentence in sentences:
+                relevant_texts.append(sentence)
+
             index += 2
         
         new_key = key.replace('-', ' ')
-        result.append({"item": new_key, "relevant_texts": relevant_texts})
+        result.append({"entity": new_key, "relevant_texts": relevant_texts})
     
     return result
 
@@ -87,20 +110,29 @@ def main():
         for i in range(DOMAIN_DESCRIPTIONS_COUNT):
 
             file_name = f"domain-description-0{i + 1}-annotated.txt"
+            model_file_name = f"domain-model.ttl"
             output_file_name = f"relevant-texts-0{i + 1}.json"
 
             file_path = os.path.join(DIRECTORY_PATH, domain_model, file_name)
+            model_file_path = os.path.join(DIRECTORY_PATH, domain_model, model_file_name)
             output_file_path = os.path.join(DIRECTORY_PATH, domain_model, output_file_name)
 
             if not os.path.isfile(file_path):
-                raise ValueError(f"File not found: {file_path}")
+                raise ValueError(f"Annotated domain description not found: {file_path}")
+            
+            if not os.path.isfile(model_file_path):
+                raise ValueError(f"Model file not found: {file_path}")
 
+
+            entities = get_entities(model_file_path)
 
             with open(file_path) as file:
                 text = file.read()
 
             tags = re.findall(r'<([^>]+)>', text)
             tags = list(filter(lambda x: x[0] != '/', tags)) # Remove closed tags
+            tags = list(filter(lambda x: x in entities, tags)) # Keep only entities
+
 
             tags_indexes = get_tags_indexes(tags, text)
 

@@ -13,7 +13,7 @@ OUTPUT_FILE = "out_manual.txt"
 IS_SAVE_OUTPUT_TO_FILE = True
 
 IS_CACHE_DOMAIN_DESCRIPTION = False
-IS_USE_CACHE = True
+IS_USE_CACHE = False
 
 
 class RelevantTextFinderLemmatization:
@@ -48,6 +48,8 @@ class RelevantTextFinderLemmatization:
 
         self.load_chunks(domain_description)
         entity_lemmas = self.tagger.get_lemmas_one_by_one(entity)
+
+        # print("Entity lemmas: ", entity_lemmas)
 
         if IS_USE_CACHE:
 

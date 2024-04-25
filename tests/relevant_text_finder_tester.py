@@ -9,37 +9,68 @@ PATH_TO_DATA_DIRECTORY = os.path.join("data", "56-2001-extract-llm-assistant-tes
 TEST_DATA_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "relevant_texts.json")
 INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "56-2001-extract-llm-assistant-test-case.txt")
 
+
+DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "domain-models")
+
+domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb"]
+DOMAIN_DESCRIPTIONS_COUNT = 3
+
+
 class RAGTester:
 
-    def test_lemmas_approach():
-        test_cases = RAGTester.load_test_cases()
+    def test_syntactic_filtering():
+
         relevant_text_finder = RelevantTextFinderLemmatization()
 
-        with open(INPUT_DOMAIN_DESCRIPTION_FILE_PATH, 'r') as domain_description_file:
-            domain_description = domain_description_file.read()
+        total_tests = 0
+        successful_tests = 0
 
-        are_all_tests_passing = True
+        for domain_model in domain_models:
+            for i in range(DOMAIN_DESCRIPTIONS_COUNT):
 
-        for test_case in test_cases:
-            entity = test_case['entity']
-            expected_relevant_texts = test_case['relevant_texts']
+                domain_description_file_name = f"domain-description-0{i + 1}.txt"
+                test_file_name = f"relevant-texts-0{i + 1}.json"
 
-            actual_relevant_texts = relevant_text_finder.get(entity, domain_description)
+                domain_description_path = os.path.join(DIRECTORY_PATH, domain_model, domain_description_file_name)
+                test_file_path = os.path.join(DIRECTORY_PATH, domain_model, test_file_name)
 
-            for expected_text in expected_relevant_texts:
-                is_relevant_text_found = False
-                for actual_relevant_text in actual_relevant_texts:
-                    if expected_text in actual_relevant_text:
-                        is_relevant_text_found = True
-                        break
 
-                if not is_relevant_text_found:
-                    are_all_tests_passing = False
-                    print(f"Test failed:\n- entity: {entity}\n- relevant text not found: {expected_text}")
-            
-        if are_all_tests_passing:
-            print("All tests are passing")
-    
+                with open(test_file_path) as file:
+                    test_cases = json.load(file)["test_cases"]
+                
+                with open(domain_description_path) as file:
+                    domain_description = file.read()
+
+                are_all_tests_passing = True
+
+                for test_case in test_cases:
+                    entity = test_case['entity']
+                    expected_relevant_texts = test_case['relevant_texts']
+
+                    actual_relevant_texts = relevant_text_finder.get(entity, domain_description)
+
+                    for expected_text in expected_relevant_texts:
+                        total_tests += 1
+                        is_relevant_text_found = False
+                        for actual_relevant_text in actual_relevant_texts:
+                            if expected_text in actual_relevant_text:
+                                is_relevant_text_found = True
+                                successful_tests += 1
+                                break
+
+                        if not is_relevant_text_found:
+                            are_all_tests_passing = False
+                            print(f"Test failed:\n- entity: {entity}\n- relevant text not found: {expected_text}")
+                            # print(f"Actual relevant texts:\n{actual_relevant_texts}\n")
+                    
+                if are_all_tests_passing:
+                    print("All tests are passing")
+
+        print(f"Successful tests / total tests: {successful_tests} / {total_tests}")
+        recall = successful_tests / total_tests
+        print("Recall:")
+        print("{:.2f}".format(recall))
+
 
     def output_relevant_text_for_given_entities():
         # entities = ["vehicle type", "motorised vehicle", "structural component", "manufacturer", "vehicle system", "owner", "operator", "natural person", "business natural person", "address", "legal person", "registration", "registration application", "third party insurance", "insurance contract", "policy holder", "insurer", "green card", "technical inspection", "technical inspection report", "defect"]
@@ -140,9 +171,9 @@ class RAGTester:
 
 
 def main():
-    # RAGTester.test_lemmas_approach()
+    RAGTester.test_syntactic_filtering()
 
-    RAGTester.output_relevant_text_for_given_entities()
+    # RAGTester.output_relevant_text_for_given_entities()
 
 
 if __name__ == "__main__":
