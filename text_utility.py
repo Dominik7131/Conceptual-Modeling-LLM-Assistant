@@ -17,6 +17,11 @@ class UserChoice(Enum):
     SUMMARY_DESCRIPTIONS = "summary-descriptions"
 
 
+class DomainDescriptionFilteringVariation(Enum):
+    NO_FILTERING = "no_filtering"
+    SYNTACTIC = "syntactic"
+    SEMANTIC = "semantic"
+
 class DataType(Enum):
     STRING = "string"
     NUMBER = "number"
