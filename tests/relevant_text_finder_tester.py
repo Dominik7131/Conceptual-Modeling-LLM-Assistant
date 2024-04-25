@@ -4,7 +4,7 @@ import json
 import os
 from text_utility import DomainDescriptionFilteringVariation, TextUtility
 from syntactic_text_filterer import SyntacitTextFilterer
-from semantic_text_filterer import SemanticTextFilterer
+
 
 PATH_TO_DATA_DIRECTORY = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
 TEST_DATA_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "relevant_texts.json")
@@ -19,13 +19,48 @@ DOMAIN_DESCRIPTIONS_COUNT = 3
 
 class RAGTester:
 
+    def compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name):
+        total_tests = 0
+        successful_tests = 0
+
+        for expected_text in expected_relevant_texts:
+            total_tests += 1
+            is_relevant_text_found = False
+            for actual_relevant_text in actual_relevant_texts:
+                if expected_text in actual_relevant_text:
+                    is_relevant_text_found = True
+                    break
+
+            if not is_relevant_text_found:
+                print(f"Test failed:\n- file: {domain_description_path}\n- name: {name}\n- relevant text not found: {expected_text}\n")
+                # print(f"Actual relevant texts:\n{actual_relevant_texts}\n")
+            else:
+                successful_tests += 1
+        
+        return total_tests, successful_tests
+
+
+    def get_actual_relevant_texts(filtering_variation, domain_description, source_entity, text_finder=None):
+
+        if filtering_variation == DomainDescriptionFilteringVariation.NO_FILTERING:
+            actual_relevant_texts = TextUtility.split_into_sentences(domain_description)
+        else:
+            actual_relevant_texts = text_finder.get(source_entity, domain_description)
+        
+        return actual_relevant_texts
+
+
     def test_filtering(filtering_variation):
 
         if filtering_variation == DomainDescriptionFilteringVariation.SYNTACTIC:
-            syntactic_text_finder = SyntacitTextFilterer()
+            text_finder = SyntacitTextFilterer()
         
-        if filtering_variation == DomainDescriptionFilteringVariation.SEMANTIC:
-            semantic_text_finder = SemanticTextFilterer()
+        elif filtering_variation == DomainDescriptionFilteringVariation.SEMANTIC:
+            from semantic_text_filterer import SemanticTextFilterer
+            text_finder = SemanticTextFilterer()
+
+        else:
+            text_finder = None
 
         total_tests = 0
         successful_tests = 0
@@ -53,44 +88,35 @@ class RAGTester:
                 with open(domain_description_path) as file:
                     domain_description = file.read()
 
-                are_all_tests_passing = True
 
                 for test_case in test_cases:
-                    entity = test_case['entity']
-                    expected_relevant_texts = test_case['relevant_texts']
+                    entity = test_case["entity"]
+                    expected_relevant_texts = test_case["relevant_texts"]
 
-                    if filtering_variation == DomainDescriptionFilteringVariation.NO_FILTERING:
-                        actual_relevant_texts = TextUtility.split_into_sentences(domain_description)
+                    actual_relevant_texts = RAGTester.get_actual_relevant_texts(filtering_variation, domain_description, entity, text_finder)
 
-                    elif filtering_variation == DomainDescriptionFilteringVariation.SYNTACTIC:
-                        actual_relevant_texts = syntactic_text_finder.get(entity, domain_description)
+                    current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, entity)
 
-                    elif filtering_variation == DomainDescriptionFilteringVariation.SEMANTIC:
-                        actual_relevant_texts = semantic_text_finder.get(entity, domain_description)
-
-                    else:
-                        raise ValueError(f"Unexpected filtering variation: {filtering_variation}")
-                    
-
-                    for expected_text in expected_relevant_texts:
-                        total_tests += 1
-                        is_relevant_text_found = False
-                        for actual_relevant_text in actual_relevant_texts:
-                            if expected_text in actual_relevant_text:
-                                is_relevant_text_found = True
-                                break
-
-                        if not is_relevant_text_found:
-                            are_all_tests_passing = False
-                            print(f"Test failed:\n- file: {domain_description_path}\n- entity: {entity}\n- relevant text not found: {expected_text}\n")
-                            # print(f"Actual relevant texts:\n{actual_relevant_texts}\n")
-                        else:
-                            successful_tests += 1
-                    
+                    total_tests += current_total
+                    successful_tests += current_successfull_tests
                     total_texts += len(actual_relevant_texts)
-                    
-                if are_all_tests_passing:
-                    print("All tests are passing")
+
+                    if "attributes" in test_case:
+                        attributes_tests = test_case['attributes']
+
+                        for attributes_test in attributes_tests:
+                            name = attributes_test["name"] + "--" + entity
+
+                            expected_relevant_texts = attributes_test["relevant_texts"]
+
+                            actual_relevant_texts = RAGTester.get_actual_relevant_texts(filtering_variation, domain_description, entity, text_finder)
+
+                            current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name)
+
+                            total_tests += current_total
+                            successful_tests += current_successfull_tests
+                            total_texts += len(actual_relevant_texts)
+
 
         print(f"Successful tests / total tests: {successful_tests} / {total_tests}")
         recall = (successful_tests / total_tests) * 100
@@ -100,40 +126,43 @@ class RAGTester:
         print("Precision: " + "{:.2f}".format(precision) + "%")
 
 
-    def output_relevant_text_for_given_entities():
+    def output_relevant_text_for_given_entities(filtering_variation, domain_description_path):
         # entities = ["vehicle type", "motorised vehicle", "structural component", "manufacturer", "vehicle system", "owner", "operator", "natural person", "business natural person", "address", "legal person", "registration", "registration application", "third party insurance", "insurance contract", "policy holder", "insurer", "green card", "technical inspection", "technical inspection report", "defect"]
-        entities = ["motorised vehicle"]
+        entities = ["cultivated variety"]
         
-        relevant_text_finder = SyntacitTextFilterer()
+        if filtering_variation == DomainDescriptionFilteringVariation.SYNTACTIC:
+            relevant_text_finder = SyntacitTextFilterer()
 
-        with open(INPUT_DOMAIN_DESCRIPTION_FILE_PATH, 'r') as domain_description_file:
-            domain_description = domain_description_file.read()
+        elif filtering_variation == DomainDescriptionFilteringVariation.SEMANTIC:
+            from semantic_text_filterer import SemanticTextFilterer
+            relevant_text_finder = SemanticTextFilterer()
+
+        with open(domain_description_path, 'r') as file:
+            domain_description = file.read()
 
         for entity in entities:
-            relevant_texts = relevant_text_finder.get(entity, domain_description)
+
+            if filtering_variation == DomainDescriptionFilteringVariation.NO_FILTERING:
+                relevant_texts = TextUtility.split_into_sentences(domain_description)
+            else:
+                relevant_texts = relevant_text_finder.get(entity, domain_description)
+
             print(f"Entity: {entity}")
             for text in relevant_texts:
                 print(text)
-            print()
-            print()
-    
 
-    def load_test_cases():
-        with open(TEST_DATA_FILE_PATH, 'r') as file:
-            test_data = json.load(file)
-
-        test_cases = test_data['test_cases']
-        return test_cases
+            print("\n\n")
 
 
 def main():
 
-    filtering_variation = DomainDescriptionFilteringVariation.SEMANTIC
+    filtering_variation = DomainDescriptionFilteringVariation.NO_FILTERING
     print(f"Selected filtering variation: {filtering_variation}")
 
     RAGTester.test_filtering(filtering_variation)
 
-    # RAGTester.output_relevant_text_for_given_entities()
+    # domain_description_path = "domain-modeling-benchmark\\domain-models\\farming 97627e23829afb\\domain-description-03.txt"
+    # RAGTester.output_relevant_text_for_given_entities(filtering_variation, domain_description_path)
 
 
 if __name__ == "__main__":

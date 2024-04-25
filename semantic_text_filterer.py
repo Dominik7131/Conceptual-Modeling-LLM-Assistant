@@ -3,7 +3,7 @@ from text_utility import TextUtility
 import os
 
 
-SCORE_NECESSARY_THRESHOLD = 0.1
+SCORE_NECESSARY_THRESHOLD = 0.08
 RANGE_FROM_TOP = 0.55 # E.g. if max score is 0.7 then invalidate any text with score lower than 0.7 - `RANGE_FROM_TOP`
 
 

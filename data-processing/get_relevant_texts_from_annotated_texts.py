@@ -11,35 +11,71 @@ DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "domain-models")
 domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb"]
 DOMAIN_DESCRIPTIONS_COUNT = 3
 
+ENTITY_SYMBOL = "owl:Class"
+ATTRIBUTE_SYMBOL = "owl:DatatypeProperty"
+RELATIONSHIP_SYMBOL = "owl:ObjectProperty"
+GENERALIZATION_SYMBOL = "owl:Class"
 
-def get_entities(model_file_path):
+TAG_REGEX = r"<([^>]+)>"
+
+
+def get_items(model_file_path):
     
     entities = []
+    attributes = {}
+    relationships = []
+    generalizations = []
 
     with open(model_file_path) as file:
         lines = file.readlines()
 
-    for line in lines:
-        entity_symbol = "owl:Class"
-        if entity_symbol in line:
-            entity = re.findall(r'<([^>]+)>', line)[0]
+    for i in range(len(lines)):
+
+        if ENTITY_SYMBOL in lines[i]:
+            entity = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
             entities.append(entity)
+
+        elif ATTRIBUTE_SYMBOL in lines[i]:
+            attribute = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
+            source_entity = re.findall(TAG_REGEX, lines[i + 1])[0].replace('-', ' ')
+            attributes[attribute] = source_entity
+        
+        elif RELATIONSHIP_SYMBOL in lines[i]:
+
+            # Relationships are broken for now: they don't have domain and range class
+            continue
+
+            relationship = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
+            source_entity = re.findall(TAG_REGEX, lines[i + 1])[0].replace('-', ' ')
+            target_entity = re.findall(TAG_REGEX, lines[i + 2])[0].replace('-', ' ')
+            relationships.append((relationship, source_entity, target_entity))
+
+        elif GENERALIZATION_SYMBOL in lines[i]:
+            generalization = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
+            subclass = re.findall(TAG_REGEX, lines[i + 3])[0].replace('-', ' ')
+            generalizations.append((generalization, subclass))
+
     
-    return entities
+    return entities, attributes, relationships, generalizations
 
 
-def convert_to_relevant_texts(dictionary, text):
+def convert_to_relevant_texts(dictionary, text, model_file_path):
 
+    entities, attributes, relationships, generalizations = get_items(model_file_path)
+    attribute_keys = attributes.keys()
+
+    attributes_dictionary = { }
     result = []
+
     for key, value in dictionary.items():
 
         relevant_texts = []
         index = 0
         while index < len(value):
             sub_text = text[value[index] : value[index + 1]]
-            relevant_text = re.sub(r'<[^>]+>', '', sub_text)
+            relevant_text_raw = re.sub(r'<[^>]+>', '', sub_text)
 
-            sentences = TextUtility.split_into_sentences(relevant_text)
+            sentences = TextUtility.split_into_sentences(relevant_text_raw)
             
             for sentence in sentences:
                 relevant_texts.append(sentence)
@@ -47,8 +83,30 @@ def convert_to_relevant_texts(dictionary, text):
             index += 2
         
         new_key = key.replace('-', ' ')
-        result.append({"entity": new_key, "relevant_texts": relevant_texts})
-    
+
+        
+
+        if new_key in entities:
+            result.append({"entity": new_key, "relevant_texts": relevant_texts})
+
+        elif new_key in attribute_keys:
+            attribute_name = new_key
+            source_entity = attributes[new_key]
+
+            if not source_entity in attributes_dictionary:
+                attributes_dictionary[source_entity] = []
+
+            attributes_dictionary[source_entity].append({"name": attribute_name, "relevant_texts": relevant_texts })
+
+
+    for i in range(len(result)):
+        entity = result[i]["entity"]
+
+        if entity in attributes_dictionary:
+            attribute_object = attributes_dictionary[entity]
+            result[i] = { "entity": entity, "relevant_texts": result[i]["relevant_texts"], "attributes": attribute_object}
+
+
     return result
 
 
@@ -124,19 +182,15 @@ def main():
                 raise ValueError(f"Model file not found: {file_path}")
 
 
-            entities = get_entities(model_file_path)
-
             with open(file_path) as file:
                 text = file.read()
 
             tags = re.findall(r'<([^>]+)>', text)
             tags = list(filter(lambda x: x[0] != '/', tags)) # Remove closed tags
-            tags = list(filter(lambda x: x in entities, tags)) # Keep only entities
-
 
             tags_indexes = get_tags_indexes(tags, text)
 
-            relevant_texts_dictionary = convert_to_relevant_texts(tags_indexes, text)
+            relevant_texts_dictionary = convert_to_relevant_texts(tags_indexes, text, model_file_path)
 
             test_cases = { "test_cases": relevant_texts_dictionary }
 
