@@ -24,6 +24,7 @@ class RAGTester:
 
         total_tests = 0
         successful_tests = 0
+        total_texts = 0
 
         for domain_model in domain_models:
             for i in range(DOMAIN_DESCRIPTIONS_COUNT):
@@ -34,7 +35,13 @@ class RAGTester:
                 domain_description_path = os.path.join(DIRECTORY_PATH, domain_model, domain_description_file_name)
                 test_file_path = os.path.join(DIRECTORY_PATH, domain_model, test_file_name)
 
+                if not os.path.isfile(domain_description_path):
+                    raise ValueError(f"Domain description not found: {domain_description_path}")
 
+                if not os.path.isfile(test_file_path):
+                    raise ValueError(f"Test file not found: {test_file_path}")
+
+                
                 with open(test_file_path) as file:
                     test_cases = json.load(file)["test_cases"]
                 
@@ -55,21 +62,94 @@ class RAGTester:
                         for actual_relevant_text in actual_relevant_texts:
                             if expected_text in actual_relevant_text:
                                 is_relevant_text_found = True
-                                successful_tests += 1
                                 break
 
                         if not is_relevant_text_found:
                             are_all_tests_passing = False
-                            print(f"Test failed:\n- entity: {entity}\n- relevant text not found: {expected_text}")
+                            print(f"Test failed:\n- file: {domain_description_path}\n- entity: {entity}\n- relevant text not found: {expected_text}\n")
                             # print(f"Actual relevant texts:\n{actual_relevant_texts}\n")
+                        else:
+                            successful_tests += 1
+                    
+                    total_texts += len(actual_relevant_texts)
                     
                 if are_all_tests_passing:
                     print("All tests are passing")
 
         print(f"Successful tests / total tests: {successful_tests} / {total_tests}")
-        recall = successful_tests / total_tests
-        print("Recall:")
-        print("{:.2f}".format(recall))
+        recall = (successful_tests / total_tests) * 100
+        print("Recall: " + "{:.2f}".format(recall) + "%")
+
+        precision = (successful_tests / total_texts) * 100
+        print("Precision: " + "{:.2f}".format(precision) + "%")
+
+
+    def test_no_filtering():
+
+        # TODO: Make one function for testing and as a parameter pass:
+        # no_filtering / syntactic_filtering / semantic_filtering
+
+        total_tests = 0
+        successful_tests = 0
+        total_texts = 0
+
+        for domain_model in domain_models:
+            for i in range(DOMAIN_DESCRIPTIONS_COUNT):
+
+                domain_description_file_name = f"domain-description-0{i + 1}.txt"
+                test_file_name = f"relevant-texts-0{i + 1}.json"
+
+                domain_description_path = os.path.join(DIRECTORY_PATH, domain_model, domain_description_file_name)
+                test_file_path = os.path.join(DIRECTORY_PATH, domain_model, test_file_name)
+
+                if not os.path.isfile(domain_description_path):
+                    raise ValueError(f"Domain description not found: {domain_description_path}")
+
+                if not os.path.isfile(test_file_path):
+                    raise ValueError(f"Test file not found: {test_file_path}")
+
+                
+                with open(test_file_path) as file:
+                    test_cases = json.load(file)["test_cases"]
+                
+                with open(domain_description_path) as file:
+                    domain_description = file.read()
+
+                are_all_tests_passing = True
+
+                for test_case in test_cases:
+                    entity = test_case['entity']
+                    expected_relevant_texts = test_case['relevant_texts']
+
+                    actual_relevant_texts = TextUtility.split_into_sentences(domain_description)
+
+                    for expected_text in expected_relevant_texts:
+                        total_tests += 1
+                        is_relevant_text_found = False
+                        for actual_relevant_text in actual_relevant_texts:
+                            if expected_text in actual_relevant_text:
+                                is_relevant_text_found = True
+                                break
+
+                        if not is_relevant_text_found:
+                            are_all_tests_passing = False
+                            print(f"Test failed:\n- file: {domain_description_path}\n- entity: {entity}\n- relevant text not found: {expected_text}\n")
+                            # print(f"Actual relevant texts:\n{actual_relevant_texts}\n")
+                        else:
+                            successful_tests += 1
+                        
+                    total_texts += len(actual_relevant_texts)
+                    
+                if are_all_tests_passing:
+                    print("All tests are passing")
+                
+
+        print(f"Successful tests / total tests: {successful_tests} / {total_tests}")
+        recall = (successful_tests / total_tests) * 100
+        print("Recall: " + "{:.2f}".format(recall) + "%")
+
+        precision = (successful_tests / total_texts) * 100
+        print("Precision: " + "{:.2f}".format(precision) + "%")
 
 
     def output_relevant_text_for_given_entities():
@@ -171,6 +251,8 @@ class RAGTester:
 
 
 def main():
+    # RAGTester.test_no_filtering()
+
     RAGTester.test_syntactic_filtering()
 
     # RAGTester.output_relevant_text_for_given_entities()
