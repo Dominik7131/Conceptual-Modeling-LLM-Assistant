@@ -86,7 +86,9 @@ class SyntacitTextFilterer:
 
         for index, chunk in enumerate(self.chunks):
 
-            chunk_lemmas_list = self.tagger.get_lemmas_one_by_one(chunk)
+            enhanced_chunk = self.edited_chunks[index]
+            chunk_lemmas_list = self.tagger.get_lemmas_one_by_one(enhanced_chunk)
+
 
             # Check if entity lemmas are contained in chunk lemmas
             are_entity_lemmas_contained = True

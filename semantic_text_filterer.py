@@ -1,10 +1,10 @@
 from sentence_transformers import SentenceTransformer, util
-from text_utility import TextUtility
+from text_utility import PRONOUNS, TextUtility
 import os
 
 
 SCORE_NECESSARY_THRESHOLD = 0.08
-RANGE_FROM_TOP = 0.55 # E.g. if max score is 0.7 then invalidate any text with score lower than 0.7 - `RANGE_FROM_TOP`
+RANGE_FROM_TOP = 0.46 # E.g. if max score is 0.7 then invalidate any text with score lower than 0.7 - `RANGE_FROM_TOP`
 
 
 class SemanticTextFilterer:
@@ -18,9 +18,34 @@ class SemanticTextFilterer:
         self.model.encode(queries, convert_to_tensor=True)
     
 
+    def enhance_chunks(self, chunks):
+
+        enhanced_chunks = []
+
+        for index, sentence in enumerate(chunks):
+            if (index == 0):
+                enhanced_chunks.append(sentence)
+                continue
+
+            is_sentence_enhanced = False
+            for pronoun in PRONOUNS:
+                if sentence.startswith(pronoun):
+                    is_sentence_enhanced = True
+                    enhanced_chunks.append(f"{chunks[index - 1]} {sentence}")
+                    break
+            
+            if not is_sentence_enhanced:
+               enhanced_chunks.append(sentence)
+        
+        return enhanced_chunks
+
+    
+
     def get(self, entity, domain_description):
 
         chunks = TextUtility.split_into_sentences(domain_description)
+        chunks = self.enhance_chunks(chunks)
+
         query = f"Info about {entity}"
 
         queries_embeddings = self.model.encode(query, convert_to_tensor=True)
