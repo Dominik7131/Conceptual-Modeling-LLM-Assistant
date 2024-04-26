@@ -62,8 +62,12 @@ class RAGTester:
         else:
             text_finder = None
 
-        total_tests = 0
-        successful_tests = 0
+        total_tests_entities = 0
+        total_tests_attributes = 0
+        total_tests_relationships = 0
+        successful_tests_entities = 0
+        successful_tests_attributes = 0
+        successful_tests_relationships = 0
         total_texts = 0
 
         for domain_model in domain_models:
@@ -97,8 +101,8 @@ class RAGTester:
 
                     current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, entity)
 
-                    total_tests += current_total
-                    successful_tests += current_successfull_tests
+                    total_tests_entities += current_total
+                    successful_tests_entities += current_successfull_tests
                     total_texts += len(actual_relevant_texts)
 
                     if "attributes" in test_case:
@@ -113,17 +117,45 @@ class RAGTester:
 
                             current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name)
 
-                            total_tests += current_total
-                            successful_tests += current_successfull_tests
+                            total_tests_attributes += current_total
+                            successful_tests_attributes += current_successfull_tests
+                            total_texts += len(actual_relevant_texts)
+                    
+                    if "relationships" in test_case:
+                        relationships_tests = test_case['relationships']
+
+                        for relationship_test in relationships_tests:
+                            name = relationship_test["name"] + "--" + entity + "--" + f"source: {relationship_test['is_source']}"
+
+                            expected_relevant_texts = relationship_test["relevant_texts"]
+
+                            actual_relevant_texts = RAGTester.get_actual_relevant_texts(filtering_variation, domain_description, entity, text_finder)
+
+                            current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name)
+
+                            total_tests_relationships += current_total
+                            successful_tests_relationships += current_successfull_tests
                             total_texts += len(actual_relevant_texts)
 
 
-        print(f"Successful tests / total tests: {successful_tests} / {total_tests}")
-        recall = (successful_tests / total_tests) * 100
+        print(f"Entities successful tests / entities total tests: {successful_tests_entities} / {total_tests_entities}")
+        recall = (successful_tests_entities / total_tests_entities) * 100
         print("Recall: " + "{:.2f}".format(recall) + "%")
 
-        precision = (successful_tests / total_texts) * 100
-        print("Precision: " + "{:.2f}".format(precision) + "%")
+        print(f"Attributes successful tests / attributes total tests: {successful_tests_attributes} / {total_tests_attributes}")
+        recall = (successful_tests_attributes / total_tests_attributes) * 100
+        print("Recall: " + "{:.2f}".format(recall) + "%")
+
+        print(f"Relationships successful tests / relationships total tests: {successful_tests_relationships} / {total_tests_relationships}")
+        recall = (successful_tests_relationships / total_tests_relationships) * 100
+        print("Recall: " + "{:.2f}".format(recall) + "%")
+
+        # print(f"Successful tests / total tests: {successful_tests} / {total_tests}")
+        # recall = (successful_tests / total_tests) * 100
+        # print("Recall: " + "{:.2f}".format(recall) + "%")
+
+        # precision = (successful_tests / total_texts) * 100
+        # print("Precision: " + "{:.2f}".format(precision) + "%")
 
 
     def output_relevant_text_for_given_entities(filtering_variation, domain_description_path):
@@ -156,7 +188,7 @@ class RAGTester:
 
 def main():
 
-    filtering_variation = DomainDescriptionFilteringVariation.NO_FILTERING
+    filtering_variation = DomainDescriptionFilteringVariation.SEMANTIC
     print(f"Selected filtering variation: {filtering_variation}")
 
     RAGTester.test_filtering(filtering_variation)

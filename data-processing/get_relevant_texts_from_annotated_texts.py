@@ -14,7 +14,6 @@ DOMAIN_DESCRIPTIONS_COUNT = 3
 ENTITY_SYMBOL = "owl:Class"
 ATTRIBUTE_SYMBOL = "owl:DatatypeProperty"
 RELATIONSHIP_SYMBOL = "owl:ObjectProperty"
-GENERALIZATION_SYMBOL = "owl:Class"
 
 TAG_REGEX = r"<([^>]+)>"
 
@@ -23,8 +22,26 @@ def get_items(model_file_path):
     
     entities = []
     attributes = {}
-    relationships = []
-    generalizations = []
+    relationships = {}
+    generalizations = {}
+
+    # with open(model_file_path) as file:
+    #     # lines = file.readlines()
+    #     model = json.load(file)
+    
+    # model_descriptor = model["modelDescriptors"][0]["entities"]
+    # print()
+
+    # for key, value in model_descriptor.items():
+    #     if "class" in value["type"]:
+    #         entities.append(value["iri"].replace('-', ' '))
+    #     elif "relationship" in value["type"]:
+    #         ends = value["ends"]
+    #         source_iri = ends[0]["iri"]
+    #         target_iri = ends[1]["iri"]
+    #         print()
+    
+    # print()
 
     with open(model_file_path) as file:
         lines = file.readlines()
@@ -35,6 +52,11 @@ def get_items(model_file_path):
             entity = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
             entities.append(entity)
 
+            # TODO: Parse generalization
+            # Probably add the subclass into "entities" if it exists
+            # if i + 3 < len(lines):
+            #     subclass = re.findall(TAG_REGEX, lines[i + 3])[0].replace('-', ' ')
+
         elif ATTRIBUTE_SYMBOL in lines[i]:
             attribute = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
             source_entity = re.findall(TAG_REGEX, lines[i + 1])[0].replace('-', ' ')
@@ -42,18 +64,14 @@ def get_items(model_file_path):
         
         elif RELATIONSHIP_SYMBOL in lines[i]:
 
-            # Relationships are broken for now: they don't have domain and range class
-            continue
+            # Relationships in this model are broken for now: they don't have domain and range class
+            if model_file_path.endswith("farming 97627e23829afb\\domain-model.ttl"):
+                continue
 
             relationship = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
             source_entity = re.findall(TAG_REGEX, lines[i + 1])[0].replace('-', ' ')
             target_entity = re.findall(TAG_REGEX, lines[i + 2])[0].replace('-', ' ')
-            relationships.append((relationship, source_entity, target_entity))
-
-        elif GENERALIZATION_SYMBOL in lines[i]:
-            generalization = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
-            subclass = re.findall(TAG_REGEX, lines[i + 3])[0].replace('-', ' ')
-            generalizations.append((generalization, subclass))
+            relationships[relationship] = (source_entity, target_entity)
 
     
     return entities, attributes, relationships, generalizations
@@ -63,8 +81,10 @@ def convert_to_relevant_texts(dictionary, text, model_file_path):
 
     entities, attributes, relationships, generalizations = get_items(model_file_path)
     attribute_keys = attributes.keys()
+    relationships_keys = relationships.keys()
 
-    attributes_dictionary = { }
+    attributes_dictionary = {}
+    relationships_dictionary = {}
     result = []
 
     for key, value in dictionary.items():
@@ -84,7 +104,6 @@ def convert_to_relevant_texts(dictionary, text, model_file_path):
         
         new_key = key.replace('-', ' ')
 
-        
 
         if new_key in entities:
             result.append({"entity": new_key, "relevant_texts": relevant_texts})
@@ -98,6 +117,20 @@ def convert_to_relevant_texts(dictionary, text, model_file_path):
 
             attributes_dictionary[source_entity].append({"name": attribute_name, "relevant_texts": relevant_texts })
 
+        elif new_key in relationships_keys:
+            relationship_name = new_key
+            source_entity = relationships[new_key][0]
+            target_entity = relationships[new_key][1]
+
+            if not source_entity in relationships_dictionary:
+                relationships_dictionary[source_entity] = []
+            
+            if not target_entity in relationships_dictionary:
+                relationships_dictionary[target_entity] = []
+
+            relationships_dictionary[source_entity].append({"name": relationship_name, "is_source": True, "relevant_texts": relevant_texts })
+            relationships_dictionary[target_entity].append({"name": relationship_name, "is_source": False, "relevant_texts": relevant_texts })
+
 
     for i in range(len(result)):
         entity = result[i]["entity"]
@@ -105,6 +138,10 @@ def convert_to_relevant_texts(dictionary, text, model_file_path):
         if entity in attributes_dictionary:
             attribute_object = attributes_dictionary[entity]
             result[i] = { "entity": entity, "relevant_texts": result[i]["relevant_texts"], "attributes": attribute_object}
+        
+        if entity in relationships_dictionary:
+            relationship_object = relationships_dictionary[entity]
+            result[i] = { "entity": entity, "relevant_texts": result[i]["relevant_texts"], "relationships": relationship_object}
 
 
     return result
