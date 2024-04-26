@@ -57,6 +57,8 @@ RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
 ENTITIES_STRING = "entities"
 ONLY_DESCRIPTION = "description"
 
+PRONOUNS = ["It", "This", "The", "They"]
+
 alphabets= "([A-Za-z])"
 prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
 suffixes = "(Inc|Ltd|Jr|Sr|Co)"
@@ -271,17 +273,20 @@ class TextUtility:
         # For each match, look up the new string in the replacements, being the key the normalized old string
         return pattern.sub(lambda match: replacements[normalize_old(match.group(0))], string)
 
+
     def create_query(entity):
         #query = f'What attributes does \"{entity}\" have?'
         #query = f"Information about {entity}"
         query = f"What are the information about {entity}?"
         return query
-    
+
+
     def is_bullet_point(text):
         # TODO: Implement for all possible bullet points -- e.g. I), a), 15), *, ...
         return text[0] == '-'
 
 
+    # TODO: This method is for syntactic filtering so it should be in the script `syntactit_text_filterer.py`
     def split_text_into_chunks(domain_description):
         # Divide the text into: sentences and bullets
         lines = domain_description.split(sep='\n')
@@ -298,6 +303,10 @@ class TextUtility:
         if not is_bullet_point_enhancement:
             return sentences, sentences, [], []
         
+        # If a sentence contains pronoun then enhance then chunk by adding the previous sentence
+        # It would be better to replace the pronoun instead. However, there is no easy way to do this.
+        is_pronouns_enhancement = True
+
         is_bullet_point_list = []
         title_references = []
 
@@ -335,7 +344,17 @@ class TextUtility:
                 title_references.append(chunk_before_bullet_points_index)
                 continue
 
-            edited_sentences.append(sentence)
+            is_sentence_enhanced = False
+            if is_pronouns_enhancement:
+                for pronoun in PRONOUNS:
+                    # If the sentence starts with a pronoun then append the previous sentences too for more context
+                    if sentence.startswith(pronoun):
+                        is_sentence_enhanced = True
+                        edited_sentences.append(f"{sentences[index - 1]} {sentence}")
+                        break
+
+            if not is_sentence_enhanced:
+                edited_sentences.append(sentence)
             is_bullet_point_list.append(False)
             title_references.append(-1)
 

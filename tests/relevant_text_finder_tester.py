@@ -150,12 +150,10 @@ class RAGTester:
         recall = (successful_tests_relationships / total_tests_relationships) * 100
         print("Recall: " + "{:.2f}".format(recall) + "%")
 
-        # print(f"Successful tests / total tests: {successful_tests} / {total_tests}")
-        # recall = (successful_tests / total_tests) * 100
-        # print("Recall: " + "{:.2f}".format(recall) + "%")
-
-        # precision = (successful_tests / total_texts) * 100
-        # print("Precision: " + "{:.2f}".format(precision) + "%")
+        tested_texts = total_tests_entities + total_tests_attributes + total_tests_relationships
+        print(f"Used sentences / total output sentences: {tested_texts} / {total_texts}")
+        precision = (tested_texts / total_texts) * 100
+        print("Precision: " + "{:.2f}".format(precision) + "%")
 
 
     def output_relevant_text_for_given_entities(filtering_variation, domain_description_path):
