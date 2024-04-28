@@ -3,8 +3,13 @@ from text_utility import PRONOUNS, TextUtility
 import os
 
 
+# Settings for "all-MiniLM-L6-v2"
 SCORE_NECESSARY_THRESHOLD = 0.08
 RANGE_FROM_TOP = 0.46 # E.g. if max score is 0.7 then invalidate any text with score lower than 0.7 - `RANGE_FROM_TOP`
+
+# Settings for "all-mpnet-base-v2"
+# SCORE_NECESSARY_THRESHOLD = 0.04
+# RANGE_FROM_TOP = 0.52
 
 
 class SemanticTextFilterer:
