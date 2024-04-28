@@ -288,9 +288,9 @@ def main():
             relevant_text_test_cases_2 = { "test_cases": relevant_texts2 }
 
             entities_expected_suggestions = { "entities": entities_suggestions }
-            attributes_expected_suggestions = { "attributes": entities_suggestions }
-            relationships1_expected_suggestions = { "relationships1": entities_suggestions }
-            relationships2_expected_suggestions = { "relationships2": entities_suggestions }
+            attributes_expected_suggestions = { "attributes": attributes_suggestions }
+            relationships1_expected_suggestions = { "relationships1": relationships_suggestions }
+            relationships2_expected_suggestions = { "relationships2": relationships2_suggestions }
             # generalizations2_expected_suggestions = { "generalizations2": generalizations2_suggestions }
 
             with open(output_file_path_one_known_entity, 'w') as file:
