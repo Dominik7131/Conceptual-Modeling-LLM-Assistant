@@ -18,7 +18,7 @@ class UserChoice(Enum):
 
 
 class DomainDescriptionFilteringVariation(Enum):
-    NO_FILTERING = "no_filtering"
+    NONE = "none"
     SYNTACTIC = "syntactic"
     SEMANTIC = "semantic"
 
