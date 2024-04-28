@@ -4,7 +4,7 @@ import argparse
 import json
 import os
 from text_utility import DomainDescriptionFilteringVariation, TextUtility
-from syntactic_text_filterer import SyntacitTextFilterer
+from syntactic_text_filterer import SyntacticTextFilterer
 
 
 PATH_TO_DATA_DIRECTORY = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
@@ -54,7 +54,7 @@ class RAGTester:
     def test_filtering(filtering_variation):
 
         if filtering_variation == DomainDescriptionFilteringVariation.SYNTACTIC.value:
-            text_finder = SyntacitTextFilterer()
+            text_finder = SyntacticTextFilterer()
         
         elif filtering_variation == DomainDescriptionFilteringVariation.SEMANTIC.value:
             from semantic_text_filterer import SemanticTextFilterer
@@ -172,7 +172,7 @@ class RAGTester:
         entities = ["cultivated variety"]
         
         if filtering_variation == DomainDescriptionFilteringVariation.SYNTACTIC.value:
-            relevant_text_finder = SyntacitTextFilterer()
+            relevant_text_finder = SyntacticTextFilterer()
 
         elif filtering_variation == DomainDescriptionFilteringVariation.SEMANTIC.value:
             from semantic_text_filterer import SemanticTextFilterer

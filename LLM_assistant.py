@@ -1,7 +1,7 @@
 import os
 
 from text_utility import LOGGER_NAME, Field, PromptFileSymbols, TextUtility, UserChoice, DataType
-from syntactic_text_filterer import SyntacitTextFilterer
+from syntactic_text_filterer import SyntacticTextFilterer
 import time
 import logging
 import json
@@ -35,7 +35,7 @@ class LLMAssistant:
         if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
             # Assumption: domain description never changes
             # TODO: Add option for semantic text finder
-            self.relevant_text_finder = SyntacitTextFilterer()
+            self.relevant_text_finder = SyntacticTextFilterer()
         
         self.debug_info = self.DebugInfo()
 

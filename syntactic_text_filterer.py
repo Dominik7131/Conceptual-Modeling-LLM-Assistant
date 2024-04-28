@@ -16,7 +16,7 @@ IS_CACHE_DOMAIN_DESCRIPTION = False
 IS_USE_CACHE = False
 
 
-class SyntacitTextFilterer:
+class SyntacticTextFilterer:
 
     def __init__(self):
         self.tagger = Morphodita_Tagger()
@@ -27,7 +27,7 @@ class SyntacitTextFilterer:
         self.edited_chunks, self.chunks, self.is_bullet_point_list, self.title_references = TextUtility.split_text_into_chunks(domain_description)
 
         if IS_CACHE_DOMAIN_DESCRIPTION:
-            SyntacitTextFilterer.cache_chunks(self)
+            SyntacticTextFilterer.cache_chunks(self)
             print("Domain description successfully cached")
 
 
@@ -139,7 +139,7 @@ def main():
     with open(INPUT_DOMAIN_DESCRIPTION_FILE_PATH, 'r') as domain_description_file:
         domain_description = domain_description_file.read()
 
-    relevant_text_finder = SyntacitTextFilterer()
+    relevant_text_finder = SyntacticTextFilterer()
     relevant_texts = relevant_text_finder.get(entity, domain_description)#, cache_file_name=INPUT_DOMAIN_DESCRIPTION_FILE_NAME)
 
     if IS_SAVE_OUTPUT_TO_FILE:
