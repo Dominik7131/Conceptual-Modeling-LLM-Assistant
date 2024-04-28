@@ -12,7 +12,7 @@ TEST_DATA_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "relevant_texts.json"
 INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "56-2001-extract-llm-assistant-test-case.txt")
 
 
-DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "domain-models")
+DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
 
 domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb"]
 DOMAIN_DESCRIPTIONS_COUNT = 3

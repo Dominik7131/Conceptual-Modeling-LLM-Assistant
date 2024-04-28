@@ -70,7 +70,7 @@ class SemanticTextFilterer:
 def main():
 
     # Simple usage example
-    path = os.path.join("domain-modeling-benchmark", "domain-models", "farming 97627e23829afb", "domain-description-01.txt")
+    path = os.path.join("domain-modeling-benchmark", "evaluation domain models", "farming 97627e23829afb", "domain-description-01.txt")
     with open(path) as file:
         domain_description = file.read()
 

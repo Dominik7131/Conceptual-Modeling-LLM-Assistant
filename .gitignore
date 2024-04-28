@@ -15,11 +15,6 @@ llama/
 output/
 requirements.txt
 get_stream.py
-data/56-2001-extract-llm-assistant-test-case/56-2001-extract-llm-assistant-test-case.txt_embeddings.npy
-data/56-2001-extract-llm-assistant-test-case/actual_output.txt
-data/56-2001-extract-llm-assistant-test-case/manual_evaluation.txt
-data/56-2001-extract-llm-assistant-test-case/56-2001-extract-llm-assistant-test-case-truncated.txt
-data/56-2001-extract-llm-assistant-test-case/relationships-evaluation/*
 out.txt
 out_manual.txt
 inferences-log.txt
@@ -31,3 +26,4 @@ notes/odkaz na 2024-01-28 Návrh schématu konceptuálního modelu.txt
 cache/
 conceptual-model-editor-assistant/public/input.txt
 domain-modeling-benchmark/
+notes/measurement-approach-cz.md

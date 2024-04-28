@@ -7,10 +7,11 @@ sys.path.append('.')
 from text_utility import Field, TextUtility
 
 
-DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "domain-models")
+DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
 
-domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb"]
-DOMAIN_DESCRIPTIONS_COUNT = 3
+domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
+
+DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
 ENTITY_SYMBOL = "owl:Class"
 ATTRIBUTE_SYMBOL = "owl:DatatypeProperty"
@@ -215,6 +216,7 @@ def print_result(tags_indexes, text):
 
 def find_end_index(tag, text, text_index):
 
+    original_text_index = text_index
     end_enclosed_tag = "</" + tag + '>'
     while text_index < len(text):
         if text[text_index:].startswith(end_enclosed_tag):
@@ -223,7 +225,8 @@ def find_end_index(tag, text, text_index):
         else:
             text_index += 1
     
-    raise ValueError(f"End tag not found in the text: {end_enclosed_tag}")
+    # raise ValueError(f"End tag not found in the text: {end_enclosed_tag}")
+    return original_text_index + 1
 
 
 def get_tags_indexes(tags, text):
@@ -262,8 +265,8 @@ def write_json_to_file(output_file_path, content_to_write):
 
 def main():
 
-    for domain_model in domain_models:
-        for i in range(DOMAIN_DESCRIPTIONS_COUNT):
+    for index, domain_model in enumerate(domain_models):
+        for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
             file_name = f"domain-description-0{i + 1}-annotated.txt"
             model_file_name = f"domain-model.json"
