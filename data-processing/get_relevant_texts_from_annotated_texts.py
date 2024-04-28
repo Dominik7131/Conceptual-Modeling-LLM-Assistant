@@ -2,6 +2,7 @@ import json
 import re
 import os
 import sys
+import requests
 sys.path.append('.')
 from text_utility import TextUtility
 
@@ -17,134 +18,130 @@ RELATIONSHIP_SYMBOL = "owl:ObjectProperty"
 
 TAG_REGEX = r"<([^>]+)>"
 
+BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
+
 
 def get_items(model_file_path):
     
-    entities = []
-    attributes = {}
-    relationships = {}
-    generalizations = {}
-
-    # with open(model_file_path) as file:
-    #     # lines = file.readlines()
-    #     model = json.load(file)
-    
-    # model_descriptor = model["modelDescriptors"][0]["entities"]
-    # print()
-
-    # for key, value in model_descriptor.items():
-    #     if "class" in value["type"]:
-    #         entities.append(value["iri"].replace('-', ' '))
-    #     elif "relationship" in value["type"]:
-    #         ends = value["ends"]
-    #         source_iri = ends[0]["iri"]
-    #         target_iri = ends[1]["iri"]
-    #         print()
-    
-    # print()
+    entities_out = []
+    attributes_out = {}
+    relationships_out = {}
+    generalizations_out = {}
 
     with open(model_file_path) as file:
-        lines = file.readlines()
+        # lines = file.readlines()
+        model = json.load(file)
+    
+    model_descriptor = model["modelDescriptors"][0]["entities"]
 
-    for i in range(len(lines)):
+    model_ID = model["modelDescriptors"][0]["modelId"]
 
-        if ENTITY_SYMBOL in lines[i]:
-            entity = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
-            entities.append(entity)
+    url = BASE_URL + model_ID
+    model = requests.get(url=url).text
+    model = json.loads(model)
 
-            # TODO: Parse generalization
-            # Probably add the subclass into "entities" if it exists
-            # if i + 3 < len(lines):
-            #     subclass = re.findall(TAG_REGEX, lines[i + 3])[0].replace('-', ' ')
 
-        elif ATTRIBUTE_SYMBOL in lines[i]:
-            attribute = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
-            source_entity = re.findall(TAG_REGEX, lines[i + 1])[0].replace('-', ' ')
-            attributes[attribute] = source_entity
-        
-        elif RELATIONSHIP_SYMBOL in lines[i]:
+    entities = model["classes"]
+    attributes = model["attributes"]
+    relationships = model["relationships"]
+    generalizations = model["generalizations"]
 
-            # Relationships in this model are broken for now: they don't have domain and range class
-            if model_file_path.endswith("farming 97627e23829afb\\domain-model.ttl"):
-                continue
 
-            relationship = re.findall(TAG_REGEX, lines[i])[0].replace('-', ' ')
-            source_entity = re.findall(TAG_REGEX, lines[i + 1])[0].replace('-', ' ')
-            target_entity = re.findall(TAG_REGEX, lines[i + 2])[0].replace('-', ' ')
-            relationships[relationship] = (source_entity, target_entity)
+    for entity in entities:
+        entities_out.append(entity["name"])
+
+    for attribute in attributes:
+        attributes_out[attribute["name"]] = attribute["domain"]
 
     
-    return entities, attributes, relationships, generalizations
+    return entities_out, attributes_out, relationships_out, generalizations_out
 
 
-def convert_to_relevant_texts(dictionary, text, model_file_path):
+def get_text_from_indexes(indexes, text):
 
-    entities, attributes, relationships, generalizations = get_items(model_file_path)
-    attribute_keys = attributes.keys()
-    relationships_keys = relationships.keys()
+    relevant_texts = []
+    index = 0
+    while index < len(indexes):
+        sub_text = text[indexes[index] : indexes[index + 1]]
+        relevant_text_raw = re.sub(r'<[^>]+>', '', sub_text)
 
-    attributes_dictionary = {}
-    relationships_dictionary = {}
-    result = []
-
-    for key, value in dictionary.items():
-
-        relevant_texts = []
-        index = 0
-        while index < len(value):
-            sub_text = text[value[index] : value[index + 1]]
-            relevant_text_raw = re.sub(r'<[^>]+>', '', sub_text)
-
-            sentences = TextUtility.split_into_sentences(relevant_text_raw)
-            
-            for sentence in sentences:
-                relevant_texts.append(sentence)
-
-            index += 2
+        sentences = TextUtility.split_into_sentences(relevant_text_raw)
         
-        new_key = key.replace('-', ' ')
+        for sentence in sentences:
+            relevant_texts.append(sentence)
+
+        index += 2
+    
+    return relevant_texts
 
 
-        if new_key in entities:
-            result.append({"entity": new_key, "relevant_texts": relevant_texts})
+def convert_to_relevant_texts(dictionary, text, model_file_path, file_path):
 
-        elif new_key in attribute_keys:
-            attribute_name = new_key
-            source_entity = attributes[new_key]
+    with open(model_file_path) as file:
+        model = json.load(file)
 
-            if not source_entity in attributes_dictionary:
-                attributes_dictionary[source_entity] = []
+    model_ID = model["modelDescriptors"][0]["modelId"]
 
-            attributes_dictionary[source_entity].append({"name": attribute_name, "relevant_texts": relevant_texts })
+    url = BASE_URL + model_ID
+    model_text = requests.get(url=url).text
+    model = json.loads(model_text)
 
-        elif new_key in relationships_keys:
-            relationship_name = new_key
-            source_entity = relationships[new_key][0]
-            target_entity = relationships[new_key][1]
+    entities = model["classes"]
+    attributes = model["attributes"]
+    relationships = model["relationships"]
+    generalizations = model["generalizations"]
 
-            if not source_entity in relationships_dictionary:
-                relationships_dictionary[source_entity] = []
+    result_one_known_entity = []
+    result_two_known_entities = []
+
+    for entity in entities:
+        entity_name = entity["title"].lower()
+        indexes = dictionary[entity_name]
+        relevant_texts_entities = get_text_from_indexes(indexes, text)
+
+        attributes_out = []
+        for attribute in attributes:
+            attribute_name = attribute["title"].lower()
+            source_entity = attribute["domain"].lower()
+            if source_entity == entity_name:
+
+                if attribute_name not in dictionary:
+                    print(f"Warning: Attribute {attribute_name} not in annotated text: {file_path}")
+                    continue
+
+                indexes = dictionary[attribute_name]
+                relevant_texts_attributes = get_text_from_indexes(indexes, text)
+                attributes_out.append({ "name": attribute_name, "relevant_texts": relevant_texts_attributes })
+
+        relationships_out = []
+        for relationship in relationships:
+            relationship_name = relationship["title"].lower()
+            source_entity = relationship["domain"].lower().replace('-', ' ')
+            target_entity = relationship["range"].lower().replace('-', ' ')
+
+            if relationship_name not in dictionary:
+                print(f"Warning: Relationship {relationship_name} not in annotated text: {file_path}")
+                continue
+
+            is_source = True
+            indexes = dictionary[relationship_name]
+            relevant_texts_relationships = get_text_from_indexes(indexes, text)
+
+            if target_entity == entity_name:
+                source_entity = target_entity
+                is_source = False
+
+            if source_entity == entity_name:
+                relationships_out.append({ "name": relationship_name, "is_source": is_source, "relevant_texts": relevant_texts_relationships })
             
-            if not target_entity in relationships_dictionary:
-                relationships_dictionary[target_entity] = []
-
-            relationships_dictionary[source_entity].append({"name": relationship_name, "is_source": True, "relevant_texts": relevant_texts })
-            relationships_dictionary[target_entity].append({"name": relationship_name, "is_source": False, "relevant_texts": relevant_texts })
+            # Two known entities:
+            result_two_known_entities.append( { "source_entity": source_entity, "target_entity": target_entity, "relevant_texts": relevant_texts_relationships})
 
 
-    for i in range(len(result)):
-        entity = result[i]["entity"]
+        result_one_known_entity.append({"entity": entity_name, "relevant_texts": relevant_texts_entities, "attributes": attributes_out,
+                       "relationships": relationships_out})
 
-        if entity in attributes_dictionary:
-            attribute_object = attributes_dictionary[entity]
-            result[i] = { "entity": entity, "relevant_texts": result[i]["relevant_texts"], "attributes": attribute_object}
-        
-        if entity in relationships_dictionary:
-            relationship_object = relationships_dictionary[entity]
-            result[i] = { "entity": entity, "relevant_texts": result[i]["relevant_texts"], "relationships": relationship_object}
-
-
-    return result
+    return result_one_known_entity, result_two_known_entities
 
 
 def print_result(tags_indexes, text):
@@ -185,11 +182,12 @@ def get_tags_indexes(tags, text):
                 start_index = text_index + len(enclosed_tag)
                 end_index = find_end_index(tag, text, text_index + len(enclosed_tag))
 
-                if tag not in dictionary:
-                    dictionary[tag] = [start_index, end_index]
+                parsed_tag = tag.replace('-', ' ')
+                if parsed_tag not in dictionary:
+                    dictionary[parsed_tag] = [start_index, end_index]
                 else:
-                    dictionary[tag].append(start_index)
-                    dictionary[tag].append(end_index)
+                    dictionary[parsed_tag].append(start_index)
+                    dictionary[parsed_tag].append(end_index)
                 
                 text_index += len(enclosed_tag)
                 break
@@ -205,12 +203,14 @@ def main():
         for i in range(DOMAIN_DESCRIPTIONS_COUNT):
 
             file_name = f"domain-description-0{i + 1}-annotated.txt"
-            model_file_name = f"domain-model.ttl"
-            output_file_name = f"relevant-texts-0{i + 1}.json"
+            model_file_name = f"domain-model.json"
+            output_file_name_one_known_entity = f"relevant-texts-one-known_entity-0{i + 1}.json"
+            output_file_name_two_known_entities = f"relevant-texts-two-known-entities-0{i + 1}.json"
 
             file_path = os.path.join(DIRECTORY_PATH, domain_model, file_name)
             model_file_path = os.path.join(DIRECTORY_PATH, domain_model, model_file_name)
-            output_file_path = os.path.join(DIRECTORY_PATH, domain_model, output_file_name)
+            output_file_path_one_known_entity = os.path.join(DIRECTORY_PATH, domain_model, output_file_name_one_known_entity)
+            output_file_path_two_known_entities = os.path.join(DIRECTORY_PATH, domain_model, output_file_name_two_known_entities)
 
             if not os.path.isfile(file_path):
                 raise ValueError(f"Annotated domain description not found: {file_path}")
@@ -227,12 +227,16 @@ def main():
 
             tags_indexes = get_tags_indexes(tags, text)
 
-            relevant_texts_dictionary = convert_to_relevant_texts(tags_indexes, text, model_file_path)
+            relevant_texts_one_known_entity, relevant_texts_two_known_entities = convert_to_relevant_texts(tags_indexes, text, model_file_path, file_path)
 
-            test_cases = { "test_cases": relevant_texts_dictionary }
+            test_cases_1 = { "test_cases": relevant_texts_one_known_entity }
+            test_cases_2 = { "test_cases": relevant_texts_two_known_entities }
 
-            with open(output_file_path, 'w') as file:
-                json.dump(test_cases, file)
+            with open(output_file_path_one_known_entity, 'w') as file:
+                json.dump(test_cases_1, file)
+
+            with open(output_file_path_two_known_entities, 'w') as file:
+                json.dump(test_cases_2, file)
 
 
 if __name__ == "__main__":
