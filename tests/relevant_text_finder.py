@@ -3,7 +3,7 @@ sys.path.append('.')
 import argparse
 import json
 import os
-from text_utility import DomainDescriptionFilteringVariation, TextUtility
+from text_utility import TextFilteringVariation, TextUtility
 from syntactic_text_filterer import SyntacticTextFilterer
 
 
@@ -37,7 +37,7 @@ class RAGTester:
 
     def get_actual_relevant_texts(filtering_variation, domain_description, source_entity, text_finder=None):
 
-        if filtering_variation == DomainDescriptionFilteringVariation.NONE.value:
+        if filtering_variation == TextFilteringVariation.NONE.value:
             actual_relevant_texts = TextUtility.split_into_sentences(domain_description)
         else:
             actual_relevant_texts = text_finder.get(source_entity, domain_description)
@@ -47,10 +47,10 @@ class RAGTester:
 
     def test_filtering(filtering_variation):
 
-        if filtering_variation == DomainDescriptionFilteringVariation.SYNTACTIC.value:
+        if filtering_variation == TextFilteringVariation.SYNTACTIC.value:
             text_finder = SyntacticTextFilterer()
         
-        elif filtering_variation == DomainDescriptionFilteringVariation.SEMANTIC.value:
+        elif filtering_variation == TextFilteringVariation.SEMANTIC.value:
             from semantic_text_filterer import SemanticTextFilterer
             text_finder = SemanticTextFilterer()
 
@@ -165,10 +165,10 @@ class RAGTester:
         # entities = ["vehicle type", "motorised vehicle", "structural component", "manufacturer", "vehicle system", "owner", "operator", "natural person", "business natural person", "address", "legal person", "registration", "registration application", "third party insurance", "insurance contract", "policy holder", "insurer", "green card", "technical inspection", "technical inspection report", "defect"]
         entities = ["cultivated variety"]
         
-        if filtering_variation == DomainDescriptionFilteringVariation.SYNTACTIC.value:
+        if filtering_variation == TextFilteringVariation.SYNTACTIC.value:
             relevant_text_finder = SyntacticTextFilterer()
 
-        elif filtering_variation == DomainDescriptionFilteringVariation.SEMANTIC.value:
+        elif filtering_variation == TextFilteringVariation.SEMANTIC.value:
             from semantic_text_filterer import SemanticTextFilterer
             relevant_text_finder = SemanticTextFilterer()
 
@@ -177,7 +177,7 @@ class RAGTester:
 
         for entity in entities:
 
-            if filtering_variation == DomainDescriptionFilteringVariation.NONE.value:
+            if filtering_variation == TextFilteringVariation.NONE.value:
                 relevant_texts = TextUtility.split_into_sentences(domain_description)
             else:
                 relevant_texts = relevant_text_finder.get(entity, domain_description)
@@ -192,7 +192,7 @@ class RAGTester:
 def main():
 
     parser = argparse.ArgumentParser(description = "Relevant texts tester")
-    parser.add_argument("--filtering", choices = [DomainDescriptionFilteringVariation.NONE.value, DomainDescriptionFilteringVariation.SYNTACTIC.value, DomainDescriptionFilteringVariation.SEMANTIC.value], type=str, default=DomainDescriptionFilteringVariation.NONE.value, help = "Choose variation for domain description filtering")
+    parser.add_argument("--filtering", choices = [TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value, TextFilteringVariation.SEMANTIC.value], type=str, default=TextFilteringVariation.NONE.value, help = "Choose variation for domain description filtering")
     args = parser.parse_args()
 
     RAGTester.test_filtering(args.filtering)

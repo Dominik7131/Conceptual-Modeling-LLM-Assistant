@@ -1,6 +1,7 @@
 import os
 
-from text_utility import LOGGER_NAME, Field, PromptFileSymbols, TextUtility, UserChoice, DataType
+from semantic_text_filterer import SemanticTextFilterer
+from text_utility import LOGGER_NAME, Field, PromptFileSymbols, TextFilteringVariation, TextUtility, UserChoice, DataType
 from syntactic_text_filterer import SyntacticTextFilterer
 import time
 import logging
@@ -11,7 +12,7 @@ import openai
 ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 IS_IGNORE_DOMAIN_DESCRIPTION = False
-TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION = True
+FILTERING_VARIATION = TextFilteringVariation.SYNTACTIC
 IS_RELATIONSHIPS_IS_A = False
 
 logger = logging.getLogger(LOGGER_NAME)
@@ -36,10 +37,11 @@ class LLMAssistant:
 
         self.client = openai.OpenAI(base_url=LLM_BACKEND_URL, api_key="sk-no-key-required")
 
-        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
-            # Assumption: domain description never changes
-            # TODO: Add option for semantic text finder
+        if FILTERING_VARIATION == TextFilteringVariation.SYNTACTIC:
             self.relevant_text_finder = SyntacticTextFilterer()
+
+        elif FILTERING_VARIATION == TextFilteringVariation.SEMANTIC:
+            self.relevant_text_finder = SemanticTextFilterer()
         
         self.debug_info = self.DebugInfo()
 
@@ -365,7 +367,7 @@ class LLMAssistant:
         self.__append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
 
 
-        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION and user_choice != UserChoice.ENTITIES.value:
+        if FILTERING_VARIATION != TextFilteringVariation.NONE and user_choice != UserChoice.ENTITIES.value:
             relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
 
             result = ""
@@ -423,7 +425,7 @@ class LLMAssistant:
 
     def __get_relevant_texts(self, source_entity, domain_description):
 
-        if TAKE_ONLY_RELEVANT_INFO_FROM_DOMAIN_DESCRIPTION:
+        if FILTERING_VARIATION != TextFilteringVariation.NONE:
             relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
 
             result = ""

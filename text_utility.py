@@ -15,7 +15,7 @@ class UserChoice(Enum):
     SUMMARY_DESCRIPTIONS = "summary-descriptions"
 
 
-class DomainDescriptionFilteringVariation(Enum):
+class TextFilteringVariation(Enum):
     NONE = "none"
     SYNTACTIC = "syntactic"
     SEMANTIC = "semantic"
