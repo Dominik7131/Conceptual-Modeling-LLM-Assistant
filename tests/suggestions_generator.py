@@ -329,7 +329,7 @@ def main():
                 generate_expected_output(test_file_path, expected_output_file_path, user_choice)
                 continue
             
-            actual_output_file_path = os.path.join(DIRECTORY_PATH, f"{TIMESTAMP_PREFIX}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}.txt")
+            actual_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, f"{TIMESTAMP_PREFIX}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}.txt")
             domain_description_file_name = f"domain-description-0{i + 1}.txt"
             domain_description_path = os.path.join(DIRECTORY_PATH, domain_model, domain_description_file_name)
 

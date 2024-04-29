@@ -391,9 +391,16 @@ class LLMAssistant:
             logging.warn("No relevant texts found.")
             return
 
+        is_chain_of_thoughts = True
+
+        # For entities with Mixtral it works better to disable chain of thoughts
+        if user_choice == UserChoice.ENTITIES.value:
+            is_chain_of_thoughts = False    
+
+
         prompt = self.__create_prompt(user_choice=user_choice, source_entity=source_entity, target_entity=target_entity,
             is_domain_description=is_domain_description, items_count_to_suggest=count_items_to_suggest, relevant_texts=relevant_texts,
-            is_chain_of_thoughts=True)
+            is_chain_of_thoughts=is_chain_of_thoughts)
         
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
