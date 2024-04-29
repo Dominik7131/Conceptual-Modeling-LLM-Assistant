@@ -181,7 +181,14 @@ def test_relationships(llm_assistant, test_data_json, domain_description, actual
                 file.write("\n")
 
 
-def create_entities_actual_output(llm_assistant, user_choice, domain_description):
+def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description):
+
+    expected_entities = []
+    for test_case in test_cases:
+        expected_entities.append(test_case["entity"])
+    
+    matched_entities = 0
+    total_expected_entities = len(test_cases)
 
     iterator = llm_assistant.suggest(source_entity="", target_entity="", user_choice=user_choice, domain_description=domain_description)
     result = []
@@ -190,7 +197,18 @@ def create_entities_actual_output(llm_assistant, user_choice, domain_description
         suggested_item = json.loads(suggested_item)
 
         entity_name = suggested_item[Field.NAME.value]
-        result.append(f"Entity: {entity_name}\n\n")
+        result.append(f"Entity: {entity_name}")
+
+        if Field.ORIGINAL_TEXT.value in suggested_item:
+            original_text = suggested_item[Field.ORIGINAL_TEXT.value]
+            result.append(f"Original text: {original_text}\n\n")
+        else:
+            result.append("\n")
+        
+        if entity_name in expected_entities:
+            matched_entities += 1
+    
+    print(f"Found {matched_entities} / {total_expected_entities} entities\n")
 
     return result
 
@@ -264,7 +282,7 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
     test_cases = test_data[user_choice]
 
     if user_choice == UserChoice.ENTITIES.value:
-        results = create_entities_actual_output(llm_assistant, user_choice, domain_description)
+        results = create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description)
 
     elif user_choice == UserChoice.ATTRIBUTES.value:
         results = create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description)
@@ -322,7 +340,7 @@ def main():
                 domain_description = file.read()
             
             generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path, user_choice)
-            exit(0)
+
 
 if __name__ == "__main__":
     main()
