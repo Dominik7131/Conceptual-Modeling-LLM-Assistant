@@ -139,10 +139,10 @@ def convert_to_relevant_texts(dictionary, text, model, file_path):
 
 
     for entity in entities:
-        entity_name = entity["title"].lower()
+        entity_name = entity["title"].lower().replace('-', ' ')
 
         if entity_name not in dictionary:
-            print(f"Warning: Entity {entity_name} not in annotated text: {file_path}")
+            print(f"Warning: Entity \"{entity_name}\" not in annotated text: {file_path}")
             continue
 
         indexes = dictionary[entity_name]
@@ -153,11 +153,11 @@ def convert_to_relevant_texts(dictionary, text, model, file_path):
         attributes_out = []
         attributes_out_suggestions = []
         for attribute in attributes:
-            attribute_name = attribute["title"].lower()
-            source_entity = attribute["domain"].lower()
+            attribute_name = attribute["title"].lower().replace('-', ' ')
+            source_entity = attribute["domain"].lower().replace('-', ' ')
 
             if attribute_name not in dictionary:
-                print(f"Warning: Attribute {attribute_name} not in annotated text: {file_path}")
+                print(f"Warning: Attribute \"{attribute_name}\" not in annotated text: {file_path}")
                 continue
 
             if source_entity == entity_name:
@@ -171,12 +171,12 @@ def convert_to_relevant_texts(dictionary, text, model, file_path):
         relationships_out = []
         relationships_out_suggestions = []
         for relationship in relationships:
-            relationship_name = relationship["title"].lower()
+            relationship_name = relationship["title"].lower().replace('-', ' ')
             source_entity = relationship["domain"].lower().replace('-', ' ')
             target_entity = relationship["range"].lower().replace('-', ' ')
 
             if relationship_name not in dictionary:
-                print(f"Warning: Relationship {relationship_name} not in annotated text: {file_path}")
+                print(f"Warning: Relationship \"{relationship_name}\" not in annotated text: {file_path}")
                 continue
 
             is_source = True
@@ -216,7 +216,6 @@ def print_result(tags_indexes, text):
 
 def find_end_index(tag, text, text_index):
 
-    original_text_index = text_index
     end_enclosed_tag = "</" + tag + '>'
     while text_index < len(text):
         if text[text_index:].startswith(end_enclosed_tag):
@@ -225,8 +224,7 @@ def find_end_index(tag, text, text_index):
         else:
             text_index += 1
     
-    # raise ValueError(f"End tag not found in the text: {end_enclosed_tag}")
-    return original_text_index + 1
+    raise ValueError(f"End tag not found in the text: {end_enclosed_tag}")
 
 
 def get_tags_indexes(tags, text):
