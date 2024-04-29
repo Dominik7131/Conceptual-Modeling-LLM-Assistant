@@ -66,7 +66,17 @@ class Morphodita_Tagger:
         result = []
 
         for i in range(len(tokens)):
-            result.append(self.get_lemmas(tokens[i]))
+
+            # For example: "non-motorised vehicle" split into "non", "motorised", "vehicle"
+            if '-' in tokens[i]:
+                words = tokens[i].split('-')
+                for word in words:
+                    lemma = self.get_lemmas(word)
+                    result.append(lemma)
+
+            else:
+                lemma = self.get_lemmas(tokens[i])
+                result.append(lemma)
         
         flatten_result = [x for xs in result for x in xs]
         return flatten_result
