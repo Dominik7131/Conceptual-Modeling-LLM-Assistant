@@ -1,6 +1,5 @@
 import os
 
-from semantic_text_filterer import SemanticTextFilterer
 from text_utility import LOGGER_NAME, Field, PromptFileSymbols, TextFilteringVariation, TextUtility, UserChoice, DataType
 from syntactic_text_filterer import SyntacticTextFilterer
 import time
@@ -41,6 +40,8 @@ class LLMAssistant:
             self.relevant_text_finder = SyntacticTextFilterer()
 
         elif FILTERING_VARIATION == TextFilteringVariation.SEMANTIC:
+            # Import here so the model for semantic filtering does not have to load
+            from semantic_text_filterer import SemanticTextFilterer
             self.relevant_text_finder = SemanticTextFilterer()
         
         self.debug_info = self.DebugInfo()
@@ -241,6 +242,10 @@ class LLMAssistant:
         self.end_parsing_prematurely = False
         opened_curly_brackets_count = 0
 
+        # E.g.: "classNames": {[{ "name": "customer", "originalText": "Customers represent..."}, {...}]}
+        # To parse the item with "name": "customer", we need to reset parsing when we encounter '{' symbol
+        is_disable_JSON_nesting = True
+
 
         for text in output:
 
@@ -253,7 +258,11 @@ class LLMAssistant:
 
             for char in text:
                 if char == '{':
-                    opened_curly_brackets_count += 1
+
+                    if opened_curly_brackets_count == 1 and is_disable_JSON_nesting:
+                        item = ""
+                    else:
+                        opened_curly_brackets_count += 1
 
                 if char == '\n' and last_char == '\n':
                     new_lines_in_a_row += 1
@@ -308,7 +317,7 @@ class LLMAssistant:
                 else:
                     self.debug_info.deleted_items.append(completed_item)
         
-        # logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
+        logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
         return
 
 
@@ -390,7 +399,7 @@ class LLMAssistant:
         new_messages.append({"role": "user", "content": prompt})
 
         messages_prettified = TextUtility.messages_prettify(new_messages)
-        # logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
         self.debug_info.prompt = messages_prettified
 
         items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, source_entity=source_entity, target_entity=target_entity)
@@ -408,14 +417,15 @@ class LLMAssistant:
                     continue
                 suggested_entities.append(suggestion_dictionary['name'])
 
-                # Set original text to find all occurencies of the entity name in the domain description
-                item['originalText'] = suggestion_dictionary['name']
+                if not Field.ORIGINAL_TEXT.value in suggestion_dictionary:
+                    # Find occurencies of the entity name in the domain description
+                    item[Field.ORIGINAL_TEXT.value] = suggestion_dictionary['name']
 
             # Find originalText indexes for `item['originalText']` in `domain_description`
-            if 'originalText' in item:
-                original_text = item['originalText']
+            if Field.ORIGINAL_TEXT.value in item:
+                original_text = item[Field.ORIGINAL_TEXT.value]
                 original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(original_text, domain_description, user_choice)
-                suggestion_dictionary['originalTextIndexes'] = original_text_indexes
+                suggestion_dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
             else:
                 logging.warn(f"Warning: original text not in item: {item}")
 
@@ -453,7 +463,7 @@ class LLMAssistant:
         messages_prettified = TextUtility.messages_prettify(new_messages)
         self.debug_info.prompt = messages_prettified
 
-        # logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items_iterator = self.__parse_streamed_output(new_messages, user_choice, source_entity, field_name=field_name)
 
@@ -481,7 +491,7 @@ class LLMAssistant:
         messages_prettified = TextUtility.messages_prettify(new_messages)
         self.debug_info.prompt = messages_prettified
 
-        # logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY_PLAIN_TEXT.value, "")
 
@@ -503,7 +513,7 @@ class LLMAssistant:
         messages_prettified = TextUtility.messages_prettify(new_messages)
         self.debug_info.prompt = messages_prettified
 
-        # logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY_DESCRIPTIONS.value, "")
 
