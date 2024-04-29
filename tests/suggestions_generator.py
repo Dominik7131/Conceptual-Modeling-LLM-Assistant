@@ -29,7 +29,7 @@ def create_entities_expected_output(test_cases):
         entity_name = test_case['entity']
         original_text = test_case[Field.ORIGINAL_TEXT.value]
         
-        entity = f"Entity: {entity_name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n\n"
+        entity = f"Entity: {entity_name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n"
         result.append(entity)
 
     return result
@@ -47,7 +47,7 @@ def create_attributes_expected_output(test_cases):
         for index, output in enumerate(expected_output):
             name = output[Field.NAME.value]
             original_text = output[Field.ORIGINAL_TEXT.value]
-            entry = f"{index + 1}) {name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n\n"
+            entry = f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n"
             result.append(entry)
 
     return result
@@ -68,7 +68,7 @@ def create_relationships_expected_output(test_cases):
             source_entity = output[Field.SOURCE_ENTITY.value]
             target_entity = output[Field.TARGET_ENTITY.value]
 
-            entry = f"{index + 1}) {name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n- {Field.SOURCE_ENTITY.value}: {source_entity}\n- {Field.TARGET_ENTITY.value}: {target_entity}\n\n"
+            entry = f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n"
             result.append(entry)
 
     return result
@@ -84,7 +84,7 @@ def create_relationships2_expected_output(test_cases):
         target_entity = test_case[Field.TARGET_ENTITY.value]
 
 
-        entry = f"{name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n- {Field.SOURCE_ENTITY.value}: {source_entity}\n- {Field.TARGET_ENTITY.value}: {target_entity}\n\n"
+        entry = f"{name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n"
         result.append(entry)
 
     return result
