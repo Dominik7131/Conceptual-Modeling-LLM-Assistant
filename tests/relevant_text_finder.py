@@ -7,13 +7,7 @@ from text_utility import DomainDescriptionFilteringVariation, TextUtility
 from syntactic_text_filterer import SyntacticTextFilterer
 
 
-PATH_TO_DATA_DIRECTORY = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
-TEST_DATA_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "relevant_texts.json")
-INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "56-2001-extract-llm-assistant-test-case.txt")
-
-
 DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
-
 domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
@@ -198,7 +192,7 @@ class RAGTester:
 def main():
 
     parser = argparse.ArgumentParser(description = "Relevant texts tester")
-    parser.add_argument("--filtering", choices = [DomainDescriptionFilteringVariation.NONE.value, DomainDescriptionFilteringVariation.SYNTACTIC.value, DomainDescriptionFilteringVariation.SEMANTIC.value], type=str, default="none", help = "Choose variation for domain description filtering")
+    parser.add_argument("--filtering", choices = [DomainDescriptionFilteringVariation.NONE.value, DomainDescriptionFilteringVariation.SYNTACTIC.value, DomainDescriptionFilteringVariation.SEMANTIC.value], type=str, default=DomainDescriptionFilteringVariation.NONE.value, help = "Choose variation for domain description filtering")
     args = parser.parse_args()
 
     RAGTester.test_filtering(args.filtering)

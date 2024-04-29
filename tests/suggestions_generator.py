@@ -1,47 +1,120 @@
-import sys
-sys.path.append('.')
-from LLM_assistant import LLMAssistant, ITEMS_COUNT
-from text_utility import TextUtility, UserChoice
 import time
 import json
 import os
+import argparse
+import sys
+
+sys.path.append('.')
+from LLM_assistant import LLMAssistant, ITEMS_COUNT
+from text_utility import Field, TextUtility, UserChoice
 
 
-PATH_TO_DATA_DIRECTORY = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
-INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "56-2001-extract-llm-assistant-test-case.txt")
-#INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, "medium", "01_domain_description.txt")
+DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
+domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
+DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
+
 IS_A_RELATIONSHIPS_STRING = "is_a_relationships"
 ACTUAL_OUTPUT = "actual-output"
 EXPECTED_OUTPUT = "expected-output"
 TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 # Settings
-IS_GENERATE_EXPECTED_OUTPUT = False
-USER_CHOICE = UserChoice.RELATIONSHIPS.value
 IS_SKIP_IS_A_RELATIONSHIPS = True
 
 
-def generate_expected_output(test_file_path, output_file_path, test_name):
+def create_entities_expected_output(test_cases):
+
+    result = []
+    for test_case in test_cases:
+        entity_name = test_case['entity']
+        original_text = test_case[Field.ORIGINAL_TEXT.value]
+        
+        entity = f"Entity: {entity_name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n\n"
+        result.append(entity)
+
+    return result
+
+
+def create_attributes_expected_output(test_cases):
+
+    result = []
+    for test_case in test_cases:
+        entity = f"Entity: {test_case['entity']}"
+        result.append(entity)
+
+        expected_output = test_case['expected_output']
+
+        for index, output in enumerate(expected_output):
+            name = output[Field.NAME.value]
+            original_text = output[Field.ORIGINAL_TEXT.value]
+            entry = f"{index + 1}) {name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n\n"
+            result.append(entry)
+
+    return result
+
+
+def create_relationships_expected_output(test_cases):
+
+    result = []
+    for test_case in test_cases:
+        entity = f"Entity: {test_case['entity']}"
+        result.append(entity)
+
+        expected_output = test_case['expected_output']
+
+        for index, output in enumerate(expected_output):
+            name = output[Field.NAME.value]
+            original_text = output[Field.ORIGINAL_TEXT.value]
+            source_entity = output[Field.SOURCE_ENTITY.value]
+            target_entity = output[Field.TARGET_ENTITY.value]
+
+            entry = f"{index + 1}) {name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n- {Field.SOURCE_ENTITY.value}: {source_entity}\n- {Field.TARGET_ENTITY.value}: {target_entity}\n\n"
+            result.append(entry)
+
+    return result
+
+
+def create_relationships2_expected_output(test_cases):
+
+    result = []
+    for test_case in test_cases:
+        name = test_case[Field.NAME.value]
+        original_text = test_case[Field.ORIGINAL_TEXT.value]
+        source_entity = test_case[Field.SOURCE_ENTITY.value]
+        target_entity = test_case[Field.TARGET_ENTITY.value]
+
+
+        entry = f"{name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n- {Field.SOURCE_ENTITY.value}: {source_entity}\n- {Field.TARGET_ENTITY.value}: {target_entity}\n\n"
+        result.append(entry)
+
+    return result
+
+
+def generate_expected_output(test_file_path, output_file_path, user_choice):
+
     with open(test_file_path) as file:
         test_data = json.load(file)
 
-    test_cases = test_data[test_name]
+    test_cases = test_data[user_choice]
 
+    if user_choice == UserChoice.ENTITIES.value:
+        expected_output = create_entities_expected_output(test_cases)
+
+    elif user_choice == UserChoice.ATTRIBUTES.value:
+        expected_output = create_attributes_expected_output(test_cases)
+    
+    elif user_choice == UserChoice.RELATIONSHIPS.value:
+        expected_output = create_relationships_expected_output(test_cases)
+    
+    elif user_choice == UserChoice.RELATIONSHIPS2.value:
+        expected_output = create_relationships2_expected_output(test_cases)
+
+    else:
+        raise ValueError(f"Unexpected user choice: \"{user_choice}\".")
+    
     with open(output_file_path, 'w') as file:
-        for index, test_case in enumerate(test_cases):
-            if USER_CHOICE == UserChoice.ENTITIES.value:
-                file.write(f"Entity: {test_case}\n")
-
-            elif test_name == "relationships":
-                # source_entity = TextUtility.convert_name_to_standard_convention(test_case['source_entity'])
-                # target_entity = TextUtility.convert_name_to_standard_convention(test_case['target_entity'])
-                # file.write(f"Entities: ({source_entity}, {target_entity})\n")
-                write_to_file(file, index, test_case)
-
-            else:
-                file.write(f"Entity: {test_case['entity']}\n")
-                write_outputs_to_file(file, test_case['expected_output'])
-            file.write("\n")
+        for output in expected_output:
+            file.write(f"{output}\n")
 
 
 def write_outputs_to_file(file, outputs):
@@ -63,7 +136,7 @@ def write_to_file(file, index, output):
 
 
 # TODO: Merge this with the implementation in the main method
-def test_relationships(llm_assistant, test_data_json, domain_description, actual_output_file_path):
+def test_relationships(llm_assistant, test_data_json, domain_description, actual_output_file_path, user_choice):
     test_data = test_data_json[UserChoice.RELATIONSHIPS.value]
 
     iterations_count = 0
@@ -81,14 +154,14 @@ def test_relationships(llm_assistant, test_data_json, domain_description, actual
             if iterations_count >= 20:
                 break
 
-            if USER_CHOICE == UserChoice.RELATIONSHIPS2.value:
+            if user_choice == UserChoice.RELATIONSHIPS2.value:
                 is_relationship_already_tested = (source_entity, target_entity) in tested_relationships
                 if is_relationship_already_tested:
                     continue
                 else:
                     tested_relationships.append((source_entity, target_entity))
 
-            elif USER_CHOICE == UserChoice.RELATIONSHIPS.value:
+            elif user_choice == UserChoice.RELATIONSHIPS.value:
                 target_entity = ""
                 is_relationship_already_tested = source_entity in tested_relationships
                 if is_relationship_already_tested:
@@ -100,58 +173,120 @@ def test_relationships(llm_assistant, test_data_json, domain_description, actual
 
             file.write(f"Entities: ({source_entity}, {target_entity})\n")
 
-            iterator = llm_assistant.suggest(source_entity, target_entity, USER_CHOICE, ITEMS_COUNT, conceptual_model=[], domain_description=domain_description)
+            iterator = llm_assistant.suggest(source_entity, target_entity, user_choice, ITEMS_COUNT, conceptual_model=[], domain_description=domain_description)
 
             for index, suggested_item in enumerate(iterator):
                 suggested_item = json.loads(suggested_item)
                 write_to_file(file, index, suggested_item)
                 file.write("\n")
 
+
+def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description):
+
+    iterator = llm_assistant.suggest(source_entity="", target_entity="", user_choice=user_choice, domain_description=domain_description)
+    result = []
+
+    for index, suggested_item in enumerate(iterator):
+        suggested_item = json.loads(suggested_item)
+
+        entity_name = suggested_item[Field.NAME.value]
+        result.append(f"Entity: {entity_name}\n\n")
+
+    return result
+
+
+def generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path, user_choice):
+
+    with open(test_file_path) as file:
+        test_data = json.load(file)
+
+    test_cases = test_data[user_choice]
+
+    if user_choice == UserChoice.ENTITIES.value:
+        results = create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description)
+
+    elif user_choice == UserChoice.ATTRIBUTES.value:
+        results = create_attributes_expected_output(test_cases)
+    
+    elif user_choice == UserChoice.RELATIONSHIPS.value:
+        results = create_relationships_expected_output(test_cases)
+    
+    elif user_choice == UserChoice.RELATIONSHIPS2.value:
+        results = create_relationships2_expected_output(test_cases)
+
+    else:
+        raise ValueError(f"Unexpected user choice: \"{user_choice}\".")
+    
+    with open(actual_output_file_path, 'w') as file:
+        for result in results:
+            file.write(f"{result}\n")
+
+    # if user_choice == UserChoice.ENTITIES.value:
+    #     test_data_json = {"entities" : [{"entity": ""}]}
+    # else:
+    #     with open(test_file_path) as file:
+    #         test_data_json = json.load(file)
+    
+    # if user_choice.startswith("relationships"):
+    #     test_relationships(llm_assistant, test_data_json, domain_description, actual_output_file_path)
+    #     return
+
+    # # TODO: Move this code into a function
+    # test_data = test_data_json[user_choice]
+
+    # with open(actual_output_file_path, 'w') as file:
+    #     for test_case in test_data:
+    #         entity_name = test_case['entity']
+    #         file.write(f"Entity: {entity_name}\n")
+
+    #         iterator = llm_assistant.suggest(entity_name, "", user_choice, ITEMS_COUNT, conceptual_model=[], domain_description=domain_description)
+
+    #         for index, suggested_item in enumerate(iterator):
+    #             suggested_item = json.loads(suggested_item)
+    #             write_to_file(file, index, suggested_item)
+    #             file.write("\n")
 
 
 def main():
 
-    test_name = USER_CHOICE
-    if USER_CHOICE == UserChoice.RELATIONSHIPS.value or USER_CHOICE == UserChoice.RELATIONSHIPS2.value or USER_CHOICE == IS_A_RELATIONSHIPS_STRING:
-        test_name = "relationships"
+    parser = argparse.ArgumentParser(description = "Suggestions generator")
+    parser.add_argument("--user_choice", choices = [UserChoice.ENTITIES.value, UserChoice.ATTRIBUTES.value, UserChoice.RELATIONSHIPS.value, UserChoice.RELATIONSHIPS2.value], type=str, default=UserChoice.ENTITIES.value, help = "Choose elements to generate")
+    # parser.add_argument("--generate_expected_output_only", type=bool, action = "store_true", default=True, help = "")
+    args = parser.parse_args()
 
-    test_file_path = os.path.join(PATH_TO_DATA_DIRECTORY, f"{test_name}.json")
-    expected_output_file_path = os.path.join(PATH_TO_DATA_DIRECTORY, f"{USER_CHOICE}-{EXPECTED_OUTPUT}.txt")
-    actual_output_file_path = os.path.join(PATH_TO_DATA_DIRECTORY, f"{TIMESTAMP_PREFIX}-{USER_CHOICE}-{ACTUAL_OUTPUT}.txt")
+    user_choice = args.user_choice
+    # is_generate_expected_output = args.generate_expected_output_only
+    is_generate_expected_output = True
+
+    if not is_generate_expected_output:
+        llm_assistant = LLMAssistant()
+
+    
+    for index, domain_model in enumerate(domain_models):
+        for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
+
+            test_file_name = f"{user_choice}-expected-suggestions-0{i + 1}.json"
+            test_file_path = os.path.join(DIRECTORY_PATH, domain_model, test_file_name)
+            expected_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, f"{user_choice}-{EXPECTED_OUTPUT}-0{i + 1}.txt")
+
+            if not os.path.isfile(test_file_path):
+                raise ValueError(f"Test file not found: {test_file_path}")
  
-    if IS_GENERATE_EXPECTED_OUTPUT:
-        generate_expected_output(test_file_path, expected_output_file_path, test_name)
-        return
+            if is_generate_expected_output:
+                generate_expected_output(test_file_path, expected_output_file_path, user_choice)
+                continue
+            
+            actual_output_file_path = os.path.join(DIRECTORY_PATH, f"{TIMESTAMP_PREFIX}-{user_choice}-{ACTUAL_OUTPUT}.txt")
+            domain_description_file_name = f"domain-description-0{i + 1}.txt"
+            domain_description_path = os.path.join(DIRECTORY_PATH, domain_model, domain_description_file_name)
 
-    llm_assistant = LLMAssistant()
+            if not os.path.isfile(domain_description_path):
+                raise ValueError(f"Domain description not found: {domain_description_path}")
 
-    with open(INPUT_DOMAIN_DESCRIPTION_FILE_PATH, 'r') as file:
-        domain_description = file.read()
-    
-    if USER_CHOICE == UserChoice.ENTITIES.value:
-        test_data_json = {"entities" : [{"entity": ""}]}
-    else:
-        with open(test_file_path) as file:
-            test_data_json = json.load(file)
-    
-    if USER_CHOICE.startswith("relationships"):
-        test_relationships(llm_assistant, test_data_json, domain_description, actual_output_file_path)
-        return
-
-    # TODO: Move this code into a function
-    test_data = test_data_json[USER_CHOICE]
-
-    with open(actual_output_file_path, 'w') as file:
-        for test_case in test_data:
-            entity_name = test_case['entity']
-            file.write(f"Entity: {entity_name}\n")
-
-            iterator = llm_assistant.suggest(entity_name, "", USER_CHOICE, ITEMS_COUNT, conceptual_model=[], domain_description=domain_description)
-
-            for index, suggested_item in enumerate(iterator):
-                suggested_item = json.loads(suggested_item)
-                write_to_file(file, index, suggested_item)
-                file.write("\n")
+            with open(domain_description_path, 'r') as file:
+                domain_description = file.read()
+            
+            generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path, user_choice)
 
 if __name__ == "__main__":
     main()

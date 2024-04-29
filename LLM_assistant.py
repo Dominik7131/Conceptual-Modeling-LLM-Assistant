@@ -346,7 +346,7 @@ class LLMAssistant:
         return prompt
 
 
-    def suggest(self, source_entity, target_entity, user_choice, count_items_to_suggest, conceptual_model, domain_description):
+    def suggest(self, source_entity, target_entity, user_choice, domain_description, count_items_to_suggest=5):
 
         source_entity = source_entity.strip()
 
