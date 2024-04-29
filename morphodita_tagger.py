@@ -1,16 +1,21 @@
 import logging
+import json
 from ufal.morphodita import *
 
-# TODO: Provide config similar to `llm-config.json` for setting the tagger file path
-TAGGER_FILE_PATH = "C:/Users/dommo/.cache/morphodita-models/english-morphium-wsj-140407/english-morphium-wsj-140407.tagger"
+CONFIG_FILE_PATH = "morphodita-config.json"
 
 # Code based on the `run_tagger` documentation https://pypi.org/project/ufal.morphodita/
 class Morphodita_Tagger:
 
     def __init__(self):
-        self.tagger = Tagger.load(TAGGER_FILE_PATH)
+
+        with open(CONFIG_FILE_PATH, 'r') as file:
+            config = json.load(file)
+
+        tagger_path = config["tagger_path"]
+        self.tagger = Tagger.load(tagger_path)
         if not self.tagger:
-            logging.error(f"Cannot load tagger from file: {TAGGER_FILE_PATH}")
+            logging.error(f"Cannot load tagger from file: {tagger_path}")
             exit(1)
         
         self.forms = Forms()
