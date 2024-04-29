@@ -139,7 +139,19 @@ class TextUtility:
         text = re.sub(websites,"<prd>\\1",text)
         text = re.sub(digits + "[.]" + digits,"\\1<prd>\\2",text)
         text = re.sub(multiple_dots, lambda match: "<prd>" * len(match.group(0)) + "<stop>", text)
+
+        # Titles
         if "Ph.D" in text: text = text.replace("Ph.D.","Ph<prd>D<prd>")
+        if "B.Sc." in text: text = text.replace("B.Sc.","B<prd>Sc<prd>")
+        if "B.A." in text: text = text.replace("B.A.","B<prd>A<prd>")
+        if "Ing." in text: text = text.replace("Ing.","Ing<prd>")
+        if "Ing. arch." in text: text = text.replace("Ing. arch.","Ing<prd> arch<prd>")
+        if "M.D." in text: text = text.replace("M.D.","M<prd>D<prd>")
+        if "MDDr." in text: text = text.replace("MDDr.","MDDr<prd>")
+        if "MVDr." in text: text = text.replace("MVDr.","MVDr<prd>")
+        if "MgA." in text: text = text.replace("MgA.","MgA<prd>")
+        if "Mgr." in text: text = text.replace("Mgr.","Mgr<prd>")
+
         text = re.sub("\s" + alphabets + "[.] "," \\1<prd> ",text)
         text = re.sub(acronyms+" "+starters,"\\1<stop> \\2",text)
         text = re.sub(alphabets + "[.]" + alphabets + "[.]" + alphabets + "[.]","\\1<prd>\\2<prd>\\3<prd>",text)
@@ -183,12 +195,6 @@ class TextUtility:
 
         # TODO: Convert camel case starting with a small letter
         # E.g.: periodOfInterruptionOfInsurance, dateOfChangeOfInsurance
-
-        if name == "animalID":
-            print("")
-
-        if name == "Capitalized Name":
-            print("")
         
         if not name:
             return ""
@@ -282,7 +288,26 @@ class TextUtility:
 
     def is_bullet_point(text):
         # TODO: Implement for all possible bullet points -- e.g. I), a), 15), *, ...
-        return text[0] == '-'
+
+        is_bullet_point = False
+
+
+        if text[0] == '-':
+            return True
+
+        # For example text starts with: "(a)"
+        if text[0] == '(':
+            return True
+        
+        # For example text starts with: "I)", "a)", "I."
+        if len(text) > 1 and (text[1] == ')' or text[1] == '.'):
+            return True
+
+        # For example text starts with: "15)", "aa)", "15."
+        if len(text) > 2 and (text[2] == ')' or text[2] == '.'):
+            return True
+        
+        return False
 
 
     # TODO: This method is for syntactic filtering so it should be in the script `syntactit_text_filterer.py`
