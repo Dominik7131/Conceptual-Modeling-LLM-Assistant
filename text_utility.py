@@ -20,6 +20,7 @@ class DomainDescriptionFilteringVariation(Enum):
     SYNTACTIC = "syntactic"
     SEMANTIC = "semantic"
 
+
 class DataType(Enum):
     STRING = "string"
     NUMBER = "number"
@@ -34,8 +35,19 @@ class Field(Enum):
     ORIGINAL_TEXT_INDEXES = "originalTextIndexes"
     DATA_TYPE = "dataType"
     CARDINALITY = "cardinality"
-    SOURCE_ENTITY = "sourceEntity"
-    TARGET_ENTITY = "targetEntity"
+    SOURCE_ENTITY = "source"
+    TARGET_ENTITY = "target"
+
+
+class FieldUI(Enum):
+    NAME = "name"
+    DESCRIPTION = "description"
+    ORIGINAL_TEXT = "original text"
+    ORIGINAL_TEXT_INDEXES = "original text indexes"
+    DATA_TYPE = "data type"
+    CARDINALITY = "cardinality"
+    SOURCE_ENTITY = "source entity"
+    TARGET_ENTITY = "target entity"
 
 
 class PromptFileSymbols(Enum):

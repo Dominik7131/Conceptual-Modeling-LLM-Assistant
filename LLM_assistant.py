@@ -16,6 +16,12 @@ IS_RELATIONSHIPS_IS_A = False
 
 logger = logging.getLogger(LOGGER_NAME)
 
+TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
+LOG_DIRECTORY = "logs"
+LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, f"{TIMESTAMP}-log.txt")
+logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
+
+
 PROMPT_DIRECTORY = "prompts"
 SYSTEM_PROMPT_DIRECTORY = os.path.join(PROMPT_DIRECTORY, "system")
 
@@ -23,8 +29,6 @@ LLM_BACKEND_URL = "http://localhost:8080/v1"
 
 
 DEFINED_DATA_TYPES = [DataType.STRING.value, DataType.NUMBER.value, DataType.TIME.value, DataType.BOOLEAN.value]
-
-# logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
 
 
 class LLMAssistant:
@@ -156,34 +160,36 @@ class LLMAssistant:
 
 
         elif user_choice == UserChoice.RELATIONSHIPS.value:
-            if not "source" in completed_item or not completed_item["source"]:
-                completed_item["name"] = "error: no source entity"
+            if not Field.SOURCE_ENTITY.value in completed_item or not completed_item[Field.SOURCE_ENTITY.value]:
+                completed_item[Field.NAME.value] = "error: no source entity"
                 is_item_ok = False
 
             
-            if not "target" in completed_item or not completed_item["target"]:
-                completed_item["name"] = "error: no target entity"
+            if not Field.TARGET_ENTITY.value in completed_item or not completed_item[Field.TARGET_ENTITY.value]:
+                completed_item[Field.NAME.value] = "error: no target entity"
                 is_item_ok = False
             
             if not is_item_ok:
                 yield completed_item, is_item_ok
                 return
             
-            source_lower = completed_item['source'].lower().replace('s', 'z')
-            target_lower = completed_item['target'].lower().replace('s', 'z')
+            source_lower = completed_item[Field.SOURCE_ENTITY.value].lower().replace('s', 'z')
+            target_lower = completed_item[Field.TARGET_ENTITY.value].lower().replace('s', 'z')
 
-            is_entity1_source_or_target = source_entity == source_lower or source_entity == target_lower
+            source_entity_replaced = source_entity.replace('s', 'z')
+            target_entity_replaced = source_entity.replace('s', 'z')
 
-            is_entity1_in_sentence = True
-            if "sentence" in completed_item:
-                is_entity1_in_sentence = source_entity in completed_item['sentence']
-            
+            is_source_or_target_included = source_entity_replaced == source_lower or target_entity_replaced == target_lower
             is_none = (source_lower == "none") or (target_lower == "none")
             
-            if not is_entity1_source_or_target or not is_entity1_in_sentence or is_none:
+            if not is_source_or_target_included or is_none:
                 # For debugging purpuses do not end parsing but otherwise we would probably end
                 #self.end_parsing_prematurely = True
                 #return completed_item
+
+                if not is_source_or_target_included:
+                    logging.info(f"{source_entity} != {source_lower} and {target_entity} != {target_lower}")
+
                 completed_item['name'] = "(Deleted: Inputed entity is not source/target entity) " + completed_item['name']
                 is_item_ok = False
 
@@ -382,7 +388,7 @@ class LLMAssistant:
         new_messages.append({"role": "user", "content": prompt})
 
         messages_prettified = TextUtility.messages_prettify(new_messages)
-        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        # logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
         self.debug_info.prompt = messages_prettified
 
         items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, source_entity=source_entity, target_entity=target_entity)
@@ -445,7 +451,7 @@ class LLMAssistant:
         messages_prettified = TextUtility.messages_prettify(new_messages)
         self.debug_info.prompt = messages_prettified
 
-        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        # logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items_iterator = self.__parse_streamed_output(new_messages, user_choice, source_entity, field_name=field_name)
 
@@ -473,7 +479,7 @@ class LLMAssistant:
         messages_prettified = TextUtility.messages_prettify(new_messages)
         self.debug_info.prompt = messages_prettified
 
-        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        # logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY_PLAIN_TEXT.value, "")
 
@@ -495,7 +501,7 @@ class LLMAssistant:
         messages_prettified = TextUtility.messages_prettify(new_messages)
         self.debug_info.prompt = messages_prettified
 
-        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        # logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY_DESCRIPTIONS.value, "")
 
