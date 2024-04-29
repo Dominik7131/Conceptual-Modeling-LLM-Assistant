@@ -3,7 +3,7 @@ sys.path.append('.')
 import argparse
 import json
 import os
-from text_utility import TextFilteringVariation, TextUtility
+from text_utility import TextFilteringVariation, TextUtility, UserChoice
 from syntactic_text_filterer import SyntacticTextFilterer
 
 
@@ -14,7 +14,7 @@ DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
 class RAGTester:
 
-    def compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name):
+    def compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, user_choice, name, source_entity="", target_entity=""):
         total_tests = 0
         successful_tests = 0
 
@@ -27,7 +27,31 @@ class RAGTester:
                     break
 
             if not is_relevant_text_found:
-                print(f"Test failed:\n- file: {domain_description_path}\n- name: {name}\n- relevant text not found: {expected_text}\n")
+                print("Test failed:")
+                print(f"- file: {domain_description_path}")
+
+                # Note: name in capslock represents the entity used for filtering
+                if user_choice == UserChoice.ENTITIES.value:
+                    print(f"- ENTITY: {name}")
+
+                elif user_choice == UserChoice.ATTRIBUTES.value:
+                    print(f"- SOURCE ENTITY: {source_entity}")
+                    print(f"- attribute name: {name}")
+
+                elif user_choice == UserChoice.RELATIONSHIPS.value:
+                    if source_entity != "":
+                        print(f"- SOURCE ENTITY: {source_entity}")
+                    else:
+                        print(f"- TARGET ENTITY: {target_entity}")
+
+                    print(f"- relationship name: {name}")
+
+                elif user_choice == UserChoice.RELATIONSHIPS2.value:
+                    print(f"- SOURCE ENTITY: {source_entity}")
+                    print(f"- TARGET ENTITY: {target_entity}")
+                    print(f"- relationship name: {name}")
+
+                print(f"- relevant text not found: {expected_text}\n")
                 # print(f"Actual relevant texts:\n{actual_relevant_texts}\n")
             else:
                 successful_tests += 1
@@ -66,6 +90,7 @@ class RAGTester:
         used_texts_count = 0
         total_texts = 0
 
+        # TODO: Split code into methods
         for index, domain_model in enumerate(domain_models):
             for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
@@ -96,7 +121,7 @@ class RAGTester:
 
                     actual_relevant_texts = RAGTester.get_actual_relevant_texts(filtering_variation, domain_description, entity, text_finder)
 
-                    current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, entity)
+                    current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name=entity, user_choice=UserChoice.ENTITIES.value)
 
                     total_tests_entities += current_total
                     successful_tests_entities += current_successfull_tests
@@ -105,7 +130,7 @@ class RAGTester:
                         attributes_tests = test_case['attributes']
 
                         for attributes_test in attributes_tests:
-                            name = attributes_test["name"] + "--" + entity
+                            name = attributes_test["name"]
 
                             expected_relevant_texts = attributes_test["relevant_texts"]
 
@@ -113,7 +138,7 @@ class RAGTester:
                                 if text not in all_expected_relevant_texts:
                                     all_expected_relevant_texts.append(text)
 
-                            current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name)
+                            current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name=name, user_choice=UserChoice.ATTRIBUTES.value, source_entity=entity)
 
                             total_tests_attributes += current_total
                             successful_tests_attributes += current_successfull_tests
@@ -122,14 +147,22 @@ class RAGTester:
                         relationships_tests = test_case['relationships']
 
                         for relationship_test in relationships_tests:
-                            name = relationship_test["name"] + "--" + entity + "--" + f"source: {relationship_test['is_source']}"
+                            name = relationship_test["name"]
 
                             expected_relevant_texts = relationship_test["relevant_texts"]
                             for text in expected_relevant_texts:
                                 if text not in all_expected_relevant_texts:
                                     all_expected_relevant_texts.append(text)
 
-                            current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name)
+                            source_entity = ""
+                            target_entity = ""
+
+                            if relationship_test['is_source']:
+                                source_entity = entity
+                            else:
+                                target_entity = entity
+
+                            current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name=name, user_choice=UserChoice.RELATIONSHIPS.value, source_entity=source_entity, target_entity=target_entity)
 
                             total_tests_relationships += current_total
                             successful_tests_relationships += current_successfull_tests
@@ -192,7 +225,7 @@ class RAGTester:
 def main():
 
     parser = argparse.ArgumentParser(description = "Relevant texts tester")
-    parser.add_argument("--filtering", choices = [TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value, TextFilteringVariation.SEMANTIC.value], type=str, default=TextFilteringVariation.NONE.value, help = "Choose variation for domain description filtering")
+    parser.add_argument("--filtering", choices = [TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value, TextFilteringVariation.SEMANTIC.value], type=str, default=TextFilteringVariation.SYNTACTIC.value, help = "Choose variation for domain description filtering")
     args = parser.parse_args()
 
     RAGTester.test_filtering(args.filtering)
