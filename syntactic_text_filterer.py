@@ -140,7 +140,7 @@ def main():
         domain_description = domain_description_file.read()
 
     relevant_text_finder = SyntacticTextFilterer()
-    relevant_texts = relevant_text_finder.get(entity, domain_description)#, cache_file_name=INPUT_DOMAIN_DESCRIPTION_FILE_NAME)
+    relevant_texts = relevant_text_finder.get(entity, domain_description)
 
     if IS_SAVE_OUTPUT_TO_FILE:
         with open(OUTPUT_FILE, 'w') as file:
