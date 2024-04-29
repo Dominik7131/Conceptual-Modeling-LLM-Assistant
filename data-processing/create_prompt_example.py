@@ -50,7 +50,9 @@ def get_attributes_examples(expected_suggestions):
     expected_suggestions = expected_suggestions[UserChoice.ATTRIBUTES.value]
 
     for suggestion in expected_suggestions:
+        source_entity = suggestion["entity"]
         expected_output = suggestion["expected_output"]
+        result.append(f"---- Example for entity: {source_entity} ----")
 
         for output in expected_output:
             name = output[Field.NAME.value]
@@ -59,7 +61,7 @@ def get_attributes_examples(expected_suggestions):
             result.append(f"context: {original_text}")
             result.append(f"name: {name}")
 
-            JSON_object = f"\"{Field.NAME.value}\": \"{name}\", \"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\""
+            JSON_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\""
             result.append("JSON object: {" + JSON_object + "}\n")
         
         result.append("")
@@ -73,7 +75,9 @@ def get_relationships1_examples(expected_suggestions):
     expected_suggestions = expected_suggestions[UserChoice.RELATIONSHIPS.value]
 
     for suggestion in expected_suggestions:
+        source_entity = suggestion["entity"]
         expected_output = suggestion["expected_output"]
+        result.append(f"---- Example for entity: {source_entity} ----")
 
         for output in expected_output:
             name = output[Field.NAME.value]
@@ -86,7 +90,7 @@ def get_relationships1_examples(expected_suggestions):
             result.append(f"source entity: {source_entity}")
             result.append(f"target entity: {target_entity}")
 
-            JSON_object = f"\"{Field.NAME.value}\": \"{name}\", \"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.SOURCE_ENTITY.value}\": \"{source_entity}\", \"{Field.TARGET_ENTITY.value}\": \"{target_entity}\""
+            JSON_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\", \"{Field.SOURCE_ENTITY.value}\": \"{source_entity}\", \"{Field.TARGET_ENTITY.value}\": \"{target_entity}\""
             result.append("JSON object: {" + JSON_object + "}\n")
 
         result.append("")
@@ -111,7 +115,7 @@ def get_relationships2_examples(expected_suggestions):
         result.append(f"source entity: {source_entity}")
         result.append(f"target entity: {target_entity}")
 
-        JSON_object = f"\"{Field.NAME.value}\": \"{name}\", \"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.SOURCE_ENTITY.value}\": \"{source_entity}\", \"{Field.TARGET_ENTITY.value}\": \"{target_entity}\""
+        JSON_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\", \"{Field.SOURCE_ENTITY.value}\": \"{source_entity}\", \"{Field.TARGET_ENTITY.value}\": \"{target_entity}\""
         result.append("JSON object: {" + JSON_object + "}\n")
 
     return result

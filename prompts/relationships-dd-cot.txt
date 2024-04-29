@@ -2,28 +2,67 @@ Solely based on the given context which relationships does the entity: "{source_
 
 For each relationship output its name and source entity and target entity and copy the part of the given context containing this relationship in JSON object like this: {"originalText": "copy the part of the given context containing this relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}
 
+
 EXAMPLE START
 
-Solely based on the given context which relationships does the entity: "professor" have?
+Solely based on the given context which relationships does the entity: "employee" have?
 
 This is the given context:
-"Students have a name. Professors have a name. Professors teach students. Students have assigned homework from professors."
+"In this company, every employee, whether works in accounting, marketing, or any other department with some other title, has a specific role. An employee has a personal number, that uniquely identifies the employee and name the other employees in the company use to address the employee. For a remote contact, a contact email is essential. Each one works in just one department, which is a part of how the company organizes its work. Some employees are also managers; they still do much of what other employees do, but they also have extra responsibilities depending on their level in the company hierarchy. Managers help keep things running smoothly and make sure the departments they manage are productive. This simple setup helps everyone know who's doing what and where they fit in the larger picture of the company."
 
 Output:
-name: teach
-originalText: Professors teach students
-source entity: professor
-target entity: student
-JSON object: {"originalText": "Professors teach students", "name": "teach", "source": "professor", "target": "student"}
-
-name: has assigned homework from
-originalText: Students have assigned homework from professors
-source entity: professor
-target entity: student
-JSON object: {"originalText": "Students have assigned homework from professors", "name": "has assigned homework from", "source": "student", "target": "professor"}
+context: employee, whether works in accounting, marketing, or any other department with some other title Each one works in just one department, which is a part of how the company organizes its work.
+name: works in
+source entity: employee
+target entity: department
+JSON object: {"originalText": "employee, whether works in accounting, marketing, or any other department with some other title Each one works in just one department, which is a part of how the company organizes its work.", "name": "works in", "source": "employee", "target": "department"}
 
 EXAMPLE END
 
 
+EXAMPLE START
+
+Solely based on the given context which relationships does the entity: "department" have?
+
+This is the given context:
+"In this company, every employee, whether works in accounting, marketing, or any other department with some other title, has a specific role. An employee has a personal number, that uniquely identifies the employee and name the other employees in the company use to address the employee. For a remote contact, a contact email is essential. Each one works in just one department, which is a part of how the company organizes its work."
+
+Output:
+context: employee, whether works in accounting, marketing, or any other department with some other title Each one works in just one department, which is a part of how the company organizes its work.
+name: works in
+source entity: employee
+target entity: department
+JSON object: {"originalText": "employee, whether works in accounting, marketing, or any other department with some other title Each one works in just one department, which is a part of how the company organizes its work.", "name": "works in", "source": "employee", "target": "department"}
+
+context: make sure the departments they manage are productive
+name: manages
+source entity: manager
+target entity: department
+JSON object: {"originalText": "make sure the departments they manage are productive", "name": "manages", "source": "manager", "target": "department"}
+
+EXAMPLE END
+
+
+EXAMPLE START
+
+Solely based on the given context which relationships does the entity: "manager" have?
+
+This is the given context:
+"Managers help keep things running smoothly and make sure the departments they manage are productive."
+
+Output:
+context: make sure the departments they manage are productive
+name: manages
+source entity: manager
+target entity: department
+JSON object: {"originalText": "make sure the departments they manage are productive", "name": "manages", "source": "manager", "target": "department"}
+
+EXAMPLE END
+
+
+Solely based on the given context which relationships does the entity: "{source_entity}" have?
+
 This is the given context:
 "{domain_description}"
+
+Output:

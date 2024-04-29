@@ -1,36 +1,53 @@
 Solely based on the given context which attributes does the entity: "{source_entity}" have?
 
-For each attribute output its name and copy the part of the given context containing this attribute and then output this attribute in JSON object like this: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name"}.
+For each attribute copy the part of the given context containing this attribute and output its name and then output this attribute in JSON object like this: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name"}.
+
 
 EXAMPLE START
 
-Solely based on the given context which attributes does the entity: "natural person" have?
+Solely based on the given context which attributes does the entity: "employee" have?
+
 This is the given context:
-"If the person is a natural person, his name, or, where applicable, first and last names and his birth number, if any, and, where applicable, his date of birth shall be entered."
+"In this company, every employee, whether works in accounting, marketing, or any other department with some other title, has a specific role. An employee has a personal number, that uniquely identifies the employee and name the other employees in the company use to address the employee. For a remote contact, a contact email is essential."
 
 Output:
-Context: "If the person is a natural person, his name"
-Name: name
-JSON object: {"originalText": "If the person is a natural person, his name", "name": "name"}
+context: has a specific role
+name: role
+JSON object: {"originalText": "has a specific role", "name": "role"}
 
-Context: "If the person is a natural person ... first names"
-Name: first name
-JSON object: {"originalText": "If the person is a natural person ... first names", "name": "first name"}
+context: personal number, that uniquely identifies the employee
+name: personal number
+JSON object: {"originalText": "personal number, that uniquely identifies the employee", "name": "personal number"}
 
-Context: "If the person is a natural person ... last names"
-Name: last name
-JSON object: {"originalText": "If the person is a natural person ... last names", "name": "last name"}
+context: name the other employees in the company use to address the employee
+name: name
+JSON object: {"originalText": "name the other employees in the company use to address the employee", "name": "name"}
 
-Context: "If the person is a natural person ... his birth number"
-Name: birth number
-JSON object: {"originalText": "If the person is a natural person ... his birth number", "name": "birth number"}
-
-Context: "If the person is a natural person ... his date of birth"
-Name: birth date
-JSON object: {"originalText": "If the person is a natural person ... his date of birth", "name": "birth date"}
+context: For a remote contact, a contact email
+name: contact email
+JSON object: {"originalText": "For a remote contact, a contact email", "name": "contact email"}
 
 EXAMPLE END
 
 
+EXAMPLE START
+
+Solely based on the given context which attributes does the entity: "department" have?
+
+This is the given context:
+"In this company, every employee, whether works in accounting, marketing, or any other department with some other title, has a specific role."
+
+Output:
+context: department with some other title
+name: title
+JSON object: {"originalText": "department with some other title", "name": "title"}
+
+EXAMPLE END
+
+
+Solely based on the given context which attributes does the entity: "{source_entity}" have?
+
 This is the given context:
 "{domain_description}"
+
+Output:
