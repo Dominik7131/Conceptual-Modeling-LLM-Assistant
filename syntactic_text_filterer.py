@@ -5,7 +5,8 @@ import os
 
 PATH_TO_DATA_DIRECTORY = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
 INPUT_DOMAIN_DESCRIPTION_FILE_NAME = "56-2001-extract-llm-assistant-test-case.txt"
-INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, INPUT_DOMAIN_DESCRIPTION_FILE_NAME)
+# INPUT_DOMAIN_DESCRIPTION_FILE_PATH = os.path.join(PATH_TO_DATA_DIRECTORY, INPUT_DOMAIN_DESCRIPTION_FILE_NAME)
+INPUT_DOMAIN_DESCRIPTION_FILE_PATH = "domain-modeling-benchmark\\evaluation domain models\\college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1\\domain-description-01.txt"
 
 CACHED_FILE_PATH = os.path.join("cache", INPUT_DOMAIN_DESCRIPTION_FILE_NAME)
 OUTPUT_FILE = "out_manual.txt"
@@ -83,7 +84,6 @@ class SyntacticTextFilterer:
         
 
         # No cache
-
         for index, chunk in enumerate(self.chunks):
 
             enhanced_chunk = self.edited_chunks[index]
