@@ -11,11 +11,11 @@ This is the given context:
 "In this company, every employee, whether works in accounting, marketing, or any other department with some other title, has a specific role. An employee has a personal number, that uniquely identifies the employee and name the other employees in the company use to address the employee. For a remote contact, a contact email is essential. Each one works in just one department, which is a part of how the company organizes its work. Some employees are also managers; they still do much of what other employees do, but they also have extra responsibilities depending on their level in the company hierarchy. Managers help keep things running smoothly and make sure the departments they manage are productive. This simple setup helps everyone know who's doing what and where they fit in the larger picture of the company."
 
 Output:
-context: employee, whether works in accounting, marketing, or any other department with some other title Each one works in just one department, which is a part of how the company organizes its work.
+context: employee, whether works in accounting, marketing, or any other department with some other title ... Each one works in just one department, which is a part of how the company organizes its work.
 name: works in
 source entity: employee
 target entity: department
-JSON object: {"originalText": "employee, whether works in accounting, marketing, or any other department with some other title Each one works in just one department, which is a part of how the company organizes its work.", "name": "works in", "source": "employee", "target": "department"}
+JSON object: {"originalText": "employee, whether works in accounting, marketing, or any other department with some other title ... Each one works in just one department, which is a part of how the company organizes its work.", "name": "works in", "source": "employee", "target": "department"}
 
 EXAMPLE END
 
@@ -28,11 +28,11 @@ This is the given context:
 "In this company, every employee, whether works in accounting, marketing, or any other department with some other title, has a specific role. An employee has a personal number, that uniquely identifies the employee and name the other employees in the company use to address the employee. For a remote contact, a contact email is essential. Each one works in just one department, which is a part of how the company organizes its work."
 
 Output:
-context: employee, whether works in accounting, marketing, or any other department with some other title Each one works in just one department, which is a part of how the company organizes its work.
+context: employee, whether works in accounting, marketing, or any other department with some other title ... Each one works in just one department, which is a part of how the company organizes its work.
 name: works in
 source entity: employee
 target entity: department
-JSON object: {"originalText": "employee, whether works in accounting, marketing, or any other department with some other title Each one works in just one department, which is a part of how the company organizes its work.", "name": "works in", "source": "employee", "target": "department"}
+JSON object: {"originalText": "employee, whether works in accounting, marketing, or any other department with some other title ... Each one works in just one department, which is a part of how the company organizes its work.", "name": "works in", "source": "employee", "target": "department"}
 
 context: make sure the departments they manage are productive
 name: manages

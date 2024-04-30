@@ -287,16 +287,8 @@ class TextUtility:
 
 
     def is_bullet_point(text):
-        # TODO: Implement for all possible bullet points -- e.g. I), a), 15), *, ...
-
-        is_bullet_point = False
-
-
-        if text[0] == '-':
-            return True
-
-        # For example text starts with: "(a)"
-        if text[0] == '(':
+        # E.g.: - text, * text, (a) text
+        if text[0] == '-' or text[0] == '*' or text[0] == '(':
             return True
         
         # For example text starts with: "I)", "a)", "I."
