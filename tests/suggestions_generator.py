@@ -216,7 +216,7 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
 def create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description):
 
     result = []
-    for test_case in test_cases[:3]:
+    for test_case in test_cases:
         source_entity = test_case["entity"]
         result.append(f"Entity: {source_entity}")
         iterator = llm_assistant.suggest(source_entity=source_entity, target_entity="", user_choice=user_choice, domain_description=domain_description)
@@ -244,7 +244,12 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
             suggested_item = json.loads(suggested_item)
 
             name = suggested_item[Field.NAME.value]
-            original_text = suggested_item[Field.ORIGINAL_TEXT.value]
+
+            if Field.ORIGINAL_TEXT.value in suggested_item:
+                original_text = suggested_item[Field.ORIGINAL_TEXT.value]
+            else:
+                original_text = ""
+
             source_entity = suggested_item[Field.SOURCE_ENTITY.value]
             target_entity = suggested_item[Field.TARGET_ENTITY.value]
 
