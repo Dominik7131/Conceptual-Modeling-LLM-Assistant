@@ -13,13 +13,12 @@ DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain mo
 domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
-IS_A_RELATIONSHIPS_STRING = "is_a_relationships"
 ACTUAL_OUTPUT = "actual-output"
 EXPECTED_OUTPUT = "expected-output"
 TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 # Settings
-IS_SKIP_IS_A_RELATIONSHIPS = True
+IS_CSV_OUTPUT = True
 
 
 def create_entities_expected_output(test_cases):
@@ -135,19 +134,21 @@ def write_to_file(file, index, output):
     file.write("\n")
 
 
-# TODO: Merge this with the implementation in the main method
+# TODO: Check if this method is needed and then probably delete it
 def test_relationships(llm_assistant, test_data_json, domain_description, actual_output_file_path, user_choice):
     test_data = test_data_json[UserChoice.RELATIONSHIPS.value]
 
     iterations_count = 0
     tested_relationships = []
 
+    is_skip_is_a_relationships = True
+
     with open(actual_output_file_path, 'w') as file:
         for test_case in test_data:
             source_entity = TextUtility.convert_name_to_standard_convention(test_case['source_entity'])
             target_entity = TextUtility.convert_name_to_standard_convention(test_case['target_entity'])
 
-            if IS_SKIP_IS_A_RELATIONSHIPS:
+            if is_skip_is_a_relationships:
                 if test_case['name'] == 'is-a':
                     continue
             
