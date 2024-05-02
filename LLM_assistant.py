@@ -19,7 +19,7 @@ logger = logging.getLogger(LOGGER_NAME)
 TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
 LOG_DIRECTORY = "logs"
 LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, f"{TIMESTAMP}-log.txt")
-logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
+logging.basicConfig(level=logging.INFO, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
 
 
 PROMPT_DIRECTORY = "prompts"
@@ -142,16 +142,16 @@ class LLMAssistant:
             # TODO: define all attribute field names so we do not have to type "dataType" but can use some variable instead
             if "dataType" in completed_item:
                 if completed_item["dataType"] == "float":
-                    logging.debug(f"Converting float data type to number")
+                    logging.info(f"Converting float data type to number")
                     completed_item["dataType"] = "number"
 
                 elif completed_item["dataType"] == "date":
-                    logging.debug(f"Converting date data type to time")
+                    logging.info(f"Converting date data type to time")
                     completed_item["dataType"] = "time"
 
                 # Convert any unknown data type to string
                 if not completed_item["dataType"] in DEFINED_DATA_TYPES:
-                    logging.debug(f"Converting unknown data type to string")
+                    logging.info(f"Converting unknown data type to string")
                     completed_item["dataType"] = "string"
 
             # Remove attributes in which their inferred text does not contain the given entity
@@ -289,7 +289,7 @@ class LLMAssistant:
                     for completed_item, is_item_ok in iterator:
                         # TODO: Add comment what this code is doing
                         if self.end_parsing_prematurely:
-                            logging.debug(f"Ending parsing prematurely: {completed_item}")
+                            logging.info(f"Ending parsing prematurely: {completed_item}")
                             return
                             
                         if is_item_ok:
@@ -302,11 +302,11 @@ class LLMAssistant:
                 last_char = char
 
         if IS_IGNORE_DOMAIN_DESCRIPTION and len(items) != ITEMS_COUNT:
-            logging.debug(f"Incorrect amount of items\n- expected: {ITEMS_COUNT}\n- actual: {len(items)}")
+            logging.info(f"Incorrect amount of items\n- expected: {ITEMS_COUNT}\n- actual: {len(items)}")
 
         # If the JSON object is not properly finished then insert the needed amount of closed curly brackets
         if opened_curly_brackets_count > 0:
-            logging.debug(f"JSON object is not properly finished: {item}")
+            logging.info(f"JSON object is not properly finished: {item}")
             item += '}' * opened_curly_brackets_count
 
             iterator = self.__parse_item_streamed_output(item, user_choice, source_entity)
@@ -317,8 +317,23 @@ class LLMAssistant:
                 else:
                     self.debug_info.deleted_items.append(completed_item)
         
-        logging.debug(f"\nFull message: {self.debug_info.assistant_message}")
+        logging.info(f"\nFull message: {self.debug_info.assistant_message}")
         return
+    
+
+    def __edit_prompt(self, prompt, attempt_number):
+        
+        # Remove text from the end of the prompt until the `attempt_number`-th new line character 
+        for i in range(attempt_number):
+            last_new_line_index = prompt.rfind('\n')
+
+            if last_new_line_index == -1:
+                return prompt
+
+            if i + 1 == attempt_number:
+                return prompt[:last_new_line_index]
+            else:
+                prompt = prompt[:last_new_line_index]
 
 
     def __create_prompt(self, user_choice, source_entity="", target_entity="", relevant_texts = "", is_domain_description=True,
@@ -398,46 +413,61 @@ class LLMAssistant:
             is_chain_of_thoughts = False    
 
 
-        prompt = self.__create_prompt(user_choice=user_choice, source_entity=source_entity, target_entity=target_entity,
-            is_domain_description=is_domain_description, items_count_to_suggest=count_items_to_suggest, relevant_texts=relevant_texts,
-            is_chain_of_thoughts=is_chain_of_thoughts)
-        
-        new_messages = self.messages.copy()
-        new_messages.append({"role": "user", "content": prompt})
+        max_attempts_count = 3
+        is_some_item_generated = False
 
-        messages_prettified = TextUtility.messages_prettify(new_messages)
-        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
-        self.debug_info.prompt = messages_prettified
+        for attempt_number in range(max_attempts_count):
 
-        items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, source_entity=source_entity, target_entity=target_entity)
+            prompt = self.__create_prompt(user_choice=user_choice, source_entity=source_entity, target_entity=target_entity,
+                is_domain_description=is_domain_description, items_count_to_suggest=count_items_to_suggest, relevant_texts=relevant_texts,
+                is_chain_of_thoughts=is_chain_of_thoughts)
 
+            # Slightly change the prompt without any semantic changes to force different output
+            # Reason: changing parameters of `chat.completions.create` did not have any effect
+            if attempt_number > 0:
+                logging.info(f"Attempt: {attempt_number}")
+                prompt = self.__edit_prompt(prompt, attempt_number)
+            
+            new_messages = self.messages.copy()
+            new_messages.append({"role": "user", "content": prompt})
 
-        if user_choice == UserChoice.ENTITIES.value:
-            suggested_entities = []
+            messages_prettified = TextUtility.messages_prettify(new_messages)
+            logging.info(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+            self.debug_info.prompt = messages_prettified
 
-        for item in items_iterator:
-            suggestion_dictionary = json.loads(json.dumps(item))
+            items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, source_entity=source_entity, target_entity=target_entity)
+
 
             if user_choice == UserChoice.ENTITIES.value:
-                if suggestion_dictionary['name'] in suggested_entities:
-                    logging.debug(f"Skipping duplicate entity: {suggestion_dictionary['name']}")
-                    continue
-                suggested_entities.append(suggestion_dictionary['name'])
+                suggested_entities = []
 
-                if not Field.ORIGINAL_TEXT.value in suggestion_dictionary:
-                    # Find occurencies of the entity name in the domain description
-                    item[Field.ORIGINAL_TEXT.value] = suggestion_dictionary['name']
+            for item in items_iterator:
+                is_some_item_generated = True
+                suggestion_dictionary = json.loads(json.dumps(item))
 
-            # Find originalText indexes for `item['originalText']` in `domain_description`
-            if Field.ORIGINAL_TEXT.value in item:
-                original_text = item[Field.ORIGINAL_TEXT.value]
-                original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(original_text, domain_description, user_choice)
-                suggestion_dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
-            else:
-                logging.warn(f"Warning: original text not in item: {item}")
+                if user_choice == UserChoice.ENTITIES.value:
+                    if suggestion_dictionary['name'] in suggested_entities:
+                        logging.info(f"Skipping duplicate entity: {suggestion_dictionary['name']}")
+                        continue
+                    suggested_entities.append(suggestion_dictionary['name'])
 
-            json_item = json.dumps(suggestion_dictionary)
-            yield f"{json_item}\n"
+                    if not Field.ORIGINAL_TEXT.value in suggestion_dictionary:
+                        # Find occurencies of the entity name in the domain description
+                        item[Field.ORIGINAL_TEXT.value] = suggestion_dictionary['name']
+
+                # Find originalText indexes for `item['originalText']` in `domain_description`
+                if Field.ORIGINAL_TEXT.value in item:
+                    original_text = item[Field.ORIGINAL_TEXT.value]
+                    original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(original_text, domain_description, user_choice)
+                    suggestion_dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
+                else:
+                    logging.warn(f"Warning: original text not in item: {item}")
+
+                json_item = json.dumps(suggestion_dictionary)
+                yield f"{json_item}\n"
+            
+            if is_some_item_generated:
+                break
     
 
     def __get_relevant_texts(self, source_entity, domain_description):
@@ -470,7 +500,7 @@ class LLMAssistant:
         messages_prettified = TextUtility.messages_prettify(new_messages)
         self.debug_info.prompt = messages_prettified
 
-        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        logging.info(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items_iterator = self.__parse_streamed_output(new_messages, user_choice, source_entity, field_name=field_name)
 
@@ -498,7 +528,7 @@ class LLMAssistant:
         messages_prettified = TextUtility.messages_prettify(new_messages)
         self.debug_info.prompt = messages_prettified
 
-        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        logging.info(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY_PLAIN_TEXT.value, "")
 
@@ -520,7 +550,7 @@ class LLMAssistant:
         messages_prettified = TextUtility.messages_prettify(new_messages)
         self.debug_info.prompt = messages_prettified
 
-        logging.debug(f"\nSending this prompt to llm:\n{messages_prettified}\n")
+        logging.info(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
         items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY_DESCRIPTIONS.value, "")
 
