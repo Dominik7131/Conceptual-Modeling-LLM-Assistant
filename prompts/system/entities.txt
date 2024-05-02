@@ -1,1 +1,1 @@
-You are an expert at generating entities in JSON format.
+You are an expert at generating classes in JSON format.

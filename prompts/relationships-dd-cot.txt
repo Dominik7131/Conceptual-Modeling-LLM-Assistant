@@ -1,6 +1,6 @@
-Solely based on the given context which associations does the class: "{source_class}" have?
+Solely based on the given context which associations does the class: "{source_entity}" have?
 
-For each  association output its name and source class and target class and copy the part of the given context containing this association in JSON object like this: {"originalText": "copy the part of the given context containing this association", "name": "association name", "source": "source class name", "target": "target class name"}
+For each association output its name and source class and target class and copy the part of the given context containing this association in JSON object like this: {"originalText": "copy the part of the given context containing this association", "name": "association name", "source": "source class name", "target": "target class name"}
 
 
 EXAMPLE START
@@ -60,7 +60,7 @@ JSON object: {"originalText": "make sure the departments they manage are product
 EXAMPLE END
 
 
-Solely based on the given context which associations does the class: "{source_class}" have?
+Solely based on the given context which associations does the class: "{source_entity}" have?
 
 This is the given context:
 "{domain_description}"
