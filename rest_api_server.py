@@ -34,7 +34,7 @@ def suggest():
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
 
-    return llm_assistant.suggest(source_entity, target_entity, user_choice, 5, conceptual_model=[], domain_description=domain_description)
+    return llm_assistant.suggest(source_entity, target_entity, user_choice, domain_description=domain_description, count_items_to_suggest=5)
 
 
 
