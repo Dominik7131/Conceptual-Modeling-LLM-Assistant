@@ -1,4 +1,4 @@
-Solely based on the given context which attributes does the class: "{source_entity}" have?
+Solely based on the given context generate all attributes for the class: "{source_entity}".
 
 For each attribute copy the part of the given context containing this attribute and output its name and then output this attribute in JSON object like this: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name"}.
 
@@ -45,9 +45,10 @@ JSON object: {"originalText": "department with some other title", "name": "title
 EXAMPLE END
 
 
-Solely based on the given context which attributes does the class: "{source_entity}" have?
+Solely based on the given context generate all attributes for the class: "{source_entity}".
 
 This is the given context:
 "{domain_description}"
 
 Output:
+context:
