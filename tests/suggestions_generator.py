@@ -11,14 +11,19 @@ from text_utility import Field, FieldUI, TextUtility, UserChoice
 
 DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
 domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
+domain_models_name = ["aircraft manufacturing", "conference papers", "farming", "college", "zoological gardens", "registry of road vehicles"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
 ACTUAL_OUTPUT = "actual-output"
 EXPECTED_OUTPUT = "expected-output"
 TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
+OUTPUT_DIRECTORY = "out"
+OUTPUT_EXPECTED_DIRECTORY = "expected"
+OUTPUT_ACTUAL_DIRECTORY = "actual"
+
 # Settings
-IS_CSV_OUTPUT = True
+CSV_SEPARATOR = ';'
 
 
 def create_entities_expected_output(test_cases):
@@ -182,7 +187,7 @@ def test_relationships(llm_assistant, test_data_json, domain_description, actual
                 file.write("\n")
 
 
-def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description):
+def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output):
 
     expected_entities = []
     for test_case in test_cases:
@@ -194,17 +199,25 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
     iterator = llm_assistant.suggest(source_entity="", target_entity="", user_choice=user_choice, domain_description=domain_description)
     result = []
 
+    if is_csv_output:
+        result.append(f"Generated entity{CSV_SEPARATOR}Matching expected entity{CSV_SEPARATOR}If not matched does this entity make sense")
+
     for index, suggested_item in enumerate(iterator):
         suggested_item = json.loads(suggested_item)
 
         entity_name = suggested_item[Field.NAME.value]
-        result.append(f"Entity: {entity_name}")
+
+        if is_csv_output:
+            result.append(entity_name)
+        else:
+            result.append(f"Entity: {entity_name}")
 
         if Field.ORIGINAL_TEXT.value in suggested_item:
             original_text = suggested_item[Field.ORIGINAL_TEXT.value]
             result.append(f"Original text: {original_text}\n\n")
         else:
-            result.append("\n")
+            if not is_csv_output:
+                result.append("\n")
         
         if entity_name in expected_entities:
             matched_entities += 1
@@ -214,12 +227,21 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
     return result
 
 
-def create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description):
+def create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output):
 
     result = []
+
+    if is_csv_output:
+        result.append(f"Generated attribute{CSV_SEPARATOR}Source entity{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}Matching expected attribute{CSV_SEPARATOR}If not matched does this attribute make sense")
+
     for test_case in test_cases:
         source_entity = test_case["entity"]
-        result.append(f"Entity: {source_entity}")
+
+        print(f"Generating attributes for: {source_entity}")
+
+        if not is_csv_output:
+            result.append(f"Entity: {source_entity}")
+
         iterator = llm_assistant.suggest(source_entity=source_entity, target_entity="", user_choice=user_choice, domain_description=domain_description)
 
         for index, suggested_item in enumerate(iterator):
@@ -228,18 +250,32 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
             name = suggested_item[Field.NAME.value]
             original_text = suggested_item[Field.ORIGINAL_TEXT.value]
 
-            result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n")
+            if is_csv_output:
+                result.append(f"{name}{CSV_SEPARATOR}{source_entity}{CSV_SEPARATOR}{original_text}")
+            else:
+                result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n")
+        
+        result.append('')
 
     return result
 
 
-def create_relationships_actual_output(llm_assistant, test_cases, user_choice, domain_description):
+def create_relationships_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output):
 
     result = []
+
+    if is_csv_output:
+        result.append(f"Generated relationship{CSV_SEPARATOR}Inputed entity{CSV_SEPARATOR}Source entity{CSV_SEPARATOR}Target entity{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}Matching expected relationship{CSV_SEPARATOR}If not matched does this relationship make sense")
+
     for test_case in test_cases:
-        source_entity = test_case["entity"]
-        result.append(f"Entity: {source_entity}")
-        iterator = llm_assistant.suggest(source_entity=source_entity, target_entity="", user_choice=user_choice, domain_description=domain_description)
+        inputed_entity = test_case["entity"]
+
+        print(f"Generating relationships for: {inputed_entity}")
+
+        if not is_csv_output:
+            result.append(f"Entity: {source_entity}")
+
+        iterator = llm_assistant.suggest(source_entity=inputed_entity, target_entity="", user_choice=user_choice, domain_description=domain_description)
 
         for index, suggested_item in enumerate(iterator):
             suggested_item = json.loads(suggested_item)
@@ -251,10 +287,15 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
             else:
                 original_text = ""
 
-            source_entity = suggested_item[Field.SOURCE_ENTITY.value]
-            target_entity = suggested_item[Field.TARGET_ENTITY.value]
+            source_entity = suggested_item[Field.SOURCE_ENTITY.value].lower()
+            target_entity = suggested_item[Field.TARGET_ENTITY.value].lower()
 
-            result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n")
+            if is_csv_output:
+                result.append(f"{name}{CSV_SEPARATOR}{inputed_entity}{CSV_SEPARATOR}{source_entity}{CSV_SEPARATOR}{target_entity}{CSV_SEPARATOR}{original_text}")
+            else:
+                result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n")
+        
+        result.append('')
 
     return result
 
@@ -262,7 +303,7 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
 def create_relationships2_actual_output(llm_assistant, test_cases, user_choice, domain_description):
 
     result = []
-    for test_case in test_cases[:3]:
+    for test_case in test_cases:
         source_entity = test_case[Field.SOURCE_ENTITY.value]
         target_entity = test_case[Field.TARGET_ENTITY.value]
 
@@ -280,7 +321,7 @@ def create_relationships2_actual_output(llm_assistant, test_cases, user_choice, 
     return result
 
 
-def generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path, user_choice):
+def generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path, user_choice, is_csv_output):
 
     with open(test_file_path) as file:
         test_data = json.load(file)
@@ -288,13 +329,13 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
     test_cases = test_data[user_choice]
 
     if user_choice == UserChoice.ENTITIES.value:
-        results = create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description)
+        results = create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
 
     elif user_choice == UserChoice.ATTRIBUTES.value:
-        results = create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description)
+        results = create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
     
     elif user_choice == UserChoice.RELATIONSHIPS.value:
-        results = create_relationships_actual_output(llm_assistant, test_cases, user_choice, domain_description)
+        results = create_relationships_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
     
     elif user_choice == UserChoice.RELATIONSHIPS2.value:
         results = create_relationships2_actual_output(llm_assistant, test_cases, user_choice, domain_description)
@@ -311,11 +352,13 @@ def main():
 
     parser = argparse.ArgumentParser(description = "Suggestions generator")
     parser.add_argument("--user_choice", choices = [UserChoice.ENTITIES.value, UserChoice.ATTRIBUTES.value, UserChoice.RELATIONSHIPS.value, UserChoice.RELATIONSHIPS2.value], type=str, default=UserChoice.ENTITIES.value, help = "Choose elements to generate")
+    parser.add_argument("--output_format", choices = ["txt", "csv"], type=str, default="csv", help = "Choose output file format")
     parser.add_argument("--generate_expected_output_only", action = "store_true", default=False, help = "")
     args = parser.parse_args()
 
     user_choice = args.user_choice
     is_generate_expected_output = args.generate_expected_output_only
+    is_csv_output = args.output_format == "csv"
 
     if not is_generate_expected_output:
         llm_assistant = LLMAssistant()
@@ -326,7 +369,7 @@ def main():
 
             test_file_name = f"{user_choice}-expected-suggestions-0{i + 1}.json"
             test_file_path = os.path.join(DIRECTORY_PATH, domain_model, test_file_name)
-            expected_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, f"{user_choice}-{EXPECTED_OUTPUT}-0{i + 1}.txt")
+            expected_output_file_path = os.path.join(OUTPUT_DIRECTORY, OUTPUT_EXPECTED_DIRECTORY, f"{domain_models_name[index]}-{user_choice}-{EXPECTED_OUTPUT}-0{i + 1}.txt")
 
             if not os.path.isfile(test_file_path):
                 raise ValueError(f"Test file not found: {test_file_path}")
@@ -335,7 +378,8 @@ def main():
                 generate_expected_output(test_file_path, expected_output_file_path, user_choice)
                 continue
             
-            actual_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, f"{TIMESTAMP_PREFIX}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}.txt")
+            output_file_extension = ".csv" if is_csv_output else ".txt"
+            actual_output_file_path = os.path.join(OUTPUT_DIRECTORY, OUTPUT_ACTUAL_DIRECTORY, f"{domain_models_name[index]}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}-{TIMESTAMP_PREFIX}-{output_file_extension}")
             domain_description_file_name = f"domain-description-0{i + 1}.txt"
             domain_description_path = os.path.join(DIRECTORY_PATH, domain_model, domain_description_file_name)
 
@@ -345,7 +389,9 @@ def main():
             with open(domain_description_path, 'r') as file:
                 domain_description = file.read()
             
-            generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path, user_choice)
+            generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path, user_choice, is_csv_output)
+        
+        exit(0)
 
 
 if __name__ == "__main__":
