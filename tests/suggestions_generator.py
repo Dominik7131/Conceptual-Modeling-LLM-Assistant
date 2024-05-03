@@ -11,7 +11,7 @@ from text_utility import Field, FieldUI, TextUtility, UserChoice
 
 DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
 domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
-domain_models_name = ["aircraft manufacturing", "conference papers", "farming", "college", "zoological gardens", "registry of road vehicles"]
+domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
 ACTUAL_OUTPUT = "actual"
@@ -24,6 +24,7 @@ OUTPUT_ACTUAL_DIRECTORY = "actual"
 
 # Settings
 CSV_SEPARATOR = ','
+CSV_HEADER = f"Matches class{CSV_SEPARATOR}Matches attribute{CSV_SEPARATOR}Matches relationship"
 
 
 def create_entities_expected_output(test_cases):
@@ -152,7 +153,7 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
     result = []
 
     if is_csv_output:
-        result.append(f"Generated entity{CSV_SEPARATOR}Matching expected entity")
+        result.append(f"Generated class{CSV_SEPARATOR}{CSV_HEADER}")
 
     for index, suggested_item in enumerate(iterator):
         suggested_item = json.loads(suggested_item)
@@ -160,7 +161,7 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
         entity_name = suggested_item[Field.NAME.value]
 
         if is_csv_output:
-            result.append(f"{entity_name}{CSV_SEPARATOR}")
+            result.append(f"\"{entity_name}\"")
         else:
             result.append(f"Entity: {entity_name}")
 
@@ -184,7 +185,7 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
     result = []
 
     if is_csv_output:
-        result.append(f"Generated attribute{CSV_SEPARATOR}Source entity{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}Matching expected attribute")
+        result.append(f"Generated attribute{CSV_SEPARATOR}Source class{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}{CSV_HEADER}")
 
     for test_case in test_cases:
         source_entity = test_case["entity"]
@@ -203,11 +204,9 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
             original_text = suggested_item[Field.ORIGINAL_TEXT.value]
 
             if is_csv_output:
-                result.append(f"{name}{CSV_SEPARATOR}{source_entity}{CSV_SEPARATOR}{original_text}{CSV_SEPARATOR}")
+                result.append(f"\"{name}\"{CSV_SEPARATOR}\"{source_entity}\"{CSV_SEPARATOR}\"{original_text}\"")
             else:
                 result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n")
-        
-        result.append('')
 
     return result
 
@@ -217,7 +216,7 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
     result = []
 
     if is_csv_output:
-        result.append(f"Generated relationship{CSV_SEPARATOR}Inputed entity{CSV_SEPARATOR}Source entity{CSV_SEPARATOR}Target entity{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}Matching expected relationship")
+        result.append(f"Generated relationship{CSV_SEPARATOR}Inputed class{CSV_SEPARATOR}Source class{CSV_SEPARATOR}Target class{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}{CSV_HEADER}")
 
     for test_case in test_cases:
         inputed_entity = test_case["entity"]
@@ -243,11 +242,9 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
             target_entity = suggested_item[Field.TARGET_ENTITY.value].lower()
 
             if is_csv_output:
-                result.append(f"{name}{CSV_SEPARATOR}{inputed_entity}{CSV_SEPARATOR}{source_entity}{CSV_SEPARATOR}{target_entity}{CSV_SEPARATOR}{original_text}{CSV_SEPARATOR}")
+                result.append(f"\"{name}\"{CSV_SEPARATOR}\"{inputed_entity}\"{CSV_SEPARATOR}\"{source_entity}\"{CSV_SEPARATOR}\"{target_entity}\"{CSV_SEPARATOR}\"{original_text}\"")
             else:
                 result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n")
-        
-        result.append('')
 
     return result
 
@@ -331,7 +328,7 @@ def main():
                 continue
             
             output_file_extension = ".csv" if is_csv_output else ".txt"
-            actual_output_file_path = os.path.join(OUTPUT_DIRECTORY, OUTPUT_ACTUAL_DIRECTORY, f"{domain_models_name[index]}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}-{output_file_extension}")
+            actual_output_file_path = os.path.join(OUTPUT_DIRECTORY, OUTPUT_ACTUAL_DIRECTORY, f"{domain_models_name[index]}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}{output_file_extension}")
             domain_description_file_name = f"domain-description-0{i + 1}.txt"
             domain_description_path = os.path.join(DIRECTORY_PATH, domain_model, domain_description_file_name)
 
