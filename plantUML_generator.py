@@ -4,22 +4,23 @@ from text_utility import UserChoice
   
 
 DIRECTORY_PATH = os.path.join("out", "actual")
-domain_models_name = ["aircraft manufacturing", "conference papers", "farming", "college", "zoological gardens", "registry of road vehicles"]
+domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
+SEPARATOR = ','
 
 def process_entities(path):
 
     entities = []
 
     with open(path, "r", newline="") as file:
-        reader = csv.reader(file, delimiter=";")
+        reader = csv.reader(file, delimiter=SEPARATOR)
         for index, row in enumerate(reader):
             if index == 0:
                 continue
 
-            entity = row[0].replace(' ', '-')
-            entities.append(entity)
+            entity = row[0]
+            entities.append(f'"{entity}"')
 
     return entities
 
@@ -29,14 +30,14 @@ def process_attributes(path):
     attributes = []
 
     with open(path, "r", newline="") as file:
-        reader = csv.reader(file, delimiter=";")
+        reader = csv.reader(file, delimiter=SEPARATOR)
         for index, row in enumerate(reader):
             if index == 0 or len(row) == 0:
                 continue
 
             attribute_name = row[0]
-            source_entity = row[1].replace(' ', '-')
-            attributes.append((attribute_name, source_entity))
+            source_entity = row[1]
+            attributes.append((attribute_name, f'"{source_entity}"'))
 
     return attributes
 
@@ -46,28 +47,27 @@ def process_relationships(path):
     relationships = []
 
     with open(path, "r", newline="") as file:
-        reader = csv.reader(file, delimiter=";")
+        reader = csv.reader(file, delimiter=SEPARATOR)
         for index, row in enumerate(reader):
             if index == 0 or len(row) == 0:
                 continue
 
             relationship_name = row[0]
-            source_entity = row[2].replace(' ', '-').lower()
-            target_entity = row[3].replace(' ', '-').lower()
-            relationships.append((relationship_name, source_entity, target_entity))
+            source_entity = row[2]
+            target_entity = row[3]
+            relationships.append((relationship_name, f'"{source_entity}"', f'"{target_entity}"'))
 
     return relationships
 
 
 def main():
     
-        
     for index, model_name in enumerate(domain_models_name):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            entities_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ENTITIES.value}-actual-output-0{i + 1}.csv")
-            attributes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ATTRIBUTES.value}-actual-output-0{i + 1}.csv")
-            relationships_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.RELATIONSHIPS.value}-actual-output-0{i + 1}.csv")
+            entities_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ENTITIES.value}-actual-0{i + 1}.csv")
+            attributes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
+            relationships_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.RELATIONSHIPS.value}-actual-0{i + 1}.csv")
 
             if not os.path.isfile(entities_path):
                 raise ValueError(f"Entities file not found: {entities_path}")
@@ -103,7 +103,7 @@ def main():
             plantUML += '\n'
 
             for (relationship_name, source_entity, target_entity) in relationships:
-                plantUML += f"\"{source_entity}\" - \"{target_entity}\" : {relationship_name} >\n"
+                plantUML += f"{source_entity} - {target_entity} : {relationship_name} >\n"
 
             plantUML += "@enduml\n"
 
