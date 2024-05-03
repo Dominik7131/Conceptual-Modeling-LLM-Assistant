@@ -14,8 +14,8 @@ domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56c
 domain_models_name = ["aircraft manufacturing", "conference papers", "farming", "college", "zoological gardens", "registry of road vehicles"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
-ACTUAL_OUTPUT = "actual-output"
-EXPECTED_OUTPUT = "expected-output"
+ACTUAL_OUTPUT = "actual"
+EXPECTED_OUTPUT = "expected"
 TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 OUTPUT_DIRECTORY = "out"
@@ -139,54 +139,6 @@ def write_to_file(file, index, output):
     file.write("\n")
 
 
-# TODO: Check if this method is needed and then probably delete it
-def test_relationships(llm_assistant, test_data_json, domain_description, actual_output_file_path, user_choice):
-    test_data = test_data_json[UserChoice.RELATIONSHIPS.value]
-
-    iterations_count = 0
-    tested_relationships = []
-
-    is_skip_is_a_relationships = True
-
-    with open(actual_output_file_path, 'w') as file:
-        for test_case in test_data:
-            source_entity = TextUtility.convert_name_to_standard_convention(test_case['source_entity'])
-            target_entity = TextUtility.convert_name_to_standard_convention(test_case['target_entity'])
-
-            if is_skip_is_a_relationships:
-                if test_case['name'] == 'is-a':
-                    continue
-            
-            if iterations_count >= 20:
-                break
-
-            if user_choice == UserChoice.RELATIONSHIPS2.value:
-                is_relationship_already_tested = (source_entity, target_entity) in tested_relationships
-                if is_relationship_already_tested:
-                    continue
-                else:
-                    tested_relationships.append((source_entity, target_entity))
-
-            elif user_choice == UserChoice.RELATIONSHIPS.value:
-                target_entity = ""
-                is_relationship_already_tested = source_entity in tested_relationships
-                if is_relationship_already_tested:
-                    continue
-                else:
-                    tested_relationships.append(source_entity)            
-
-            iterations_count += 1
-
-            file.write(f"Entities: ({source_entity}, {target_entity})\n")
-
-            iterator = llm_assistant.suggest(source_entity, target_entity, user_choice, ITEMS_COUNT, conceptual_model=[], domain_description=domain_description)
-
-            for index, suggested_item in enumerate(iterator):
-                suggested_item = json.loads(suggested_item)
-                write_to_file(file, index, suggested_item)
-                file.write("\n")
-
-
 def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output):
 
     expected_entities = []
@@ -200,7 +152,7 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
     result = []
 
     if is_csv_output:
-        result.append(f"Generated entity{CSV_SEPARATOR}Matching expected entity{CSV_SEPARATOR}If not matched does this entity make sense")
+        result.append(f"Generated entity{CSV_SEPARATOR}Matching expected entity")
 
     for index, suggested_item in enumerate(iterator):
         suggested_item = json.loads(suggested_item)
@@ -208,7 +160,7 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
         entity_name = suggested_item[Field.NAME.value]
 
         if is_csv_output:
-            result.append(entity_name)
+            result.append(f"{entity_name}{CSV_SEPARATOR}")
         else:
             result.append(f"Entity: {entity_name}")
 
@@ -232,7 +184,7 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
     result = []
 
     if is_csv_output:
-        result.append(f"Generated attribute{CSV_SEPARATOR}Source entity{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}Matching expected attribute{CSV_SEPARATOR}If not matched does this attribute make sense")
+        result.append(f"Generated attribute{CSV_SEPARATOR}Source entity{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}Matching expected attribute")
 
     for test_case in test_cases:
         source_entity = test_case["entity"]
@@ -251,7 +203,7 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
             original_text = suggested_item[Field.ORIGINAL_TEXT.value]
 
             if is_csv_output:
-                result.append(f"{name}{CSV_SEPARATOR}{source_entity}{CSV_SEPARATOR}{original_text}")
+                result.append(f"{name}{CSV_SEPARATOR}{source_entity}{CSV_SEPARATOR}{original_text}{CSV_SEPARATOR}")
             else:
                 result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n")
         
@@ -265,7 +217,7 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
     result = []
 
     if is_csv_output:
-        result.append(f"Generated relationship{CSV_SEPARATOR}Inputed entity{CSV_SEPARATOR}Source entity{CSV_SEPARATOR}Target entity{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}Matching expected relationship{CSV_SEPARATOR}If not matched does this relationship make sense")
+        result.append(f"Generated relationship{CSV_SEPARATOR}Inputed entity{CSV_SEPARATOR}Source entity{CSV_SEPARATOR}Target entity{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}Matching expected relationship")
 
     for test_case in test_cases:
         inputed_entity = test_case["entity"]
@@ -291,7 +243,7 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
             target_entity = suggested_item[Field.TARGET_ENTITY.value].lower()
 
             if is_csv_output:
-                result.append(f"{name}{CSV_SEPARATOR}{inputed_entity}{CSV_SEPARATOR}{source_entity}{CSV_SEPARATOR}{target_entity}{CSV_SEPARATOR}{original_text}")
+                result.append(f"{name}{CSV_SEPARATOR}{inputed_entity}{CSV_SEPARATOR}{source_entity}{CSV_SEPARATOR}{target_entity}{CSV_SEPARATOR}{original_text}{CSV_SEPARATOR}")
             else:
                 result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n")
         
