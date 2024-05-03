@@ -138,6 +138,35 @@ So if you're already running some RAG projects, it's time to get your hands on s
 <br />
 
 
+## [Seven Failure Points When Engineering a RAG System](https://arxiv.org/abs/2401.05856)
+- leden 2024
+- [PDF](https://arxiv.org/pdf/2401.05856)
+
+- vizuální přehled failure pointů:
+
+<img src="images/Seven-Failure-Points-When-Engineering-a-RAG-System.png" alt="drawing" width="800"/>
+
+<br />
+
+- myslím, že většinu těch failure pointů máme ošetřenou tím, že výstup LLM hned neaplikujeme, ale uživatel nejdřív musí vygenerované návrhy potvrdit
+
+- hlavně jsou pro mě zde zajímavé způsoby, kterými lze dokumenty rozdělovat na chunky:
+	1. heuristicky
+		- rozdělování textu na předem dané části
+			- například dělení na jednotlivé věty, nebo odstavce
+
+	2. sémanticky
+		- výsledná část textu je tvořena nějakým sémantickým celkem
+			- poznámka: to se pak bude hodit do diplomky popsat, že lze použít i tento přístup	
+			- pod tím sémantickým rozdělováním si představuju, že:
+				1. nějaký LLM jako například ChatGPT dostane za úkol rozdělit dokument na sémantické části
+				2. nějaký embedding jazykový model převede například jednotlivé věty do vektorového prostoru a potom například sloučí sémanticky podobné sousedící věty do jednoho chunku
+					- zde by se ale pravděpodobně dal vymyslet protipříklad, pro který by to nefungovalo
+					- nejspíš by nejprve bylo potřeba nahradit zájmena jmény, aby bylo zřetelnější, které věty na sebe odkazují
+
+
+<br />
+
 ## [Chain-of-Thought Prompting Elicits Reasoning in LLMs](https://proceedings.neurips.cc/paper_files/paper/2022/hash/9d5609613524ecf4f15af0f7b31abca4-Abstract-Conference.html)
 - leden 2023
 - [PDF](https://arxiv.org/pdf/2201.11903.pdf)
