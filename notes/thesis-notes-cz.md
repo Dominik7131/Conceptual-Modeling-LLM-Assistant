@@ -333,7 +333,7 @@
 
 Obrázek ze zadání výzkumného projektu:
 
-<img src="LLM-assistant-pipeline.jpg" alt="drawing" width="600"/>
+<img src="images/LLM-assistant-pipeline.jpg" alt="drawing" width="600"/>
 
 - chtělo by to:
     - vyznačit, kde dělám filtrování popisu domény
@@ -342,7 +342,7 @@ Obrázek ze zadání výzkumného projektu:
 
 - TODO: lze se inspirovat architekturou z "Automated Domain Modeling with Large Language Models: A Comparative Study"
 
-<img src="architecture-simplified.png" alt="drawing" width="600"/>
+<img src="images/architecture-simplified.png" alt="drawing" width="600"/>
 
 
 
