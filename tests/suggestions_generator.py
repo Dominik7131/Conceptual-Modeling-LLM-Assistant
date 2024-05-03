@@ -19,8 +19,8 @@ EXPECTED_OUTPUT = "expected"
 TIMESTAMP_PREFIX = time.strftime('%Y-%m-%d-%H-%M-%S')
 
 OUTPUT_DIRECTORY = "out"
-OUTPUT_EXPECTED_DIRECTORY = "expected"
-OUTPUT_ACTUAL_DIRECTORY = "actual"
+OUTPUT_EXPECTED_DIRECTORY = os.path.join(OUTPUT_DIRECTORY, "expected")
+OUTPUT_ACTUAL_DIRECTORY = os.path.join(OUTPUT_DIRECTORY, "actual")
 
 # Settings
 CSV_SEPARATOR = ','
@@ -318,17 +318,24 @@ def main():
 
             test_file_name = f"{user_choice}-expected-suggestions-0{i + 1}.json"
             test_file_path = os.path.join(DIRECTORY_PATH, domain_model, test_file_name)
-            expected_output_file_path = os.path.join(OUTPUT_DIRECTORY, OUTPUT_EXPECTED_DIRECTORY, f"{domain_models_name[index]}-{user_choice}-{EXPECTED_OUTPUT}-0{i + 1}.txt")
+            expected_output_file_path = os.path.join(OUTPUT_EXPECTED_DIRECTORY, f"{domain_models_name[index]}-{user_choice}-{EXPECTED_OUTPUT}-0{i + 1}.txt")
 
             if not os.path.isfile(test_file_path):
                 raise ValueError(f"Test file not found: {test_file_path}")
  
             if is_generate_expected_output:
+
+                if not os.path.exists(OUTPUT_EXPECTED_DIRECTORY):
+                    os.makedirs(OUTPUT_EXPECTED_DIRECTORY)
+
                 generate_expected_output(test_file_path, expected_output_file_path, user_choice)
                 continue
             
+            if not os.path.exists(OUTPUT_ACTUAL_DIRECTORY):
+                os.makedirs(OUTPUT_ACTUAL_DIRECTORY)
+
             output_file_extension = ".csv" if is_csv_output else ".txt"
-            actual_output_file_path = os.path.join(OUTPUT_DIRECTORY, OUTPUT_ACTUAL_DIRECTORY, f"{domain_models_name[index]}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}{output_file_extension}")
+            actual_output_file_path = os.path.join(OUTPUT_ACTUAL_DIRECTORY, f"{domain_models_name[index]}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}{output_file_extension}")
             domain_description_file_name = f"domain-description-0{i + 1}.txt"
             domain_description_path = os.path.join(DIRECTORY_PATH, domain_model, domain_description_file_name)
 
@@ -339,8 +346,6 @@ def main():
                 domain_description = file.read()
             
             generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path, user_choice, is_csv_output)
-        
-        exit(0)
 
 
 if __name__ == "__main__":
