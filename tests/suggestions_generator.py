@@ -23,7 +23,7 @@ OUTPUT_EXPECTED_DIRECTORY = "expected"
 OUTPUT_ACTUAL_DIRECTORY = "actual"
 
 # Settings
-CSV_SEPARATOR = ';'
+CSV_SEPARATOR = ','
 
 
 def create_entities_expected_output(test_cases):
@@ -379,7 +379,7 @@ def main():
                 continue
             
             output_file_extension = ".csv" if is_csv_output else ".txt"
-            actual_output_file_path = os.path.join(OUTPUT_DIRECTORY, OUTPUT_ACTUAL_DIRECTORY, f"{domain_models_name[index]}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}-{TIMESTAMP_PREFIX}-{output_file_extension}")
+            actual_output_file_path = os.path.join(OUTPUT_DIRECTORY, OUTPUT_ACTUAL_DIRECTORY, f"{domain_models_name[index]}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}-{output_file_extension}")
             domain_description_file_name = f"domain-description-0{i + 1}.txt"
             domain_description_path = os.path.join(DIRECTORY_PATH, domain_model, domain_description_file_name)
 
