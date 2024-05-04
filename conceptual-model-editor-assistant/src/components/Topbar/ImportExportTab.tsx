@@ -34,7 +34,7 @@ const ImportTab: React.FC = (): JSX.Element =>
     
         for (const [, entity] of Object.entries(conceptualModelJson.classes))
         {
-            const entityNameLowerCase = entity.title.toLowerCase()
+            const entityNameLowerCase = entity.iri.toLowerCase()
         
             const newEntity: Entity = {
                 [Field.TYPE]: ItemType.ENTITY, [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.DESCRIPTION]: entity.description,
@@ -92,7 +92,7 @@ const ImportTab: React.FC = (): JSX.Element =>
     
         for (const [, relationship] of Object.entries(conceptualModelJson.relationships))
         {
-            const nameLowerCase = relationship.title.toLowerCase()
+            const nameLowerCase = relationship.iri.toLowerCase()
             const sourceEntityLowerCase = relationship.domain.toLowerCase()
             const targetEntityLowerCase = relationship.range.toLowerCase()
         

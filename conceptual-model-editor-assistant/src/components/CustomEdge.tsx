@@ -41,7 +41,7 @@ export default function CustomEdge ({ id, source, target, style, sourceX, source
 
   let { sx, sy, tx, ty, sourcePos, targetPos } = calculateNewEdgeSourceAndTargetPosition(sourceNode, targetNode)
 
-  console.log("sx, sy, tx, ty, sourcePos, targetPos", sx, sy, tx, ty, sourcePos, targetPos)
+  // console.log("sx, sy, tx, ty, sourcePos, targetPos", sx, sy, tx, ty, sourcePos, targetPos)
   const [edgePath, labelX, labelY] = getSimpleBezierPath({ sourceX: sx, sourceY: sy, targetX: tx, targetY: ty, sourcePosition: sourcePos, targetPosition: targetPos })
 
 

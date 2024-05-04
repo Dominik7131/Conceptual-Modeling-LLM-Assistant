@@ -219,3 +219,8 @@ export const isShowTitleDialogDomainDescriptionState = atom({
     key: 'isShowTitleDialogDomainDescriptionState',
     default: true,
 })
+
+export const modelIDState = atom({
+    key: 'modelIDState',
+    default: "",
+})

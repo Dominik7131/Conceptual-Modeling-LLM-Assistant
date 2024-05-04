@@ -2,7 +2,7 @@ import { Button } from "@mui/material"
 import DownloadIcon from '@mui/icons-material/Download';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, ItemType, NodeData, Relationship, RelationshipJson } from "../../interfaces";
 import { Node, Edge } from "reactflow";
-import { edgesState, importedFileNameState, nodesState } from "../../atoms";
+import { edgesState, importedFileNameState, modelIDState, nodesState } from "../../atoms";
 import { useRecoilValue } from "recoil";
 
 
@@ -13,7 +13,7 @@ const ExportJSONButton: React.FC = (): JSX.Element =>
 
     const importedFileName = useRecoilValue(importedFileNameState)
 
-    const export_name = "export.json"
+    const export_name = `${useRecoilValue(modelIDState)}.json`
     const export_file_name = importedFileName === "" ? export_name : `${importedFileName}-${export_name}`
 
 
