@@ -87,6 +87,7 @@ class LLMAssistant:
         try:
             # Replace invalid characters from JSON
             item = item.replace('\_', ' ')
+            item = item.replace('\n', ' ')
 
             completed_item = json.loads(item)
 
@@ -244,7 +245,7 @@ class LLMAssistant:
 
         # E.g.: "classNames": {[{ "name": "customer", "originalText": "Customers represent..."}, {...}]}
         # To parse the item with "name": "customer", we need to reset parsing when we encounter '{' symbol
-        is_disable_JSON_nesting = True
+        is_disable_JSON_nesting = user_choice != UserChoice.SUMMARY_DESCRIPTIONS.value
 
 
         for text in output:
