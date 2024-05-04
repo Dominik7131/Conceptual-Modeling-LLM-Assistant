@@ -228,9 +228,7 @@ def save_suggestion():
 
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
 
-    timestamp = time.strftime('%Y-%m-%d-%H-%M-%S')
-    print(timestamp)
-    print("Saving to")
+    print("Saving:")
     print(completed_item)
 
     return "Done"
