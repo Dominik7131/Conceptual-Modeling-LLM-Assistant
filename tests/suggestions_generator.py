@@ -22,6 +22,10 @@ OUTPUT_DIRECTORY = "out"
 OUTPUT_EXPECTED_DIRECTORY = os.path.join(OUTPUT_DIRECTORY, "expected")
 OUTPUT_ACTUAL_DIRECTORY = os.path.join(OUTPUT_DIRECTORY, "actual")
 
+# In prompt for entities output examples
+# We use this list to check if the LLM is leaking the example into the actual output
+ENTITIES_IN_EXAMPLE = ["employee", "department", "manager"]
+
 # Settings
 CSV_SEPARATOR = ','
 CSV_HEADER = f"Matches class{CSV_SEPARATOR}Matches attribute{CSV_SEPARATOR}Matches relationship"
@@ -161,8 +165,8 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
         entity_name = suggested_item[Field.NAME.value]
 
         # Warn about examples being leaked into actual output
-        if entity_name == "employee" or entity_name == "department" or entity_name == "manager":
-            print(f"ERROR: {entity_name}")
+        if entity_name in ENTITIES_IN_EXAMPLE:
+            print(f"Warning: {entity_name}")
 
         if is_csv_output:
             result.append(f"\"{entity_name}\"")
