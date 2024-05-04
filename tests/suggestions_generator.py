@@ -160,6 +160,10 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
 
         entity_name = suggested_item[Field.NAME.value]
 
+        # Warn about examples being leaked into actual output
+        if entity_name == "employee" or entity_name == "department" or entity_name == "manager":
+            print(f"ERROR: {entity_name}")
+
         if is_csv_output:
             result.append(f"\"{entity_name}\"")
         else:
