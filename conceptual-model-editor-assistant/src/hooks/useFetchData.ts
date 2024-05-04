@@ -244,6 +244,12 @@ const useFetchData = () =>
                     for (let i = 0; i < jsonStringParts.length; i++)
                     {
                       const parsedData = JSON.parse(jsonStringParts[i])
+
+                      if (!parsedData["attributes"])
+                      {
+                        parsedData["attributes"] = []
+                      }
+                      
                       console.log("Parsed data:", parsedData)
 
                       if (parsedData.hasOwnProperty("entity"))
@@ -265,7 +271,6 @@ const useFetchData = () =>
                         console.log("Received unknown object: ", parsedData)
                       }
                     }
-
 
                     readChunk()
                 })

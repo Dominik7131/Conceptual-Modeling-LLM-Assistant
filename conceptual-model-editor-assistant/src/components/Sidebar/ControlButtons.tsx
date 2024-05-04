@@ -65,7 +65,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
         setIsShowEditDialog(true)
     }
 
-    const handleSendReaction = (isPositiveReaction: boolean) =>
+    const handleSaveSuggestion = (isPositiveReaction: boolean) =>
     {
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         const suggestionData = { domainDescription: currentDomainDescription, isPositive: isPositiveReaction, item: item }
@@ -95,7 +95,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
                     size={ SIDEBAR_BUTTON_SIZE }
                     sx={{ textTransform: "none" }}
                     disabled={isClicked}
-                    onClick={ () => { handleSendReaction(true) } }
+                    onClick={ () => { handleSaveSuggestion(true) } }
                     >
                         <ThumbUpIcon/>
                 </Button>
@@ -142,7 +142,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
                     size={ SIDEBAR_BUTTON_SIZE }
                     sx={{ textTransform: "none" }}
                     disabled={isClicked}
-                    onClick={ () => { handleSendReaction(false) } }
+                    onClick={ () => { handleSaveSuggestion(false) } }
                     >
                     <ThumbDownIcon/>
                 </Button>

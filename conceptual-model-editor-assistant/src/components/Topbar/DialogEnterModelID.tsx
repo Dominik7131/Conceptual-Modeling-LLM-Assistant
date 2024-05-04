@@ -70,7 +70,7 @@ const DialogEnterModelID: React.FC<Props> = ({ onImport }): JSX.Element =>
             </DialogTitle>
 
             <DialogContent dividers={true}>
-                <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={"Model ID"} multiline
+                <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={"Model URL"} multiline
                         // sx={{'& textarea': {color: color} }}
                         onChange={ event => setEnteredURL(_ => event.target.value) }
                         value={ enteredURL }
