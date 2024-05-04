@@ -144,7 +144,9 @@
                 - TODO: zdokumentovat všechny značky na GitHubu
         - chceme ten problém pojmenovat podle toho, jak se mu nejčastěji říká na internetu, protože odtud je typicky většina trénovacích dat, aby LLM jen podle názvu daného problému už s co největší pravděpodobností věděl, co se po něm chce
             - poznámka: jako future work by bylo zajímavé vyzkoušet, jakým způsobem se u vztahů změní kvalita výstupu, když místo pojmu "relationship" použijeme pojem "association"
-                - moje hypotéza je, že to kvalitu výstupu téměř neovlivní, protože se jedná o sémanticky podobné pojmy a tudíž je LLM bude chápat podobně
+                - přijde mi, že ve chvíli, kdy jsem v promptu pro generování vztahů nahradil "relationships" za "associations" a "entities" za "classes", tak najednou Mixtral začal rozumět tomu, co po něm chci
+                    - ale chci to ještě více otestovat, jestli to třeba není jenom náhoda
+
     - chceme toto udělat úplně na začátku, protože podle několika zdrojů, LLM jsou typicky natrénovány tak, aby největší prioritu přiřadily textu na začátku promptu
 
 - pokud chceme, aby se LLM čistě držel popisu domény, pak první slova promptu obsahují "Solely based on the given context"

@@ -33,6 +33,7 @@ def main():
     generated_tokens_count = extract_generated_tokens_count(log_line)
     tokens_generation_sum += generated_tokens_count
 
+  # Divide generated tokens by 2 because we added them twice
   tokens_sum = tokens_prompt_processed_sum + (tokens_generation_sum / 2)
   print(f"Total tokens prompt processed: {tokens_prompt_processed_sum}")
   print(f"Total tokens count: {tokens_sum}")
