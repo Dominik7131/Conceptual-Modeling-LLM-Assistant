@@ -8,24 +8,47 @@ from text_utility import UserChoice
 INPUT_DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
 domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
 
-OUTPUT_DIRECTORY_PATH = os.path.join("out", "evaluated")
+OUTPUT_DIRECTORY_PATH = os.path.join("out", "evaluated-all", "actual-all")
 domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
 SEPARATOR = ','
 
-recall_entities, recall_attributes, recall_relationships = 0, 0, 0
-recall_entities_max, recall_attributes_max, recall_relationships_max = 0, 0, 0
+# Indexes correspond to: texts 01, texts 02, texts 03, all texts
+recall_entities = [0, 0, 0, 0] 
+recall_attributes = [0, 0, 0, 0]
+recall_relationships = [0, 0, 0, 0]
 
-precision_entities, precision_attributes, precision_relationships = 0, 0, 0
-precision_entities_max, precision_attributes_max, precision_relationships_max = 0, 0, 0
+recall_entities_max = [0, 0, 0, 0] 
+recall_attributes_max = [0, 0, 0, 0]
+recall_relationships_max = [0, 0, 0, 0]
 
 
-def evaluate_entities(test_data_path, evaluated_path):
+# Only = only the corresponding element is matched
+# Any = any element is matched
+precision_entities_only = [0, 0, 0, 0]
+precision_attributes_only = [0, 0, 0, 0]
+precision_relationships_only = [0, 0, 0, 0]
+
+precision_entities_any = [0, 0, 0, 0]
+precision_attributes_any = [0, 0, 0, 0]
+precision_relationships_any = [0, 0, 0, 0]
+
+precision_entities_only_max = [0, 0, 0, 0] 
+precision_attributes_only_max = [0, 0, 0, 0]
+precision_relationships_only_max = [0, 0, 0, 0]
+
+precision_entities_max = [0, 0, 0, 0] 
+precision_attributes_max = [0, 0, 0, 0]
+precision_relationships_max = [0, 0, 0, 0]
+
+
+def evaluate_entities(test_data_path, evaluated_path, text_index):
 
     global recall_entities
     global recall_entities_max
-    global precision_entities
+    global precision_entities_only
+    global precision_entities_any
     global precision_entities_max
 
     with open(test_data_path) as file:
@@ -35,7 +58,7 @@ def evaluate_entities(test_data_path, evaluated_path):
     test_cases = test_data["entities"]
 
     for test_case in test_cases:
-        expected_entities.append(test_case["entity"])
+        expected_entities.append(test_case["entity"].replace(' ', '-').lower())
 
     checked_entities = [False] * len(expected_entities)
 
@@ -50,29 +73,70 @@ def evaluate_entities(test_data_path, evaluated_path):
             matched_attribute = row[2]
             matched_relationship = row[3]
 
-            precision_entities_max += 1
+            precision_entities_max[-1] += 1
+            precision_entities_max[text_index] += 1
 
             if matched_class == "" and matched_attribute == "" and matched_relationship == "":
                 continue
 
-            precision_entities += 1
+            precision_entities_any[-1] += 1
+            precision_entities_any[text_index] += 1
+
+            if matched_class == "":
+                continue
+
+            precision_entities_only[-1] += 1
+            precision_entities_only[text_index] += 1
+
+            if matched_class == "*" or matched_attribute == "*" or matched_relationship == "*":
+                continue
             
-            for i, entity in enumerate(expected_entities):
-                if entity == matched_class:
+            is_match_found = False
+            for i, expected_entity in enumerate(expected_entities):
+                if expected_entity == matched_class.replace(' ', '-').lower():
                     checked_entities[i] = True
+                    is_match_found = True
                     break
+            
+            if is_match_found:
+                continue
+            
+            if matched_class[0] != '+' and matched_class[0] != '-':
+                print(f"Warning: matched entity was not found: {matched_class}\nfile: {evaluated_path}\n")
+
+            
+            multi_matched_entities = matched_class[1:].split(sep=';')
+
+            for multi_match in multi_matched_entities:
+                is_match_found = False
+                for i, expected_entity in enumerate(expected_entities):
+                    multi_match_identificator = multi_match.strip().replace(' ', '-').lower()
+                    if expected_entity == multi_match_identificator:
+                        # TODO: Make a scenario where this counts
+                        # checked_entities[i] = True
+                        is_match_found = True
+                        break
+                
+                if not is_match_found and multi_match != '*':
+                    print(f"Warning: multi-matched entity was not found: {multi_match}\nfile: {evaluated_path}\n")
+
+
     
     for checked_entity in checked_entities:
         if checked_entity:
-            recall_entities += 1
-        recall_entities_max += 1
+            recall_entities[-1] += 1
+            recall_entities[text_index] += 1
+
+        recall_entities_max[-1] += 1
+        recall_entities_max[text_index] += 1
 
 
-def evaluate_attributes(test_data_path, evaluated_path):
+def evaluate_attributes(test_data_path, evaluated_path, text_index):
 
     global recall_attributes
     global recall_attributes_max
-    global precision_attributes
+    global precision_attributes_only
+    global precision_attributes_any
     global precision_attributes_max
 
     with open(test_data_path) as file:
@@ -87,7 +151,7 @@ def evaluate_attributes(test_data_path, evaluated_path):
         source_entity = test_case["entity"]
 
         for output in expected_output:
-            attribute_identificator = f"{output['name']}-{source_entity}"
+            attribute_identificator = f"{output['name']}-{source_entity}".replace(' ', '-').lower()
             expected_attributes.append(attribute_identificator)
 
         checked_attributes = [False] * len(expected_attributes)
@@ -104,30 +168,71 @@ def evaluate_attributes(test_data_path, evaluated_path):
             matched_attribute = row[4]
             matched_relationship = row[5]
 
-            precision_attributes_max += 1
+            precision_attributes_max[text_index] += 1
+            precision_attributes_max[-1] += 1
 
             if matched_class == "" and matched_attribute == "" and matched_relationship == "":
                 continue
 
-            precision_attributes += 1
-            matched_attribute_identificator = f"{matched_attribute}-{source_class}"
+            precision_attributes_any[text_index] += 1
+            precision_attributes_any[-1] += 1
 
+            if matched_attribute == "":
+                continue
+
+            precision_attributes_only[text_index] += 1
+            precision_attributes_only[-1] += 1
+
+            if matched_class == "*" or matched_attribute == "*" or matched_relationship == "*":
+                continue
+
+            matched_attribute_identificator = f"{matched_attribute}-{source_class}".replace(' ', '-').lower()
+
+            is_match_found = False
             for i, expected_attribute_identificator in enumerate(expected_attributes):
                 if expected_attribute_identificator == matched_attribute_identificator:
                     checked_attributes[i] = True
+                    is_match_found = True
                     break
+
+            if is_match_found:
+                continue
+            
+            if matched_attribute[0] != '+' and matched_attribute[0] != '-':
+                print(f"Warning: matched attribute was not found: {matched_attribute}\nentity: {source_class}\nfile: {evaluated_path}\n")
+
+            
+            multi_matched_attributes = matched_attribute[1:].split(sep=';')
+
+            for multi_match in multi_matched_attributes:
+                is_match_found = False
+                for i, expected_attribute_identificator in enumerate(expected_attributes):
+                    multi_match_identificator = f"{multi_match}-{source_class}".strip().replace(' ', '-').lower()
+                    if expected_attribute_identificator == multi_match_identificator:
+                        # TODO: Make a scenario where this counts
+                        # checked_attributes[i] = True
+                        is_match_found = True
+                        break
+                
+                if not is_match_found and multi_match != '*':
+                    print(f"Warning: matched multi-attribute was not found: {multi_match}\nentity: {source_class}\nfile: {evaluated_path}\n")
+
 
     for checked_attribute in checked_attributes:
         if checked_attribute:
-            recall_attributes += 1
-        recall_attributes_max += 1
+            recall_attributes[-1] += 1
+            recall_attributes[text_index] += 1
+
+        recall_attributes_max[-1] += 1
+        recall_attributes_max[text_index] += 1
 
 
-def evaluate_relationships(test_data_path, evaluated_path):
+def evaluate_relationships(test_data_path, evaluated_path, text_index):
 
     global recall_relationships
     global recall_relationships_max
-    global precision_relationships
+    global precision_relationships_only
+    global precision_relationships_any
     global precision_relationships_max
 
     with open(test_data_path) as file:
@@ -143,7 +248,7 @@ def evaluate_relationships(test_data_path, evaluated_path):
 
         for output in expected_output:
             
-            expected_relationships.append(f"{output['name']}-{inputed_entity}")
+            expected_relationships.append(f"{output['name']}-{inputed_entity}".replace(' ', '-').lower())
 
         checked_relationships = [False] * len(expected_relationships)
 
@@ -159,22 +264,63 @@ def evaluate_relationships(test_data_path, evaluated_path):
             matched_attribute = row[6]
             matched_relationship = row[7]
 
-            precision_relationships_max += 1
+            precision_relationships_max[-1] += 1
+            precision_relationships_max[text_index] += 1
 
             if matched_class == "" and matched_attribute == "" and matched_relationship == "":
                 continue
 
-            precision_relationships += 1
+            precision_relationships_any[-1] += 1
+            precision_relationships_any[text_index] += 1
 
+            if matched_relationship == "":
+                continue
+
+            precision_relationships_only[-1] += 1
+            precision_relationships_only[text_index] += 1
+
+            if matched_class == "*" or matched_attribute == "*" or matched_relationship == "*":
+                continue
+
+
+            is_match_found = False
             for i, expected_relationship in enumerate(expected_relationships):
-                if expected_relationship == f"{matched_relationship}-{inputed_entity}":
+                matched_relationship_identificator = f"{matched_relationship}-{inputed_entity}".replace(' ', '-').lower()
+                if expected_relationship == matched_relationship_identificator:
                     checked_relationships[i] = True
+                    is_match_found = True
                     break
+            
+            if is_match_found:
+                continue
+            
+            if matched_relationship[0] != '+' and matched_relationship[0] != '-':
+                print(f"Warning: matched relationship was not found: {matched_relationship}\nentity: {inputed_entity}\nfile: {evaluated_path}\n")
+
+            
+            multi_matched_relationships = matched_relationship[1:].split(sep=';')
+
+            for multi_match in multi_matched_relationships:
+                is_match_found = False
+                for i, expected_relationship in enumerate(expected_relationships):
+                    multi_match_identificator = f"{multi_match}-{inputed_entity}".strip().replace(' ', '-').lower()
+                    if expected_relationship == multi_match_identificator:
+                        # TODO: Make a scenario where this counts
+                        # checked_relationships[i] = True
+                        is_match_found = True
+                        break
+                
+                if not is_match_found and multi_match != '*':
+                    print(f"Warning: multi-matched relationship was not found: {multi_match}\nentity: {inputed_entity}\nfile: {evaluated_path}\n")
+
 
     for checked_relationship in checked_relationships:
         if checked_relationship:
-            recall_relationships += 1
-        recall_relationships_max += 1
+            recall_relationships[-1] += 1
+            recall_relationships[text_index] += 1
+
+        recall_relationships_max[-1] += 1
+        recall_relationships_max[text_index] += 1
 
 
 def check_file(path, user_choice):
@@ -186,20 +332,43 @@ def check_file(path, user_choice):
     
 
 def print_evaluation():
-    recall_entities_percentage = (recall_entities / recall_entities_max) * 100
-    precision_entities_percentage = (precision_entities / precision_entities_max) * 100
-    print(f"Entities recall: {recall_entities}/{recall_entities_max} - " + "{:.2f}".format(recall_entities_percentage) + "%")
-    print(f"Entities precision: {precision_entities}/{precision_entities_max} - " + "{:.2f}".format(precision_entities_percentage) + "%\n")
-    
-    recall_attributes_percentage = (recall_attributes / recall_attributes_max) * 100
-    precision_attributes_percentage = (precision_attributes / precision_attributes_max) * 100
-    print(f"Attributes recall: {recall_attributes}/{recall_attributes_max} - " + "{:.2f}".format(recall_attributes_percentage) + "%")
-    print(f"Attributes precision: {precision_attributes}/{precision_attributes_max} - " + "{:.2f}".format(precision_attributes_percentage) + "%\n")
-    
-    recall_relationships_percentage = (recall_relationships / recall_relationships_max) * 100
-    precision_relationships_percentage = (precision_relationships / precision_relationships_max) * 100
-    print(f"Relationships recall: {recall_relationships}/{recall_relationships_max} - " + "{:.2f}".format(recall_relationships_percentage) + "%")
-    print(f"Relationships precision: {precision_relationships}/{precision_relationships_max} - " + "{:.2f}".format(precision_relationships_percentage) + "%")
+
+    for index in range(len(recall_entities)):
+
+        if index < len(recall_entities) - 1:
+            print(f"---- Results for text 0{index + 1} ---- ")
+        else:
+            print(f"---- Results for all texts ---- ")
+
+        recall_entities_percentage = (recall_entities[index] / recall_entities_max[index]) * 100
+        recall_attributes_percentage = (recall_attributes[index] / recall_attributes_max[index]) * 100
+        recall_relationships_percentage = (recall_relationships[index] / recall_relationships_max[index]) * 100
+
+        precision_entities_only_percentage = (precision_entities_only[index] / precision_entities_max[index]) * 100
+        precision_entities_any_percentage = (precision_entities_any[index] / precision_entities_max[index]) * 100
+        precision_attributes_only_percentage = (precision_attributes_only[index] / precision_attributes_max[index]) * 100
+        precision_attributes_any_percentage = (precision_attributes_any[index] / precision_attributes_max[index]) * 100
+        precision_relationships_only_percentage = (precision_relationships_only[index] / precision_relationships_max[index]) * 100
+        precision_relationships_any_percentage = (precision_relationships_any[index] / precision_relationships_max[index]) * 100
+        
+        print("Recall")
+        print(f"- entities: {recall_entities[index]}/{recall_entities_max[index]} - " + "{:.2f}".format(recall_entities_percentage) + "%")
+        print(f"- attributes: {recall_attributes[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_percentage) + "%")
+        print(f"- relationships: {recall_relationships[index]}/{recall_relationships_max[index]} - " + "{:.2f}".format(recall_relationships_percentage) + "%")
+        print()
+
+        print("Precision: matches only corresponding element")
+        print(f"- entities: {precision_entities_only[index]}/{precision_entities_max[index]} - " + "{:.2f}".format(precision_entities_only_percentage) + "%")
+        print(f"- attributes: {precision_attributes_only[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_only_percentage) + "%")
+        print(f"- relationships: {precision_relationships_only[index]}/{precision_relationships_max[index]} - " + "{:.2f}".format(precision_relationships_only_percentage) + "%")
+        print()
+
+        print("Precision: matches any element")
+        print(f"- entities: {precision_entities_any[index]}/{precision_entities_max[index]} - " + "{:.2f}".format(precision_entities_any_percentage) + "%")
+        print(f"- attributes: {precision_attributes_any[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_any_percentage) + "%")
+        print(f"- relationships: {precision_relationships_any[index]}/{precision_relationships_max[index]} - " + "{:.2f}".format(precision_relationships_any_percentage) + "%")
+
+        print()
 
 
 def main():
@@ -223,9 +392,9 @@ def main():
                 print_evaluation()
                 exit(0)
 
-            evaluate_entities(entities_expected_suggestions_path, entities_evaluated_path)
-            evaluate_attributes(attributes_expected_suggestions_path, attributes_evaluated_path)
-            evaluate_relationships(relationships_expected_suggestions_path, relationships_evaluated_path)
+            evaluate_entities(entities_expected_suggestions_path, entities_evaluated_path, i)
+            evaluate_attributes(attributes_expected_suggestions_path, attributes_evaluated_path, i)
+            evaluate_relationships(relationships_expected_suggestions_path, relationships_evaluated_path, i)
 
     print_evaluation()
 
