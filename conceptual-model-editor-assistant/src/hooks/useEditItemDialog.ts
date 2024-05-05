@@ -2,7 +2,8 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
-import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTION_URL, createEdgeID } from "./useUtility";
+import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTION_URL, createEdgeUniqueID } from "./useUtility";
+import { useState } from "react";
 
 
 const useEditItemDialog = () =>
@@ -11,6 +12,8 @@ const useEditItemDialog = () =>
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
     const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
+
+    const [changedItemName, setChangedItemName] = useState("")
 
     const setNodes = useSetRecoilState(nodesState)
     const setEdges = useSetRecoilState(edgesState)
@@ -79,7 +82,7 @@ const useEditItemDialog = () =>
                 {
                     const newRelationship: Relationship = { ...currentEdge.data.relationship, source: newEntity.name }
                     const newEdgeData: EdgeData = { ...currentEdge.data, relationship: newRelationship }
-                    const edgeID = createEdgeID(newEntity.name, currentEdge.target, currentEdge.data.relationship.name)
+                    const edgeID = createEdgeUniqueID(newEntity.name, currentEdge.target, currentEdge.data.relationship.name)
                     const updatedEdge: Edge = {
                         ...currentEdge, id:edgeID, source: newEntity.name, data: newEdgeData
                     }
@@ -90,7 +93,7 @@ const useEditItemDialog = () =>
                 {
                     const newRelationship: Relationship = { ...currentEdge.data.relationship, target: newEntity.name }
                     const newEdgeData: EdgeData = { ...currentEdge.data, relationship: newRelationship }
-                    const edgeID = createEdgeID(currentEdge.source, newEntity.name, currentEdge.data.relationship.name)
+                    const edgeID = createEdgeUniqueID(currentEdge.source, newEntity.name, currentEdge.data.relationship.name)
                     const updatedEdge: Edge = {
                         ...currentEdge, id:edgeID, target: newEntity.name, data: newEdgeData
                     }
@@ -167,7 +170,7 @@ const useEditItemDialog = () =>
     const editEdgeRelationship = (newRelationship: Relationship, oldRelationship : Relationship): void =>
     {
         // Find the edge to update based on the old ID
-        const oldID: string = createEdgeID(oldRelationship.source, oldRelationship.target, oldRelationship.name)
+        const oldID: string = createEdgeUniqueID(oldRelationship.source, oldRelationship.target, oldRelationship.name)
 
         console.log("OldID: ", oldID)
 
@@ -176,7 +179,7 @@ const useEditItemDialog = () =>
             if (currentEdge.id === oldID)
             {
                 const newData: EdgeData = { ...currentEdge.data, relationship: newRelationship }
-                const newID = createEdgeID(newRelationship.source, newRelationship.target, newRelationship.name)
+                const newID = createEdgeUniqueID(newRelationship.source, newRelationship.target, newRelationship.name)
                 
                 // TODO: Is the user allowed to change source and target?
                 // If the source/target does not exist we need to create a new node
@@ -200,8 +203,8 @@ const useEditItemDialog = () =>
     {
         if (isClearAll)
         {
-            setEditedSuggestedItem({[Field.ID]: -1, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
-            setRegeneratedItem({[Field.ID]: -1, [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
+            setEditedSuggestedItem({[Field.IRI]: "", [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
+            setRegeneratedItem({[Field.IRI]: "", [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
         }
 
         if (!field)
@@ -360,26 +363,29 @@ const useEditItemDialog = () =>
             const oldAttribute = item as Attribute
         
             const relationship : Relationship = {
-                [Field.ID]: oldAttribute.ID, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: "", [Field.DESCRIPTION]: oldAttribute.description,
+                [Field.IRI]: oldAttribute[Field.IRI], [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: changedItemName, [Field.DESCRIPTION]: oldAttribute.description,
                 [Field.ORIGINAL_TEXT]: oldAttribute.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldAttribute.originalTextIndexes, [Field.SOURCE_ENTITY]: oldAttribute.source,
                 [Field.TARGET_ENTITY]: oldAttribute.name, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""
             }
         
-            setSelectedSuggestedItem(_ => relationship)
-            setEditedSuggestedItem(_ => relationship)
+            setChangedItemName("")
+            setSelectedSuggestedItem(relationship)
+            setEditedSuggestedItem(relationship)
         }
         else
         {
             const oldRelationship = item as Relationship
+            setChangedItemName(oldRelationship[Field.NAME])
+            console.log("Setting")
 
             const attribute : Attribute = {
-                [Field.ID]: oldRelationship.ID, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: oldRelationship.target, [Field.DESCRIPTION]: oldRelationship.description,
+                [Field.IRI]: oldRelationship[Field.IRI], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: oldRelationship.target, [Field.DESCRIPTION]: oldRelationship.description,
                 [Field.DATA_TYPE]: "string", [Field.ORIGINAL_TEXT]: oldRelationship.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldRelationship.originalTextIndexes,
                 [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_ENTITY]: oldRelationship.source
             }
         
-            setSelectedSuggestedItem(_ => attribute)
-            setEditedSuggestedItem(_ => attribute)
+            setSelectedSuggestedItem(attribute)
+            setEditedSuggestedItem(attribute)
         }
     }
     
@@ -398,7 +404,7 @@ const useEditItemDialog = () =>
         else if (item.type === ItemType.RELATIONSHIP)
         {
             const relationship: Relationship = (item as Relationship)
-            const edgeID = createEdgeID(relationship.source, relationship.target, relationship.name)
+            const edgeID = createEdgeUniqueID(relationship.source, relationship.target, relationship.name)
             removeEdge(edgeID)
         }
         else

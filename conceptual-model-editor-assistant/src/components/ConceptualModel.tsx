@@ -52,7 +52,7 @@ const ConceptualModel: React.FC = () =>
     }
 
     const blankRelationship: Relationship = {
-      [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
+      [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
       [Field.TYPE]: ItemType.RELATIONSHIP, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntityName,
       [Field.TARGET_ENTITY]: targetEntityName
     }
@@ -71,7 +71,6 @@ const ConceptualModel: React.FC = () =>
   {
     parseSerializedConceptualModel()
   }, [])
-
 
   const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
 

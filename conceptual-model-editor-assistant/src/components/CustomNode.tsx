@@ -80,14 +80,14 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
         setIsSuggestedItem(false)
         setIsItemInConceptualModel(false)
 
-        const blankAttribute: Attribute = {
-            [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "",
+        const newAttribute: Attribute = {
+            [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "",
             [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "",
             [Field.SOURCE_ENTITY]: entity.name
         }
       
-        setSelectedSuggestedItem(blankAttribute)
-        setEditedSuggestedItem(blankAttribute)
+        setSelectedSuggestedItem(newAttribute)
+        setEditedSuggestedItem(newAttribute)
         handleClose()
         setIsShowEditDialog(true)
     }

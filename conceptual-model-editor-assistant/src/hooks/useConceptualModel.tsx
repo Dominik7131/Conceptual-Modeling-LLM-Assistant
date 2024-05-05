@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Node, Edge, MarkerType, getMarkerEnd } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, changeSidebarTab, changeTitle, convertConceptualModelToJSON, createEdgeID, onClearSuggestedItems, userChoiceToItemType } from './useUtility';
+import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, changeSidebarTab, changeTitle, convertConceptualModelToJSON, createEdgeUniqueID, createIRIFromName, onClearSuggestedItems, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, Field, ItemType, NodeData, Relationship, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
@@ -50,18 +50,18 @@ const useConceptualModel = () =>
 
     for (const [, entity] of Object.entries(input["entities"]))
     {
-      const entityNameLowerCase = entity.name.toLowerCase()
+      const nodeIRI = createIRIFromName(entity.name)
 
       for (let index = 0; index < entity.attributes.length; index++)
       {
         // TODO: Do not use "any"
-        (entity.attributes[index] as any).type = ItemType.ATTRIBUTE;
+        (entity.attributes[index] as any)[Field.TYPE] = ItemType.ATTRIBUTE;
 
-        (entity.attributes[index] as any).source = entityNameLowerCase
+        (entity.attributes[index] as any)[Field.SOURCE_ENTITY] = nodeIRI
       }
 
       const newEntity : Entity = {
-        [Field.ID]: 0, [Field.NAME]: entityNameLowerCase, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "",
+        [Field.IRI]: nodeIRI, [Field.NAME]: entity.name, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "",
         [Field.ORIGINAL_TEXT_INDEXES]: entity[Field.ORIGINAL_TEXT_INDEXES]}
 
       const maxRandomValue = 200
@@ -72,7 +72,7 @@ const useConceptualModel = () =>
       const newPositionY = positionY + randomY
 
       const nodeData : NodeData = { entity: newEntity, attributes: entity.attributes }
-      const newNode : Node = { id: entityNameLowerCase, type: "customNode", position: { x: newPositionX, y: newPositionY }, data: nodeData }
+      const newNode : Node = { id: nodeIRI, type: "customNode", position: { x: newPositionX, y: newPositionY }, data: nodeData }
 
       newNodes.push(newNode)
 
@@ -87,18 +87,22 @@ const useConceptualModel = () =>
 
     for (const [, relationship] of Object.entries(input["relationships"]))
     {
-      const newID: string = createEdgeID(relationship.source, relationship.target, relationship.name)
+      const nameIRI = createIRIFromName(relationship.name)
+      const sourceIRI = createIRIFromName(relationship.source)
+      const targetIRI = createIRIFromName(relationship.target)
+
+      const newID: string = createEdgeUniqueID(sourceIRI, targetIRI, nameIRI)
 
       const newRelationship: Relationship = {
-        [Field.ID]: 0, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: "",
-        [Field.SOURCE_ENTITY]: relationship.source, [Field.TARGET_ENTITY]: relationship.target,
+        [Field.IRI]: nameIRI, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: "",
+        [Field.SOURCE_ENTITY]: sourceIRI, [Field.TARGET_ENTITY]: targetIRI,
         [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: relationship.originalText,
         [Field.ORIGINAL_TEXT_INDEXES]: []
       }
       const edgeData: EdgeData = { relationship: newRelationship }
 
       const newEdge: Edge = {
-        id: newID, source: relationship.source, target: relationship.target, type: "custom-edge",
+        id: newID, source: newRelationship[Field.SOURCE_ENTITY], target: newRelationship[Field.TARGET_ENTITY], type: "custom-edge",
         data: edgeData, markerEnd: CUSTOM_EDGE_MARKER
       }
 
@@ -126,7 +130,8 @@ const useConceptualModel = () =>
 
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
-    fetchStreamedData(bodyData, sourceItemName, itemType)
+    const sourceItemIRI = createIRIFromName(sourceItemName)
+    fetchStreamedData(bodyData, sourceItemIRI, itemType)
   }
 
     

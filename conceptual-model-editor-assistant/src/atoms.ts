@@ -1,6 +1,7 @@
 import { atom, selector } from 'recoil'
-import { Attribute, Entity, Field, Item, ItemType, ItemsMessage, Relationship, SummaryObject } from './interfaces';
+import { Attribute, DomainDescriptionSnapshot, Entity, Field, Item, ItemType, ItemsMessage, Relationship, SummaryObject } from './interfaces';
 import { Node, Edge } from 'reactflow';
+import { blankEntity } from './hooks/useUtility';
 
 
 export const isShowEditDialogState = atom({
@@ -51,6 +52,13 @@ export const domainDescriptionState = atom({
     default: "",
 })
 
+export const domainDescriptionSnapshots = atom<DomainDescriptionSnapshot>({
+    key: 'domainDescriptionSnapshotsState',
+    default: { suggestedEntities: "", suggestedAttributes: "", suggestedRelationships: "", itemSingleField: "",
+               summaryPlainText: "", summaryDescription: ""},
+})
+
+
 export const fieldToLoadState = atom<Field[]>({
     key: 'fieldToLoadState',
     default: [],
@@ -66,17 +74,17 @@ export const itemTypesToLoadState = atom<ItemType[]>({
 // TODO: Do not use initial invalid item, instead make a type: Item | null
 export const selectedSuggestedItemState = atom<Item>({
     key: 'selectedSuggestedItemState',
-    default: {ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: []},
+    default: blankEntity,
 })
 
 export const editedSuggestedItemState = atom<Item>({
     key: 'editedSuggestedItemState',
-    default: {ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: []},
+    default: blankEntity,
 })
 
 export const regeneratedItemState = atom<Item>({
     key: 'regeneratedItemState',
-    default: {ID: -1, type: ItemType.ENTITY, name: "", description: "", originalText: "", originalTextIndexes: []},
+    default: blankEntity,
 })
 
 export const isSuggestedItemState = atom({

@@ -19,7 +19,7 @@ export const enum ItemType
 
 export const enum Field
 {
-  ID = "ID",
+  IRI = "iri",
   TYPE = "type",
   NAME = "name",
   DESCRIPTION = "description",
@@ -75,6 +75,16 @@ export interface SummaryObject
   relationships: any[]
 }
 
+export interface DomainDescriptionSnapshot
+{
+  suggestedEntities: string
+  suggestedAttributes: string
+  suggestedRelationships: string
+  itemSingleField: string
+  summaryPlainText: string
+  summaryDescription: string
+}
+
 
 export interface NodeData
 {
@@ -98,7 +108,7 @@ export type ItemFieldsUnification = keyof Entity | keyof Attribute | keyof Relat
 interface BaseItem
 {
   type : ItemType
-  ID: number
+  iri: string
   name: string
   description: string
   originalText: string

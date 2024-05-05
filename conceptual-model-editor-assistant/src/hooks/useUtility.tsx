@@ -25,7 +25,7 @@ const useUtility = () =>
 export default useUtility
 
 
-export const createEdgeID = (source: string, target: string, name: string): string =>
+export const createEdgeUniqueID = (source: string, target: string, name: string): string =>
 {
   return `${source}-${name}-${target}`
 }
@@ -275,25 +275,18 @@ const onAddRelationship = (relationship : Relationship, setNodes: any, setEdges:
 {
   // Returns "true" if the operation was successfull otherwise "false"
 
-  let sourceNodeID = relationship.source?.toLowerCase()
-  let targetNodeID = relationship.target?.toLowerCase()
-
-  if (!sourceNodeID) { sourceNodeID = "" }
-  if (!targetNodeID) { targetNodeID = "" }
-
-
-  if (doesEdgeBetweenNodesAlreadyExistSetter(setEdges, sourceNodeID, targetNodeID))
+  if (doesEdgeBetweenNodesAlreadyExistSetter(setEdges, relationship.source, relationship.target))
   {
     return false
   }
 
-  const newEdgeID = createEdgeID(sourceNodeID, targetNodeID, relationship.name)
-  const isTargetNodeCreated: boolean = doesNodeAlreadyExistSetter(setNodes, targetNodeID)
+  const newEdgeID = createEdgeUniqueID(relationship.source, relationship.target, relationship.name)
+  const isTargetNodeCreated: boolean = doesNodeAlreadyExistSetter(setNodes, relationship.target)
 
   if (!isTargetNodeCreated)
   {
     // TODO: Try to come up with a better node position
-    const newNode: Node = createNode(targetNodeID, 500, 100)
+    const newNode: Node = createNode(relationship.target, 500, 100)
 
     setNodes((previousNodes: Node[]) => 
     {
@@ -306,7 +299,7 @@ const onAddRelationship = (relationship : Relationship, setNodes: any, setEdges:
   const markerEnd = relationship[Field.TYPE] === ItemType.GENERALIZATION ? CUSTOM_ISA_EDGE_MARKER : CUSTOM_EDGE_MARKER
 
   const newEdge : Edge = {
-    id: newEdgeID, type: "custom-edge", source: sourceNodeID, target: targetNodeID, label: relationship.name, data: edgeData,
+    id: newEdgeID, type: "custom-edge", source: relationship.source, target: relationship.target, label: relationship.name, data: edgeData,
     markerEnd: markerEnd
   }
 
@@ -319,39 +312,47 @@ const onAddRelationship = (relationship : Relationship, setNodes: any, setEdges:
 }
 
 
-export const createNode = (nodeID: string, positionX: number, positionY: number): Node =>
+export const createNode = (nodeName: string, positionX: number, positionY: number): Node =>
 {
+  const nodeIRI = createIRIFromName(nodeName)
   const newEntity: Entity = {
-    [Field.ID]: 0, [Field.NAME]: nodeID, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "",
+    [Field.IRI]: nodeIRI, [Field.NAME]: nodeName, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "",
     [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
   }
 
   const nodeData: NodeData = { entity: newEntity, attributes: [] }
 
-  const newNode: Node = { id: nodeID, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
+  const newNode: Node = { id: nodeName, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
   
   return newNode
 }
 
 
-export const addNode = (nodeID: string, positionX: number, positionY: number, setNodes: any) =>
+export const addNode = (nodeName: string, positionX: number, positionY: number, setNodes: any) =>
 {
-  if (!nodeID)
+  if (!nodeName)
   {
     alert("Node name is empty")
     return
   }
 
-  if (doesNodeAlreadyExistSetter(setNodes, nodeID))
+  if (doesNodeAlreadyExistSetter(setNodes, nodeName))
   {
     return
   }
 
-  const newNode: Node = createNode(nodeID, positionX, positionY)
+  const newNode: Node = createNode(nodeName, positionX, positionY)
 
   setNodes((previousNodes: Node[]) => {
     return [...previousNodes, newNode]
   })
+}
+
+
+export const createIRIFromName = (name: string): string =>
+{
+  const iri = name.split(" ").join("-").toLowerCase()
+  return iri
 }
 
 
@@ -489,4 +490,19 @@ export const EDIT_ITEM_URL = BASE_URL + EDIT_ITEM_ENDPOINT
 export const MERGE_ORIGINAL_TEXT_URL = BASE_URL + MERGE_ORIGINAL_TEXT_ENDPOINT
 export const SAVE_SUGESTION_URL = BASE_URL + SAVE_SUGESTION
 export const JSON_MODEL_FROM_IRI_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
+
+// TODO: It is probably better to use "null" instead of blank item
+export const blankEntity: Entity = {
+  [Field.IRI]: "", [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
+}
+
+export const blankAttribute: Attribute = {
+  [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "",
+  [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "",
+  [Field.SOURCE_ENTITY]: ""
+}
+
+// export const blankRelationship: Relationship = {
+//   [Field.IRI]: "", [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
+// }
 

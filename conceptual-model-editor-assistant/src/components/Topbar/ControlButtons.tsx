@@ -5,7 +5,7 @@ import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import useConceptualModel from "../../hooks/useConceptualModel";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
 import { Entity, Field, ItemType, TopbarTabs, UserChoice } from "../../interfaces";
-import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME, convertConceptualModelToJSON } from "../../hooks/useUtility";
+import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME, blankEntity, convertConceptualModelToJSON } from "../../hooks/useUtility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { domainDescriptionState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, topbarTabValueState } from "../../atoms";
 import SummaryPlainTextButton from "./SummaryPlainTextButton";
@@ -25,12 +25,7 @@ const ControlButtons: React.FC = (): JSX.Element =>
 
 
     const onAddNewEntity = () : void =>
-    {
-        const blankEntity: Entity = {
-            [Field.ID]: -1, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-            [Field.TYPE]: ItemType.ENTITY,
-        }
-    
+    {    
         setIsItemInConceptualModel(false)
         setIsSuggestedItem(true)
         setSelectedSuggestedItem(blankEntity)

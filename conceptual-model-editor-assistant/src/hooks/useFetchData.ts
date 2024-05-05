@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Attribute, Field, Item, ItemType, Relationship, SummaryObject } from "../interfaces";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedEntitiesState, suggestedAttributesState, suggestedRelationshipsState } from "../atoms";
-import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL, onClearSuggestedItems } from "./useUtility";
+import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL, createIRIFromName, onClearSuggestedItems } from "./useUtility";
 
 
 const useFetchData = () =>
@@ -22,7 +22,7 @@ const useFetchData = () =>
     const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
 
 
-    const fetchStreamedData = (bodyData: any, sourceEntityName: string, itemType: ItemType) =>
+    const fetchStreamedData = (bodyData: any, sourceEntityIRI: string, itemType: ItemType) =>
     {
       // TODO: add object interface for header and bodyData
 
@@ -82,7 +82,7 @@ const useFetchData = () =>
                       }
 
                       isEmptyResponse = false
-                      onProcessStreamedData(value, sourceEntityName, itemType)
+                      onProcessStreamedData(value, sourceEntityIRI, itemType)
 
                       // Read the next chunk
                       readChunk()
@@ -116,7 +116,7 @@ const useFetchData = () =>
     for (let i = 0; i < jsonStringParts.length; i++)
     {
       let item : Item = JSON.parse(jsonStringParts[i])
-      item[Field.ID] = 0
+      item[Field.IRI] = createIRIFromName(item[Field.NAME])
       item[Field.TYPE] = itemType
 
       if (itemType === ItemType.ENTITY)
