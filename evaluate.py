@@ -11,38 +11,51 @@ domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56c
 OUTPUT_DIRECTORY_PATH = os.path.join("out", "evaluated-all", "actual-all")
 domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
+DOMAIN_TEXTS_COUNT = 12
 
 SEPARATOR = ','
 
-# Indexes correspond to: texts 01, texts 02, texts 03, all texts
-recall_entities = [0, 0, 0, 0] 
-recall_attributes = [0, 0, 0, 0]
-recall_relationships = [0, 0, 0, 0]
+# Indexes correspond to texts in domain models and last index corresponds to all texts together
+recall_entities = [0] * ((DOMAIN_TEXTS_COUNT + 1))
+recall_attributes = [0] * (DOMAIN_TEXTS_COUNT + 1)
+recall_relationships = [0] * (DOMAIN_TEXTS_COUNT + 1)
 
-recall_entities_max = [0, 0, 0, 0] 
-recall_attributes_max = [0, 0, 0, 0]
-recall_relationships_max = [0, 0, 0, 0]
+recall_entities_max = [0] * (DOMAIN_TEXTS_COUNT + 1)
+recall_attributes_max = [0] * (DOMAIN_TEXTS_COUNT + 1)
+recall_relationships_max = [0] * (DOMAIN_TEXTS_COUNT + 1)
 
 
 # Only = only the corresponding element is matched
 # Any = any element is matched
-precision_entities_only = [0, 0, 0, 0]
-precision_attributes_only = [0, 0, 0, 0]
-precision_relationships_only = [0, 0, 0, 0]
+precision_entities_only = [0] * (DOMAIN_TEXTS_COUNT + 1)
+precision_attributes_only = [0] * (DOMAIN_TEXTS_COUNT + 1)
+precision_relationships_only = [0] * (DOMAIN_TEXTS_COUNT + 1)
 
-precision_entities_any = [0, 0, 0, 0]
-precision_attributes_any = [0, 0, 0, 0]
-precision_relationships_any = [0, 0, 0, 0]
+precision_entities_any = [0] * (DOMAIN_TEXTS_COUNT + 1)
+precision_attributes_any = [0] * (DOMAIN_TEXTS_COUNT + 1)
+precision_relationships_any = [0] * (DOMAIN_TEXTS_COUNT + 1)
 
-precision_entities_only_max = [0, 0, 0, 0] 
-precision_attributes_only_max = [0, 0, 0, 0]
-precision_relationships_only_max = [0, 0, 0, 0]
+precision_entities_only_max = [0] * (DOMAIN_TEXTS_COUNT + 1)
+precision_attributes_only_max = [0] * (DOMAIN_TEXTS_COUNT + 1)
+precision_relationships_only_max = [0] * (DOMAIN_TEXTS_COUNT + 1)
 
-precision_entities_max = [0, 0, 0, 0] 
-precision_attributes_max = [0, 0, 0, 0]
-precision_relationships_max = [0, 0, 0, 0]
+precision_entities_max = [0] * (DOMAIN_TEXTS_COUNT + 1)
+precision_attributes_max = [0] * (DOMAIN_TEXTS_COUNT + 1)
+precision_relationships_max = [0] * (DOMAIN_TEXTS_COUNT + 1)
 
 
+def get_domain_model_index(text_index):
+
+    domain_model_index = 0
+    for count in DOMAIN_DESCRIPTIONS_COUNT:
+        text_index -= count
+
+        if (text_index < 0):
+            return domain_model_index
+        
+        domain_model_index += 1
+
+    
 def evaluate_entities(test_data_path, evaluated_path, text_index):
 
     global recall_entities
@@ -329,50 +342,60 @@ def check_file(path, user_choice):
         print(f"Stopping: {user_choice.capitalize()} evaluated file not found: {path}\n")
         return False
     return True
-    
+
+
+def print_recall(index):
+
+    recall_entities_percentage = (recall_entities[index] / recall_entities_max[index]) * 100
+    recall_attributes_percentage = (recall_attributes[index] / recall_attributes_max[index]) * 100
+    recall_relationships_percentage = (recall_relationships[index] / recall_relationships_max[index]) * 100
+
+    print("Recall")
+    print(f"- entities: {recall_entities[index]}/{recall_entities_max[index]} - " + "{:.2f}".format(recall_entities_percentage) + "%")
+    print(f"- attributes: {recall_attributes[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_percentage) + "%")
+    print(f"- relationships: {recall_relationships[index]}/{recall_relationships_max[index]} - " + "{:.2f}".format(recall_relationships_percentage) + "%\n")
+
+
+def print_precision(index):
+
+    precision_entities_only_percentage = (precision_entities_only[index] / precision_entities_max[index]) * 100
+    precision_entities_any_percentage = (precision_entities_any[index] / precision_entities_max[index]) * 100
+    precision_attributes_only_percentage = (precision_attributes_only[index] / precision_attributes_max[index]) * 100
+    precision_attributes_any_percentage = (precision_attributes_any[index] / precision_attributes_max[index]) * 100
+    precision_relationships_only_percentage = (precision_relationships_only[index] / precision_relationships_max[index]) * 100
+    precision_relationships_any_percentage = (precision_relationships_any[index] / precision_relationships_max[index]) * 100
+
+    print("Precision: matches only corresponding element")
+    print(f"- entities: {precision_entities_only[index]}/{precision_entities_max[index]} - " + "{:.2f}".format(precision_entities_only_percentage) + "%")
+    print(f"- attributes: {precision_attributes_only[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_only_percentage) + "%")
+    print(f"- relationships: {precision_relationships_only[index]}/{precision_relationships_max[index]} - " + "{:.2f}".format(precision_relationships_only_percentage) + "%")
+    print()
+
+    print("Precision: matches any element")
+    print(f"- entities: {precision_entities_any[index]}/{precision_entities_max[index]} - " + "{:.2f}".format(precision_entities_any_percentage) + "%")
+    print(f"- attributes: {precision_attributes_any[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_any_percentage) + "%")
+    print(f"- relationships: {precision_relationships_any[index]}/{precision_relationships_max[index]} - " + "{:.2f}".format(precision_relationships_any_percentage) + "%\n\n")
+
 
 def print_evaluation():
 
-    for index in range(len(recall_entities)):
+    text_index = 0
+    for index, _ in enumerate(domain_models):
+        for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-        if index < len(recall_entities) - 1:
-            print(f"---- Results for text 0{index + 1} ---- ")
-        else:
-            print(f"---- Results for all texts ---- ")
+            print(f"---- Results for {domain_models_name[index]}-0{i + 1} ---- ")
+            print_recall(text_index)
+            print_precision(text_index)
+            text_index += 1
 
-        recall_entities_percentage = (recall_entities[index] / recall_entities_max[index]) * 100
-        recall_attributes_percentage = (recall_attributes[index] / recall_attributes_max[index]) * 100
-        recall_relationships_percentage = (recall_relationships[index] / recall_relationships_max[index]) * 100
-
-        precision_entities_only_percentage = (precision_entities_only[index] / precision_entities_max[index]) * 100
-        precision_entities_any_percentage = (precision_entities_any[index] / precision_entities_max[index]) * 100
-        precision_attributes_only_percentage = (precision_attributes_only[index] / precision_attributes_max[index]) * 100
-        precision_attributes_any_percentage = (precision_attributes_any[index] / precision_attributes_max[index]) * 100
-        precision_relationships_only_percentage = (precision_relationships_only[index] / precision_relationships_max[index]) * 100
-        precision_relationships_any_percentage = (precision_relationships_any[index] / precision_relationships_max[index]) * 100
-        
-        print("Recall")
-        print(f"- entities: {recall_entities[index]}/{recall_entities_max[index]} - " + "{:.2f}".format(recall_entities_percentage) + "%")
-        print(f"- attributes: {recall_attributes[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_percentage) + "%")
-        print(f"- relationships: {recall_relationships[index]}/{recall_relationships_max[index]} - " + "{:.2f}".format(recall_relationships_percentage) + "%")
-        print()
-
-        print("Precision: matches only corresponding element")
-        print(f"- entities: {precision_entities_only[index]}/{precision_entities_max[index]} - " + "{:.2f}".format(precision_entities_only_percentage) + "%")
-        print(f"- attributes: {precision_attributes_only[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_only_percentage) + "%")
-        print(f"- relationships: {precision_relationships_only[index]}/{precision_relationships_max[index]} - " + "{:.2f}".format(precision_relationships_only_percentage) + "%")
-        print()
-
-        print("Precision: matches any element")
-        print(f"- entities: {precision_entities_any[index]}/{precision_entities_max[index]} - " + "{:.2f}".format(precision_entities_any_percentage) + "%")
-        print(f"- attributes: {precision_attributes_any[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_any_percentage) + "%")
-        print(f"- relationships: {precision_relationships_any[index]}/{precision_relationships_max[index]} - " + "{:.2f}".format(precision_relationships_any_percentage) + "%")
-
-        print()
+    print(f"---- Results for all texts ---- ")
+    print_recall(text_index)
+    print_precision(text_index)
 
 
 def main():
     
+    text_index = 0
     for index, domain_model in enumerate(domain_models):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
@@ -392,9 +415,10 @@ def main():
                 print_evaluation()
                 exit(0)
 
-            evaluate_entities(entities_expected_suggestions_path, entities_evaluated_path, i)
-            evaluate_attributes(attributes_expected_suggestions_path, attributes_evaluated_path, i)
-            evaluate_relationships(relationships_expected_suggestions_path, relationships_evaluated_path, i)
+            evaluate_entities(entities_expected_suggestions_path, entities_evaluated_path, text_index)
+            evaluate_attributes(attributes_expected_suggestions_path, attributes_evaluated_path, text_index)
+            evaluate_relationships(relationships_expected_suggestions_path, relationships_evaluated_path, text_index)
+            text_index += 1
 
     print_evaluation()
 
