@@ -56,6 +56,7 @@ def create_attributes_expected_output(test_cases):
         for index, output in enumerate(expected_output):
             name = output[Field.NAME.value]
             original_text = output[Field.ORIGINAL_TEXT.value]
+            original_text = original_text.replace('"', '""') # Escape '"' characters
             entry = f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n"
             result.append(entry)
 
@@ -74,6 +75,7 @@ def create_relationships_expected_output(test_cases):
         for index, output in enumerate(expected_output):
             name = output[Field.NAME.value]
             original_text = output[Field.ORIGINAL_TEXT.value]
+            original_text = original_text.replace('"', '""') # Escape '"' characters
             source_entity = output[Field.SOURCE_ENTITY.value]
             target_entity = output[Field.TARGET_ENTITY.value]
 
