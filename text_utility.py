@@ -7,10 +7,10 @@ LOGGER_NAME = "LLM_logger"
 
 
 class UserChoice(Enum):
+    ENTITIES = "entities"
     ATTRIBUTES = "attributes"
     RELATIONSHIPS = "relationships"
     RELATIONSHIPS2 = "relationships2"
-    ENTITIES = "entities"
     SUMMARY_PLAIN_TEXT = "summary-plain-text"
     SUMMARY_DESCRIPTIONS = "summary-descriptions"
 

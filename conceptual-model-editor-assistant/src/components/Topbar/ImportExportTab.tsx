@@ -72,12 +72,13 @@ const ImportTab: React.FC = (): JSX.Element =>
         {
             const sourceEntityLowerCase = attribute.domain.toLowerCase()
             const attributeName = attribute.title
-            const attributeIriLowerCase = attribute.title.toLowerCase()
+
+            const domainCardinality = attribute.domainCardinality ?? ""
         
             const newAttribute: Attribute = {
-                [Field.IRI]: attributeIriLowerCase, [Field.NAME]: attributeName, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.DESCRIPTION]: attribute.description,
+                [Field.IRI]: attribute[Field.IRI], [Field.NAME]: attributeName, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.DESCRIPTION]: attribute.description,
                 [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.SOURCE_ENTITY]: sourceEntityLowerCase,
-                [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: attribute.domainCardinality
+                [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: domainCardinality
             }
         
         
@@ -97,11 +98,14 @@ const ImportTab: React.FC = (): JSX.Element =>
             const iriLowerCase = relationship.iri.toLowerCase()
             const sourceEntityLowerCase = relationship.domain.toLowerCase()
             const targetEntityLowerCase = relationship.range.toLowerCase()
+
+            const domainCardinality = relationship.domainCardinality ?? ""
+            const rangeCardinality = relationship.rangeCardinality ?? ""
         
             const newRelationship: Relationship = {
                 [Field.IRI]: iriLowerCase, [Field.NAME]: relationship.title, [Field.DESCRIPTION]: relationship.description, [Field.TYPE]: ItemType.RELATIONSHIP,
                 [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
-                [Field.SOURCE_CARDINALITY]: relationship.domainCardinality, [Field.TARGET_CARDINALITY]: relationship.rangeCardinality,
+                [Field.SOURCE_CARDINALITY]: domainCardinality, [Field.TARGET_CARDINALITY]: rangeCardinality,
                 [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
             }
         

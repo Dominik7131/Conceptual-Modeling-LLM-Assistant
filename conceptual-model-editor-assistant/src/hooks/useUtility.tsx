@@ -1,5 +1,5 @@
 import { SetterOrUpdater } from "recoil";
-import { Attribute, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, SidebarTabs, UserChoice } from "../interfaces"
+import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, SidebarTabs, UserChoice } from "../interfaces"
 import { Node, Edge, MarkerType, EdgeMarker, Position, internalsSymbol } from 'reactflow';
 
 
@@ -460,6 +460,49 @@ export const changeSidebarTab = (itemType: ItemType, setSidebarTab: any) =>
   {
     throw Error(`Received unknown item type: ${itemType}`)
   }
+}
+
+
+export const snapshotDomainDescription = (userChoice: UserChoice, domainDescription: string, setSnapshotDomainDescription: any) =>
+{
+  setSnapshotDomainDescription((previousDomain: DomainDescriptionSnapshot) => ({...previousDomain, [userChoice]: domainDescription}))
+}
+
+export const snapshotConceptualModel = (userChoice: UserChoice, conceptualModel: any, setSnapshotConceptualModel: any) =>
+{
+  setSnapshotConceptualModel((previousModel: ConceptualModelSnapshot) => ({...previousModel, [userChoice]: conceptualModel}))
+} 
+
+export const getSnapshotDomainDescription = (userChoice: UserChoice, snapshot: DomainDescriptionSnapshot): string =>
+{
+  return snapshot[userChoice]
+}
+
+export const getSnapshotConceptualModel = (userChoice: UserChoice, snapshot: ConceptualModelSnapshot) =>
+{
+  if (userChoice === UserChoice.SUMMARY_PLAIN_TEXT || userChoice === UserChoice.SUMMARY_DESCRIPTIONS)
+  {
+    return snapshot[userChoice]
+  }
+  throw Error(`Received unexpected user choice: ${userChoice}`)
+}
+
+export const itemTypeToUserChoice = (itemType: ItemType): UserChoice =>
+{
+  if (itemType === ItemType.ENTITY)
+  {
+    return UserChoice.ENTITIES
+  }
+  else if (itemType === ItemType.ATTRIBUTE)
+  {
+    return UserChoice.ATTRIBUTES
+  }
+  else if (itemType === ItemType.RELATIONSHIP || itemType === ItemType.GENERALIZATION)
+  {
+    return UserChoice.RELATIONSHIPS
+  }
+
+  throw Error(`Received unknown item type: ${itemType}`)
 }
 
 

@@ -6,7 +6,10 @@ export const enum UserChoice
   ENTITIES = "entities",
   ATTRIBUTES = "attributes",
   RELATIONSHIPS = "relationships",
-  RELATIONSHIPS2 = "relationships2"
+  RELATIONSHIPS2 = "relationships2",
+  SUMMARY_PLAIN_TEXT = "summary-plain-text",
+  SUMMARY_DESCRIPTIONS = "summary-descriptions",
+  SINGLE_FIELD = "single-field"
 }
 
 export const enum ItemType
@@ -77,12 +80,20 @@ export interface SummaryObject
 
 export interface DomainDescriptionSnapshot
 {
-  suggestedEntities: string
-  suggestedAttributes: string
-  suggestedRelationships: string
-  itemSingleField: string
-  summaryPlainText: string
-  summaryDescription: string
+  [UserChoice.ENTITIES]: string
+  [UserChoice.ATTRIBUTES]: string
+  [UserChoice.RELATIONSHIPS]: string
+  [UserChoice.RELATIONSHIPS2]: string
+  [UserChoice.SINGLE_FIELD]: string
+  [UserChoice.SUMMARY_PLAIN_TEXT]: string
+  [UserChoice.SUMMARY_DESCRIPTIONS]: string
+}
+
+export interface ConceptualModelSnapshot
+{
+  // TODO: Fill in the correct type
+  [UserChoice.SUMMARY_PLAIN_TEXT]: any
+  [UserChoice.SUMMARY_DESCRIPTIONS]: any
 }
 
 
@@ -158,14 +169,12 @@ interface DomainRangeJson
 {
   // TODO: Why do we have "target entity" in attributes?
   // Isn't that going to be always empty string?
-  // Optional-one: 0..1
-  // one-one: 1..1
-  // Many: 1..*
-  // Is optional-many (0..*) missing?
+
+  // Possible cardinalities: "optional-one" | "optional-many" | "one-one" | "one-many" | null
   domain: string
-  domainCardinality: "optional-one" | "optional-many" | "one-one" | "one-many" | ""
+  domainCardinality: string | null
   range: string
-  rangeCardinality: "optional-one" | "optional-many" | "one-one" | "one-many" | ""
+  rangeCardinality: string | null
 }
 
 export interface AttributeJson extends ItemJson, DomainRangeJson { }
@@ -180,6 +189,7 @@ export interface GeneralizationJson extends ItemJson
 
 export interface ConceptualModelJson
 {
+  $schema: string
   classes: EntityJson[]
   attributes: AttributeJson[]
   relationships: RelationshipJson[]

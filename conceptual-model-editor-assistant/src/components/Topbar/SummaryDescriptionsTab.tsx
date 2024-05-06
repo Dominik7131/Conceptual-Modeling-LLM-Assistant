@@ -1,9 +1,11 @@
-import { Button, Typography, CircularProgress, IconButton } from "@mui/material"
-import { useRecoilValue } from "recoil"
-import { edgesState, isLoadingSummaryDescriptionsState, nodesState, summaryDescriptionsState } from "../../atoms"
-import { capitalizeString } from "../../hooks/useUtility"
-import { Attribute } from "../../interfaces"
+import { Button, Typography, CircularProgress, IconButton, Stack, Tooltip } from "@mui/material"
+import { useRecoilState, useRecoilValue } from "recoil"
+import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, edgesState, isLoadingSummaryDescriptionsState, isSummaryDescriptionReactButtonClickedState, nodesState, summaryDescriptionsState } from "../../atoms"
+import { HEADER, SAVE_SUGESTION_URL, capitalizeString, getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../hooks/useUtility"
+import { Attribute, UserChoice } from "../../interfaces"
 import CheckIcon from '@mui/icons-material/Check';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 
 
@@ -12,6 +14,25 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
     const summaryDescriptions = useRecoilValue(summaryDescriptionsState)
     const isLoadingSummaryDescriptions = useRecoilValue(isLoadingSummaryDescriptionsState)
 
+    const [isClicked, setIsClicked] = useRecoilState(isSummaryDescriptionReactButtonClickedState)
+    const domainDescriptionSnapshot = useRecoilValue(domainDescriptionSnapshotsState)
+    const conceptualModelSnapshot = useRecoilValue(conceptualModelSnapshotState)
+
+    const showReactButtons = (summaryDescriptions.entities.length !== 0 || summaryDescriptions.relationships.length !== 0) && !isLoadingSummaryDescriptions
+
+    
+    const handleSaveSuggestion = (isPositiveReaction: boolean) =>
+    {
+        const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SUMMARY_DESCRIPTIONS, domainDescriptionSnapshot)        
+        const currentConceptualModel = getSnapshotConceptualModel(UserChoice.SUMMARY_PLAIN_TEXT, conceptualModelSnapshot)
+
+        const suggestionData = { domainDescription: currentDomainDescription, isPositive: isPositiveReaction, item: summaryDescriptions, conceptualModel: currentConceptualModel }
+
+        fetch(SAVE_SUGESTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+
+        setIsClicked(true)
+    }
+    
     // const nodes = useRecoilValue(nodesState)
     // const edges = useRecoilValue(edgesState)
 
@@ -98,6 +119,43 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
             </ul>
 
             { isLoadingSummaryDescriptions && <CircularProgress /> }
+
+            {
+                showReactButtons &&
+                <Stack direction="row" spacing={"8px"}>
+                    <Tooltip
+                        title="Like"
+                        enterDelay={500}
+                        leaveDelay={200}>
+
+                        <Button
+                            size={ "small" }
+                            color="inherit"
+                            sx={{ textTransform: "none", maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px' }}
+                            disabled={isClicked}
+                            onClick={ () => { handleSaveSuggestion(true) } }
+                            >
+                                <ThumbUpIcon sx={{ width: "20px", height: "20px" }}/>
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip
+                        title="Dislike"
+                        enterDelay={500}
+                        leaveDelay={200}>
+
+                        <Button
+                            color="inherit"
+                            size={ "small" }
+                            sx={{ textTransform: "none", maxWidth: '50px', maxHeight: '30px', minWidth: '30px', minHeight: '30px', paddingRight: "10px" }}
+                            disabled={isClicked}
+                            onClick={ () => { handleSaveSuggestion(false) } }
+                            >
+                                <ThumbDownIcon sx={{ width: "20px", height: "20px" }}/>
+                        </Button>
+                    </Tooltip>
+                </Stack>
+            }
         </>
     )
 }

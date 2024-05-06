@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil'
-import { Attribute, DomainDescriptionSnapshot, Entity, Field, Item, ItemType, ItemsMessage, Relationship, SummaryObject } from './interfaces';
+import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, Entity, Field, Item, ItemType, ItemsMessage, Relationship, SummaryObject, UserChoice } from './interfaces';
 import { Node, Edge } from 'reactflow';
 import { blankEntity } from './hooks/useUtility';
 
@@ -52,10 +52,15 @@ export const domainDescriptionState = atom({
     default: "",
 })
 
-export const domainDescriptionSnapshots = atom<DomainDescriptionSnapshot>({
+export const domainDescriptionSnapshotsState = atom<DomainDescriptionSnapshot>({
     key: 'domainDescriptionSnapshotsState',
-    default: { suggestedEntities: "", suggestedAttributes: "", suggestedRelationships: "", itemSingleField: "",
-               summaryPlainText: "", summaryDescription: ""},
+    default: { [UserChoice.ENTITIES]: "", [UserChoice.ATTRIBUTES]: "", [UserChoice.RELATIONSHIPS]: "", [UserChoice.RELATIONSHIPS2]: "",
+    [UserChoice.SINGLE_FIELD]: "", [UserChoice.SUMMARY_PLAIN_TEXT]: "", [UserChoice.SUMMARY_DESCRIPTIONS]: ""},
+})
+
+export const conceptualModelSnapshotState = atom<ConceptualModelSnapshot>({
+    key: 'conceptualModelSnapshotState',
+    default: { [UserChoice.SUMMARY_PLAIN_TEXT]: "", [UserChoice.SUMMARY_DESCRIPTIONS]: ""},
 })
 
 
@@ -231,4 +236,15 @@ export const isShowTitleDialogDomainDescriptionState = atom({
 export const modelIDState = atom({
     key: 'modelIDState',
     default: "",
+})
+
+
+export const isSummaryPlainTextReactButtonClickedState = atom({
+    key: 'isSummaryPlainTextReactButtonClickedState',
+    default: false,
+})
+
+export const isSummaryDescriptionReactButtonClickedState = atom({
+    key: 'isSummaryDescriptionReactButtonClickedState',
+    default: false,
 })

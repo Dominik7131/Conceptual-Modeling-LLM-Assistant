@@ -90,10 +90,15 @@ def save_suggestion():
 
     body_data = request.get_json()
     domain_description = body_data["domainDescription"]
+    conceptual_model = body_data["conceptualModel"]
     item = body_data["item"]
     isPositive = body_data["isPositive"]
 
+
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
+
+    if conceptual_model:
+        completed_item["conceptual_model"] = conceptual_model
 
     # TODO: Check storage size
     # If the storage size > 100MB then print warning and do not store anything

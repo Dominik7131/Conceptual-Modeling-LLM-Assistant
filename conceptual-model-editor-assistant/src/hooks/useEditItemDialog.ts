@@ -1,8 +1,8 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
+import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
-import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTION_URL, createEdgeUniqueID } from "./useUtility";
+import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTION_URL, createEdgeUniqueID, getSnapshotDomainDescription, snapshotDomainDescription } from "./useUtility";
 import { useState } from "react";
 
 
@@ -22,7 +22,9 @@ const useEditItemDialog = () =>
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
     const setFieldToLoad = useSetRecoilState(fieldToLoadState)
 
-    const setErrorMessage = useSetRecoilState(editDialogErrorMsgState)   
+    const setErrorMessage = useSetRecoilState(editDialogErrorMsgState)
+
+    const [domainDescriptionSnapshot, setSnapshotDomainDescription] = useRecoilState(domainDescriptionSnapshotsState)
 
 
     const onClose = (): void =>
@@ -227,12 +229,11 @@ const useEditItemDialog = () =>
     const saveSingleFieldSuggestion = (text: string): void =>
     {
         // Save generated single field to backend
-        const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
-        const suggestionData = { domainDescription: currentDomainDescription, isPositive: true, item: text }
+        const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SINGLE_FIELD, domainDescriptionSnapshot)
+        const suggestionData = { domainDescription: currentDomainDescription, isPositive: true, item: text, conceptualModel: [] }
 
         fetch(SAVE_SUGESTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
     }
-
 
     
     const onConfirmRegeneratedText = (field : Field) =>
@@ -256,6 +257,9 @@ const useEditItemDialog = () =>
 
     const onGenerateField = (itemType: ItemType, name: string, sourceEntity: string, targetEntity: string, field: Field) =>
     {
+        const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
+        snapshotDomainDescription(UserChoice.SINGLE_FIELD, currentDomainDescription, setSnapshotDomainDescription)
+
         let userChoice = UserChoice.ENTITIES
 
         if (itemType === ItemType.ATTRIBUTE)
@@ -277,7 +281,7 @@ const useEditItemDialog = () =>
 
         const bodyData = JSON.stringify({
             "name": name, "sourceEntity": sourceEntity, "targetEntity": targetEntity, "field": field, "userChoice": userChoice,
-            "domainDescription": domainDescription
+            "domainDescription": currentDomainDescription
         })
 
         setErrorMessage("")

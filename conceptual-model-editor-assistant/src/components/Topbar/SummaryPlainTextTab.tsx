@@ -1,14 +1,34 @@
 import { Typography, CircularProgress, Button, Tooltip, Stack } from "@mui/material"
-import { useRecoilValue } from "recoil"
-import { isLoadingSummaryPlainTextState, summaryTextState } from "../../atoms"
+import { useRecoilState, useRecoilValue } from "recoil"
+import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, isLoadingSummaryPlainTextState, isSummaryPlainTextReactButtonClickedState, summaryTextState } from "../../atoms"
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { UserChoice } from "../../interfaces";
+import { HEADER, SAVE_SUGESTION_URL, getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../hooks/useUtility";
 
 
 const SummaryPlainTextTab: React.FC = (): JSX.Element =>
 {
+    const [isClicked, setIsClicked] = useRecoilState(isSummaryPlainTextReactButtonClickedState)
+    
     const summary = useRecoilValue(summaryTextState)
+
     const isLoadingSummaryPlainText = useRecoilValue(isLoadingSummaryPlainTextState)
+    const domainDescriptionSnapshot = useRecoilValue(domainDescriptionSnapshotsState)
+    const conceptualModelSnapshot = useRecoilValue(conceptualModelSnapshotState)
+
+
+    const handleSaveSuggestion = (isPositiveReaction: boolean) =>
+    {
+        const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SUMMARY_PLAIN_TEXT, domainDescriptionSnapshot)
+        const currentConceptualModel = getSnapshotConceptualModel(UserChoice.SUMMARY_PLAIN_TEXT, conceptualModelSnapshot)
+
+        const suggestionData = { domainDescription: currentDomainDescription, isPositive: isPositiveReaction, item: summary, conceptualModel: currentConceptualModel }
+
+        fetch(SAVE_SUGESTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+
+        setIsClicked(true)
+    }
 
 
     return (
@@ -19,7 +39,7 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
             </Typography>
 
             {
-                summary !== "" &&
+                summary !== "" && !isLoadingSummaryPlainText &&
                 <Stack direction="row" spacing={"8px"}>
                     <Tooltip
                         title="Like"
@@ -30,8 +50,8 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
                             size={ "small" }
                             color="inherit"
                             sx={{ textTransform: "none", maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px' }}
-                            // disabled={isClicked}
-                            // onClick={ () => { handleSaveSuggestion(true) } }
+                            disabled={isClicked}
+                            onClick={ () => { handleSaveSuggestion(true) } }
                             >
                                 <ThumbUpIcon sx={{ width: "20px", height: "20px" }}/>
                         </Button>
@@ -46,8 +66,8 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
                             color="inherit"
                             size={ "small" }
                             sx={{ textTransform: "none", maxWidth: '50px', maxHeight: '30px', minWidth: '30px', minHeight: '30px', paddingRight: "10px" }}
-                            // disabled={isClicked}
-                            // onClick={ () => { handleSaveSuggestion(true) } }
+                            disabled={isClicked}
+                            onClick={ () => { handleSaveSuggestion(false) } }
                             >
                                 <ThumbDownIcon sx={{ width: "20px", height: "20px" }}/>
                         </Button>

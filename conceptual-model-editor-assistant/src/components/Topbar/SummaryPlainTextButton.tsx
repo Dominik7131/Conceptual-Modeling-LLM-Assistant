@@ -1,9 +1,9 @@
 import { Button } from "@mui/material"
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
-import { SUMMARY_PLAIN_TEXT_NAME, convertConceptualModelToJSON } from "../../hooks/useUtility";
+import { SUMMARY_PLAIN_TEXT_NAME, convertConceptualModelToJSON, snapshotConceptualModel, snapshotDomainDescription } from "../../hooks/useUtility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { domainDescriptionState, isIgnoreDomainDescriptionState, selectedEdgesState, selectedNodesState, summaryTextState, topbarTabValueState } from "../../atoms";
-import { TopbarTabs } from "../../interfaces";
+import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryPlainTextReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryTextState, topbarTabValueState } from "../../atoms";
+import { TopbarTabs, UserChoice } from "../../interfaces";
 import useFetchData from "../../hooks/useFetchData";
 
 
@@ -17,7 +17,11 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
 
     const domainDescription = useRecoilValue(domainDescriptionState)
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+    const setDomainDescriptionSnapshot = useSetRecoilState(domainDescriptionSnapshotsState)
+    const setConceptualModelSnapshot = useSetRecoilState(conceptualModelSnapshotState)
 
+    const setIsReactButtonClicked = useSetRecoilState(isSummaryPlainTextReactButtonClickedState)
+    
     const { fetchSummaryPlainText } = useFetchData()
 
     
@@ -30,12 +34,16 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
         }
 
         setSummaryText("")
+        setIsReactButtonClicked(false)
         
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
+        snapshotDomainDescription(UserChoice.SUMMARY_PLAIN_TEXT, currentDomainDescription, setDomainDescriptionSnapshot)
+
+        const conceptualModel = convertConceptualModelToJSON(selectedNodes, selectedEdges, false)
+        snapshotConceptualModel(UserChoice.SUMMARY_PLAIN_TEXT, conceptualModel, setConceptualModelSnapshot)
 
         setTopbarTab(TopbarTabs.SUMMARY_PLAIN_TEXT)
 
-        const conceptualModel = convertConceptualModelToJSON(selectedNodes, selectedEdges, false)
         const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": currentDomainDescription})
 
         fetchSummaryPlainText(bodyData)

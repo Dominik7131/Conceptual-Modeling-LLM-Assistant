@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { Node, Edge, MarkerType, getMarkerEnd } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, changeSidebarTab, changeTitle, convertConceptualModelToJSON, createEdgeUniqueID, createIRIFromName, onClearSuggestedItems, userChoiceToItemType } from './useUtility';
+import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, changeSidebarTab, changeTitle, convertConceptualModelToJSON, createEdgeUniqueID, createIRIFromName, onClearSuggestedItems, snapshotDomainDescription, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, Field, ItemType, NodeData, Relationship, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, isIgnoreDomainDescriptionState, nodesState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
+import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, isIgnoreDomainDescriptionState, nodesState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
 
 
 const useConceptualModel = () =>
@@ -22,6 +22,7 @@ const useConceptualModel = () =>
 
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+  const setDomainDescriptionSnapshot = useSetRecoilState(domainDescriptionSnapshotsState)
 
   const setSidebarTab = useSetRecoilState(sidebarTabValueState)
 
@@ -127,6 +128,8 @@ const useConceptualModel = () =>
     changeSidebarTab(itemType, setSidebarTab)
     changeTitle(userChoice, sourceItemName, targetItemName, setSidebarTitles)
 
+    // Snapshot current domain description to know from what text the suggestions were generated
+    snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
 
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
