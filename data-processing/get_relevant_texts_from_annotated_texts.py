@@ -175,6 +175,10 @@ def convert_to_relevant_texts(dictionary, text, model, file_path):
             source_entity = relationship["domain"].lower().replace('-', ' ')
             target_entity = relationship["range"].lower().replace('-', ' ')
 
+            # TODO: Fix typo in expected model
+            if relationship_name == "is staff member of academic commumity":
+                relationship_name = "is staff member of academic community"
+
             if relationship_name not in dictionary:
                 print(f"Warning: Relationship \"{relationship_name}\" not in annotated text: {file_path}")
                 continue
