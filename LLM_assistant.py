@@ -337,11 +337,8 @@ class LLMAssistant:
                 prompt = prompt[:last_new_line_index]
 
 
-    def __create_prompt(self, user_choice, source_entity="", target_entity="", relevant_texts = "", is_domain_description=True,
-                        items_count_to_suggest = 5, is_chain_of_thoughts = True, conceptual_model = {}, field_name = "",
-                        attribute_name="", relationship_name=""):
+    def get_prompt(self, user_choice, field_name="", is_domain_description=True):
 
-        # Build corresponding file name
         prompt_file_name = f"{user_choice}"
 
         if field_name != "":
@@ -357,11 +354,20 @@ class LLMAssistant:
             prompt_file_name += "-cot"
 
         prompt_file_name += ".txt"
+
         prompt_file_path = os.path.join(PROMPT_DIRECTORY, prompt_file_name)
 
         with open(prompt_file_path, 'r') as file:
-            original_prompt = file.read()
+            prompt = file.read()
 
+        return prompt
+
+
+    def __create_prompt(self, user_choice, source_entity="", target_entity="", relevant_texts = "", is_domain_description=True,
+                        items_count_to_suggest = 5, is_chain_of_thoughts = True, conceptual_model = {}, field_name = "",
+                        attribute_name="", relationship_name=""):
+
+        original_prompt = self.get_prompt(user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description)
 
         replacements = {
             PromptFileSymbols.SOURCE_ENTITY.value: source_entity,
