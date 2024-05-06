@@ -218,23 +218,48 @@ def create_summary_mockup(entities : list[str]) -> list[dict]:
     return result
 
 
-@app.route('/save_suggestion', methods=['POST'])
-def save_suggestion():
+@app.route('/save_suggested_item', methods=['POST'])
+def save_suggested_item():
 
     body_data = request.get_json()
+    user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
-    conceptual_model = body_data["conceptualModel"]
     item = body_data["item"]
     isPositive = body_data["isPositive"]
 
-
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
+    print(completed_item)
 
-    if conceptual_model:
-        completed_item["conceptual_model"] = conceptual_model
+    return "Done"
 
 
-    print("Saving:")
+@app.route('/save_suggested_single_field', methods=['POST'])
+def save_suggested_single_field():
+
+    body_data = request.get_json()
+    user_choice = body_data["userChoice"]
+    field_name = body_data["fieldName"]
+    field_text = body_data["fieldText"]
+    domain_description = body_data["domainDescription"]
+    isPositive = body_data["isPositive"]
+
+    completed_item = { "domain_description": domain_description, "field_name": field_name, "field_text": field_text, "is_positive": isPositive }
+    print(completed_item)
+
+    return "Done"
+
+
+@app.route('/save_suggested_description', methods=['POST'])
+def save_suggested_description():
+
+    body_data = request.get_json()
+    user_choice = body_data["userChoice"]
+    domain_description = body_data["domainDescription"]
+    conceptual_model = body_data["conceptualModel"]
+    summary = body_data["summary"]
+    isPositive = body_data["isPositive"]
+
+    completed_item = { "domain_description": domain_description, "summary": summary, "is_positive": isPositive, "conceptual_model": conceptual_model }
     print(completed_item)
 
     return "Done"

@@ -5,7 +5,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Attribute, Field, Item, ItemType, Relationship } from "../../interfaces";
 import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarErrorMsgState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { HEADER, SAVE_SUGESTION_URL, SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE, createErrorMessage, getSnapshotDomainDescription, itemTypeToUserChoice, onAddItem } from "../../hooks/useUtility";
+import { HEADER, SAVE_SUGESTED_ITEM_URL, SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE, createErrorMessage, getSnapshotDomainDescription, itemTypeToUserChoice, onAddItem } from "../../hooks/useUtility";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { useState } from "react";
@@ -67,11 +67,13 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
     const handleSaveSuggestion = (isPositiveReaction: boolean) =>
     {
         const userChoice = itemTypeToUserChoice(item[Field.TYPE])
-        const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)        
+        const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)
 
-        const suggestionData = { domainDescription: currentDomainDescription, isPositive: isPositiveReaction, item: item, conceptualModel: [] }
+        const suggestionData = {
+            domainDescription: currentDomainDescription, isPositive: isPositiveReaction, item: item, userChoice: userChoice
+        }
 
-        fetch(SAVE_SUGESTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+        fetch(SAVE_SUGESTED_ITEM_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
 
         setIsClicked(true)
     }

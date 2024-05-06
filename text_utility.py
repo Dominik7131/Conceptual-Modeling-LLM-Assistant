@@ -13,6 +13,7 @@ class UserChoice(Enum):
     RELATIONSHIPS2 = "relationships2"
     SUMMARY_PLAIN_TEXT = "summary-plain-text"
     SUMMARY_DESCRIPTIONS = "summary-descriptions"
+    SINGLE_FIELD = "single-field"
 
 
 class TextFilteringVariation(Enum):

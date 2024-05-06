@@ -1,7 +1,7 @@
 import { Button, Typography, CircularProgress, IconButton, Stack, Tooltip } from "@mui/material"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, edgesState, isLoadingSummaryDescriptionsState, isSummaryDescriptionReactButtonClickedState, nodesState, summaryDescriptionsState } from "../../atoms"
-import { HEADER, SAVE_SUGESTION_URL, capitalizeString, getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../hooks/useUtility"
+import { HEADER, SAVE_SUGESTED_DESCRIPTION_URL, capitalizeString, getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../hooks/useUtility"
 import { Attribute, UserChoice } from "../../interfaces"
 import CheckIcon from '@mui/icons-material/Check';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
@@ -23,12 +23,15 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
     
     const handleSaveSuggestion = (isPositiveReaction: boolean) =>
     {
-        const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SUMMARY_DESCRIPTIONS, domainDescriptionSnapshot)        
-        const currentConceptualModel = getSnapshotConceptualModel(UserChoice.SUMMARY_PLAIN_TEXT, conceptualModelSnapshot)
+        const userChoice = UserChoice.SUMMARY_DESCRIPTIONS
+        const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)        
+        const currentConceptualModel = getSnapshotConceptualModel(userChoice, conceptualModelSnapshot)
 
-        const suggestionData = { domainDescription: currentDomainDescription, isPositive: isPositiveReaction, item: summaryDescriptions, conceptualModel: currentConceptualModel }
+        const suggestionData = {
+            domainDescription: currentDomainDescription, isPositive: isPositiveReaction, summary: summaryDescriptions,
+            conceptualModel: currentConceptualModel, userChoice: userChoice }
 
-        fetch(SAVE_SUGESTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+        fetch(SAVE_SUGESTED_DESCRIPTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
 
         setIsClicked(true)
     }

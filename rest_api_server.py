@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from LLM_assistant import LLMAssistant
-from text_utility import LOGGER_NAME, TextUtility
+from text_utility import LOGGER_NAME, TextUtility, UserChoice
 import json
 import os
 import time
@@ -85,30 +85,73 @@ def merge_original_texts():
     return result
 
 
-@app.route('/save_suggestion', methods=['POST'])
-def save_suggestion():
-
-    body_data = request.get_json()
-    domain_description = body_data["domainDescription"]
-    conceptual_model = body_data["conceptualModel"]
-    item = body_data["item"]
-    isPositive = body_data["isPositive"]
-
-
-    completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
-
-    if conceptual_model:
-        completed_item["conceptual_model"] = conceptual_model
+def save_item_to_storage(item):
 
     # TODO: Check storage size
-    # If the storage size > 100MB then print warning and do not store anything
-
+    # If the storage size > 1GB then print warning and do not store anything
 
     timestamp = time.strftime('%Y-%m-%d-%H-%M-%S')
     file_to_write_path = f"{os.path.join(STORAGE_DIRECTORY, timestamp)}.json"
 
     with open(file_to_write_path, 'w') as file:
-        json.dump(completed_item, file)
+        json.dump(item, file)
+
+
+@app.route('/save_suggested_item', methods=['POST'])
+def save_suggested_item():
+
+    body_data = request.get_json()
+    user_choice = body_data["userChoice"]
+    domain_description = body_data["domainDescription"]
+    item = body_data["item"]
+    isPositive = body_data["isPositive"]
+
+    completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
+
+    prompt = llm_assistant.get_prompt(user_choice=user_choice)
+    completed_item["prompt"] = prompt
+
+    save_item_to_storage(completed_item)
+
+    return "Done"
+
+
+@app.route('/save_suggested_single_field', methods=['POST'])
+def save_suggested_single_field():
+
+    body_data = request.get_json()
+    user_choice = body_data["userChoice"]
+    field_name = body_data["fieldName"]
+    field_text = body_data["fieldText"]
+    domain_description = body_data["domainDescription"]
+    isPositive = body_data["isPositive"]
+
+    completed_item = { "domain_description": domain_description, "field_name": field_name, "field_text": field_text, "is_positive": isPositive }
+
+    prompt = llm_assistant.get_prompt(user_choice=user_choice, field_name=field_name)
+    completed_item["prompt"] = prompt
+
+    save_item_to_storage(completed_item)
+
+    return "Done"
+
+
+@app.route('/save_suggested_description', methods=['POST'])
+def save_suggested_description():
+
+    body_data = request.get_json()
+    user_choice = body_data["userChoice"]
+    domain_description = body_data["domainDescription"]
+    conceptual_model = body_data["conceptualModel"]
+    summary = body_data["summary"]
+    isPositive = body_data["isPositive"]
+
+    completed_item = { "domain_description": domain_description, "summary": summary, "is_positive": isPositive, "conceptual_model": conceptual_model }
+
+    prompt = llm_assistant.get_prompt(user_choice=user_choice)
+    completed_item["prompt"] = prompt
+
+    save_item_to_storage(completed_item)
 
     return "Done"
 

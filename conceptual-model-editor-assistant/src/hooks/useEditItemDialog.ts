@@ -2,7 +2,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
 import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
-import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTION_URL, createEdgeUniqueID, getSnapshotDomainDescription, snapshotDomainDescription } from "./useUtility";
+import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL, createEdgeUniqueID, getSnapshotDomainDescription, snapshotDomainDescription } from "./useUtility";
 import { useState } from "react";
 
 
@@ -226,13 +226,16 @@ const useEditItemDialog = () =>
     }
 
 
-    const saveSingleFieldSuggestion = (text: string): void =>
+    const saveSingleFieldSuggestion = (field_name: string, field_text: string): void =>
     {
         // Save generated single field to backend
         const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SINGLE_FIELD, domainDescriptionSnapshot)
-        const suggestionData = { domainDescription: currentDomainDescription, isPositive: true, item: text, conceptualModel: [] }
+        const suggestionData = {
+            domainDescription: currentDomainDescription, fieldName: field_name, fieldText: field_text,
+            userChoice: UserChoice.SINGLE_FIELD, isPositive: true
+        }
 
-        fetch(SAVE_SUGESTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+        fetch(SAVE_SUGESTED_SINGLE_FIELD_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
     }
 
     
@@ -249,7 +252,7 @@ const useEditItemDialog = () =>
             return editedItem
         })
 
-        saveSingleFieldSuggestion((regeneratedItem as any)[field])
+        saveSingleFieldSuggestion(field, (regeneratedItem as any)[field])
 
         onClearRegeneratedItem(field, false)
     }

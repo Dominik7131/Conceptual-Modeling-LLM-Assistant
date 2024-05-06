@@ -4,7 +4,7 @@ import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, isLoadin
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { UserChoice } from "../../interfaces";
-import { HEADER, SAVE_SUGESTION_URL, getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../hooks/useUtility";
+import { HEADER, SAVE_SUGESTED_DESCRIPTION_URL, getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../hooks/useUtility";
 
 
 const SummaryPlainTextTab: React.FC = (): JSX.Element =>
@@ -20,12 +20,16 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
 
     const handleSaveSuggestion = (isPositiveReaction: boolean) =>
     {
-        const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SUMMARY_PLAIN_TEXT, domainDescriptionSnapshot)
-        const currentConceptualModel = getSnapshotConceptualModel(UserChoice.SUMMARY_PLAIN_TEXT, conceptualModelSnapshot)
+        const userChoice = UserChoice.SUMMARY_DESCRIPTIONS
+        const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)
+        const currentConceptualModel = getSnapshotConceptualModel(userChoice, conceptualModelSnapshot)
 
-        const suggestionData = { domainDescription: currentDomainDescription, isPositive: isPositiveReaction, item: summary, conceptualModel: currentConceptualModel }
+        const suggestionData = {
+            domainDescription: currentDomainDescription, isPositive: isPositiveReaction, summary: summary,
+            userChoice: userChoice, conceptualModel: currentConceptualModel
+        }
 
-        fetch(SAVE_SUGESTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+        fetch(SAVE_SUGESTED_DESCRIPTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
 
         setIsClicked(true)
     }
