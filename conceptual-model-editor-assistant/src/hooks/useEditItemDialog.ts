@@ -225,14 +225,30 @@ const useEditItemDialog = () =>
         })
     }
 
+    const getSourceEntityFromItem = (item: Item) =>
+    {
+        if (item[Field.TYPE] === ItemType.ENTITY)
+        {
+            return item[Field.NAME]
+        }
+        else
+        {
+            return (item as Relationship)[Field.SOURCE_ENTITY]
+        }
+    }
+
 
     const saveSingleFieldSuggestion = (field_name: string, field_text: string): void =>
     {
         // Save generated single field to backend
+
         const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SINGLE_FIELD, domainDescriptionSnapshot)
+
+        const sourceEntity = getSourceEntityFromItem(regeneratedItem)
+
         const suggestionData = {
             domainDescription: currentDomainDescription, fieldName: field_name, fieldText: field_text,
-            userChoice: UserChoice.SINGLE_FIELD, isPositive: true
+            userChoice: UserChoice.SINGLE_FIELD, sourceEntity: sourceEntity, isPositive: true
         }
 
         fetch(SAVE_SUGESTED_SINGLE_FIELD_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})

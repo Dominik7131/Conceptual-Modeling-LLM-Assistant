@@ -1,7 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 from LLM_assistant import LLMAssistant
-from text_utility import LOGGER_NAME, TextUtility, UserChoice
+from text_utility import LOGGER_NAME, Field, TextUtility, UserChoice
 import json
 import os
 import time
@@ -106,10 +106,14 @@ def save_suggested_item():
     item = body_data["item"]
     isPositive = body_data["isPositive"]
 
+    item = json.loads(item)
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
 
     prompt = llm_assistant.get_prompt(user_choice=user_choice)
     completed_item["prompt"] = prompt
+
+    relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_entity=item[Field.SOURCE_ENTITY])
+    completed_item["filtered_domain_description": relevant_texts]
 
     save_item_to_storage(completed_item)
 
@@ -123,6 +127,7 @@ def save_suggested_single_field():
     user_choice = body_data["userChoice"]
     field_name = body_data["fieldName"]
     field_text = body_data["fieldText"]
+    source_entity = body_data["sourceEntity"]
     domain_description = body_data["domainDescription"]
     isPositive = body_data["isPositive"]
 
@@ -130,6 +135,9 @@ def save_suggested_single_field():
 
     prompt = llm_assistant.get_prompt(user_choice=user_choice, field_name=field_name)
     completed_item["prompt"] = prompt
+
+    relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_entity=source_entity)
+    completed_item["filtered_domain_description": relevant_texts]
 
     save_item_to_storage(completed_item)
 

@@ -477,7 +477,7 @@ class LLMAssistant:
                 break
     
 
-    def __get_relevant_texts(self, source_entity, domain_description):
+    def get_relevant_texts(self, source_entity, domain_description):
 
         if FILTERING_VARIATION != TextFilteringVariation.NONE:
             relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
@@ -496,7 +496,7 @@ class LLMAssistant:
     def generate_single_field(self, user_choice, name, source_entity, target_entity, domain_description, field_name):
         source_entity = source_entity.strip()
         
-        relevant_texts = self.__get_relevant_texts(source_entity=source_entity, domain_description=domain_description)
+        relevant_texts = self.get_relevant_texts(source_entity=source_entity, domain_description=domain_description)
 
         prompt = self.__create_prompt(user_choice=user_choice, source_entity=source_entity, target_entity=target_entity, 
             attribute_name=name, relevant_texts=relevant_texts, field_name=field_name, is_chain_of_thoughts=False)
