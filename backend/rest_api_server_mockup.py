@@ -1,8 +1,12 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
-from text_utility import TextUtility
 import json
 import time
+import sys
+
+sys.path.append('utils/')
+from text_utility import TextUtility
+
 
 app = Flask(__name__)
 llm_assistant = None

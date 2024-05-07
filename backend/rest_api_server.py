@@ -1,11 +1,15 @@
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
-from LLM_assistant import LLMAssistant
-from text_utility import LOGGER_NAME, Field, TextUtility, UserChoice
 import json
 import os
 import time
 import logging
+import sys
+from LLM_assistant import LLMAssistant
+
+sys.path.append('utils/')
+from text_utility import LOGGER_NAME, Field, TextUtility, UserChoice
+
 
 app = Flask(__name__)
 llm_assistant = None
