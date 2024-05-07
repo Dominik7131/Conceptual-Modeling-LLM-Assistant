@@ -1,5 +1,9 @@
 import sys
 sys.path.append('.')
+sys.path.append('utils/')
+sys.path.append('text-filtering/syntactic')
+sys.path.append('text-filtering/semantic')
+
 import argparse
 import json
 import os

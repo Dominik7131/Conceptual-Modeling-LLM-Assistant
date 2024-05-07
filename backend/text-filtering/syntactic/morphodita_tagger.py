@@ -1,8 +1,9 @@
 import logging
 import json
+import os
 from ufal.morphodita import *
 
-CONFIG_FILE_PATH = "morphodita-config.json"
+CONFIG_FILE_PATH = os.path.join("text-filtering", "syntactic", "morphodita-config.json")
 
 # Code based on the `run_tagger` documentation https://pypi.org/project/ufal.morphodita/
 class Morphodita_Tagger:
