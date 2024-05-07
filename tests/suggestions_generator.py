@@ -56,7 +56,6 @@ def create_attributes_expected_output(test_cases):
         for index, output in enumerate(expected_output):
             name = output[Field.NAME.value]
             original_text = output[Field.ORIGINAL_TEXT.value]
-            original_text = original_text.replace('"', '""') # Escape '"' characters
             entry = f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n"
             result.append(entry)
 
@@ -75,7 +74,6 @@ def create_relationships_expected_output(test_cases):
         for index, output in enumerate(expected_output):
             name = output[Field.NAME.value]
             original_text = output[Field.ORIGINAL_TEXT.value]
-            original_text = original_text.replace('"', '""') # Escape '"' characters
             source_entity = output[Field.SOURCE_ENTITY.value]
             target_entity = output[Field.TARGET_ENTITY.value]
 
@@ -214,6 +212,7 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
             original_text = suggested_item[Field.ORIGINAL_TEXT.value]
 
             if is_csv_output:
+                original_text = original_text.replace('"', '""')
                 result.append(f"\"{name}\"{CSV_SEPARATOR}\"{source_entity}\"{CSV_SEPARATOR}\"{original_text}\"")
             else:
                 result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n")
@@ -252,6 +251,7 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
             target_entity = suggested_item[Field.TARGET_ENTITY.value].lower()
 
             if is_csv_output:
+                original_text = original_text.replace('"', '""')
                 result.append(f"\"{name}\"{CSV_SEPARATOR}\"{inputed_entity}\"{CSV_SEPARATOR}\"{source_entity}\"{CSV_SEPARATOR}\"{target_entity}\"{CSV_SEPARATOR}\"{original_text}\"")
             else:
                 result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n")
