@@ -16,7 +16,7 @@ DOMAIN_TEXTS_COUNT = 12
 SEPARATOR = ','
 
 # Indexes correspond to texts in domain models and last index corresponds to all texts together
-recall_entities = [0] * ((DOMAIN_TEXTS_COUNT + 1))
+recall_entities = [0] * (DOMAIN_TEXTS_COUNT + 1)
 recall_attributes = [0] * (DOMAIN_TEXTS_COUNT + 1)
 recall_relationships = [0] * (DOMAIN_TEXTS_COUNT + 1)
 
