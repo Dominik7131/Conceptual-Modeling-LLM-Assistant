@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer, util
-from text_utility import PRONOUNS, TextUtility
+from text_utility import PRONOUNS_TO_DETECT, TextUtility
 import os
 
 
@@ -33,7 +33,7 @@ class SemanticTextFilterer:
                 continue
 
             is_sentence_enhanced = False
-            for pronoun in PRONOUNS:
+            for pronoun in PRONOUNS_TO_DETECT:
                 if sentence.startswith(pronoun):
                     is_sentence_enhanced = True
                     enhanced_chunks.append(f"{chunks[index - 1]} {sentence}")
