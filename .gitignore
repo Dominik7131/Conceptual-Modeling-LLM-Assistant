@@ -13,19 +13,15 @@ Frontend/conceptual-model-editor/src/setupTests.js
 commands.txt
 llama/
 output/
-requirements.txt
-get_stream.py
+backend/get_stream.py
 out.txt
 out_manual.txt
-inferences-log.txt
-x.py
-asociace-změny.txt
-entities-prompts.txt
+backend/x.py
 notes/2024-01-28 Návrh schématu konceptuálního modelu.pdf
 notes/odkaz na 2024-01-28 Návrh schématu konceptuálního modelu.txt
 cache/
 conceptual-model-editor-assistant/public/input.txt
 domain-modeling-benchmark/
 notes/measurement-approach-cz.md
-storage/*
+backend/storage/*
 out/*
