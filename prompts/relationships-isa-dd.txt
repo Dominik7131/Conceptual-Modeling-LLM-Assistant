@@ -1,7 +1,0 @@
-Solely based on the following context which is-a relationships does the entity: "{source_entity}" have?
-
-First output all possible is-a relationships for the entity "{source_entity}". Then output only those is-a relationships which you are certain about in JSON format like this:
-{"originalText": "copy the part of the given context containing this is-a relationship", "name": "relationship name", "source": "source entity name", "target": "target entity name"}.'
-
-This is the given context:
-"{domain_description}"

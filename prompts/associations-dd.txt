@@ -1,4 +1,4 @@
-Solely based on the given context which associations does the class: "{source_entity}" have?
+Solely based on the given context which associations does the class: "{source_class}" have?
 
 Output each association in JSON object like this: {"originalText": "copy the part of the given context containing this association", "name": "association name", "source": "source class name", "target": "target class name"}
 
@@ -43,7 +43,7 @@ Output:
 EXAMPLE END
 
 
-Solely based on the given context which associations does the class: "{source_entity}" have?
+Solely based on the given context which associations does the class: "{source_class}" have?
 
 This is the given context:
 "{domain_description}"

@@ -1,4 +1,4 @@
-Solely based on the given context provide data type for the attribute: "{attribute_name}" of the entity: "{source_entity}" and output it in this JSON object:
+Solely based on the given context provide data type for the attribute: "{attribute_name}" of the entity: "{source_class}" and output it in this JSON object:
 {"dataType": "..."}.
 
 

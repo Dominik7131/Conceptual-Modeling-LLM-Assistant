@@ -1,30 +1,30 @@
-Solely based on the given context generate description only for the given entities, attributes and relationships in JSON format like this:
-{"entity": "...", "description": "...", "attributes": [{"name": "...", "description": "..."}]}
-{"relationship": "...", "sourceEntity": "...", "targetEntity": "...", "description": "..."}
+Solely based on the given context generate description only for the given classes, attributes and associations in JSON format like this:
+{"class": "...", "description": "...", "attributes": [{"name": "...", "description": "..."}]}
+{"association": "...", "sourceClass": "...", "targetClass": "...", "description": "..."}
 
 EXAMPLE START
 
-Given entities, attributes and relationships:
-{"entities": [{"name": "student", "attributes": [{"name": "name"}]}, {"name": "course", "attributes": [{"name": "name"}, {"name": "number of credits"}]}, {"name": "professor", "attributes": [{"name": "name"}]}, {"name": "dormitory", "attributes": [{"name": "price"}]}],
-"relationships": [{"name": "has", "sourceEntity": "course", "targetEntity": "professor"}, {"name": "enrolled in", "sourceEntity": "student", "targetEntity": "course"}, {"name": "accommodated in", "sourceEntity": "student", "targetEntity": "dormitory"}]}
+Given classes, attributes and associations:
+{"classes": [{"name": "student", "attributes": [{"name": "name"}]}, {"name": "course", "attributes": [{"name": "name"}, {"name": "number of credits"}]}, {"name": "professor", "attributes": [{"name": "name"}]}, {"name": "dormitory", "attributes": [{"name": "price"}]}],
+"associations": [{"name": "has", "sourceClass": "course", "TargetClass": "professor"}, {"name": "enrolled in", "SourceClass": "student", "TargetClass": "course"}, {"name": "accommodated in", "SourceClass": "student", "TargetClass": "dormitory"}]}
 
 Given context:
 "We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."
 
 Output that you should generate:
-{"entity": "student", "description": "A student entity represents an individual enrolled in an educational institution", "attributes": [{"name": "name", "description": "The name of the student"}]}
-{"entity": "course", "description": "A course entity representing educational modules", "attributes": [{"name": "name", "description": "The name of the course"}, {"name": "number of credits", "description": "The number of credits assigned to the course"}]}
-{"entity": "professor", "description": "A professor entity representing instructors teaching courses", "attributes": [{"name": "name", "description": "The name of the professor"}]}
-{"entity": "dormitory", "description": "A dormitory entity representing residential facilities for students", "attributes": [{"name": "name", "description": "The price of staying in the dormitory"}]}
+{"class": "student", "description": "A student class represents an individual enrolled in an educational institution", "attributes": [{"name": "name", "description": "The name of the student"}]}
+{"class": "course", "description": "A course class representing educational modules", "attributes": [{"name": "name", "description": "The name of the course"}, {"name": "number of credits", "description": "The number of credits assigned to the course"}]}
+{"class": "professor", "description": "A professor class representing instructors teaching courses", "attributes": [{"name": "name", "description": "The name of the professor"}]}
+{"class": "dormitory", "description": "A dormitory class representing residential facilities for students", "attributes": [{"name": "name", "description": "The price of staying in the dormitory"}]}
 
-{"relationship": "has", "sourceEntity": "course", "targetEntity": "professor", "description": "Courses have professors who teach them"}
-{"relationship": "enrolled in", "sourceEntity": "student", "targetEntity": "course", "description": "Students can be enrolled in any number of courses"}
-{"relationship": "accommodated in", "sourceEntity": "student", "targetEntity": "dormitory", "description": "Students can be accommodated in dormitories"}
+{"association": "has", "SourceClass": "course", "TargetClass": "professor", "description": "Courses have professors who teach them"}
+{"association": "enrolled in", "SourceClass": "student", "TargetClass": "course", "description": "Students can be enrolled in any number of courses"}
+{"association": "accommodated in", "SourceClass": "student", "TargetClass": "dormitory", "description": "Students can be accommodated in dormitories"}
 
 EXAMPLE END
 
 
-Given entities, attributes and relationships:
+Given classes, attributes and associations:
 "{conceptual_model}"
 
 

@@ -283,7 +283,7 @@ def main():
 
     print_evaluation()
 
-    # Get relevant text for a given entity
+    # Get relevant text for a given domain description and entity
     # domain_description_path = "domain-modeling-benchmark\\domain-models\\farming 97627e23829afb\\domain-description-03.txt"
     # RAGTester.output_relevant_text_for_given_entities(filtering_variation, domain_description_path)
 

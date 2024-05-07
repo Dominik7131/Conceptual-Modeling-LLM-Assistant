@@ -1,2 +1,0 @@
-Output exactly {items_count} random entities in a JSON format like this:
-{"description": "entity description", "name": "entity name"}.

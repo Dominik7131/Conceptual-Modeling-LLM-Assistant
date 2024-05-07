@@ -1,2 +1,2 @@
-What attributes does the class: "{source_entity}" have? Output exactly {items_count} attributes in JSON format like this:
+What attributes does the class: "{source_class}" have? Output exactly {items_count} attributes in JSON format like this:
 {"description": "attribute description", "name": "attribute name"}.

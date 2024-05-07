@@ -7,10 +7,10 @@ LOGGER_NAME = "LLM_logger"
 
 
 class UserChoice(Enum):
-    ENTITIES = "entities"
+    ENTITIES = "classes"
     ATTRIBUTES = "attributes"
-    RELATIONSHIPS = "relationships"
-    RELATIONSHIPS2 = "relationships2"
+    RELATIONSHIPS = "associations"
+    RELATIONSHIPS2 = "associations2"
     SUMMARY_PLAIN_TEXT = "summary-plain-text"
     SUMMARY_DESCRIPTIONS = "summary-descriptions"
     SINGLE_FIELD = "single-field"
@@ -52,23 +52,17 @@ class FieldUI(Enum):
 
 
 class PromptFileSymbols(Enum):
-    SOURCE_ENTITY = "{source_entity}"
-    TARGET_ENTITY = "{target_entity}"
+    SOURCE_ENTITY = "{source_class}"
+    TARGET_ENTITY = "{target_class}"
     DOMAIN_DESCRIPTION = "{domain_description}"
     ITEMS_COUNT_TO_SUGGEST = "{items_count}"
     CONCEPTUAL_MODEL = "{conceptual_model}"
     ATTRIBUTE_NAME = "{attribute_name}"
-    RELATIONSHIP_NAME = "{relationship_name}"
+    RELATIONSHIP_NAME = "{association_name}"
     FIELD_NAME = "{field_name}"
 
 
-ATTRIBUTES_STRING = "attributes"
-RELATIONSHIPS_STRING = "relationships"
-RELATIONSHIPS_STRING_TWO_ENTITIES = "relationships2"
-ENTITIES_STRING = "entities"
-ONLY_DESCRIPTION = "description"
-
-PRONOUNS = ["It", "This", "The", "They"]
+PRONOUNS_TO_DETECT = ["It", "This", "The", "They"]
 
 alphabets= "([A-Za-z])"
 prefixes = "(Mr|St|Mrs|Ms|Dr)[.]"
@@ -363,7 +357,7 @@ class TextUtility:
 
             is_sentence_enhanced = False
             if is_pronouns_enhancement:
-                for pronoun in PRONOUNS:
+                for pronoun in PRONOUNS_TO_DETECT:
                     # If the sentence starts with a pronoun then append the previous sentences too for more context
                     if sentence.startswith(pronoun):
                         is_sentence_enhanced = True

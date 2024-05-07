@@ -1,4 +1,4 @@
-Solely based on the given context which attributes does the class: "{source_entity}" have?
+Solely based on the given context which attributes does the class: "{source_class}" have?
 
 Output each attribute in JSON object like this: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name"}.
 
@@ -32,7 +32,7 @@ Output:
 EXAMPLE END
 
 
-Solely based on the given context which attributes does the class: "{source_entity}" have?
+Solely based on the given context which attributes does the class: "{source_class}" have?
 
 This is the given context:
 "{domain_description}"

@@ -1,4 +1,4 @@
-Solely based on the given context provide cardinality for the relationship: "{relationship_name}" of the source entity: "{source_entity}" and the target entity "{target_entity}" and output it in this JSON object: {"targetCardinality": "..."}.
+Solely based on the given context provide cardinality for the association: "{association_name}" of the source class: "{source_class}" and the target class "{target_class}" and output it in this JSON object: {"targetCardinality": "..."}.
 The cardinality must be one of these: ["optional-one", "optional-many", "one-one", "one-many"]. If you are not certain which cardinality to choose output exactly this JSON object: {"targetCardinality": ""}
 
 

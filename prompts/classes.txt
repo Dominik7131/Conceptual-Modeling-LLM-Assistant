@@ -1,0 +1,2 @@
+Output exactly {items_count} random classes in a JSON format like this:
+{"description": "class description", "name": "entity name"}.
