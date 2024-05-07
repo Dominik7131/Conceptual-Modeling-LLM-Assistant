@@ -1,7 +1,7 @@
 import sys
 sys.path.append('.')
 from LLM_assistant import LLMAssistant, ITEMS_COUNT
-from user_input_processor import UserInputProcessor
+from backend.tests.user_input_processor import UserInputProcessor
 import time
 import json
 

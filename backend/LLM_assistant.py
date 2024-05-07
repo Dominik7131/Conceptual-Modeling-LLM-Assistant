@@ -27,6 +27,7 @@ SYSTEM_PROMPT_DIRECTORY = os.path.join(PROMPT_DIRECTORY, "system")
 
 LLM_BACKEND_URL = "http://localhost:8080/v1"
 
+ENTITIES_BLACK_LIST = ["employee", "department", "manager"]
 
 DEFINED_DATA_TYPES = [DataType.STRING.value, DataType.NUMBER.value, DataType.TIME.value, DataType.BOOLEAN.value]
 
@@ -456,6 +457,11 @@ class LLMAssistant:
                     if suggestion_dictionary['name'] in suggested_entities:
                         logging.info(f"Skipping duplicate entity: {suggestion_dictionary['name']}")
                         continue
+
+                    if suggestion_dictionary['name'] in ENTITIES_BLACK_LIST:
+                        logging.info(f"Skipping black-listed entity: {suggestion_dictionary['name']}")
+                        continue
+
                     suggested_entities.append(suggestion_dictionary['name'])
 
                     if not Field.ORIGINAL_TEXT.value in suggestion_dictionary:
