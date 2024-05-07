@@ -1,11 +1,15 @@
 import os
-
-from text_utility import LOGGER_NAME, Field, PromptFileSymbols, TextFilteringVariation, TextUtility, UserChoice, DataType
-from syntactic_text_filterer import SyntacticTextFilterer
 import time
 import logging
 import json
 import openai
+import sys
+
+sys.path.append('utils/')
+sys.path.append('text-filtering/syntactic')
+sys.path.append('text-filtering/semantic')
+from text_utility import LOGGER_NAME, Field, PromptFileSymbols, TextFilteringVariation, TextUtility, UserChoice, DataType
+from syntactic_text_filterer import SyntacticTextFilterer
 
 
 ITEMS_COUNT = 5
@@ -22,7 +26,7 @@ LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, f"{TIMESTAMP}-log.txt")
 logging.basicConfig(level=logging.INFO, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
 
 
-PROMPT_DIRECTORY = "prompts"
+PROMPT_DIRECTORY = os.path.join("..", "prompts")
 SYSTEM_PROMPT_DIRECTORY = os.path.join(PROMPT_DIRECTORY, "system")
 
 LLM_BACKEND_URL = "http://localhost:8080/v1"
@@ -84,7 +88,7 @@ class LLMAssistant:
 
     # Returns (parsed_item, is_item_ok)
     # is_item_ok: False if there is any issue while parsing otherwise True
-    def __parse_item_streamed_output(self, item, user_choice, source_entity, target_entity="", field_name=""):
+    def __parse_item_streamed_output(self, item, user_choice, source_class, target_class="", field_name=""):
         try:
             # Replace invalid characters from JSON
             item = item.replace('\_', ' ')
@@ -99,8 +103,8 @@ class LLMAssistant:
             return
         
         is_item_ok = True
-        source_entity = source_entity.lower()
-        target_entity = target_entity.lower()
+        source_class = source_class.lower()
+        target_class = target_class.lower()
 
         if field_name != "":
             is_item_ok = field_name in completed_item
@@ -165,12 +169,12 @@ class LLMAssistant:
 
 
         elif user_choice == UserChoice.RELATIONSHIPS.value:
-            if not Field.SOURCE_ENTITY.value in completed_item or not completed_item[Field.SOURCE_ENTITY.value]:
+            if not Field.SOURCE_CLASS.value in completed_item or not completed_item[Field.SOURCE_CLASS.value]:
                 completed_item[Field.NAME.value] = "error: no source entity"
                 is_item_ok = False
 
             
-            if not Field.TARGET_ENTITY.value in completed_item or not completed_item[Field.TARGET_ENTITY.value]:
+            if not Field.TARGET_CLASS.value in completed_item or not completed_item[Field.TARGET_CLASS.value]:
                 completed_item[Field.NAME.value] = "error: no target entity"
                 is_item_ok = False
             
@@ -178,13 +182,13 @@ class LLMAssistant:
                 yield completed_item, is_item_ok
                 return
             
-            source_lower = completed_item[Field.SOURCE_ENTITY.value].lower().replace('s', 'z')
-            target_lower = completed_item[Field.TARGET_ENTITY.value].lower().replace('s', 'z')
+            source_lower = completed_item[Field.SOURCE_CLASS.value].lower().replace('s', 'z')
+            target_lower = completed_item[Field.TARGET_CLASS.value].lower().replace('s', 'z')
 
-            source_entity_replaced = source_entity.replace('s', 'z')
-            target_entity_replaced = source_entity.replace('s', 'z')
+            source_class_replaced = source_class.replace('s', 'z')
+            target_class_replaced = source_class.replace('s', 'z')
 
-            is_source_or_target_included = source_entity_replaced == source_lower or target_entity_replaced == target_lower
+            is_source_or_target_included = source_class_replaced == source_lower or target_class_replaced == target_lower
             is_none = (source_lower == "none") or (target_lower == "none")
             
             if not is_source_or_target_included or is_none:
@@ -193,7 +197,7 @@ class LLMAssistant:
                 #return completed_item
 
                 if not is_source_or_target_included:
-                    logging.info(f"{source_entity} != {source_lower} and {target_entity} != {target_lower}")
+                    logging.info(f"{source_class} != {source_lower} and {target_class} != {target_lower}")
 
                 completed_item['name'] = "(Deleted: Inputed entity is not source/target entity) " + completed_item['name']
                 is_item_ok = False
@@ -208,14 +212,14 @@ class LLMAssistant:
                 source_lower = completed_item['source'].lower().replace('s', 'z')
                 target_lower = completed_item['target'].lower().replace('s', 'z')
 
-                entity1 = source_entity.replace('s', 'z')
-                entity2 = target_entity.replace('s', 'z')
+                entity1 = source_class.replace('s', 'z')
+                entity2 = target_class.replace('s', 'z')
 
                 is_match = (entity1 == source_lower and entity2 == target_lower) or (entity2 == source_lower and entity1 == target_lower)
                 is_none = (source_lower == "none") or (target_lower == "none")
 
                 if not is_match or is_none:
-                    completed_item['name'] = f"Deleted: Inputed entites are not contained in source and target entities: {completed_item['name']}"
+                    completed_item['name'] = f"Deleted: Inputed classes are not contained in source and target classes: {completed_item['name']}"
                     is_item_ok = False
 
         logging.info(f"Completed item: {completed_item['name']}")
@@ -231,7 +235,7 @@ class LLMAssistant:
         yield completed_item, is_item_ok
 
 
-    def __parse_streamed_output(self, messages, user_choice, source_entity, target_entity="", field_name=""):
+    def __parse_streamed_output(self, messages, user_choice, source_class, target_class="", field_name=""):
 
         self.debug_info = self.DebugInfo() # Reset debug info
 
@@ -286,7 +290,7 @@ class LLMAssistant:
 
                 if opened_curly_brackets_count == 0 and item != '':
 
-                    iterator = self.__parse_item_streamed_output(item, user_choice, source_entity, target_entity, field_name)
+                    iterator = self.__parse_item_streamed_output(item, user_choice, source_class, target_class, field_name)
 
                     for completed_item, is_item_ok in iterator:
                         # TODO: Add comment what this code is doing
@@ -311,7 +315,7 @@ class LLMAssistant:
             logging.info(f"JSON object is not properly finished: {item}")
             item += '}' * opened_curly_brackets_count
 
-            iterator = self.__parse_item_streamed_output(item, user_choice, source_entity)
+            iterator = self.__parse_item_streamed_output(item, user_choice, source_class)
 
             for completed_item, is_item_ok in iterator:
                 if is_item_ok:
@@ -338,9 +342,9 @@ class LLMAssistant:
                 prompt = prompt[:last_new_line_index]
 
 
-    def get_prompt(self, user_choice, field_name="", is_domain_description=True):
+    def get_prompt(self, user_choice, field_name="", is_domain_description=True, is_chain_of_thoughts=True):
 
-        prompt_file_name = f"{user_choice}"
+        prompt_file_name = ""
 
         if field_name != "":
             prompt_file_name += f"-{field_name}"
@@ -356,7 +360,10 @@ class LLMAssistant:
 
         prompt_file_name += ".txt"
 
-        prompt_file_path = os.path.join(PROMPT_DIRECTORY, prompt_file_name)
+        if prompt_file_name[0] == '-':
+            prompt_file_name = prompt_file_name[1:]
+
+        prompt_file_path = os.path.join(PROMPT_DIRECTORY, user_choice, prompt_file_name)
 
         with open(prompt_file_path, 'r') as file:
             prompt = file.read()
@@ -364,15 +371,15 @@ class LLMAssistant:
         return prompt
 
 
-    def __create_prompt(self, user_choice, source_entity="", target_entity="", relevant_texts = "", is_domain_description=True,
+    def __create_prompt(self, user_choice, source_class="", target_class="", relevant_texts = "", is_domain_description=True,
                         items_count_to_suggest = 5, is_chain_of_thoughts = True, conceptual_model = {}, field_name = "",
                         attribute_name="", relationship_name=""):
 
-        original_prompt = self.get_prompt(user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description)
+        original_prompt = self.get_prompt(user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description, is_chain_of_thoughts=is_chain_of_thoughts)
 
         replacements = {
-            PromptFileSymbols.SOURCE_ENTITY.value: source_entity,
-            PromptFileSymbols.TARGET_ENTITY.value: target_entity,
+            PromptFileSymbols.SOURCE_CLASS.value: source_class,
+            PromptFileSymbols.TARGET_CLASS.value: target_class,
             PromptFileSymbols.DOMAIN_DESCRIPTION.value: relevant_texts,
             PromptFileSymbols.ITEMS_COUNT_TO_SUGGEST.value: str(items_count_to_suggest),
             PromptFileSymbols.CONCEPTUAL_MODEL.value: json.dumps(conceptual_model),
@@ -386,9 +393,9 @@ class LLMAssistant:
         return prompt
 
 
-    def suggest(self, source_entity, target_entity, user_choice, domain_description, count_items_to_suggest=5):
+    def suggest(self, source_class, target_class, user_choice, domain_description, count_items_to_suggest=5):
 
-        source_entity = source_entity.strip()
+        source_class = source_class.strip()
 
         if IS_IGNORE_DOMAIN_DESCRIPTION:
             domain_description = ""
@@ -399,8 +406,8 @@ class LLMAssistant:
         self.__append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
 
 
-        if FILTERING_VARIATION != TextFilteringVariation.NONE and user_choice != UserChoice.ENTITIES.value:
-            relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
+        if FILTERING_VARIATION != TextFilteringVariation.NONE and user_choice != UserChoice.CLASSES.value:
+            relevant_texts = self.relevant_text_finder.get(source_class, domain_description)
 
             result = ""
             for text in relevant_texts:
@@ -417,7 +424,7 @@ class LLMAssistant:
         is_chain_of_thoughts = True
 
         # For entities with Mixtral it works better to disable chain of thoughts
-        if user_choice == UserChoice.ENTITIES.value:
+        if user_choice == UserChoice.CLASSES.value:
             is_chain_of_thoughts = False    
 
 
@@ -426,7 +433,7 @@ class LLMAssistant:
 
         for attempt_number in range(max_attempts_count):
 
-            prompt = self.__create_prompt(user_choice=user_choice, source_entity=source_entity, target_entity=target_entity,
+            prompt = self.__create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class,
                 is_domain_description=is_domain_description, items_count_to_suggest=count_items_to_suggest, relevant_texts=relevant_texts,
                 is_chain_of_thoughts=is_chain_of_thoughts)
 
@@ -443,17 +450,17 @@ class LLMAssistant:
             logging.info(f"\nSending this prompt to llm:\n{messages_prettified}\n")
             self.debug_info.prompt = messages_prettified
 
-            items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, source_entity=source_entity, target_entity=target_entity)
+            items_iterator = self.__parse_streamed_output(new_messages, user_choice=user_choice, source_class=source_class, target_class=target_class)
 
 
-            if user_choice == UserChoice.ENTITIES.value:
+            if user_choice == UserChoice.CLASSES.value:
                 suggested_entities = []
 
             for item in items_iterator:
                 is_some_item_generated = True
                 suggestion_dictionary = json.loads(json.dumps(item))
 
-                if user_choice == UserChoice.ENTITIES.value:
+                if user_choice == UserChoice.CLASSES.value:
                     if suggestion_dictionary['name'] in suggested_entities:
                         logging.info(f"Skipping duplicate entity: {suggestion_dictionary['name']}")
                         continue
@@ -483,10 +490,10 @@ class LLMAssistant:
                 break
     
 
-    def get_relevant_texts(self, source_entity, domain_description):
+    def get_relevant_texts(self, source_class, domain_description):
 
         if FILTERING_VARIATION != TextFilteringVariation.NONE:
-            relevant_texts = self.relevant_text_finder.get(source_entity, domain_description)
+            relevant_texts = self.relevant_text_finder.get(source_class, domain_description)
 
             result = ""
             for text in relevant_texts:
@@ -499,12 +506,12 @@ class LLMAssistant:
         return relevant_texts
 
 
-    def generate_single_field(self, user_choice, name, source_entity, target_entity, domain_description, field_name):
-        source_entity = source_entity.strip()
+    def generate_single_field(self, user_choice, name, source_class, target_class, domain_description, field_name):
+        source_class = source_class.strip()
         
-        relevant_texts = self.get_relevant_texts(source_entity=source_entity, domain_description=domain_description)
+        relevant_texts = self.get_relevant_texts(source_class=source_class, domain_description=domain_description)
 
-        prompt = self.__create_prompt(user_choice=user_choice, source_entity=source_entity, target_entity=target_entity, 
+        prompt = self.__create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class, 
             attribute_name=name, relevant_texts=relevant_texts, field_name=field_name, is_chain_of_thoughts=False)
 
         self.messages = []
@@ -515,7 +522,7 @@ class LLMAssistant:
 
         logging.info(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
-        items_iterator = self.__parse_streamed_output(new_messages, user_choice, source_entity, field_name=field_name)
+        items_iterator = self.__parse_streamed_output(new_messages, user_choice, source_class, field_name=field_name)
 
         for item in items_iterator:
             # Parse string to json to dictionary

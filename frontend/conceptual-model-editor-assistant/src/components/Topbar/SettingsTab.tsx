@@ -10,12 +10,13 @@ const SettingsTab: React.FC = (): JSX.Element =>
 
     return (
         <Stack>
-            <FormLabel > Domain description filtering </FormLabel >
-            <RadioGroup row defaultValue="Syntactit">
-                <FormControlLabel disabled value="None" control={<Radio />} label="None" />
-                <FormControlLabel disabled value="Semantic" control={<Radio />} label="Semantic" />
-                <FormControlLabel disabled value="Syntactit" control={<Radio />} label="Syntactic" />
-            </RadioGroup>
+
+                <FormControlLabel label="Ignore domain description"
+                    control={
+                    <Checkbox
+                        checked={isIgnoreDomainDescription}
+                        onChange={() => setIsIgnoreDomainDescription(previousValue => !previousValue)}/>
+                    }/>
 
             <p></p>
             <Divider></Divider>
@@ -23,12 +24,14 @@ const SettingsTab: React.FC = (): JSX.Element =>
 
             
 
-            <FormControlLabel label="Ignore domain description"
-                control={
-                    <Checkbox
-                        checked={isIgnoreDomainDescription}
-                        onChange={() => setIsIgnoreDomainDescription(previousValue => !previousValue)}/>
-                    }/>
+
+            
+            <FormLabel > Domain description filtering </FormLabel >
+            <RadioGroup row defaultValue="Syntactit">
+                <FormControlLabel disabled value="None" control={<Radio />} label="None" />
+                <FormControlLabel disabled value="Semantic" control={<Radio />} label="Semantic" />
+                <FormControlLabel disabled value="Syntactit" control={<Radio />} label="Syntactic" />
+            </RadioGroup>
             
             <p></p>
             <Divider></Divider>

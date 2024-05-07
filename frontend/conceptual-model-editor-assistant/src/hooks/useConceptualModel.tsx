@@ -4,7 +4,7 @@ import { Node, Edge, MarkerType, getMarkerEnd } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, changeSidebarTab, changeTitle, convertConceptualModelToJSON, createEdgeUniqueID, createIRIFromName, onClearSuggestedItems, snapshotDomainDescription, userChoiceToItemType } from './useUtility';
 import useFetchData from './useFetchData';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, Field, ItemType, NodeData, Relationship, UserChoice } from '../interfaces';
+import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Class, Field, ItemType, NodeData, Association, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, isIgnoreDomainDescriptionState, nodesState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState, topbarTabValueState } from '../atoms';
 
@@ -33,10 +33,8 @@ const useConceptualModel = () =>
   const parseSerializedConceptualModel = (): void =>
   {
     const input = { entities: [
-        {name: "Engine", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
+        {name: "Farmer", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
         {name: "Manufacturer", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
-        {name: "Natural person", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
-        {name: "Business natural person", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [], attributes: []},
         {name: "Road vehicle", description: "", originalText: "", [Field.ORIGINAL_TEXT_INDEXES]: [4, 10], attributes: []}],
                   relationships: [
                     {"name": "manufactures", "source": "manufacturer", "target": "road vehicle", "originalText": "s"}]}
@@ -58,11 +56,11 @@ const useConceptualModel = () =>
         // TODO: Do not use "any"
         (entity.attributes[index] as any)[Field.TYPE] = ItemType.ATTRIBUTE;
 
-        (entity.attributes[index] as any)[Field.SOURCE_ENTITY] = nodeIRI
+        (entity.attributes[index] as any)[Field.SOURCE_CLASS] = nodeIRI
       }
 
-      const newEntity : Entity = {
-        [Field.IRI]: nodeIRI, [Field.NAME]: entity.name, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "",
+      const newEntity : Class = {
+        [Field.IRI]: nodeIRI, [Field.NAME]: entity.name, [Field.TYPE]: ItemType.CLASS, [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "",
         [Field.ORIGINAL_TEXT_INDEXES]: entity[Field.ORIGINAL_TEXT_INDEXES]}
 
       const maxRandomValue = 200
@@ -72,7 +70,7 @@ const useConceptualModel = () =>
       const newPositionX = positionX + randomX
       const newPositionY = positionY + randomY
 
-      const nodeData : NodeData = { entity: newEntity, attributes: entity.attributes }
+      const nodeData : NodeData = { class: newEntity, attributes: entity.attributes }
       const newNode : Node = { id: nodeIRI, type: "customNode", position: { x: newPositionX, y: newPositionY }, data: nodeData }
 
       newNodes.push(newNode)
@@ -94,16 +92,16 @@ const useConceptualModel = () =>
 
       const newID: string = createEdgeUniqueID(sourceIRI, targetIRI, nameIRI)
 
-      const newRelationship: Relationship = {
-        [Field.IRI]: nameIRI, [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: "",
-        [Field.SOURCE_ENTITY]: sourceIRI, [Field.TARGET_ENTITY]: targetIRI,
+      const newRelationship: Association = {
+        [Field.IRI]: nameIRI, [Field.TYPE]: ItemType.ASSOCIATION, [Field.NAME]: relationship.name, [Field.DESCRIPTION]: "",
+        [Field.SOURCE_CLASS]: sourceIRI, [Field.TARGET_CLASS]: targetIRI,
         [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: relationship.originalText,
         [Field.ORIGINAL_TEXT_INDEXES]: []
       }
-      const edgeData: EdgeData = { relationship: newRelationship }
+      const edgeData: EdgeData = { association: newRelationship }
 
       const newEdge: Edge = {
-        id: newID, source: newRelationship[Field.SOURCE_ENTITY], target: newRelationship[Field.TARGET_ENTITY], type: "custom-edge",
+        id: newID, source: newRelationship[Field.SOURCE_CLASS], target: newRelationship[Field.TARGET_CLASS], type: "custom-edge",
         data: edgeData, markerEnd: CUSTOM_EDGE_MARKER
       }
 

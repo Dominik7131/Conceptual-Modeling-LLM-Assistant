@@ -9,7 +9,7 @@ import Stack from '@mui/material/Stack';
 import Alert from '@mui/material/Alert';
 import { useEffect, useRef, useState } from 'react';
 import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
-import { Field, Item, ItemType, Relationship, UserChoice } from '../interfaces';
+import { Field, Item, ItemType, Association, UserChoice } from '../interfaces';
 import useUtility from '../hooks/useUtility';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
@@ -22,7 +22,7 @@ import useConceptualModel from '../hooks/useConceptualModel';
 const DialogCreateEdge: React.FC = () =>
 {
   const [isOpened, setIsOpened] = useRecoilState(isShowCreateEdgeDialogState)
-  const relationship = useRecoilValue(selectedSuggestedItemState) as Relationship
+  const relationship = useRecoilValue(selectedSuggestedItemState) as Association
 
   const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
 
@@ -40,7 +40,7 @@ const DialogCreateEdge: React.FC = () =>
 
   const handleManuallyAddNewRelationship = (isGeneralization: boolean): void =>
   {
-    const itemType: ItemType = isGeneralization ? ItemType.GENERALIZATION : ItemType.RELATIONSHIP
+    const itemType: ItemType = isGeneralization ? ItemType.GENERALIZATION : ItemType.ASSOCIATION
     const newObject = { ...relationship, [Field.TYPE]: itemType}
     setSelectedSuggestedItem(newObject)
     setEditedSuggestedItem(newObject)
@@ -90,7 +90,7 @@ const DialogCreateEdge: React.FC = () =>
                   startIcon={<AutoFixHighIcon/>}
                   variant="outlined"
                   sx={{textTransform: "none"}}
-                  onClick={() => { onSuggestItems(UserChoice.RELATIONSHIPS2, relationship.source, relationship.target); handleClose() } }
+                  onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS2, relationship.source, relationship.target); handleClose() } }
                   >
                     Suggest relationships
                 </Button>

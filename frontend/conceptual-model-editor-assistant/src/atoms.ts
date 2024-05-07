@@ -1,5 +1,5 @@
 import { atom, selector } from 'recoil'
-import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, Entity, Field, Item, ItemType, ItemsMessage, Relationship, SummaryObject, UserChoice } from './interfaces';
+import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice } from './interfaces';
 import { Node, Edge } from 'reactflow';
 import { blankEntity } from './hooks/useUtility';
 
@@ -20,7 +20,7 @@ export const isShowCreateEdgeDialogState = atom({
 })
 
 
-export const suggestedEntitiesState = atom<Entity[]>({
+export const suggestedEntitiesState = atom<Class[]>({
     key: 'suggestedEntitiesState',
     default: [],
 })
@@ -30,7 +30,7 @@ export const suggestedAttributesState = atom<Attribute[]>({
     default: [],
 })
 
-export const suggestedRelationshipsState = atom<Relationship[]>({
+export const suggestedRelationshipsState = atom<Association[]>({
     key: 'suggestedRelationshipsState',
     default: [],
 })
@@ -38,7 +38,7 @@ export const suggestedRelationshipsState = atom<Relationship[]>({
 
 export const sidebarTitlesState = atom<ItemsMessage>({
     key: 'sidebarTitlesState',
-    default: { entities: "", attributes: "", relationships: "" },
+    default: { classes: "", attributes: "", associations: "" },
 })
 
 
@@ -54,7 +54,7 @@ export const domainDescriptionState = atom({
 
 export const domainDescriptionSnapshotsState = atom<DomainDescriptionSnapshot>({
     key: 'domainDescriptionSnapshotsState',
-    default: { [UserChoice.ENTITIES]: "", [UserChoice.ATTRIBUTES]: "", [UserChoice.RELATIONSHIPS]: "", [UserChoice.RELATIONSHIPS2]: "",
+    default: { [UserChoice.CLASSES]: "", [UserChoice.ATTRIBUTES]: "", [UserChoice.ASSOCIATIONS]: "", [UserChoice.ASSOCIATIONS2]: "",
     [UserChoice.SINGLE_FIELD]: "", [UserChoice.SUMMARY_PLAIN_TEXT]: "", [UserChoice.SUMMARY_DESCRIPTIONS]: ""},
 })
 
@@ -144,7 +144,7 @@ export const summaryTextState = atom({
 // TODO: This object should contain descriptions for "entities": array of entities and "relationships": array of relationships
 export const summaryDescriptionsState = atom<SummaryObject>({
     key: 'summaryDescriptionsState',
-    default: { entities: [], relationships: []},
+    default: { classes: [], associations: []},
 })
 
 

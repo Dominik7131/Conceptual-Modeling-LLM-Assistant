@@ -3,10 +3,10 @@ export const PRIMARY_COLOR = "#2196f3"
 
 export const enum UserChoice
 {
-  ENTITIES = "entities",
+  CLASSES = "classes",
   ATTRIBUTES = "attributes",
-  RELATIONSHIPS = "relationships",
-  RELATIONSHIPS2 = "relationships2",
+  ASSOCIATIONS = "associations",
+  ASSOCIATIONS2 = "associations2",
   SUMMARY_PLAIN_TEXT = "summary-plain-text",
   SUMMARY_DESCRIPTIONS = "summary-descriptions",
   SINGLE_FIELD = "single-field"
@@ -14,9 +14,9 @@ export const enum UserChoice
 
 export const enum ItemType
 {
-  ENTITY = "entity",
+  CLASS = "class",
   ATTRIBUTE = "attribute",
-  RELATIONSHIP = "relationship",
+  ASSOCIATION = "association",
   GENERALIZATION = "generalization",
 }
 
@@ -29,8 +29,8 @@ export const enum Field
   ORIGINAL_TEXT = "originalText",
   ORIGINAL_TEXT_INDEXES = "originalTextIndexes",
   DATA_TYPE = "dataType",
-  SOURCE_ENTITY = "source",
-  TARGET_ENTITY = "target",
+  SOURCE_CLASS = "source",
+  TARGET_CLASS = "target",
   SOURCE_CARDINALITY = "sourceCardinality",
   TARGET_CARDINALITY = "targetCardinality",
 }
@@ -39,19 +39,19 @@ export const enum Field
 export const enum ItemFieldUIName
 {
   ID = "ID",
-  TYPE = "Ttype",
+  TYPE = "Type",
   NAME = "Name",
   DESCRIPTION = "Description",
   ORIGINAL_TEXT = "Original text",
   ORIGINAL_TEXT_INDEXES = "Original text indexes",
   DATA_TYPE = "Data type",
-  SOURCE_ENTITY = "Source entity",
-  TARGET_ENTITY = "Target entity",
+  SOURCE_CLASS = "Source class",
+  TARGET_CLASS = "Target class",
   CARDINALITY = "Cardinality",
   SOURCE_CARDINALITY = "Source cardinality",
   TARGET_CARDINALITY = "Target cardinality",
-  GENERAl_ENTITY = "General entity",
-  SPECIAL_ENTITY = "Special entity",
+  GENERAl_CLASS = "General class",
+  SPECIAL_CLASS = "Special class",
 }
 
 
@@ -66,24 +66,24 @@ export const enum TopbarTabs
 
 export const enum SidebarTabs
 {
-  ENTITIES = "0",
+  CLASSES = "0",
   ATTRIBUTES = "1",
-  RELATIONSHIPS = "2",
+  ASSOCIATIONS = "2",
 }
 
 
 export interface SummaryObject
 {
-  entities: any[]
-  relationships: any[]
+  classes: any[]
+  associations: any[]
 }
 
 export interface DomainDescriptionSnapshot
 {
-  [UserChoice.ENTITIES]: string
+  [UserChoice.CLASSES]: string
   [UserChoice.ATTRIBUTES]: string
-  [UserChoice.RELATIONSHIPS]: string
-  [UserChoice.RELATIONSHIPS2]: string
+  [UserChoice.ASSOCIATIONS]: string
+  [UserChoice.ASSOCIATIONS2]: string
   [UserChoice.SINGLE_FIELD]: string
   [UserChoice.SUMMARY_PLAIN_TEXT]: string
   [UserChoice.SUMMARY_DESCRIPTIONS]: string
@@ -99,21 +99,21 @@ export interface ConceptualModelSnapshot
 
 export interface NodeData
 {
-  entity: Entity
+  class: Class
   attributes: Attribute[]
 }
 
 
 export interface EdgeData
 {
-  relationship: Relationship
+  association: Association
 }
 
 
-export type Item = Entity | Attribute | Relationship
+export type Item = Class | Attribute | Association
 
 
-export type ItemFieldsUnification = keyof Entity | keyof Attribute | keyof Relationship
+export type ItemFieldsUnification = keyof Class | keyof Attribute | keyof Association
 
 
 interface BaseItem
@@ -126,7 +126,7 @@ interface BaseItem
   originalTextIndexes: number[]
 }
 
-export interface Entity extends BaseItem { }
+export interface Class extends BaseItem { }
 
 export interface Attribute extends BaseItem
 {
@@ -135,7 +135,7 @@ export interface Attribute extends BaseItem
   sourceCardinality: string
 }
 
-export interface Relationship extends BaseItem
+export interface Association extends BaseItem
 {
   source: string
   target: string
@@ -152,8 +152,8 @@ export interface OriginalTextIndexesItem
 
 export interface SerializedConceptualModel
 {
-  entities: any[] // TODO: Provide correct type
-  relationships: Relationship[]
+  classes: any[] // TODO: Provide correct type
+  associations: Association[]
 }
 
 export interface ItemJson
@@ -163,11 +163,11 @@ export interface ItemJson
   description: string
 }
 
-export interface EntityJson extends ItemJson { }
+export interface ClassJson extends ItemJson { }
 
 interface DomainRangeJson
 {
-  // TODO: Why do we have "target entity" in attributes?
+  // TODO: Why do we have "target class" in attributes?
   // Isn't that going to be always empty string?
 
   // Possible cardinalities: "optional-one" | "optional-many" | "one-one" | "one-many" | null
@@ -190,16 +190,16 @@ export interface GeneralizationJson extends ItemJson
 export interface ConceptualModelJson
 {
   $schema: string
-  classes: EntityJson[]
+  classes: ClassJson[]
   attributes: AttributeJson[]
-  relationships: RelationshipJson[]
+  associations: RelationshipJson[]
   generalizations: GeneralizationJson[]
 }
 
 
 export interface ItemsMessage
 {
-  entities: string
+  classes: string
   attributes: string
-  relationships: string
+  associations: string
 }

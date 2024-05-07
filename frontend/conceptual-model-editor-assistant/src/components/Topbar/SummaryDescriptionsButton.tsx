@@ -34,7 +34,7 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
             return
         }
 
-        setSummaryDescriptions({entities: [], relationships: []})
+        setSummaryDescriptions({classes: [], associations: []})
         setIsReactButtonClicked(false)
 
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription

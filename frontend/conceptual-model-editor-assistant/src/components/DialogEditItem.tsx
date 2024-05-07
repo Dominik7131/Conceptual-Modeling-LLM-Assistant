@@ -7,7 +7,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
-import { Attribute, Field, Item, ItemFieldUIName, ItemType, Relationship } from '../interfaces';
+import { Attribute, Field, Item, ItemFieldUIName, ItemType, Association } from '../interfaces';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
@@ -20,6 +20,10 @@ import useEditItemDialog from '../hooks/useEditItemDialog';
 import useConceptualModel from '../hooks/useConceptualModel';
 import Alert from '@mui/material/Alert';
 import { createErrorMessage, onAddItem } from '../hooks/useUtility';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
 
 
 const DialogEditItem: React.FC = () =>
@@ -44,10 +48,10 @@ const DialogEditItem: React.FC = () =>
     const { onSave, onClose, onRemove, onItemEdit, onGenerateField, onConfirmRegeneratedText, onClearRegeneratedItem, onChangeItemType } = useEditItemDialog()
 
     const attribute = editedItem as Attribute
-    const relationship = editedItem as Relationship
+    const relationship = editedItem as Association
 
     const isAttribute = item.type === ItemType.ATTRIBUTE
-    const isRelationship = item.type === ItemType.RELATIONSHIP
+    const isRelationship = item.type === ItemType.ASSOCIATION
 
 
     const handleAddItem = (item: Item): void =>
@@ -97,7 +101,7 @@ const DialogEditItem: React.FC = () =>
             color = "black"
         }
 
-        const isDisabledFieldSuggestion = field === Field.NAME || field === Field.SOURCE_ENTITY || field === Field.TARGET_ENTITY
+        const isDisabledFieldSuggestion = field === Field.NAME || field === Field.SOURCE_CLASS || field === Field.TARGET_CLASS
 
         return (
             <Stack direction="row" spacing={4}>
@@ -108,7 +112,7 @@ const DialogEditItem: React.FC = () =>
                     />
                     { !isRegeneratedText ?
                         ( (fieldToLoad.includes(field)) ? <CircularProgress sx={{position: 'relative', right: '3px', top: '5px'}} size={"30px"} /> :
-                        <IconButton disabled={isDisabledFieldSuggestion} color="primary" size="small" onClick={() => onGenerateField(editedItem.type, editedItem.name, (editedItem as Relationship).source, (editedItem as Relationship).target, field)}>
+                        <IconButton disabled={isDisabledFieldSuggestion} color="primary" size="small" onClick={() => onGenerateField(editedItem.type, editedItem.name, (editedItem as Association).source, (editedItem as Association).target, field)}>
                             <AutoFixHighIcon/>
                         </IconButton>)
                         :
@@ -129,6 +133,26 @@ const DialogEditItem: React.FC = () =>
     const showDialogTitle = (item: Item): JSX.Element =>
     {
         return <Typography variant="h5" component="span"> Editing {item.type}: <strong>{item.name}</strong> </Typography>
+    }
+
+    const showClassesList = (fieldName: string): JSX.Element =>
+    {
+        // https://mui.com/material-ui/react-select/
+        return (
+            <FormControl fullWidth variant="standard">
+                    <InputLabel id="demo-simple-select-standard-label">{ fieldName }</InputLabel>
+                    <Select
+                    labelId="demo-simple-select-standard-label"
+                    id="demo-simple-select-standard"
+                    value={20}
+                    // onChange={handleChange}
+                    >
+                        {/* TODO: Get IRIs from all nodes */}
+                        <MenuItem value={10}>something-something</MenuItem>
+                        <MenuItem value={20}>else-else</MenuItem>
+                    </Select>
+                </FormControl>
+        )
     }
 
 
@@ -161,8 +185,9 @@ const DialogEditItem: React.FC = () =>
                 {
                     isRelationship && relationship[Field.TYPE] !== ItemType.GENERALIZATION &&
                     <>
-                        { showEditField(ItemFieldUIName.SOURCE_ENTITY, Field.SOURCE_ENTITY, relationship[Field.SOURCE_ENTITY]) }
-                        { showEditField(ItemFieldUIName.TARGET_ENTITY, Field.TARGET_ENTITY, relationship[Field.TARGET_ENTITY]) }
+                        {/* { showEditField(ItemFieldUIName.SOURCE_CLASS, Field.SOURCE_CLASS, relationship[Field.SOURCE_CLASS]) } */}
+                        { showClassesList(ItemFieldUIName.SOURCE_CLASS) }
+                        { showEditField(ItemFieldUIName.TARGET_CLASS, Field.TARGET_CLASS, relationship[Field.TARGET_CLASS]) }
                         { showEditField(ItemFieldUIName.SOURCE_CARDINALITY, Field.SOURCE_CARDINALITY, relationship[Field.SOURCE_CARDINALITY]) }
                         { showEditField(ItemFieldUIName.TARGET_CARDINALITY, Field.TARGET_CARDINALITY, relationship[Field.TARGET_CARDINALITY]) }
                     </>
@@ -171,8 +196,8 @@ const DialogEditItem: React.FC = () =>
                 {
                     isRelationship && relationship[Field.TYPE] === ItemType.GENERALIZATION &&
                     <>
-                        { showEditField(ItemFieldUIName.GENERAl_ENTITY, Field.SOURCE_ENTITY, relationship[Field.SOURCE_ENTITY]) }
-                        { showEditField(ItemFieldUIName.SPECIAL_ENTITY, Field.TARGET_ENTITY, relationship[Field.TARGET_ENTITY]) }
+                        { showEditField(ItemFieldUIName.GENERAl_CLASS, Field.SOURCE_CLASS, relationship[Field.SOURCE_CLASS]) }
+                        { showEditField(ItemFieldUIName.SPECIAL_CLASS, Field.TARGET_CLASS, relationship[Field.TARGET_CLASS]) }
                     </>
                 }
 

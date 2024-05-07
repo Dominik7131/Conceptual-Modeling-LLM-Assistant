@@ -1,8 +1,8 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
-import { Attribute, EdgeData, Entity, Field, Item, ItemType, NodeData, Relationship, UserChoice } from "../interfaces"
+import { Attribute, EdgeData, Class, Field, Item, ItemType, NodeData, Association, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
-import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL, createEdgeUniqueID, getSnapshotDomainDescription, snapshotDomainDescription } from "./useUtility";
+import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL, createEdgeUniqueID, createIRIFromName, getSnapshotDomainDescription, snapshotDomainDescription } from "./useUtility";
 import { useState } from "react";
 
 
@@ -44,17 +44,17 @@ const useEditItemDialog = () =>
     
         setIsOpened(_ => false)
     
-        if (newItem.type === ItemType.ENTITY)
+        if (newItem.type === ItemType.CLASS)
         {
-            editNodeEntity(newItem as Entity, oldItem as Entity)
+            editNodeEntity(newItem as Class, oldItem as Class)
         }
         else if (newItem.type === ItemType.ATTRIBUTE)
         {
             editNodeAttribute(newItem as Attribute, oldItem as Attribute)
         }
-        else if (newItem.type === ItemType.RELATIONSHIP)
+        else if (newItem.type === ItemType.ASSOCIATION)
         {
-            editEdgeRelationship(newItem as Relationship, oldItem as Relationship)
+            editEdgeRelationship(newItem as Association, oldItem as Association)
         }
         else
         {
@@ -71,33 +71,36 @@ const useEditItemDialog = () =>
     }
 
 
-    const editNodeEntity = (newEntity: Entity, oldEntity: Entity): void =>
+    const editNodeEntity = (newEntity: Class, oldEntity: Class): void =>
     {
-        const id: string = oldEntity.name  
-    
+
         if (newEntity.name !== oldEntity.name)
         {
-            // Update all edges that connect to the changed source or target entity
+            // Update iri
+            const newIRI = createIRIFromName(newEntity[Field.NAME])
+            newEntity = {...newEntity, [Field.IRI]: newIRI}
+
+            // Update all edges that connect to the changed source or target class
             setEdges((edges) => edges.map((currentEdge: Edge) =>
             {
-                if (currentEdge.source === oldEntity.name)
+                if (currentEdge.source === oldEntity.iri)
                 {
-                    const newRelationship: Relationship = { ...currentEdge.data.relationship, source: newEntity.name }
-                    const newEdgeData: EdgeData = { ...currentEdge.data, relationship: newRelationship }
-                    const edgeID = createEdgeUniqueID(newEntity.name, currentEdge.target, currentEdge.data.relationship.name)
+                    const newRelationship: Association = { ...currentEdge.data.relationship, source: newEntity[Field.IRI] }
+                    const newEdgeData: EdgeData = { ...currentEdge.data, association: newRelationship }
+                    const edgeID = createEdgeUniqueID(newEntity[Field.IRI], currentEdge.target, currentEdge.data.relationship[Field.IRI])
                     const updatedEdge: Edge = {
-                        ...currentEdge, id:edgeID, source: newEntity.name, data: newEdgeData
+                        ...currentEdge, id: edgeID, source: newEntity[Field.IRI], data: newEdgeData
                     }
 
                     return updatedEdge
                 }
-                else if (currentEdge.target === oldEntity.name)
+                else if (currentEdge.target === oldEntity.iri)
                 {
-                    const newRelationship: Relationship = { ...currentEdge.data.relationship, target: newEntity.name }
-                    const newEdgeData: EdgeData = { ...currentEdge.data, relationship: newRelationship }
-                    const edgeID = createEdgeUniqueID(currentEdge.source, newEntity.name, currentEdge.data.relationship.name)
+                    const newRelationship: Association = { ...currentEdge.data.relationship, target: newEntity[Field.IRI] }
+                    const newEdgeData: EdgeData = { ...currentEdge.data, association: newRelationship }
+                    const edgeID = createEdgeUniqueID(currentEdge.source, newEntity[Field.IRI], currentEdge.data.relationship[Field.IRI])
                     const updatedEdge: Edge = {
-                        ...currentEdge, id:edgeID, target: newEntity.name, data: newEdgeData
+                        ...currentEdge, id:edgeID, target: newEntity[Field.IRI], data: newEdgeData
                     }
 
                     console.log(updatedEdge)
@@ -110,22 +113,22 @@ const useEditItemDialog = () =>
 
         setNodes((nodes: Node[]) => nodes.map((currentNode : Node) =>
         {
-            if (currentNode.id === id)
+            if (currentNode.id === oldEntity.iri)
             {
                 let newAttributes = currentNode.data.attributes
 
-                // For each attribute update their source entity if the name of the entity changed
-                if (currentNode.id !== newEntity.name)
+                // For each attribute update their source entity if the iri of the entity changed
+                if (oldEntity.iri !== newEntity.iri)
                 {                   
                     newAttributes = currentNode.data.attributes.map((attribute: Attribute) =>
                     {
-                        return { ...attribute, [Field.SOURCE_ENTITY]: newEntity.name }
+                        return { ...attribute, [Field.SOURCE_CLASS]: newEntity[Field.IRI] }
                     })
                 }
 
 
-                const newData: NodeData = { ...currentNode.data, entity: newEntity, attributes: newAttributes }
-                const newNode: Node = {...currentNode, id: newEntity.name, data: newData}
+                const newData: NodeData = { ...currentNode.data, class: newEntity, attributes: newAttributes }
+                const newNode: Node = {...currentNode, id: newEntity[Field.IRI], data: newData}
 
                 return newNode
             }
@@ -169,10 +172,10 @@ const useEditItemDialog = () =>
     }
     
     
-    const editEdgeRelationship = (newRelationship: Relationship, oldRelationship : Relationship): void =>
+    const editEdgeRelationship = (newRelationship: Association, oldRelationship : Association): void =>
     {
         // Find the edge to update based on the old ID
-        const oldID: string = createEdgeUniqueID(oldRelationship.source, oldRelationship.target, oldRelationship.name)
+        const oldID: string = createEdgeUniqueID(oldRelationship.source, oldRelationship.target, oldRelationship[Field.IRI])
 
         console.log("OldID: ", oldID)
 
@@ -180,8 +183,8 @@ const useEditItemDialog = () =>
         {
             if (currentEdge.id === oldID)
             {
-                const newData: EdgeData = { ...currentEdge.data, relationship: newRelationship }
-                const newID = createEdgeUniqueID(newRelationship.source, newRelationship.target, newRelationship.name)
+                const newData: EdgeData = { ...currentEdge.data, association: newRelationship }
+                const newID = createEdgeUniqueID(newRelationship.source, newRelationship.target, newRelationship[Field.IRI])
                 
                 // TODO: Is the user allowed to change source and target?
                 // If the source/target does not exist we need to create a new node
@@ -205,8 +208,8 @@ const useEditItemDialog = () =>
     {
         if (isClearAll)
         {
-            setEditedSuggestedItem({[Field.IRI]: "", [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
-            setRegeneratedItem({[Field.IRI]: "", [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
+            setEditedSuggestedItem({[Field.IRI]: "", [Field.TYPE]: ItemType.CLASS, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
+            setRegeneratedItem({[Field.IRI]: "", [Field.TYPE]: ItemType.CLASS, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
         }
 
         if (!field)
@@ -227,18 +230,18 @@ const useEditItemDialog = () =>
 
     const getSourceEntityFromItem = (item: Item) =>
     {
-        if (item[Field.TYPE] === ItemType.ENTITY)
+        if (item[Field.TYPE] === ItemType.CLASS)
         {
             return item[Field.NAME]
         }
         else
         {
-            return (item as Relationship)[Field.SOURCE_ENTITY]
+            return (item as Association)[Field.SOURCE_CLASS]
         }
     }
 
 
-    const saveSingleFieldSuggestion = (field_name: string, field_text: string): void =>
+    const saveSingleFieldSuggestion = (fieldName: string, fieldText: string): void =>
     {
         // Save generated single field to backend
 
@@ -247,7 +250,7 @@ const useEditItemDialog = () =>
         const sourceEntity = getSourceEntityFromItem(regeneratedItem)
 
         const suggestionData = {
-            domainDescription: currentDomainDescription, fieldName: field_name, fieldText: field_text,
+            domainDescription: currentDomainDescription, fieldName: fieldName, fieldText: fieldText,
             userChoice: UserChoice.SINGLE_FIELD, sourceEntity: sourceEntity, isPositive: true
         }
 
@@ -279,18 +282,18 @@ const useEditItemDialog = () =>
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         snapshotDomainDescription(UserChoice.SINGLE_FIELD, currentDomainDescription, setSnapshotDomainDescription)
 
-        let userChoice = UserChoice.ENTITIES
+        let userChoice = UserChoice.CLASSES
 
         if (itemType === ItemType.ATTRIBUTE)
         {
             userChoice = UserChoice.ATTRIBUTES 
         }
-        else if (itemType === ItemType.RELATIONSHIP)
+        else if (itemType === ItemType.ASSOCIATION)
         {
-            userChoice = UserChoice.RELATIONSHIPS
+            userChoice = UserChoice.ASSOCIATIONS
         }
 
-        if (userChoice === UserChoice.ENTITIES)
+        if (userChoice === UserChoice.CLASSES)
         {
             sourceEntity = name
         }
@@ -385,10 +388,10 @@ const useEditItemDialog = () =>
         {
             const oldAttribute = item as Attribute
         
-            const relationship : Relationship = {
-                [Field.IRI]: oldAttribute[Field.IRI], [Field.TYPE]: ItemType.RELATIONSHIP, [Field.NAME]: changedItemName, [Field.DESCRIPTION]: oldAttribute.description,
-                [Field.ORIGINAL_TEXT]: oldAttribute.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldAttribute.originalTextIndexes, [Field.SOURCE_ENTITY]: oldAttribute.source,
-                [Field.TARGET_ENTITY]: oldAttribute.name, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""
+            const relationship : Association = {
+                [Field.IRI]: oldAttribute[Field.IRI], [Field.TYPE]: ItemType.ASSOCIATION, [Field.NAME]: changedItemName, [Field.DESCRIPTION]: oldAttribute.description,
+                [Field.ORIGINAL_TEXT]: oldAttribute.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldAttribute.originalTextIndexes, [Field.SOURCE_CLASS]: oldAttribute.source,
+                [Field.TARGET_CLASS]: oldAttribute.name, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""
             }
         
             setChangedItemName("")
@@ -397,14 +400,14 @@ const useEditItemDialog = () =>
         }
         else
         {
-            const oldRelationship = item as Relationship
+            const oldRelationship = item as Association
             setChangedItemName(oldRelationship[Field.NAME])
             console.log("Setting")
 
             const attribute : Attribute = {
                 [Field.IRI]: oldRelationship[Field.IRI], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: oldRelationship.target, [Field.DESCRIPTION]: oldRelationship.description,
                 [Field.DATA_TYPE]: "string", [Field.ORIGINAL_TEXT]: oldRelationship.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldRelationship.originalTextIndexes,
-                [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_ENTITY]: oldRelationship.source
+                [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_CLASS]: oldRelationship.source
             }
         
             setSelectedSuggestedItem(attribute)
@@ -415,7 +418,7 @@ const useEditItemDialog = () =>
 
     const onRemove = (item: Item): void =>
     {
-        if (item.type === ItemType.ENTITY)
+        if (item.type === ItemType.CLASS)
         {
             const nodeID = item.name
             removeNode(nodeID)
@@ -424,9 +427,9 @@ const useEditItemDialog = () =>
         {
             removeNodeAttribute(item as Attribute)
         }
-        else if (item.type === ItemType.RELATIONSHIP)
+        else if (item.type === ItemType.ASSOCIATION)
         {
-            const relationship: Relationship = (item as Relationship)
+            const relationship: Association = (item as Association)
             const edgeID = createEdgeUniqueID(relationship.source, relationship.target, relationship.name)
             removeEdge(edgeID)
         }

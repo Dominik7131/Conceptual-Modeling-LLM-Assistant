@@ -1,6 +1,6 @@
 import { Button } from "@mui/material"
 import DownloadIcon from '@mui/icons-material/Download';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, ItemType, NodeData, Relationship, RelationshipJson } from "../../interfaces";
+import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Class, ClassJson, Field, GeneralizationJson, ItemType, NodeData, Association, RelationshipJson } from "../../interfaces";
 import { Node, Edge } from "reactflow";
 import { edgesState, importedFileNameState, nodesState } from "../../atoms";
 import { useRecoilValue } from "recoil";

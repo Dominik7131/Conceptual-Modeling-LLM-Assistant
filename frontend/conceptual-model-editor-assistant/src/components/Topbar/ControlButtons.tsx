@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import useConceptualModel from "../../hooks/useConceptualModel";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
-import { Entity, Field, ItemType, TopbarTabs, UserChoice } from "../../interfaces";
+import { Class, Field, ItemType, TopbarTabs, UserChoice } from "../../interfaces";
 import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME, blankEntity, convertConceptualModelToJSON } from "../../hooks/useUtility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { domainDescriptionState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, topbarTabValueState } from "../../atoms";
@@ -24,7 +24,7 @@ const ControlButtons: React.FC = (): JSX.Element =>
     const { onSuggestItems } = useConceptualModel()
 
 
-    const onAddNewEntity = () : void =>
+    const onAddNewClass = () : void =>
     {    
         setIsItemInConceptualModel(false)
         setIsSuggestedItem(true)
@@ -46,8 +46,8 @@ const ControlButtons: React.FC = (): JSX.Element =>
                         sx={{textTransform: "none"}}
                         disableElevation
                         startIcon={<AutoFixHighIcon/>}
-                        onClick={() => onSuggestItems(UserChoice.ENTITIES, null, null)}>
-                            Suggest entities
+                        onClick={() => onSuggestItems(UserChoice.CLASSES, null, null)}>
+                            Suggest classes
                     </Button>
 
                     <Button
@@ -55,8 +55,8 @@ const ControlButtons: React.FC = (): JSX.Element =>
                         sx={{textTransform: "none"}}
                         disableElevation
                         startIcon={<AddIcon/>}
-                        onClick={ onAddNewEntity }>
-                            Add new entity
+                        onClick={ onAddNewClass }>
+                            Add new class
                     </Button>
                 </Stack>
 

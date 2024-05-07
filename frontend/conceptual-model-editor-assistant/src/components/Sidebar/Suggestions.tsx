@@ -56,7 +56,7 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
 
             {
                 items.map(item =>
-                    <ListItem key={ createUniqueKey(item[Field.NAME], (item as any)[Field.SOURCE_ENTITY], (item as any)[Field.TARGET_ENTITY]) }>
+                    <ListItem key={ createUniqueKey(item[Field.NAME], (item as any)[Field.SOURCE_CLASS], (item as any)[Field.TARGET_CLASS]) }>
                         <Stack>
                             <ItemDisplay item={item}/>
                             <ControlButtons item={item}/>

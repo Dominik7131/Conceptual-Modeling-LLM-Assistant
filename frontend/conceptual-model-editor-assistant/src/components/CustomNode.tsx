@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { useCallback, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { Attribute, Entity, Field, ItemType, NodeData, UserChoice, PRIMARY_COLOR, Item } from '../interfaces';
+import { Attribute, Class, Field, ItemType, NodeData, UserChoice, PRIMARY_COLOR, Item } from '../interfaces';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -37,7 +37,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
     const { onSuggestItems } = useConceptualModel()
 
     const nodeData: NodeData = data as NodeData
-    const entity: Entity = nodeData.entity
+    const entity: Class = nodeData.class
 
     const attributes: Attribute[] = nodeData.attributes
 
@@ -46,13 +46,12 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
 
     // If the entity name is too long then display only the beginning of it with three dots at the end
     const spacesCount: number = entity[Field.NAME].split(" ").length - 1
-    let entityName = capitalizeString(entity[Field.NAME])
+    let entityName = entity[Field.NAME]
     const maxLength = 15
     if (spacesCount === 0 && entityName.length > maxLength)
     {
         entityName = entityName.substring(0, maxLength) + "..."
     }
-
 
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) =>
@@ -83,7 +82,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
         const newAttribute: Attribute = {
             [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "",
             [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "",
-            [Field.SOURCE_ENTITY]: entity.name
+            [Field.SOURCE_CLASS]: entity.name
         }
       
         setSelectedSuggestedItem(newAttribute)
@@ -178,11 +177,11 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                         Suggest attributes
                 </MenuItem>
                 
-                <MenuItem onClick={() => { onSuggestItems(UserChoice.RELATIONSHIPS, entity[Field.NAME], null); handleClose(); }}>
+                <MenuItem onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS, entity[Field.NAME], null); handleClose(); }}>
                     <ListItemIcon>
                         <AutoFixHighIcon fontSize="small" />
                     </ListItemIcon>
-                        Suggest relationships
+                        Suggest associations
                     </MenuItem>
             </Menu>
 

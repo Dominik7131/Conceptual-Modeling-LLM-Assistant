@@ -113,10 +113,11 @@ def save_suggested_item():
     item = json.loads(item)
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
 
-    prompt = llm_assistant.get_prompt(user_choice=user_choice)
+    is_chain_of_thoughts = (user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.RELATIONSHIPS.value)
+    prompt = llm_assistant.get_prompt(user_choice=user_choice, is_chain_of_thoughts=is_chain_of_thoughts)
     completed_item["prompt"] = prompt
 
-    relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_entity=item[Field.SOURCE_ENTITY])
+    relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_entity=item[Field.SOURCE_CLASS])
     completed_item["filtered_domain_description": relevant_texts]
 
     save_item_to_storage(completed_item)

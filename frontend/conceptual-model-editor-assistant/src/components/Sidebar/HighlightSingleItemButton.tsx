@@ -2,7 +2,7 @@ import { Button, IconButton, Tooltip } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
 import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { useSetRecoilState } from "recoil";
-import { Attribute, Field, Item, ItemType, Relationship } from "../../interfaces";
+import { Attribute, Field, Item, ItemType, Association } from "../../interfaces";
 import { SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE, capitalizeString } from "../../hooks/useUtility";
 
 
@@ -31,7 +31,7 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
         let tooltip = ""
         const capitalizedSourceEntity: string = capitalizeString((item as Attribute).source)
     
-        if (item.type === ItemType.ENTITY)
+        if (item.type === ItemType.CLASS)
         {
             tooltip = `Entity: ${item.name}`
         }
@@ -39,9 +39,9 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
         {
             tooltip = `${capitalizedSourceEntity}: ${item.name}`
         }
-        else if (item.type === ItemType.RELATIONSHIP)
+        else if (item.type === ItemType.ASSOCIATION)
         {
-            tooltip = `${capitalizedSourceEntity} - ${item.name} - ${(item as Relationship).target}`
+            tooltip = `${capitalizedSourceEntity} - ${item.name} - ${(item as Association).target}`
         }
     
         let newTooltips : string[] = Array(item.originalTextIndexes.length).fill(tooltip)

@@ -1,5 +1,5 @@
 import { ListItemText, Stack, Typography } from "@mui/material"
-import { Attribute, Field, Item, ItemFieldUIName, ItemType, Relationship } from "../../interfaces"
+import { Attribute, Field, Item, ItemFieldUIName, ItemType, Association } from "../../interfaces"
 import ControlButtons from "./ControlButtons"
 
 interface Props
@@ -11,10 +11,10 @@ interface Props
 const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
 {
     const attribute : Attribute = (item as Attribute)
-    const relationship : Relationship = (item as Relationship)
+    const relationship : Association = (item as Association)
 
     const isAttribute = item.type === ItemType.ATTRIBUTE
-    const isRelationship = item.type === ItemType.RELATIONSHIP
+    const isRelationship = item.type === ItemType.ASSOCIATION
 
     // Display original text in gray color if generated original text was not found in domain description
     const customLightGray = "#b5b5b5"
@@ -51,13 +51,13 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
             }
 
             {
-                isRelationship && relationship[Field.SOURCE_ENTITY] &&
-                    <Typography> <strong> { ItemFieldUIName.SOURCE_ENTITY }:</strong> { relationship[Field.SOURCE_ENTITY] } </Typography>
+                isRelationship && relationship[Field.SOURCE_CLASS] &&
+                    <Typography> <strong> { ItemFieldUIName.SOURCE_CLASS }:</strong> { relationship[Field.SOURCE_CLASS] } </Typography>
             }
 
             {
-                isRelationship && relationship[Field.TARGET_ENTITY] &&
-                    <Typography> <strong> { ItemFieldUIName.TARGET_ENTITY }:</strong> { relationship[Field.TARGET_ENTITY] } </Typography>
+                isRelationship && relationship[Field.TARGET_CLASS] &&
+                    <Typography> <strong> { ItemFieldUIName.TARGET_CLASS }:</strong> { relationship[Field.TARGET_CLASS] } </Typography>
             }
 
             {

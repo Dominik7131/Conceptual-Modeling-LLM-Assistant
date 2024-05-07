@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Attribute, Field, Item, ItemType, Relationship, SummaryObject } from "../interfaces";
+import { Attribute, Field, Item, ItemType, Association, SummaryObject } from "../interfaces";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedEntitiesState, suggestedAttributesState, suggestedRelationshipsState } from "../atoms";
 import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL, createIRIFromName, onClearSuggestedItems } from "./useUtility";
@@ -22,7 +22,7 @@ const useFetchData = () =>
     const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
 
 
-    const fetchStreamedData = (bodyData: any, sourceEntityIRI: string, itemType: ItemType) =>
+    const fetchStreamedData = (bodyData: any, sourceClassIRI: string, itemType: ItemType) =>
     {
       // TODO: add object interface for header and bodyData
 
@@ -69,9 +69,9 @@ const useFetchData = () =>
                         console.log("Stream finished")
                         setItemTypesToLoad(previousItems => previousItems.filter(currentItemType => currentItemType !== itemType))
 
-                        const isNothingFound = (itemType === ItemType.ENTITY && isEmptyResponse) ||
+                        const isNothingFound = (itemType === ItemType.CLASS && isEmptyResponse) ||
                                                (itemType === ItemType.ATTRIBUTE && isEmptyResponse) ||
-                                               (itemType === ItemType.RELATIONSHIP && isEmptyResponse)
+                                               (itemType === ItemType.ASSOCIATION && isEmptyResponse)
 
                         if (isNothingFound)
                         {
@@ -82,7 +82,7 @@ const useFetchData = () =>
                       }
 
                       isEmptyResponse = false
-                      onProcessStreamedData(value, sourceEntityIRI, itemType)
+                      onProcessStreamedData(value, sourceClassIRI, itemType)
 
                       // Read the next chunk
                       readChunk()
@@ -105,7 +105,7 @@ const useFetchData = () =>
     }
 
 
-  const onProcessStreamedData = (value: any, sourceEntityName: string, itemType: ItemType): void =>
+  const onProcessStreamedData = (value: any, sourceClassName: string, itemType: ItemType): void =>
   {
     // Convert the `value` to a string
     var jsonString = new TextDecoder().decode(value)
@@ -119,26 +119,28 @@ const useFetchData = () =>
       item[Field.IRI] = createIRIFromName(item[Field.NAME])
       item[Field.TYPE] = itemType
 
-      if (itemType === ItemType.ENTITY)
+      if (itemType === ItemType.CLASS)
       {
         setSuggestedEntities(previousSuggestedItems => {
           return [...previousSuggestedItems, item]
         })
       }
 
+      const sourceClassIRI = createIRIFromName(sourceClassName)
+
       if (itemType === ItemType.ATTRIBUTE)
       {
         let attribute: Attribute = item as Attribute
-        attribute[Field.SOURCE_ENTITY] = sourceEntityName
+        attribute[Field.SOURCE_CLASS] = sourceClassIRI
 
         setSuggestedAttributes(previousSuggestedItems => {
           return [...previousSuggestedItems, attribute]
         })
       }
-      else if (itemType === ItemType.RELATIONSHIP)
+      else if (itemType === ItemType.ASSOCIATION)
       {
-        let relationship: Relationship = item as Relationship
-        relationship[Field.SOURCE_ENTITY] = sourceEntityName
+        let relationship: Association = item as Association
+        relationship[Field.SOURCE_CLASS] = sourceClassIRI
 
         setSuggestedRelationships(previousSuggestedItems => {
           return [...previousSuggestedItems, relationship]
@@ -256,14 +258,14 @@ const useFetchData = () =>
                       {
                         setSummaryDescriptions(previousSummary => ({
                           ...previousSummary,
-                          entities: [...previousSummary.entities, parsedData],
+                          classes: [...previousSummary.classes, parsedData],
                         }))
                       }
                       else if (parsedData.hasOwnProperty("relationship"))
                       {
                         setSummaryDescriptions(previousSummary => ({
                           ...previousSummary,
-                          relationships: [...previousSummary.relationships, parsedData],
+                          associations: [...previousSummary.associations, parsedData],
                         }))
                       }
                       else

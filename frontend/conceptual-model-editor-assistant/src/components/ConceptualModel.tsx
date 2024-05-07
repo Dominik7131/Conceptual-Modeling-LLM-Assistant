@@ -2,7 +2,7 @@ import Stack from '@mui/material/Stack';
 import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange, useOnSelectionChange } from 'reactflow';
 import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
-import { Field, Item, ItemType, Relationship } from '../interfaces';
+import { Field, Item, ItemType, Association } from '../interfaces';
 import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarWidthPercentageState } from '../atoms';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useCallback, useEffect } from 'react';
@@ -51,10 +51,10 @@ const ConceptualModel: React.FC = () =>
       return 
     }
 
-    const blankRelationship: Relationship = {
+    const blankRelationship: Association = {
       [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-      [Field.TYPE]: ItemType.RELATIONSHIP, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.SOURCE_ENTITY]: sourceEntityName,
-      [Field.TARGET_ENTITY]: targetEntityName
+      [Field.TYPE]: ItemType.ASSOCIATION, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.SOURCE_CLASS]: sourceEntityName,
+      [Field.TARGET_CLASS]: targetEntityName
     }
 
     setSelectedSuggestedItem(_ => blankRelationship)

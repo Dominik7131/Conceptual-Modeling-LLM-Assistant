@@ -18,7 +18,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
     const domainDescriptionSnapshot = useRecoilValue(domainDescriptionSnapshotsState)
     const conceptualModelSnapshot = useRecoilValue(conceptualModelSnapshotState)
 
-    const showReactButtons = (summaryDescriptions.entities.length !== 0 || summaryDescriptions.relationships.length !== 0) && !isLoadingSummaryDescriptions
+    const showReactButtons = (summaryDescriptions.classes.length !== 0 || summaryDescriptions.associations.length !== 0) && !isLoadingSummaryDescriptions
 
     
     const handleSaveSuggestion = (isPositiveReaction: boolean) =>
@@ -66,12 +66,12 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
     return (
         <>
             {
-                summaryDescriptions.entities.length > 0 && <Typography>Entities and attributes:</Typography>
+                summaryDescriptions.classes.length > 0 && <Typography>Entities and attributes:</Typography>
             }
             
             <ul>
             {
-                summaryDescriptions.entities.map((entity) =>
+                summaryDescriptions.classes.map((entity) =>
                     <Typography component="span">
                         <li>
                             <strong>{capitalizeString(entity.entity)}</strong>: {entity.description}
@@ -103,12 +103,12 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
             </ul>
 
             {
-                summaryDescriptions.relationships.length > 0 && <Typography>Relationships:</Typography>
+                summaryDescriptions.associations.length > 0 && <Typography>Relationships:</Typography>
             }
 
             <ul>
             {
-                summaryDescriptions.relationships.map((relationship) =>
+                summaryDescriptions.associations.map((relationship) =>
                     <Typography component="span">
                         <li>
                             <strong> { capitalizeString(relationship.sourceEntity) }</strong> {relationship.relationship} <strong>{capitalizeString(relationship.targetEntity)}</strong>: {relationship.description}

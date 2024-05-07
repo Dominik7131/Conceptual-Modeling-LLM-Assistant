@@ -2,7 +2,7 @@ import { Stack } from "@mui/material"
 import ImportIRIButton from "./ImportFromDataspecerButton"
 import ImportJSONButton from "./ImportJSONButton"
 import ExportButton from "./ExportJSONButton"
-import { Attribute, ConceptualModelJson, Entity, Field, ItemType, NodeData, EdgeData, Relationship } from "../../interfaces";
+import { Attribute, ConceptualModelJson, Class, Field, ItemType, NodeData, EdgeData, Association } from "../../interfaces";
 import { edgesState, importedFileNameState, nodesState } from "../../atoms";
 import { Node, Edge } from 'reactflow';
 import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, createEdgeUniqueID, onAddItem } from "../../hooks/useUtility";
@@ -28,7 +28,7 @@ const ImportTab: React.FC = (): JSX.Element =>
         let newEdges : Edge[] = []
     
         if (!conceptualModelJson.attributes) { conceptualModelJson.attributes = [] }
-        if (!conceptualModelJson.relationships) { conceptualModelJson.relationships = [] }
+        if (!conceptualModelJson.associations) { conceptualModelJson.associations = [] }
         if (!conceptualModelJson.generalizations) { conceptualModelJson.generalizations = [] }
     
     
@@ -37,12 +37,12 @@ const ImportTab: React.FC = (): JSX.Element =>
             const entityIriLowerCase = entity.iri.toLowerCase()
             const entityTitle = entity.title
         
-            const newEntity: Entity = {
+            const newEntity: Class = {
                 [Field.IRI]: entityIriLowerCase, [Field.NAME]: entityTitle, [Field.DESCRIPTION]: entity.description,
-                [Field.TYPE]: ItemType.ENTITY, [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
+                [Field.TYPE]: ItemType.CLASS, [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
             }
         
-            const nodeData : NodeData = { entity: newEntity, attributes: [] }
+            const nodeData : NodeData = { class: newEntity, attributes: [] }
         
             const maxRandomValue = 400
             const randomX = Math.floor(Math.random() * maxRandomValue)
@@ -77,7 +77,7 @@ const ImportTab: React.FC = (): JSX.Element =>
         
             const newAttribute: Attribute = {
                 [Field.IRI]: attribute[Field.IRI], [Field.NAME]: attributeName, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.DESCRIPTION]: attribute.description,
-                [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.SOURCE_ENTITY]: sourceEntityLowerCase,
+                [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.SOURCE_CLASS]: sourceEntityLowerCase,
                 [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: domainCardinality
             }
         
@@ -86,14 +86,14 @@ const ImportTab: React.FC = (): JSX.Element =>
             {
                 const entityName = newNodes[i].id
         
-                if (entityName === newAttribute[Field.SOURCE_ENTITY])
+                if (entityName === newAttribute[Field.SOURCE_CLASS])
                 {
                     onAddItem(newAttribute, setNodes, setEdges)
                 }
             }
         }
     
-        for (const [, relationship] of Object.entries(conceptualModelJson.relationships))
+        for (const [, relationship] of Object.entries(conceptualModelJson.associations))
         {
             const iriLowerCase = relationship.iri.toLowerCase()
             const sourceEntityLowerCase = relationship.domain.toLowerCase()
@@ -102,14 +102,14 @@ const ImportTab: React.FC = (): JSX.Element =>
             const domainCardinality = relationship.domainCardinality ?? ""
             const rangeCardinality = relationship.rangeCardinality ?? ""
         
-            const newRelationship: Relationship = {
-                [Field.IRI]: iriLowerCase, [Field.NAME]: relationship.title, [Field.DESCRIPTION]: relationship.description, [Field.TYPE]: ItemType.RELATIONSHIP,
-                [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
+            const newRelationship: Association = {
+                [Field.IRI]: iriLowerCase, [Field.NAME]: relationship.title, [Field.DESCRIPTION]: relationship.description, [Field.TYPE]: ItemType.ASSOCIATION,
+                [Field.SOURCE_CLASS]: sourceEntityLowerCase, [Field.TARGET_CLASS]: targetEntityLowerCase,
                 [Field.SOURCE_CARDINALITY]: domainCardinality, [Field.TARGET_CARDINALITY]: rangeCardinality,
                 [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
             }
         
-            const edgeData: EdgeData = { relationship: newRelationship }
+            const edgeData: EdgeData = { association: newRelationship }
         
             const newID: string = createEdgeUniqueID(sourceEntityLowerCase, targetEntityLowerCase, relationship.title)
             const newEdge : Edge = {
@@ -126,14 +126,14 @@ const ImportTab: React.FC = (): JSX.Element =>
             const sourceEntityLowerCase = generalization.specialClass.toLowerCase()
             const targetEntityLowerCase = generalization.generalClass.toLowerCase()
         
-            const newGeneralization: Relationship = {
+            const newGeneralization: Association = {
                 [Field.IRI]: iriLowerCase, [Field.NAME]: generalization.title, [Field.DESCRIPTION]: "", [Field.TYPE]: ItemType.GENERALIZATION,
-                [Field.SOURCE_ENTITY]: sourceEntityLowerCase, [Field.TARGET_ENTITY]: targetEntityLowerCase,
+                [Field.SOURCE_CLASS]: sourceEntityLowerCase, [Field.TARGET_CLASS]: targetEntityLowerCase,
                 [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.ORIGINAL_TEXT]: "",
                 [Field.ORIGINAL_TEXT_INDEXES]: []
             }
         
-            const edgeData: EdgeData = { relationship: newGeneralization }
+            const edgeData: EdgeData = { association: newGeneralization }
         
             const newID: string = createEdgeUniqueID(sourceEntityLowerCase, targetEntityLowerCase, generalization.title)
             const newEdge : Edge = {

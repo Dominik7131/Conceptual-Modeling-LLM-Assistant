@@ -1,5 +1,5 @@
 import { SetterOrUpdater } from "recoil";
-import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, EdgeData, Entity, Field, Item, ItemType, ItemsMessage, NodeData, Relationship, SidebarTabs, UserChoice } from "../interfaces"
+import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, EdgeData, Class, Field, Item, ItemType, ItemsMessage, NodeData, Association, SidebarTabs, UserChoice } from "../interfaces"
 import { Node, Edge, MarkerType, EdgeMarker, Position, internalsSymbol } from 'reactflow';
 
 
@@ -13,9 +13,9 @@ const useUtility = () =>
       }
 
       let result : string = ""
-      if (userChoice === UserChoice.ENTITIES) { result = "Entity" }
+      if (userChoice === UserChoice.CLASSES) { result = "Entity" }
       else if (userChoice === UserChoice.ATTRIBUTES) { result = "Attribute" }
-      else if (userChoice === UserChoice.RELATIONSHIPS) { result = "Relationship" }
+      else if (userChoice === UserChoice.ASSOCIATIONS) { result = "Relationship" }
       return result
     }
 
@@ -151,9 +151,9 @@ export const clipName = (name: string, maxLength: number): string =>
 
 export const userChoiceToItemType = (userChoice: UserChoice): ItemType =>
 {
-  if (userChoice === UserChoice.ENTITIES)
+  if (userChoice === UserChoice.CLASSES)
   {
-    return ItemType.ENTITY 
+    return ItemType.CLASS 
   }
 
   if (userChoice === UserChoice.ATTRIBUTES)
@@ -161,9 +161,9 @@ export const userChoiceToItemType = (userChoice: UserChoice): ItemType =>
     return ItemType.ATTRIBUTE
   }
 
-  if (userChoice === UserChoice.RELATIONSHIPS || userChoice === UserChoice.RELATIONSHIPS2)
+  if (userChoice === UserChoice.ASSOCIATIONS || userChoice === UserChoice.ASSOCIATIONS2)
   {
-    return ItemType.RELATIONSHIP
+    return ItemType.ASSOCIATION
   }
 
   throw Error(`Unexpected user choice: ${userChoice}`)
@@ -174,17 +174,17 @@ export const createErrorMessage = (item: Item, setErrorMessage: SetterOrUpdater<
 {
   let message = ""
 
-  if (item.type === ItemType.ENTITY)
+  if (item.type === ItemType.CLASS)
   {
     message = `Entity "${item.name}" already exists`
   }
   else if (item.type === ItemType.ATTRIBUTE)
   {
-    message = `Entity "${(item as Attribute)[Field.SOURCE_ENTITY]}" already contains attribute "${item.name}"`
+    message = `Entity "${(item as Attribute)[Field.SOURCE_CLASS]}" already contains attribute "${item.name}"`
   }
-  else if (item.type === ItemType.RELATIONSHIP)
+  else if (item.type === ItemType.ASSOCIATION)
   {
-    message = `Relationship in between source entity "${(item as Relationship)[Field.SOURCE_ENTITY]}" and target entity "${(item as Relationship)[Field.TARGET_ENTITY]}" already exists`
+    message = `Relationship in between source entity "${(item as Association)[Field.SOURCE_CLASS]}" and target entity "${(item as Association)[Field.TARGET_CLASS]}" already exists`
   }
 
   setErrorMessage(message)
@@ -192,17 +192,18 @@ export const createErrorMessage = (item: Item, setErrorMessage: SetterOrUpdater<
 
 export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
 {
-  if (item.type === ItemType.ENTITY)
+
+  if (item.type === ItemType.CLASS)
   {
-    return addEntity(item as Entity, 66, 66, setNodes)
+    return addEntity(item as Class, 66, 66, setNodes)
   }
   else if (item.type === ItemType.ATTRIBUTE)
   {
     return onAddAttribute(item as Attribute, setNodes)
   }
-  else if (item.type === ItemType.RELATIONSHIP)
+  else if (item.type === ItemType.ASSOCIATION)
   {
-    return onAddRelationship(item as Relationship, setNodes, setEdges)
+    return onAddRelationship(item as Association, setNodes, setEdges)
   }
   else
   {
@@ -211,17 +212,20 @@ export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
 }
 
 
-export const addEntity = (entity: Entity, positionX: number, positionY: number, setNodes: any): boolean =>
+export const addEntity = (entity: Class, positionX: number, positionY: number, setNodes: any): boolean =>
 {
-  if (doesNodeAlreadyExistSetter(setNodes, entity.name))
+  if (doesNodeAlreadyExistSetter(setNodes, entity[Field.IRI]))
   {
     return false
   }
 
-  const nodeData: NodeData = { entity: entity, attributes: [] }
+  const entityIRI = createIRIFromName(entity[Field.NAME])
+  entity = { ...entity, [Field.IRI]: entityIRI}
+
+  const nodeData: NodeData = { class: entity, attributes: [] }
 
   const newNode: Node = {
-    id: entity.name, type: "customNode", position: { x: positionX, y: positionY },
+    id: entity[Field.IRI], type: "customNode", position: { x: positionX, y: positionY },
     data: nodeData
   }
 
@@ -250,7 +254,7 @@ const onAddAttribute = (attribute : Attribute, setNodes: any) =>
     // If the node already contains the selected attribute do not add anything
     currentNode.data.attributes.forEach((currentAttribute : Attribute) =>
     {
-      if (currentAttribute.name === attribute.name)
+      if (currentAttribute.iri === attribute.iri)
       {
         isAttributePresent = true
       }
@@ -271,7 +275,7 @@ const onAddAttribute = (attribute : Attribute, setNodes: any) =>
 }
 
 
-const onAddRelationship = (relationship : Relationship, setNodes: any, setEdges: any): boolean =>
+const onAddRelationship = (relationship : Association, setNodes: any, setEdges: any): boolean =>
 {
   // Returns "true" if the operation was successfull otherwise "false"
 
@@ -294,7 +298,7 @@ const onAddRelationship = (relationship : Relationship, setNodes: any, setEdges:
     })
   }
 
-  const edgeData: EdgeData = { relationship: relationship }
+  const edgeData: EdgeData = { association: relationship }
 
   const markerEnd = relationship[Field.TYPE] === ItemType.GENERALIZATION ? CUSTOM_ISA_EDGE_MARKER : CUSTOM_EDGE_MARKER
 
@@ -315,12 +319,12 @@ const onAddRelationship = (relationship : Relationship, setNodes: any, setEdges:
 export const createNode = (nodeName: string, positionX: number, positionY: number): Node =>
 {
   const nodeIRI = createIRIFromName(nodeName)
-  const newEntity: Entity = {
-    [Field.IRI]: nodeIRI, [Field.NAME]: nodeName, [Field.TYPE]: ItemType.ENTITY, [Field.DESCRIPTION]: "",
+  const newEntity: Class = {
+    [Field.IRI]: nodeIRI, [Field.NAME]: nodeName, [Field.TYPE]: ItemType.CLASS, [Field.DESCRIPTION]: "",
     [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
   }
 
-  const nodeData: NodeData = { entity: newEntity, attributes: [] }
+  const nodeData: NodeData = { class: newEntity, attributes: [] }
 
   const newNode: Node = { id: nodeName, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
   
@@ -351,7 +355,11 @@ export const addNode = (nodeName: string, positionX: number, positionY: number, 
 
 export const createIRIFromName = (name: string): string =>
 {
-  const iri = name.split(" ").join("-").toLowerCase()
+  // Replace one or more whitespace characters with only one whitespace
+  // global ('g') flag is used so the regex does not stop after the first match
+  name = name.replace(/\s+/g, ' ')
+
+  const iri = name.split(" ").join('-').toLowerCase() // Replace every whitespace character with '-'
   return iri
 }
 
@@ -359,7 +367,7 @@ export const createIRIFromName = (name: string): string =>
 export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[], isOnlyNames : boolean) =>
 {
   let result: { [key: string]: any } = {
-    entities: []
+    classes: []
   }
 
   for (let node of nodes)
@@ -377,24 +385,24 @@ export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[], isOnl
       }
     }
 
-    result.entities.push({[Field.NAME]: node.id, attributes: attributes})
+    result.classes.push({[Field.NAME]: node.id, attributes: attributes})
   }
 
 
-  let relationships = []
+  let associations = []
   for (let edge of edges)
   {
     if (isOnlyNames)
     {
-      relationships.push({[Field.NAME]: edge.data.relationship.name, "sourceEntity": edge.source, "targetEntity": edge.target})
+      associations.push({[Field.NAME]: edge.data.relationship.name, "sourceEntity": edge.source, "targetEntity": edge.target})
     }
     else
     {
-      relationships.push({[Field.NAME]: edge.data.relationship.name, [Field.ORIGINAL_TEXT]: edge.data.originalText, "sourceEntity": edge.source, "targetEntity": edge.target})
+      associations.push({[Field.NAME]: edge.data.relationship.name, [Field.ORIGINAL_TEXT]: edge.data.originalText, "sourceEntity": edge.source, "targetEntity": edge.target})
     }
   }
 
-  result.relationships = relationships
+  result.associations = associations
 
   return result
 }
@@ -402,7 +410,7 @@ export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[], isOnl
 
 export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targetItemName: string, setTitle: any): void =>
 {
-  if (userChoice === UserChoice.ENTITIES)
+  if (userChoice === UserChoice.CLASSES)
   {
     const message = ""
     setTitle((title: ItemsMessage) => { return { ...title, entities: message} })
@@ -412,12 +420,12 @@ export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targ
     const message = `Selected entity: ${sourceItemName}`
     setTitle((title: ItemsMessage) => { return { ...title, attributes: message} })
   }
-  else if (userChoice === UserChoice.RELATIONSHIPS)
+  else if (userChoice === UserChoice.ASSOCIATIONS)
   {
     const message = `Selected entity: ${sourceItemName}`
     setTitle((title: ItemsMessage) => { return { ...title, relationships: message} })
   }
-  else if (userChoice === UserChoice.RELATIONSHIPS2)
+  else if (userChoice === UserChoice.ASSOCIATIONS2)
   {
     const message = `Source entity: ${sourceItemName}\nTarget entity: ${targetItemName}`
     setTitle((title: ItemsMessage) => { return { ...title, relationships: message} })
@@ -427,7 +435,7 @@ export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targ
 
 export const onClearSuggestedItems = (itemType: ItemType, setSuggestedEntities: any, setSuggestedAttributes: any, setSuggestedRelationships: any): void =>
 {
-  if (itemType === ItemType.ENTITY)
+  if (itemType === ItemType.CLASS)
   {
     setSuggestedEntities([])
   }
@@ -435,7 +443,7 @@ export const onClearSuggestedItems = (itemType: ItemType, setSuggestedEntities: 
   {
     setSuggestedAttributes([])
   }
-  else if (itemType === ItemType.RELATIONSHIP)
+  else if (itemType === ItemType.ASSOCIATION)
   {
     setSuggestedRelationships([])
   }
@@ -444,17 +452,17 @@ export const onClearSuggestedItems = (itemType: ItemType, setSuggestedEntities: 
 
 export const changeSidebarTab = (itemType: ItemType, setSidebarTab: any) =>
 {
-  if (itemType === ItemType.ENTITY)
+  if (itemType === ItemType.CLASS)
   {
-    setSidebarTab(SidebarTabs.ENTITIES)
+    setSidebarTab(SidebarTabs.CLASSES)
   }
   else if (itemType === ItemType.ATTRIBUTE)
   {
     setSidebarTab(SidebarTabs.ATTRIBUTES)
   }
-  else if (itemType === ItemType.RELATIONSHIP || itemType === ItemType.GENERALIZATION)
+  else if (itemType === ItemType.ASSOCIATION || itemType === ItemType.GENERALIZATION)
   {
-    setSidebarTab(SidebarTabs.RELATIONSHIPS)
+    setSidebarTab(SidebarTabs.ASSOCIATIONS)
   }
   else
   {
@@ -489,17 +497,17 @@ export const getSnapshotConceptualModel = (userChoice: UserChoice, snapshot: Con
 
 export const itemTypeToUserChoice = (itemType: ItemType): UserChoice =>
 {
-  if (itemType === ItemType.ENTITY)
+  if (itemType === ItemType.CLASS)
   {
-    return UserChoice.ENTITIES
+    return UserChoice.CLASSES
   }
   else if (itemType === ItemType.ATTRIBUTE)
   {
     return UserChoice.ATTRIBUTES
   }
-  else if (itemType === ItemType.RELATIONSHIP || itemType === ItemType.GENERALIZATION)
+  else if (itemType === ItemType.ASSOCIATION || itemType === ItemType.GENERALIZATION)
   {
-    return UserChoice.RELATIONSHIPS
+    return UserChoice.ASSOCIATIONS
   }
 
   throw Error(`Received unknown item type: ${itemType}`)
@@ -539,14 +547,14 @@ export const SAVE_SUGESTED_DESCRIPTION_URL = BASE_URL + SAVE_SUGESTED_DESCRIPTIO
 export const JSON_MODEL_FROM_IRI_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
 
 // TODO: It is probably better to use "null" instead of blank item
-export const blankEntity: Entity = {
-  [Field.IRI]: "", [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
+export const blankEntity: Class = {
+  [Field.IRI]: "", [Field.TYPE]: ItemType.CLASS, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
 }
 
 export const blankAttribute: Attribute = {
   [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "",
   [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "",
-  [Field.SOURCE_ENTITY]: ""
+  [Field.SOURCE_CLASS]: ""
 }
 
 // export const blankRelationship: Relationship = {

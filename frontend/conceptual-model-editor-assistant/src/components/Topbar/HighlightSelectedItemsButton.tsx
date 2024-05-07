@@ -84,7 +84,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                 }
             }
 
-            const originalTextIndexes = nodeData.entity.originalTextIndexes
+            const originalTextIndexes = nodeData.class.originalTextIndexes
 
             if (!originalTextIndexes)
             {
@@ -105,7 +105,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
         for (let i = 0; i < selectedEdges.length; i++)
         {
             const edgeData: EdgeData = selectedEdges[i].data
-            const originalTextIndexes = edgeData.relationship.originalTextIndexes
+            const originalTextIndexes = edgeData.association.originalTextIndexes
             
             if (!originalTextIndexes)
             {
@@ -119,7 +119,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                 const ii2 : number = originalTextIndexes[k + 1]
         
                 originalTextsIndexesObjects.push({
-                    indexes: [ii1, ii2], label: `${selectedEdges[i].source} – ${edgeData.relationship.name} – ${selectedEdges[i].target}`
+                    indexes: [ii1, ii2], label: `${selectedEdges[i].source} – ${edgeData.association.name} – ${selectedEdges[i].target}`
                 })
             }
         }

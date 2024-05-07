@@ -1,5 +1,5 @@
 import { Node, BaseEdge, EdgeLabelRenderer, EdgeProps, MarkerType, getBezierPath, getMarkerEnd, getSimpleBezierPath, getStraightPath, useStore } from 'reactflow';
-import { EdgeData, Field, ItemType, Relationship, PRIMARY_COLOR } from '../interfaces';
+import { EdgeData, Field, ItemType, Association, PRIMARY_COLOR } from '../interfaces';
 import { useCallback, useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
@@ -48,7 +48,7 @@ export default function CustomEdge ({ id, source, target, style, sourceX, source
 
 
   const edgeData: EdgeData = data as EdgeData
-  const relationship: Relationship = edgeData.relationship
+  const relationship: Association = edgeData.association
 
 
   const borderNonSelected = "1px solid black"
@@ -57,7 +57,7 @@ export default function CustomEdge ({ id, source, target, style, sourceX, source
   // console.log(markerEnd)
   // const markerEndString = "url(#1__color=red&height=40&strokeWidth=0.8&type=arrow&width=40)"
 
-  const handleEditRelationship = (relationship: Relationship) =>
+  const handleEditRelationship = (relationship: Association) =>
   {
     setIsItemInConceptualModel(true)
     setIsSuggestedItem(false)

@@ -42,7 +42,7 @@ const Sidebar: React.FC = () =>
                 <Tabs/>
 
                 <TabPanel value="0">
-                    <Suggestions items={entities} title={sidebarTitles.entities} itemType={ItemType.ENTITY}/>
+                    <Suggestions items={entities} title={sidebarTitles.classes} itemType={ItemType.CLASS}/>
                 </TabPanel>
 
                 <TabPanel value="1">
@@ -50,7 +50,7 @@ const Sidebar: React.FC = () =>
                 </TabPanel>
 
                 <TabPanel value="2">
-                    <Suggestions items={relationships} title={sidebarTitles.relationships} itemType={ItemType.RELATIONSHIP}/>
+                    <Suggestions items={relationships} title={sidebarTitles.associations} itemType={ItemType.ASSOCIATION}/>
                 </TabPanel>
             </TabContext>
             

@@ -1,6 +1,6 @@
 import { Button } from "@mui/material"
 import DownloadIcon from '@mui/icons-material/Download';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Entity, EntityJson, Field, GeneralizationJson, ItemType, NodeData, Relationship, RelationshipJson } from "../../interfaces";
+import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Class, ClassJson, Field, GeneralizationJson, ItemType, NodeData, Association, RelationshipJson } from "../../interfaces";
 import { Node, Edge } from "reactflow";
 import { edgesState, importedFileNameState, modelIDState, nodesState } from "../../atoms";
 import { useRecoilValue } from "recoil";
@@ -40,16 +40,16 @@ const ExportJSONButton: React.FC = (): JSX.Element =>
     const convertConceptualModelToJson = (): ConceptualModelJson =>
     {
         // "$schema":"https://schemas.dataspecer.com/adapters/simplified-semantic-model.v1.0.schema.json",
-        let conceptualModel: ConceptualModelJson = { $schema: SCHEMA, classes: [], attributes: [], relationships: [], generalizations: [] }
+        let conceptualModel: ConceptualModelJson = { $schema: SCHEMA, classes: [], attributes: [], associations: [], generalizations: [] }
     
         for (let i = 0; i < nodes.length; i++)
         {
             const node: Node = nodes[i]
             const nodeData: NodeData = node.data
-            const entity: Entity = nodeData.entity
+            const entity: Class = nodeData.class
             const attributes: Attribute[] = nodeData.attributes
         
-            const newEntityJson: EntityJson = {
+            const newEntityJson: ClassJson = {
                 iri: entity[Field.IRI], title: entity[Field.NAME], description: entity[Field.DESCRIPTION]
             }
         
@@ -61,7 +61,7 @@ const ExportJSONButton: React.FC = (): JSX.Element =>
         
                 const newAttributeJson: AttributeJson = {
                     iri: attribute[Field.IRI], title: attribute[Field.NAME], description: attribute[Field.DESCRIPTION],
-                    domain: attribute[Field.SOURCE_ENTITY], domainCardinality: attribute[Field.SOURCE_CARDINALITY],
+                    domain: attribute[Field.SOURCE_CLASS], domainCardinality: attribute[Field.SOURCE_CARDINALITY],
                     range: "", rangeCardinality: null
                 }
         
@@ -74,25 +74,25 @@ const ExportJSONButton: React.FC = (): JSX.Element =>
             const edge: Edge = edges[i]
             const edgeData: EdgeData = edge.data
         
-            const relationship: Relationship = edgeData.relationship
+            const relationship: Association = edgeData.association
 
             if (relationship[Field.TYPE] !== ItemType.GENERALIZATION)
             {
                 // Relationships
                 const newRelationshipJson: RelationshipJson = {
                     iri: relationship[Field.IRI], title: relationship[Field.NAME], description: relationship[Field.DESCRIPTION],
-                    domain: relationship[Field.SOURCE_ENTITY], domainCardinality: relationship[Field.SOURCE_CARDINALITY],
-                    range: relationship[Field.TARGET_ENTITY], rangeCardinality: relationship[Field.TARGET_CARDINALITY]
+                    domain: relationship[Field.SOURCE_CLASS], domainCardinality: relationship[Field.SOURCE_CARDINALITY],
+                    range: relationship[Field.TARGET_CLASS], rangeCardinality: relationship[Field.TARGET_CARDINALITY]
                 }
         
-                conceptualModel.relationships.push(newRelationshipJson)
+                conceptualModel.associations.push(newRelationshipJson)
             }
             else
             {
                 // Generalizations
                 const newGeneralizationJson: GeneralizationJson = {
                     iri: relationship[Field.IRI], title: relationship[Field.NAME], description: relationship[Field.DESCRIPTION],
-                    specialClass: relationship[Field.SOURCE_ENTITY], generalClass: relationship[Field.TARGET_ENTITY]
+                    specialClass: relationship[Field.SOURCE_CLASS], generalClass: relationship[Field.TARGET_CLASS]
                 }
         
                 conceptualModel.generalizations.push(newGeneralizationJson)
