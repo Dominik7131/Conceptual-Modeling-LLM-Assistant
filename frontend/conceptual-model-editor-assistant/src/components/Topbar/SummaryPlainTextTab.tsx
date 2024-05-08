@@ -20,7 +20,7 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
 
     const handleSaveSuggestion = (isPositiveReaction: boolean) =>
     {
-        const userChoice = UserChoice.SUMMARY_DESCRIPTIONS
+        const userChoice = UserChoice.SUMMARY_PLAIN_TEXT
         const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)
         const currentConceptualModel = getSnapshotConceptualModel(userChoice, conceptualModelSnapshot)
 

@@ -2,7 +2,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
 import { Attribute, EdgeData, Class, Field, Item, ItemType, NodeData, Association, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
-import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL, createEdgeUniqueID, createIRIFromName, getSnapshotDomainDescription, snapshotDomainDescription } from "./useUtility";
+import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL, createEdgeUniqueID, createIRIFromName, getSnapshotDomainDescription, itemTypeToUserChoice, snapshotDomainDescription } from "./useUtility";
 import { useState } from "react";
 
 
@@ -36,8 +36,6 @@ const useEditItemDialog = () =>
 
     const onSave = (newItem: Item, oldItem: Item): void =>
     {
-        console.log("Saving: ", newItem)
-
         if (!newItem.name)
         {
             setErrorMessage(_ => "Name cannot be empty")
@@ -67,8 +65,16 @@ const useEditItemDialog = () =>
     const onItemEdit = (field: Field, newValue : string) : void =>
     {
         setEditedSuggestedItem((previousItem: Item) =>
-        { 
-            return { ...previousItem, [field]: newValue }
+        {
+            if (field === Field.NAME)
+            {
+                const newIRI = createIRIFromName(newValue)
+                return { ...previousItem, [field]: newValue, [Field.IRI]: newIRI }
+            }
+            else
+            {
+                return { ...previousItem, [field]: newValue }
+            }
         })
     }
 
@@ -241,17 +247,16 @@ const useEditItemDialog = () =>
     }
 
 
-    const saveSingleFieldSuggestion = (fieldName: string, fieldText: string): void =>
+    const saveSingleFieldSuggestion = (fieldName: string, fieldText: string, itemType: ItemType, sourceClass: string): void =>
     {
         // Save generated single field to backend
 
         const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SINGLE_FIELD, domainDescriptionSnapshot)
-
-        const sourceEntity = getSourceEntityFromItem(regeneratedItem)
+        const userChoice = itemTypeToUserChoice(itemType)
 
         const suggestionData = {
             domainDescription: currentDomainDescription, fieldName: fieldName, fieldText: fieldText,
-            userChoice: UserChoice.SINGLE_FIELD, sourceEntity: sourceEntity, isPositive: true
+            userChoice: userChoice, sourceClass: sourceClass, isPositive: true
         }
 
         fetch(SAVE_SUGESTED_SINGLE_FIELD_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
@@ -260,18 +265,32 @@ const useEditItemDialog = () =>
     
     const onConfirmRegeneratedText = (field : Field) =>
     {
+        let itemType = ItemType.CLASS
+        let sourceClass = ""
+
         setEditedSuggestedItem((editedItem: Item) =>
         {
             // Set type to "any" because Typescript doesn't recognise that we already did the check
             // Otherwise we need to write an if-statement for each field of type Item
             if (regeneratedItem.hasOwnProperty(field))
             {
+                itemType = editedItem[Field.TYPE]
+
+                if (itemType === ItemType.CLASS)
+                {
+                    sourceClass = editedItem[Field.NAME]
+                }
+                else
+                {
+                    sourceClass = (editedItem as Attribute)[Field.SOURCE_CLASS]
+                }
+
                 return {...editedItem, [field]: (regeneratedItem as any)[field]}
             }
             return editedItem
         })
 
-        saveSingleFieldSuggestion(field, (regeneratedItem as any)[field])
+        saveSingleFieldSuggestion(field, (regeneratedItem as any)[field], itemType, sourceClass)
 
         onClearRegeneratedItem(field, false)
     }
@@ -471,7 +490,7 @@ const useEditItemDialog = () =>
         }))
     }
 
-    return { onSave, onClose, onGenerateField, onRemove, onItemEdit, onConfirmRegeneratedText, onChangeItemType, onClearRegeneratedItem, editEdgeRelationship }
+    return { onSave, onClose, onGenerateField, onRemove, onItemEdit, onConfirmRegeneratedText, onChangeItemType, onClearRegeneratedItem }
 }
 
 export default useEditItemDialog

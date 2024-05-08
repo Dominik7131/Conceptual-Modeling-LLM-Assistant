@@ -66,7 +66,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
     return (
         <>
             {
-                summaryDescriptions.classes.length > 0 && <Typography>Entities and attributes:</Typography>
+                summaryDescriptions.classes.length > 0 && <Typography>Classes and attributes:</Typography>
             }
             
             <ul>
@@ -74,7 +74,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
                 summaryDescriptions.classes.map((entity) =>
                     <Typography component="span">
                         <li>
-                            <strong>{capitalizeString(entity.entity)}</strong>: {entity.description}
+                            <strong>{capitalizeString(entity.class)}</strong>: {entity.description}
                             {/* <IconButton>
                                 <CheckIcon color="success"/>
                             </IconButton> */}
@@ -103,15 +103,15 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
             </ul>
 
             {
-                summaryDescriptions.associations.length > 0 && <Typography>Relationships:</Typography>
+                summaryDescriptions.associations.length > 0 && <Typography>Associations:</Typography>
             }
 
             <ul>
             {
-                summaryDescriptions.associations.map((relationship) =>
+                summaryDescriptions.associations.map((association) =>
                     <Typography component="span">
                         <li>
-                            <strong> { capitalizeString(relationship.sourceEntity) }</strong> {relationship.relationship} <strong>{capitalizeString(relationship.targetEntity)}</strong>: {relationship.description}
+                            <strong> { capitalizeString(association.sourceClass) }</strong> {association.association} <strong>{capitalizeString(association.targetClass)}</strong>: {association.description}
                             {/* <IconButton>
                                 <CheckIcon color="success"/>
                             </IconButton> */}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Attribute, Field, Item, ItemType, Association, SummaryObject } from "../interfaces";
+import { Attribute, Field, Item, ItemType, Association, SummaryObject, UserChoice } from "../interfaces";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedEntitiesState, suggestedAttributesState, suggestedRelationshipsState } from "../atoms";
 import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL, createIRIFromName, onClearSuggestedItems } from "./useUtility";
@@ -247,21 +247,21 @@ const useFetchData = () =>
                     {
                       const parsedData = JSON.parse(jsonStringParts[i])
 
-                      if (!parsedData["attributes"])
+                      if (!parsedData[UserChoice.ATTRIBUTES])
                       {
-                        parsedData["attributes"] = []
+                        parsedData[UserChoice.ATTRIBUTES] = []
                       }
                       
                       console.log("Parsed data:", parsedData)
 
-                      if (parsedData.hasOwnProperty("entity"))
+                      if (parsedData.hasOwnProperty(ItemType.CLASS))
                       {
                         setSummaryDescriptions(previousSummary => ({
                           ...previousSummary,
                           classes: [...previousSummary.classes, parsedData],
                         }))
                       }
-                      else if (parsedData.hasOwnProperty("relationship"))
+                      else if (parsedData.hasOwnProperty(ItemType.ASSOCIATION))
                       {
                         setSummaryDescriptions(previousSummary => ({
                           ...previousSummary,

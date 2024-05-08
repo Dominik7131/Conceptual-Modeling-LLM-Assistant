@@ -275,22 +275,24 @@ const onAddAttribute = (attribute : Attribute, setNodes: any) =>
 }
 
 
-const onAddRelationship = (relationship : Association, setNodes: any, setEdges: any): boolean =>
+const onAddRelationship = (association : Association, setNodes: any, setEdges: any): boolean =>
 {
   // Returns "true" if the operation was successfull otherwise "false"
 
-  if (doesEdgeBetweenNodesAlreadyExistSetter(setEdges, relationship.source, relationship.target))
+  console.log("Adding association: ", association)
+
+  if (doesEdgeBetweenNodesAlreadyExistSetter(setEdges, association.source, association.target))
   {
     return false
   }
 
-  const newEdgeID = createEdgeUniqueID(relationship.source, relationship.target, relationship.name)
-  const isTargetNodeCreated: boolean = doesNodeAlreadyExistSetter(setNodes, relationship.target)
+  const newEdgeID = createEdgeUniqueID(association.source, association.target, association.name)
+  const isTargetNodeCreated: boolean = doesNodeAlreadyExistSetter(setNodes, association.target)
 
   if (!isTargetNodeCreated)
   {
     // TODO: Try to come up with a better node position
-    const newNode: Node = createNode(relationship.target, 500, 100)
+    const newNode: Node = createNode(association.target, 500, 100)
 
     setNodes((previousNodes: Node[]) => 
     {
@@ -298,12 +300,12 @@ const onAddRelationship = (relationship : Association, setNodes: any, setEdges: 
     })
   }
 
-  const edgeData: EdgeData = { association: relationship }
+  const edgeData: EdgeData = { association: association }
 
-  const markerEnd = relationship[Field.TYPE] === ItemType.GENERALIZATION ? CUSTOM_ISA_EDGE_MARKER : CUSTOM_EDGE_MARKER
+  const markerEnd = association[Field.TYPE] === ItemType.GENERALIZATION ? CUSTOM_ISA_EDGE_MARKER : CUSTOM_EDGE_MARKER
 
   const newEdge : Edge = {
-    id: newEdgeID, type: "custom-edge", source: relationship.source, target: relationship.target, label: relationship.name, data: edgeData,
+    id: newEdgeID, type: "custom-edge", source: association.source, target: association.target, data: edgeData,
     markerEnd: markerEnd
   }
 

@@ -22,7 +22,7 @@ import useConceptualModel from '../hooks/useConceptualModel';
 const DialogCreateEdge: React.FC = () =>
 {
   const [isOpened, setIsOpened] = useRecoilState(isShowCreateEdgeDialogState)
-  const relationship = useRecoilValue(selectedSuggestedItemState) as Association
+  const association = useRecoilValue(selectedSuggestedItemState) as Association
 
   const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
 
@@ -41,7 +41,7 @@ const DialogCreateEdge: React.FC = () =>
   const handleManuallyAddNewRelationship = (isGeneralization: boolean): void =>
   {
     const itemType: ItemType = isGeneralization ? ItemType.GENERALIZATION : ItemType.ASSOCIATION
-    const newObject = { ...relationship, [Field.TYPE]: itemType}
+    const newObject = { ...association, [Field.TYPE]: itemType}
     setSelectedSuggestedItem(newObject)
     setEditedSuggestedItem(newObject)
 
@@ -61,7 +61,7 @@ const DialogCreateEdge: React.FC = () =>
       >
         <DialogTitle sx={{ textAlign: 'center' }}>
           <Stack>
-            Select how to create relationship with source as "{ relationship.source }" and target as "{ relationship.target }"
+            Select how to create association with source as "{ association.source }" and target as "{ association.target }"
           </Stack>
         </DialogTitle>
 
@@ -74,7 +74,7 @@ const DialogCreateEdge: React.FC = () =>
                   sx={{textTransform: "none"}}
                   onClick={() => { handleManuallyAddNewRelationship(false) } }
                   >
-                    Create relationship manually
+                    Create association manually
                 </Button>
 
                 <Button
@@ -83,16 +83,16 @@ const DialogCreateEdge: React.FC = () =>
                   sx={{textTransform: "none"}}
                   onClick={() => { handleManuallyAddNewRelationship(true) } }
                   >
-                    Create is-a relationship manually
+                    Create is-a association manually
                 </Button>
 
                 <Button
                   startIcon={<AutoFixHighIcon/>}
                   variant="outlined"
                   sx={{textTransform: "none"}}
-                  onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS2, relationship.source, relationship.target); handleClose() } }
+                  onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS2, association.source, association.target); handleClose() } }
                   >
-                    Suggest relationships
+                    Suggest associations
                 </Button>
             </Stack>
 

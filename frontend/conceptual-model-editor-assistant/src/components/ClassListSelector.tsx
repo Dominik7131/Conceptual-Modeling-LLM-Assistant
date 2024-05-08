@@ -23,11 +23,11 @@ const ClassListSelector: React.FC<Props> = ({ fieldName, association, editedItem
     const [value, setValue] = useState((association as any)[fieldName])
     const fieldUIName = fieldName == Field.SOURCE_CLASS ? ItemFieldUIName.SOURCE_CLASS : ItemFieldUIName.TARGET_CLASS
     
-    const { onItemEdit, editEdgeRelationship } = useEditItemDialog()
+    const { onItemEdit } = useEditItemDialog()
 
     const handleChange = (event: SelectChangeEvent) =>
     {
-        setValue(event.target.value);
+        setValue(event.target.value)
         onItemEdit(fieldName, event.target.value)
     }
     
