@@ -160,7 +160,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                     <ListItemIcon>
                         <EditIcon fontSize="small" />
                     </ListItemIcon>
-                        Edit entity
+                        Edit class
                 </MenuItem>
                 <MenuItem onClick={ handleAddNewAttribute }>
                     <ListItemIcon>

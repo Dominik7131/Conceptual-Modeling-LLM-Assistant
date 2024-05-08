@@ -24,6 +24,7 @@ import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import ClassListSelector from './ClassListSelector';
 
 
 const DialogEditItem: React.FC = () =>
@@ -48,10 +49,10 @@ const DialogEditItem: React.FC = () =>
     const { onSave, onClose, onRemove, onItemEdit, onGenerateField, onConfirmRegeneratedText, onClearRegeneratedItem, onChangeItemType } = useEditItemDialog()
 
     const attribute = editedItem as Attribute
-    const relationship = editedItem as Association
+    const association = editedItem as Association
 
     const isAttribute = item.type === ItemType.ATTRIBUTE
-    const isRelationship = item.type === ItemType.ASSOCIATION
+    const isAssociation = item.type === ItemType.ASSOCIATION
 
 
     const handleAddItem = (item: Item): void =>
@@ -183,21 +184,20 @@ const DialogEditItem: React.FC = () =>
                 }
 
                 {
-                    isRelationship && relationship[Field.TYPE] !== ItemType.GENERALIZATION &&
+                    isAssociation && association[Field.TYPE] !== ItemType.GENERALIZATION &&
                     <>
-                        {/* { showEditField(ItemFieldUIName.SOURCE_CLASS, Field.SOURCE_CLASS, relationship[Field.SOURCE_CLASS]) } */}
-                        { showClassesList(ItemFieldUIName.SOURCE_CLASS) }
-                        { showEditField(ItemFieldUIName.TARGET_CLASS, Field.TARGET_CLASS, relationship[Field.TARGET_CLASS]) }
-                        { showEditField(ItemFieldUIName.SOURCE_CARDINALITY, Field.SOURCE_CARDINALITY, relationship[Field.SOURCE_CARDINALITY]) }
-                        { showEditField(ItemFieldUIName.TARGET_CARDINALITY, Field.TARGET_CARDINALITY, relationship[Field.TARGET_CARDINALITY]) }
+                        { <ClassListSelector fieldName={Field.SOURCE_CLASS} association={association} editedItem={editedItem}/> }
+                        { <ClassListSelector fieldName={Field.TARGET_CLASS} association={association} editedItem={editedItem}/> }
+                        { showEditField(ItemFieldUIName.SOURCE_CARDINALITY, Field.SOURCE_CARDINALITY, association[Field.SOURCE_CARDINALITY]) }
+                        { showEditField(ItemFieldUIName.TARGET_CARDINALITY, Field.TARGET_CARDINALITY, association[Field.TARGET_CARDINALITY]) }
                     </>
                 }
 
                 {
-                    isRelationship && relationship[Field.TYPE] === ItemType.GENERALIZATION &&
+                    isAssociation && association[Field.TYPE] === ItemType.GENERALIZATION &&
                     <>
-                        { showEditField(ItemFieldUIName.GENERAl_CLASS, Field.SOURCE_CLASS, relationship[Field.SOURCE_CLASS]) }
-                        { showEditField(ItemFieldUIName.SPECIAL_CLASS, Field.TARGET_CLASS, relationship[Field.TARGET_CLASS]) }
+                        { showEditField(ItemFieldUIName.GENERAl_CLASS, Field.SOURCE_CLASS, association[Field.SOURCE_CLASS]) }
+                        { showEditField(ItemFieldUIName.SPECIAL_CLASS, Field.TARGET_CLASS, association[Field.TARGET_CLASS]) }
                     </>
                 }
 
@@ -239,7 +239,7 @@ const DialogEditItem: React.FC = () =>
                     }
 
                     {
-                        isSuggestedItem && !isDisableChange && isRelationship &&
+                        isSuggestedItem && !isDisableChange && isAssociation &&
                             <Button
                                 variant="contained"
                                 sx={{ textTransform: "none" }}

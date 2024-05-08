@@ -36,6 +36,8 @@ const useEditItemDialog = () =>
 
     const onSave = (newItem: Item, oldItem: Item): void =>
     {
+        console.log("Saving: ", newItem)
+
         if (!newItem.name)
         {
             setErrorMessage(_ => "Name cannot be empty")
@@ -176,8 +178,6 @@ const useEditItemDialog = () =>
     {
         // Find the edge to update based on the old ID
         const oldID: string = createEdgeUniqueID(oldRelationship.source, oldRelationship.target, oldRelationship[Field.IRI])
-
-        console.log("OldID: ", oldID)
 
         setEdges((edges) => edges.map((currentEdge : Edge) =>
         {
@@ -471,7 +471,7 @@ const useEditItemDialog = () =>
         }))
     }
 
-    return { onSave, onClose, onGenerateField, onRemove, onItemEdit, onConfirmRegeneratedText, onChangeItemType, onClearRegeneratedItem }
+    return { onSave, onClose, onGenerateField, onRemove, onItemEdit, onConfirmRegeneratedText, onChangeItemType, onClearRegeneratedItem, editEdgeRelationship }
 }
 
 export default useEditItemDialog
