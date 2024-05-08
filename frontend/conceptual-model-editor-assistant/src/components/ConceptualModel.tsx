@@ -3,7 +3,7 @@ import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyN
 import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
 import { Field, Item, ItemType, Association } from '../interfaces';
-import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarWidthPercentageState } from '../atoms';
+import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarWidthPercentageState, topbarHeightPxState } from '../atoms';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useCallback, useEffect } from 'react';
 import useConceptualModel from '../hooks/useConceptualModel';
@@ -25,6 +25,11 @@ const ConceptualModel: React.FC = () =>
   const setIsItemInConceptualModel = useSetRecoilState(isItemInConceptualModelState)
   
   const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialogState)
+  const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
+
+  const topbarHeightPx = useRecoilValue(topbarHeightPxState) // 361
+  const heightPx = 947 - topbarHeightPx
+
 
 
   const { parseSerializedConceptualModel } = useConceptualModel()
@@ -72,9 +77,6 @@ const ConceptualModel: React.FC = () =>
     parseSerializedConceptualModel()
   }, [])
 
-  const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
-
-  const heightPx = 586
 
   // Define custom edge type for selected state
 

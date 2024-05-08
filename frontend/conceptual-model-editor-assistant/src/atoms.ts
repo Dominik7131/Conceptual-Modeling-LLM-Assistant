@@ -248,3 +248,9 @@ export const isSummaryDescriptionReactButtonClickedState = atom({
     key: 'isSummaryDescriptionReactButtonClickedState',
     default: false,
 })
+
+
+export const topbarHeightPxState = atom({
+    key: 'topbarHeightPxState',
+    default: 361, // 361
+})
