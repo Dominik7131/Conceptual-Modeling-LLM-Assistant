@@ -252,5 +252,10 @@ export const isSummaryDescriptionReactButtonClickedState = atom({
 
 export const topbarHeightPxState = atom({
     key: 'topbarHeightPxState',
-    default: 361, // 361
+    default: 361,
+})
+
+export const isSidebarCollapsedState = atom({
+    key: 'isSidebarCollapsedState',
+    default: false,
 })

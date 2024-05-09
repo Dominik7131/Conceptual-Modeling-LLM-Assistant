@@ -1,6 +1,6 @@
 import Drawer from '@mui/material/Drawer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { isLoadingSuggestedItemsState, isSidebarOpenState, sidebarTabValueState, sidebarTitlesState, sidebarWidthPercentageState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState } from '../../atoms';
+import { isLoadingSuggestedItemsState, isSidebarCollapsedState, isSidebarOpenState, sidebarTabValueState, sidebarTitlesState, sidebarWidthPercentageState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState } from '../../atoms';
 import ItemDisplay from './ItemDisplay';
 import { Button, Divider, Stack, Tab, Typography } from '@mui/material';
 import { Attribute, Field, Item, ItemType } from '../../interfaces';
@@ -14,7 +14,8 @@ import { useState } from 'react';
 
 const Sidebar: React.FC = () =>
 {
-    const [isCollapsed, setIsCollapsed] = useState(false)
+    const isCollapsed = useRecoilValue(isSidebarCollapsedState)
+
     const [previousWidthPercentage, setPreviousWidthPercentage] = useState(0)
 
 
@@ -29,21 +30,21 @@ const Sidebar: React.FC = () =>
 
     const sidebarTitles = useRecoilValue(sidebarTitlesState)
 
-    const collapsedWidthPercentage = 3
+    // const collapsedWidthPercentage = 3
 
-    const handleChangeSize = () =>
-    {
-        if (isCollapsed)
-        {
-            setSidebarWidthPercentage(previousWidthPercentage)
-        }
-        else
-        {
-            setPreviousWidthPercentage(sidebarWidthPercentage)
-            setSidebarWidthPercentage(collapsedWidthPercentage)
-        }
-        setIsCollapsed(previousValue => !previousValue)
-    }
+    // const handleChangeSize = () =>
+    // {
+    //     if (isCollapsed)
+    //     {
+    //         setSidebarWidthPercentage(previousWidthPercentage)
+    //     }
+    //     else
+    //     {
+    //         setPreviousWidthPercentage(sidebarWidthPercentage)
+    //         setSidebarWidthPercentage(collapsedWidthPercentage)
+    //     }
+    //     setIsCollapsed(previousValue => !previousValue)
+    // }
 
     return (
         <Drawer
@@ -71,16 +72,6 @@ const Sidebar: React.FC = () =>
                     </TabPanel>
                 </TabContext>
             }
-
-            
-            <Button
-                onClick={handleChangeSize}
-                color="inherit"
-                size="small"
-                sx={{position: "absolute", right: "0px", top: "50%", zindex: 2 }}
-            >
-                    { isCollapsed ? <ChevronLeftIcon/> : <ChevronRightIcon/>}
-            </Button>
         </Drawer>
     )
 }

@@ -13,7 +13,7 @@ import { Field, Item, ItemType, Association, UserChoice } from '../interfaces';
 import useUtility from '../hooks/useUtility';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { editedSuggestedItemState, isShowCreateEdgeDialogState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../atoms';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import useConceptualModel from '../hooks/useConceptualModel';
@@ -69,7 +69,7 @@ const DialogCreateEdge: React.FC = () =>
 
             <Stack direction="row" sx={{justifyContent:'space-around'}}>
                 <Button
-                  startIcon={<AddIcon/>}
+                  startIcon={ <AddIcon/> }
                   variant="outlined"
                   sx={{textTransform: "none"}}
                   onClick={() => { handleManuallyAddNewRelationship(false) } }
@@ -78,7 +78,7 @@ const DialogCreateEdge: React.FC = () =>
                 </Button>
 
                 <Button
-                  startIcon={<AddIcon/>}
+                  startIcon={ <AddIcon/> }
                   variant="outlined"
                   sx={{textTransform: "none"}}
                   onClick={() => { handleManuallyAddNewRelationship(true) } }
@@ -87,7 +87,7 @@ const DialogCreateEdge: React.FC = () =>
                 </Button>
 
                 <Button
-                  startIcon={<AutoFixHighIcon/>}
+                  startIcon={ <AutoFixNormalIcon/> }
                   variant="outlined"
                   sx={{textTransform: "none"}}
                   onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS2, association.source, association.target); handleClose() } }

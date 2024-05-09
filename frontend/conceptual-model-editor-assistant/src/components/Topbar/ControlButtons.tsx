@@ -1,7 +1,7 @@
 import { Button, Stack } from "@mui/material"
 import DomainDescriptionTextArea from "./DomainDescriptionTextArea";
 import AddIcon from '@mui/icons-material/Add';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import useConceptualModel from "../../hooks/useConceptualModel";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
 import { Class, Field, ItemType, TopbarTabs, UserChoice } from "../../interfaces";
@@ -45,7 +45,7 @@ const ControlButtons: React.FC = (): JSX.Element =>
                         variant="contained"
                         sx={{textTransform: "none"}}
                         disableElevation
-                        startIcon={<AutoFixHighIcon/>}
+                        startIcon={<AutoFixNormalIcon/>}
                         onClick={() => onSuggestItems(UserChoice.CLASSES, null, null)}>
                             Suggest classes
                     </Button>

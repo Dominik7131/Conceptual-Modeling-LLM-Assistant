@@ -1,5 +1,5 @@
 import { Button } from "@mui/material"
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { SUMMARY_DESCRIPTIONS_NAME, convertConceptualModelToJSON, snapshotConceptualModel, snapshotDomainDescription } from "../../hooks/useUtility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryDescriptionReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryDescriptionsState, topbarTabValueState } from "../../atoms";
@@ -57,7 +57,7 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
             variant="contained"
             sx={{textTransform: "none"}}
             disableElevation
-            startIcon={<AutoFixHighIcon/>}
+            startIcon={<AutoFixNormalIcon/>}
             onClick={ handleSummaryDescriptionsClick }>
                 { SUMMARY_DESCRIPTIONS_NAME }
         </Button>

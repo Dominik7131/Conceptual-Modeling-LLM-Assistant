@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import ModeStandbyIcon from '@mui/icons-material/ModeStandby';
@@ -172,14 +172,14 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
 
                 <MenuItem onClick={() => { onSuggestItems(UserChoice.ATTRIBUTES, entity[Field.NAME], null); handleClose(); }}>
                     <ListItemIcon>
-                        <AutoFixHighIcon fontSize="small" />
+                        <AutoFixNormalIcon fontSize="small" />
                     </ListItemIcon>
                         Suggest attributes
                 </MenuItem>
                 
                 <MenuItem onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS, entity[Field.NAME], null); handleClose(); }}>
                     <ListItemIcon>
-                        <AutoFixHighIcon fontSize="small" />
+                        <AutoFixNormalIcon fontSize="small" />
                     </ListItemIcon>
                         Suggest associations
                     </MenuItem>
