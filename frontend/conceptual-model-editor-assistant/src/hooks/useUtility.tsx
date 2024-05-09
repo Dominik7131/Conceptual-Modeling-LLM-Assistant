@@ -176,15 +176,15 @@ export const createErrorMessage = (item: Item, setErrorMessage: SetterOrUpdater<
 
   if (item.type === ItemType.CLASS)
   {
-    message = `Entity "${item.name}" already exists`
+    message = `Class "${item.name}" already exists`
   }
   else if (item.type === ItemType.ATTRIBUTE)
   {
-    message = `Entity "${(item as Attribute)[Field.SOURCE_CLASS]}" already contains attribute "${item.name}"`
+    message = `Class "${(item as Attribute)[Field.SOURCE_CLASS]}" already contains attribute "${item.name}"`
   }
   else if (item.type === ItemType.ASSOCIATION)
   {
-    message = `Relationship in between source entity "${(item as Association)[Field.SOURCE_CLASS]}" and target entity "${(item as Association)[Field.TARGET_CLASS]}" already exists`
+    message = `Association in between source class "${(item as Association)[Field.SOURCE_CLASS]}" and target class "${(item as Association)[Field.TARGET_CLASS]}" already exists`
   }
 
   setErrorMessage(message)
@@ -192,10 +192,9 @@ export const createErrorMessage = (item: Item, setErrorMessage: SetterOrUpdater<
 
 export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
 {
-
   if (item.type === ItemType.CLASS)
   {
-    return addEntity(item as Class, 66, 66, setNodes)
+    return addClass(item as Class, 66, 66, setNodes)
   }
   else if (item.type === ItemType.ATTRIBUTE)
   {
@@ -203,7 +202,7 @@ export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
   }
   else if (item.type === ItemType.ASSOCIATION)
   {
-    return onAddRelationship(item as Association, setNodes, setEdges)
+    return onAddAssociation(item as Association, setNodes, setEdges)
   }
   else
   {
@@ -212,20 +211,20 @@ export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
 }
 
 
-export const addEntity = (entity: Class, positionX: number, positionY: number, setNodes: any): boolean =>
+export const addClass = (clss: Class, positionX: number, positionY: number, setNodes: any): boolean =>
 {
-  if (doesNodeAlreadyExistSetter(setNodes, entity[Field.IRI]))
+  if (doesNodeAlreadyExistSetter(setNodes, clss[Field.IRI]))
   {
     return false
   }
 
-  const entityIRI = createIRIFromName(entity[Field.NAME])
-  entity = { ...entity, [Field.IRI]: entityIRI}
+  const entityIRI = createIRIFromName(clss[Field.NAME])
+  clss = { ...clss, [Field.IRI]: entityIRI}
 
-  const nodeData: NodeData = { class: entity, attributes: [] }
+  const nodeData: NodeData = { class: clss, attributes: [] }
 
   const newNode: Node = {
-    id: entity[Field.IRI], type: "customNode", position: { x: positionX, y: positionY },
+    id: clss[Field.IRI], type: "customNode", position: { x: positionX, y: positionY },
     data: nodeData
   }
 
@@ -241,7 +240,6 @@ const onAddAttribute = (attribute : Attribute, setNodes: any) =>
 {
   const nodeID = attribute.source
   let isAttributePresent = false
-  
 
   setNodes((nodes: Node[]) => nodes.map((currentNode : Node) =>
   {
@@ -275,30 +273,42 @@ const onAddAttribute = (attribute : Attribute, setNodes: any) =>
 }
 
 
-const onAddRelationship = (association : Association, setNodes: any, setEdges: any): boolean =>
+const onAddAssociation = (association : Association, setNodes: any, setEdges: any): boolean =>
 {
   // Returns "true" if the operation was successfull otherwise "false"
-
-  console.log("Adding association: ", association)
+  console.log("Adding: ", association)
 
   if (doesEdgeBetweenNodesAlreadyExistSetter(setEdges, association.source, association.target))
   {
     return false
   }
 
-  const newEdgeID = createEdgeUniqueID(association.source, association.target, association.name)
-  const isTargetNodeCreated: boolean = doesNodeAlreadyExistSetter(setNodes, association.target)
+  const newEdgeID = createEdgeUniqueID(association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS], association[Field.NAME])
+  const isTargetNodeCreated: boolean = doesNodeAlreadyExistSetter(setNodes, association[Field.TARGET_CLASS])
 
   if (!isTargetNodeCreated)
   {
-    // TODO: Try to come up with a better node position
-    const newNode: Node = createNode(association.target, 500, 100)
+    const associationName = createNameFromIRI(association[Field.TARGET_CLASS])
+    const newNode: Node = createNode(associationName, 500, 100)
 
     setNodes((previousNodes: Node[]) => 
     {
       return [...previousNodes, newNode]
     })
   }
+
+  const isSourceNodeCreated: boolean = doesNodeAlreadyExistSetter(setNodes, association[Field.SOURCE_CLASS])
+  if (!isSourceNodeCreated)
+    {
+      const associationName = createNameFromIRI(association[Field.SOURCE_CLASS])
+      const newNode: Node = createNode(associationName, 500, 200)
+  
+      setNodes((previousNodes: Node[]) =>
+      {
+        return [...previousNodes, newNode]
+      })
+    }
+
 
   const edgeData: EdgeData = { association: association }
 
@@ -308,6 +318,8 @@ const onAddRelationship = (association : Association, setNodes: any, setEdges: a
     id: newEdgeID, type: "custom-edge", source: association.source, target: association.target, data: edgeData,
     markerEnd: markerEnd
   }
+
+  console.log("New edge: ", newEdge)
 
   setEdges((previousEdges: Edge[]) =>
   {
@@ -321,6 +333,7 @@ const onAddRelationship = (association : Association, setNodes: any, setEdges: a
 export const createNode = (nodeName: string, positionX: number, positionY: number): Node =>
 {
   const nodeIRI = createIRIFromName(nodeName)
+
   const newEntity: Class = {
     [Field.IRI]: nodeIRI, [Field.NAME]: nodeName, [Field.TYPE]: ItemType.CLASS, [Field.DESCRIPTION]: "",
     [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
@@ -361,8 +374,15 @@ export const createIRIFromName = (name: string): string =>
   // global ('g') flag is used so the regex does not stop after the first match
   name = name.replace(/\s+/g, ' ')
 
-  const iri = name.split(" ").join('-').toLowerCase() // Replace every whitespace character with '-'
+  const iri = name.split(' ').join('-').toLowerCase() // Replace every whitespace character with '-'
   return iri
+}
+
+
+export const createNameFromIRI = (iri: string): string =>
+{
+  const name = iri.split('-').join(' ').toLowerCase()
+  return name
 }
 
 
@@ -412,6 +432,9 @@ export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[], isOnl
 
 export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targetItemName: string, setTitle: any): void =>
 {
+  console.log("uc: ", userChoice)
+  console.log("sin: ", sourceItemName)
+
   if (userChoice === UserChoice.CLASSES)
   {
     const message = ""
@@ -419,18 +442,18 @@ export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targ
   }
   else if (userChoice === UserChoice.ATTRIBUTES)
   {
-    const message = `Selected entity: ${sourceItemName}`
+    const message = `Selected class: ${sourceItemName}`
     setTitle((title: ItemsMessage) => { return { ...title, attributes: message} })
   }
   else if (userChoice === UserChoice.ASSOCIATIONS)
   {
-    const message = `Selected entity: ${sourceItemName}`
-    setTitle((title: ItemsMessage) => { return { ...title, relationships: message} })
+    const message = `Selected class: ${sourceItemName}`
+    setTitle((title: ItemsMessage) => { return { ...title, associations: message} })
   }
   else if (userChoice === UserChoice.ASSOCIATIONS2)
   {
-    const message = `Source entity: ${sourceItemName}\nTarget entity: ${targetItemName}`
-    setTitle((title: ItemsMessage) => { return { ...title, relationships: message} })
+    const message = `Source class: ${sourceItemName}\nTarget class: ${targetItemName}`
+    setTitle((title: ItemsMessage) => { return { ...title, associations: message} })
   }
 }
 

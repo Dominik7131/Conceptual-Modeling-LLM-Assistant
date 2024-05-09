@@ -29,7 +29,7 @@ const DomainDescriptionTextArea: React.FC = ():JSX.Element =>
     {
         if (domainDescription === "")
         {
-            loadDomainDescriptionFromFile()
+            // loadDomainDescriptionFromFile()
         }
     }, [])
 

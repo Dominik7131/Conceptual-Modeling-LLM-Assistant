@@ -110,12 +110,11 @@ def save_suggested_item():
     item = body_data["item"]
     isPositive = body_data["isPositive"]
 
-    # print(f"Item: {item}")
-    # item = json.loads(item)
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
 
+    is_domain_description = domain_description != ""
     is_chain_of_thoughts = (user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.ASSOCIATIONS.value)
-    prompt = llm_assistant.get_prompt(user_choice=user_choice, is_chain_of_thoughts=is_chain_of_thoughts)
+    prompt = llm_assistant.get_prompt(user_choice=user_choice, is_chain_of_thoughts=is_chain_of_thoughts, is_domain_description=is_domain_description)
     completed_item["prompt"] = prompt
 
     if user_choice == UserChoice.ATTRIBUTES or user_choice == UserChoice.ASSOCIATIONS.value:
@@ -181,4 +180,4 @@ if __name__ == '__main__':
 
     llm_assistant = LLMAssistant()
 
-    app.run(port=5000, threaded=True) # host="0.0.0.0"
+    app.run(port=5000, threaded=True, host="0.0.0.0")

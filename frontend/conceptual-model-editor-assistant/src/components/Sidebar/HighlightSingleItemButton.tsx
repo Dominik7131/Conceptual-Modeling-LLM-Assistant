@@ -22,6 +22,11 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
 
     const onHighlightSingleItem = () =>
     {
+        if (!item.hasOwnProperty(Field.ORIGINAL_TEXT_INDEXES))
+        {
+            item = { ...item, [Field.ORIGINAL_TEXT_INDEXES]: [] }
+        }
+
         setIsShowTitleDialogDomainDescription(true)
         setIsShowHighlightDialog(_ => true)
         setSelectedSuggestedItem(_ => item)

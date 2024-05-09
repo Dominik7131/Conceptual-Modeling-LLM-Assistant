@@ -1,6 +1,7 @@
 import re
 from difflib import SequenceMatcher
 from enum import Enum
+import string
 
 
 LOGGER_NAME = "LLM_logger"
@@ -185,7 +186,7 @@ class TextUtility:
         return True
 
 
-    def convert_name_to_standard_convention(name):
+    def convert_string_to_standard_convention(name):
         # Convert text in any convention to a lower-cased text where each word is delimited with a space
 
         # TODO: Convert camel case starting with a small letter
@@ -193,6 +194,11 @@ class TextUtility:
         
         if not name:
             return ""
+        
+        # Detect full upper-case name
+        is_all_uppercase = all((char.isupper() or char in string.punctuation) for char in name)
+        if is_all_uppercase:
+            name = name.lower()
 
         # Detect snake_case_convention
         if name[0].islower() and '_' in name:

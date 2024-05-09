@@ -135,9 +135,15 @@ class LLMAssistant:
 
         else:
             # Lower case the first letter in the `name` to consistently have all names with the first letter in lower case
-            completed_item["name"] = completed_item["name"][0].lower() + completed_item["name"][1:]
+            # completed_item["name"] = completed_item["name"][0].lower() + completed_item["name"][1:]
 
-            completed_item["name"] = TextUtility.convert_name_to_standard_convention(completed_item["name"])
+            completed_item[Field.NAME.value] = TextUtility.convert_string_to_standard_convention(completed_item[Field.NAME.value])
+
+            if Field.SOURCE_CLASS.value in completed_item:
+                completed_item[Field.SOURCE_CLASS.value] = TextUtility.convert_string_to_standard_convention(completed_item[Field.SOURCE_CLASS.value])
+
+            if Field.TARGET_CLASS.value in completed_item:
+                completed_item[Field.TARGET_CLASS.value] = TextUtility.convert_string_to_standard_convention(completed_item[Field.TARGET_CLASS.value])
         
 
         if not is_item_ok:

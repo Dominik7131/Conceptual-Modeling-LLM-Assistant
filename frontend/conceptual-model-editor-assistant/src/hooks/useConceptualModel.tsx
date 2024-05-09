@@ -131,8 +131,7 @@ const useConceptualModel = () =>
 
     const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
-    const sourceItemIRI = createIRIFromName(sourceItemName)
-    fetchStreamedData(bodyData, sourceItemIRI, itemType)
+    fetchStreamedData(bodyData, sourceItemName, itemType)
   }
 
     

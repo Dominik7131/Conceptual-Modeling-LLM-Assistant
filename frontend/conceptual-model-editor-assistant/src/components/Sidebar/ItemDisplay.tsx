@@ -1,6 +1,7 @@
 import { ListItemText, Stack, Typography } from "@mui/material"
 import { Attribute, Field, Item, ItemFieldUIName, ItemType, Association } from "../../interfaces"
 import ControlButtons from "./ControlButtons"
+import { createNameFromIRI } from "../../hooks/useUtility"
 
 interface Props
 {
@@ -11,10 +12,10 @@ interface Props
 const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
 {
     const attribute : Attribute = (item as Attribute)
-    const relationship : Association = (item as Association)
+    const association : Association = (item as Association)
 
     const isAttribute = item.type === ItemType.ATTRIBUTE
-    const isRelationship = item.type === ItemType.ASSOCIATION
+    const isAssociation = item.type === ItemType.ASSOCIATION
 
     // Display original text in gray color if generated original text was not found in domain description
     const customLightGray = "#b5b5b5"
@@ -51,22 +52,22 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
             }
 
             {
-                isRelationship && relationship[Field.SOURCE_CLASS] &&
-                    <Typography> <strong> { ItemFieldUIName.SOURCE_CLASS }:</strong> { relationship[Field.SOURCE_CLASS] } </Typography>
+                isAssociation && association[Field.SOURCE_CLASS] &&
+                    <Typography> <strong> { ItemFieldUIName.SOURCE_CLASS }:</strong> { createNameFromIRI(association[Field.SOURCE_CLASS]) } </Typography>
             }
 
             {
-                isRelationship && relationship[Field.TARGET_CLASS] &&
-                    <Typography> <strong> { ItemFieldUIName.TARGET_CLASS }:</strong> { relationship[Field.TARGET_CLASS] } </Typography>
+                isAssociation && association[Field.TARGET_CLASS] &&
+                    <Typography> <strong> { ItemFieldUIName.TARGET_CLASS }:</strong> { createNameFromIRI(association[Field.TARGET_CLASS]) } </Typography>
             }
 
             {
-                isRelationship && relationship[Field.SOURCE_CARDINALITY] &&
-                    <Typography> <strong> { ItemFieldUIName.SOURCE_CARDINALITY }:</strong> { relationship[Field.SOURCE_CARDINALITY] } </Typography>
+                isAssociation && association[Field.SOURCE_CARDINALITY] &&
+                    <Typography> <strong> { ItemFieldUIName.SOURCE_CARDINALITY }:</strong> { association[Field.SOURCE_CARDINALITY] } </Typography>
             }
 
-            { isRelationship && relationship[Field.TARGET_CARDINALITY] &&
-                    <Typography> <strong> { ItemFieldUIName.TARGET_CARDINALITY }:</strong> { relationship[Field.TARGET_CARDINALITY] } </Typography>
+            { isAssociation && association[Field.TARGET_CARDINALITY] &&
+                    <Typography> <strong> { ItemFieldUIName.TARGET_CARDINALITY }:</strong> { association[Field.TARGET_CARDINALITY] } </Typography>
             }
         </Stack>
     )

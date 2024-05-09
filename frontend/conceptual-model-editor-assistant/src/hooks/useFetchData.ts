@@ -22,7 +22,7 @@ const useFetchData = () =>
     const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
 
 
-    const fetchStreamedData = (bodyData: any, sourceClassIRI: string, itemType: ItemType) =>
+    const fetchStreamedData = (bodyData: any, sourceClassName: string, itemType: ItemType) =>
     {
       // TODO: add object interface for header and bodyData
 
@@ -82,7 +82,7 @@ const useFetchData = () =>
                       }
 
                       isEmptyResponse = false
-                      onProcessStreamedData(value, sourceClassIRI, itemType)
+                      onProcessStreamedData(value, sourceClassName, itemType)
 
                       // Read the next chunk
                       readChunk()
@@ -90,6 +90,9 @@ const useFetchData = () =>
                   .catch(error =>
                   {
                     console.error(error)
+                    setItemTypesToLoad(previousItems => previousItems.filter(currentItemType => currentItemType !== itemType))
+                    const errorMessage = `Backend error: ${error}\n\nFor more info check the console.`
+                    setErrorMessage(errorMessage)
                   })
           }
           // Start reading the first chunk
@@ -97,7 +100,7 @@ const useFetchData = () =>
       })
       .catch(error =>
       {
-        console.log(error)
+        console.error(error)
         setItemTypesToLoad(previousItems => previousItems.filter(currentItemType => currentItemType !== itemType))
         const errorMessage = `Backend error: ${error}\n\nFor more info check the console.`
         setErrorMessage(errorMessage)
@@ -126,11 +129,11 @@ const useFetchData = () =>
         })
       }
 
-      const sourceClassIRI = createIRIFromName(sourceClassName)
 
       if (itemType === ItemType.ATTRIBUTE)
       {
         let attribute: Attribute = item as Attribute
+        const sourceClassIRI = createIRIFromName(sourceClassName)
         attribute[Field.SOURCE_CLASS] = sourceClassIRI
 
         setSuggestedAttributes(previousSuggestedItems => {
@@ -139,11 +142,15 @@ const useFetchData = () =>
       }
       else if (itemType === ItemType.ASSOCIATION)
       {
-        let relationship: Association = item as Association
-        relationship[Field.SOURCE_CLASS] = sourceClassIRI
+        let association: Association = item as Association
+        const sourceClassIRI = createIRIFromName(association[Field.SOURCE_CLASS])
+        const targetClassIRI = createIRIFromName(association[Field.TARGET_CLASS])
+        
+        association[Field.SOURCE_CLASS] = sourceClassIRI
+        association[Field.TARGET_CLASS] = targetClassIRI
 
         setSuggestedRelationships(previousSuggestedItems => {
-          return [...previousSuggestedItems, relationship]
+          return [...previousSuggestedItems, association]
         })
       }
     }
