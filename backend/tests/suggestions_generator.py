@@ -77,8 +77,8 @@ def create_relationships_expected_output(test_cases):
         for index, output in enumerate(expected_output):
             name = output[Field.NAME.value]
             original_text = output[Field.ORIGINAL_TEXT.value]
-            source_entity = output[Field.SOURCE_ENTITY.value]
-            target_entity = output[Field.TARGET_ENTITY.value]
+            source_entity = output[Field.SOURCE_CLASS.value]
+            target_entity = output[Field.TARGET_CLASS.value]
 
             entry = f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n"
             result.append(entry)
@@ -92,8 +92,8 @@ def create_relationships2_expected_output(test_cases):
     for test_case in test_cases:
         name = test_case[Field.NAME.value]
         original_text = test_case[Field.ORIGINAL_TEXT.value]
-        source_entity = test_case[Field.SOURCE_ENTITY.value]
-        target_entity = test_case[Field.TARGET_ENTITY.value]
+        source_entity = test_case[Field.SOURCE_CLASS.value]
+        target_entity = test_case[Field.TARGET_CLASS.value]
 
 
         entry = f"{name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n"
@@ -115,10 +115,10 @@ def generate_expected_output(test_file_path, output_file_path, user_choice):
     elif user_choice == UserChoice.ATTRIBUTES.value:
         expected_output = create_attributes_expected_output(test_cases)
     
-    elif user_choice == UserChoice.RELATIONSHIPS.value:
+    elif user_choice == UserChoice.ASSOCIATIONS.value:
         expected_output = create_relationships_expected_output(test_cases)
     
-    elif user_choice == UserChoice.RELATIONSHIPS2.value:
+    elif user_choice == UserChoice.ASSOCIATIONS2.value:
         expected_output = create_relationships2_expected_output(test_cases)
 
     else:
@@ -250,8 +250,8 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
             else:
                 original_text = ""
 
-            source_entity = suggested_item[Field.SOURCE_ENTITY.value].lower()
-            target_entity = suggested_item[Field.TARGET_ENTITY.value].lower()
+            source_entity = suggested_item[Field.SOURCE_CLASS.value].lower()
+            target_entity = suggested_item[Field.TARGET_CLASS.value].lower()
 
             if is_csv_output:
                 original_text = original_text.replace('"', "'")
@@ -266,8 +266,8 @@ def create_relationships2_actual_output(llm_assistant, test_cases, user_choice, 
 
     result = []
     for test_case in test_cases:
-        source_entity = test_case[Field.SOURCE_ENTITY.value]
-        target_entity = test_case[Field.TARGET_ENTITY.value]
+        source_entity = test_case[Field.SOURCE_CLASS.value]
+        target_entity = test_case[Field.TARGET_CLASS.value]
 
         result.append(f"Source entity: {source_entity}, Target entity: {target_entity}")
         iterator = llm_assistant.suggest(source_entity=source_entity, target_entity=target_entity, user_choice=user_choice, domain_description=domain_description)
@@ -296,10 +296,10 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
     elif user_choice == UserChoice.ATTRIBUTES.value:
         results = create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
     
-    elif user_choice == UserChoice.RELATIONSHIPS.value:
+    elif user_choice == UserChoice.ASSOCIATIONS.value:
         results = create_relationships_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
     
-    elif user_choice == UserChoice.RELATIONSHIPS2.value:
+    elif user_choice == UserChoice.ASSOCIATIONS2.value:
         results = create_relationships2_actual_output(llm_assistant, test_cases, user_choice, domain_description)
 
     else:
@@ -313,7 +313,7 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
 def main():
 
     parser = argparse.ArgumentParser(description = "Suggestions generator")
-    parser.add_argument("--user_choice", choices = [UserChoice.ENTITIES.value, UserChoice.ATTRIBUTES.value, UserChoice.RELATIONSHIPS.value, UserChoice.RELATIONSHIPS2.value], type=str, default=UserChoice.ENTITIES.value, help = "Choose elements to generate")
+    parser.add_argument("--user_choice", choices = [UserChoice.ENTITIES.value, UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS.value, UserChoice.ASSOCIATIONS2.value], type=str, default=UserChoice.ENTITIES.value, help = "Choose elements to generate")
     parser.add_argument("--output_format", choices = ["txt", "csv"], type=str, default="csv", help = "Choose output file format")
     parser.add_argument("--generate_expected_output_only", action = "store_true", default=False, help = "")
     args = parser.parse_args()

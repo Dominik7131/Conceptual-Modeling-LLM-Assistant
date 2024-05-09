@@ -7,10 +7,10 @@ LOGGER_NAME = "LLM_logger"
 
 
 class UserChoice(Enum):
-    ENTITIES = "classes"
+    CLASSES = "classes"
     ATTRIBUTES = "attributes"
-    RELATIONSHIPS = "associations"
-    RELATIONSHIPS2 = "associations2"
+    ASSOCIATIONS = "associations"
+    ASSOCIATIONS2 = "associations2"
     SUMMARY_PLAIN_TEXT = "summary-plain-text"
     SUMMARY_DESCRIPTIONS = "summary-descriptions"
     SINGLE_FIELD = "single-field"
@@ -36,8 +36,8 @@ class Field(Enum):
     ORIGINAL_TEXT_INDEXES = "originalTextIndexes"
     DATA_TYPE = "dataType"
     CARDINALITY = "cardinality"
-    SOURCE_ENTITY = "source"
-    TARGET_ENTITY = "target"
+    SOURCE_CLASS = "source"
+    TARGET_CLASS = "target"
 
 
 class FieldUI(Enum):
@@ -52,8 +52,8 @@ class FieldUI(Enum):
 
 
 class PromptFileSymbols(Enum):
-    SOURCE_ENTITY = "{source_class}"
-    TARGET_ENTITY = "{target_class}"
+    SOURCE_CLASS = "{source_class}"
+    TARGET_CLASS = "{target_class}"
     DOMAIN_DESCRIPTION = "{domain_description}"
     ITEMS_COUNT_TO_SUGGEST = "{items_count}"
     CONCEPTUAL_MODEL = "{conceptual_model}"
@@ -415,7 +415,7 @@ class TextUtility:
             # Relevant sentece = sentence that contains all lemmas in `inference_part` (probably except brackets, punctuation etc.)        
             if is_inference_found:
                 inference_parts_found += 1
-            elif not user_choice == UserChoice.ENTITIES.value:
+            elif not user_choice == UserChoice.CLASSES.value:
                 new_result = TextUtility.findSubstrings(inference_part, domain_description)
                 if new_result:
                     is_inference_found = True
@@ -427,7 +427,7 @@ class TextUtility:
 
         # TODO: Fix bug with too many inference indexes
         # Do not limit number of outputs if we are suggesting entities
-        if not user_choice == UserChoice.ENTITIES.value and len(result) > 10:
+        if not user_choice == UserChoice.CLASSES.value and len(result) > 10:
             result = []
 
         return result, inference_parts_found, inference_parts_total

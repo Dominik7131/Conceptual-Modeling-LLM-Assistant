@@ -20,10 +20,10 @@ class UserInputProcessor():
             self.user_choice = UserChoice.ATTRIBUTES.value
 
         elif self.user_choice == "r":
-            self.user_choice = UserChoice.RELATIONSHIPS.value
+            self.user_choice = UserChoice.ASSOCIATIONS.value
 
         elif self.user_choice == "x":
-            self.user_choice = UserChoice.RELATIONSHIPS2.value
+            self.user_choice = UserChoice.ASSOCIATIONS2.value
             entities = self.entity_name.split(',')
             self.entity_name = entities[0]
             self.entity_name_2 = entities[1]

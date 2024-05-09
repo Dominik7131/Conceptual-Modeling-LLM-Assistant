@@ -33,12 +33,12 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 def suggest():
 
     body_data = request.get_json()
-    source_entity = body_data["sourceEntity"]
-    target_entity = body_data["targetEntity"]
+    source_class = body_data["sourceEntity"]
+    target_class = body_data["targetEntity"]
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
 
-    return llm_assistant.suggest(source_entity, target_entity, user_choice, domain_description=domain_description, count_items_to_suggest=5)
+    return llm_assistant.suggest(source_class, target_class, user_choice, domain_description=domain_description, count_items_to_suggest=5)
 
 
 
@@ -46,14 +46,14 @@ def suggest():
 def generate_single_field():
 
     body_data = request.get_json()
-    source_entity = body_data["sourceEntity"]
-    target_entity = body_data["targetEntity"]
+    source_class = body_data["sourceEntity"]
+    target_class = body_data["targetEntity"]
     name = body_data["name"]
     field = body_data["field"]
     domain_description = body_data["domainDescription"]
     user_choice = body_data["userChoice"]
 
-    return llm_assistant.generate_single_field(user_choice, name, source_entity, target_entity, domain_description, field)
+    return llm_assistant.generate_single_field(user_choice, name, source_class, target_class, domain_description, field)
 
 
 @app.route('/summary_plain_text', methods=['POST'])
@@ -110,15 +110,17 @@ def save_suggested_item():
     item = body_data["item"]
     isPositive = body_data["isPositive"]
 
-    item = json.loads(item)
+    # print(f"Item: {item}")
+    # item = json.loads(item)
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
 
-    is_chain_of_thoughts = (user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.RELATIONSHIPS.value)
+    is_chain_of_thoughts = (user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.ASSOCIATIONS.value)
     prompt = llm_assistant.get_prompt(user_choice=user_choice, is_chain_of_thoughts=is_chain_of_thoughts)
     completed_item["prompt"] = prompt
 
-    relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_entity=item[Field.SOURCE_CLASS])
-    completed_item["filtered_domain_description": relevant_texts]
+    if user_choice == UserChoice.ATTRIBUTES or user_choice == UserChoice.ASSOCIATIONS.value:
+        relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_class=item[Field.SOURCE_CLASS.value])
+        completed_item["filtered_domain_description"] = relevant_texts
 
     save_item_to_storage(completed_item)
 
@@ -132,17 +134,17 @@ def save_suggested_single_field():
     user_choice = body_data["userChoice"]
     field_name = body_data["fieldName"]
     field_text = body_data["fieldText"]
-    source_entity = body_data["sourceEntity"]
+    source_class = body_data["sourceClass"]
     domain_description = body_data["domainDescription"]
     isPositive = body_data["isPositive"]
 
     completed_item = { "domain_description": domain_description, "field_name": field_name, "field_text": field_text, "is_positive": isPositive }
 
-    prompt = llm_assistant.get_prompt(user_choice=user_choice, field_name=field_name)
+    prompt = llm_assistant.get_prompt(user_choice=user_choice, field_name=field_name, is_chain_of_thoughts=False)
     completed_item["prompt"] = prompt
 
-    relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_entity=source_entity)
-    completed_item["filtered_domain_description": relevant_texts]
+    relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_class=source_class)
+    completed_item["filtered_domain_description"] = relevant_texts
 
     save_item_to_storage(completed_item)
 
@@ -161,7 +163,7 @@ def save_suggested_description():
 
     completed_item = { "domain_description": domain_description, "summary": summary, "is_positive": isPositive, "conceptual_model": conceptual_model }
 
-    prompt = llm_assistant.get_prompt(user_choice=user_choice)
+    prompt = llm_assistant.get_prompt(user_choice=user_choice, is_chain_of_thoughts=False)
     completed_item["prompt"] = prompt
 
     save_item_to_storage(completed_item)

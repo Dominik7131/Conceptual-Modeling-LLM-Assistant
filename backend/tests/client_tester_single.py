@@ -35,7 +35,7 @@ def main():
 
             entity_1 = entity
             entity_2 = ""
-            if user_choice == UserChoice.RELATIONSHIPS2.value:
+            if user_choice == UserChoice.ASSOCIATIONS2.value:
                 entity_1 = entity[0]
                 entity_2 = entity[1]
 

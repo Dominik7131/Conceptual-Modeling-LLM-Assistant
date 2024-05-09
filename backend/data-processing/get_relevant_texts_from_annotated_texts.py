@@ -108,8 +108,8 @@ def create_suggestions_two_known_entities(dictionary, model, text):
         indexes = dictionary[relationship_name]
         relevant_texts = get_text_from_indexes(indexes, text)
 
-        result_two_known_entities.append({ Field.NAME.value: relationship_name, Field.SOURCE_ENTITY.value: source_entity, Field.TARGET_ENTITY.value: target_entity, "relevant_texts": relevant_texts })
-        relationships2_out_suggestions.append({ Field.NAME.value: relationship_name, Field.SOURCE_ENTITY.value: source_entity, Field.TARGET_ENTITY.value: target_entity, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts) })
+        result_two_known_entities.append({ Field.NAME.value: relationship_name, Field.SOURCE_CLASS.value: source_entity, Field.TARGET_CLASS.value: target_entity, "relevant_texts": relevant_texts })
+        relationships2_out_suggestions.append({ Field.NAME.value: relationship_name, Field.SOURCE_CLASS.value: source_entity, Field.TARGET_CLASS.value: target_entity, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts) })
 
 
     generalizations2_out_suggestions = []
@@ -189,7 +189,7 @@ def convert_to_relevant_texts(dictionary, text, model, file_path):
 
             if source_entity == entity_name or target_entity == entity_name:
                 relationships_out.append({ "name": relationship_name, "is_source": is_source, "relevant_texts": relevant_texts_relationships })
-                relationships_out_suggestions.append({"name": relationship_name, Field.SOURCE_ENTITY.value: source_entity, Field.TARGET_ENTITY.value: target_entity, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts_relationships)})
+                relationships_out_suggestions.append({"name": relationship_name, Field.SOURCE_CLASS.value: source_entity, Field.TARGET_CLASS.value: target_entity, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts_relationships)})
 
 
         result_one_known_entity.append({"entity": entity_name, "relevant_texts": relevant_texts_entities, "attributes": attributes_out,

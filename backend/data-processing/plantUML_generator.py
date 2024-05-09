@@ -67,7 +67,7 @@ def main():
 
             entities_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ENTITIES.value}-actual-0{i + 1}.csv")
             attributes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
-            relationships_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.RELATIONSHIPS.value}-actual-0{i + 1}.csv")
+            relationships_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ASSOCIATIONS.value}-actual-0{i + 1}.csv")
 
             if not os.path.isfile(entities_path):
                 raise ValueError(f"Entities file not found: {entities_path}")

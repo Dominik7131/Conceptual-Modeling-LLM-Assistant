@@ -15,13 +15,13 @@ def main():
 
     entities = {
         UserChoice.ATTRIBUTES.value: ["course", "professor"],
-        UserChoice.RELATIONSHIPS.value: [],
-        UserChoice.RELATIONSHIPS2.value: []
+        UserChoice.ASSOCIATIONS.value: [],
+        UserChoice.ASSOCIATIONS2.value: []
         }
 
 
     domain_descriptions = ["We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."]
-    user_choices = [UserChoice.ATTRIBUTES.value, UserChoice.RELATIONSHIPS.value, UserChoice.RELATIONSHIPS2.value]
+    user_choices = [UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS.value, UserChoice.ASSOCIATIONS2.value]
 
     file_name = os.path.join("output", f"{time.strftime('%Y-%m-%d-%H-%M-%S')}.txt")
 
@@ -39,7 +39,7 @@ def main():
 
                 entity_1 = entity
                 entity_2 = ""
-                if user_choice == UserChoice.RELATIONSHIPS2.value:
+                if user_choice == UserChoice.ASSOCIATIONS2.value:
                     entity_1 = entity[0]
                     entity_2 = entity[1]
 

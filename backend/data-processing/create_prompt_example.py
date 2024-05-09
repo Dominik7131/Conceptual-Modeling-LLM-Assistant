@@ -72,7 +72,7 @@ def get_attributes_examples(expected_suggestions):
 def get_relationships1_examples(expected_suggestions):
 
     result = []
-    expected_suggestions = expected_suggestions[UserChoice.RELATIONSHIPS.value]
+    expected_suggestions = expected_suggestions[UserChoice.ASSOCIATIONS.value]
 
     for suggestion in expected_suggestions:
         source_entity = suggestion["entity"]
@@ -82,15 +82,15 @@ def get_relationships1_examples(expected_suggestions):
         for output in expected_output:
             name = output[Field.NAME.value]
             original_text = output[Field.ORIGINAL_TEXT.value]
-            source_entity = output[Field.SOURCE_ENTITY.value]
-            target_entity = output[Field.TARGET_ENTITY.value]
+            source_entity = output[Field.SOURCE_CLASS.value]
+            target_entity = output[Field.TARGET_CLASS.value]
 
             result.append(f"context: {original_text}")
             result.append(f"name: {name}")
             result.append(f"source entity: {source_entity}")
             result.append(f"target entity: {target_entity}")
 
-            JSON_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\", \"{Field.SOURCE_ENTITY.value}\": \"{source_entity}\", \"{Field.TARGET_ENTITY.value}\": \"{target_entity}\""
+            JSON_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\", \"{Field.SOURCE_CLASS.value}\": \"{source_entity}\", \"{Field.TARGET_CLASS.value}\": \"{target_entity}\""
             result.append("JSON object: {" + JSON_object + "}\n")
 
         result.append("")
@@ -101,21 +101,21 @@ def get_relationships1_examples(expected_suggestions):
 def get_relationships2_examples(expected_suggestions):
 
     result = []
-    expected_suggestions = expected_suggestions[UserChoice.RELATIONSHIPS2.value]
+    expected_suggestions = expected_suggestions[UserChoice.ASSOCIATIONS2.value]
 
     for suggestion in expected_suggestions:
 
         name = suggestion[Field.NAME.value]
         original_text = suggestion[Field.ORIGINAL_TEXT.value]
-        source_entity = suggestion[Field.SOURCE_ENTITY.value]
-        target_entity = suggestion[Field.TARGET_ENTITY.value]
+        source_entity = suggestion[Field.SOURCE_CLASS.value]
+        target_entity = suggestion[Field.TARGET_CLASS.value]
 
         result.append(f"context: {original_text}")
         result.append(f"name: {name}")
         result.append(f"source entity: {source_entity}")
         result.append(f"target entity: {target_entity}")
 
-        JSON_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\", \"{Field.SOURCE_ENTITY.value}\": \"{source_entity}\", \"{Field.TARGET_ENTITY.value}\": \"{target_entity}\""
+        JSON_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\", \"{Field.SOURCE_CLASS.value}\": \"{source_entity}\", \"{Field.TARGET_CLASS.value}\": \"{target_entity}\""
         result.append("JSON object: {" + JSON_object + "}\n")
 
     return result
