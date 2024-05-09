@@ -27,7 +27,7 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
 
 
     return (
-        <Stack marginTop={"15px"}>
+        <Stack marginTop={"15px"} width="342px">
             <Typography> <strong>{ ItemFieldUIName.NAME }:</strong> { item[Field.NAME] } </Typography>
 
             {
