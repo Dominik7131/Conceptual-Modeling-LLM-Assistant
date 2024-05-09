@@ -1,2 +1,4 @@
-Which associations does the class: "{source_class}" have? Output exactly {items_count} associations in JSON format like this:
+Generate {items_count} associations for the class: "{source_class}" in JSON format like this:
 {"description": "description of the association", "name": "association name", "source": "source class name", "target": "target class name"}
+
+Output:

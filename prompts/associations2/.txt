@@ -1,2 +1,4 @@
-What associations are between the class "{source_class}" and the class "{target_class}"? Output exactly {count_items} associations in JSON format like this:
+Generate {items_count} associations for the class "{source_class}" and the class "{target_class}" in JSON format like this:
 {"description": "description of the association", "name": "association name", "source": "source class name", "target": "target class name"}
+
+Output:

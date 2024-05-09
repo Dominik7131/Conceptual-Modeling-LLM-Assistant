@@ -1,2 +1,4 @@
-What attributes does the class: "{source_class}" have? Output exactly {items_count} attributes in JSON format like this:
+Generate {items_count} attributes for the class: "{source_class}" in JSON format like this:
 {"description": "attribute description", "name": "attribute name"}.
+
+Output:
