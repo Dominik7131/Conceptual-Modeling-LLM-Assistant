@@ -11,7 +11,7 @@ Given classes, attributes and associations:
 Given context:
 "We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."
 
-Output that you should generate:
+Output:
 {"class": "student", "description": "A student class represents an individual enrolled in an educational institution", "attributes": [{"name": "name", "description": "The name of the student"}]}
 {"class": "course", "description": "A course class representing educational modules", "attributes": [{"name": "name", "description": "The name of the course"}, {"name": "number of credits", "description": "The number of credits assigned to the course"}]}
 {"class": "professor", "description": "A professor class representing instructors teaching courses", "attributes": [{"name": "name", "description": "The name of the professor"}]}
@@ -30,3 +30,5 @@ Given classes, attributes and associations:
 
 Given context:
 "{domain_description}"
+
+Output:
