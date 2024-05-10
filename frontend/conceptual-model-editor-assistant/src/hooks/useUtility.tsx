@@ -194,7 +194,7 @@ export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
 {
   if (item.type === ItemType.CLASS)
   {
-    return addClass(item as Class, 66, 66, setNodes)
+    return onAddClass(item as Class, 66, 66, setNodes)
   }
   else if (item.type === ItemType.ATTRIBUTE)
   {
@@ -211,15 +211,15 @@ export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
 }
 
 
-export const addClass = (clss: Class, positionX: number, positionY: number, setNodes: any): boolean =>
+export const onAddClass = (clss: Class, positionX: number, positionY: number, setNodes: any): boolean =>
 {
   if (doesNodeAlreadyExistSetter(setNodes, clss[Field.IRI]))
   {
     return false
   }
 
-  const entityIRI = createIRIFromName(clss[Field.NAME])
-  clss = { ...clss, [Field.IRI]: entityIRI}
+  const iri = createIRIFromName(clss[Field.NAME])
+  clss = { ...clss, [Field.IRI]: iri}
 
   const nodeData: NodeData = { class: clss, attributes: [] }
 
@@ -299,15 +299,15 @@ const onAddAssociation = (association : Association, setNodes: any, setEdges: an
 
   const isSourceNodeCreated: boolean = doesNodeAlreadyExistSetter(setNodes, association[Field.SOURCE_CLASS])
   if (!isSourceNodeCreated)
+  {
+    const associationName = createNameFromIRI(association[Field.SOURCE_CLASS])
+    const newNode: Node = createNode(associationName, 500, 200)
+
+    setNodes((previousNodes: Node[]) =>
     {
-      const associationName = createNameFromIRI(association[Field.SOURCE_CLASS])
-      const newNode: Node = createNode(associationName, 500, 200)
-  
-      setNodes((previousNodes: Node[]) =>
-      {
-        return [...previousNodes, newNode]
-      })
-    }
+      return [...previousNodes, newNode]
+    })
+  }
 
 
   const edgeData: EdgeData = { association: association }
@@ -315,7 +315,7 @@ const onAddAssociation = (association : Association, setNodes: any, setEdges: an
   const markerEnd = association[Field.TYPE] === ItemType.GENERALIZATION ? CUSTOM_ISA_EDGE_MARKER : CUSTOM_EDGE_MARKER
 
   const newEdge : Edge = {
-    id: newEdgeID, type: "custom-edge", source: association.source, target: association.target, data: edgeData,
+    id: newEdgeID, type: "custom-edge", source: association[Field.SOURCE_CLASS], target: association[Field.TARGET_CLASS], data: edgeData,
     markerEnd: markerEnd
   }
 
@@ -341,8 +341,8 @@ export const createNode = (nodeName: string, positionX: number, positionY: numbe
 
   const nodeData: NodeData = { class: newEntity, attributes: [] }
 
-  const newNode: Node = { id: nodeName, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
-  
+  const newNode: Node = { id: nodeIRI, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
+
   return newNode
 }
 
@@ -432,8 +432,6 @@ export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[], isOnl
 
 export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targetItemName: string, setTitle: any): void =>
 {
-  console.log("uc: ", userChoice)
-  console.log("sin: ", sourceItemName)
 
   if (userChoice === UserChoice.CLASSES)
   {
@@ -546,7 +544,7 @@ export const CUSTOM_ISA_EDGE_MARKER: EdgeMarker = { type: MarkerType.ArrowClosed
 export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
 export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 
-const BASE_URL = "http://127.0.0.1:5000/"
+const BASE_URL = "http://127.0.0.1:5000/" // https://llm-backend.opendata.cz/
 export const HEADER = { "Content-Type": "application/json" }
 
 export const SIDEBAR_BUTTON_SIZE = "small"

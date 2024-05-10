@@ -2,7 +2,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
 import { Attribute, EdgeData, Class, Field, Item, ItemType, NodeData, Association, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
-import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL, createEdgeUniqueID, createIRIFromName, getSnapshotDomainDescription, itemTypeToUserChoice, snapshotDomainDescription } from "./useUtility";
+import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL, createEdgeUniqueID, createIRIFromName, createNameFromIRI, getSnapshotDomainDescription, itemTypeToUserChoice, snapshotDomainDescription } from "./useUtility";
 import { useState } from "react";
 
 
@@ -14,6 +14,7 @@ const useEditItemDialog = () =>
     const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
 
     const [changedItemName, setChangedItemName] = useState("")
+    const [changedDataType, setChangedDataType] = useState("")
 
     const setNodes = useSetRecoilState(nodesState)
     const setEdges = useSetRecoilState(edgesState)
@@ -408,12 +409,15 @@ const useEditItemDialog = () =>
             const oldAttribute = item as Attribute
         
             const relationship : Association = {
-                [Field.IRI]: oldAttribute[Field.IRI], [Field.TYPE]: ItemType.ASSOCIATION, [Field.NAME]: changedItemName, [Field.DESCRIPTION]: oldAttribute.description,
-                [Field.ORIGINAL_TEXT]: oldAttribute.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldAttribute.originalTextIndexes, [Field.SOURCE_CLASS]: oldAttribute.source,
-                [Field.TARGET_CLASS]: oldAttribute.name, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""
+                [Field.IRI]: oldAttribute[Field.IRI], [Field.TYPE]: ItemType.ASSOCIATION, [Field.NAME]: changedItemName,
+                [Field.DESCRIPTION]: oldAttribute[Field.DESCRIPTION], [Field.ORIGINAL_TEXT]: oldAttribute[Field.ORIGINAL_TEXT],
+                [Field.ORIGINAL_TEXT_INDEXES]: oldAttribute[Field.ORIGINAL_TEXT_INDEXES],
+                [Field.SOURCE_CLASS]: oldAttribute[Field.SOURCE_CLASS], [Field.TARGET_CLASS]: oldAttribute[Field.IRI],
+                [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""
             }
         
             setChangedItemName("")
+            setChangedDataType(oldAttribute[Field.DATA_TYPE])
             setSelectedSuggestedItem(relationship)
             setEditedSuggestedItem(relationship)
         }
@@ -421,11 +425,11 @@ const useEditItemDialog = () =>
         {
             const oldRelationship = item as Association
             setChangedItemName(oldRelationship[Field.NAME])
-            console.log("Setting")
+            const newTarget = createNameFromIRI(oldRelationship.target)
 
             const attribute : Attribute = {
-                [Field.IRI]: oldRelationship[Field.IRI], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: oldRelationship.target, [Field.DESCRIPTION]: oldRelationship.description,
-                [Field.DATA_TYPE]: "string", [Field.ORIGINAL_TEXT]: oldRelationship.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldRelationship.originalTextIndexes,
+                [Field.IRI]: oldRelationship[Field.IRI], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: newTarget, [Field.DESCRIPTION]: oldRelationship.description,
+                [Field.DATA_TYPE]: changedDataType, [Field.ORIGINAL_TEXT]: oldRelationship.originalText, [Field.ORIGINAL_TEXT_INDEXES]: oldRelationship.originalTextIndexes,
                 [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_CLASS]: oldRelationship.source
             }
         

@@ -39,8 +39,8 @@ def suggest():
                 # time.sleep(2)
                 pass
             else:
-                yield '{"name": "enrolled in", "originalText": "Students can be enrolled in any number of courses", "originalTextIndexes": [10,20], "source": "student", "target": "course"}\n'
-                yield '{"name": "accommodated in", "originalText": "students can be accommodated in dormitories", "originalTextIndexes": [20,100], "source": "student", "target": "dormitory"}\n'
+                yield '{"name": "enrolled in", "originalText": "Students can be enrolled in any number of courses", "originalTextIndexes": [10,20], "source": "farmer", "target": "fruit and something"}\n'
+                yield '{"name": "accommodated in", "originalText": "students can be accommodated in dormitories", "originalTextIndexes": [20,100], "source": "student and x", "target": "farmer"}\n'
         return generate_mock_up()
 
 

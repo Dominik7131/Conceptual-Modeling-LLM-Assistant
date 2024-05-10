@@ -77,6 +77,11 @@ const ConceptualModel: React.FC = () =>
     parseSerializedConceptualModel()
   }, [])
 
+  // useEffect(() =>
+  // {
+  //   console.log(nodes)
+  // }, [nodes])
+
 
   // Define custom edge type for selected state
 
