@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import { Typography } from '@mui/material';
-import useUtility, { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, clipName, } from '../hooks/useUtility';
+import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, clipName, } from '../utils/utility';
 import useConceptualModel from '../hooks/useConceptualModel';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState } from '../atoms';

@@ -3,7 +3,8 @@ import HighlightIcon from '@mui/icons-material/Highlight';
 import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../../interfaces";
-import { HEADER, MERGE_ORIGINAL_TEXT_URL, capitalizeString } from "../../hooks/useUtility";
+import { capitalizeString } from "../../utils/utility";
+import { HEADER, MERGE_ORIGINAL_TEXT_URL } from "../../utils/urls";
 
 
 const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>

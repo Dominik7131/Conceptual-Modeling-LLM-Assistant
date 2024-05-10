@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { Node, Edge, MarkerType, getMarkerEnd } from 'reactflow';
 
 import 'reactflow/dist/style.css';
-import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, changeSidebarTab, changeTitle, convertConceptualModelToJSON, createEdgeUniqueID, createIRIFromName, onClearSuggestedItems, snapshotDomainDescription, userChoiceToItemType } from './useUtility';
+import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, changeSidebarTab, changeTitle, convertConceptualModelToJSON, createEdgeUniqueID, createIRIFromName, onClearSuggestedItems, snapshotDomainDescription, userChoiceToItemType } from '../utils/utility';
 import useFetchData from './useFetchData';
 import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Class, Field, ItemType, NodeData, Association, UserChoice } from '../interfaces';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';

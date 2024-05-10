@@ -3,7 +3,9 @@ import HighlightIcon from '@mui/icons-material/Highlight';
 import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { useSetRecoilState } from "recoil";
 import { Attribute, Field, Item, ItemType, Association } from "../../interfaces";
-import { SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE, capitalizeString } from "../../hooks/useUtility";
+import { capitalizeString } from "../../utils/utility";
+import { useState } from "react";
+import { SIDEBAR_BUTTON_SIZE } from "../../utils/urls";
 
 
 interface Props
@@ -13,6 +15,7 @@ interface Props
 
 const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
 {
+    const isDisabled = !item.hasOwnProperty(Field.ORIGINAL_TEXT_INDEXES)
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setIsShowHighlightDialog = useSetRecoilState(isShowHighlightDialogState)
     const setOriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
@@ -60,6 +63,7 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
             leaveDelay={200}>
 
             <Button
+                disabled={isDisabled}
                 size={ SIDEBAR_BUTTON_SIZE }
                 sx={{ textTransform: "none" }}
                 onClick={() => onHighlightSingleItem()}>

@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Attribute, Field, Item, ItemType, Association, SummaryObject, UserChoice } from "../interfaces";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedEntitiesState, suggestedAttributesState, suggestedRelationshipsState } from "../atoms";
-import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL, createIRIFromName, onClearSuggestedItems } from "./useUtility";
+import { createIRIFromName, onClearSuggestedItems } from "../utils/utility";
+import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL } from "../utils/urls";
 
 
 const useFetchData = () =>

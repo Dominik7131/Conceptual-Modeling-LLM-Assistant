@@ -1,28 +1,21 @@
 import { SetterOrUpdater } from "recoil";
-import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, EdgeData, Class, Field, Item, ItemType, ItemsMessage, NodeData, Association, SidebarTabs, UserChoice } from "../interfaces"
-import { Node, Edge, MarkerType, EdgeMarker, Position, internalsSymbol } from 'reactflow';
+import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, EdgeData, Class, Field, Item, ItemType, ItemsMessage, NodeData, Association, SidebarTabs, UserChoice, ConceptualModelJson, ClassJson, AttributeJson, RelationshipJson, GeneralizationJson } from "../interfaces"
+import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
 
 
-const useUtility = () =>
+export const getUserChoiceSingular = (userChoice : string) =>
 {
-    const getUserChoiceSingular = (userChoice : string) =>
-    {
-      if (!userChoice)
-      {
-        return ""
-      }
+  if (!userChoice)
+  {
+    return ""
+  }
 
-      let result : string = ""
-      if (userChoice === UserChoice.CLASSES) { result = "Entity" }
-      else if (userChoice === UserChoice.ATTRIBUTES) { result = "Attribute" }
-      else if (userChoice === UserChoice.ASSOCIATIONS) { result = "Relationship" }
-      return result
-    }
-
-    return { capitalizeString, getUserChoiceSingular }
+  let result : string = ""
+  if (userChoice === UserChoice.CLASSES) { result = "Entity" }
+  else if (userChoice === UserChoice.ATTRIBUTES) { result = "Attribute" }
+  else if (userChoice === UserChoice.ASSOCIATIONS) { result = "Relationship" }
+  return result
 }
-
-export default useUtility
 
 
 export const createEdgeUniqueID = (source: string, target: string, name: string): string =>
@@ -544,30 +537,6 @@ export const CUSTOM_ISA_EDGE_MARKER: EdgeMarker = { type: MarkerType.ArrowClosed
 export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
 export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 
-const BASE_URL = "http://127.0.0.1:5000/" // https://llm-backend.opendata.cz/
-export const HEADER = { "Content-Type": "application/json" }
-
-export const SIDEBAR_BUTTON_SIZE = "small"
-export const SIDEBAR_BUTTON_COLOR = "secondary"
-
-const SUGGEST_ITEMS_ENDPOINT = "suggest"
-const SUMMARY_PLAIN_TEXT_ENDPOINT = "summary_plain_text"
-const SUMMARY_DESCRIPTIONS_ENDPOINT = "summary_descriptions"
-const EDIT_ITEM_ENDPOINT = "getOnly"
-const MERGE_ORIGINAL_TEXT_ENDPOINT = "merge_original_texts"
-const SAVE_SUGESTED_ITEM = "save_suggested_item"
-const SAVE_SUGESTED_SINGLE_FIELD = "save_suggested_single_field"
-const SAVE_SUGESTED_DESCRIPTION = "save_suggested_description"
-
-export const SUGGEST_ITEMS_URL = BASE_URL + SUGGEST_ITEMS_ENDPOINT
-export const SUMMARY_PLAIN_TEXT_URL = BASE_URL + SUMMARY_PLAIN_TEXT_ENDPOINT
-export const SUMMARY_DESCRIPTIONS_URL = BASE_URL + SUMMARY_DESCRIPTIONS_ENDPOINT
-export const EDIT_ITEM_URL = BASE_URL + EDIT_ITEM_ENDPOINT
-export const MERGE_ORIGINAL_TEXT_URL = BASE_URL + MERGE_ORIGINAL_TEXT_ENDPOINT
-export const SAVE_SUGESTED_ITEM_URL = BASE_URL + SAVE_SUGESTED_ITEM
-export const SAVE_SUGESTED_SINGLE_FIELD_URL = BASE_URL + SAVE_SUGESTED_SINGLE_FIELD
-export const SAVE_SUGESTED_DESCRIPTION_URL = BASE_URL + SAVE_SUGESTED_DESCRIPTION
-export const JSON_MODEL_FROM_IRI_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
 
 // TODO: It is probably better to use "null" instead of blank item
 export const blankEntity: Class = {
@@ -579,8 +548,4 @@ export const blankAttribute: Attribute = {
   [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "",
   [Field.SOURCE_CLASS]: ""
 }
-
-// export const blankRelationship: Relationship = {
-//   [Field.IRI]: "", [Field.TYPE]: ItemType.ENTITY, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
-// }
 

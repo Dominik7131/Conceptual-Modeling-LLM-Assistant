@@ -8,7 +8,7 @@ import { Association, Field, Item, ItemFieldUIName } from "../interfaces"
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState } from "react"
 import useEditItemDialog from "../hooks/useEditItemDialog"
-import { createIRIFromName, createNameFromIRI, doesNodeAlreadyExist } from "../hooks/useUtility"
+import { createIRIFromName, createNameFromIRI, doesNodeAlreadyExist } from "../utils/utility"
 
 
 interface Props

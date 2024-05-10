@@ -2,7 +2,7 @@ import { Box, Button, Tab } from "@mui/material"
 import { topbarTabValueState } from "../../atoms"
 import { useSetRecoilState } from "recoil"
 import { TabList } from "@mui/lab"
-import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME } from "../../hooks/useUtility"
+import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME } from "../../utils/utility"
 import { TopbarTabs } from "../../interfaces"
 
 

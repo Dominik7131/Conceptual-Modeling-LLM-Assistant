@@ -2,18 +2,15 @@ import { ChangeEvent } from "react";
 import Button from "@mui/material/Button";
 import UploadIcon from '@mui/icons-material/Upload';
 import { useSetRecoilState } from "recoil";
-import { importedFileNameState } from "../../atoms";
-import { ConceptualModelJson } from "../../interfaces";
+import { edgesState, importedFileNameState, nodesState } from "../../atoms";
+import { importConceptualModelFromJson } from "../../utils/import";
 
 
-interface Props
+const ImportJSONButton: React.FC = () =>
 {
-    onImport: (conceptualModelJson: ConceptualModelJson) => void
-}
-
-
-const ImportJSONButton: React.FC<Props> = ({ onImport }) =>
-{
+    const setNodes = useSetRecoilState(nodesState)
+    const setEdges = useSetRecoilState(edgesState)
+    
     const setImportedFileName = useSetRecoilState(importedFileNameState)
 
 
@@ -44,7 +41,7 @@ const ImportJSONButton: React.FC<Props> = ({ onImport }) =>
 
             const { result } = event.target
             let jsonObject = JSON.parse(result as string)
-            onImport(jsonObject)
+            importConceptualModelFromJson(jsonObject, setNodes, setEdges)
         }
         reader.readAsText(file)
 

@@ -13,7 +13,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import ModeStandbyIcon from '@mui/icons-material/ModeStandby';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import useUtility, { capitalizeString, clipName } from '../hooks/useUtility';
+import { capitalizeString, clipName } from '../utils/utility';
 import useConceptualModel from '../hooks/useConceptualModel';
 import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../atoms';
 import { useSetRecoilState } from 'recoil';

@@ -5,10 +5,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import { Attribute, Field, Item, ItemType, Association } from "../../interfaces";
 import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarErrorMsgState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { HEADER, SAVE_SUGESTED_ITEM_URL, SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE, createErrorMessage, getSnapshotDomainDescription, itemTypeToUserChoice, onAddItem } from "../../hooks/useUtility";
+import { createErrorMessage, getSnapshotDomainDescription, itemTypeToUserChoice, onAddItem } from "../../utils/utility";
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { useState } from "react";
+import { HEADER, SAVE_SUGESTED_ITEM_URL, SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE } from "../../utils/urls";
 
 
 interface Props

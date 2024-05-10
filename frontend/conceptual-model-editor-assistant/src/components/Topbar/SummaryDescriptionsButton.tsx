@@ -1,6 +1,6 @@
 import { Button } from "@mui/material"
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
-import { SUMMARY_DESCRIPTIONS_NAME, convertConceptualModelToJSON, snapshotConceptualModel, snapshotDomainDescription } from "../../hooks/useUtility";
+import { SUMMARY_DESCRIPTIONS_NAME, convertConceptualModelToJSON, snapshotConceptualModel, snapshotDomainDescription } from "../../utils/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryDescriptionReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryDescriptionsState, topbarTabValueState } from "../../atoms";
 import { TopbarTabs, UserChoice } from "../../interfaces";

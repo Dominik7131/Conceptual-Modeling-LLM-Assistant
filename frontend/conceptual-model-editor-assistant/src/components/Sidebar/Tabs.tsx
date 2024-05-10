@@ -3,7 +3,7 @@ import { sidebarErrorMsgState, sidebarTabValueState } from "../../atoms"
 import { useSetRecoilState } from "recoil"
 import { TabList } from "@mui/lab"
 import { SidebarTabs, UserChoice } from "../../interfaces"
-import { capitalizeString } from "../../hooks/useUtility"
+import { capitalizeString } from "../../utils/utility"
 
 
 const Tabs: React.FC = (): JSX.Element =>

@@ -1,7 +1,7 @@
 import { atom, selector } from 'recoil'
 import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice } from './interfaces';
 import { Node, Edge } from 'reactflow';
-import { blankEntity } from './hooks/useUtility';
+import { blankEntity } from './utils/utility';
 
 
 export const isShowEditDialogState = atom({

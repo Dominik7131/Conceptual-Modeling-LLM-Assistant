@@ -1,7 +1,7 @@
 import { ListItemText, Stack, Typography } from "@mui/material"
 import { Attribute, Field, Item, ItemFieldUIName, ItemType, Association } from "../../interfaces"
 import ControlButtons from "./ControlButtons"
-import { createNameFromIRI } from "../../hooks/useUtility"
+import { createNameFromIRI } from "../../utils/utility"
 
 interface Props
 {

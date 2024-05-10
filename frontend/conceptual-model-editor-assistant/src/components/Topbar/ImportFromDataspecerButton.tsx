@@ -2,16 +2,12 @@ import Button from "@mui/material/Button";
 import UploadIcon from '@mui/icons-material/Upload';
 import { ConceptualModelJson } from "../../interfaces";
 import DialogEnterIRI from "./DialogEnterModelID";
-import { importedFileNameState, isDialogEnterIRIOpenedState } from "../../atoms";
+import { edgesState, importedFileNameState, isDialogEnterIRIOpenedState, nodesState } from "../../atoms";
 import { useSetRecoilState } from "recoil";
+import { importConceptualModelFromJson } from "../../utils/import";
 
 
-interface Props
-{
-    onImport: (conceptualModelJson: ConceptualModelJson) => void
-}
-
-const ImportFromDataspecerButton: React.FC<Props> = ({ onImport }): JSX.Element =>
+const ImportFromDataspecerButton: React.FC = (): JSX.Element =>
 {
     const setIsOpened = useSetRecoilState(isDialogEnterIRIOpenedState)
     const setImportedFileName = useSetRecoilState(importedFileNameState)
@@ -37,9 +33,7 @@ const ImportFromDataspecerButton: React.FC<Props> = ({ onImport }): JSX.Element 
                 Import from Dataspecer
             </Button>
 
-            <DialogEnterIRI
-                onImport={ onImport }
-            />
+            <DialogEnterIRI/>
         </>
     )
 }

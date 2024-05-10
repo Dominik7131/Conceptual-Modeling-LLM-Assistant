@@ -10,7 +10,6 @@ import Alert from '@mui/material/Alert';
 import { useEffect, useRef, useState } from 'react';
 import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
 import { Field, Item, ItemType, Association, UserChoice } from '../interfaces';
-import useUtility from '../hooks/useUtility';
 import { styled } from '@mui/system';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';

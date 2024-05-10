@@ -1,11 +1,12 @@
 import { Button, Typography, CircularProgress, IconButton, Stack, Tooltip } from "@mui/material"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, edgesState, isLoadingSummaryDescriptionsState, isSummaryDescriptionReactButtonClickedState, nodesState, summaryDescriptionsState } from "../../atoms"
-import { HEADER, SAVE_SUGESTED_DESCRIPTION_URL, capitalizeString, getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../hooks/useUtility"
+import { capitalizeString, getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../utils/utility"
 import { Attribute, UserChoice } from "../../interfaces"
 import CheckIcon from '@mui/icons-material/Check';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import { HEADER, SAVE_SUGESTED_DESCRIPTION_URL } from "../../utils/urls"
 
 
 

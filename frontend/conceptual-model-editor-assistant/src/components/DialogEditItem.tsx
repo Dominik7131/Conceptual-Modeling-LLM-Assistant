@@ -19,7 +19,7 @@ import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSugg
 import useEditItemDialog from '../hooks/useEditItemDialog';
 import useConceptualModel from '../hooks/useConceptualModel';
 import Alert from '@mui/material/Alert';
-import { createErrorMessage, onAddItem } from '../hooks/useUtility';
+import { createErrorMessage, onAddItem } from '../utils/utility';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
@@ -113,7 +113,7 @@ const DialogEditItem: React.FC = () =>
                     />
                     { !isRegeneratedText ?
                         ( (fieldToLoad.includes(field)) ? <CircularProgress sx={{position: 'relative', right: '3px', top: '5px'}} size={"30px"} /> :
-                        <IconButton disabled={isDisabledFieldSuggestion} color="primary" size="small" onClick={() => onGenerateField(editedItem.type, editedItem.name, (editedItem as Association).source, (editedItem as Association).target, field)}>
+                        <IconButton disabled={isDisabledFieldSuggestion} color="primary" size="small" onClick={() => onGenerateField(editedItem[Field.TYPE], editedItem[Field.NAME], (editedItem as Association)[Field.SOURCE_CLASS], (editedItem as Association)[Field.TARGET_CLASS], field)}>
                             <AutoFixHighIcon/>
                         </IconButton>)
                         :
