@@ -15,6 +15,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useState } from 'react';
+import { SIDEBAR_DEFAULT_WIDTH_PERCENTAGE, TOPBAR_DEFAULT_HEIGHT_PX } from '../../utils/utility';
 
 
 
@@ -26,38 +27,21 @@ const Topbar: React.FC = () =>
 
     const [sidebarWidthPercentage, setSidebarWidthPercentage] = useRecoilState(sidebarWidthPercentageState)
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useRecoilState(isSidebarCollapsedState)
-    const [sidebarPreviousWidthPercentage, setSidebarPreviousWidthPercentage] = useState(0)
 
     const topBarWidth = 100 - sidebarWidthPercentage
-
-    const [previousHeightPx, setPreviousHeightPx] = useState(0)
 
 
     const handleChangeSize = () =>
     {
-        if (isCollapsed)
-        {
-            setTopbarHeight(previousHeightPx)
-        }
-        else
-        {
-            setPreviousHeightPx(topbarHeightPx)
-            setTopbarHeight(0)
-        }
+        const newTopbarHeight = isCollapsed ? TOPBAR_DEFAULT_HEIGHT_PX : 0
+        setTopbarHeight(newTopbarHeight)
         setIsCollapsed(previousValue => !previousValue)
     }
 
     const handleSidebarSize = () =>
     {
-        if (isSidebarCollapsed)
-        {
-            setSidebarWidthPercentage(sidebarPreviousWidthPercentage)
-        }
-        else
-        {
-            setSidebarPreviousWidthPercentage(sidebarWidthPercentage)
-            setSidebarWidthPercentage(0)
-        }
+        const newSidebarWidth = isSidebarCollapsed ? SIDEBAR_DEFAULT_WIDTH_PERCENTAGE : 0
+        setSidebarWidthPercentage(newSidebarWidth)
         setIsSidebarCollapsed(previousValue => !previousValue)
     }
 

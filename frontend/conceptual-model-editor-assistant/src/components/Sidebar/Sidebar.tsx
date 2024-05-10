@@ -16,9 +16,6 @@ const Sidebar: React.FC = () =>
 {
     const isCollapsed = useRecoilValue(isSidebarCollapsedState)
 
-    const [previousWidthPercentage, setPreviousWidthPercentage] = useState(0)
-
-
     const entities = useRecoilValue(suggestedEntitiesState)
     const attributes = useRecoilValue(suggestedAttributesState)
     const relationships = useRecoilValue(suggestedRelationshipsState)
@@ -30,21 +27,6 @@ const Sidebar: React.FC = () =>
 
     const sidebarTitles = useRecoilValue(sidebarTitlesState)
 
-    // const collapsedWidthPercentage = 3
-
-    // const handleChangeSize = () =>
-    // {
-    //     if (isCollapsed)
-    //     {
-    //         setSidebarWidthPercentage(previousWidthPercentage)
-    //     }
-    //     else
-    //     {
-    //         setPreviousWidthPercentage(sidebarWidthPercentage)
-    //         setSidebarWidthPercentage(collapsedWidthPercentage)
-    //     }
-    //     setIsCollapsed(previousValue => !previousValue)
-    // }
 
     return (
         <Drawer
