@@ -43,7 +43,7 @@ def suggest():
 
 
 @app.route('/getOnly', methods=['POST'])
-def generate_single_field():
+def suggest_single_field():
 
     body_data = request.get_json()
     source_class = body_data["sourceEntity"]
