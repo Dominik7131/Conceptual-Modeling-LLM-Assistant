@@ -16,7 +16,7 @@ export const importConceptualModelFromJson = (conceptualModelJson: ConceptualMod
     let newEdges : Edge[] = []
 
     if (!conceptualModelJson.attributes) { conceptualModelJson.attributes = [] }
-    if (!conceptualModelJson.associations) { conceptualModelJson.associations = [] }
+    if (!conceptualModelJson.relationships) { conceptualModelJson.relationships = [] }
     if (!conceptualModelJson.generalizations) { conceptualModelJson.generalizations = [] }
 
 
@@ -81,17 +81,17 @@ export const importConceptualModelFromJson = (conceptualModelJson: ConceptualMod
         }
     }
 
-    for (const [, relationship] of Object.entries(conceptualModelJson.associations))
+    for (const [, association] of Object.entries(conceptualModelJson.relationships))
     {
-        const iriLowerCase = relationship.iri.toLowerCase()
-        const sourceEntityLowerCase = relationship.domain.toLowerCase()
-        const targetEntityLowerCase = relationship.range.toLowerCase()
+        const iriLowerCase = association[Field.IRI]
+        const sourceEntityLowerCase = association.domain.toLowerCase()
+        const targetEntityLowerCase = association.range.toLowerCase()
 
-        const domainCardinality = relationship.domainCardinality ?? ""
-        const rangeCardinality = relationship.rangeCardinality ?? ""
+        const domainCardinality = association.domainCardinality ?? ""
+        const rangeCardinality = association.rangeCardinality ?? ""
     
         const newRelationship: Association = {
-            [Field.IRI]: iriLowerCase, [Field.NAME]: relationship.title, [Field.DESCRIPTION]: relationship.description, [Field.TYPE]: ItemType.ASSOCIATION,
+            [Field.IRI]: iriLowerCase, [Field.NAME]: association.title, [Field.DESCRIPTION]: association[Field.DESCRIPTION], [Field.TYPE]: ItemType.ASSOCIATION,
             [Field.SOURCE_CLASS]: sourceEntityLowerCase, [Field.TARGET_CLASS]: targetEntityLowerCase,
             [Field.SOURCE_CARDINALITY]: domainCardinality, [Field.TARGET_CARDINALITY]: rangeCardinality,
             [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
@@ -99,7 +99,7 @@ export const importConceptualModelFromJson = (conceptualModelJson: ConceptualMod
     
         const edgeData: EdgeData = { association: newRelationship }
     
-        const newID: string = createEdgeUniqueID(sourceEntityLowerCase, targetEntityLowerCase, relationship.title)
+        const newID: string = createEdgeUniqueID(sourceEntityLowerCase, targetEntityLowerCase, association.title)
         const newEdge : Edge = {
             id: newID, source: sourceEntityLowerCase, target: targetEntityLowerCase, type: "custom-edge",
             data: edgeData, markerEnd: CUSTOM_EDGE_MARKER

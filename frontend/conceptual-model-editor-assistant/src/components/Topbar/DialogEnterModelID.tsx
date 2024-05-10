@@ -5,19 +5,24 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
-import { edgesState, isDialogEnterIRIOpenedState, modelIDState, nodesState } from '../../atoms';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { edgesState, isDialogEnterIRIOpenedState, isDialogImportState, modelIDState, nodesState } from '../../atoms';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { ConceptualModelJson } from '../../interfaces';
 import { importConceptualModelFromJson } from '../../utils/import';
+import { convertConceptualModelToJson } from '../../utils/export';
+import { DATASPECER_MODEL_URL, HEADER } from '../../utils/urls';
 
 
 const DialogEnterModelID: React.FC = (): JSX.Element =>
 {
+    const nodes = useRecoilValue(nodesState)
+    const edges = useRecoilValue(edgesState)
     const setNodes = useSetRecoilState(nodesState)
     const setEdges = useSetRecoilState(edgesState)
     
     const [enteredURL, setEnteredURL] = useState("")
     const [isOpened, setIsOpened] = useRecoilState(isDialogEnterIRIOpenedState)
+    const isDialogImport = useRecoilValue(isDialogImportState)
     const setModelD = useSetRecoilState(modelIDState)
 
     const IRI_IDENTIFICATOR = "iri="
@@ -37,11 +42,14 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
         return substring
     }
 
-    const onEnter = () =>
+
+    const onImport = () =>
     {
         onClose()
 
-        fetch(enteredURL)
+        const fetchOptions = { method: "GET" }
+
+        fetch(enteredURL, fetchOptions)
             .then(response => response.json())
             .then(json => importConceptualModelFromJson(json, setNodes, setEdges))
         
@@ -49,12 +57,24 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
         setModelD(modelID)
     }
 
+
+    const onExport = () =>
+    {
+        onClose()
+        const conceptualModelJson = convertConceptualModelToJson(nodes, edges)
+        const content = JSON.stringify(conceptualModelJson)
+
+        const fetchOptions = { method: "PUT", headers: HEADER, body: content }
+        console.log(content)
+        fetch(enteredURL, fetchOptions)
+    }
+
     const onClose = () =>
     {
         setIsOpened(_ => false)
     }
 
-    return(
+    return (
         <Dialog
             open={isOpened}
             fullWidth={true}
@@ -77,14 +97,26 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
             </DialogContent>
 
             <DialogActions>
-                <Button
-                    variant="contained"
-                    color="success"
-                    disableElevation
-                    sx={{ textTransform: "none" }}
-                    onClick={ onEnter }>
-                        Enter
-                </Button>
+
+                { isDialogImport ? 
+                    <Button
+                        variant="contained"
+                        color="success"
+                        disableElevation
+                        sx={{ textTransform: "none" }}
+                        onClick={ onImport }>
+                            Import
+                    </Button>
+                    :
+                    <Button
+                        variant="contained"
+                        color="success"
+                        disableElevation
+                        sx={{ textTransform: "none" }}
+                        onClick={ onExport }>
+                            Export
+                    </Button>
+                }
 
                 <Button
                     variant="contained"

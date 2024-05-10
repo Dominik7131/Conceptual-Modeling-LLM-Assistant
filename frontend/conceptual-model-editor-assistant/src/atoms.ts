@@ -259,3 +259,9 @@ export const isSidebarCollapsedState = atom({
     key: 'isSidebarCollapsedState',
     default: false,
 })
+
+
+export const isDialogImportState = atom({
+    key: 'isDialogImportState',
+    default: true,
+})

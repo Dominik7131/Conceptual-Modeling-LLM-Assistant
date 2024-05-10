@@ -14,7 +14,8 @@ const ExportJSONButton: React.FC = (): JSX.Element =>
 
     const importedFileName = useRecoilValue(importedFileNameState)
 
-    const export_name = `${useRecoilValue(modelIDState)}.json`
+    const modelID = useRecoilValue(modelIDState)
+    const export_name = modelID === "" ? "export.json" : `${modelID}.json`
     const export_file_name = importedFileName === "" ? export_name : `${importedFileName}-${export_name}`
 
 

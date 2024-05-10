@@ -192,7 +192,7 @@ export interface ConceptualModelJson
   $schema: string
   classes: ClassJson[]
   attributes: AttributeJson[]
-  associations: RelationshipJson[]
+  relationships: RelationshipJson[] // TODO: In JSON schema rename relationships to associations
   generalizations: GeneralizationJson[]
 }
 

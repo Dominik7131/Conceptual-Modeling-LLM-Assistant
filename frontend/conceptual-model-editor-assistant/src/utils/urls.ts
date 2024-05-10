@@ -21,4 +21,4 @@ export const MERGE_ORIGINAL_TEXT_URL = BASE_URL + MERGE_ORIGINAL_TEXT_ENDPOINT
 export const SAVE_SUGESTED_ITEM_URL = BASE_URL + SAVE_SUGESTED_ITEM
 export const SAVE_SUGESTED_SINGLE_FIELD_URL = BASE_URL + SAVE_SUGESTED_SINGLE_FIELD
 export const SAVE_SUGESTED_DESCRIPTION_URL = BASE_URL + SAVE_SUGESTED_DESCRIPTION
-export const JSON_MODEL_FROM_IRI_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
+export const DATASPECER_MODEL_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="

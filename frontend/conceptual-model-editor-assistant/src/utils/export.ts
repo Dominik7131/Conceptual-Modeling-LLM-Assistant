@@ -8,7 +8,7 @@ const JSON_SCHEMA = "https://schemas.dataspecer.com/adapters/simplified-semantic
 export const convertConceptualModelToJson = (nodes: Node[], edges: Edge[]): ConceptualModelJson =>
 {
     // TODO: Divide into smaller functions
-    let conceptualModel: ConceptualModelJson = { $schema: JSON_SCHEMA, classes: [], attributes: [], associations: [], generalizations: [] }
+    let conceptualModel: ConceptualModelJson = { $schema: JSON_SCHEMA, classes: [], attributes: [], relationships: [], generalizations: [] }
 
     for (let i = 0; i < nodes.length; i++)
     {
@@ -54,7 +54,7 @@ export const convertConceptualModelToJson = (nodes: Node[], edges: Edge[]): Conc
                 range: relationship[Field.TARGET_CLASS], rangeCardinality: relationship[Field.TARGET_CARDINALITY]
             }
     
-            conceptualModel.associations.push(newRelationshipJson)
+            conceptualModel.relationships.push(newRelationshipJson)
         }
         else
         {
