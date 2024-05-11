@@ -24,7 +24,7 @@ const ClassListSelector: React.FC<Props> = ({ fieldName, association, editedItem
     const selectedAssociation: Association = useRecoilValue(selectedSuggestedItemState) as Association
 
     const [value, setValue] = useState((association as any)[fieldName])
-    const fieldUIName = fieldName == Field.SOURCE_CLASS ? ItemFieldUIName.SOURCE_CLASS : ItemFieldUIName.TARGET_CLASS
+    const fieldUIName = fieldName === Field.SOURCE_CLASS ? ItemFieldUIName.SOURCE_CLASS : ItemFieldUIName.TARGET_CLASS
     
     const { onItemEdit } = useEditItemDialog()
 
