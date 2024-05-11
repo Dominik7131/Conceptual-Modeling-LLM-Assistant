@@ -2,9 +2,11 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isLoadingEditState, isShowEditDialogState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../atoms"
 import { Attribute, EdgeData, Class, Field, Item, ItemType, NodeData, Association, UserChoice } from "../interfaces"
 import { Node, Edge } from 'reactflow';
-import { createEdgeUniqueID, createIRIFromName, createNameFromIRI, getSnapshotDomainDescription, itemTypeToUserChoice, snapshotDomainDescription } from "../utils/utility";
+import { itemTypeToUserChoice } from "../utils/utility";
 import { useState } from "react";
 import { SUGGEST_SINGLE_FIELD_URL, HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL } from "../utils/urls";
+import { createEdgeUniqueID, createIRIFromName, createNameFromIRI } from "../utils/conceptualModel";
+import { getSnapshotDomainDescription, snapshotDomainDescription } from "../utils/snapshot";
 
 
 const useEditItemDialog = () =>

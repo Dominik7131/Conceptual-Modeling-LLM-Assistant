@@ -19,12 +19,13 @@ import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSugg
 import useEditItemDialog from '../hooks/useEditItemDialog';
 import useConceptualModel from '../hooks/useConceptualModel';
 import Alert from '@mui/material/Alert';
-import { createErrorMessage, onAddItem } from '../utils/utility';
+import { createErrorMessage } from '../utils/utility';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import ClassListSelector from './ClassListSelector';
+import { onAddItem } from '../utils/conceptualModel';
 
 
 const DialogEditItem: React.FC = () =>

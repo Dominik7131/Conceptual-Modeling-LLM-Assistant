@@ -4,10 +4,10 @@ import AddIcon from '@mui/icons-material/Add';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import useConceptualModel from "../../hooks/useConceptualModel";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
-import { Class, Field, ItemType, TopbarTabs, UserChoice } from "../../interfaces";
-import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME, blankClass, convertConceptualModelToJSON } from "../../utils/utility";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { domainDescriptionState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, topbarTabValueState } from "../../atoms";
+import { UserChoice } from "../../interfaces";
+import { blankClass } from "../../utils/utility";
+import { useSetRecoilState } from "recoil";
+import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from "../../atoms";
 import SummaryPlainTextButton from "./SummaryPlainTextButton";
 import SummaryDescriptionsButton from "./SummaryDescriptionsButton";
 

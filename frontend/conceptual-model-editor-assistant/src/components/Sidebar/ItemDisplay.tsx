@@ -1,13 +1,12 @@
-import { ListItemText, Stack, Typography } from "@mui/material"
+import { Stack, Typography } from "@mui/material"
 import { Attribute, Field, Item, ItemFieldUIName, ItemType, Association } from "../../interfaces"
-import ControlButtons from "./ControlButtons"
-import { createNameFromIRI } from "../../utils/utility"
+import { createNameFromIRI } from "../../utils/conceptualModel"
+
 
 interface Props
 {
     item: Item
 }
-
 
 const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
 {

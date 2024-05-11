@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import { Typography } from '@mui/material';
-import { capitalizeString, clipName, } from '../../utils/utility';
+import { capitalizeString, clipString, } from '../../utils/utility';
 import { useSetRecoilState } from 'recoil';
 import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../../atoms';
 import { calculateNewEdgeSourceAndTargetPosition } from '../../utils/autoEdgeReconnect';
@@ -90,7 +90,7 @@ export default function CustomEdge ({ id, source, target, style, sourceX, source
                 onMouseEnter={() => setIsHovered(_ => true)} 
                 onMouseLeave={() => setIsHovered(_ => false)}
                 >
-                { capitalizeString( clipName(relationship[Field.NAME], 18)) }
+                { capitalizeString( clipString(relationship[Field.NAME], 18)) }
 
                 <Typography
                   color={selected ? PRIMARY_COLOR : "black"}

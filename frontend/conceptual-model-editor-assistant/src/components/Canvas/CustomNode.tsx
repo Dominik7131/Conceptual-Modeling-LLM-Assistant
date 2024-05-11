@@ -13,7 +13,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import ModeStandbyIcon from '@mui/icons-material/ModeStandby';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { capitalizeString, clipName } from '../../utils/utility';
+import { capitalizeString, clipString } from '../../utils/utility';
 import useConceptualModel from '../../hooks/useConceptualModel';
 import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../../atoms';
 import { useSetRecoilState } from 'recoil';
@@ -137,7 +137,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                 onMouseEnter={() => setIsEntityHovered(_ => true)} 
                 onMouseLeave={() => setIsEntityHovered(_ => false)}
                 >
-                <strong>{ clipName(entityName, 18) }</strong>
+                <strong>{ clipString(entityName, 18) }</strong>
 
                 <Typography
                     id="long-button"
@@ -197,7 +197,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                         style={{justifyContent: "flex-start"}}
                         sx={{ color: selected ? PRIMARY_COLOR : "black", fontSize: "12px", textTransform: 'lowercase'}}
                         onClick={ () => { handleEditAttribute(attribute) }}>
-                        - { clipName(attribute[Field.NAME], 30) }
+                        - { clipString(attribute[Field.NAME], 30) }
                     </Button>
                 ))}
             </Stack>

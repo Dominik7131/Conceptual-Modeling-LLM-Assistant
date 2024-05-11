@@ -4,8 +4,8 @@ import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, isLoadin
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { UserChoice } from "../../interfaces";
-import { getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../utils/utility";
 import { HEADER, SAVE_SUGESTED_DESCRIPTION_URL } from "../../utils/urls";
+import { getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../utils/snapshot";
 
 
 const SummaryPlainTextTab: React.FC = (): JSX.Element =>
