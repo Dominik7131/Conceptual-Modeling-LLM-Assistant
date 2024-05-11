@@ -1,31 +1,9 @@
 # Frontend documentation
 
+Frontend is made out of 3 main components:
+- topbar
+- sidebar
+- react-flow canvas
+
 ## Input/Output conceptual model JSON format
-
-```
-{
-	"entities": [
-		{
-			"name": "entity_name",
-		 	"attributes": [
-				{
-					"name": "attribute_name", 
-					"data_type" : "..."
-				}, 
-				...
-						],
-		},
-		...
-				],
-
-	"relationships": [
-		{
-			"name": "relationship_name",
-			"source_entity": "source_entity_name",
-			"target_entity": "target_entity_name",
-			"cardinality": "..."
-		},
-		...
-					 ] 
-}
-```
+- [json schema](https://schemas.dataspecer.com/adapters/simplified-semantic-model.v1.0.schema.json)
