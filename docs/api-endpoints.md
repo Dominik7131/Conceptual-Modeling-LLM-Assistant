@@ -114,3 +114,8 @@
 | domainDescription | yes     | string | The exact domain description that was used to generate this item.
 | conceptualModel | yes | object | The exact conceptual model in JSON format used to generate this summary. |
 | isPositive  | yes | bool | True if the field text is evaluated as good otherwise False.  |
+
+<br/>
+
+**Response**
+- all **POST** /save/* endpoints return void
