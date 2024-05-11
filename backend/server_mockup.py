@@ -21,49 +21,37 @@ app.config["CORS_HEADERS"] = "Content-Type"
 def suggest_items():
 
     body_data = request.get_json()
-    source_class = body_data["sourceClass"]
+    source_class = body_data.get("sourceClass", "")
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
 
-    is_stream_output = True
-    
-    if not is_stream_output:
-        return create_suggest_mockup(source_class, user_choice, domain_description)
-    else:
-        def generate_mock_up():
+    def generate_mock_up():
+        # time.sleep(2)
+        if user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.CLASSES.value:
+            yield '{"originalText": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "originalTextIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
             # time.sleep(2)
-            if user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.CLASSES.value:
-                yield '{"originalText": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "originalTextIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
-                # time.sleep(2)
-                yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
-                # time.sleep(2)
-                pass
-            else:
-                yield '{"name": "enrolled in", "originalText": "Students can be enrolled in any number of courses", "originalTextIndexes": [10,20], "source": "farmer", "target": "fruit and something"}\n'
-                yield '{"name": "accommodated in", "originalText": "students can be accommodated in dormitories", "originalTextIndexes": [20,100], "source": "student and x", "target": "farmer"}\n'
-        return generate_mock_up()
+            yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
+            # time.sleep(2)
+            pass
+        else:
+            yield '{"name": "enrolled in", "originalText": "Students can be enrolled in any number of courses", "originalTextIndexes": [10,20], "source": "farmer", "target": "fruit and something"}\n'
+            yield '{"name": "accommodated in", "originalText": "students can be accommodated in dormitories", "originalTextIndexes": [20,100], "source": "student and x", "target": "farmer"}\n'
+
+    return generate_mock_up()
 
 
 @app.route("/suggest/single_field", methods=["POST"])
 def suggest_single_field():
 
     def generator_function(field):
-        if field == "name":
-            dictionary = { field: "Regenerated name" }
-        elif field == "description":
-            dictionary = { field: "The engine type attribute of a road vehicle refers to the specific classification assigned by the manufacturer to denote the kind of engine installed in the vehicle. It encompasses various types such as internal combustion engines or other alternative propulsion systems. This attribute provides crucial information about the power source and characteristics of the engine, aiding in regulatory compliance, maintenance, and performance assessment."}
-        elif field == "originalText":
-            dictionary = { field: "Regenerated original text" }
-        elif field == "dataType":
-            dictionary = { field: "string" }
-        elif field == "sourceCardinality" or field == "targetCardinality":
-            dictionary = { field: "one-many"}
-        elif field == "source":
-            dictionary = { field: "New source entity"}
-        elif field == "target":
-            dictionary = { field: "New target entity"}
-        else:
-            dictionary = { field: "Some new text"}
+        if field == "name": dictionary = { field: "Regenerated name" }
+        elif field == "description": dictionary = { field: "The engine type attribute of a road vehicle refers to the specific classification assigned by the manufacturer to denote the kind of engine installed in the vehicle. It encompasses various types such as internal combustion engines or other alternative propulsion systems. This attribute provides crucial information about the power source and characteristics of the engine, aiding in regulatory compliance, maintenance, and performance assessment."}
+        elif field == "originalText": dictionary = { field: "Regenerated original text" }
+        elif field == "dataType": dictionary = { field: "string" }
+        elif field == "sourceCardinality" or field == "targetCardinality": dictionary = { field: "one-many"}
+        elif field == "source": dictionary = { field: "New source entity"}
+        elif field == "target": dictionary = { field: "New target entity"}
+        else: dictionary = { field: "Some new text"}
 
         yield json.dumps(dictionary)
 
@@ -76,7 +64,7 @@ def suggest_single_field():
 
 def generate_summary_plain_text_mock_up():
     yield '{"summary": "The conceptual model includes four main entities: Student, Course, Dormitory, and Professor. The Student entity has a name attribute and can be enrolled in any number of Courses. The Course entity has a name and a number of credits attribute, and can have one or more Professors. The Dormitory entity has a price attribute, and students can be accommodated in it. The Professor entity has a name attribute. Additionally, there is a relationship between Student and Person through an \'is-a\' relationship."}\n'
-    return 
+    return
 
 
 def generate_summary_descriptions_mock_up():
@@ -94,16 +82,16 @@ def generate_summary_descriptions_mock_up():
 def suggest_summary():
 
     body_data = request.get_json()
-    user_choice = body_data["userChoice"]
+    summary_type = body_data["summaryType"]
 
-    if user_choice == UserChoice.SUMMARY_PLAIN_TEXT.value:
+    if summary_type == UserChoice.SUMMARY_PLAIN_TEXT.value:
         return generate_summary_plain_text_mock_up()
     
-    elif user_choice == UserChoice.SUMMARY_DESCRIPTIONS.value:
+    elif summary_type == UserChoice.SUMMARY_DESCRIPTIONS.value:
         return generate_summary_descriptions_mock_up()
     
     else:
-        return f"Unexpected user choice: {user_choice}", 400
+        return f"Unexpected user choice: {summary_type}", 400
 
 
 @app.route("/merge_original_texts", methods=["POST"])
@@ -119,84 +107,6 @@ def merge_original_texts():
 
     # print(f"{result}\n")
     return result
-
-
-def create_suggest_mockup(entity, user_choice, domain_description):
-    if entity == "student":
-        if user_choice == "a":
-            if domain_description == "":
-                dictionary = [
-                    json.dumps({"name": "ID", "data_type": "integer"}),
-                    json.dumps({"name": "name", "data_type": "string"}),
-                    json.dumps({"name": "age", "data_type": "integer"}),
-                    json.dumps({"name": "grade", "data_type": "float"}),
-                    json.dumps({"name": "enrollment date", "data_type": "date"}),
-                    ]
-                return dictionary
-            else:
-                dictionary1 = json.dumps({"name": "name", "originalText": "student has a name", "data_type": "string"})
-                return [dictionary1]
-        else:
-            dictionary1 = json.dumps({"name": "enrolled in", "originalText": "Students can be enrolled in any number of courses", "source_entity": "student", "target_entity": "course"})
-            dictionary2 = json.dumps({"name": "accommodated in", "originalText": "students can be accommodated in dormitories", "source_entity": "student", "target_entity": "dormitory"})
-
-            return [dictionary1, dictionary2]
-    
-    elif entity == "course":
-        if user_choice == "a":
-            if domain_description == "":
-                dictionary = [
-                    json.dumps({"name": "code", "data_type": "string"}),
-                    json.dumps({"name": "title", "data_type": "string"}),
-                    json.dumps({"name": "instructor", "data_type": "string"}),
-                    json.dumps({"name": "enrollment capacity", "data_type": "integer"}),
-                    json.dumps({"name": "schedule", "data_type": "array"}),
-                ]
-                return dictionary
-            else:
-                dictionary1 = json.dumps({"name": "name", "originalText": "courses have a name", "data_type": "string"})
-                dictionary2 = json.dumps({"name": "number of credits", "originalText": "courses have a specific number of credits", "data_type": "string"})
-                return [dictionary1, dictionary2]
-        else:
-            dictionary1 = json.dumps({"name": "has", "originalText": "each course can have one or more professors", "source_entity": "course", "target_entity": "professor"})
-            dictionary2 = json.dumps({"name": "aggregates", "originalText": "for a course to exist, it must aggregate at least, five students", "source_entity": "course", "target_entity": "student"})
-            return [dictionary1, dictionary2]
-    
-    elif entity == "professor":
-        if user_choice == "a":
-            if domain_description == "":
-                dictionary = [
-                    json.dumps({"name": "name", "data_type": "string"}),
-                    json.dumps({"name": "age", "data_type": "integer"}),
-                    json.dumps({"name": "subject", "data_type": "string"}),
-                    json.dumps({"name": "years of experience", "data_type": "integer"}),
-                    json.dumps({"name": "education", "data_type": "string"}),
-                ]
-                return dictionary
-            else:
-                dictionary1 = json.dumps({"name": "name", "originalText": "professors, who have a name", "data_type": "string"})
-                return [dictionary1]
-        else:
-            dictionary1 = json.dumps({"name": "can participate in", "originalText": "Professors could pariticipate in any number of courses", "source_entity": "professor", "target_entity": "course"})
-            return [dictionary1]
-    
-    elif entity == "dormitory":
-        if user_choice == "a":
-            if domain_description == "":
-                dictionary = [
-                    json.dumps({"name": "building name", "data_type": "string"}),
-                    json.dumps({"name": "capacity", "data_type": "integer"}),
-                    json.dumps({"name": "occupancy", "data_type": "integer"}),
-                    json.dumps({"name": "facilities", "data_type": "array"}),
-                    json.dumps({"name": "usage type", "data_type": "string"}),
-                ]
-                return dictionary
-            else:
-                dictionary1 = json.dumps({"name": "price", "originalText": "each dormitory has a price", "data_type": "int"})
-                return [dictionary1]
-        else:
-            dictionary1 = json.dumps({"name": "has", "originalText": "students can be accomodated in dormitories", "source_entity": "dormitory", "target_entity": "student"})
-            return [dictionary1]
 
 
 def create_summary_mockup(entities : list[str]) -> list[dict]:
@@ -259,10 +169,10 @@ def save_suggested_single_field():
 
 
 @app.route("/save/suggested_summary", methods=["POST"])
-def save_suggested_description():
+def save_suggested_summary():
 
     body_data = request.get_json()
-    user_choice = body_data["userChoice"]
+    summary_type = body_data["summaryType"]
     domain_description = body_data["domainDescription"]
     conceptual_model = body_data["conceptualModel"]
     summary = body_data["summary"]
