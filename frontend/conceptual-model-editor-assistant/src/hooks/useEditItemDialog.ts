@@ -4,7 +4,7 @@ import { Attribute, EdgeData, Class, Field, Item, ItemType, NodeData, Associatio
 import { Node, Edge } from 'reactflow';
 import { createEdgeUniqueID, createIRIFromName, createNameFromIRI, getSnapshotDomainDescription, itemTypeToUserChoice, snapshotDomainDescription } from "../utils/utility";
 import { useState } from "react";
-import { EDIT_ITEM_URL, HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL } from "../utils/urls";
+import { SUGGEST_SINGLE_FIELD_URL, HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL } from "../utils/urls";
 
 
 const useEditItemDialog = () =>
@@ -298,7 +298,7 @@ const useEditItemDialog = () =>
     }
     
 
-    const onGenerateField = (itemType: ItemType, name: string, sourceEntity: string, targetEntity: string, field: Field) =>
+    const onGenerateField = (itemType: ItemType, name: string, sourceClass: string, targetClass: string, field: Field) =>
     {
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         snapshotDomainDescription(UserChoice.SINGLE_FIELD, currentDomainDescription, setSnapshotDomainDescription)
@@ -316,14 +316,14 @@ const useEditItemDialog = () =>
 
         if (userChoice === UserChoice.CLASSES)
         {
-            sourceEntity = name
+            sourceClass = name
         }
 
-        if (!sourceEntity) { sourceEntity = "" }
-        if (!targetEntity) { targetEntity = "" }
+        if (!sourceClass) { sourceClass = "" }
+        if (!targetClass) { targetClass = "" }
 
         const bodyData = JSON.stringify({
-            "name": name, "sourceEntity": sourceEntity, "targetEntity": targetEntity, "field": field, "userChoice": userChoice,
+            "name": name, "sourceClass": sourceClass, "targetClass": targetClass, "field": field, "userChoice": userChoice,
             "domainDescription": currentDomainDescription
         })
 
@@ -335,7 +335,7 @@ const useEditItemDialog = () =>
     // TODO: Put this fetch-function into a separate file
     const fetchStreamedDataGeneral = (bodyData: any, field: Field) =>
     {
-        fetch(EDIT_ITEM_URL, { method: "POST", headers: HEADER, body: bodyData })
+        fetch(SUGGEST_SINGLE_FIELD_URL, { method: "POST", headers: HEADER, body: bodyData })
         .then(response =>
         {
             const stream = response.body; // Get the readable stream from the response body

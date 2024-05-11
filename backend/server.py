@@ -29,12 +29,19 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type' 
 
 
-@app.route('/suggest', methods=['POST'])
-def suggest():
+@app.route('/suggest-items', methods=['POST'])
+def suggest_items():
 
     body_data = request.get_json()
-    source_class = body_data["sourceEntity"]
-    target_class = body_data["targetEntity"]
+    source_class = body_data["sourceClass"]
+
+    target_class = body_data.get("targetClass", "")
+
+    # if not "targetClass" in body_data["targetClass"]:
+    #     target_class = ""
+    # else:
+    #     target_class = body_data["targetClass"]
+
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
 
@@ -42,12 +49,14 @@ def suggest():
 
 
 
-@app.route('/getOnly', methods=['POST'])
+@app.route('/suggest-single-field', methods=['POST'])
 def suggest_single_field():
 
     body_data = request.get_json()
-    source_class = body_data["sourceEntity"]
-    target_class = body_data["targetEntity"]
+    source_class = body_data["sourceClass"]
+
+    target_class = body_data.get("targetClass", "")
+
     name = body_data["name"]
     field = body_data["field"]
     domain_description = body_data["domainDescription"]
@@ -56,27 +65,25 @@ def suggest_single_field():
     return llm_assistant.generate_single_field(user_choice, name, source_class, target_class, domain_description, field)
 
 
-@app.route('/summary_plain_text', methods=['POST'])
-def summary_plain_text():
+@app.route('/suggest-summary', methods=['POST'])
+def suggest_summary_plain_text():
 
     body_data = request.get_json()
+    user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
     conceptual_model = body_data["conceptualModel"]
 
-    return llm_assistant.summarize_conceptual_model_plain_text(conceptual_model, domain_description)
+    if user_choice == UserChoice.SUMMARY_PLAIN_TEXT.value:
+        return llm_assistant.summarize_conceptual_model_plain_text(conceptual_model, domain_description)
+
+    elif user_choice == UserChoice.SUMMARY_DESCRIPTIONS.value:
+        return llm_assistant.summarize_conceptual_model_descriptions(conceptual_model, domain_description)
+
+    else:
+        return f"Unexpected user choice: {user_choice}", 400
 
 
-@app.route('/summary_descriptions', methods=['POST'])
-def summary_descriptions():
-
-    body_data = request.get_json()
-    domain_description = body_data["domainDescription"]
-    conceptual_model = body_data["conceptualModel"]
-
-    return llm_assistant.summarize_conceptual_model_descriptions(conceptual_model, domain_description)
-
-
-@app.route('/merge_original_texts', methods=['POST'])
+@app.route('/merge-original-texts', methods=['POST'])
 def merge_original_texts():
 
     body_data = request.get_json()
@@ -101,7 +108,7 @@ def save_item_to_storage(item):
         json.dump(item, file)
 
 
-@app.route('/save_suggested_item', methods=['POST'])
+@app.route('/save-suggested-item', methods=['POST'])
 def save_suggested_item():
 
     body_data = request.get_json()
@@ -126,7 +133,7 @@ def save_suggested_item():
     return "Done"
 
 
-@app.route('/save_suggested_single_field', methods=['POST'])
+@app.route('/save-suggested-single-field', methods=['POST'])
 def save_suggested_single_field():
 
     body_data = request.get_json()
@@ -150,7 +157,7 @@ def save_suggested_single_field():
     return "Done"
 
 
-@app.route('/save_suggested_description', methods=['POST'])
+@app.route('/save-suggested-description', methods=['POST'])
 def save_suggested_description():
 
     body_data = request.get_json()

@@ -3,7 +3,7 @@ import { Attribute, Field, Item, ItemType, Association, SummaryObject, UserChoic
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedEntitiesState, suggestedAttributesState, suggestedRelationshipsState } from "../atoms";
 import { createIRIFromName, onClearSuggestedItems } from "../utils/utility";
-import { HEADER, SUGGEST_ITEMS_URL, SUMMARY_DESCRIPTIONS_URL, SUMMARY_PLAIN_TEXT_URL } from "../utils/urls";
+import { HEADER, SUGGEST_ITEMS_URL, SUGGEST_SUMMARY_URL } from "../utils/urls";
 
 
 const useFetchData = () =>
@@ -162,7 +162,7 @@ const useFetchData = () =>
   {
     setIsLoadingSummary1(_ => true)
 
-    fetch(SUMMARY_PLAIN_TEXT_URL, { method: "POST", headers: HEADER, body: bodyData })
+    fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyData })
     .then(response =>
     {
         const stream = response.body // Get the readable stream from the response body
@@ -217,7 +217,7 @@ const useFetchData = () =>
   {
     setIsLoadingSummaryDescriptions(_ => true)
 
-    fetch(SUMMARY_DESCRIPTIONS_URL, { method: "POST", headers: HEADER, body: bodyData })
+    fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyData })
     .then(response =>
     {
         const stream = response.body // Get the readable stream from the response body

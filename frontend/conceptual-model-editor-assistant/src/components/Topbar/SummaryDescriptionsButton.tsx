@@ -34,21 +34,21 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
             return
         }
 
+        const userChoice = UserChoice.SUMMARY_DESCRIPTIONS
         setSummaryDescriptions({classes: [], associations: []})
         setIsReactButtonClicked(false)
 
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
-        snapshotDomainDescription(UserChoice.SUMMARY_DESCRIPTIONS, currentDomainDescription, setDomainDescriptionSnapshot)
+        snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
 
         const conceptualModel = convertConceptualModelToJSON(selectedNodes, selectedEdges, true)
-        snapshotConceptualModel(UserChoice.SUMMARY_DESCRIPTIONS, conceptualModel, setConceptualModelSnapshot)
+        snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
 
         setTopbarTab(TopbarTabs.SUMMARY_DESCRIPTION)  
 
-        const bodyData = JSON.stringify({"conceptualModel": conceptualModel, "domainDescription": currentDomainDescription})
+        const bodyData = JSON.stringify({"userChoice": userChoice, "conceptualModel": conceptualModel, "domainDescription": currentDomainDescription})
     
         fetchSummaryDescriptions(bodyData)
-        return
     }
 
 

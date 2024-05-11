@@ -5,7 +5,7 @@ import time
 import sys
 
 sys.path.append('utils/')
-from text_utility import TextUtility
+from text_utility import TextUtility, UserChoice
 
 
 app = Flask(__name__)
@@ -17,22 +17,22 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type' 
 
 
-@app.route('/suggest', methods=['POST'])
-def suggest():
+@app.route('/suggest-items', methods=['POST'])
+def suggest_items():
+
     body_data = request.get_json()
-    sourceEntity = body_data["sourceEntity"]
-    targetEntity = body_data["targetEntity"]
+    source_class = body_data["sourceClass"]
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
 
     is_stream_output = True
     
     if not is_stream_output:
-        return create_suggest_mockup(sourceEntity, user_choice, domain_description)
+        return create_suggest_mockup(source_class, user_choice, domain_description)
     else:
         def generate_mock_up():
             # time.sleep(2)
-            if user_choice == "attributes" or user_choice == "entities":
+            if user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.CLASSES.value:
                 yield '{"originalText": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "originalTextIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
                 # time.sleep(2)
                 yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
@@ -44,35 +44,8 @@ def suggest():
         return generate_mock_up()
 
 
-@app.route('/summary_plain_text', methods=['POST'])
-def summary_plain_text():
-
-    def generate_mock_up():
-        yield '{"summary": "The conceptual model includes four main entities: Student, Course, Dormitory, and Professor. The Student entity has a name attribute and can be enrolled in any number of Courses. The Course entity has a name and a number of credits attribute, and can have one or more Professors. The Dormitory entity has a price attribute, and students can be accommodated in it. The Professor entity has a name attribute. Additionally, there is a relationship between Student and Person through an \'is-a\' relationship."}\n'
-        return
-
-    return generate_mock_up()
-
-
-@app.route('/summary_descriptions', methods=['POST'])
-def summary_descriptions():
-
-    def generate_mock_up():
-        # time.sleep(1)
-        yield '{"entity": "engine","description": "An engine entity represents the power source of a vehicle.","attributes": [{"name": "engine type","description": "The type of engine, such as internal combustion, electric, etc."},{"name": "engine power","description": "The power output of the engine, typically measured in kilowatts (kW)."},{"name": "fuel type","description": "The type of fuel used by the engine, such as gasoline, diesel, electricity, etc."}]}\n'
-        time.sleep(1)
-        yield '{"relationship": "has", "sourceEntity": "course", "targetEntity": "professor", "description": "Courses have professors who teach them"}\n'
-        time.sleep(1)
-        yield '{"relationship": "enrolled in", "sourceEntity": "student", "targetEntity": "course", "description": "Students can be enrolled in any number of courses"}\n'
-        time.sleep(1)
-        yield '{"relationship": "accommodated in", "sourceEntity": "student", "targetEntity": "dormitory", "description": "Students can be accommodated in dormitories"}\n'
-        return
-
-    return generate_mock_up()
-
-
-@app.route('/getOnly', methods=['POST'])
-def get_only():
+@app.route('/suggest-single-field', methods=['POST'])
+def suggest_single_field():
 
     def generator_function(field):
         if field == "name":
@@ -99,6 +72,38 @@ def get_only():
     field = body_data["field"]
 
     return generator_function(field)
+
+
+def generate_summary_plain_text_mock_up():
+    yield '{"summary": "The conceptual model includes four main entities: Student, Course, Dormitory, and Professor. The Student entity has a name attribute and can be enrolled in any number of Courses. The Course entity has a name and a number of credits attribute, and can have one or more Professors. The Dormitory entity has a price attribute, and students can be accommodated in it. The Professor entity has a name attribute. Additionally, there is a relationship between Student and Person through an \'is-a\' relationship."}\n'
+    return 
+
+
+def generate_summary_descriptions_mock_up():
+    yield '{"class": "engine","description": "An engine entity represents the power source of a vehicle.","attributes": [{"name": "engine type","description": "The type of engine, such as internal combustion, electric, etc."},{"name": "engine power","description": "The power output of the engine, typically measured in kilowatts (kW)."},{"name": "fuel type","description": "The type of fuel used by the engine, such as gasoline, diesel, electricity, etc."}]}\n'
+    time.sleep(1)
+    yield '{"association": "has", "sourceEntity": "course", "targetEntity": "professor", "description": "Courses have professors who teach them"}\n'
+    time.sleep(1)
+    yield '{"association": "enrolled in", "sourceEntity": "student", "targetEntity": "course", "description": "Students can be enrolled in any number of courses"}\n'
+    time.sleep(1)
+    yield '{"association": "accommodated in", "sourceEntity": "student", "targetEntity": "dormitory", "description": "Students can be accommodated in dormitories"}\n'
+    return
+
+
+@app.route('/suggest-summary', methods=['POST'])
+def summary_plain_text():
+
+    body_data = request.get_json()
+    user_choice = body_data["userChoice"]
+
+    if user_choice == UserChoice.SUMMARY_PLAIN_TEXT.value:
+        return generate_summary_plain_text_mock_up()
+    
+    elif user_choice == UserChoice.SUMMARY_DESCRIPTIONS.value:
+        return generate_summary_descriptions_mock_up()
+    
+    else:
+        return f"Unexpected user choice: {user_choice}", 400
 
 
 @app.route('/merge_original_texts', methods=['POST'])
@@ -222,7 +227,7 @@ def create_summary_mockup(entities : list[str]) -> list[dict]:
     return result
 
 
-@app.route('/save_suggested_item', methods=['POST'])
+@app.route('/save-suggested-item', methods=['POST'])
 def save_suggested_item():
 
     body_data = request.get_json()
@@ -237,7 +242,7 @@ def save_suggested_item():
     return "Done"
 
 
-@app.route('/save_suggested_single_field', methods=['POST'])
+@app.route('/save-suggested-single-field', methods=['POST'])
 def save_suggested_single_field():
 
     body_data = request.get_json()
@@ -253,7 +258,7 @@ def save_suggested_single_field():
     return "Done"
 
 
-@app.route('/save_suggested_description', methods=['POST'])
+@app.route('/save-suggested-description', methods=['POST'])
 def save_suggested_description():
 
     body_data = request.get_json()

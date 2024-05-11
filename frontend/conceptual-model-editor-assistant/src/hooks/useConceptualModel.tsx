@@ -129,7 +129,7 @@ const useConceptualModel = () =>
     // Snapshot current domain description to know from what text the suggestions were generated
     snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
 
-    const bodyData = JSON.stringify({"sourceEntity": sourceItemName, "targetEntity": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
+    const bodyData = JSON.stringify({"sourceClass": sourceItemName, "targetClass": "", "userChoice": userChoice, "domainDescription": currentDomainDescription})
 
     fetchStreamedData(bodyData, sourceItemName, itemType)
   }
