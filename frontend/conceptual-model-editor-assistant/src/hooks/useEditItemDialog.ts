@@ -311,7 +311,7 @@ const useEditItemDialog = () =>
         }
         else if (itemType === ItemType.ASSOCIATION)
         {
-            userChoice = UserChoice.ASSOCIATIONS
+            userChoice = UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS
         }
 
         if (userChoice === UserChoice.CLASSES)

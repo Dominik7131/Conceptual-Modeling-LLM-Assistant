@@ -58,7 +58,7 @@ class RAGTester:
                         print(f"- SOURCE ENTITY: {source_entity}")
                         print(f"- attribute name: {name}")
 
-                    elif user_choice == UserChoice.ASSOCIATIONS.value:
+                    elif user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
                         if source_entity != "":
                             print(f"- SOURCE ENTITY: {source_entity}")
                         else:
@@ -66,7 +66,7 @@ class RAGTester:
 
                         print(f"- relationship name: {name}")
 
-                    elif user_choice == UserChoice.ASSOCIATIONS2.value:
+                    elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
                         print(f"- SOURCE ENTITY: {source_entity}")
                         print(f"- TARGET ENTITY: {target_entity}")
                         print(f"- relationship name: {name}")
@@ -130,7 +130,7 @@ class RAGTester:
                 else:
                     target_entity = entity
 
-                current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name=name, user_choice=UserChoice.ASSOCIATIONS.value, source_entity=source_entity, target_entity=target_entity, is_print_failed_tests=is_print_failed_tests)
+                current_total, current_successfull_tests = RAGTester.compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name=name, user_choice=UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, source_entity=source_entity, target_entity=target_entity, is_print_failed_tests=is_print_failed_tests)
 
                 recall_relationships[text_index] += current_successfull_tests
                 recall_relationships[-1] += current_successfull_tests

@@ -13,7 +13,7 @@ export const getUserChoiceSingular = (userChoice : string) =>
   let result : string = ""
   if (userChoice === UserChoice.CLASSES) { result = "Entity" }
   else if (userChoice === UserChoice.ATTRIBUTES) { result = "Attribute" }
-  else if (userChoice === UserChoice.ASSOCIATIONS) { result = "Relationship" }
+  else if (userChoice === UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS) { result = "Relationship" }
   return result
 }
 
@@ -154,7 +154,7 @@ export const userChoiceToItemType = (userChoice: UserChoice): ItemType =>
     return ItemType.ATTRIBUTE
   }
 
-  if (userChoice === UserChoice.ASSOCIATIONS || userChoice === UserChoice.ASSOCIATIONS2)
+  if (userChoice === UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS || userChoice === UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES)
   {
     return ItemType.ASSOCIATION
   }
@@ -436,12 +436,12 @@ export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targ
     const message = `Selected class: ${sourceItemName}`
     setTitle((title: ItemsMessage) => { return { ...title, attributes: message} })
   }
-  else if (userChoice === UserChoice.ASSOCIATIONS)
+  else if (userChoice === UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS)
   {
     const message = `Selected class: ${sourceItemName}`
     setTitle((title: ItemsMessage) => { return { ...title, associations: message} })
   }
-  else if (userChoice === UserChoice.ASSOCIATIONS2)
+  else if (userChoice === UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES)
   {
     const message = `Source class: ${sourceItemName}\nTarget class: ${targetItemName}`
     setTitle((title: ItemsMessage) => { return { ...title, associations: message} })
@@ -523,7 +523,7 @@ export const itemTypeToUserChoice = (itemType: ItemType): UserChoice =>
   }
   else if (itemType === ItemType.ASSOCIATION || itemType === ItemType.GENERALIZATION)
   {
-    return UserChoice.ASSOCIATIONS
+    return UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS
   }
 
   throw Error(`Received unknown item type: ${itemType}`)

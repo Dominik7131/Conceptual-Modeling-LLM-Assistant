@@ -72,7 +72,7 @@ def get_attributes_examples(expected_suggestions):
 def get_relationships1_examples(expected_suggestions):
 
     result = []
-    expected_suggestions = expected_suggestions[UserChoice.ASSOCIATIONS.value]
+    expected_suggestions = expected_suggestions[UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value]
 
     for suggestion in expected_suggestions:
         source_entity = suggestion["entity"]
@@ -101,7 +101,7 @@ def get_relationships1_examples(expected_suggestions):
 def get_relationships2_examples(expected_suggestions):
 
     result = []
-    expected_suggestions = expected_suggestions[UserChoice.ASSOCIATIONS2.value]
+    expected_suggestions = expected_suggestions[UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value]
 
     for suggestion in expected_suggestions:
 

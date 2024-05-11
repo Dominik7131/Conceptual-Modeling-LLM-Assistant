@@ -5,8 +5,8 @@ export const enum UserChoice
 {
   CLASSES = "classes",
   ATTRIBUTES = "attributes",
-  ASSOCIATIONS = "associations",
-  ASSOCIATIONS2 = "associations2",
+  ASSOCIATIONS_ONE_KNOWN_CLASS = "associations1",
+  ASSOCIATIONS_TWO_KNOWN_CLASSES = "associations2",
   SUMMARY_PLAIN_TEXT = "summary-plain-text",
   SUMMARY_DESCRIPTIONS = "summary-descriptions",
   SINGLE_FIELD = "single-field"
@@ -82,8 +82,8 @@ export interface DomainDescriptionSnapshot
 {
   [UserChoice.CLASSES]: string
   [UserChoice.ATTRIBUTES]: string
-  [UserChoice.ASSOCIATIONS]: string
-  [UserChoice.ASSOCIATIONS2]: string
+  [UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS]: string
+  [UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES]: string
   [UserChoice.SINGLE_FIELD]: string
   [UserChoice.SUMMARY_PLAIN_TEXT]: string
   [UserChoice.SUMMARY_DESCRIPTIONS]: string

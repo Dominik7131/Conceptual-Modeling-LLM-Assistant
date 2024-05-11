@@ -89,7 +89,7 @@ const DialogCreateEdge: React.FC = () =>
                   startIcon={ <AutoFixNormalIcon/> }
                   variant="outlined"
                   sx={{textTransform: "none"}}
-                  onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS2, association.source, association.target); handleClose() } }
+                  onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES, association.source, association.target); handleClose() } }
                   >
                     Suggest associations
                 </Button>

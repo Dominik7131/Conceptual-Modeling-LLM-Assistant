@@ -13,7 +13,7 @@ const Tabs: React.FC = (): JSX.Element =>
 
     const entitiesLabel = capitalizeString(UserChoice.CLASSES)
     const attributesLabel = capitalizeString(UserChoice.ATTRIBUTES)
-    const associationsLabel = capitalizeString(UserChoice.ASSOCIATIONS)
+    const associationsLabel = capitalizeString(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS)
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) =>
     {

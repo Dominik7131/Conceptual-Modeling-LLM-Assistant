@@ -174,7 +174,7 @@ class LLMAssistant:
                 # is_item_ok = True
 
 
-        elif user_choice == UserChoice.ASSOCIATIONS.value:
+        elif user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
             if not Field.SOURCE_CLASS.value in completed_item or not completed_item[Field.SOURCE_CLASS.value]:
                 completed_item[Field.NAME.value] = "error: no source entity"
                 is_item_ok = False
@@ -209,7 +209,7 @@ class LLMAssistant:
                 is_item_ok = False
 
 
-        elif user_choice == UserChoice.ASSOCIATIONS2.value:
+        elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
             if 'source' in completed_item and 'target' in completed_item:
 
                 # Replace 's' for 'z' to solve the following issue:

@@ -115,10 +115,10 @@ def generate_expected_output(test_file_path, output_file_path, user_choice):
     elif user_choice == UserChoice.ATTRIBUTES.value:
         expected_output = create_attributes_expected_output(test_cases)
     
-    elif user_choice == UserChoice.ASSOCIATIONS.value:
+    elif user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
         expected_output = create_relationships_expected_output(test_cases)
     
-    elif user_choice == UserChoice.ASSOCIATIONS2.value:
+    elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
         expected_output = create_relationships2_expected_output(test_cases)
 
     else:
@@ -296,10 +296,10 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
     elif user_choice == UserChoice.ATTRIBUTES.value:
         results = create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
     
-    elif user_choice == UserChoice.ASSOCIATIONS.value:
+    elif user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
         results = create_relationships_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
     
-    elif user_choice == UserChoice.ASSOCIATIONS2.value:
+    elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
         results = create_relationships2_actual_output(llm_assistant, test_cases, user_choice, domain_description)
 
     else:
@@ -313,7 +313,7 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
 def main():
 
     parser = argparse.ArgumentParser(description = "Suggestions generator")
-    parser.add_argument("--user_choice", choices = [UserChoice.ENTITIES.value, UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS.value, UserChoice.ASSOCIATIONS2.value], type=str, default=UserChoice.ENTITIES.value, help = "Choose elements to generate")
+    parser.add_argument("--user_choice", choices = [UserChoice.ENTITIES.value, UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value], type=str, default=UserChoice.ENTITIES.value, help = "Choose elements to generate")
     parser.add_argument("--output_format", choices = ["txt", "csv"], type=str, default="csv", help = "Choose output file format")
     parser.add_argument("--generate_expected_output_only", action = "store_true", default=False, help = "")
     args = parser.parse_args()

@@ -401,15 +401,15 @@ def main():
 
             entities_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ENTITIES.value}-expected-suggestions-0{i + 1}.json")
             attributes_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ATTRIBUTES.value}-expected-suggestions-0{i + 1}.json")
-            relationships_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ASSOCIATIONS.value}-expected-suggestions-0{i + 1}.json")
+            relationships_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{i + 1}.json")
 
             entities_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.ENTITIES.value}-actual-0{i + 1}.csv")
             attributes_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
-            relationships_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.ASSOCIATIONS.value}-actual-0{i + 1}.csv")
+            relationships_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
 
             is_file = check_file(entities_evaluated_path, UserChoice.ENTITIES.value)
             is_file = is_file and check_file(attributes_evaluated_path, UserChoice.ATTRIBUTES.value)
-            is_file = is_file and check_file(relationships_evaluated_path, UserChoice.ASSOCIATIONS.value)
+            is_file = is_file and check_file(relationships_evaluated_path, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value)
 
             if not is_file:
                 print_evaluation()

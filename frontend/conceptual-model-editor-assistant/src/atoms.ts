@@ -54,7 +54,7 @@ export const domainDescriptionState = atom({
 
 export const domainDescriptionSnapshotsState = atom<DomainDescriptionSnapshot>({
     key: 'domainDescriptionSnapshotsState',
-    default: { [UserChoice.CLASSES]: "", [UserChoice.ATTRIBUTES]: "", [UserChoice.ASSOCIATIONS]: "", [UserChoice.ASSOCIATIONS2]: "",
+    default: { [UserChoice.CLASSES]: "", [UserChoice.ATTRIBUTES]: "", [UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS]: "", [UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES]: "",
     [UserChoice.SINGLE_FIELD]: "", [UserChoice.SUMMARY_PLAIN_TEXT]: "", [UserChoice.SUMMARY_DESCRIPTIONS]: ""},
 })
 

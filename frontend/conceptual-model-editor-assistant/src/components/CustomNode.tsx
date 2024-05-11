@@ -177,7 +177,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                         Suggest attributes
                 </MenuItem>
                 
-                <MenuItem onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS, entity[Field.NAME], null); handleClose(); }}>
+                <MenuItem onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS, entity[Field.NAME], null); handleClose(); }}>
                     <ListItemIcon>
                         <AutoFixNormalIcon fontSize="small" />
                     </ListItemIcon>
