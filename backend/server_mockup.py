@@ -91,7 +91,7 @@ def suggest_summary():
         return generate_summary_descriptions_mock_up()
     
     else:
-        return f"Unexpected user choice: {summary_type}", 400
+        return f"Unexpected summary type: {summary_type}", 400
 
 
 @app.route("/merge_original_texts", methods=["POST"])
