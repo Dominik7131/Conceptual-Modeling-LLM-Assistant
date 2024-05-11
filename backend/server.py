@@ -33,7 +33,7 @@ app.config["CORS_HEADERS"] = "Content-Type"
 def suggest_items():
 
     body_data = request.get_json()
-    source_class = body_data["sourceClass"]
+    source_class = body_data.get("sourceClass", "")
     target_class = body_data.get("targetClass", "")
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
@@ -46,8 +46,7 @@ def suggest_items():
 def suggest_single_field():
 
     body_data = request.get_json()
-    source_class = body_data["sourceClass"]
-
+    source_class = body_data.get("sourceClass", "")
     target_class = body_data.get("targetClass", "")
 
     name = body_data["name"]
@@ -55,25 +54,28 @@ def suggest_single_field():
     domain_description = body_data["domainDescription"]
     user_choice = body_data["userChoice"]
 
+    if user_choice == "associations":
+        user_choice = UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value
+
     return llm_assistant.generate_single_field(user_choice, name, source_class, target_class, domain_description, field)
 
 
 @app.route("/suggest/summary", methods=["POST"])
-def suggest_summary_plain_text():
+def suggest_summary():
 
     body_data = request.get_json()
-    user_choice = body_data["userChoice"]
+    summary_type = body_data["summaryType"]
     domain_description = body_data["domainDescription"]
     conceptual_model = body_data["conceptualModel"]
 
-    if user_choice == UserChoice.SUMMARY_PLAIN_TEXT.value:
+    if summary_type == UserChoice.SUMMARY_PLAIN_TEXT.value:
         return llm_assistant.summarize_conceptual_model_plain_text(conceptual_model, domain_description)
 
-    elif user_choice == UserChoice.SUMMARY_DESCRIPTIONS.value:
+    elif summary_type == UserChoice.SUMMARY_DESCRIPTIONS.value:
         return llm_assistant.summarize_conceptual_model_descriptions(conceptual_model, domain_description)
 
     else:
-        return f"Unexpected user choice: {user_choice}", 400
+        return f"Unexpected summary type: {summary_type}", 400
 
 
 @app.route("/merge_original_texts", methods=["POST"])
@@ -133,7 +135,7 @@ def save_suggested_single_field():
     user_choice = body_data["userChoice"]
     field_name = body_data["fieldName"]
     field_text = body_data["fieldText"]
-    source_class = body_data["sourceClass"]
+    source_class = body_data.get("sourceClass", "")
     domain_description = body_data["domainDescription"]
     isPositive = body_data["isPositive"]
 
@@ -154,7 +156,7 @@ def save_suggested_single_field():
 def save_suggested_summary():
 
     body_data = request.get_json()
-    user_choice = body_data["userChoice"]
+    summaryType = body_data["summaryType"]
     domain_description = body_data["domainDescription"]
     conceptual_model = body_data["conceptualModel"]
     summary = body_data["summary"]
@@ -162,7 +164,7 @@ def save_suggested_summary():
 
     completed_item = { "domain_description": domain_description, "summary": summary, "is_positive": isPositive, "conceptual_model": conceptual_model }
 
-    prompt = llm_assistant.get_prompt(user_choice=user_choice, is_chain_of_thoughts=False)
+    prompt = llm_assistant.get_prompt(user_choice=summaryType, is_chain_of_thoughts=False)
     completed_item["prompt"] = prompt
 
     save_item_to_storage(completed_item)

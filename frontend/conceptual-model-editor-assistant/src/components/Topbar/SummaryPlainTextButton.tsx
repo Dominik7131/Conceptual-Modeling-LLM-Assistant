@@ -45,7 +45,7 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
 
         setTopbarTab(TopbarTabs.SUMMARY_PLAIN_TEXT)
 
-        const bodyData = JSON.stringify({"userChoice": userChoice, "conceptualModel": conceptualModel, "domainDescription": currentDomainDescription})
+        const bodyData = JSON.stringify({"summaryType": userChoice, "conceptualModel": conceptualModel, "domainDescription": currentDomainDescription})
 
         fetchSummaryPlainText(bodyData)
     }

@@ -46,7 +46,7 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
 
         setTopbarTab(TopbarTabs.SUMMARY_DESCRIPTION)  
 
-        const bodyData = JSON.stringify({"userChoice": userChoice, "conceptualModel": conceptualModel, "domainDescription": currentDomainDescription})
+        const bodyData = JSON.stringify({"summaryType": userChoice, "conceptualModel": conceptualModel, "domainDescription": currentDomainDescription})
     
         fetchSummaryDescriptions(bodyData)
     }

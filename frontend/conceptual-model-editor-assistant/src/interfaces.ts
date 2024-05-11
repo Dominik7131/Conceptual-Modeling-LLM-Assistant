@@ -7,9 +7,9 @@ export const enum UserChoice
   ATTRIBUTES = "attributes",
   ASSOCIATIONS_ONE_KNOWN_CLASS = "associations1",
   ASSOCIATIONS_TWO_KNOWN_CLASSES = "associations2",
-  SUMMARY_PLAIN_TEXT = "summary-plain-text",
-  SUMMARY_DESCRIPTIONS = "summary-descriptions",
-  SINGLE_FIELD = "single-field"
+  SUMMARY_PLAIN_TEXT = "summaryPlainText",
+  SUMMARY_DESCRIPTIONS = "summaryDescriptions",
+  SINGLE_FIELD = "singleField"
 }
 
 export const enum ItemType

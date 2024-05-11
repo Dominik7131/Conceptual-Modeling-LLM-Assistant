@@ -2,6 +2,7 @@ import { atom, selector } from 'recoil'
 import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice } from './interfaces';
 import { Node, Edge } from 'reactflow';
 import { SIDEBAR_DEFAULT_WIDTH_PERCENTAGE, TOPBAR_DEFAULT_HEIGHT_PX, blankEntity } from './utils/utility';
+import { DATASPECER_MODEL_URL } from './utils/urls';
 
 
 export const isShowEditDialogState = atom({
@@ -235,7 +236,7 @@ export const isShowTitleDialogDomainDescriptionState = atom({
 
 export const modelIDState = atom({
     key: 'modelIDState',
-    default: "",
+    default: DATASPECER_MODEL_URL,
 })
 
 
