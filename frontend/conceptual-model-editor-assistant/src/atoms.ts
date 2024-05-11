@@ -1,9 +1,10 @@
 import { atom, selector } from 'recoil'
 import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice } from './interfaces';
 import { Node, Edge } from 'reactflow';
-import { SIDEBAR_DEFAULT_WIDTH_PERCENTAGE, TOPBAR_DEFAULT_HEIGHT_PX, blankEntity } from './utils/utility';
+import { SIDEBAR_DEFAULT_WIDTH_PERCENTAGE, TOPBAR_DEFAULT_HEIGHT_PX, blankClass } from './utils/utility';
 import { DATASPECER_MODEL_URL } from './utils/urls';
 
+// TODO: Divide atoms into separate files
 
 export const isShowEditDialogState = atom({
     key: 'isShowEditDialogState',
@@ -21,8 +22,13 @@ export const isShowCreateEdgeDialogState = atom({
 })
 
 
-export const suggestedEntitiesState = atom<Class[]>({
-    key: 'suggestedEntitiesState',
+// export const suggestedItemsState = atom<any>({
+//     key: 'suggestedItemsState',
+//     default: { classes: [], attributes: [], associations: []},
+// })
+
+export const suggestedClassesState = atom<Class[]>({
+    key: 'suggestedClassesState',
     default: [],
 })
 
@@ -31,8 +37,8 @@ export const suggestedAttributesState = atom<Attribute[]>({
     default: [],
 })
 
-export const suggestedRelationshipsState = atom<Association[]>({
-    key: 'suggestedRelationshipsState',
+export const suggestedAssociationsState = atom<Association[]>({
+    key: 'suggestedAssociationsState',
     default: [],
 })
 
@@ -80,17 +86,17 @@ export const itemTypesToLoadState = atom<ItemType[]>({
 // TODO: Do not use initial invalid item, instead make a type: Item | null
 export const selectedSuggestedItemState = atom<Item>({
     key: 'selectedSuggestedItemState',
-    default: blankEntity,
+    default: blankClass,
 })
 
 export const editedSuggestedItemState = atom<Item>({
     key: 'editedSuggestedItemState',
-    default: blankEntity,
+    default: blankClass,
 })
 
 export const regeneratedItemState = atom<Item>({
     key: 'regeneratedItemState',
-    default: blankEntity,
+    default: blankClass,
 })
 
 export const isSuggestedItemState = atom({
@@ -142,7 +148,7 @@ export const summaryTextState = atom({
     default: "",
 })
 
-// TODO: This object should contain descriptions for "entities": array of entities and "relationships": array of relationships
+// TODO: This object should contain descriptions for "classes": array of classes and "associations": array of associations
 export const summaryDescriptionsState = atom<SummaryObject>({
     key: 'summaryDescriptionsState',
     default: { classes: [], associations: []},

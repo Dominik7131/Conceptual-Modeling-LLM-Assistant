@@ -1,4 +1,4 @@
-import ConceptualModel from './components/ConceptualModel';
+import ConceptualModel from './components/Canvas/ConceptualModel';
 import Topbar from './components/Topbar/Topbar'
 import SideBar from './components/Sidebar/Sidebar';
 import { ReactFlowProvider } from 'reactflow';

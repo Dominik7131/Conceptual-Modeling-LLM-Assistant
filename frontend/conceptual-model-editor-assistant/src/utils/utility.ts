@@ -530,6 +530,7 @@ export const itemTypeToUserChoice = (itemType: ItemType): UserChoice =>
 }
 
 
+export const CUSTOM_EDGE_TYPE = "custom-edge"
 export const CUSTOM_EDGE_MARKER: EdgeMarker = { type: MarkerType.Arrow, width: 50, height: 50, strokeWidth: 1 }
 export const CUSTOM_ISA_EDGE_MARKER: EdgeMarker = { type: MarkerType.ArrowClosed, width: 40, height: 40, strokeWidth: 0.8 }
 
@@ -541,7 +542,7 @@ export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 
 
 // TODO: It is probably better to use "null" instead of blank item
-export const blankEntity: Class = {
+export const blankClass: Class = {
   [Field.IRI]: "", [Field.TYPE]: ItemType.CLASS, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
 }
 

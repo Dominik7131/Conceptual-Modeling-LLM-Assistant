@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Attribute, Field, Item, ItemType, Association, SummaryObject, UserChoice } from "../interfaces";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedEntitiesState, suggestedAttributesState, suggestedRelationshipsState } from "../atoms";
+import { isLoadingEditState, isLoadingSuggestedItemsState, isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms";
 import { createIRIFromName, onClearSuggestedItems } from "../utils/utility";
 import { HEADER, SUGGEST_ITEMS_URL, SUGGEST_SUMMARY_URL } from "../utils/urls";
 
@@ -16,9 +16,9 @@ const useFetchData = () =>
     const setSummaryText = useSetRecoilState(summaryTextState)
     const setSummaryDescriptions = useSetRecoilState(summaryDescriptionsState)
 
-    const setSuggestedEntities = useSetRecoilState(suggestedEntitiesState)
+    const setSuggestedEntities = useSetRecoilState(suggestedClassesState)
     const setSuggestedAttributes = useSetRecoilState(suggestedAttributesState)
-    const setSuggestedRelationships = useSetRecoilState(suggestedRelationshipsState)
+    const setSuggestedRelationships = useSetRecoilState(suggestedAssociationsState)
 
     const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
 

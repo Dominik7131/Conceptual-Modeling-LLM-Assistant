@@ -2,15 +2,15 @@ import Stack from '@mui/material/Stack';
 import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange, useOnSelectionChange } from 'reactflow';
 import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
-import { Field, Item, ItemType, Association } from '../interfaces';
-import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarWidthPercentageState, topbarHeightPxState } from '../atoms';
+import { Field, Item, ItemType, Association } from '../../interfaces';
+import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarWidthPercentageState, topbarHeightPxState } from '../../atoms';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useCallback, useEffect } from 'react';
-import useConceptualModel from '../hooks/useConceptualModel';
+import { loadDefaultConceptualModel } from '../../utils/import';
 
 
 const nodeTypes = { customNode: CustomNode };
-const edgeTypes = { 'custom-edge': CustomEdge }
+const edgeTypes = { "custom-edge": CustomEdge }
 
 
 const ConceptualModel: React.FC = () =>
@@ -27,12 +27,8 @@ const ConceptualModel: React.FC = () =>
   const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialogState)
   const sidebarWidthPercentage = useRecoilValue(sidebarWidthPercentageState)
 
-  const topbarHeightPx = useRecoilValue(topbarHeightPxState) // 361
+  const topbarHeightPx = useRecoilValue(topbarHeightPxState)
   const heightPx = 947 - topbarHeightPx
-
-
-
-  const { parseSerializedConceptualModel } = useConceptualModel()
 
 
   const onNodesChange = useCallback((changes: NodeChange[]) =>
@@ -74,7 +70,7 @@ const ConceptualModel: React.FC = () =>
 
   useEffect(() =>
   {
-    parseSerializedConceptualModel()
+    loadDefaultConceptualModel(setNodes, setEdges)
   }, [])
 
   // useEffect(() =>

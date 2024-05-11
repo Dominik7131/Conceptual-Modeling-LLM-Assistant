@@ -1,6 +1,6 @@
 import Drawer from '@mui/material/Drawer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { isLoadingSuggestedItemsState, isSidebarCollapsedState, isSidebarOpenState, sidebarTabValueState, sidebarTitlesState, sidebarWidthPercentageState, suggestedAttributesState, suggestedEntitiesState, suggestedRelationshipsState } from '../../atoms';
+import { isLoadingSuggestedItemsState, isSidebarCollapsedState, isSidebarOpenState, sidebarTabValueState, sidebarTitlesState, sidebarWidthPercentageState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState } from '../../atoms';
 import ItemDisplay from './ItemDisplay';
 import { Button, Divider, Stack, Tab, Typography } from '@mui/material';
 import { Attribute, Field, Item, ItemType } from '../../interfaces';
@@ -16,9 +16,9 @@ const Sidebar: React.FC = () =>
 {
     const isCollapsed = useRecoilValue(isSidebarCollapsedState)
 
-    const entities = useRecoilValue(suggestedEntitiesState)
+    const entities = useRecoilValue(suggestedClassesState)
     const attributes = useRecoilValue(suggestedAttributesState)
-    const relationships = useRecoilValue(suggestedRelationshipsState)
+    const relationships = useRecoilValue(suggestedAssociationsState)
 
     const isSidebarOpen = useRecoilValue(isSidebarOpenState)
     const [sidebarWidthPercentage, setSidebarWidthPercentage] = useRecoilState(sidebarWidthPercentageState)

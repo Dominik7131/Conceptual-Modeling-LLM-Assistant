@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { useCallback, useState } from 'react';
 import { Handle, NodeProps, Position } from 'reactflow';
-import { Attribute, Class, Field, ItemType, NodeData, UserChoice, PRIMARY_COLOR, Item } from '../interfaces';
+import { Attribute, Class, Field, ItemType, NodeData, UserChoice, PRIMARY_COLOR, Item } from '../../interfaces';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
@@ -13,9 +13,9 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { IconButton, ListItemIcon, Menu, MenuItem, Tooltip } from '@mui/material';
 import ModeStandbyIcon from '@mui/icons-material/ModeStandby';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
-import { capitalizeString, clipName } from '../utils/utility';
-import useConceptualModel from '../hooks/useConceptualModel';
-import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../atoms';
+import { capitalizeString, clipName } from '../../utils/utility';
+import useConceptualModel from '../../hooks/useConceptualModel';
+import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../../atoms';
 import { useSetRecoilState } from 'recoil';
 
 

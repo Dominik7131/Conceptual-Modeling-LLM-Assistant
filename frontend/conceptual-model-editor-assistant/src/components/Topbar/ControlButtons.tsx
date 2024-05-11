@@ -5,7 +5,7 @@ import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import useConceptualModel from "../../hooks/useConceptualModel";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
 import { Class, Field, ItemType, TopbarTabs, UserChoice } from "../../interfaces";
-import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME, blankEntity, convertConceptualModelToJSON } from "../../utils/utility";
+import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME, blankClass, convertConceptualModelToJSON } from "../../utils/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { domainDescriptionState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, topbarTabValueState } from "../../atoms";
 import SummaryPlainTextButton from "./SummaryPlainTextButton";
@@ -28,8 +28,8 @@ const ControlButtons: React.FC = (): JSX.Element =>
     {    
         setIsItemInConceptualModel(false)
         setIsSuggestedItem(true)
-        setSelectedSuggestedItem(blankEntity)
-        setEditedSuggestedItem(blankEntity)
+        setSelectedSuggestedItem(blankClass)
+        setEditedSuggestedItem(blankClass)
     
         setIsShowEditDialog(true)
     }

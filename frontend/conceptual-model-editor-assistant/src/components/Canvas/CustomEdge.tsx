@@ -1,15 +1,13 @@
 import { Node, BaseEdge, EdgeLabelRenderer, EdgeProps, MarkerType, getBezierPath, getMarkerEnd, getSimpleBezierPath, getStraightPath, useStore } from 'reactflow';
-import { EdgeData, Field, ItemType, Association, PRIMARY_COLOR } from '../interfaces';
+import { EdgeData, Field, ItemType, Association, PRIMARY_COLOR } from '../../interfaces';
 import { useCallback, useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
-import IconButton from '@mui/material/IconButton';
 import { Typography } from '@mui/material';
-import { CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, capitalizeString, clipName, } from '../utils/utility';
-import useConceptualModel from '../hooks/useConceptualModel';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState } from '../atoms';
-import { calculateNewEdgeSourceAndTargetPosition } from '../autoEdgeReconnect';
+import { capitalizeString, clipName, } from '../../utils/utility';
+import { useSetRecoilState } from 'recoil';
+import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../../atoms';
+import { calculateNewEdgeSourceAndTargetPosition } from '../../utils/autoEdgeReconnect';
 
 
 // Inspiration: https://reactflow.dev/learn/customization/custom-edges
