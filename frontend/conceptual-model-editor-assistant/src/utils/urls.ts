@@ -4,15 +4,15 @@ export const HEADER = { "Content-Type": "application/json" }
 export const SIDEBAR_BUTTON_SIZE = "small"
 export const SIDEBAR_BUTTON_COLOR = "secondary"
 
-const SUGGEST_ITEMS_ENDPOINT = "suggest-items"
-const SUGGEST_SINGLE_FIELD_ENDPOINT = "suggest-single-field"
-const SUGGEST_SUMMARY_ENDPOINT = "suggest-summary"
+const SUGGEST_ITEMS_ENDPOINT = "suggest/items"
+const SUGGEST_SINGLE_FIELD_ENDPOINT = "suggest/single_field"
+const SUGGEST_SUMMARY_ENDPOINT = "suggest/summary"
 
-const SAVE_SUGESTED_ITEM = "save-suggested-item"
-const SAVE_SUGESTED_SINGLE_FIELD = "save-suggested-single-field"
-const SAVE_SUGESTED_DESCRIPTION = "save-suggested-description"
+const SAVE_SUGESTED_ITEM = "save/suggested_item"
+const SAVE_SUGESTED_SINGLE_FIELD = "save/suggested_single_field"
+const SAVE_SUGESTED_DESCRIPTION = "save/suggested_description"
 
-const MERGE_ORIGINAL_TEXT_ENDPOINT = "merge-original-texts"
+const MERGE_ORIGINAL_TEXT_ENDPOINT = "merge_original_texts"
 
 export const SUGGEST_ITEMS_URL = BASE_URL + SUGGEST_ITEMS_ENDPOINT
 export const SUGGEST_SINGLE_FIELD_URL = BASE_URL + SUGGEST_SINGLE_FIELD_ENDPOINT

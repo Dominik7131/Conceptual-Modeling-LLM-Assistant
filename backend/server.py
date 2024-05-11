@@ -7,18 +7,18 @@ import logging
 import sys
 from LLM_assistant import LLMAssistant
 
-sys.path.append('utils/')
+sys.path.append("utils/")
 from text_utility import LOGGER_NAME, Field, TextUtility, UserChoice
 
 
 app = Flask(__name__)
 llm_assistant = None
 
-TIMESTAMP = time.strftime('%Y-%m-%d-%H-%M-%S')
+TIMESTAMP = time.strftime("%Y-%m-%d-%H-%M-%S")
 LOG_DIRECTORY = "logs"
 LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, f"{TIMESTAMP}-log.txt")
 
-logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
+logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode="w")
 logger = logging.getLogger(LOGGER_NAME)
 
 
@@ -26,22 +26,15 @@ STORAGE_DIRECTORY = "storage"
 
 # CORS error from frontend solution: https://stackoverflow.com/a/33091782
 cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type' 
+app.config["CORS_HEADERS"] = "Content-Type"
 
 
-@app.route('/suggest-items', methods=['POST'])
+@app.route("/suggest/items", methods=["POST"])
 def suggest_items():
 
     body_data = request.get_json()
     source_class = body_data["sourceClass"]
-
     target_class = body_data.get("targetClass", "")
-
-    # if not "targetClass" in body_data["targetClass"]:
-    #     target_class = ""
-    # else:
-    #     target_class = body_data["targetClass"]
-
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
 
@@ -49,7 +42,7 @@ def suggest_items():
 
 
 
-@app.route('/suggest-single-field', methods=['POST'])
+@app.route("/suggest/single_field", methods=["POST"])
 def suggest_single_field():
 
     body_data = request.get_json()
@@ -65,7 +58,7 @@ def suggest_single_field():
     return llm_assistant.generate_single_field(user_choice, name, source_class, target_class, domain_description, field)
 
 
-@app.route('/suggest-summary', methods=['POST'])
+@app.route("/suggest/summary", methods=["POST"])
 def suggest_summary_plain_text():
 
     body_data = request.get_json()
@@ -83,14 +76,14 @@ def suggest_summary_plain_text():
         return f"Unexpected user choice: {user_choice}", 400
 
 
-@app.route('/merge-original-texts', methods=['POST'])
+@app.route("/merge_original_texts", methods=["POST"])
 def merge_original_texts():
 
     body_data = request.get_json()
     original_text_indexes_object = body_data["originalTextIndexesObject"]
     # print(f"Received: {original_text_indexes_object}\n")
 
-    parsed_original_text_indexes_object = [(item['indexes'][0], item['indexes'][1], item['label']) for item in original_text_indexes_object]
+    parsed_original_text_indexes_object = [(item["indexes"][0], item["indexes"][1], item["label"]) for item in original_text_indexes_object]
     result = TextUtility.merge_original_texts(parsed_original_text_indexes_object)
 
     return result
@@ -101,14 +94,14 @@ def save_item_to_storage(item):
     # TODO: Check storage size
     # If the storage size > 1GB then print warning and do not store anything
 
-    timestamp = time.strftime('%Y-%m-%d-%H-%M-%S')
+    timestamp = time.strftime("%Y-%m-%d-%H-%M-%S")
     file_to_write_path = f"{os.path.join(STORAGE_DIRECTORY, timestamp)}.json"
 
-    with open(file_to_write_path, 'w') as file:
+    with open(file_to_write_path, "w") as file:
         json.dump(item, file)
 
 
-@app.route('/save-suggested-item', methods=['POST'])
+@app.route("/save/suggested_item", methods=["POST"])
 def save_suggested_item():
 
     body_data = request.get_json()
@@ -133,7 +126,7 @@ def save_suggested_item():
     return "Done"
 
 
-@app.route('/save-suggested-single-field', methods=['POST'])
+@app.route("/save/suggested_single_field", methods=["POST"])
 def save_suggested_single_field():
 
     body_data = request.get_json()
@@ -157,8 +150,8 @@ def save_suggested_single_field():
     return "Done"
 
 
-@app.route('/save-suggested-description', methods=['POST'])
-def save_suggested_description():
+@app.route("/save/suggested_summary", methods=["POST"])
+def save_suggested_summary():
 
     body_data = request.get_json()
     user_choice = body_data["userChoice"]
@@ -177,7 +170,7 @@ def save_suggested_description():
     return "Done"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     if (not os.path.exists(LOG_DIRECTORY)):
         os.makedirs(LOG_DIRECTORY)

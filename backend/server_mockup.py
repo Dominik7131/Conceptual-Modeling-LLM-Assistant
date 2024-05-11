@@ -4,7 +4,7 @@ import json
 import time
 import sys
 
-sys.path.append('utils/')
+sys.path.append("utils/")
 from text_utility import TextUtility, UserChoice
 
 
@@ -14,10 +14,10 @@ llm_assistant = None
 
 # CORS error from frontend solution: https://stackoverflow.com/a/33091782
 cors = CORS(app)
-app.config['CORS_HEADERS'] = 'Content-Type' 
+app.config["CORS_HEADERS"] = "Content-Type" 
 
 
-@app.route('/suggest-items', methods=['POST'])
+@app.route("/suggest/items", methods=["POST"])
 def suggest_items():
 
     body_data = request.get_json()
@@ -44,7 +44,7 @@ def suggest_items():
         return generate_mock_up()
 
 
-@app.route('/suggest-single-field', methods=['POST'])
+@app.route("/suggest/single_field", methods=["POST"])
 def suggest_single_field():
 
     def generator_function(field):
@@ -90,8 +90,8 @@ def generate_summary_descriptions_mock_up():
     return
 
 
-@app.route('/suggest-summary', methods=['POST'])
-def summary_plain_text():
+@app.route("/suggest/summary", methods=["POST"])
+def suggest_summary():
 
     body_data = request.get_json()
     user_choice = body_data["userChoice"]
@@ -106,14 +106,14 @@ def summary_plain_text():
         return f"Unexpected user choice: {user_choice}", 400
 
 
-@app.route('/merge_original_texts', methods=['POST'])
+@app.route("/merge_original_texts", methods=["POST"])
 def merge_original_texts():
 
     body_data = request.get_json()
     original_text_indexes_object = body_data["originalTextIndexesObject"]
     # print(f"Received: {original_text_indexes_object}\n")
 
-    parsed_original_text_indexes_object = [(item['indexes'][0], item['indexes'][1], item['label']) for item in original_text_indexes_object]
+    parsed_original_text_indexes_object = [(item["indexes"][0], item["indexes"][1], item["label"]) for item in original_text_indexes_object]
     # print(f"Parsed object: {parsed_original_text_indexes_object}\n")
     result = TextUtility.merge_original_texts(parsed_original_text_indexes_object)
 
@@ -227,7 +227,7 @@ def create_summary_mockup(entities : list[str]) -> list[dict]:
     return result
 
 
-@app.route('/save-suggested-item', methods=['POST'])
+@app.route("/save/suggested_item", methods=["POST"])
 def save_suggested_item():
 
     body_data = request.get_json()
@@ -242,7 +242,7 @@ def save_suggested_item():
     return "Done"
 
 
-@app.route('/save-suggested-single-field', methods=['POST'])
+@app.route("/save/suggested_single_field", methods=["POST"])
 def save_suggested_single_field():
 
     body_data = request.get_json()
@@ -258,7 +258,7 @@ def save_suggested_single_field():
     return "Done"
 
 
-@app.route('/save-suggested-description', methods=['POST'])
+@app.route("/save/suggested_summary", methods=["POST"])
 def save_suggested_description():
 
     body_data = request.get_json()
@@ -274,5 +274,5 @@ def save_suggested_description():
     return "Done"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(port=5000, threaded=True)
