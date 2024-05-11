@@ -1,27 +1,16 @@
 __pycache__/
 .vscode/
-Dataset/images/IT-DatabaseCZ.jpg
-Dataset/images/IT-DatabaseCZ.psd
-Dataset/images/IT-DatabaseEN.psd
-
-Frontend/conceptual-model-editor/src/App.test.js
-Frontend/conceptual-model-editor/src/CustomNode.js
-Frontend/conceptual-model-editor/src/commands.txt
-Frontend/conceptual-model-editor/src/reportWebVitals.js
-Frontend/conceptual-model-editor/src/setupTests.js
 
 commands.txt
 llama/
-output/
-backend/get_stream.py
-out.txt
-out_manual.txt
-backend/x.py
+out/*
+
 notes/2024-01-28 Návrh schématu konceptuálního modelu.pdf
 notes/odkaz na 2024-01-28 Návrh schématu konceptuálního modelu.txt
-cache/
-conceptual-model-editor-assistant/public/input.txt
-domain-modeling-benchmark/
 notes/measurement-approach-cz.md
+
+domain-modeling-benchmark/
+
+backend/get_stream.py
+backend/x.py
 backend/storage/*
-out/*
