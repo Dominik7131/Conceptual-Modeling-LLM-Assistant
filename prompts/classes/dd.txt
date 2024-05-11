@@ -1,4 +1,4 @@
-Solely based on the given context extract all class names.
+Solely based on the given context extract all class names for a UML diagram.
 
 Output each class name in JSON object like this: {"name": "class name"}.
 
