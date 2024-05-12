@@ -14,5 +14,5 @@
 
 <br/>
 
-## Input/Output conceptual model JSON format
+## Input and output conceptual model JSON format
 - [json schema](https://schemas.dataspecer.com/adapters/simplified-semantic-model.v1.0.schema.json)
