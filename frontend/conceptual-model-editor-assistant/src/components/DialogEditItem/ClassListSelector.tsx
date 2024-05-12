@@ -1,14 +1,14 @@
 import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
-import { nodesState, selectedSuggestedItemState } from "../atoms"
+import { nodesState, selectedSuggestedItemState } from "../../atoms"
 import { useRecoilValue } from "recoil"
 import { Node } from 'reactflow';
-import { Association, Field, Item, ItemFieldUIName } from "../interfaces"
+import { Association, Field, Item, ItemFieldUIName } from "../../interfaces"
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState } from "react"
-import useEditItemDialog from "../hooks/useEditItemDialog"
-import { createNameFromIRI, doesNodeAlreadyExist } from "../utils/conceptualModel"
+import useEditItemDialog from "../../hooks/useEditItemDialog"
+import { createNameFromIRI, doesNodeAlreadyExist } from "../../utils/conceptualModel"
 
 
 interface Props

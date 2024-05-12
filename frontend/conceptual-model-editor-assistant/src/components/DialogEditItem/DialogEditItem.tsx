@@ -7,25 +7,24 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Stack from '@mui/material/Stack';
-import { Attribute, Field, Item, ItemFieldUIName, ItemType, Association } from '../interfaces';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import IconButton from '@mui/material/IconButton';
 import CircularProgress from '@mui/material/CircularProgress';
-import AddIcon from '@mui/icons-material/Add';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from '../atoms';
-import useEditItemDialog from '../hooks/useEditItemDialog';
-import useConceptualModel from '../hooks/useConceptualModel';
+import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from '../../atoms';
 import Alert from '@mui/material/Alert';
-import { createErrorMessage } from '../utils/utility';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import { Association, Attribute, Field, Item, ItemFieldUIName, ItemType } from '../../interfaces';
+import { onAddItem } from '../../utils/conceptualModel';
+import { createErrorMessage } from '../../utils/utility';
 import ClassListSelector from './ClassListSelector';
-import { onAddItem } from '../utils/conceptualModel';
+import useEditItemDialog from '../../hooks/useEditItemDialog';
+import Title from './Title';
 
 
 const DialogEditItem: React.FC = () =>
@@ -132,32 +131,6 @@ const DialogEditItem: React.FC = () =>
     }
 
 
-    const showDialogTitle = (item: Item): JSX.Element =>
-    {
-        return <Typography variant="h5" component="span"> Editing {item.type}: <strong>{item.name}</strong> </Typography>
-    }
-
-    const showClassesList = (fieldName: string): JSX.Element =>
-    {
-        // https://mui.com/material-ui/react-select/
-        return (
-            <FormControl fullWidth variant="standard">
-                    <InputLabel id="demo-simple-select-standard-label">{ fieldName }</InputLabel>
-                    <Select
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    value={20}
-                    // onChange={handleChange}
-                    >
-                        {/* TODO: Get IRIs from all nodes */}
-                        <MenuItem value={10}>something-something</MenuItem>
-                        <MenuItem value={20}>else-else</MenuItem>
-                    </Select>
-                </FormControl>
-        )
-    }
-
-
     return (
         <Dialog open={isOpened} fullWidth maxWidth={'xl'} onClose={onClose}>
 
@@ -168,7 +141,7 @@ const DialogEditItem: React.FC = () =>
                 </Alert>
             }
             
-            <DialogTitle> { showDialogTitle(item) } </DialogTitle> 
+            <DialogTitle> <Title item={item}/> </DialogTitle> 
 
             <DialogContent>
 
