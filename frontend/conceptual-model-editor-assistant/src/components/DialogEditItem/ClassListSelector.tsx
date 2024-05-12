@@ -1,14 +1,14 @@
 import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
-import { nodesState, selectedSuggestedItemState } from "../../atoms"
-import { useRecoilValue } from "recoil"
+import { editedSuggestedItemState, nodesState, selectedSuggestedItemState } from "../../atoms"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { Node } from 'reactflow';
 import { Association, Field, Item, ItemFieldUIName } from "../../interfaces"
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState } from "react"
-import useEditItemDialog from "../../hooks/useEditItemDialog"
 import { createNameFromIRI, doesNodeAlreadyExist } from "../../utils/conceptualModel"
+import { onItemEdit } from "../../utils/editItem"
 
 
 interface Props
@@ -23,10 +23,10 @@ const ClassListSelector: React.FC<Props> = ({ fieldName, association, editedItem
     const nodes: Node[] = useRecoilValue(nodesState)
     const selectedAssociation: Association = useRecoilValue(selectedSuggestedItemState) as Association
 
+    const setEditedItem = useSetRecoilState(editedSuggestedItemState)
+
     const [value, setValue] = useState((association as any)[fieldName])
     const fieldUIName = fieldName === Field.SOURCE_CLASS ? ItemFieldUIName.SOURCE_CLASS : ItemFieldUIName.TARGET_CLASS
-    
-    const { onItemEdit } = useEditItemDialog()
 
     const iri = fieldName === Field.SOURCE_CLASS ? selectedAssociation[Field.SOURCE_CLASS] : selectedAssociation[Field.TARGET_CLASS]
     const name = createNameFromIRI(iri)
@@ -34,7 +34,7 @@ const ClassListSelector: React.FC<Props> = ({ fieldName, association, editedItem
     const handleChange = (event: SelectChangeEvent) =>
     {
         setValue(event.target.value)
-        onItemEdit(fieldName, event.target.value)
+        onItemEdit(fieldName, event.target.value, setEditedItem)
     }
     
     // Documentation: https://mui.com/material-ui/react-select/#props

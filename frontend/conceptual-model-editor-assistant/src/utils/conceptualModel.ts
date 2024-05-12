@@ -1,5 +1,6 @@
 import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
 import { Association, Attribute, Class, EdgeData, Field, Item, ItemType, NodeData } from '../interfaces';
+import { SetterOrUpdater } from 'recoil';
 
 
 export const CUSTOM_EDGE_TYPE = "custom-edge"
@@ -21,9 +22,9 @@ export const getNodeByID = (nodes: Node[], nodeID: string): Node | null =>
 }
 
 
-export const createEdgeUniqueID = (source: string, target: string, name: string): string =>
+export const createEdgeUniqueID = (source: string, target: string, iri: string): string =>
 {
-    return `${source}-${name}-${target}`
+    return `${source}-${iri}-${target}`
 }
 
 
@@ -41,7 +42,7 @@ export const doesNodeAlreadyExist = (nodes: Node[], nodeID: string): boolean =>
 }
 
 
-export const doesNodeAlreadyExistSetter = (setNodes: any, nodeID: string): boolean =>
+export const doesNodeAlreadyExistSetter = (setNodes: SetterOrUpdater<Node[]>, nodeID: string): boolean =>
 {
     // It would be better more readable to use `doesNodeAlreadyExist` function however, when not using nodes the component
     // using this function does not get updated every time a node is changed
@@ -77,7 +78,7 @@ export const doesEdgeAlreadyExist = (edges: Edge[], edgeID: string): boolean =>
 }
 
 
-export const doesEdgeAlreadyExistSetter = (setEdges: any, edgeID: string): boolean =>
+export const doesEdgeAlreadyExistSetter = (setEdges: SetterOrUpdater<Edge[]>, edgeID: string): boolean =>
 {
     let isEdgeAlreadyPresent = false
 
@@ -93,7 +94,7 @@ export const doesEdgeAlreadyExistSetter = (setEdges: any, edgeID: string): boole
     return isEdgeAlreadyPresent
 }
 
-export const doesEdgeBetweenNodesAlreadyExistSetter = (setEdges: any, sourceNodeID: string, targetNodeID: string): boolean =>
+export const doesEdgeBetweenNodesAlreadyExistSetter = (setEdges: SetterOrUpdater<Edge[]>, sourceNodeID: string, targetNodeID: string): boolean =>
 {
     let isEdgeAlreadyPresent = false
 
@@ -109,7 +110,7 @@ export const doesEdgeBetweenNodesAlreadyExistSetter = (setEdges: any, sourceNode
     return isEdgeAlreadyPresent
 }
 
-export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
+export const onAddItem = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): boolean =>
 {
     if (item.type === ItemType.CLASS)
     {
@@ -130,7 +131,7 @@ export const onAddItem = (item: Item, setNodes: any, setEdges: any): boolean =>
 }
 
 
-export const onAddClass = (clss: Class, positionX: number, positionY: number, setNodes: any): boolean =>
+export const onAddClass = (clss: Class, positionX: number, positionY: number, setNodes: SetterOrUpdater<Node[]>): boolean =>
 {
     if (doesNodeAlreadyExistSetter(setNodes, clss[Field.IRI]))
     {
@@ -155,7 +156,7 @@ export const onAddClass = (clss: Class, positionX: number, positionY: number, se
 }
 
 
-const onAddAttribute = (attribute : Attribute, setNodes: any) =>
+const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>) =>
 {
     const nodeID = attribute.source
     let isAttributePresent = false
@@ -193,7 +194,7 @@ const onAddAttribute = (attribute : Attribute, setNodes: any) =>
 }
 
 
-const onAddAssociation = (association : Association, setNodes: any, setEdges: any): boolean =>
+const onAddAssociation = (association : Association, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): boolean =>
 {
     // Returns "true" if the operation was successfull otherwise "false"
     console.log("Adding: ", association)
@@ -203,7 +204,7 @@ const onAddAssociation = (association : Association, setNodes: any, setEdges: an
         return false
     }
 
-    const newEdgeID = createEdgeUniqueID(association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS], association[Field.NAME])
+    const newEdgeID = createEdgeUniqueID(association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS], association[Field.IRI])
     const isTargetNodeCreated: boolean = doesNodeAlreadyExistSetter(setNodes, association[Field.TARGET_CLASS])
 
     if (!isTargetNodeCreated)
@@ -267,7 +268,7 @@ export const createNode = (nodeName: string, positionX: number, positionY: numbe
 }
 
 
-export const addNode = (nodeName: string, positionX: number, positionY: number, setNodes: any) =>
+export const addNode = (nodeName: string, positionX: number, positionY: number, setNodes: SetterOrUpdater<Node[]>) =>
 {
     if (!nodeName)
     {
@@ -347,4 +348,190 @@ export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[], isOnl
     result.associations = associations
 
     return result
+}
+
+
+export const editNodeClass = (newEntity: Class, oldEntity: Class, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
+{
+    if (newEntity.name !== oldEntity.name)
+    {
+        // Update iri
+        const newIRI = createIRIFromName(newEntity[Field.NAME])
+        newEntity = {...newEntity, [Field.IRI]: newIRI}
+
+        // Update all edges that connect to the changed source or target class
+        setEdges((edges) => edges.map((currentEdge: Edge) =>
+        {
+            if (currentEdge.source === oldEntity.iri)
+            {
+                const newRelationship: Association = { ...currentEdge.data.relationship, source: newEntity[Field.IRI] }
+                const newEdgeData: EdgeData = { ...currentEdge.data, association: newRelationship }
+                const edgeID = createEdgeUniqueID(newEntity[Field.IRI], currentEdge.target, currentEdge.data.relationship[Field.IRI])
+                const updatedEdge: Edge = {
+                    ...currentEdge, id: edgeID, source: newEntity[Field.IRI], data: newEdgeData
+                }
+
+                return updatedEdge
+            }
+            else if (currentEdge.target === oldEntity.iri)
+            {
+                const newRelationship: Association = { ...currentEdge.data.relationship, target: newEntity[Field.IRI] }
+                const newEdgeData: EdgeData = { ...currentEdge.data, association: newRelationship }
+                const edgeID = createEdgeUniqueID(currentEdge.source, newEntity[Field.IRI], currentEdge.data.relationship[Field.IRI])
+                const updatedEdge: Edge = {
+                    ...currentEdge, id:edgeID, target: newEntity[Field.IRI], data: newEdgeData
+                }
+
+                console.log(updatedEdge)
+
+                return updatedEdge
+            }
+            return currentEdge
+        }))
+    }
+
+    setNodes((nodes: Node[]) => nodes.map((currentNode : Node) =>
+    {
+        if (currentNode.id === oldEntity.iri)
+        {
+            let newAttributes = currentNode.data.attributes
+
+            // For each attribute update their source entity if the iri of the entity changed
+            if (oldEntity.iri !== newEntity.iri)
+            {                   
+                newAttributes = currentNode.data.attributes.map((attribute: Attribute) =>
+                {
+                    return { ...attribute, [Field.SOURCE_CLASS]: newEntity[Field.IRI] }
+                })
+            }
+
+
+            const newData: NodeData = { ...currentNode.data, class: newEntity, attributes: newAttributes }
+            const newNode: Node = {...currentNode, id: newEntity[Field.IRI], data: newData}
+
+            return newNode
+        }
+        else
+        {
+            return currentNode
+        }
+    }))
+}
+
+    
+export const editNodeAttribute = (newAttribute: Attribute, oldAttribute: Attribute, setNodes: SetterOrUpdater<Node[]>): void =>
+{
+    const id: string = oldAttribute.source
+
+    setNodes((nodes: Node[]) => nodes.map((currentNode: Node) =>
+    {
+        if (currentNode.id === id)
+        {
+            const newAttributes = currentNode.data.attributes.map((attribute: Attribute) =>
+            {
+                if (attribute.name === oldAttribute.name)
+                {
+                    return newAttribute
+                }
+                else
+                {
+                    return attribute
+                }
+            })
+
+            const newData: NodeData = { ...currentNode.data, attributes: newAttributes}
+            const newNode: Node = { ...currentNode, data: newData}
+            return newNode
+        }
+        else
+        {
+            return currentNode
+        }
+    }))
+}
+
+
+export const editEdgeAssociation = (newAssociation: Association, oldAssociation : Association, setEdges: SetterOrUpdater<Edge[]>): void =>
+{
+    // Find the edge to update based on the old ID
+    const oldID: string = createEdgeUniqueID(oldAssociation[Field.SOURCE_CLASS], oldAssociation[Field.TARGET_CLASS], oldAssociation[Field.IRI])
+
+    setEdges((edges) => edges.map((currentEdge : Edge) =>
+    {
+        if (currentEdge.id === oldID)
+        {
+            const newData: EdgeData = { ...currentEdge.data, association: newAssociation }
+            const newID = createEdgeUniqueID(newAssociation[Field.SOURCE_CLASS], newAssociation[Field.TARGET_CLASS], newAssociation[Field.IRI])
+
+            let newEdge: Edge = {
+                ...currentEdge, id: newID, source: newAssociation[Field.SOURCE_CLASS], target: newAssociation[Field.TARGET_CLASS], data: newData
+            }
+
+            console.log("Edited edge: ", newEdge)
+
+            return newEdge
+        }
+        else
+        {
+            return currentEdge
+        }
+    }))
+}
+
+
+
+export const onRemove = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
+{
+    if (item[Field.TYPE] === ItemType.CLASS)
+    {
+        const nodeID = item[Field.IRI]
+        removeNode(nodeID, setNodes)
+    }
+    else if (item.type === ItemType.ATTRIBUTE)
+    {
+        removeNodeAttribute(item as Attribute, setNodes)
+    }
+    else if (item.type === ItemType.ASSOCIATION)
+    {
+        const association: Association = (item as Association)
+        const edgeID = createEdgeUniqueID(association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS], association[Field.NAME])
+        removeEdge(edgeID, setEdges)
+    }
+    else
+    {
+        alert("Unknown action")
+    }
+}
+
+
+export const removeNode = (nodeID: string, setNodes: SetterOrUpdater<Node[]>): void =>
+{
+    setNodes((previousNodes) => previousNodes.filter(node => node.id !== nodeID))
+}
+
+
+export const removeEdge = (edgeID: string, setEdges: SetterOrUpdater<Edge[]>): void =>
+{
+    setEdges((edges: Edge[]) => edges.filter(edge => edge.id !== edgeID))
+}
+
+
+export const removeNodeAttribute = (attribute: Attribute, setNodes: SetterOrUpdater<Node[]>): void =>
+{
+    const nodeID: string = attribute.source
+
+    setNodes((nodes) => nodes.map((currentNode : Node) =>
+    {
+        if (currentNode.id === nodeID)
+        {
+            const newAttributes = currentNode.data.attributes.filter((element: Attribute) => element.name !== attribute.name)
+            const newData: NodeData = { ...currentNode.data, attributes: newAttributes }
+            const newNode = { ...currentNode, data: newData }
+            return newNode
+        }
+        else
+        {
+            return currentNode
+        }
+    }))
 }

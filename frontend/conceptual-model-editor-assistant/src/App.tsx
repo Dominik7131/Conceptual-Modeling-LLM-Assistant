@@ -27,8 +27,8 @@ function App()
 
       <DialogCreateEdge/>
     </RecoilRoot>
-  );
+  )
 }
 
 
-export default App;
+export default App
