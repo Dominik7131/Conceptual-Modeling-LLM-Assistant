@@ -14,17 +14,17 @@ import CircularProgress from '@mui/material/CircularProgress';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { domainDescriptionState, edgesState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from '../../atoms';
-import Alert from '@mui/material/Alert';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import { Association, Attribute, Field, Item, ItemFieldUIName, ItemType } from '../../interfaces';
-import { onAddItem } from '../../utils/conceptualModel';
 import { createErrorMessage } from '../../utils/utility';
 import ClassListSelector from './ClassListSelector';
 import useEditItemDialog from '../../hooks/useEditItemDialog';
 import Title from './Title';
+import ControlButtons from './ControlButtons';
+import ErrorMessage from './ErrorMessage';
 
 
 const DialogEditItem: React.FC = () =>
@@ -32,48 +32,17 @@ const DialogEditItem: React.FC = () =>
     const isOpened = useRecoilValue(isShowEditDialogState)
     const fieldToLoad = useRecoilValue(fieldToLoadState)
 
-    const setNodes = useSetRecoilState(nodesState)
-    const setEdges = useSetRecoilState(edgesState)
-
     const item = useRecoilValue(selectedSuggestedItemState)
     const editedItem = useRecoilValue(editedSuggestedItemState)
     const regeneratedItem = useRecoilValue(regeneratedItemState)
-    const isSuggestedItem = useRecoilValue(isSuggestedItemState)
-    const isItemInConceptualModel = useRecoilValue(isItemInConceptualModelState)
 
-    const isDisableSave = !isItemInConceptualModel
-    const isDisableChange = !isSuggestedItem
-
-    const [errorMessage, setErrorMessage] = useRecoilState(editDialogErrorMsgState)
-
-    const { onSave, onClose, onRemove, onItemEdit, onGenerateField, onConfirmRegeneratedText, onClearRegeneratedItem, onChangeItemType } = useEditItemDialog()
+    const { onClose, onItemEdit, onGenerateField, onConfirmRegeneratedText, onClearRegeneratedItem } = useEditItemDialog()
 
     const attribute = editedItem as Attribute
     const association = editedItem as Association
 
     const isAttribute = item.type === ItemType.ATTRIBUTE
     const isAssociation = item.type === ItemType.ASSOCIATION
-
-
-    const handleAddItem = (item: Item): void =>
-    {
-        if (item.name === "")
-        {
-            const message = "Name cannot be empty"
-            setErrorMessage(_ => message)
-            return
-        }
-
-        const isOperationSuccessful = onAddItem(item, setNodes, setEdges)
-
-        if (isOperationSuccessful)
-        {
-            onClose()
-            return
-        }
-
-        createErrorMessage(item, setErrorMessage)
-    }
 
 
     const showEditField = (label : string, field : Field, value : string) =>
@@ -134,14 +103,11 @@ const DialogEditItem: React.FC = () =>
     return (
         <Dialog open={isOpened} fullWidth maxWidth={'xl'} onClose={onClose}>
 
-            {
-                errorMessage !== "" &&
-                <Alert variant="outlined" severity="warning" sx={{marginX:"20px", marginTop: "20px"}}>
-                    { errorMessage }
-                </Alert>
-            }
+            <ErrorMessage/>
             
-            <DialogTitle> <Title item={item}/> </DialogTitle> 
+            <DialogTitle>
+                <Title item={item}/>
+            </DialogTitle> 
 
             <DialogContent>
 
@@ -175,71 +141,12 @@ const DialogEditItem: React.FC = () =>
                     </>
                 }
 
-
-
             </DialogContent>
 
             <DialogActions>
-
-                    {
-                        isItemInConceptualModel ?
-                        <Button
-                            variant="contained"
-                            color="error"
-                            sx={{ textTransform: "none" }}
-                            onClick={() => { onRemove(item); onClose()}}>
-                                Remove
-                        </Button>
-                        :
-                        <Button
-                            variant="contained"
-                            color="success"
-                            sx={{ textTransform: "none" }}
-                            onClick={() => { handleAddItem(editedItem) }}>
-                                Add
-                        </Button>
-
-                    }
-                    
-
-                    {
-                        isSuggestedItem && !isDisableChange && isAttribute &&
-                            <Button
-                                variant="contained"
-                                sx={{ textTransform: "none" }}
-                                onClick={ () => onChangeItemType(item)}>
-                                Change to relationship
-                            </Button>
-                    }
-
-                    {
-                        isSuggestedItem && !isDisableChange && isAssociation &&
-                            <Button
-                                variant="contained"
-                                sx={{ textTransform: "none" }}
-                                onClick={ () => onChangeItemType(item)}>
-                                Change to attribute
-                            </Button>
-                    }
-                    
-                    { !isDisableSave &&
-                        <Button
-                            variant="contained"
-                            color="success"
-                            sx={{ textTransform: "none" }}
-                            onClick={() => {onSave(editedItem, item)}}>
-                            Save
-                        </Button>
-                    }
-
-                    <Button
-                        variant="contained"
-                        sx={{ textTransform: "none" }}
-                        onClick={() => onClose()}>
-                        Cancel
-                    </Button>
-
+                <ControlButtons/>
             </DialogActions>
+
         </Dialog>
     )
 }

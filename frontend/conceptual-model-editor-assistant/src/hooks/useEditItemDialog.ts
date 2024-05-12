@@ -444,9 +444,9 @@ const useEditItemDialog = () =>
 
     const onRemove = (item: Item): void =>
     {
-        if (item.type === ItemType.CLASS)
+        if (item[Field.TYPE] === ItemType.CLASS)
         {
-            const nodeID = item.name
+            const nodeID = item[Field.IRI]
             removeNode(nodeID)
         }
         else if (item.type === ItemType.ATTRIBUTE)
@@ -455,8 +455,8 @@ const useEditItemDialog = () =>
         }
         else if (item.type === ItemType.ASSOCIATION)
         {
-            const relationship: Association = (item as Association)
-            const edgeID = createEdgeUniqueID(relationship.source, relationship.target, relationship.name)
+            const association: Association = (item as Association)
+            const edgeID = createEdgeUniqueID(association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS], association[Field.NAME])
             removeEdge(edgeID)
         }
         else
