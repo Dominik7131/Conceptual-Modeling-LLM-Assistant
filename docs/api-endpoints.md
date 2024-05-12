@@ -6,41 +6,42 @@
 | Parameter | Mandatory  | Data type | Description  |
 |---|---|---|---|
 | userChoice  | yes |  string (`classes`, `attributes`, `associations1`, `associations2`) | What items the LLM should suggest. `associations1` means associations where the source class is provided, `associations2` means associations where both the source class and the target class is provided. |
-| domainDescription  | yes | string | Solely based on this text the LLM will generate random suggestions. If empty string is provided then the LLM will use it's parameters to generate the items. |
-| sourceClass  | no | string  | Name of the source class when the userChoice `attributes` or `associations1` or `associations2` is provided. |
-| targetClass  | no  | string | Name of the target class when the userChoice `associations2` is provided.  |
+| domainDescription  | yes | string | Solely based on this text the LLM will generate suggestions. If `domainDescription=""` then the LLM will use it's parameters to generate 5 random suggestions. |
+| sourceClass  | no | string  | Name of the source class if `userChoice=attributes` or `userChoice=associations1` or `userChoice=associations2`. |
+| targetClass  | no  | string | Name of the target class if `userChoice=associations2`.  |
 
 
 <br/>
 
 **Response**
 - stream of JSON objects
-- warning: when buffering is not disabled multiple JSON objects can be received in one response and then basic json parsing functions such as `json.loads` in Python won't work because first you need to split the received string object by newline character
 - each JSON object contains the field `name`
     - if `domainDescription=""` then also `description`
     - else `originalText` and `originalTextIndexes` except for `userChoice=classes`
-        - `associations` also contains field `source` as source class and `target` as target class
+        - `associations` also contain field `source` as source class and `target` as target class
 
-- note: our prompts with `dd` inside their name usually contain examples of input and output so check out [our prompts](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/prompts) to see some examples
+- note: our prompts with `dd` (domain description) inside their name usually contain examples of input and output so check out [our prompts](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/prompts) for examples
+- warning: when buffering is not disabled multiple JSON objects can be received in one response and then basic json parsing functions such as `json.loads` in Python won't work because first you need to split the received string object by newline character
 <br/>
 <br/>
 
 
 **POST** /suggest/single_field
+- for a given item's name and it's field the LLM generates this field's content
 
 | Parameter | Mandatory | Data type | Description |
 |-----------|-----------|-----------|-------------|
+| name      | yes       | string    | Item name.  |
+| field     | yes       | string (`originalText`, `description`, `dataType`, `sourceCardinality`, `targetCardinality`) | Item field to suggest. |
 | userChoice | yes     | string (`classes`, `attributes`, `associations`) | Type of the item. |
 | domainDescription | yes     | string | Solely based on this text the LLM will generate the output.
-| name      | yes       | string    | Item name.   |
-| field     | yes       | string (`originalText`, `description`, `data type`, `sourceCardinality`, `targetCardinality`) | Item field to suggest. |
 | sourceClass  | no | string  | Name of the source class when the userChoice `attribute` or `associations` is provided. |
 | targetClass  | no  | string | Name of the target target class when the userChoice `associations` is provided.  |
 
 <br/>
 
 **Response**
-- stream of json objects containing a single field named by the `field` parameter
+- JSON object containing a single field named by the `field` parameter
 
 
 <br/>
@@ -70,7 +71,7 @@
 
 | Parameter | Mandatory | Data type | Description |
 |-----------|-----------|-----------|-------------|
-| originalTextIndexesObject          | yes  | string | Array of JSON objects like this: `{"indexes": [10, 20], "label": "Employee: ID"}`. |
+| originalTextIndexesObject          | yes  | object[] | Array of JSON objects like this: `{"indexes": [10, 20], "label": "Employee: ID"}`. |
 
 <br/>
 
@@ -81,14 +82,20 @@
 <br/>
 
 
+## Save endpoints
+- they are used for saving user's liked/disliked suggestions
+- all **POST** save endpoints return no value
+
+<br/>
+
 **POST** /save/suggested_item
 
 | Parameter | Mandatory | Data type | Description |
 |-----------|-----------|-----------|-------------|
+| item          | yes | object | The item to save. |
 | userChoice  | yes |  string (`classes`, `attributes`, `associations1`, `associations2`) | What user choice was used to generate this item. |
-| domainDescription | yes | string | The exact domain description that was used to generate this item. | The original domain description that the item was generated from
-| item          | yes | string | The item to save. |
-| isPositive | yes | bool | True if the suggestion was evaluated as good otherwise False.  |
+| domainDescription | yes | string | The domain description that was used to generate this item. | The original domain description that the item was generated from
+| isPositive | yes | bool | True if the user liked this suggestion otherwise False.  |
 
 <br/>
 
@@ -96,13 +103,13 @@
 
 | Parameter | Mandatory | Data type | Description |
 |-----------|-----------|-----------|-------------|
-| userChoice | yes     | string (`classes`, `attributes`, `associations1`, `associations2`) | Type of the original suggestion |
-| domainDescription | yes     | string | The exact domain description that was used to generate this item. | The original domain description that the field was generated from
 | fieldName      | yes       | string (`originalText`, `description`, `data type`, `sourceCardinality`, `targetCardinality`)    | Name of the item's field.   |
 | fieldText     | yes       | string    | Generated text of the item field.
-| sourceClass  | no | string  | Source class |
-| targetClass  | no  | string | Target class  |
-| isPositive  | yes | bool | True if the field text is evaluated as good otherwise False.  |
+| userChoice | yes     | string (`classes`, `attributes`, `associations1`, `associations2`) | Type of the original suggestion. |
+| domainDescription | yes     | string | The domain description that was used to generate this item. | The original domain description that the field was generated from.
+| sourceClass  | no | string  | Name of the source class if `userChoice=attributes` or `userChoice=associations1` or `userChoice=associations2`. |
+| targetClass  | no  | string | Name of the target class if `userChoice=associations2`.  |
+| isPositive  | yes | bool | True if the user liked this suggestion otherwise False.  |
 
 <br/>
 
@@ -116,6 +123,3 @@
 | isPositive  | yes | bool | True if the field text is evaluated as good otherwise False.  |
 
 <br/>
-
-**Response**
-- all **POST** /save/* endpoints return void
