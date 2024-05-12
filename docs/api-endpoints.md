@@ -59,7 +59,7 @@
 
 **Response**
 - if `userChoice=summaryPlainText` then a single JSON object with a single field `summary`
-- otherwise stream of JSON objects as specified in [this prompt](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/prompts/summary-descriptions/dd.txt#L15-L22).
+- otherwise stream of JSON objects as specified in [this prompt](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/prompts/summary-descriptions/dd.txt#L15-L22)
 
 <br/>
 <br/>
@@ -83,7 +83,7 @@
 
 
 ## Save endpoints
-- they are used for saving user's liked/disliked suggestions
+- used for saving user's liked and disliked suggestions
 - all **POST** save endpoints return no value
 
 <br/>
@@ -120,6 +120,6 @@
 | summaryType | yes     | string (`summaryPlainText`, `summaryDescriptions`) | Type of the summary. |
 | domainDescription | yes     | string | The exact domain description that was used to generate this item.
 | conceptualModel | yes | object | The exact conceptual model in JSON format used to generate this summary. |
-| isPositive  | yes | bool | True if the field text is evaluated as good otherwise False.  |
+| isPositive  | yes | bool | True if the user liked the suggested summary otherwise False.  |
 
 <br/>
