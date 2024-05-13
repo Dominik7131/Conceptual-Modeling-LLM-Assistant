@@ -14,3 +14,4 @@ domain-modeling-benchmark/
 backend/get_stream.py
 backend/x.py
 backend/storage/*
+backend/out/*
