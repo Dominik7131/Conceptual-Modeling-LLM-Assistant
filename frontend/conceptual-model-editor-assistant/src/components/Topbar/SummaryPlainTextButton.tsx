@@ -24,6 +24,8 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
 
     const setIsReactButtonClicked = useSetRecoilState(isSummaryPlainTextReactButtonClickedState)
     
+    const isDisabled = domainDescription === "" || isIgnoreDomainDescription
+
     const { fetchSummaryPlainText } = useFetchData()
 
     
@@ -55,6 +57,7 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
 
     return (
         <Button
+            disabled={isDisabled}
             variant="contained"
             sx={{textTransform: "none"}}
             disableElevation

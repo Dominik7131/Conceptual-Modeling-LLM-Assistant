@@ -12,7 +12,6 @@ import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
 import { styled } from '@mui/system';
 import { domainDescriptionState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from '../atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { Item } from '../interfaces';
 
 
 
@@ -89,14 +88,14 @@ const HighlightDialog: React.FC = () =>
           start = inferenceIndexes[i + 1]
       }
 
-      texts.push(domainDescription.slice(start, -1))
+      texts.push(domainDescription.slice(start)) // Append last part of the text
 
       return (
           <Typography component='span' whiteSpace="pre-wrap">
               { texts.map((text, index) =>
               (
                   index % 2 === 0 ? <span key={index}>{text}</span> :
-                  <HtmlTooltip title={<Typography color="inherit">{getTooltip(index)}</Typography>} arrow key={index}>
+                  <HtmlTooltip title={<Typography color="inherit">{ getTooltip(index) }</Typography>} arrow key={index}>
                     <HoverSpan
                       id={`highlightedOriginalText-${index}`}
                       className="highlight"
@@ -127,11 +126,11 @@ const HighlightDialog: React.FC = () =>
   return (
     <>
       <Dialog
-        open={isOpened}
-        fullWidth={true}
-        maxWidth={'xl'}
-        scroll={'paper'}
-        onClose={onClose}
+        open={ isOpened }
+        fullWidth={ true }
+        maxWidth={ "xl" }
+        scroll={ "paper" }
+        onClose={ onClose }
       >
         <DialogTitle>
           <Stack spacing={2}>
@@ -156,7 +155,7 @@ const HighlightDialog: React.FC = () =>
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={onClose}>Close</Button>
+          <Button onClick={ onClose }>Close</Button>
           {/* <Button onClick={() => {
 
             let highlightedText = document.getElementById("highlightedInference-1")

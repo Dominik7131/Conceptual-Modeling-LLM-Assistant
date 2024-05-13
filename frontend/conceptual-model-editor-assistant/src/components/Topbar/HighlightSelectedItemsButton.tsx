@@ -1,6 +1,6 @@
 import { Button } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
-import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
+import { domainDescriptionState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../../interfaces";
 import { capitalizeString } from "../../utils/utility";
@@ -11,6 +11,9 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
 {
     const selectedNodes = useRecoilValue(selectedNodesState)
     const selectedEdges = useRecoilValue(selectedEdgesState)
+
+    const domainDescription = useRecoilValue(domainDescriptionState)
+    const isDisabled = domainDescription === ""
 
     const setIsShowHighlightDialog = useSetRecoilState(isShowHighlightDialogState)
     const setoriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
@@ -125,8 +128,6 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
             }
         }
 
-        const url = MERGE_ORIGINAL_TEXT_URL
-        const headers = { "Content-Type": "application/json" }
         const bodyData = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects})
     
         fetchMergedOriginalTexts(bodyData)
@@ -136,6 +137,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
 
     return (
         <Button
+            disabled={isDisabled}
             startIcon={<HighlightIcon/>}
             variant="contained"
             sx={{textTransform: "none"}}

@@ -22,6 +22,7 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
     const setDomainDescriptionSnapshot = useSetRecoilState(domainDescriptionSnapshotsState)
     const setConceptualModelSnapshot = useSetRecoilState(conceptualModelSnapshotState)
 
+    const isDisabled = domainDescription === "" || isIgnoreDomainDescription
 
     const setIsReactButtonClicked = useSetRecoilState(isSummaryDescriptionReactButtonClickedState)
 
@@ -56,6 +57,7 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
 
     return (
         <Button
+            disabled={isDisabled}
             variant="contained"
             sx={{textTransform: "none"}}
             disableElevation
