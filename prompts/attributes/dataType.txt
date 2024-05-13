@@ -1,2 +1,1 @@
-Generate data type for the attribute: "{attribute_name}" of the entity: "{source_class}" and output it in this JSON object:
-{"dataType": "..."}.
+Generate data type for the attribute: "{attribute_name}" of the entity: "{source_class}" and output it in exactly this JSON object: {"dataType": ""}.
