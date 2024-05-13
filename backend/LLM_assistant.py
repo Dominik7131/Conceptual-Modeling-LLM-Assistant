@@ -8,7 +8,7 @@ import sys
 sys.path.append('utils/')
 sys.path.append('text-filtering/syntactic')
 sys.path.append('text-filtering/semantic')
-from text_utility import LOGGER_NAME, Field, PromptFileSymbols, TextFilteringVariation, TextUtility, UserChoice, DataType
+from text_utility import DEFINED_DATA_TYPES, LOGGER_NAME, Field, PromptFileSymbols, TextFilteringVariation, TextUtility, UserChoice, DataType
 from syntactic_text_filterer import SyntacticTextFilterer
 
 
@@ -32,8 +32,6 @@ SYSTEM_PROMPT_DIRECTORY = os.path.join(PROMPT_DIRECTORY, "system")
 LLM_BACKEND_URL = "http://localhost:8080/v1"
 
 ENTITIES_BLACK_LIST = ["employee", "department", "manager"]
-
-DEFINED_DATA_TYPES = [DataType.STRING.value, DataType.NUMBER.value, DataType.TIME.value, DataType.BOOLEAN.value]
 
 
 class LLMAssistant:
@@ -434,7 +432,7 @@ class LLMAssistant:
             is_chain_of_thoughts = False    
 
 
-        max_attempts_count = 3
+        max_attempts_count = 2
         is_some_item_generated = False
 
         for attempt_number in range(max_attempts_count):
@@ -516,9 +514,10 @@ class LLMAssistant:
         source_class = source_class.strip()
         
         relevant_texts = self.get_relevant_texts(source_class=source_class, domain_description=domain_description)
+        is_domain_description = domain_description != ""
 
         prompt = self.__create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class, 
-            attribute_name=name, relevant_texts=relevant_texts, field_name=field_name, is_chain_of_thoughts=False)
+            attribute_name=name, relevant_texts=relevant_texts, field_name=field_name, is_chain_of_thoughts=False, is_domain_description=is_domain_description)
 
         self.messages = []
         new_messages = self.messages.copy()
