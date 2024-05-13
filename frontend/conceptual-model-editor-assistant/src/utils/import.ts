@@ -100,7 +100,7 @@ export const importConceptualModelFromJson = (conceptualModelJson: ConceptualMod
     
         const edgeData: EdgeData = { association: newRelationship }
     
-        const newID: string = createEdgeUniqueID(sourceEntityLowerCase, targetEntityLowerCase, association.title)
+        const newID: string = createEdgeUniqueID(sourceEntityLowerCase, targetEntityLowerCase, iriLowerCase)
         const newEdge : Edge = {
             id: newID, source: sourceEntityLowerCase, target: targetEntityLowerCase, type: "custom-edge",
             data: edgeData, markerEnd: CUSTOM_EDGE_MARKER
