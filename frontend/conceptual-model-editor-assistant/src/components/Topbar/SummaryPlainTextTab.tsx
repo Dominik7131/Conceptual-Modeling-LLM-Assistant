@@ -4,7 +4,7 @@ import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, isLoadin
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { UserChoice } from "../../interfaces";
-import { HEADER, SAVE_SUGESTED_DESCRIPTION_URL } from "../../utils/urls";
+import { HEADER, SAVE_SUGESTED_SUMMARY_URL } from "../../utils/urls";
 import { getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../utils/snapshot";
 
 
@@ -27,10 +27,10 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
 
         const suggestionData = {
             domainDescription: currentDomainDescription, isPositive: isPositiveReaction, summary: summary,
-            userChoice: userChoice, conceptualModel: currentConceptualModel
+            "summaryType": userChoice, conceptualModel: currentConceptualModel
         }
 
-        fetch(SAVE_SUGESTED_DESCRIPTION_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+        fetch(SAVE_SUGESTED_SUMMARY_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
 
         setIsClicked(true)
     }

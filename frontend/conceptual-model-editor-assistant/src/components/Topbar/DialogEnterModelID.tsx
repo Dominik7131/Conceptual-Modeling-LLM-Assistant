@@ -18,10 +18,13 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
     const setNodes = useSetRecoilState(nodesState)
     const setEdges = useSetRecoilState(edgesState)
     
-    const [enteredURL, setEnteredURL] = useState("")
+    const modelD = useRecoilValue(modelIDState)
+    const setModelD = useSetRecoilState(modelIDState)
+
+    const [enteredURL, setEnteredURL] = useState(modelD)
     const [isOpened, setIsOpened] = useRecoilState(isDialogEnterIRIOpenedState)
     const isDialogImport = useRecoilValue(isDialogImportState)
-    const setModelD = useSetRecoilState(modelIDState)
+
 
     const IRI_IDENTIFICATOR = "iri="
 

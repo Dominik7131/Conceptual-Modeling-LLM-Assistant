@@ -3,6 +3,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 import { edgesState, importedFileNameState, modelIDState, nodesState } from "../../atoms";
 import { useRecoilValue } from "recoil";
 import { convertConceptualModelToJSON } from "../../utils/serialization";
+import { DATASPECER_MODEL_URL } from "../../utils/urls";
 
 
 const ExportJSONButton: React.FC = (): JSX.Element =>
@@ -13,7 +14,7 @@ const ExportJSONButton: React.FC = (): JSX.Element =>
     const importedFileName = useRecoilValue(importedFileNameState)
 
     const modelID = useRecoilValue(modelIDState)
-    const export_name = modelID === "" ? "export.json" : `${modelID}.json`
+    const export_name = (modelID === "" || modelID === DATASPECER_MODEL_URL) ? "export.json" : `${modelID}.json`
     const export_file_name = importedFileName === "" ? export_name : `${importedFileName}-${export_name}`
 
 
