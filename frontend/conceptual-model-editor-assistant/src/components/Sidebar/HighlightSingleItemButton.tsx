@@ -1,7 +1,7 @@
-import { Button, IconButton, Tooltip } from "@mui/material"
+import { Button, Tooltip } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
-import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
-import { useSetRecoilState } from "recoil";
+import { domainDescriptionState, isIgnoreDomainDescriptionState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
+import { RecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Attribute, Field, Item, ItemType, Association } from "../../interfaces";
 import { capitalizeString } from "../../utils/utility";
 import { useState } from "react";
@@ -15,7 +15,10 @@ interface Props
 
 const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
 {
-    const isDisabled = !item.hasOwnProperty(Field.ORIGINAL_TEXT_INDEXES)
+    const domainDescription = useRecoilValue(domainDescriptionState)
+    const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+    const isDisabled = (!item.hasOwnProperty(Field.ORIGINAL_TEXT_INDEXES)) || domainDescription === "" || isIgnoreDomainDescription
+
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setIsShowHighlightDialog = useSetRecoilState(isShowHighlightDialogState)
     const setOriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
@@ -56,6 +59,11 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
         setTooltips(_ => newTooltips)
     }
 
+    if (isDisabled)
+    {
+        return <></>
+    }
+
     return (
         <Tooltip
             title="Highlight in domain description"
@@ -74,3 +82,7 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
 }
 
 export default HighlightSingleItemButton
+
+function getRecoilValue(domainDescriptionState: RecoilState<string>) {
+    throw new Error("Function not implemented.");
+}

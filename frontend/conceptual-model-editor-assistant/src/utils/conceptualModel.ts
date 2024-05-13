@@ -114,7 +114,10 @@ export const onAddItem = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdge
 {
     if (item.type === ItemType.CLASS)
     {
-        return onAddClass(item as Class, 66, 66, setNodes)
+        const maxRandomValue = 400
+        const randomX = Math.floor(Math.random() * maxRandomValue)
+        const randomY = Math.floor(Math.random() * maxRandomValue)
+        return onAddClass(item as Class, randomX, randomY, setNodes)
     }
     else if (item.type === ItemType.ATTRIBUTE)
     {
