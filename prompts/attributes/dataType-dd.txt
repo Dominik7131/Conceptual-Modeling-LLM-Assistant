@@ -1,5 +1,5 @@
 Solely based on the given context provide data type for the attribute: "{attribute_name}" of the entity: "{source_class}" and output it in this JSON object:
-{"dataType": "..."}. The data type should be one of this elements: ["string", "number", "boolean", "time"].
+{"dataType": ""}. The data type should be one of this elements: ["string", "number", "boolean", "time"].
 
 
 This is the given context:
