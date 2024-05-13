@@ -1,14 +1,17 @@
 import csv
 import json
 import os
+import sys
 
+sys.path.append('utils/')
+sys.path.append('backend/utils/')
 from text_utility import UserChoice
 
 
 INPUT_DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
 domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
 
-OUTPUT_DIRECTORY_PATH = os.path.join("out", "evaluated-all", "actual-all")
+OUTPUT_DIRECTORY_PATH = os.path.join("out", "evaluated", "actual")
 domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 DOMAIN_TEXTS_COUNT = 12
@@ -399,15 +402,15 @@ def main():
     for index, domain_model in enumerate(domain_models):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            entities_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ENTITIES.value}-expected-suggestions-0{i + 1}.json")
+            entities_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.CLASSES.value}-expected-suggestions-0{i + 1}.json")
             attributes_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ATTRIBUTES.value}-expected-suggestions-0{i + 1}.json")
             relationships_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{i + 1}.json")
 
-            entities_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.ENTITIES.value}-actual-0{i + 1}.csv")
+            entities_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
             attributes_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
             relationships_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
 
-            is_file = check_file(entities_evaluated_path, UserChoice.ENTITIES.value)
+            is_file = check_file(entities_evaluated_path, UserChoice.CLASSES.value)
             is_file = is_file and check_file(attributes_evaluated_path, UserChoice.ATTRIBUTES.value)
             is_file = is_file and check_file(relationships_evaluated_path, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value)
 
