@@ -1,0 +1,2 @@
+Generate description for the class: "{source_class}" in this JSON object:
+{"description": "..."}.
