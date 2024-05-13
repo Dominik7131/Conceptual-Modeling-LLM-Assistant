@@ -27,7 +27,6 @@ export const convertConceptualModelToJson = (nodes: Node[], edges: Edge[]): Conc
         {
             const attribute: Attribute = attributes[j]
 
-    
             const newAttributeJson: AttributeJson = {
                 iri: attribute[Field.IRI], title: attribute[Field.NAME], description: attribute[Field.DESCRIPTION],
                 domain: attribute[Field.SOURCE_CLASS], domainCardinality: "many",

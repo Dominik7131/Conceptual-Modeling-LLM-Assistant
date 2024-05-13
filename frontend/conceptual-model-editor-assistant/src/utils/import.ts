@@ -24,14 +24,14 @@ export const importConceptualModelFromJson = (conceptualModelJson: ConceptualMod
     {
         const entityIriLowerCase = entity.iri.toLowerCase()
         const entityTitle = entity.title
-    
+
         const newEntity: Class = {
             [Field.IRI]: entityIriLowerCase, [Field.NAME]: entityTitle, [Field.DESCRIPTION]: entity.description,
             [Field.TYPE]: ItemType.CLASS, [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
         }
-    
+
         const nodeData : NodeData = { class: newEntity, attributes: [] }
-    
+
         const maxRandomValue = 400
         const randomX = Math.floor(Math.random() * maxRandomValue)
         const randomY = Math.floor(Math.random() * maxRandomValue)
@@ -41,15 +41,15 @@ export const importConceptualModelFromJson = (conceptualModelJson: ConceptualMod
         const newNode : Node = {
             id: entityIriLowerCase, type: "customNode", position: { x: newPositionX, y: newPositionY }, data: nodeData
         }
-    
+
         positionX += incrementX
-    
+
         if (positionX >= 1300)
         {
             positionX = 100
             positionY += incrementY
         }
-    
+
         newNodes.push(newNode)
     }
 
@@ -61,15 +61,16 @@ export const importConceptualModelFromJson = (conceptualModelJson: ConceptualMod
         const sourceEntityLowerCase = attribute.domain.toLowerCase()
         const attributeName = attribute.title
 
-        const domainCardinality = attribute.domainCardinality ?? ""
-    
+        const rangeCardinality = attribute.rangeCardinality ?? ""
+
         const newAttribute: Attribute = {
             [Field.IRI]: attribute[Field.IRI], [Field.NAME]: attributeName, [Field.TYPE]: ItemType.ATTRIBUTE, [Field.DESCRIPTION]: attribute.description,
             [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.SOURCE_CLASS]: sourceEntityLowerCase,
-            [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: domainCardinality
+            [Field.DATA_TYPE]: "",
+            [Field.SOURCE_CARDINALITY]: rangeCardinality // Set to rangeCardinality because domainCardinality right now should be always "many"
         }
     
-    
+
         for (let i = 0; i < newNodes.length; i++)
         {
             const entityName = newNodes[i].id
