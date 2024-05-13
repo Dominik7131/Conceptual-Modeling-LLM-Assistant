@@ -5,8 +5,8 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryDescriptionReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryDescriptionsState, topbarTabValueState } from "../../atoms";
 import { TopbarTabs, UserChoice } from "../../interfaces";
 import useFetchData from "../../hooks/useFetchData";
-import { convertConceptualModelToJSON } from "../../utils/conceptualModel";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
+import { convertConceptualModelToJSONSummary } from "../../utils/serialization";
 
 
 const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
@@ -44,7 +44,7 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
 
-        const conceptualModel = convertConceptualModelToJSON(selectedNodes, selectedEdges, true)
+        const conceptualModel = convertConceptualModelToJSONSummary(selectedNodes, selectedEdges, true)
         snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
 
         setTopbarTab(TopbarTabs.SUMMARY_DESCRIPTION)  

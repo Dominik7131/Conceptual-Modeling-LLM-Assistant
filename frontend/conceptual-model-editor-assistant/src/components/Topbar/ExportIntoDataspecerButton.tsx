@@ -1,11 +1,7 @@
 import { Button } from "@mui/material"
 import DownloadIcon from '@mui/icons-material/Download';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Class, ClassJson, Field, GeneralizationJson, ItemType, NodeData, Association, RelationshipJson } from "../../interfaces";
-import { Node, Edge } from "reactflow";
-import { edgesState, importedFileNameState, isDialogEnterIRIOpenedState, isDialogImportState, nodesState } from "../../atoms";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { convertConceptualModelToJson } from "../../utils/export";
-import { DATASPECER_MODEL_URL, HEADER } from "../../utils/urls";
+import { isDialogEnterIRIOpenedState, isDialogImportState } from "../../atoms";
+import { useSetRecoilState } from "recoil";
 
 
 const ExportJSONButton: React.FC = (): JSX.Element =>

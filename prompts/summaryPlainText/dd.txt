@@ -3,3 +3,5 @@ Solely based on the given conceptual model detaily summarize each given class, a
 
 This is the given conceptual model:
 "{conceptual_model}"
+
+Output:

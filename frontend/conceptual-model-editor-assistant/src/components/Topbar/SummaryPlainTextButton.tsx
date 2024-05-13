@@ -6,7 +6,7 @@ import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDe
 import { TopbarTabs, UserChoice } from "../../interfaces";
 import useFetchData from "../../hooks/useFetchData";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
-import { convertConceptualModelToJSON } from "../../utils/conceptualModel";
+import { convertConceptualModelToJSONSummary } from "../../utils/serialization";
 
 
 const SummaryPlainTextButton: React.FC= (): JSX.Element =>
@@ -44,7 +44,7 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
 
-        const conceptualModel = convertConceptualModelToJSON(selectedNodes, selectedEdges, false)
+        const conceptualModel = convertConceptualModelToJSONSummary(selectedNodes, selectedEdges, false)
         snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
 
         setTopbarTab(TopbarTabs.SUMMARY_PLAIN_TEXT)

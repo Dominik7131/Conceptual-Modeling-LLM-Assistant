@@ -2,15 +2,13 @@ import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
 import Dialog, { DialogProps } from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useState } from 'react';
 import { edgesState, isDialogEnterIRIOpenedState, isDialogImportState, modelIDState, nodesState } from '../../atoms';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { ConceptualModelJson } from '../../interfaces';
 import { importConceptualModelFromJson } from '../../utils/import';
-import { convertConceptualModelToJson } from '../../utils/export';
-import { DATASPECER_MODEL_URL, HEADER } from '../../utils/urls';
+import { HEADER } from '../../utils/urls';
+import { convertConceptualModelToJSON } from '../../utils/serialization';
 
 
 const DialogEnterModelID: React.FC = (): JSX.Element =>
@@ -61,7 +59,7 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
     const onExport = () =>
     {
         onClose()
-        const conceptualModelJson = convertConceptualModelToJson(nodes, edges)
+        const conceptualModelJson = convertConceptualModelToJSON(nodes, edges)
         const content = JSON.stringify(conceptualModelJson)
 
         const fetchOptions = { method: "PUT", headers: HEADER, body: content }

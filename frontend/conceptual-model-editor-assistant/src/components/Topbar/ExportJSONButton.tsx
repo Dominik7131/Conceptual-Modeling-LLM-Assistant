@@ -1,10 +1,8 @@
 import { Button } from "@mui/material"
 import DownloadIcon from '@mui/icons-material/Download';
-import { Attribute, AttributeJson, ConceptualModelJson, EdgeData, Class, ClassJson, Field, GeneralizationJson, ItemType, NodeData, Association, RelationshipJson } from "../../interfaces";
-import { Node, Edge } from "reactflow";
 import { edgesState, importedFileNameState, modelIDState, nodesState } from "../../atoms";
 import { useRecoilValue } from "recoil";
-import { convertConceptualModelToJson } from "../../utils/export";
+import { convertConceptualModelToJSON } from "../../utils/serialization";
 
 
 const ExportJSONButton: React.FC = (): JSX.Element =>
@@ -21,7 +19,7 @@ const ExportJSONButton: React.FC = (): JSX.Element =>
 
     const onExport = () =>
     {
-        const conceptualModelJson = convertConceptualModelToJson(nodes, edges)
+        const conceptualModelJson = convertConceptualModelToJSON(nodes, edges)
         const content = JSON.stringify(conceptualModelJson)
 
         const blob = new Blob([content], { type: 'text/plain' })

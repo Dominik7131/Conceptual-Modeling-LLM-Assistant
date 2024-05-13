@@ -310,50 +310,6 @@ export const createNameFromIRI = (iri: string): string =>
 }
 
 
-export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[], isOnlyNames : boolean) =>
-{
-    let result: { [key: string]: any } = {
-        classes: []
-    }
-
-    for (let node of nodes)
-    {
-        let attributes = []
-        for (let attribute of node.data.attributes)
-        {
-            if (isOnlyNames)
-            {
-                attributes.push({[Field.NAME]: attribute.name})
-            }
-            else
-            {
-                attributes.push({[Field.NAME]: attribute.name, [Field.ORIGINAL_TEXT]: attribute.originalText})
-            }
-    }
-
-    result.classes.push({[Field.NAME]: node.id, attributes: attributes})
-    }
-
-
-    let associations = []
-    for (let edge of edges)
-    {
-        if (isOnlyNames)
-        {
-            associations.push({[Field.NAME]: edge.data.relationship.name, "sourceEntity": edge.source, "targetEntity": edge.target})
-        }
-        else
-        {
-            associations.push({[Field.NAME]: edge.data.relationship.name, [Field.ORIGINAL_TEXT]: edge.data.originalText, "sourceEntity": edge.source, "targetEntity": edge.target})
-        }
-    }
-
-    result.associations = associations
-
-    return result
-}
-
-
 export const editNodeClass = (newEntity: Class, oldEntity: Class, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
 {
     if (newEntity.name !== oldEntity.name)

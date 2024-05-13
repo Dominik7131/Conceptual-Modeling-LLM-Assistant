@@ -1,6 +1,6 @@
 Solely based on the given context generate description only for the given classes, attributes and associations in JSON format like this:
-{"class": "...", "description": "...", "attributes": [{"name": "...", "description": "..."}]}
-{"association": "...", "sourceClass": "...", "targetClass": "...", "description": "..."}
+{"class": "", "description": "", "attributes": [{"name": "", "description": ""}]}
+{"association": "", "sourceClass": "", "targetClass": "", "description": ""}
 
 EXAMPLE START
 
