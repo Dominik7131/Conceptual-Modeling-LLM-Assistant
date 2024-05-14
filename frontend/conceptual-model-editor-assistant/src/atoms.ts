@@ -272,3 +272,9 @@ export const isDialogImportState = atom({
     key: 'isDialogImportState',
     default: true,
 })
+
+
+export const regeneratedOriginalTextIndexesState = atom<number[]>({
+    key: 'regeneratedOriginalTextIndexesState',
+    default: [],
+})

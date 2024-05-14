@@ -101,7 +101,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                 const ii1 : number = originalTextIndexes[k]
                 const ii2 : number = originalTextIndexes[k + 1]
         
-                originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Entity: ${selectedNodes[i].id}`} )
+                originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Class: ${selectedNodes[i].id}`} )
             }
         }
     
@@ -123,7 +123,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                 const ii2 : number = originalTextIndexes[k + 1]
         
                 originalTextsIndexesObjects.push({
-                    indexes: [ii1, ii2], label: `${selectedEdges[i].source} – ${edgeData.association.name} – ${selectedEdges[i].target}`
+                    indexes: [ii1, ii2], label: `${selectedEdges[i].source} - ${edgeData.association.name} - ${selectedEdges[i].target}`
                 })
             }
         }

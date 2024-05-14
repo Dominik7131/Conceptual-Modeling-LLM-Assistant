@@ -6,7 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isShowEditDialogState, regeneratedItemState } from "../../atoms";
+import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isShowEditDialogState, regeneratedItemState, regeneratedOriginalTextIndexesState } from "../../atoms";
 import { Association, Attribute, Field, Item, ItemType, UserChoice } from '../../interfaces';
 import { onClearRegeneratedItem, onItemEdit } from '../../utils/editItem';
 import { getSnapshotDomainDescription, snapshotDomainDescription } from '../../utils/snapshot';
@@ -25,6 +25,7 @@ const EditField: React.FC<Props> = ({ label, field }) =>
 {
     const [editedItem, setEditedItem] = useRecoilState(editedSuggestedItemState)
     const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
+    const [regeneratedOriginalTextIndexes, setRegeneratedOriginalTextIndexes] = useRecoilState(regeneratedOriginalTextIndexesState)
 
     const domainDescription = useRecoilValue(domainDescriptionState)
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
@@ -65,7 +66,7 @@ const EditField: React.FC<Props> = ({ label, field }) =>
     const isDisabledFieldSuggestion = field === Field.NAME || field === Field.SOURCE_CLASS || field === Field.TARGET_CLASS || isDisableOriginalTextSuggestion
 
 
-    // When the component is unmounted clear the generated suggestion
+    // Clear the generated suggestion when the component is unmounted
     useEffect(() =>
     {
         return () => { onClearRegeneratedItem(field, setRegeneratedItem) }
@@ -109,8 +110,15 @@ const EditField: React.FC<Props> = ({ label, field }) =>
                 {
                     sourceClass = (editedItem as Attribute)[Field.SOURCE_CLASS]
                 }
-    
-                return {...editedItem, [field]: (regeneratedItem as any)[field]}
+
+                if (field === Field.ORIGINAL_TEXT)
+                {
+                    return { ...editedItem, [field]: (regeneratedItem as any)[field], [Field.ORIGINAL_TEXT_INDEXES]: regeneratedOriginalTextIndexes }
+                }
+                else
+                {
+                    return { ...editedItem, [field]: (regeneratedItem as any)[field] }
+                }
             }
             return editedItem
         })
@@ -218,6 +226,13 @@ const EditField: React.FC<Props> = ({ label, field }) =>
         {
             return {...regeneratedItem, [field]: parsedData[field]}
         })
+
+        if (field === Field.ORIGINAL_TEXT)
+        {
+            const originalTextIndexes = parsedData[Field.ORIGINAL_TEXT_INDEXES]
+            console.log(originalTextIndexes)
+            setRegeneratedOriginalTextIndexes(originalTextIndexes)
+        }
     }
 
 
