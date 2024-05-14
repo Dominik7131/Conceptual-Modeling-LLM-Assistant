@@ -35,6 +35,7 @@ def suggest_items():
     body_data = request.get_json()
     source_class = body_data.get("sourceClass", "")
     target_class = body_data.get("targetClass", "")
+
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
 
