@@ -6,12 +6,13 @@ import IconButton from '@mui/material/IconButton';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, regeneratedItemState } from "../../atoms";
+import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isShowEditDialogState, regeneratedItemState } from "../../atoms";
 import { Association, Attribute, Field, Item, ItemType, UserChoice } from '../../interfaces';
 import { onClearRegeneratedItem, onItemEdit } from '../../utils/editItem';
 import { getSnapshotDomainDescription, snapshotDomainDescription } from '../../utils/snapshot';
 import { HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL, SUGGEST_SINGLE_FIELD_URL } from '../../utils/urls';
 import { itemTypeToUserChoice } from '../../utils/utility';
+import { useEffect, useRef } from 'react';
 
 
 interface Props
@@ -28,7 +29,7 @@ const EditField: React.FC<Props> = ({ label, field }) =>
     const domainDescription = useRecoilValue(domainDescriptionState)
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
     const [domainDescriptionSnapshot, setSnapshotDomainDescription] = useRecoilState(domainDescriptionSnapshotsState)
-
+    
     const setFieldToLoad = useSetRecoilState(fieldToLoadState)
 
     const setErrorMessage = useSetRecoilState(editDialogErrorMsgState)
@@ -62,6 +63,13 @@ const EditField: React.FC<Props> = ({ label, field }) =>
 
     const isDisableOriginalTextSuggestion = field === Field.ORIGINAL_TEXT && (domainDescription === "" || isIgnoreDomainDescription)
     const isDisabledFieldSuggestion = field === Field.NAME || field === Field.SOURCE_CLASS || field === Field.TARGET_CLASS || isDisableOriginalTextSuggestion
+
+
+    // When the component is unmounted clear the generated suggestion
+    useEffect(() =>
+    {
+        return () => { onClearRegeneratedItem(field, setRegeneratedItem) }
+    }, [])
 
 
     const saveSingleFieldSuggestion = (fieldName: string, fieldText: string, itemType: ItemType, sourceClass: string): void =>
@@ -109,7 +117,7 @@ const EditField: React.FC<Props> = ({ label, field }) =>
     
         saveSingleFieldSuggestion(field, (regeneratedItem as any)[field], itemType, sourceClass)
     
-        onClearRegeneratedItem(field, false, setEditedItem, setRegeneratedItem)
+        onClearRegeneratedItem(field, setRegeneratedItem)
     }
     
     
@@ -232,7 +240,7 @@ const EditField: React.FC<Props> = ({ label, field }) =>
                         <IconButton onClick={() => onConfirmRegeneratedText(field)}>
                             <CheckIcon color="success"/>
                         </IconButton>
-                        <IconButton onClick={() => { onClearRegeneratedItem(field, false, setEditedItem, setRegeneratedItem) }}>
+                        <IconButton onClick={() => { onClearRegeneratedItem(field, setRegeneratedItem) }}>
                             <CloseIcon color="error"/>
                         </IconButton>
                     </Stack>

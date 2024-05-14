@@ -32,7 +32,7 @@ const DialogEditItem: React.FC = () =>
 
 
     return (
-        <Dialog open={isOpened} fullWidth maxWidth={'xl'} onClose={ () => onClose(setIsOpened, setErrorMessage, setEditedItem, setRegeneratedItem) }>
+        <Dialog open={isOpened} fullWidth maxWidth={'xl'} onClose={ () => onClose(setIsOpened, setErrorMessage) }>
 
             <ErrorMessage/>
             

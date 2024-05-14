@@ -4,27 +4,15 @@ import { SetterOrUpdater } from "recoil"
 import { createIRIFromName, editEdgeAssociation, editNodeAttribute, editNodeClass } from "./conceptualModel"
 
 
-export const onClose = (setIsOpened: SetterOrUpdater<boolean>, setErrorMessage: SetterOrUpdater<string>, setEditedItem: SetterOrUpdater<Item>, setRegeneratedItem: SetterOrUpdater<Item>): void =>
+export const onClose = (setIsOpened: SetterOrUpdater<boolean>, setErrorMessage: SetterOrUpdater<string>): void =>
 {
-    onClearRegeneratedItem(null, true, setEditedItem, setRegeneratedItem)
     setIsOpened(_ => false)
     setErrorMessage(_ => "")
 }
 
 
-export const onClearRegeneratedItem = (field: Field | null, isClearAll: boolean, setEditedItem: SetterOrUpdater<Item>, setRegeneratedItem: SetterOrUpdater<Item>) : void =>
+export const onClearRegeneratedItem = (field: Field, setRegeneratedItem: SetterOrUpdater<Item>) : void =>
 {
-    if (isClearAll)
-    {
-        setEditedItem({[Field.IRI]: "", [Field.TYPE]: ItemType.CLASS, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
-        setRegeneratedItem({[Field.IRI]: "", [Field.TYPE]: ItemType.CLASS, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.DATA_TYPE]: "", [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""})
-    }
-
-    if (!field)
-    {
-        return
-    }
-
     setRegeneratedItem((previousRegeneratedItem: Item) =>
     {
         if (previousRegeneratedItem.hasOwnProperty(field))

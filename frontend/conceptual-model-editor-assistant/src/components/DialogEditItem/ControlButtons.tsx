@@ -50,7 +50,7 @@ const ControlButtons: React.FC = () =>
 
         if (isOperationSuccessful)
         {
-            onClose(setIsOpened, setErrorMessage, setEditedItem, setRegeneratedItem)
+            onClose(setIsOpened, setErrorMessage)
             return
         }
 
@@ -60,7 +60,7 @@ const ControlButtons: React.FC = () =>
 
     const handleClose = (): void =>
     {
-        onClose(setIsOpened, setErrorMessage, setEditedItem, setRegeneratedItem)
+        onClose(setIsOpened, setErrorMessage)
     }
 
 
