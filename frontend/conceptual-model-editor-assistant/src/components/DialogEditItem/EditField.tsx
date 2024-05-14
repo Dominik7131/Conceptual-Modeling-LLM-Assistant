@@ -3,7 +3,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isShowEditDialogState, regeneratedItemState } from "../../atoms";
@@ -233,7 +233,7 @@ const EditField: React.FC<Props> = ({ label, field }) =>
                 { !isRegeneratedText ?
                     ( (fieldToLoad.includes(field)) ? <CircularProgress sx={{position: "relative", right: "3px", top: "5px"}} size={"30px"} /> :
                     <IconButton disabled={isDisabledFieldSuggestion} color="primary" size="small" onClick={() => onGenerateField(editedItem[Field.TYPE], editedItem[Field.NAME], (editedItem as Association)[Field.SOURCE_CLASS], (editedItem as Association)[Field.TARGET_CLASS], field)}>
-                        <AutoFixHighIcon/>
+                        <AutoFixNormalIcon/>
                     </IconButton>)
                     :
                     <Stack direction="row">
