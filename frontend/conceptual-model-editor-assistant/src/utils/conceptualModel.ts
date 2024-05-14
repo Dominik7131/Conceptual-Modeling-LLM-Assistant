@@ -161,7 +161,7 @@ export const onAddClass = (clss: Class, positionX: number, positionY: number, se
 
 const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>) =>
 {
-    const nodeID = attribute.source
+    const nodeID = attribute[Field.SOURCE_CLASS]
     let isAttributePresent = false
 
     setNodes((nodes: Node[]) => nodes.map((currentNode : Node) =>
@@ -175,7 +175,7 @@ const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>
         // If the node already contains the selected attribute do not add anything
         currentNode.data.attributes.forEach((currentAttribute : Attribute) =>
         {
-            if (currentAttribute.iri === attribute.iri)
+            if (currentAttribute[Field.IRI] === attribute[Field.IRI])
             {
                 isAttributePresent = true
             }

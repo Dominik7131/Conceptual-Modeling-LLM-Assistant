@@ -35,7 +35,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
     const { onSuggestItems } = useConceptualModel()
 
     const nodeData: NodeData = data as NodeData
-    const entity: Class = nodeData.class
+    const clss: Class = nodeData.class
 
     const attributes: Attribute[] = nodeData.attributes
 
@@ -43,8 +43,8 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
     const borderSelected = `1px solid ${PRIMARY_COLOR}`
 
     // If the entity name is too long then display only the beginning of it with three dots at the end
-    const spacesCount: number = entity[Field.NAME].split(" ").length - 1
-    let entityName = entity[Field.NAME]
+    const spacesCount: number = clss[Field.NAME].split(" ").length - 1
+    let entityName = clss[Field.NAME]
     const maxLength = 15
     if (spacesCount === 0 && entityName.length > maxLength)
     {
@@ -68,7 +68,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
     {
         setIsSuggestedItem(false)
         setIsItemInConceptualModel(true)
-        onEditItem(entity)
+        onEditItem(clss)
     }
 
 
@@ -80,7 +80,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
         const newAttribute: Attribute = {
             [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "",
             [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "",
-            [Field.SOURCE_CLASS]: entity.name
+            [Field.SOURCE_CLASS]: clss[Field.IRI]
         }
       
         setSelectedSuggestedItem(newAttribute)
@@ -168,14 +168,14 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
                 </MenuItem>
 
 
-                <MenuItem onClick={() => { onSuggestItems(UserChoice.ATTRIBUTES, entity[Field.NAME], null); handleClose(); }}>
+                <MenuItem onClick={() => { onSuggestItems(UserChoice.ATTRIBUTES, clss[Field.NAME], null); handleClose(); }}>
                     <ListItemIcon>
                         <AutoFixNormalIcon fontSize="small" />
                     </ListItemIcon>
                         Suggest attributes
                 </MenuItem>
                 
-                <MenuItem onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS, entity[Field.NAME], null); handleClose(); }}>
+                <MenuItem onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS, clss[Field.NAME], null); handleClose(); }}>
                     <ListItemIcon>
                         <AutoFixNormalIcon fontSize="small" />
                     </ListItemIcon>

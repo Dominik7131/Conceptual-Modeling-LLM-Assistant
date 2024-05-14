@@ -82,7 +82,7 @@ const ControlButtons: React.FC = () =>
                 [Field.SOURCE_CLASS]: oldAttribute[Field.SOURCE_CLASS], [Field.TARGET_CLASS]: oldAttribute[Field.IRI],
                 [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""
             }
-        
+
             setChangedItemName("")
             setChangedDataType(oldAttribute[Field.DATA_TYPE])
             setItem(association)
@@ -92,13 +92,15 @@ const ControlButtons: React.FC = () =>
         {
             const oldAssociation = item as Association
             setChangedItemName(oldAssociation[Field.NAME])
-            const newTarget = createNameFromIRI(oldAssociation.target)
 
             const attribute : Attribute = {
-                [Field.IRI]: oldAssociation[Field.IRI], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: newTarget, [Field.DESCRIPTION]: oldAssociation[Field.DESCRIPTION],
+                [Field.IRI]: oldAssociation[Field.TARGET_CLASS], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: oldAssociation[Field.TARGET_CLASS], [Field.DESCRIPTION]: oldAssociation[Field.DESCRIPTION],
                 [Field.DATA_TYPE]: changedDataType, [Field.ORIGINAL_TEXT]: oldAssociation[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: oldAssociation[Field.ORIGINAL_TEXT_INDEXES],
                 [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_CLASS]: oldAssociation[Field.SOURCE_CLASS]
             }
+
+            console.log("Old association: ", oldAssociation)
+            console.log("New attribute: ", attribute)
         
             setItem(attribute)
             setEditedSuggestedItem(attribute)
