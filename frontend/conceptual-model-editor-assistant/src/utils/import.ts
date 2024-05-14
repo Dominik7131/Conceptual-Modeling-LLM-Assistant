@@ -25,12 +25,12 @@ export const importConceptualModelFromJson = (conceptualModelJson: ConceptualMod
         const entityIriLowerCase = entity.iri.toLowerCase()
         const entityTitle = entity.title
 
-        const newEntity: Class = {
+        const newClass: Class = {
             [Field.IRI]: entityIriLowerCase, [Field.NAME]: entityTitle, [Field.DESCRIPTION]: entity.description,
             [Field.TYPE]: ItemType.CLASS, [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
         }
 
-        const nodeData : NodeData = { class: newEntity, attributes: [] }
+        const nodeData : NodeData = { class: newClass, attributes: [] }
 
         const maxRandomValue = 400
         const randomX = Math.floor(Math.random() * maxRandomValue)

@@ -73,10 +73,10 @@ const ConceptualModel: React.FC = () =>
     loadDefaultConceptualModel(setNodes, setEdges)
   }, [])
 
-  // useEffect(() =>
-  // {
-  //   console.log(nodes)
-  // }, [nodes])
+  useEffect(() =>
+  {
+    console.log(nodes)
+  }, [nodes])
 
 
   // Define custom edge type for selected state

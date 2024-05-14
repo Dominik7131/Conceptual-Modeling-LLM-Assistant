@@ -310,35 +310,35 @@ export const createNameFromIRI = (iri: string): string =>
 }
 
 
-export const editNodeClass = (newEntity: Class, oldEntity: Class, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
+export const editNodeClass = (newClass: Class, oldClass: Class, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
 {
-    if (newEntity.name !== oldEntity.name)
+    if (newClass.name !== oldClass.name)
     {
         // Update iri
-        const newIRI = createIRIFromName(newEntity[Field.NAME])
-        newEntity = {...newEntity, [Field.IRI]: newIRI}
+        const newIRI = createIRIFromName(newClass[Field.NAME])
+        newClass = {...newClass, [Field.IRI]: newIRI}
 
         // Update all edges that connect to the changed source or target class
         setEdges((edges) => edges.map((currentEdge: Edge) =>
         {
-            if (currentEdge.source === oldEntity.iri)
+            if (currentEdge.source === oldClass.iri)
             {
-                const newRelationship: Association = { ...currentEdge.data.relationship, source: newEntity[Field.IRI] }
-                const newEdgeData: EdgeData = { ...currentEdge.data, association: newRelationship }
-                const edgeID = createEdgeUniqueID(newEntity[Field.IRI], currentEdge.target, currentEdge.data.relationship[Field.IRI])
+                const newAssociation: Association = { ...currentEdge.data.association, source: newClass[Field.IRI] }
+                const newEdgeData: EdgeData = { ...currentEdge.data, association: newAssociation }
+                const edgeID = createEdgeUniqueID(newClass[Field.IRI], currentEdge.target, currentEdge.data.association[Field.IRI])
                 const updatedEdge: Edge = {
-                    ...currentEdge, id: edgeID, source: newEntity[Field.IRI], data: newEdgeData
+                    ...currentEdge, id: edgeID, source: newClass[Field.IRI], data: newEdgeData
                 }
 
                 return updatedEdge
             }
-            else if (currentEdge.target === oldEntity.iri)
+            else if (currentEdge.target === oldClass.iri)
             {
-                const newRelationship: Association = { ...currentEdge.data.relationship, target: newEntity[Field.IRI] }
-                const newEdgeData: EdgeData = { ...currentEdge.data, association: newRelationship }
-                const edgeID = createEdgeUniqueID(currentEdge.source, newEntity[Field.IRI], currentEdge.data.relationship[Field.IRI])
+                const newAssociation: Association = { ...currentEdge.data.association, target: newClass[Field.IRI] }
+                const newEdgeData: EdgeData = { ...currentEdge.data, association: newAssociation }
+                const edgeID = createEdgeUniqueID(currentEdge.source, newClass[Field.IRI], currentEdge.data.association[Field.IRI])
                 const updatedEdge: Edge = {
-                    ...currentEdge, id:edgeID, target: newEntity[Field.IRI], data: newEdgeData
+                    ...currentEdge, id:edgeID, target: newClass[Field.IRI], data: newEdgeData
                 }
 
                 console.log(updatedEdge)
@@ -351,22 +351,22 @@ export const editNodeClass = (newEntity: Class, oldEntity: Class, setNodes: Sett
 
     setNodes((nodes: Node[]) => nodes.map((currentNode : Node) =>
     {
-        if (currentNode.id === oldEntity.iri)
+        if (currentNode.id === oldClass.iri)
         {
             let newAttributes = currentNode.data.attributes
 
             // For each attribute update their source entity if the iri of the entity changed
-            if (oldEntity.iri !== newEntity.iri)
+            if (oldClass.iri !== newClass.iri)
             {                   
                 newAttributes = currentNode.data.attributes.map((attribute: Attribute) =>
                 {
-                    return { ...attribute, [Field.SOURCE_CLASS]: newEntity[Field.IRI] }
+                    return { ...attribute, [Field.SOURCE_CLASS]: newClass[Field.IRI] }
                 })
             }
 
 
-            const newData: NodeData = { ...currentNode.data, class: newEntity, attributes: newAttributes }
-            const newNode: Node = {...currentNode, id: newEntity[Field.IRI], data: newData}
+            const newData: NodeData = { ...currentNode.data, class: newClass, attributes: newAttributes }
+            const newNode: Node = {...currentNode, id: newClass[Field.IRI], data: newData}
 
             return newNode
         }
