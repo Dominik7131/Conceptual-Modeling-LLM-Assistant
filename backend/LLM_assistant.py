@@ -186,14 +186,14 @@ class LLMAssistant:
                 yield completed_item, is_item_ok
                 return
             
-            source_lower = completed_item[Field.SOURCE_CLASS.value].lower().replace('s', 'z')
-            target_lower = completed_item[Field.TARGET_CLASS.value].lower().replace('s', 'z')
+            source_generated_lower = completed_item[Field.SOURCE_CLASS.value].lower().replace('s', 'z')
+            target_generated_lower = completed_item[Field.TARGET_CLASS.value].lower().replace('s', 'z')
 
             source_class_replaced = source_class.replace('s', 'z')
             target_class_replaced = source_class.replace('s', 'z')
 
-            is_source_or_target_included = source_class_replaced == source_lower or target_class_replaced == target_lower
-            is_none = (source_lower == "none") or (target_lower == "none")
+            is_source_or_target_included = source_class_replaced == source_generated_lower or target_class_replaced == target_generated_lower
+            is_none = (source_generated_lower == "none") or (target_generated_lower == "none")
             
             if not is_source_or_target_included or is_none:
                 # For debugging purpuses do not end parsing but otherwise we would probably end
@@ -201,29 +201,32 @@ class LLMAssistant:
                 #return completed_item
 
                 if not is_source_or_target_included:
-                    logging.info(f"{source_class} != {source_lower} and {target_class} != {target_lower}")
+                    logging.info(f"{source_class} != {source_generated_lower} and {target_class} != {target_generated_lower}")
 
                 completed_item['name'] = "(Deleted: Inputed entity is not source/target entity) " + completed_item['name']
                 is_item_ok = False
 
 
         elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
-            if 'source' in completed_item and 'target' in completed_item:
+            if "source" in completed_item and "target" in completed_item:
 
                 # Replace 's' for 'z' to solve the following issue:
                 #   - input: motoriSed vehicle with S
                 #   - LLM output: motoriZed vehicle with Z
-                source_lower = completed_item['source'].lower().replace('s', 'z')
-                target_lower = completed_item['target'].lower().replace('s', 'z')
+                source_generated_lower = completed_item["source"].lower().replace('s', 'z')
+                target_generated_lower = completed_item["target"].lower().replace('s', 'z')
 
-                entity1 = source_class.replace('s', 'z')
-                entity2 = target_class.replace('s', 'z')
+                source_class = source_class.lower().replace('s', 'z')
+                target_class = target_class.lower().replace('s', 'z')
 
-                is_match = (entity1 == source_lower and entity2 == target_lower) or (entity2 == source_lower and entity1 == target_lower)
-                is_none = (source_lower == "none") or (target_lower == "none")
+                is_match = (source_class == source_generated_lower and target_class == target_generated_lower) or (target_class == source_generated_lower and source_class == target_generated_lower)
+                is_none = (source_generated_lower == "none") or (target_generated_lower == "none")
+
+                if not is_match:
+                    logging.info(f"Not matched:\n- given classes: {source_class}, {target_class}\n- generated classes: {source_generated_lower}, {target_generated_lower}\n")
 
                 if not is_match or is_none:
-                    completed_item['name'] = f"Deleted: Inputed classes are not contained in source and target classes: {completed_item['name']}"
+                    completed_item["name"] = f"Deleted: Inputed classes are not contained in source and target classes: {completed_item['name']}"
                     is_item_ok = False
 
         logging.info(f"Completed item: {completed_item['name']}")
@@ -377,7 +380,7 @@ class LLMAssistant:
 
     def __create_prompt(self, user_choice, source_class="", target_class="", relevant_texts = "", is_domain_description=True,
                         items_count_to_suggest = 5, is_chain_of_thoughts = True, conceptual_model = {}, field_name = "",
-                        attribute_name="", relationship_name=""):
+                        attribute_name="", association_name=""):
 
         original_prompt = self.get_prompt(user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description, is_chain_of_thoughts=is_chain_of_thoughts)
 
@@ -388,7 +391,7 @@ class LLMAssistant:
             PromptFileSymbols.ITEMS_COUNT_TO_SUGGEST.value: str(items_count_to_suggest),
             PromptFileSymbols.CONCEPTUAL_MODEL.value: json.dumps(conceptual_model),
             PromptFileSymbols.ATTRIBUTE_NAME.value: attribute_name,
-            PromptFileSymbols.RELATIONSHIP_NAME.value: relationship_name,
+            PromptFileSymbols.ASSOCIATION_NAME.value: association_name,
         }
         
         # Substitute all special symbols in the given prompt
@@ -517,7 +520,7 @@ class LLMAssistant:
         is_domain_description = domain_description != ""
 
         prompt = self.__create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class, 
-            attribute_name=name, relevant_texts=relevant_texts, field_name=field_name, is_chain_of_thoughts=False, is_domain_description=is_domain_description)
+            attribute_name=name, association_name=name, relevant_texts=relevant_texts, field_name=field_name, is_chain_of_thoughts=False, is_domain_description=is_domain_description)
 
         self.messages = []
         new_messages = self.messages.copy()
