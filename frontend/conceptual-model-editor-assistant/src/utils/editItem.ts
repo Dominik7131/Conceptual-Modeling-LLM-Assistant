@@ -44,7 +44,9 @@ export const onItemEdit = (field: Field, newValue: string, setEditedItem: Setter
 
 export const onSave = (newItem: Item, oldItem: Item, setIsOpened: SetterOrUpdater<boolean>, setErrorMessage: SetterOrUpdater<string>, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
 {
-    if (!newItem.name)
+    console.log(newItem)
+    
+    if (!newItem[Field.NAME])
     {
         setErrorMessage(_ => "Name cannot be empty")
         return
@@ -52,20 +54,20 @@ export const onSave = (newItem: Item, oldItem: Item, setIsOpened: SetterOrUpdate
 
     setIsOpened(_ => false)
 
-    if (newItem.type === ItemType.CLASS)
+    if (newItem[Field.TYPE] === ItemType.CLASS)
     {
         editNodeClass(newItem as Class, oldItem as Class, setNodes, setEdges)
     }
-    else if (newItem.type === ItemType.ATTRIBUTE)
+    else if (newItem[Field.TYPE] === ItemType.ATTRIBUTE)
     {
         editNodeAttribute(newItem as Attribute, oldItem as Attribute, setNodes)
     }
-    else if (newItem.type === ItemType.ASSOCIATION)
+    else if (newItem[Field.TYPE] === ItemType.ASSOCIATION || newItem[Field.TYPE] === ItemType.GENERALIZATION)
     {
         editEdgeAssociation(newItem as Association, oldItem as Association, setEdges)
     }
     else
     {
-        alert("Unknown action")
+        throw Error("Unknown item type: ", newItem[Field.TYPE])
     }
 }

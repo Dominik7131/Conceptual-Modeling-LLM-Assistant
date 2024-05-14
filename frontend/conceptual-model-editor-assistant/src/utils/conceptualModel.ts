@@ -112,18 +112,18 @@ export const doesEdgeBetweenNodesAlreadyExistSetter = (setEdges: SetterOrUpdater
 
 export const onAddItem = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): boolean =>
 {
-    if (item.type === ItemType.CLASS)
+    if (item[Field.TYPE] === ItemType.CLASS)
     {
         const maxRandomValue = 400
         const randomX = Math.floor(Math.random() * maxRandomValue)
         const randomY = Math.floor(Math.random() * maxRandomValue)
         return onAddClass(item as Class, randomX, randomY, setNodes)
     }
-    else if (item.type === ItemType.ATTRIBUTE)
+    else if (item[Field.TYPE] === ItemType.ATTRIBUTE)
     {
         return onAddAttribute(item as Attribute, setNodes)
     }
-    else if (item.type === ItemType.ASSOCIATION)
+    else if (item[Field.TYPE] === ItemType.ASSOCIATION || item[Field.TYPE] === ItemType.GENERALIZATION)
     {
         return onAddAssociation(item as Association, setNodes, setEdges)
     }
@@ -446,11 +446,11 @@ export const onRemove = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges
         const nodeID = item[Field.IRI]
         removeNode(nodeID, setNodes)
     }
-    else if (item.type === ItemType.ATTRIBUTE)
+    else if (item[Field.TYPE] === ItemType.ATTRIBUTE)
     {
         removeNodeAttribute(item as Attribute, setNodes)
     }
-    else if (item.type === ItemType.ASSOCIATION)
+    else if (item[Field.TYPE] === ItemType.ASSOCIATION || item[Field.TYPE] === ItemType.GENERALIZATION)
     {
         const association: Association = (item as Association)
         const edgeID = createEdgeUniqueID(association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS], association[Field.NAME])

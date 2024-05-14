@@ -17,9 +17,6 @@ const DialogEditItem: React.FC = () =>
 {
     const [isOpened, setIsOpened] = useRecoilState(isShowEditDialogState)
 
-    const setEditedItem = useSetRecoilState(editedSuggestedItemState)
-    const setRegeneratedItem = useSetRecoilState(editedSuggestedItemState)
-
     const setErrorMessage = useSetRecoilState(editDialogErrorMsgState)
 
     const item = useRecoilValue(selectedSuggestedItemState)
@@ -29,7 +26,7 @@ const DialogEditItem: React.FC = () =>
 
     const isAttribute = item.type === ItemType.ATTRIBUTE
     const isAssociation = item.type === ItemType.ASSOCIATION
-
+    const isGeneralization = item.type === ItemType.GENERALIZATION
 
     return (
         <Dialog open={isOpened} fullWidth maxWidth={'xl'} onClose={ () => onClose(setIsOpened, setErrorMessage) }>
@@ -54,7 +51,7 @@ const DialogEditItem: React.FC = () =>
                 }
 
                 {
-                    isAssociation && association[Field.TYPE] !== ItemType.GENERALIZATION &&
+                    isAssociation &&
                     <>
                         <ClassListSelector fieldName={Field.SOURCE_CLASS} association={association} editedItem={editedItem}/>
                         <ClassListSelector fieldName={Field.TARGET_CLASS} association={association} editedItem={editedItem}/>
@@ -65,10 +62,12 @@ const DialogEditItem: React.FC = () =>
                 }
 
                 {
-                    isAssociation && association[Field.TYPE] === ItemType.GENERALIZATION &&
+                    isGeneralization &&
                     <>
-                        <EditField label={ItemFieldUIName.GENERAl_CLASS} field={Field.SOURCE_CLASS} />
-                        <EditField label={ItemFieldUIName.SPECIAL_CLASS} field={Field.TARGET_CLASS} />
+                        {/* ItemFieldUIName.GENERAl_CLASS */}
+                        {/* ItemFieldUIName.SPECIAL_CLASS */}
+                        <ClassListSelector fieldName={Field.SOURCE_CLASS} association={association} editedItem={editedItem}/>
+                        <ClassListSelector fieldName={Field.TARGET_CLASS} association={association} editedItem={editedItem}/>
                     </>
                 }
             </DialogContent>
