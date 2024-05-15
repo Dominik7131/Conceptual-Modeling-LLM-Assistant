@@ -184,5 +184,10 @@ def save_suggested_summary():
     return "Done"
 
 
+@app.route('/')
+def index():
+    return "LLM assistant backend"
+
+
 if __name__ == "__main__":
     app.run(port=5000, threaded=True)

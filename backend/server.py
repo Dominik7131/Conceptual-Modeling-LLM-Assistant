@@ -174,6 +174,11 @@ def save_suggested_summary():
     return "Done"
 
 
+@app.route('/')
+def index():
+    return "LLM assistant backend"
+
+
 if __name__ == "__main__":
 
     if (not os.path.exists(LOG_DIRECTORY)):
