@@ -30,11 +30,11 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
 
     return (
 
-        <Stack style={{ whiteSpace: 'pre-line' }}>
+        <Stack style={{ whiteSpace: "pre-line" }}>
             { title &&
                 <Stack>
                     <Typography
-                        sx={{ display: 'flex', justifyContent:"center"}}
+                        sx={{ display: "flex", justifyContent:"center"}}
                         variant="body1"
                         gutterBottom>
                             <strong> { title } </strong>
@@ -67,7 +67,7 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
 
             { itemTypesToLoad.includes(itemType) &&
                 <Box
-                    sx={{ display: 'flex', justifyContent:"center", marginTop: "20px"}}>
+                    sx={{ display: "flex", justifyContent:"center", marginTop: "20px"}}>
                     <CircularProgress />
                 </Box>
             }

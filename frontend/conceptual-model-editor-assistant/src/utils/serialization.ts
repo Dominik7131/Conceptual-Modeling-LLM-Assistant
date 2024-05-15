@@ -1,5 +1,6 @@
 import { Node, Edge } from "reactflow"
 import { Association, Attribute, AttributeJson, Class, ClassJson, ConceptualModelJson, EdgeData, Field, GeneralizationJson, ItemType, NodeData, RelationshipJson } from "../interfaces"
+import { createNameFromIRI } from "./conceptualModel"
 
 
 const JSON_SCHEMA = "https://schemas.dataspecer.com/adapters/simplified-semantic-model.v1.0.schema.json"
@@ -91,20 +92,26 @@ export const convertConceptualModelToJSONSummary = (nodes: Node[], edges: Edge[]
             }
         }
 
-        result.classes.push({[Field.NAME]: node.id, attributes: attributes})
+        const nodeData: NodeData = node.data
+        result.classes.push({[Field.NAME]: nodeData.class[Field.NAME], attributes: attributes})
     }
 
 
     let associations = []
     for (let edge of edges)
     {
+        const edgeData: EdgeData = edge.data
+
+        const sourceClassName = createNameFromIRI(edge[Field.SOURCE_CLASS])
+        const targetClassName = createNameFromIRI(edge[Field.TARGET_CLASS])        
+
         if (isOnlyNames)
         {
-            associations.push({[Field.NAME]: edge.data.association[Field.NAME], "sourceClass": edge[Field.SOURCE_CLASS], "targetClass": edge[Field.TARGET_CLASS]})
+            associations.push({ [Field.NAME]: edgeData.association[Field.NAME], "sourceClass": sourceClassName, "targetClass": targetClassName })
         }
         else
         {
-            associations.push({[Field.NAME]: edge.data.association[Field.NAME], [Field.ORIGINAL_TEXT]: edge.data[Field.ORIGINAL_TEXT], "sourceClass": edge[Field.SOURCE_CLASS], "targetClass": edge[Field.TARGET_CLASS]})
+            associations.push({ [Field.NAME]: edgeData.association[Field.NAME], [Field.ORIGINAL_TEXT]: edgeData.association[Field.ORIGINAL_TEXT], "sourceClass": sourceClassName, "targetClass": targetClassName })
         }
     }
 

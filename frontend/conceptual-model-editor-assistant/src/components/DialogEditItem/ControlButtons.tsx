@@ -17,11 +17,9 @@ const ControlButtons: React.FC = () =>
     const [changedDataType, setChangedDataType] = useState("")
     
     const [item, setItem] = useRecoilState(selectedSuggestedItemState)
-    const [editedItem, setEditedItem] = useRecoilState(editedSuggestedItemState)
+    const editedItem = useRecoilValue(editedSuggestedItemState)
 
     const setIsOpened = useSetRecoilState(isShowEditDialogState)
-
-    const setRegeneratedItem = useSetRecoilState(editedSuggestedItemState)
 
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
 
@@ -93,15 +91,14 @@ const ControlButtons: React.FC = () =>
             const oldAssociation = item as Association
             setChangedItemName(oldAssociation[Field.NAME])
 
+            const attributeName = createNameFromIRI(oldAssociation[Field.TARGET_CLASS])
+
             const attribute : Attribute = {
-                [Field.IRI]: oldAssociation[Field.TARGET_CLASS], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: oldAssociation[Field.TARGET_CLASS], [Field.DESCRIPTION]: oldAssociation[Field.DESCRIPTION],
+                [Field.IRI]: oldAssociation[Field.TARGET_CLASS], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: attributeName, [Field.DESCRIPTION]: oldAssociation[Field.DESCRIPTION],
                 [Field.DATA_TYPE]: changedDataType, [Field.ORIGINAL_TEXT]: oldAssociation[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: oldAssociation[Field.ORIGINAL_TEXT_INDEXES],
                 [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_CLASS]: oldAssociation[Field.SOURCE_CLASS]
             }
 
-            console.log("Old association: ", oldAssociation)
-            console.log("New attribute: ", attribute)
-        
             setItem(attribute)
             setEditedSuggestedItem(attribute)
         }

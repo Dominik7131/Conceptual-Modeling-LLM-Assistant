@@ -1,5 +1,6 @@
 import { SetterOrUpdater } from "recoil";
 import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SidebarTabs, UserChoice } from "../interfaces"
+import { createNameFromIRI } from "./conceptualModel";
 
 
 export const TOPBAR_DEFAULT_HEIGHT_PX = 361
@@ -87,17 +88,28 @@ export const createErrorMessage = (item: Item, setErrorMessage: SetterOrUpdater<
 {
   let message = ""
 
-  if (item.type === ItemType.CLASS)
+  if (item[Field.TYPE] === ItemType.CLASS)
   {
     message = `Class "${item.name}" already exists`
   }
-  else if (item.type === ItemType.ATTRIBUTE)
+  else if (item[Field.TYPE] === ItemType.ATTRIBUTE)
   {
-    message = `Class "${(item as Attribute)[Field.SOURCE_CLASS]}" already contains attribute "${item.name}"`
+    const attribute: Attribute = item as Attribute
+    const sourceClassName = createNameFromIRI(attribute[Field.SOURCE_CLASS])
+
+    message = `Class "${sourceClassName}" already contains attribute: "${item[Field.NAME]}"`
   }
-  else if (item.type === ItemType.ASSOCIATION)
+  else if (item[Field.TYPE] === ItemType.ASSOCIATION || item[Field.TYPE] === ItemType.GENERALIZATION)
   {
-    message = `Association in between source class "${(item as Association)[Field.SOURCE_CLASS]}" and target class "${(item as Association)[Field.TARGET_CLASS]}" already exists`
+    const association: Association = item as Association
+    const sourceClassName = createNameFromIRI(association[Field.SOURCE_CLASS])
+    const targetClassName = createNameFromIRI(association[Field.TARGET_CLASS])
+
+    message = `Association in between source class "${sourceClassName}" and target class "${targetClassName}" already exists`
+  }
+  else
+  {
+    throw Error("Received unexpected item type: ", item[Field.TYPE])
   }
 
   setErrorMessage(message)

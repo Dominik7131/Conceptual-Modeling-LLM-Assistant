@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem"
 import { editedSuggestedItemState, nodesState, selectedSuggestedItemState } from "../../atoms"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { Node } from 'reactflow';
-import { Association, Field, Item, ItemFieldUIName } from "../../interfaces"
+import { Association, Field, ItemFieldUIName } from "../../interfaces"
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState } from "react"
 import { createNameFromIRI, doesNodeAlreadyExist } from "../../utils/conceptualModel"
@@ -15,17 +15,16 @@ interface Props
 {
     fieldName: Field
     association: Association
-    editedItem: Item
 }
 
-const ClassListSelector: React.FC<Props> = ({ fieldName, association, editedItem}) =>
+const ClassListSelector: React.FC<Props> = ({ fieldName, association }) =>
 {
     const nodes: Node[] = useRecoilValue(nodesState)
     const selectedAssociation: Association = useRecoilValue(selectedSuggestedItemState) as Association
 
     const setEditedItem = useSetRecoilState(editedSuggestedItemState)
 
-    const [value, setValue] = useState((association as any)[fieldName])
+    const [value, setValue] = useState(association[fieldName as keyof Association])
     const fieldUIName = fieldName === Field.SOURCE_CLASS ? ItemFieldUIName.SOURCE_CLASS : ItemFieldUIName.TARGET_CLASS
 
     const iri = fieldName === Field.SOURCE_CLASS ? selectedAssociation[Field.SOURCE_CLASS] : selectedAssociation[Field.TARGET_CLASS]
@@ -42,14 +41,14 @@ const ClassListSelector: React.FC<Props> = ({ fieldName, association, editedItem
         <FormControl fullWidth variant="standard">
                 <InputLabel>{ fieldUIName }</InputLabel>
                 <Select
-                    value={value}
+                    value={value.toString()}
                     onChange={handleChange}
                 >
-                    { !doesNodeAlreadyExist(nodes, iri) && <MenuItem value={iri}> {name} </MenuItem>}
+                    { !doesNodeAlreadyExist(nodes, iri) && <MenuItem value={iri}> {name} </MenuItem> }
                     
                     { nodes.map((node: Node) => <MenuItem key={node.id} value={node.id}> {node.data.class[Field.NAME]} </MenuItem>) }
                 </Select>
-            </FormControl>
+        </FormControl>
     )
 }
 

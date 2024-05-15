@@ -1,6 +1,7 @@
 import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
 import { Association, Attribute, Class, EdgeData, Field, Item, ItemType, NodeData } from '../interfaces';
 import { SetterOrUpdater } from 'recoil';
+import { blankClass } from './utility';
 
 
 export const CUSTOM_EDGE_TYPE = "custom-edge"
@@ -163,6 +164,7 @@ const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>
 {
     const nodeID = attribute[Field.SOURCE_CLASS]
     let isAttributePresent = false
+    let isAttributeAdded = false
 
     setNodes((nodes: Node[]) => nodes.map((currentNode : Node) =>
     {
@@ -189,9 +191,19 @@ const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>
         const newAttributes = [...currentNode.data.attributes, attribute]  
         const newData : NodeData = { ...currentNode.data, attributes: newAttributes }
         const updatedNode: Node = {...currentNode, data: newData}
+        isAttributeAdded = true
 
         return updatedNode
     }))
+
+
+    const doesSourceClassExist = isAttributePresent || isAttributeAdded
+    if (!doesSourceClassExist)
+    {
+        const name = createNameFromIRI(nodeID)
+        const newClass: Class = { ...blankClass, [Field.IRI]: nodeID, [Field.NAME]: name }
+        onAddClass(newClass, 100, 100, setNodes)
+    }
 
     return !isAttributePresent
 }

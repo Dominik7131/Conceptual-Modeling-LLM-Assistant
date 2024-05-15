@@ -6,6 +6,7 @@ import { Attribute, Field, Item, ItemType, Association } from "../../interfaces"
 import { capitalizeString } from "../../utils/utility";
 import { useState } from "react";
 import { SIDEBAR_BUTTON_SIZE } from "../../utils/urls";
+import { createNameFromIRI } from "../../utils/conceptualModel";
 
 
 interface Props
@@ -40,19 +41,25 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
     
         // Create tooltips for highlighted original text
         let tooltip = ""
-        const capitalizedSourceEntity: string = capitalizeString((item as Attribute).source)
     
-        if (item.type === ItemType.CLASS)
+        if (item[Field.TYPE] === ItemType.CLASS)
         {
-            tooltip = `Class: ${item.name}`
+            tooltip = `Class: ${item[Field.NAME]}`
         }
-        else if (item.type === ItemType.ATTRIBUTE)
+        else if (item[Field.TYPE] === ItemType.ATTRIBUTE)
         {
-            tooltip = `${capitalizedSourceEntity}: ${item.name}`
+            const attribute: Attribute = item as Attribute
+            const sourceName = createNameFromIRI(attribute[Field.SOURCE_CLASS])
+            
+            tooltip = `${sourceName}: ${item.name}`
         }
-        else if (item.type === ItemType.ASSOCIATION)
+        else if (item[Field.TYPE] === ItemType.ASSOCIATION)
         {
-            tooltip = `${capitalizedSourceEntity} - ${item.name} - ${(item as Association).target}`
+            const association: Association = item as Association
+            const sourceName = createNameFromIRI(association[Field.SOURCE_CLASS])
+            const targetName = createNameFromIRI(association[Field.TARGET_CLASS])
+
+            tooltip = `${sourceName} - ${item[Field.NAME]} - ${targetName}`
         }
     
         let newTooltips : string[] = Array(item.originalTextIndexes.length).fill(tooltip)
@@ -74,7 +81,7 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
                 disabled={isDisabled}
                 size={ SIDEBAR_BUTTON_SIZE }
                 sx={{ textTransform: "none" }}
-                onClick={() => onHighlightSingleItem()}>
+                onClick={ () => onHighlightSingleItem() }>
                     <HighlightIcon/>
             </Button>
         </Tooltip>
@@ -82,7 +89,3 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
 }
 
 export default HighlightSingleItemButton
-
-function getRecoilValue(domainDescriptionState: RecoilState<string>) {
-    throw new Error("Function not implemented.");
-}

@@ -5,6 +5,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../../interfaces";
 import { capitalizeString } from "../../utils/utility";
 import { HEADER, MERGE_ORIGINAL_TEXT_URL } from "../../utils/urls";
+import { createNameFromIRI } from "../../utils/conceptualModel";
 
 
 const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
@@ -87,7 +88,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                     const ii1: number = originalTextIndexes[k]
                     const ii2: number = originalTextIndexes[k + 1]
             
-                    originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${className}: ${attribute.name}`} )
+                    originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${className}: ${attribute[Field.NAME]}`} )
                 }
             }
 
@@ -125,9 +126,12 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
             {
                 const ii1 : number = originalTextIndexes[k]
                 const ii2 : number = originalTextIndexes[k + 1]
+
+                const sourceName = createNameFromIRI(selectedEdges[i][Field.SOURCE_CLASS])
+                const targetName = createNameFromIRI(selectedEdges[i][Field.TARGET_CLASS])
         
                 originalTextsIndexesObjects.push({
-                    indexes: [ii1, ii2], label: `${selectedEdges[i].source} - ${edgeData.association.name} - ${selectedEdges[i].target}`
+                    indexes: [ii1, ii2], label: `${sourceName} - ${edgeData.association[Field.NAME]} - ${targetName}`
                 })
             }
         }

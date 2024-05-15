@@ -1,5 +1,5 @@
 import Stack from '@mui/material/Stack';
-import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange, useOnSelectionChange } from 'reactflow';
+import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange, useOnSelectionChange, BackgroundVariant } from 'reactflow';
 import CustomNode from './CustomNode';
 import CustomEdge from './CustomEdge';
 import { Field, Item, ItemType, Association } from '../../interfaces';
@@ -79,8 +79,6 @@ const ConceptualModel: React.FC = () =>
   // }, [nodes])
 
 
-  // Define custom edge type for selected state
-
   return (
           <Stack width={`${100 - sidebarWidthPercentage}%`} height={`${heightPx}px`}>
             <ReactFlow
@@ -94,7 +92,7 @@ const ConceptualModel: React.FC = () =>
                 >
                 <MiniMap nodeStrokeWidth={3} zoomable pannable />
                 <Controls />
-                <Background color="black" />
+                <Background color="black"/>
             </ReactFlow>
           </Stack>
       )

@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';
 import { Typography } from '@mui/material';
-import { capitalizeString, clipString, } from '../../utils/utility';
+import { clipString, } from '../../utils/utility';
 import { useSetRecoilState } from 'recoil';
 import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../../atoms';
 import { calculateNewEdgeSourceAndTargetPosition } from '../../utils/autoEdgeReconnect';
@@ -39,21 +39,15 @@ export default function CustomEdge ({ id, source, target, style, sourceX, source
 
   let { sx, sy, tx, ty, sourcePos, targetPos } = calculateNewEdgeSourceAndTargetPosition(sourceNode, targetNode)
 
-  // console.log("sx, sy, tx, ty, sourcePos, targetPos", sx, sy, tx, ty, sourcePos, targetPos)
   const [edgePath, labelX, labelY] = getSimpleBezierPath({ sourceX: sx, sourceY: sy, targetX: tx, targetY: ty, sourcePosition: sourcePos, targetPosition: targetPos })
 
-
-
-
   const edgeData: EdgeData = data as EdgeData
-  const relationship: Association = edgeData.association
+  const association: Association = edgeData.association
 
 
   const borderNonSelected = "1px solid black"
   const borderSelected = `1px solid ${PRIMARY_COLOR}`
 
-  // console.log(markerEnd)
-  // const markerEndString = "url(#1__color=red&height=40&strokeWidth=0.8&type=arrow&width=40)"
 
   const handleEditRelationship = (relationship: Association) =>
   {
@@ -90,11 +84,11 @@ export default function CustomEdge ({ id, source, target, style, sourceX, source
                 onMouseEnter={() => setIsHovered(_ => true)} 
                 onMouseLeave={() => setIsHovered(_ => false)}
                 >
-                { capitalizeString( clipString(relationship[Field.NAME], 18)) }
+                { clipString(association[Field.NAME], 20) }
 
                 <Typography
                   color={selected ? PRIMARY_COLOR : "black"}
-                  onClick={() => handleEditRelationship(relationship)}
+                  onClick={() => handleEditRelationship(association)}
                   sx={{ display: isHovered ? "inline" : "none",  position: "absolute", right: 3, top: 3 }}
                 >
                   <EditIcon sx={{ width: "20px", height: "20px" }}/> 

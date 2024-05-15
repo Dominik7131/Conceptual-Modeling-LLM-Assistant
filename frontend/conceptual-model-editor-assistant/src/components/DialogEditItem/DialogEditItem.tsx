@@ -53,8 +53,8 @@ const DialogEditItem: React.FC = () =>
                 {
                     isAssociation &&
                     <>
-                        <ClassListSelector fieldName={Field.SOURCE_CLASS} association={association} editedItem={editedItem}/>
-                        <ClassListSelector fieldName={Field.TARGET_CLASS} association={association} editedItem={editedItem}/>
+                        <ClassListSelector fieldName={Field.SOURCE_CLASS} association={association}/>
+                        <ClassListSelector fieldName={Field.TARGET_CLASS} association={association}/>
 
                         <EditField label={ItemFieldUIName.SOURCE_CARDINALITY} field={Field.SOURCE_CARDINALITY} />
                         <EditField label={ItemFieldUIName.TARGET_CARDINALITY} field={Field.TARGET_CARDINALITY} />
@@ -66,8 +66,8 @@ const DialogEditItem: React.FC = () =>
                     <>
                         {/* ItemFieldUIName.GENERAl_CLASS */}
                         {/* ItemFieldUIName.SPECIAL_CLASS */}
-                        <ClassListSelector fieldName={Field.SOURCE_CLASS} association={association} editedItem={editedItem}/>
-                        <ClassListSelector fieldName={Field.TARGET_CLASS} association={association} editedItem={editedItem}/>
+                        <ClassListSelector fieldName={Field.SOURCE_CLASS} association={association}/>
+                        <ClassListSelector fieldName={Field.TARGET_CLASS} association={association}/>
                     </>
                 }
             </DialogContent>
