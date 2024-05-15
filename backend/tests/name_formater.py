@@ -6,8 +6,8 @@ from text_utility import TextUtility
 
 
 def convert_name_to_standard_convention_test():
-    names = ["snake_case", "snake_case_name_long", "Camel", "CamelCase", "CamelCaseLong", "camelCaseWithLowerCasedFirstLetter", "standard case", "Capitalized Name", "animalID", "CAPSLOCK", "CONSISTS_OF",]
-    expected_names = ["snake case", "snake case name long", "camel", "camel case", "camel case long", "camel case with lower cased first letter", "standard case", "capitalized name", "animal id", "capslock", "consists of"]
+    names = ["snake_case", "snake_case_name_long", "Camel", "CamelCase", "CamelCaseLong", "camelCaseWithLowerCasedFirstLetter", "standard case", "Capitalized Name", "animalID", "CAPSLOCK", "CONSISTS_OF", "Point3D",]
+    expected_names = ["snake case", "snake case name long", "camel", "camel case", "camel case long", "camel case with lower cased first letter", "standard case", "capitalized name", "animal id", "capslock", "consists of", "point 3D"]
 
     are_all_tests_passing = True
 
