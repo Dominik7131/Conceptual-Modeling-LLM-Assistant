@@ -23,7 +23,7 @@ const ImportJSONButton: React.FC = () =>
         const file = changeEvent.target.files[0]
 
 
-        if (file.name.length < 5 || file.name.slice(-5) != ".json")
+        if (file.name.length < 5 || file.name.slice(-5) !== ".json")
         {
             const alertMessage = "Invalid file extension"
             alert(alertMessage)
