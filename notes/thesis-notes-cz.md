@@ -5,7 +5,7 @@
 
 ## Featury LLM asistenta
 
-- obecné pravidlo, kterým se řídíme: LLM se může kdykoliv splést, proto finální rozhodnutí je vždy na uživateli, jestli chce daný návrh příjmout
+- obecné pravidlo, kterým se řídíme: LLM se může kdykoliv splést, proto finální rozhodnutí je vždy na uživateli, jestli chce daný návrh přijmout
 
 <br />
 
@@ -169,8 +169,8 @@
 - proto v našich promptech jako první chceme vygenerovat pro daný návrh původní text (to je ten zmíněný kontext pro daný prvek) a potom až chceme nechat vygenerovat například název konkrétního návrhu
     - cílem je přinutit LLM, aby nejprve vykonal ten zmíněný první krok a pak až druhý
         - obava je taková, že pokud LLM jako první vygeneruje například název atributu, tak:
-            - jednak to může znamenat, že dělá ty oba zmíněné kroky najednou, což možná může zhoršit kvalitu výstupu podobně, jako když se LLM snaží vyřešit matematickou slovní úlohu najednou a kvůli tomu vydá špatný výsledek (je to jen hypotéza, bylo by to potřeba pořádně otestovat)
-            - druhak to může znamenat, že LLM bude původní text generovat na základě toho předem vygenerovaného názvu atributu, což může být problém, pokud je název atributu špatně (opět by to bylo potřeba pořádně otestovat)
+            - za prvé to může znamenat, že dělá ty oba zmíněné kroky najednou, což možná může zhoršit kvalitu výstupu podobně, jako když se LLM snaží vyřešit matematickou slovní úlohu najednou a kvůli tomu vydá špatný výsledek (je to jen hypotéza, bylo by to potřeba pořádně otestovat)
+            - za druhé to může znamenat, že LLM bude původní text generovat na základě toho předem vygenerovaného názvu atributu, což může být problém, pokud je název atributu špatně (opět by to bylo potřeba pořádně otestovat)
 
     - podle našeho menšího experimentu to vypadá, že lze dále zlepšit kvalitu výstupu tím, že si necháme původní text a název daného prvku nejdřív vypsat v plain textu a až potom si to necháme vypsat v JSON formátu
         - tento přístup označujeme jako "chain of thoughts"
@@ -355,7 +355,7 @@ Obrázek ze zadání výzkumného projektu:
     - hlavní problémy:
         1. z praktických zkušeností víme, že LLM typicky výstup nějak okomentuje
             - i když do promptu dáme instrukci, aby nic nekomentoval, tak toto občas bývá ignorováno (záleží na konkrétním LLM)
-            - tudíž ve výsledku by se výstup nedal automaticky naparsovat, uživatel by zbytečně čekal než se něco vygeneruje a pak by nic nedostal
+            - tudíž ve výsledku by se výstup nedal automaticky naparsovat, uživatel by zbytečně čekal, než se něco vygeneruje a pak by nic nedostal
 
         2. pro lepší user experience se hodí parsovat výstup LLM během generování
             - například pokud se první položka výstupu vygeneruje za 1 vteřinu a celý výstup komplet se vygeneruje za 10 vteřin, tak je mnohem lepší uživateli po 1 vteřině zobrazit první položku, než uživateli 10 vteřin nezobrazovat nic a až potom celý výsledek
