@@ -1,5 +1,9 @@
 # Thesis notes
 - text diplomky pak bude v angličtině, poznámky zatím píšu v češtině
+- v těchto poznámkách pro prvky konceptuálního modelu používám pojmy: "entities", "attributes", "relationships"
+    - ale v kódu i pak v článku a diplomce budeme používat pojmy: "classes", "attributes", "associations"
+        - důvod: přijde mi, že LLM lépe rozumí promptům, které obsahují tyto pojmy
+            - a chceme, aby použité pojmy v promptech byly konzistentní s pojmy v kódu a textu
 
 <br />
 
@@ -228,7 +232,7 @@
 2. pro některé prompty zde dáme popis domény v plain textu
     - provádíme filtrování popisu domény
         - to znamená, že se snažíme do promptu dát pouze ty informace z popisu domény, které LLM potřebuje k vygenerování správného výstupu
-            - například pokud uživatel chce atributy pro entitu "animal", tak do promptu chceme dát pouze části textu hovořící zvířatech
+            - například pokud uživatel chce atributy pro entitu "animal", tak do promptu chceme dát pouze části textu hovořící o zvířatech
 
 
 
