@@ -16,7 +16,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
     const isDisabled = domainDescription === ""
 
     const setIsShowHighlightDialog = useSetRecoilState(isShowHighlightDialogState)
-    const setoriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
+    const setOriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
     const setTooltips = useSetRecoilState(tooltipsState)
     const setIsShowTitleDialogDomainDescription = useSetRecoilState(isShowTitleDialogDomainDescriptionState)
 
@@ -50,13 +50,14 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
             tooltips.push(element[2])
         }
 
-        setoriginalTextIndexesList(_ => originalTextIndexes)
+        setOriginalTextIndexesList(_ => originalTextIndexes)
         setTooltips(_ => tooltips)
     }
 
 
     const onHighlightSelectedItems = (): void =>
     {
+        // console.log("SNodes: ", selectedNodes)
         setIsShowTitleDialogDomainDescription(false)
 
         let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []
@@ -65,15 +66,17 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
         for (let i = 0; i < selectedNodes.length; i++)
         {
             const nodeData: NodeData = selectedNodes[i].data
+            // console.log("Node data:", nodeData)
 
             // Process each attribute for the given entity
-            const entityName: string = capitalizeString(selectedNodes[i].id)
+            const className: string = nodeData.class[Field.NAME]
+            // console.log("Class name: ", className)
             for (let j = 0; j < nodeData.attributes.length; j++)
             {
                 const attribute = nodeData.attributes[j]
-                const originalTextIndexes = attribute.originalTextIndexes
+                const originalTextIndexes = attribute[Field.ORIGINAL_TEXT_INDEXES]
         
-                if (!attribute.originalTextIndexes)
+                if (!attribute[Field.ORIGINAL_TEXT_INDEXES])
                 {
                     continue
                 }
@@ -84,11 +87,12 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                     const ii1: number = originalTextIndexes[k]
                     const ii2: number = originalTextIndexes[k + 1]
             
-                    originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${entityName}: ${attribute.name}`} )
+                    originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `${className}: ${attribute.name}`} )
                 }
             }
 
-            const originalTextIndexes = nodeData.class.originalTextIndexes
+            const originalTextIndexes = nodeData.class[Field.ORIGINAL_TEXT_INDEXES]
+            // console.log("OTI: ", originalTextIndexes)
 
             if (!originalTextIndexes)
             {
@@ -101,7 +105,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                 const ii1 : number = originalTextIndexes[k]
                 const ii2 : number = originalTextIndexes[k + 1]
         
-                originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Class: ${selectedNodes[i].id}`} )
+                originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Class: ${nodeData.class[Field.NAME]}`} )
             }
         }
     

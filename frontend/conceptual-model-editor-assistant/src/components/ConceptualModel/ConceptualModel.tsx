@@ -44,22 +44,22 @@ const ConceptualModel: React.FC = () =>
 
   const onConnect : OnConnect = useCallback((params) =>
   { 
-    const sourceEntityName = params.source
-    const targetEntityName = params.target
+    const sourceClass = params[Field.SOURCE_CLASS]
+    const targetClass = params[Field.TARGET_CLASS]
 
-    if (!sourceEntityName || !targetEntityName)
+    if (!sourceClass || !targetClass)
     {
-      return 
+      return
     }
 
-    const blankRelationship: Association = {
+    const newAssociation: Association = {
       [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-      [Field.TYPE]: ItemType.ASSOCIATION, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.SOURCE_CLASS]: sourceEntityName,
-      [Field.TARGET_CLASS]: targetEntityName
+      [Field.TYPE]: ItemType.ASSOCIATION, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.SOURCE_CLASS]: sourceClass,
+      [Field.TARGET_CLASS]: targetClass
     }
 
-    setSelectedSuggestedItem(_ => blankRelationship)
-    setEditedSuggestedItem(_ => blankRelationship)
+    setSelectedSuggestedItem(_ => newAssociation)
+    setEditedSuggestedItem(_ => newAssociation)
 
     setIsSuggestedItem(false)
     setIsItemInConceptualModel(false)
@@ -70,7 +70,7 @@ const ConceptualModel: React.FC = () =>
 
   useEffect(() =>
   {
-    loadDefaultConceptualModel(setNodes, setEdges)
+    // loadDefaultConceptualModel(setNodes, setEdges)
   }, [])
 
   // useEffect(() =>
@@ -91,7 +91,7 @@ const ConceptualModel: React.FC = () =>
                 onConnect={onConnect}
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
-                fitView>
+                >
                 <MiniMap nodeStrokeWidth={3} zoomable pannable />
                 <Controls />
                 <Background color="black" />

@@ -44,7 +44,7 @@ const HighlightSingleItemButton: React.FC<Props> = ({ item }): JSX.Element =>
     
         if (item.type === ItemType.CLASS)
         {
-            tooltip = `Entity: ${item.name}`
+            tooltip = `Class: ${item.name}`
         }
         else if (item.type === ItemType.ATTRIBUTE)
         {

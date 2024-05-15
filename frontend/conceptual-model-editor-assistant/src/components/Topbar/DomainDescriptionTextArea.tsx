@@ -1,13 +1,17 @@
 import { Box, TextField } from "@mui/material"
-import { useRecoilState, useRecoilValue } from "recoil"
-import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { domainDescriptionState, edgesState, isIgnoreDomainDescriptionState, nodesState } from "../../atoms"
 import { useEffect } from "react"
+import { invalidateAllOriginalTextIndexes } from "../../utils/conceptualModel"
 
 
 const DomainDescriptionTextArea: React.FC = ():JSX.Element =>
 {
     const [domainDescription, setDomainDescription] = useRecoilState(domainDescriptionState)
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+
+    const setNodes = useSetRecoilState(nodesState)
+    const setEdges = useSetRecoilState(edgesState)
 
 
     const loadDomainDescriptionFromFile = () =>
@@ -34,6 +38,7 @@ const DomainDescriptionTextArea: React.FC = ():JSX.Element =>
     }, [])
 
 
+
     return (
         <Box
             sx={{ '& .MuiTextField-root': { m: 1, width: '98.9%' } }}
@@ -48,7 +53,7 @@ const DomainDescriptionTextArea: React.FC = ():JSX.Element =>
                 disabled={isIgnoreDomainDescription}
                 multiline
                 rows={7}
-                onChange={event => setDomainDescription(_ => event.target.value)}
+                onChange={event => { setDomainDescription(_ => event.target.value); invalidateAllOriginalTextIndexes(setNodes, setEdges) }}
                 value={domainDescription}
                 spellCheck="false">
             </TextField>
