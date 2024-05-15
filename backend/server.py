@@ -39,7 +39,7 @@ def suggest_items():
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
 
-    return llm_assistant.suggest(source_class, target_class, user_choice, domain_description=domain_description, count_items_to_suggest=5)
+    return llm_assistant.suggest_items(source_class, target_class, user_choice, domain_description=domain_description, count_items_to_suggest=5)
 
 
 
@@ -58,7 +58,8 @@ def suggest_single_field():
     if user_choice == "associations":
         user_choice = UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value
 
-    return llm_assistant.generate_single_field(user_choice, name, source_class, target_class, domain_description, field)
+    single_field = llm_assistant.suggest_single_field(user_choice, name, source_class, target_class, domain_description, field)
+    return single_field
 
 
 @app.route("/suggest/summary", methods=["POST"])
@@ -70,10 +71,10 @@ def suggest_summary():
     conceptual_model = body_data["conceptualModel"]
 
     if summary_type == UserChoice.SUMMARY_PLAIN_TEXT.value:
-        return llm_assistant.summarize_conceptual_model_plain_text(conceptual_model, domain_description)
+        return llm_assistant.suggest_summary_plain_text(conceptual_model, domain_description)
 
     elif summary_type == UserChoice.SUMMARY_DESCRIPTIONS.value:
-        return llm_assistant.summarize_conceptual_model_descriptions(conceptual_model, domain_description)
+        return llm_assistant.suggest_summary_descriptions(conceptual_model, domain_description)
 
     else:
         return f"Unexpected summary type: {summary_type}", 400

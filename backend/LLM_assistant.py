@@ -127,7 +127,7 @@ class LLMAssistant:
             yield completed_item, is_item_ok
             return
 
-        if "name" not in completed_item or not completed_item["name"]:
+        if "name" not in completed_item or not completed_item["name"] or completed_item["name"] == "none":
             completed_item["name"] = "error: no name"
             is_item_ok = False
 
@@ -174,12 +174,12 @@ class LLMAssistant:
 
         elif user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
             if not Field.SOURCE_CLASS.value in completed_item or not completed_item[Field.SOURCE_CLASS.value]:
-                completed_item[Field.NAME.value] = "error: no source entity"
+                completed_item[Field.NAME.value] = "error: no source class"
                 is_item_ok = False
 
             
             if not Field.TARGET_CLASS.value in completed_item or not completed_item[Field.TARGET_CLASS.value]:
-                completed_item[Field.NAME.value] = "error: no target entity"
+                completed_item[Field.NAME.value] = "error: no target class"
                 is_item_ok = False
             
             if not is_item_ok:
@@ -400,7 +400,7 @@ class LLMAssistant:
         return prompt
 
 
-    def suggest(self, source_class, target_class, user_choice, domain_description, count_items_to_suggest=5):
+    def suggest_items(self, source_class, target_class, user_choice, domain_description, count_items_to_suggest=5):
 
         source_class = source_class.strip()
 
@@ -513,7 +513,7 @@ class LLMAssistant:
         return relevant_texts
 
 
-    def generate_single_field(self, user_choice, name, source_class, target_class, domain_description, field_name):
+    def suggest_single_field(self, user_choice, name, source_class, target_class, domain_description, field_name):
         source_class = source_class.strip()
         
         relevant_texts = self.get_relevant_texts(source_class=source_class, domain_description=domain_description)
@@ -542,10 +542,10 @@ class LLMAssistant:
                 dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
             
             json_item = json.dumps(dictionary)
-            yield f"{json_item}\n"
+            return json_item
 
 
-    def summarize_conceptual_model_plain_text(self, conceptual_model, domain_description):
+    def suggest_summary_plain_text(self, conceptual_model, domain_description):
         
         prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY_PLAIN_TEXT.value, conceptual_model=conceptual_model,
             relevant_texts=domain_description, is_chain_of_thoughts=False)
@@ -567,7 +567,7 @@ class LLMAssistant:
             yield f"{json_item}\n"
 
 
-    def summarize_conceptual_model_descriptions(self, conceptual_model, domain_description):
+    def suggest_summary_descriptions(self, conceptual_model, domain_description):
 
         prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY_DESCRIPTIONS.value, conceptual_model=conceptual_model, 
             relevant_texts=domain_description, is_chain_of_thoughts=False)
