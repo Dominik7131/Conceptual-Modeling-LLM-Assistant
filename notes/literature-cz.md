@@ -5,7 +5,9 @@
 - [PDF](https://arxiv.org/pdf/2311.07605.pdf)
 - [GitHub](https://github.com/fhaer/llm-cmi)
 
-- nejspíš nepoužívají žádné triky, přímo na základě dotazu uživatele LLM vygeneruje kód buď pro PlantUML, nebo Graphviz
+- nepoužívají žádné promptovací techniky
+	- prompt obsahuje přímo instrukci, v jakém formátu má výstup vygenerovat + popis domény
+	- pro výstupní formát zkoušeli PlantUML a Graphviz
 - příklad vstupu a výstupu:
 
 <img src="images/conceptual-model-interpreter-example.png" alt="drawing" width="1100"/>
@@ -73,6 +75,100 @@
 
 <br />
 
+
+## [LLMs4OL - Large Language Models for Ontology Learning](https://link.springer.com/chapter/10.1007/978-3-031-47240-4_22)
+- říjen 2023
+- pro stáhnutí PDF je potřeba se přihlásit
+- [GitHub](https://github.com/HamedBabaei/LLMs4OL)
+
+- snaží se pomocí LLM řešit úlohy, jako jsou například automatická extrakce obyčejných asociací a is-a asociací
+- zkouší tyto typy architektur LLM včetně pár fine-tunovaných:
+    - encoder
+    - decoder
+    - encoder-decoder
+
+- zajímavé je, že pro extrakci obyčejných asociacích jim vyšel jako nejlepší model `Flan-T5-XL`, jinak na zbytek úloh byl nejlepší `ChatGPT-4`
+- akorát pozor, že jejich vstupem není plain text v přirozeném jazyce, ale vypadá to spíš na jednotlivé názvy entit a k nim jejich popis
+	- prompt pak vypadá nějak takto: "je {entita1} rodičem třídy {entita2}?"
+		- LLM pak buď souhlasí, nebo nesouhlasí, čímž automaticky otestují správnost výstupu
+
+<br />
+
+## [Automated Domain Modeling with Large Language Models: A Comparative Study](https://ieeexplore.ieee.org/abstract/document/10344012/)
+- říjen 2023
+- pro stáhnutí PDF je potřeba se přihlásit
+- [použitá data](https://zenodo.org/records/8118642)
+
+- použili ChatGPT 3.5 a 4, ale pouze přes webové rozhraní
+- cíl: z popisu domény vytvořit automaticky bez žádné interakce s uživatelem nějaký doménový model (Př.: UML model)
+	- ale aby výstup nezávisel na tom, jak moc dobře například ChatGPT umí generovat UML model, tak LLM výstup generuje v jejich strukturovaném plain textu formátu
+	- defaultní datový typ atributů nastavují na string
+
+- architektura:
+
+<img src="images/architecture-simplified.png" alt="drawing" width="700"/>
+
+
+- používají 10 popisů domén, které mají 7-23 tříd, 11-43 atributů a 9-27 asociací
+    - z toho 2 popisy domén používají na few-shot prompting, takže ručně hodnotí pouze zbylých 8 popisů domén
+
+- při vyhodnocování každý element (například atribut) zařazují do jedné ze 4 kategorií, kde kategorie 1 znamená, že vygenerovaný element odpovídá sémanticky tomu, co je v očekávaném doménovém modelu a naopak kategorie 4 znamená, že vygenerovaný element vůbec není sémanticky v očekávaném doménovém modelu
+	- při výpočtu precisionu a recallu pak elementům v kategoriích 1-2 dávají 1 bod, elementům v kategorii 3 dávají 0.5 bodu a elementům v kategorii 4 dávají 0 bodů
+
+- strana 163 - B. Large language models (LLMs): hezky stručně popisují, jakým způsobem LLM generuje výstup
+- strana 163 - C. Fine-tuning and prompting: hezky popisují fine-tuning
+- začátek strany 166: říkají, že neexistují žádné vhodné evaluátory pro automatické zhodnocení kvality vygenerovaného konceptuálního modelu
+	- odkazují se na některé automatické evaluátory, které mají fungovat za určitých podmínek
+- strana 167 - C. Evaluation criteria: hezky stručně popisují, co je to recall a precision a jakým způsobem ho měří
+- strana 169 - Answer to RQ2: "Adding reasoning steps may decrease the performance"
+	- tedy když použili chain of thoughts, tak jim to akorát zhoršilo výsledek
+	- ale je potřeba brát v potaz, že:
+		- měli výchozí temperature, čímž možná LLM občas mohlo trochu ignorovat kroky, jakými má postupovat
+		- jejich popisy domén příliš nesedí na ty očekávané konceptuální modely, tudíž LLM mohl být ve výsledku zmatený, proč nějaká daná část textu vede na příslušný prvek konceptuálního modelu
+		- já negeneruju všechny prvky najednou, takže u mě chain of thought naopak může fungovat dobře
+
+- tento zdroj mám uveden u zadání diplomky
+
+<br />
+
+
+## [Navigating Ontology Development with LLMs](https://2024.eswc-conferences.org/wp-content/uploads/2024/04/146640137.pdf)
+- březen 2024
+- [PDF](https://2024.eswc-conferences.org/wp-content/uploads/2024/04/146640137.pdf)
+- [GitHub](https://github.com/LiUSemWeb/LLMs4OntologyDev-ESWC2024/tree/main)
+
+- v kapitole 2. "Related Work" zmiňují hodně příbuzných prací
+
+- LLM jako prompt dostane popis domény ("story") a několik otázek
+	- prompty jsou ve formě šablon, do kterých se později doplní příslušné argumenty (tedy stejný princip jako u nás)
+	- celkem pracují se 3 popisy domény, které jsou [zde](https://github.com/LiUSemWeb/LLMs4OntologyDev-ESWC2024/blob/main/Stories/README.MD#here-are-ontology-stories-in-the-experiments)
+		- jejich popisy domén jsou asi tak 2x-3x kratší než náš nejkratší popis domény
+	- jejich prompty jsou hezky popsány [zde](https://github.com/LiUSemWeb/LLMs4OntologyDev-ESWC2024/tree/main/Prompts#prompts)
+	- úplně na konec do "footeru" dávají seznam věcí, na které si LLM má dát pozor
+		- například "when i ask to execute plan x, step y, your output at executing steps must be only codes not explanations"
+
+- LLM nejspíš iterativně generuje výstup, který pak dostane znovu na vstupu s dalším zadáním dokud nevygeneruje celou ontologii v Turtle formátu
+	- u promptu typu [Graph of Thoughts](https://github.com/LiUSemWeb/LLMs4OntologyDev-ESWC2024/blob/main/Prompts/GoT.md) (GoT) LLM vygeneruje více možných výstupů a ty pak nejspíš LLM zhodnotí a zkombinuje dohromady
+	- [LLM vygeneroval tyto ontologie](https://github.com/LiUSemWeb/LLMs4OntologyDev-ESWC2024/tree/main/LLM_OWL_outputs)
+
+- při experimentech zkoušeli [několik různých LLM](https://github.com/LiUSemWeb/LLMs4OntologyDev-ESWC2024?tab=readme-ov-file#models) a několik různých promptovacích technik
+	- protože by bylo těžké ručně zhodnotit všechny kombinace, tak nejdřív udělali menší testy, ve kterých vyřadili ty kombinace, které dávaly špatné výsledky
+	- jako nejlepší LLM jim vyšel ChatGPT-4
+	- jako nejlepší promptovací technika jim vyšla `CQbyCQ`, což v principu znamená to, že LLM se nesnažil vyřešit všechny položené otázky najednou, ale vždy měl za úkol si vybrat pouze jednu z otázek a tu vyřešit
+		- výstupy kombinace ChatGPT-4 + `CQbyCQ` jsou prý o trochu lepší než průměrná kvalita toho, co za úkol v první iteraci odevzdali jejich studenti
+
+- v evaluaci hodnotili, jestli LLM vygeneroval správné atributy (datatype property), asociace (object property), abstraktní třídy (reification) a podmínky (restrictions)
+	- asi nejlépe to popisují na straně 13 v bodech 1.-4.
+
+- prý by jejich nástroj měl fungovat jako asistent pro modelování, ale to podle mě jenom znamená to, že LLM vygeneruje celý výstup a potom je na uživateli, aby opravil věci, které se mu nelíbí
+	- tedy do procesu generování ontologie uživatel nezasahuje, což pro ty jejich krátké texty asi dává smysl, ale s delšími texty ve chvíli, kdy LLM udělá jednu chybu, tak se podle mě tato chyba může potenciálně naakumulovat do velmi špatného celkového výstupu
+		- akumulování chyb možná trochu zabrání jejich promptovací technika `Graph of Thoughts`
+
+- ve výsledku mi ten jejich výzkum přijde hodně podobný paperu "Automated Domain Modeling with Large Language Models A Comparative Study" s tím rozdílem, že se jim podařilo zlepšit kvalitu výstupu generováním krok po kroku
+	- což ale možná opět funguje jenom díky tomu, že pracují se 3 krátkými texty
+		- to v kapitole 5. "Discussion" sami říkají a zdůvodňují to tím, že by modelování s delšími texty stálo více peněz, protože používali placené API
+
+<br />
 
 ## [BEAR: Revolutionizing Service Domain Knowledge Graph Construction with LLM](https://link.springer.com/chapter/10.1007/978-3-031-48421-6_23)
 - listopad 2023
@@ -219,59 +315,3 @@ So if you're already running some RAG projects, it's time to get your hands on s
 - architektura:
 
 <img src="images/LLM-Guided-Tree-of-Thought.png" alt="drawing" width="800"/>
-
-
-<br />
-
-
-## [Automated Domain Modeling with Large Language Models: A Comparative Study](https://ieeexplore.ieee.org/abstract/document/10344012/)
-- pro stáhnutí PDF je potřeba se přihlásit
-- [použitá data](https://zenodo.org/records/8118642)
-
-- použili ChatGPT 3.5 a 4, ale pouze přes webové rozhraní
-- cíl: z popisu domény vytvořit automaticky bez žádné interakce s uživatelem nějaký doménový model (Př.: UML model)
-	- ale aby výstup nezávisel na tom, jak moc dobře například ChatGPT umí generovat UML model, tak LLM výstup generuje v jejich strukturovaném plain textu formátu
-	- defaultní datový typ atributů nastavují na string
-
-- architektura:
-
-<img src="images/architecture-simplified.png" alt="drawing" width="700"/>
-
-
-- používají 10 popisů domén, které mají 7-23 tříd, 11-43 atributů a 9-27 asociací
-    - z toho 2 popisy domén používají na few-shot prompting, takže ručně hodnotí pouze zbylých 8 popisů domén
-
-- při vyhodnocování každý element (například atribut) zařazují do jedné ze 4 kategorií, kde kategorie 1 znamená, že vygenerovaný element odpovídá sémanticky tomu, co je v očekávaném doménovém modelu a naopak kategorie 4 znamená, že vygenerovaný element vůbec není sémanticky v očekávaném doménovém modelu
-	- při výpočtu precisionu a recallu pak elementům v kategoriích 1-2 dávají 1 bod, elementům v kategorii 3 dávají 0.5 bodu a elementům v kategorii 4 dávají 0 bodů
-
-- strana 163 - B. Large language models (LLMs): hezky stručně popisují, jakým způsobem LLM generuje výstup
-- strana 163 - C. Fine-tuning and prompting: hezky popisují fine-tuning
-- začátek strany 166: říkají, že neexistují žádné vhodné evaluátory pro automatické zhodnocení kvality vygenerovaného konceptuálního modelu
-	- odkazují se na některé automatické evaluátory, které mají fungovat za určitých podmínek
-- strana 167 - C. Evaluation criteria: hezky stručně popisují, co je to recall a precision a jakým způsobem ho měří
-- strana 169 - Answer to RQ2: "Adding reasoning steps may decrease the performance"
-	- tedy když použili chain of thoughts, tak jim to akorát zhoršilo výsledek
-	- ale je potřeba brát v potaz, že:
-		- měli výchozí temperature, čímž možná LLM občas mohlo trochu ignorovat kroky, jakými má postupovat
-		- jejich popisy domén příliš nesedí na ty očekávané konceptuální modely, tudíž LLM mohl být ve výsledku zmatený, proč nějaká daná část textu vede na příslušný prvek konceptuálního modelu
-		- já negeneruju všechny prvky najednou, takže u mě chain of thought naopak může fungovat dobře
-
-- tento zdroj mám uveden u zadání diplomky
-
-<br />
-
-
-## [LLMs4OL - Large Language Models for Ontology Learning](https://link.springer.com/chapter/10.1007/978-3-031-47240-4_22)
-- pro stáhnutí PDF je potřeba se přihlásit
-- [GitHub](https://github.com/HamedBabaei/LLMs4OL)
-
-- snaží se pomocí LLM řešit úlohy, jako jsou například automatická extrakce obyčejných asociací a is-a asociací
-- zkouší tyto typy architektur LLM včetně pár fine-tunovaných:
-    - encoder
-    - decoder
-    - encoder-decoder
-
-- zajímavé je, že pro extrakci obyčejných asociacích jim vyšel jako nejlepší model `Flan-T5-XL`, jinak na zbytek úloh byl nejlepší `ChatGPT-4`
-- akorát pozor, že jejich vstupem není plain text v přirozeném jazyce, ale vypadá to spíš na jednotlivé názvy entit a k nim jejich popis
-	- prompt pak vypadá nějak takto: "je {entita1} rodičem třídy {entita2}?"
-		- LLM pak buď souhlasí, nebo nesouhlasí, čímž automaticky otestují správnost výstupu
