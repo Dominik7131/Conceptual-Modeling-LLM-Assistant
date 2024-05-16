@@ -1,4 +1,4 @@
-# Literature
+# LLM jako nástroj pro namodelování zadané domény
 
 ## [Conceptual model interpreter for Large Language Models](https://arxiv.org/abs/2311.07605)
 - listopad 2023
@@ -139,6 +139,9 @@
 
 - v kapitole 2. "Related Work" zmiňují hodně příbuzných prací
 
+- líbí se mi, jak v kapitole 3.2 "Prompting methods" vysvětlují, co to jsou prompty a promptovací techniky
+	- také hezky popisují strukturu svých promptů
+
 - LLM jako prompt dostane popis domény ("story") a několik otázek
 	- prompty jsou ve formě šablon, do kterých se později doplní příslušné argumenty (tedy stejný princip jako u nás)
 	- celkem pracují se 3 popisy domény, které jsou [zde](https://github.com/LiUSemWeb/LLMs4OntologyDev-ESWC2024/blob/main/Stories/README.MD#here-are-ontology-stories-in-the-experiments)
@@ -207,7 +210,10 @@ So if you're already running some RAG projects, it's time to get your hands on s
 
 <br />
 
-## [Retrieval-Augmented Generation for Large Language Models: A Survey](https://arxiv.org/abs/2312.10997v4)
+
+# Retrieval-Augmented Generation
+
+## [RAG for LLMs: A Survey](https://arxiv.org/abs/2312.10997v4)
 - prosinec 2023
 - [PDF](https://arxiv.org/pdf/2312.10997v4)
 
@@ -262,6 +268,9 @@ So if you're already running some RAG projects, it's time to get your hands on s
 
 
 <br />
+
+
+# Promptovací techniky
 
 ## [Chain-of-Thought Prompting Elicits Reasoning in LLMs](https://proceedings.neurips.cc/paper_files/paper/2022/hash/9d5609613524ecf4f15af0f7b31abca4-Abstract-Conference.html)
 - leden 2023
