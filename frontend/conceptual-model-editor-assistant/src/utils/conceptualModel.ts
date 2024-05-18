@@ -46,7 +46,7 @@ export const doesNodeAlreadyExist = (nodes: Node[], nodeID: string): boolean =>
 export const doesNodeAlreadyExistSetter = (setNodes: SetterOrUpdater<Node[]>, nodeID: string): boolean =>
 {
     // It would be more readable to use `doesNodeAlreadyExist` function
-    // however, this triggers re-rendering any time a node is moved
+    // however, that triggers re-rendering any time a node is moved
 
     let isNodeAlreadyPresent = false
 
