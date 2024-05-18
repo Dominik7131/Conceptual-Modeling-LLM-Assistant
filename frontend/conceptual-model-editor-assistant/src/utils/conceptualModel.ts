@@ -45,8 +45,8 @@ export const doesNodeAlreadyExist = (nodes: Node[], nodeID: string): boolean =>
 
 export const doesNodeAlreadyExistSetter = (setNodes: SetterOrUpdater<Node[]>, nodeID: string): boolean =>
 {
-    // It would be better more readable to use `doesNodeAlreadyExist` function however, when not using nodes the component
-    // using this function does not get updated every time a node is changed
+    // It would be more readable to use `doesNodeAlreadyExist` function
+    // however, this triggers re-rendering any time a node is moved
 
     let isNodeAlreadyPresent = false
 
@@ -67,12 +67,12 @@ export const doesEdgeAlreadyExist = (edges: Edge[], edgeID: string): boolean =>
 {
     for (let i = 0; i < edges.length; i++)
     {
-    const edge: Edge = edges[i]
+        const edge: Edge = edges[i]
 
-    if (edge.id === edgeID)
-    {
-        return true
-    }
+        if (edge.id === edgeID)
+        {
+            return true
+        }
     }
 
     return false
@@ -85,11 +85,11 @@ export const doesEdgeAlreadyExistSetter = (setEdges: SetterOrUpdater<Edge[]>, ed
 
     setEdges((edges: Edge[]) => edges.map(currentEdge => 
     {
-    if (edgeID === currentEdge.id)
-    {
-        isEdgeAlreadyPresent = true
-    }
-    return currentEdge
+        if (edgeID === currentEdge.id)
+        {
+            isEdgeAlreadyPresent = true
+        }
+        return currentEdge
     }))
 
     return isEdgeAlreadyPresent
