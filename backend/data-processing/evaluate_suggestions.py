@@ -13,10 +13,11 @@ domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56c
 
 OUTPUT_DIRECTORY_PATH = os.path.join("backend/out", "evaluated", "actual")
 domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
+
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 DOMAIN_TEXTS_COUNT = 12
 
-IS_CSV = False
+IS_CSV = True
 SEPARATOR = ','
 SCORE_LENGTH = DOMAIN_TEXTS_COUNT + 1
 
@@ -298,15 +299,64 @@ def check_suggestion(user_choice, matched_user_choice, matched_element, evaluate
             print(f"Element still not found: {element}\n- original matches element: {matched_element}\n- source class: {source_class}\n- user choice: {user_choice}\n- matched column: {matched_user_choice}\nfile: {evaluated_path}\n")
 
 
+def compute_precision(user_choice, text_index, matched_class, matched_attribute, matched_association):
+
+    global precision_classes_strict, precision_classes_construct, precision_classes_isa, precision_classes_list, precision_classes_max
+    global precision_attributes_strict, precision_attributes_construct, precision_attributes_isa, precision_attributes_list, precision_attributes_max
+    global precision_associations_strict, precision_associations_construct, precision_associations_isa, precision_associations_list, precision_associations_max
+
+    if user_choice == UserChoice.CLASSES.value:
+        precision_elements_strict, precision_elements_construct, precision_elements_isa, precision_elements_list, precision_elements_max = precision_classes_strict, precision_classes_construct, precision_classes_isa, precision_classes_list, precision_classes_max
+
+    elif user_choice == UserChoice.ATTRIBUTES.value:
+        precision_elements_strict, precision_elements_construct, precision_elements_isa, precision_elements_list, precision_elements_max = precision_attributes_strict, precision_attributes_construct, precision_attributes_isa, precision_attributes_list, precision_attributes_max
+
+    elif user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
+        precision_elements_strict, precision_elements_construct, precision_elements_isa, precision_elements_list, precision_elements_max = precision_associations_strict, precision_associations_construct, precision_associations_isa, precision_associations_list, precision_associations_max
+
+
+    precision_elements_list[-1] += 1
+    precision_elements_list[text_index] += 1
+
+    is_class_list = matched_class.startswith('+') or matched_class.startswith('-')
+    is_attribute_list = matched_attribute.startswith('+') or matched_attribute.startswith('-')
+    is_association_list = matched_association.startswith('+') or matched_association.startswith('-')
+
+    is_class_isa = matched_class.startswith(':')
+    is_attribute_isa = matched_attribute.startswith(':')
+    is_association_isa = matched_association.startswith(':')
+
+    is_strict_class = not is_class_list and not is_class_isa and matched_class != ""
+    is_strict_attribute = not is_attribute_list and not is_attribute_isa and matched_attribute != ""
+    is_strict_association = not is_association_list and not is_association_isa and matched_association != ""
+
+    # is_not_construct = is_strict_attribute or is_strict_association
+    is_not_construct = (user_choice != UserChoice.CLASSES.value and is_strict_class) or (user_choice != UserChoice.ATTRIBUTES.value and is_strict_attribute) or (user_choice != UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value and is_strict_association)
+
+    is_isa = is_not_construct and (is_class_isa or is_attribute_isa or is_association_isa)
+
+    is_strict = (user_choice == UserChoice.CLASSES.value and is_strict_class) or (user_choice == UserChoice.ATTRIBUTES.value and is_strict_attribute) or (user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value and is_strict_association)
+
+    if is_strict:
+        precision_elements_strict[-1] += 1
+        precision_elements_strict[text_index] += 1
+        precision_elements_construct[-1] += 1
+        precision_elements_construct[text_index] += 1
+        precision_elements_isa[-1] += 1
+        precision_elements_isa[text_index] += 1
+
+    elif is_not_construct:
+        precision_elements_construct[-1] += 1
+        precision_elements_construct[text_index] += 1
+        precision_elements_isa[-1] += 1
+        precision_elements_isa[text_index] += 1
+
+    elif is_isa:
+        precision_elements_isa[-1] += 1
+        precision_elements_isa[text_index] += 1
+
 
 def evaluate_classes(evaluated_path, text_index):
-
-    global recall_classes_strict, recall_classes_construct, recall_classes_isa, recall_classes_list
-    global recall_classes_max
-    global precision_classes_strict, precision_classes_construct, precision_classes_isa, precision_classes_list
-    global precision_classes_max
-    global expected_classes, expected_attributes, expected_associations
-
 
     with open(evaluated_path, "r", newline="") as file:
         reader = csv.reader(file, delimiter=SEPARATOR)
@@ -325,27 +375,7 @@ def evaluate_classes(evaluated_path, text_index):
             if matched_class == "" and matched_attribute == "" and matched_association == "":
                 continue
 
-            precision_classes_list[-1] += 1
-            precision_classes_list[text_index] += 1
-
-            is_list_pluses = matched_class.startswith('+') or matched_attribute.startswith('+') or matched_association.startswith('+')
-            is_list_minuses = matched_class.startswith('-') or matched_attribute.startswith('-') or matched_association.startswith('-')
-            is_list = is_list_pluses or is_list_minuses
-
-            is_isa = matched_class.startswith(':') or matched_attribute.startswith(':') or matched_association.startswith(':')
-            is_construct_hit = matched_class != ""
-
-            if not is_list:
-                precision_classes_isa[-1] += 1
-                precision_classes_isa[text_index] += 1
-
-                if not is_isa:
-                    precision_classes_construct[-1] += 1
-                    precision_classes_construct[text_index] += 1
-
-                    if is_construct_hit:
-                        precision_classes_strict[-1] += 1
-                        precision_classes_strict[text_index] += 1
+            compute_precision(UserChoice.CLASSES.value, text_index, matched_class, matched_attribute, matched_association)
 
             # Check if suggested class matches some expected class
             check_suggestion(UserChoice.CLASSES.value, UserChoice.CLASSES.value, matched_class, evaluated_path)
@@ -358,9 +388,6 @@ def evaluate_classes(evaluated_path, text_index):
 
 
 def evaluate_attributes(evaluated_path, text_index):
-
-    global precision_attributes_strict, precision_attributes_construct, precision_attributes_isa, precision_attributes_list
-    global precision_attributes_max
 
     with open(evaluated_path, "r", newline="") as file:
         reader = csv.reader(file, delimiter=SEPARATOR)
@@ -379,31 +406,7 @@ def evaluate_attributes(evaluated_path, text_index):
             if matched_class == "" and matched_attribute == "" and matched_association == "":
                 continue
 
-            precision_attributes_list[-1] += 1
-            precision_attributes_list[text_index] += 1
-
-            is_list_pluses = matched_class.startswith('+') or matched_attribute.startswith('+') or matched_association.startswith('+')
-            is_list_minuses = matched_class.startswith('-') or matched_attribute.startswith('-') or matched_association.startswith('-')
-            is_list = is_list_pluses or is_list_minuses
-
-            is_isa = matched_class.startswith(':') or matched_attribute.startswith(':') or matched_association.startswith(':')
-            is_construct_hit = matched_attribute != ""
-
-            if not is_list:
-                precision_attributes_isa[-1] += 1
-                precision_attributes_isa[text_index] += 1
-
-                if not is_isa:
-                    precision_attributes_construct[-1] += 1
-                    precision_attributes_construct[text_index] += 1
-
-                    if is_construct_hit:
-                        precision_attributes_strict[-1] += 1
-                        precision_attributes_strict[text_index] += 1
-
-
-            if matched_class == "*" or matched_attribute == "*" or matched_association == "*":
-                continue
+            compute_precision(UserChoice.ATTRIBUTES.value, text_index, matched_class, matched_attribute, matched_association)
 
             # Check if suggested attribute matches some expected class
             check_suggestion(UserChoice.ATTRIBUTES.value, UserChoice.CLASSES.value, matched_class, evaluated_path, source_class=source_class)
@@ -416,9 +419,6 @@ def evaluate_attributes(evaluated_path, text_index):
 
 
 def evaluate_associations(evaluated_path, text_index):
-
-    global precision_associations_strict, precision_associations_construct, precision_associations_isa, precision_associations_list
-    global precision_associations_max
 
     with open(evaluated_path, "r", newline="") as file:
         reader = csv.reader(file, delimiter=SEPARATOR)
@@ -437,30 +437,7 @@ def evaluate_associations(evaluated_path, text_index):
             if matched_class == "" and matched_attribute == "" and matched_association == "":
                 continue
 
-            precision_associations_list[-1] += 1
-            precision_associations_list[text_index] += 1
-
-            is_list_pluses = matched_class.startswith('+') or matched_attribute.startswith('+') or matched_association.startswith('+')
-            is_list_minuses = matched_class.startswith('-') or matched_attribute.startswith('-') or matched_association.startswith('-')
-            is_list = is_list_pluses or is_list_minuses
-
-            is_isa = matched_class.startswith(':') or matched_attribute.startswith(':') or matched_association.startswith(':')
-            is_construct_hit = matched_association != ""
-
-            if not is_list:
-                precision_associations_isa[-1] += 1
-                precision_associations_isa[text_index] += 1
-
-                if not is_isa:
-                    precision_associations_construct[-1] += 1
-                    precision_associations_construct[text_index] += 1
-
-                    if is_construct_hit:
-                        precision_associations_strict[-1] += 1
-                        precision_associations_strict[text_index] += 1
-
-            if matched_class == "*" or matched_attribute == "*" or matched_association == "*":
-                continue
+            compute_precision(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, text_index, matched_class, matched_attribute, matched_association)
 
             # Check if suggested association matches some expected class
             check_suggestion(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, UserChoice.CLASSES.value, matched_class, evaluated_path, source_class=inputed_entity)
@@ -488,6 +465,7 @@ def compute_recall_wrapper(text_index):
 
 
 def compute_recall(user_choice, text_index):
+
     global checked_classes_strict, checked_classes_construct, checked_associations_isa, checked_classes_list
     global checked_attributes_strict, checked_attributes_construct, checked_associations_isa, checked_attributes_list
     global checked_associations_strict, checked_associations_construct, checked_associations_isa, checked_associations_list
