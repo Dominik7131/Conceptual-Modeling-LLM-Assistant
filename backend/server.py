@@ -189,4 +189,4 @@ if __name__ == "__main__":
 
     llm_assistant = LLMAssistant()
 
-    app.run(port=5000, threaded=True, host="0.0.0.0")
+    app.run(port=5000, threaded=False, host="0.0.0.0")
