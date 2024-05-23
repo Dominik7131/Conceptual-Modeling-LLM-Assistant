@@ -11,7 +11,7 @@ from text_utility import UserChoice
 INPUT_DIRECTORY_PATH = os.path.join("backend/domain-modeling-benchmark", "evaluation domain models")
 domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
 
-OUTPUT_DIRECTORY_PATH = os.path.join("backend/out", "evaluated", "actual")
+OUTPUT_DIRECTORY_PATH = os.path.join("backend", "out", "evaluated", "actual")
 domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
 
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
@@ -537,27 +537,27 @@ def print_recall(index, is_csv):
         return
 
     print("Recall: strict")
-    print(f"- classes: {recall_classes_strict[index]}/{recall_classes_max[index]} - " + "{:.2f}".format(recall_classes_strict_percentage) + "%")
-    print(f"- attributes: {recall_attributes_strict[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_strict_percentage) + "%")
-    print(f"- associations: {recall_associations_strict[index]}/{recall_associations_max[index]} - " + "{:.2f}".format(recall_associations_strict_percentage) + "%")
+    print(f"- classes: {recall_classes_strict[index]}/{recall_classes_max[index]} - " + "{:.2f}".format(recall_classes_strict_percentage))
+    print(f"- attributes: {recall_attributes_strict[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_strict_percentage))
+    print(f"- associations: {recall_associations_strict[index]}/{recall_associations_max[index]} - " + "{:.2f}".format(recall_associations_strict_percentage))
     print()
 
     print("Recall: construct")
-    print(f"- classes: {recall_classes_construct[index]}/{recall_classes_max[index]} - " + "{:.2f}".format(recall_classes_construct_percentage) + "%")
-    print(f"- attributes: {recall_attributes_construct[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_construct_percentage) + "%")
-    print(f"- associations: {recall_associations_construct[index]}/{recall_associations_max[index]} - " + "{:.2f}".format(recall_associations_construct_percentage) + "%")
+    print(f"- classes: {recall_classes_construct[index]}/{recall_classes_max[index]} - " + "{:.2f}".format(recall_classes_construct_percentage))
+    print(f"- attributes: {recall_attributes_construct[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_construct_percentage))
+    print(f"- associations: {recall_associations_construct[index]}/{recall_associations_max[index]} - " + "{:.2f}".format(recall_associations_construct_percentage))
     print()
 
     print("Recall: isa")
-    print(f"- classes: {recall_classes_isa[index]}/{recall_classes_max[index]} - " + "{:.2f}".format(recall_classes_isa_percentage) + "%")
-    print(f"- attributes: {recall_attributes_isa[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_isa_percentage) + "%")
-    print(f"- associations: {recall_associations_isa[index]}/{recall_associations_max[index]} - " + "{:.2f}".format(recall_associations_isa_percentage) + "%")
+    print(f"- classes: {recall_classes_isa[index]}/{recall_classes_max[index]} - " + "{:.2f}".format(recall_classes_isa_percentage))
+    print(f"- attributes: {recall_attributes_isa[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_isa_percentage))
+    print(f"- associations: {recall_associations_isa[index]}/{recall_associations_max[index]} - " + "{:.2f}".format(recall_associations_isa_percentage))
     print()
 
     print("Recall: list")
-    print(f"- classes: {recall_classes_list[index]}/{recall_classes_max[index]} - " + "{:.2f}".format(recall_classes_list_percentage) + "%")
-    print(f"- attributes: {recall_attributes_list[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_list_percentage) + "%")
-    print(f"- associations: {recall_associations_list[index]}/{recall_associations_max[index]} - " + "{:.2f}".format(recall_associations_list_percentage) + "%\n\n")
+    print(f"- classes: {recall_classes_list[index]}/{recall_classes_max[index]} - " + "{:.2f}".format(recall_classes_list_percentage))
+    print(f"- attributes: {recall_attributes_list[index]}/{recall_attributes_max[index]} - " + "{:.2f}".format(recall_attributes_list_percentage))
+    print(f"- associations: {recall_associations_list[index]}/{recall_associations_max[index]} - " + "{:.2f}".format(recall_associations_list_percentage) + "\n\n")
 
 
 def print_precision(index, is_csv):
@@ -585,27 +585,27 @@ def print_precision(index, is_csv):
         return
 
     print("Precision: strict")
-    print(f"- classes: {precision_classes_strict[index]}/{precision_classes_max[index]} - " + "{:.2f}".format(precision_classes_strict_percentage) + "%")
-    print(f"- attributes: {precision_attributes_strict[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_strict_percentage) + "%")
-    print(f"- associations: {precision_associations_strict[index]}/{precision_associations_max[index]} - " + "{:.2f}".format(precision_associations_strict_percentage) + "%")
+    print(f"- classes: {precision_classes_strict[index]}/{precision_classes_max[index]} - " + "{:.2f}".format(precision_classes_strict_percentage) )
+    print(f"- attributes: {precision_attributes_strict[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_strict_percentage) )
+    print(f"- associations: {precision_associations_strict[index]}/{precision_associations_max[index]} - " + "{:.2f}".format(precision_associations_strict_percentage) )
     print()
 
     print("Precision: construct")
-    print(f"- classes: {precision_classes_construct[index]}/{precision_classes_max[index]} - " + "{:.2f}".format(precision_classes_construct_percentage) + "%")
-    print(f"- attributes: {precision_attributes_construct[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_construct_percentage) + "%")
-    print(f"- associations: {precision_associations_construct[index]}/{precision_associations_max[index]} - " + "{:.2f}".format(precision_associations_construct_percentage) + "%")
+    print(f"- classes: {precision_classes_construct[index]}/{precision_classes_max[index]} - " + "{:.2f}".format(precision_classes_construct_percentage) )
+    print(f"- attributes: {precision_attributes_construct[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_construct_percentage) )
+    print(f"- associations: {precision_associations_construct[index]}/{precision_associations_max[index]} - " + "{:.2f}".format(precision_associations_construct_percentage) )
     print()
 
     print("Precision: isa")
-    print(f"- classes: {precision_classes_isa[index]}/{precision_classes_max[index]} - " + "{:.2f}".format(precision_classes_isa_percentage) + "%")
-    print(f"- attributes: {precision_attributes_isa[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_isa_percentage) + "%")
-    print(f"- associations: {precision_associations_isa[index]}/{precision_associations_max[index]} - " + "{:.2f}".format(precision_associations_isa_percentage) + "%")
+    print(f"- classes: {precision_classes_isa[index]}/{precision_classes_max[index]} - " + "{:.2f}".format(precision_classes_isa_percentage) )
+    print(f"- attributes: {precision_attributes_isa[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_isa_percentage) )
+    print(f"- associations: {precision_associations_isa[index]}/{precision_associations_max[index]} - " + "{:.2f}".format(precision_associations_isa_percentage) )
     print()
 
     print("Precision: list")
-    print(f"- classes: {precision_classes_list[index]}/{precision_classes_max[index]} - " + "{:.2f}".format(precision_classes_list_percentage) + "%")
-    print(f"- attributes: {precision_attributes_list[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_list_percentage) + "%")
-    print(f"- associations: {precision_associations_list[index]}/{precision_associations_max[index]} - " + "{:.2f}".format(precision_associations_list_percentage) + "%\n\n")
+    print(f"- classes: {precision_classes_list[index]}/{precision_classes_max[index]} - " + "{:.2f}".format(precision_classes_list_percentage) )
+    print(f"- attributes: {precision_attributes_list[index]}/{precision_attributes_max[index]} - " + "{:.2f}".format(precision_attributes_list_percentage) )
+    print(f"- associations: {precision_associations_list[index]}/{precision_associations_max[index]} - " + "{:.2f}".format(precision_associations_list_percentage) + "\n\n")
 
 
 def print_evaluation(is_csv):
