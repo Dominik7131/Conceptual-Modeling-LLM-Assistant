@@ -105,7 +105,7 @@ export const createErrorMessage = (item: Item, setErrorMessage: SetterOrUpdater<
     const sourceClassName = createNameFromIRI(association[Field.SOURCE_CLASS])
     const targetClassName = createNameFromIRI(association[Field.TARGET_CLASS])
 
-    message = `Association in between source class "${sourceClassName}" and target class "${targetClassName}" already exists`
+    message = `Association "${item[Field.NAME]}" in between source class "${sourceClassName}" and target class "${targetClassName}" already exists`
   }
   else
   {

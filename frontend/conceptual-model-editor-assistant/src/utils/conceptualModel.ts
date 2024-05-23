@@ -95,17 +95,22 @@ export const doesEdgeAlreadyExistSetter = (setEdges: SetterOrUpdater<Edge[]>, ed
     return isEdgeAlreadyPresent
 }
 
-export const doesEdgeBetweenNodesAlreadyExistSetter = (setEdges: SetterOrUpdater<Edge[]>, sourceNodeID: string, targetNodeID: string): boolean =>
+export const doesSameEdgeBetweenNodesAlreadyExistSetter = (setEdges: SetterOrUpdater<Edge[]>, newEdgeIRI: string, associationType: string, sourceNodeID: string, targetNodeID: string): boolean =>
 {
     let isEdgeAlreadyPresent = false
 
     setEdges((edges: Edge[]) => edges.map(currentEdge => 
     {
-    if (currentEdge.source === sourceNodeID && currentEdge.target === targetNodeID)
-    {
-        isEdgeAlreadyPresent = true
-    }
-    return currentEdge
+        const isEdgeBetweenTheSameNodes = currentEdge.source === sourceNodeID && currentEdge.target === targetNodeID
+        const isSameType = associationType === currentEdge[Field.TYPE]
+        const edgeData: EdgeData = currentEdge.data
+
+        if (isEdgeBetweenTheSameNodes && isSameType && edgeData.association[Field.IRI] === newEdgeIRI)
+        {
+            isEdgeAlreadyPresent = true
+        }
+
+        return currentEdge
     }))
 
     return isEdgeAlreadyPresent
@@ -212,9 +217,8 @@ const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>
 const onAddAssociation = (association : Association, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): boolean =>
 {
     // Returns "true" if the operation was successfull otherwise "false"
-    console.log("Adding: ", association)
 
-    if (doesEdgeBetweenNodesAlreadyExistSetter(setEdges, association.source, association.target))
+    if (doesSameEdgeBetweenNodesAlreadyExistSetter(setEdges, association[Field.IRI], association[Field.TYPE], association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS]))
     {
         return false
     }
