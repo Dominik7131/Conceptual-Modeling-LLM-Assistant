@@ -13,7 +13,6 @@ const ControlButtons: React.FC = () =>
     const setNodes = useSetRecoilState(nodesState)
     const setEdges = useSetRecoilState(edgesState)
 
-    const [changedItemName, setChangedItemName] = useState("")
     const [changedDataType, setChangedDataType] = useState("")
     
     const [item, setItem] = useRecoilState(selectedSuggestedItemState)
@@ -62,6 +61,43 @@ const ControlButtons: React.FC = () =>
     }
 
 
+    const changeAttributeToAssociation = (attribute: Attribute): Association =>
+    {
+        const oldAttribute = item as Attribute
+        
+        const association : Association = {
+            [Field.IRI]: oldAttribute[Field.IRI], [Field.TYPE]: ItemType.ASSOCIATION, [Field.NAME]: oldAttribute[Field.NAME],
+            [Field.DESCRIPTION]: oldAttribute[Field.DESCRIPTION], [Field.ORIGINAL_TEXT]: oldAttribute[Field.ORIGINAL_TEXT],
+            [Field.ORIGINAL_TEXT_INDEXES]: oldAttribute[Field.ORIGINAL_TEXT_INDEXES],
+            [Field.SOURCE_CLASS]: oldAttribute[Field.SOURCE_CLASS], [Field.TARGET_CLASS]: oldAttribute[Field.IRI],
+            [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""
+        }
+
+        setChangedDataType(oldAttribute[Field.DATA_TYPE])
+        setItem(association)
+        setEditedSuggestedItem(association)
+
+        return association
+    }
+
+
+    const changeAssociationToAttribute = (association: Association): Attribute =>
+    {
+        const attributeName = createNameFromIRI(association[Field.TARGET_CLASS])
+
+        const attribute : Attribute = {
+            [Field.IRI]: association[Field.TARGET_CLASS], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: attributeName, [Field.DESCRIPTION]: association[Field.DESCRIPTION],
+            [Field.DATA_TYPE]: changedDataType, [Field.ORIGINAL_TEXT]: association[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: association[Field.ORIGINAL_TEXT_INDEXES],
+            [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_CLASS]: association[Field.SOURCE_CLASS]
+        }
+
+        setItem(attribute)
+        setEditedSuggestedItem(attribute)
+
+        return attribute
+    }
+
+
     const onChangeItemType = (item: Item): void =>
     {
         // If the item is attribute then transform it into association
@@ -71,36 +107,11 @@ const ControlButtons: React.FC = () =>
     
         if (item.type === ItemType.ATTRIBUTE)
         {
-            const oldAttribute = item as Attribute
-        
-            const association : Association = {
-                [Field.IRI]: oldAttribute[Field.IRI], [Field.TYPE]: ItemType.ASSOCIATION, [Field.NAME]: changedItemName,
-                [Field.DESCRIPTION]: oldAttribute[Field.DESCRIPTION], [Field.ORIGINAL_TEXT]: oldAttribute[Field.ORIGINAL_TEXT],
-                [Field.ORIGINAL_TEXT_INDEXES]: oldAttribute[Field.ORIGINAL_TEXT_INDEXES],
-                [Field.SOURCE_CLASS]: oldAttribute[Field.SOURCE_CLASS], [Field.TARGET_CLASS]: oldAttribute[Field.IRI],
-                [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: ""
-            }
-
-            setChangedItemName("")
-            setChangedDataType(oldAttribute[Field.DATA_TYPE])
-            setItem(association)
-            setEditedSuggestedItem(association)
+            changeAttributeToAssociation(item as Attribute)
         }
         else
         {
-            const oldAssociation = item as Association
-            setChangedItemName(oldAssociation[Field.NAME])
-
-            const attributeName = createNameFromIRI(oldAssociation[Field.TARGET_CLASS])
-
-            const attribute : Attribute = {
-                [Field.IRI]: oldAssociation[Field.TARGET_CLASS], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.NAME]: attributeName, [Field.DESCRIPTION]: oldAssociation[Field.DESCRIPTION],
-                [Field.DATA_TYPE]: changedDataType, [Field.ORIGINAL_TEXT]: oldAssociation[Field.ORIGINAL_TEXT], [Field.ORIGINAL_TEXT_INDEXES]: oldAssociation[Field.ORIGINAL_TEXT_INDEXES],
-                [Field.SOURCE_CARDINALITY]: "", [Field.SOURCE_CLASS]: oldAssociation[Field.SOURCE_CLASS]
-            }
-
-            setItem(attribute)
-            setEditedSuggestedItem(attribute)
+            changeAssociationToAttribute(item as Association)
         }
     }
 
