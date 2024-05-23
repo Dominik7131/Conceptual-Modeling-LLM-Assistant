@@ -4,13 +4,14 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { editDialogErrorMsgState, editedSuggestedItemState, isShowEditDialogState, selectedSuggestedItemState } from '../../atoms';
-import { Association, Field, ItemFieldUIName, ItemType } from '../../interfaces';
+import { Association, Attribute, Field, ItemFieldUIName, ItemType } from '../../interfaces';
 import ClassListSelector from './ClassListSelector';
 import Title from './Title';
 import ControlButtons from './ControlButtons';
 import ErrorMessage from './ErrorMessage';
 import EditField from './EditField';
 import { onClose } from '../../utils/editItem';
+import DataTypeSelector from './DataTypeSelector';
 
 
 const DialogEditItem: React.FC = () =>
@@ -22,6 +23,7 @@ const DialogEditItem: React.FC = () =>
     const item = useRecoilValue(selectedSuggestedItemState)
     const editedItem = useRecoilValue(editedSuggestedItemState)
 
+    const attribute = editedItem as Attribute
     const association = editedItem as Association
 
     const isAttribute = item.type === ItemType.ATTRIBUTE
@@ -45,7 +47,8 @@ const DialogEditItem: React.FC = () =>
                 { 
                     isAttribute &&
                     <>
-                        <EditField label={ItemFieldUIName.DATA_TYPE} field={Field.DATA_TYPE} />
+                        {/* <EditField label={ItemFieldUIName.DATA_TYPE} field={Field.DATA_TYPE} /> */}
+                        <DataTypeSelector attribute={attribute}/>
                         <EditField label={ItemFieldUIName.CARDINALITY} field={Field.SOURCE_CARDINALITY} />
                     </>
                 }

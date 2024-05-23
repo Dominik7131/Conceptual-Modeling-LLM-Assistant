@@ -1,8 +1,8 @@
 import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
-import { editedSuggestedItemState, nodesState, selectedSuggestedItemState } from "../../atoms"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { editedSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../../atoms"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { Node } from 'reactflow';
 import { Association, Field, ItemFieldUIName } from "../../interfaces"
 import Select, { SelectChangeEvent } from '@mui/material/Select';
@@ -39,15 +39,15 @@ const ClassListSelector: React.FC<Props> = ({ fieldName, association }) =>
     // Documentation: https://mui.com/material-ui/react-select/#props
     return (
         <FormControl fullWidth variant="standard">
-                <InputLabel>{ fieldUIName }</InputLabel>
-                <Select
-                    value={value.toString()}
-                    onChange={handleChange}
-                >
-                    { !doesNodeAlreadyExist(nodes, iri) && <MenuItem value={iri}> {name} </MenuItem> }
-                    
-                    { nodes.map((node: Node) => <MenuItem key={node.id} value={node.id}> {node.data.class[Field.NAME]} </MenuItem>) }
-                </Select>
+            <InputLabel>{ fieldUIName }</InputLabel>
+            <Select
+                value={ value.toString() }
+                onChange={ handleChange }
+            >
+                { !doesNodeAlreadyExist(nodes, iri) && <MenuItem value={iri}> {name} </MenuItem> }
+                
+                { nodes.map((node: Node) => <MenuItem key={node.id} value={node.id}> {node.data.class[Field.NAME]} </MenuItem>) }
+            </Select>
         </FormControl>
     )
 }
