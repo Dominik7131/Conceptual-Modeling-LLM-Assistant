@@ -85,7 +85,7 @@ const DialogCreateEdge: React.FC = () =>
                   sx={{textTransform: "none"}}
                   onClick={() => { handleManuallyAddNewAssociation(true) } }
                   >
-                    Create is-a association manually
+                    Create generalization manually
                 </Button>
 
                 <Button

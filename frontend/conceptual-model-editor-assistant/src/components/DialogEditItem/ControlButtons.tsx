@@ -36,7 +36,9 @@ const ControlButtons: React.FC = () =>
 
     const handleAddItem = (item: Item): void =>
     {
-        if (item[Field.NAME] === "")
+        // Let only generalizations to have an empty name
+        const isGeneralization = item[Field.TYPE] === ItemType.GENERALIZATION
+        if (item[Field.NAME] === "" && !isGeneralization)
         {
             const message = "Name cannot be empty"
             setErrorMessage(_ => message)
