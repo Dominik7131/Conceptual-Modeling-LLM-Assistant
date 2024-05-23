@@ -6,7 +6,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { Node } from 'reactflow';
 import { Association, Attribute, Field, ItemFieldUIName, ItemType } from "../../interfaces"
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { onClearRegeneratedItem, onItemEdit } from "../../utils/editItem"
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import IconButton from '@mui/material/IconButton';
@@ -50,8 +50,14 @@ const DataTypeSelector: React.FC<Props> = ({ attribute }) =>
 
         onItemEdit(Field.DATA_TYPE, event.target.value, setEditedItem)
     }
-    
-    // Documentation: https://mui.com/material-ui/react-select/#props
+
+    // Clear the generated suggestion when the component is unmounted
+    useEffect(() =>
+    {
+        return () => { onClearRegeneratedItem(Field.DATA_TYPE, setRegeneratedItem) }
+    }, [])
+
+
     return (
         <Stack direction="row">
             <FormControl fullWidth variant="standard">

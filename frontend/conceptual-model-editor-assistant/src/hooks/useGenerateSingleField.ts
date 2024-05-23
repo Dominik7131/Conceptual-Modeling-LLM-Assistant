@@ -119,7 +119,6 @@ const useGenerateSingleField = () =>
         if (field === Field.ORIGINAL_TEXT)
         {
             const originalTextIndexes = parsedData[Field.ORIGINAL_TEXT_INDEXES]
-            console.log(originalTextIndexes)
             setRegeneratedOriginalTextIndexes(originalTextIndexes)
         }
     }

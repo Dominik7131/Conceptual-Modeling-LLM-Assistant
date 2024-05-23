@@ -6,6 +6,7 @@ import { createNameFromIRI, onAddItem, onRemove } from '../../utils/conceptualMo
 import { createErrorMessage } from "../../utils/utility";
 import { onClose, onSave } from "../../utils/editItem";
 import { useState } from "react";
+import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField";
 
 
 const ControlButtons: React.FC = () =>
@@ -26,6 +27,10 @@ const ControlButtons: React.FC = () =>
     const isSuggestedItem = useRecoilValue(isSuggestedItemState)
     const setErrorMessage = useSetRecoilState(editDialogErrorMsgState)
 
+    const regeneratedItem = useRecoilValue(regeneratedItemState)
+
+    const { saveSingleFieldSuggestion } = useConfirmRegeneratedField()
+
 
     const isAttribute = item.type === ItemType.ATTRIBUTE
     const isAssociation = item.type === ItemType.ASSOCIATION
@@ -45,7 +50,9 @@ const ControlButtons: React.FC = () =>
             return
         }
 
-        const isOperationSuccessful = onAddItem(item, setNodes, setEdges)
+        const newItem = confirmEverything()
+
+        const isOperationSuccessful = onAddItem(newItem, setNodes, setEdges)
 
         if (isOperationSuccessful)
         {
@@ -117,6 +124,37 @@ const ControlButtons: React.FC = () =>
         }
     }
 
+    const confirmEverything = (): Item =>
+    {
+        const keys = Object.keys(regeneratedItem)
+ 
+        let newItem: Item = { ...editedItem }
+
+        keys.forEach((key) =>
+        {
+            const isFieldChangable = key !== Field.TYPE && key !== Field.ORIGINAL_TEXT_INDEXES
+
+            if (isFieldChangable)
+            {
+                if (regeneratedItem[key as keyof Item] !== "")
+                {
+                    const newText = regeneratedItem[key as keyof Item] as string
+                    const sourceClass = newItem[Field.TYPE] === ItemType.CLASS ? newItem[Field.NAME] : (newItem as Attribute)[Field.SOURCE_CLASS]
+                    saveSingleFieldSuggestion(key, newText, newItem[Field.TYPE], sourceClass)
+                    newItem = { ...newItem, [key]: newText}
+                }
+            }
+        })
+
+        return newItem
+    }
+
+    const handleSave = () =>
+    {
+        const newItem = confirmEverything()
+        onSave(newItem, item, setIsOpened, setErrorMessage, setNodes, setEdges)
+    }
+
 
     return (
         <>
@@ -166,7 +204,7 @@ const ControlButtons: React.FC = () =>
                     variant="contained"
                     color="success"
                     sx={{ textTransform: "none" }}
-                    onClick={() => { onSave(editedItem, item, setIsOpened, setErrorMessage, setNodes, setEdges) }}>
+                    onClick={() => { handleSave() }}>
                     Save
                 </Button>
             }
@@ -174,7 +212,7 @@ const ControlButtons: React.FC = () =>
             <Button
                 variant="contained"
                 sx={{ textTransform: "none" }}
-                onClick={() => handleClose() }>
+                onClick={ () => handleClose() }>
                 Cancel
             </Button>
         </>

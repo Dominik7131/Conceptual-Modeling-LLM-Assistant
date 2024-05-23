@@ -18,7 +18,7 @@ const useConfirmRegeneratedField = () =>
     
     const saveSingleFieldSuggestion = (fieldName: string, fieldText: string, itemType: ItemType, sourceClass: string): void =>
     {
-        // Save generated single field to backend
+        // Save generated single field to the backend
     
         const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SINGLE_FIELD, domainDescriptionSnapshot)
         const userChoice = itemTypeToUserChoice(itemType)
@@ -71,7 +71,7 @@ const useConfirmRegeneratedField = () =>
         onClearRegeneratedItem(field, setRegeneratedItem)
     }
 
-    return { onConfirmRegeneratedText }
+    return { onConfirmRegeneratedText, saveSingleFieldSuggestion }
 }
 
 export default useConfirmRegeneratedField
