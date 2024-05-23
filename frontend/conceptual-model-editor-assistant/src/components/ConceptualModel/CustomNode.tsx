@@ -104,19 +104,19 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
     return (
         <Box sx={{ minWidth: "250px", textAlign: "center", backgroundColor: "white", border: (selected || isClassHovered) ? borderSelected : borderNonSelected}}>
 
-            <Handle type="source" position={Position.Top} style={{ top: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
+            <Handle id="source-top" type="source" position={Position.Top} style={{ top: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
                 { isClassHovered && <Typography fontSize="13px" color={selected ? PRIMARY_COLOR : "black"}> s </Typography> }
             </Handle>
 
-            <Handle type="source" position={Position.Bottom} style={{ bottom: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
+            <Handle id="source-bottom" type="source" position={Position.Bottom} style={{ bottom: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
                 { isClassHovered && <Typography fontSize="13px" color={selected ? PRIMARY_COLOR : "black"}> s </Typography> }
             </Handle>
 
-            <Handle type="target" position={Position.Left} style={{ left: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
+            <Handle id="target-left" type="target" position={Position.Left} style={{ left: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
                 { isClassHovered && <Typography fontSize="13px" color={selected ? PRIMARY_COLOR : "black"} sx={{ marginY: "3px"}}> t </Typography> }
             </Handle>
 
-            <Handle type="target" position={Position.Right} style={{ right: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
+            <Handle id="target-right" type="target" position={Position.Right} style={{ right: `-${handleOffset}px`, background: selected ? PRIMARY_COLOR : "black" }}>
                 { isClassHovered && <Typography fontSize="13px" color={selected ? PRIMARY_COLOR : "black"} sx={{ marginY: "3px"}}> t </Typography> }
             </Handle>
 

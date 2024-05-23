@@ -8,6 +8,7 @@ import { clipString, } from '../../utils/utility';
 import { useSetRecoilState } from 'recoil';
 import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../../atoms';
 import { calculateNewEdgeSourceAndTargetPosition } from '../../utils/autoEdgeReconnect';
+import { getLoopPath } from '../../utils/conceptualModel';
 
 
 // Inspiration: https://reactflow.dev/learn/customization/custom-edges
@@ -39,17 +40,24 @@ export default function CustomEdge ({ id, source, target, style, sourceX, source
 
   let { sx, sy, tx, ty, sourcePos, targetPos } = calculateNewEdgeSourceAndTargetPosition(sourceNode, targetNode)
 
-  const [edgePath, labelX, labelY] = getSimpleBezierPath({ sourceX: sx, sourceY: sy, targetX: tx, targetY: ty, sourcePosition: sourcePos, targetPosition: targetPos })
+  let [edgePath, labelX, labelY] = getSimpleBezierPath({ sourceX: sx, sourceY: sy, targetX: tx, targetY: ty, sourcePosition: sourcePos, targetPosition: targetPos })
+
 
   const edgeData: EdgeData = data as EdgeData
   const association: Association = edgeData.association
+
+  if (source === target)
+  {
+    [edgePath, labelX, labelY] = getLoopPath(sourceNode, targetNode, association[Field.TYPE] === ItemType.GENERALIZATION)
+  }
+  
 
 
   const borderNonSelected = "1px solid black"
   const borderSelected = `1px solid ${PRIMARY_COLOR}`
 
 
-  const handleEditRelationship = (relationship: Association) =>
+  const handleEditAssociation = (relationship: Association) =>
   {
     setIsItemInConceptualModel(true)
     setIsSuggestedItem(false)
@@ -88,7 +96,7 @@ export default function CustomEdge ({ id, source, target, style, sourceX, source
 
                 <Typography
                   color={selected ? PRIMARY_COLOR : "black"}
-                  onClick={() => handleEditRelationship(association)}
+                  onClick={() => handleEditAssociation(association)}
                   sx={{ display: isHovered ? "inline" : "none",  position: "absolute", right: 3, top: 3 }}
                 >
                   <EditIcon sx={{ width: "20px", height: "20px" }}/> 
@@ -96,5 +104,5 @@ export default function CustomEdge ({ id, source, target, style, sourceX, source
         </Button>
       </EdgeLabelRenderer>
     </>
-  );
+  )
 }

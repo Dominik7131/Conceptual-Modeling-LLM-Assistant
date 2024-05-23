@@ -1,4 +1,4 @@
-import { Node, Edge, MarkerType, EdgeMarker } from 'reactflow';
+import { Node, Edge, MarkerType, EdgeMarker, internalsSymbol } from 'reactflow';
 import { Association, Attribute, Class, EdgeData, Field, Item, ItemType, NodeData } from '../interfaces';
 import { SetterOrUpdater } from 'recoil';
 import { blankClass } from './utility';
@@ -102,7 +102,7 @@ export const doesSameEdgeBetweenNodesAlreadyExistSetter = (setEdges: SetterOrUpd
     setEdges((edges: Edge[]) => edges.map(currentEdge => 
     {
         const isEdgeBetweenTheSameNodes = currentEdge.source === sourceNodeID && currentEdge.target === targetNodeID
-        const isSameType = associationType === currentEdge[Field.TYPE]
+        const isSameType = associationType === currentEdge.data.association[Field.TYPE]
         const edgeData: EdgeData = currentEdge.data
 
         if (isEdgeBetweenTheSameNodes && isSameType && edgeData.association[Field.IRI] === newEdgeIRI)
@@ -217,6 +217,7 @@ const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>
 const onAddAssociation = (association : Association, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): boolean =>
 {
     // Returns "true" if the operation was successfull otherwise "false"
+    console.log("on add association: ", association)
 
     if (doesSameEdgeBetweenNodesAlreadyExistSetter(setEdges, association[Field.IRI], association[Field.TYPE], association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS]))
     {
@@ -567,4 +568,28 @@ export const invalidateAllOriginalTextIndexesEdges = (setEdges: SetterOrUpdater<
 
         return currentEdge
     }))
+}
+
+
+export function getLoopPath(sourceNode: Node, targetNode: Node, isGeneralization: boolean)
+{
+    const sourceHandleID = isGeneralization ? "source-bottom" : "source-top"
+    const targetHandleID = "target-right"
+
+    const handleSource = sourceNode[internalsSymbol]?.handleBounds?.source?.find((h) => h.id === sourceHandleID)
+    const handleTarget = sourceNode[internalsSymbol]?.handleBounds?.target?.find((h) => h.id === targetHandleID)
+
+    const offsetX = -60
+    const offsetY = isGeneralization ? 85 : -55
+
+    const newX = sourceNode.position.x + sourceNode.width! + offsetX
+    const newY = sourceNode.position.y + offsetY
+
+    const position = { x: newX, y: newY }
+
+    const path = `M ${sourceNode.position.x + handleSource!.x + 5},${sourceNode.position.y + handleSource!.y + 5} A 1 1 90 0 ${isGeneralization ? 0 : 1} ${
+        targetNode.position.x + handleTarget!.x
+    } ${targetNode.position.y + handleTarget!.y}`
+
+    return [path, position.x, position.y] as const
 }
