@@ -120,8 +120,8 @@ export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targ
 {
   if (userChoice === UserChoice.CLASSES)
   {
-    const message = ""
-    setTitle((title: ItemsMessage) => { return { ...title, entities: message} })
+    const message = "All suggested classes: "
+    setTitle((title: ItemsMessage) => { return { ...title, classes: message} })
   }
   else if (userChoice === UserChoice.ATTRIBUTES)
   {
