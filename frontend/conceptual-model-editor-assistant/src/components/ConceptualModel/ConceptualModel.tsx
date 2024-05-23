@@ -89,7 +89,7 @@ const ConceptualModel: React.FC = () =>
                 onConnect={onConnect}
                 nodeTypes={nodeTypes}
                 edgeTypes={edgeTypes}
-                minZoom={0.05}
+                minZoom={0.04}
                 >
                 <MiniMap nodeStrokeWidth={3} zoomable pannable />
                 <Controls />
