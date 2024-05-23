@@ -4,7 +4,8 @@ import os
 import sys
 import requests
 sys.path.append('.')
-from text_utility import Field, TextUtility
+sys.path.append('utils/')
+from text_utility import Field, TextUtility, UserChoice
 
 
 DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
@@ -24,7 +25,7 @@ BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
 
 def get_items(model_file_path):
     
-    entities_out = []
+    classes_out = []
     attributes_out = {}
     relationships_out = {}
     generalizations_out = {}
@@ -49,13 +50,13 @@ def get_items(model_file_path):
 
 
     for entity in entities:
-        entities_out.append(entity["name"])
+        classes_out.append(entity["name"])
 
     for attribute in attributes:
         attributes_out[attribute["name"]] = attribute["domain"]
 
     
-    return entities_out, attributes_out, relationships_out, generalizations_out
+    return classes_out, attributes_out, relationships_out, generalizations_out
 
 
 def get_text_from_indexes(indexes, text):
@@ -273,10 +274,10 @@ def main():
             one_known_entity_output_file_name = f"relevant-texts-one-known_entity-0{i + 1}.json"
             two_known_entities_output_file_name = f"relevant-texts-two-known-entities-0{i + 1}.json"
 
-            entities_suggestions_output_file_name = f"entities-expected-suggestions-0{i + 1}.json"
+            entities_suggestions_output_file_name = f"classes-expected-suggestions-0{i + 1}.json"
             attributes_suggestions_output_file_name = f"attributes-expected-suggestions-0{i + 1}.json"
-            relationships_suggestions_output_file_name = f"relationships-expected-suggestions-0{i + 1}.json"
-            relationships2_suggestions_output_file_name = f"relationships2-expected-suggestions-0{i + 1}.json"
+            relationships_suggestions_output_file_name = f"associations1-expected-suggestions-0{i + 1}.json"
+            relationships2_suggestions_output_file_name = f"associations2-expected-suggestions-0{i + 1}.json"
             # generalizations2_expected_suggestions_output_file_name = f"generalizations2-expected-suggestions-0{i + 1}.json"
 
             file_path = os.path.join(DIRECTORY_PATH, domain_model, file_name)
@@ -312,10 +313,10 @@ def main():
             relevant_text_test_cases_1 = { "test_cases": relevant_texts1 }
             relevant_text_test_cases_2 = { "test_cases": relevant_texts2 }
 
-            entities_expected_suggestions = { "entities": entities_suggestions }
-            attributes_expected_suggestions = { "attributes": attributes_suggestions }
-            relationships1_expected_suggestions = { "relationships": relationships_suggestions }
-            relationships2_expected_suggestions = { "relationships2": relationships2_suggestions }
+            entities_expected_suggestions = { UserChoice.CLASSES.value: entities_suggestions }
+            attributes_expected_suggestions = { UserChoice.ATTRIBUTES.value: attributes_suggestions }
+            relationships1_expected_suggestions = { UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value: relationships_suggestions }
+            relationships2_expected_suggestions = { UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value: relationships2_suggestions }
             # generalizations2_expected_suggestions = { "generalizations2": generalizations2_suggestions }
 
             write_json_to_file(one_known_entity_output_file_path, relevant_text_test_cases_1)

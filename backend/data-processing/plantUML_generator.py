@@ -1,7 +1,9 @@
 import os
 import csv
+import sys
+sys.path.append('utils/')
 from text_utility import UserChoice
-  
+
 
 DIRECTORY_PATH = os.path.join("out", "actual")
 domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
@@ -65,7 +67,7 @@ def main():
     for index, model_name in enumerate(domain_models_name):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            entities_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ENTITIES.value}-actual-0{i + 1}.csv")
+            entities_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
             attributes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
             relationships_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
 

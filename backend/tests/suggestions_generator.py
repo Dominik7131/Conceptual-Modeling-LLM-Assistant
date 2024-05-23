@@ -8,8 +8,8 @@ sys.path.append('.')
 sys.path.append('utils/')
 sys.path.append('text-filtering/syntactic')
 sys.path.append('text-filtering/semantic')
-from LLM_assistant import LLMAssistant, ITEMS_COUNT
-from text_utility import Field, FieldUI, TextUtility, UserChoice
+from LLM_assistant import LLMAssistant
+from text_utility import Field, FieldUI, UserChoice
 
 
 DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
@@ -27,11 +27,11 @@ OUTPUT_ACTUAL_DIRECTORY = os.path.join(OUTPUT_DIRECTORY, "actual")
 
 # In prompt for entities output examples
 # We use this list to check if the LLM is leaking the example into the actual output
-ENTITIES_IN_EXAMPLE = ["employee", "department", "manager"]
+CLASSES_IN_EXAMPLE = ["employee", "department", "manager"]
 
 # Settings
 CSV_SEPARATOR = ','
-CSV_HEADER = f"Matches class{CSV_SEPARATOR}Matches attribute{CSV_SEPARATOR}Matches relationship"
+CSV_HEADER = f"Matches class{CSV_SEPARATOR}Matches attribute{CSV_SEPARATOR}Matches association"
 
 
 def create_entities_expected_output(test_cases):
@@ -109,7 +109,7 @@ def generate_expected_output(test_file_path, output_file_path, user_choice):
 
     test_cases = test_data[user_choice]
 
-    if user_choice == UserChoice.ENTITIES.value:
+    if user_choice == UserChoice.CLASSES.value:
         expected_output = create_entities_expected_output(test_cases)
 
     elif user_choice == UserChoice.ATTRIBUTES.value:
@@ -156,7 +156,7 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
     matched_entities = 0
     total_expected_entities = len(test_cases)
 
-    iterator = llm_assistant.suggest(source_entity="", target_entity="", user_choice=user_choice, domain_description=domain_description)
+    iterator = llm_assistant.suggest_items(source_class="", target_class="", user_choice=user_choice, domain_description=domain_description)
     result = []
 
     if is_csv_output:
@@ -168,7 +168,7 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
         entity_name = suggested_item[Field.NAME.value]
 
         # Warn about examples being leaked into actual output
-        if entity_name in ENTITIES_IN_EXAMPLE:
+        if entity_name in CLASSES_IN_EXAMPLE:
             print(f"Warning: {entity_name}")
 
         if is_csv_output:
@@ -206,7 +206,7 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
         if not is_csv_output:
             result.append(f"Entity: {source_entity}")
 
-        iterator = llm_assistant.suggest(source_entity=source_entity, target_entity="", user_choice=user_choice, domain_description=domain_description)
+        iterator = llm_assistant.suggest_items(source_class=source_entity, target_class="", user_choice=user_choice, domain_description=domain_description)
 
         for index, suggested_item in enumerate(iterator):
             suggested_item = json.loads(suggested_item)
@@ -228,17 +228,17 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
     result = []
 
     if is_csv_output:
-        result.append(f"Generated relationship{CSV_SEPARATOR}Inputed class{CSV_SEPARATOR}Source class{CSV_SEPARATOR}Target class{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}{CSV_HEADER}")
+        result.append(f"Generated association{CSV_SEPARATOR}Inputed class{CSV_SEPARATOR}Source class{CSV_SEPARATOR}Target class{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}{CSV_HEADER}")
 
     for test_case in test_cases:
         inputed_entity = test_case["entity"]
 
-        print(f"Generating relationships for: {inputed_entity}")
+        print(f"Generating associations for: {inputed_entity}")
 
         if not is_csv_output:
             result.append(f"Entity: {source_entity}")
 
-        iterator = llm_assistant.suggest(source_entity=inputed_entity, target_entity="", user_choice=user_choice, domain_description=domain_description)
+        iterator = llm_assistant.suggest_items(source_class=inputed_entity, target_class="", user_choice=user_choice, domain_description=domain_description)
 
         for index, suggested_item in enumerate(iterator):
             suggested_item = json.loads(suggested_item)
@@ -270,7 +270,7 @@ def create_relationships2_actual_output(llm_assistant, test_cases, user_choice, 
         target_entity = test_case[Field.TARGET_CLASS.value]
 
         result.append(f"Source entity: {source_entity}, Target entity: {target_entity}")
-        iterator = llm_assistant.suggest(source_entity=source_entity, target_entity=target_entity, user_choice=user_choice, domain_description=domain_description)
+        iterator = llm_assistant.suggest_items(source_class=source_entity, target_class=target_entity, user_choice=user_choice, domain_description=domain_description)
 
         for index, suggested_item in enumerate(iterator):
             suggested_item = json.loads(suggested_item)
@@ -290,7 +290,7 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
 
     test_cases = test_data[user_choice]
 
-    if user_choice == UserChoice.ENTITIES.value:
+    if user_choice == UserChoice.CLASSES.value:
         results = create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
 
     elif user_choice == UserChoice.ATTRIBUTES.value:
@@ -313,7 +313,7 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
 def main():
 
     parser = argparse.ArgumentParser(description = "Suggestions generator")
-    parser.add_argument("--user_choice", choices = [UserChoice.ENTITIES.value, UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value], type=str, default=UserChoice.ENTITIES.value, help = "Choose elements to generate")
+    parser.add_argument("--user_choice", choices = [UserChoice.CLASSES.value, UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value], type=str, default=UserChoice.CLASSES.value, help = "Choose elements to generate")
     parser.add_argument("--output_format", choices = ["txt", "csv"], type=str, default="csv", help = "Choose output file format")
     parser.add_argument("--generate_expected_output_only", action = "store_true", default=False, help = "")
     args = parser.parse_args()
