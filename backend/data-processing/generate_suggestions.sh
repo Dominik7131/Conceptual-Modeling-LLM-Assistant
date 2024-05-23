@@ -2,13 +2,13 @@
 set -euo pipefail
 
 
-# Generate entities
+# Generate classes
 start=$(date +%s.%N)
-python tests/suggestions_generator.py --user_choice entities
-end_entities=$(date +%s.%N)
+python tests/suggestions_generator.py --user_choice classes
+end_classes=$(date +%s.%N)
 
-execution_time_entities=$(echo "$end_entities - $start" | bc)
-echo "Entities execution time: $execution_time_entities seconds"
+execution_time_classes=$(echo "$end_classes - $start" | bc)
+echo "Classes execution time: $execution_time_classes seconds"
 
 
 # Generate attributes
@@ -20,16 +20,16 @@ execution_time_attributes=$(echo "$end_attributes - $start_attributes" | bc)
 echo "Attributes execution time: $execution_time_attributes seconds"
 
 
-# Generate relationships
-start_relationships=$(date +%s.%N)
-python tests/suggestions_generator.py --user_choice relationships
-end_relationships=$(date +%s.%N)
+# Generate associations
+start_associations=$(date +%s.%N)
+python tests/suggestions_generator.py --user_choice associations1
+end_associations=$(date +%s.%N)
 
-execution_time_relationships=$(echo "$end_relationships - $start_relationships" | bc)
-echo "Relationships execution time: $execution_time_relationships seconds"
+execution_time_associations=$(echo "$end_associations - $start_associations" | bc)
+echo "Associations execution time: $execution_time_associations seconds"
 
 # Generate PlantUML diagrams for the generated results
-python plantUML_generator.py
+python data-processing/plantUML_generator.py
 
-execution_time_total=$(echo "$end_relationships - $start" | bc)
+execution_time_total=$(echo "$end_associations - $start" | bc)
 echo "Total execution time: $execution_time_total seconds"
