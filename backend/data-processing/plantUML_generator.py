@@ -11,9 +11,9 @@ DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
 SEPARATOR = ','
 
-def process_entities(path):
+def process_classes(path):
 
-    entities = []
+    classes = []
 
     with open(path, "r", newline="") as file:
         reader = csv.reader(file, delimiter=SEPARATOR)
@@ -21,10 +21,10 @@ def process_entities(path):
             if index == 0:
                 continue
 
-            entity = row[0]
-            entities.append(f'"{entity}"')
+            clss = row[0]
+            classes.append(f'"{clss}"')
 
-    return entities
+    return classes
 
 
 def process_attributes(path):
@@ -38,15 +38,15 @@ def process_attributes(path):
                 continue
 
             attribute_name = row[0]
-            source_entity = row[1]
-            attributes.append((attribute_name, f'"{source_entity}"'))
+            source_class = row[1]
+            attributes.append((attribute_name, f'"{source_class}"'))
 
     return attributes
 
 
-def process_relationships(path):
+def process_associations(path):
 
-    relationships = []
+    associations = []
 
     with open(path, "r", newline="") as file:
         reader = csv.reader(file, delimiter=SEPARATOR)
@@ -54,12 +54,12 @@ def process_relationships(path):
             if index == 0 or len(row) == 0:
                 continue
 
-            relationship_name = row[0]
-            source_entity = row[2]
-            target_entity = row[3]
-            relationships.append((relationship_name, f'"{source_entity}"', f'"{target_entity}"'))
+            association_name = row[0]
+            source_class = row[2]
+            target_class = row[3]
+            associations.append((association_name, f'"{source_class}"', f'"{target_class}"'))
 
-    return relationships
+    return associations
 
 
 def main():
@@ -67,45 +67,45 @@ def main():
     for index, model_name in enumerate(domain_models_name):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            entities_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
+            classes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
             attributes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
-            relationships_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
+            associations_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
 
-            if not os.path.isfile(entities_path):
-                raise ValueError(f"Entities file not found: {entities_path}")
+            if not os.path.isfile(classes_path):
+                raise ValueError(f"Classes file not found: {classes_path}")
             
             if not os.path.isfile(attributes_path):
                 raise ValueError(f"Attributes file not found: {attributes_path}")
 
-            if not os.path.isfile(relationships_path):
-                raise ValueError(f"Relationships file not found: {relationships_path}")
+            if not os.path.isfile(associations_path):
+                raise ValueError(f"Associations file not found: {associations_path}")
             
-            entities = process_entities(entities_path)
+            classes = process_classes(classes_path)
             attributes = process_attributes(attributes_path)
-            relationships = process_relationships(relationships_path)
+            associations = process_associations(associations_path)
 
             plantUML = "@startuml\n"
 
-            for entity in entities:
-                plantUML += f"class {entity}\n"
+            for clss in classes:
+                plantUML += f"class {clss}\n"
             
             plantUML += '\n'
 
-            for (attribute_name, source_entity) in attributes:
-                plantUML += f"class {source_entity} " + "{\n    " + f"{attribute_name}\n" + "}\n"
+            for (attribute_name, source_class) in attributes:
+                plantUML += f"class {source_class} " + "{\n    " + f"{attribute_name}\n" + "}\n"
             
             plantUML += '\n'
 
-            for (relationship_name, source_entity, target_entity) in relationships:
+            for (association_name, source_class, target_class) in associations:
 
-                # Create class for source and target entity to make sure it exists
-                plantUML += f"class {source_entity}\n"
-                plantUML += f"class {target_entity}\n"
+                # Create class for source and target class to make sure it exists
+                plantUML += f"class {source_class}\n"
+                plantUML += f"class {target_class}\n"
             
             plantUML += '\n'
 
-            for (relationship_name, source_entity, target_entity) in relationships:
-                plantUML += f"{source_entity} - {target_entity} : {relationship_name} >\n"
+            for (association_name, source_class, target_class) in associations:
+                plantUML += f"{source_class} - {target_class} : {association_name} >\n"
 
             plantUML += "@enduml\n"
 
@@ -114,8 +114,6 @@ def main():
             with open(plantUML_output_file_path, 'w') as file:
                 for result in plantUML:
                     file.write(result)
-
-    
 
 
 if __name__ == "__main__":
