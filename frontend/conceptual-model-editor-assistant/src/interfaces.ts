@@ -61,7 +61,8 @@ export const enum TopbarTabs
   SUMMARY_PLAIN_TEXT = "1",
   SUMMARY_DESCRIPTION = "2",
   IMPORT_EXPORT = "3",
-  SETTINGS = "4"
+  SETTINGS = "4",
+  INFO = "5",
 }
 
 export const enum SidebarTabs

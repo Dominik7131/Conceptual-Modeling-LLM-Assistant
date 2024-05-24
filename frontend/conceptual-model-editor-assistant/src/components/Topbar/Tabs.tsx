@@ -25,6 +25,7 @@ const Tabs: React.FC = (): JSX.Element =>
                 <Tab sx={{textTransform: "none"}} label={SUMMARY_DESCRIPTIONS_NAME} value={TopbarTabs.SUMMARY_DESCRIPTION} />
                 <Tab sx={{textTransform: "none"}} label="Import & Export" value={TopbarTabs.IMPORT_EXPORT} />
                 <Tab sx={{textTransform: "none"}} label="Settings" value={TopbarTabs.SETTINGS} />
+                <Tab sx={{textTransform: "none"}} label="Report bug" value={TopbarTabs.INFO} />
             </TabList>
         </Box>
     )

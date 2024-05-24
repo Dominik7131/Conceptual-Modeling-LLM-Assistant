@@ -15,6 +15,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { useState } from 'react';
+import InfoTab from './InfoTab';
 
 
 const Topbar: React.FC = () =>
@@ -64,6 +65,10 @@ const Topbar: React.FC = () =>
 
                         <TabPanel value="4">
                             <SettingsTab/>
+                        </TabPanel>
+
+                        <TabPanel value="5">
+                            <InfoTab/>
                         </TabPanel>
                     </TabContext>
                 </Box>
