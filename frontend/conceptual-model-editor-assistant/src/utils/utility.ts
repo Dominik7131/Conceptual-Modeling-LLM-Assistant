@@ -6,6 +6,8 @@ import { createNameFromIRI } from "./conceptualModel";
 export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
 export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 
+export const ORIGINAL_TEXT_ID = "highlightedOriginalText"
+
 
 // TODO: It is probably better to use "null" instead of blank item
 export const blankClass: Class = {

@@ -2,7 +2,7 @@ import ConceptualModel from './components/ConceptualModel/ConceptualModel';
 import Topbar from './components/Topbar/Topbar'
 import SideBar from './components/Sidebar/Sidebar';
 import { ReactFlowProvider } from 'reactflow';
-import HighlightDialog from './components/DialogDomainDescription';
+import HighlightDialog from './components/DialogDomainDescription/DialogDomainDescription';
 import DialogCreateEdge from './components/DialogCreateEdge';
 import { RecoilRoot } from 'recoil';
 import DialogEditItem from './components/DialogEditItem/DialogEditItem';
