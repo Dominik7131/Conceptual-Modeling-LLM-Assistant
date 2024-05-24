@@ -19,33 +19,33 @@ const Sidebar: React.FC = () =>
 
     const sidebarTitles = useRecoilValue(sidebarTitlesState)
 
-    const flexValue = isCollapsed ? 0 : 1
+    if (isCollapsed)
+    {
+        return <></>
+    }
 
 
     return (
-        <Box sx={{ flex: flexValue, display: 'flex', flexDirection: 'row', '& .MuiTabPanel-root': { paddingX: "0px", marginX: "3px" } }}>
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'row', '& .MuiTabPanel-root': { paddingX: "0px", marginX: "3px" } }}>
 
             <Divider orientation="vertical" />
             
-            <Box sx={{ flex: flexValue }}>
-                {
-                    !isCollapsed &&
-                    <TabContext value={tabValue}>
-                        <Tabs/>
+            <Box sx={{ flex: 1 }}>
+                <TabContext value={tabValue}>
+                    <Tabs/>
 
-                        <TabPanel value="0">
-                            <Suggestions items={entities} title={sidebarTitles.classes} itemType={ItemType.CLASS}/>
-                        </TabPanel>
+                    <TabPanel value="0">
+                        <Suggestions items={entities} title={sidebarTitles.classes} itemType={ItemType.CLASS}/>
+                    </TabPanel>
 
-                        <TabPanel value="1">
-                            <Suggestions items={attributes} title={sidebarTitles.attributes} itemType={ItemType.ATTRIBUTE}/>
-                        </TabPanel>
+                    <TabPanel value="1">
+                        <Suggestions items={attributes} title={sidebarTitles.attributes} itemType={ItemType.ATTRIBUTE}/>
+                    </TabPanel>
 
-                        <TabPanel value="2">
-                            <Suggestions items={relationships} title={sidebarTitles.associations} itemType={ItemType.ASSOCIATION}/>
-                        </TabPanel>
-                    </TabContext>
-                }
+                    <TabPanel value="2">
+                        <Suggestions items={relationships} title={sidebarTitles.associations} itemType={ItemType.ASSOCIATION}/>
+                    </TabPanel>
+                </TabContext>
             </Box>
         </Box>
     )
