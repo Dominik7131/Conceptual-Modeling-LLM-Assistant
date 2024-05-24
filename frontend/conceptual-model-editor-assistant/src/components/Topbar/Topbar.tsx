@@ -38,7 +38,7 @@ const Topbar: React.FC = () =>
 
 
     return (
-        <Box sx={{ flex: flexValue, backgroundColor: 'lightblue' }}>
+        <Box sx={{ flex: flexValue }}>
 
             { !isCollapsed &&
                 <Box sx={{ overflow: 'auto' }}>

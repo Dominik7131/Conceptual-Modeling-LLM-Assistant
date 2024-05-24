@@ -1,6 +1,6 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { isSidebarCollapsedState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState } from '../../atoms';
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import { ItemType } from '../../interfaces';
 import { TabContext, TabList, TabPanel } from "@mui/lab"
 import Tabs from "./Tabs";
@@ -23,25 +23,30 @@ const Sidebar: React.FC = () =>
 
 
     return (
-        <Box sx={{ flex: flexValue, '& .MuiTabPanel-root': { paddingX: "0px", marginX: "3px" } }}>
-            {
-                !isCollapsed &&
-                <TabContext value={tabValue}>
-                    <Tabs/>
+        <Box sx={{ flex: flexValue, display: 'flex', flexDirection: 'row', '& .MuiTabPanel-root': { paddingX: "0px", marginX: "3px" } }}>
 
-                    <TabPanel value="0">
-                        <Suggestions items={entities} title={sidebarTitles.classes} itemType={ItemType.CLASS}/>
-                    </TabPanel>
+            <Divider orientation="vertical" />
+            
+            <Box sx={{ flex: flexValue }}>
+                {
+                    !isCollapsed &&
+                    <TabContext value={tabValue}>
+                        <Tabs/>
 
-                    <TabPanel value="1">
-                        <Suggestions items={attributes} title={sidebarTitles.attributes} itemType={ItemType.ATTRIBUTE}/>
-                    </TabPanel>
+                        <TabPanel value="0">
+                            <Suggestions items={entities} title={sidebarTitles.classes} itemType={ItemType.CLASS}/>
+                        </TabPanel>
 
-                    <TabPanel value="2">
-                        <Suggestions items={relationships} title={sidebarTitles.associations} itemType={ItemType.ASSOCIATION}/>
-                    </TabPanel>
-                </TabContext>
-            }
+                        <TabPanel value="1">
+                            <Suggestions items={attributes} title={sidebarTitles.attributes} itemType={ItemType.ATTRIBUTE}/>
+                        </TabPanel>
+
+                        <TabPanel value="2">
+                            <Suggestions items={relationships} title={sidebarTitles.associations} itemType={ItemType.ASSOCIATION}/>
+                        </TabPanel>
+                    </TabContext>
+                }
+            </Box>
         </Box>
     )
 }

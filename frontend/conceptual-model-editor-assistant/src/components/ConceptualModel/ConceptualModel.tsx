@@ -6,7 +6,7 @@ import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isS
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useCallback, useEffect } from 'react';
 import { loadDefaultConceptualModel } from '../../utils/import';
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 
 
 const nodeTypes = { customNode: CustomNode };
@@ -76,23 +76,27 @@ const ConceptualModel: React.FC = () =>
 
 
   return (
-          <Box sx={{ flex: 2, backgroundColor: 'lightgreen', width: "100%", height: "100%" }}>
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onConnect={onConnect}
-                nodeTypes={nodeTypes}
-                edgeTypes={edgeTypes}
-                minZoom={0.04}
-                >
-                <MiniMap nodeStrokeWidth={3} zoomable pannable />
-                <Controls />
-                <Background color="black"/>
-            </ReactFlow>
-          </Box>
-      )
+    <>
+      <Divider />
+
+      <Box sx={{ flex: 2, width: "100%", height: "100%" }}>
+        <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            onConnect={onConnect}
+            nodeTypes={nodeTypes}
+            edgeTypes={edgeTypes}
+            minZoom={0.04}
+            >
+            <MiniMap nodeStrokeWidth={3} zoomable pannable />
+            <Controls />
+            <Background color="black"/>
+        </ReactFlow>
+      </Box>
+    </>
+  )
 }
 
 export default ConceptualModel
