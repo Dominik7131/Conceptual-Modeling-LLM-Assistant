@@ -315,16 +315,16 @@ def main():
 
             entities_expected_suggestions = { UserChoice.CLASSES.value: entities_suggestions }
             attributes_expected_suggestions = { UserChoice.ATTRIBUTES.value: attributes_suggestions }
-            relationships1_expected_suggestions = { UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value: relationships_suggestions }
-            relationships2_expected_suggestions = { UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value: relationships2_suggestions }
+            associations1_expected_suggestions = { UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value: relationships_suggestions }
+            associations2_expected_suggestions = { UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value: relationships2_suggestions }
             # generalizations2_expected_suggestions = { "generalizations2": generalizations2_suggestions }
 
             write_json_to_file(one_known_entity_output_file_path, relevant_text_test_cases_1)
             write_json_to_file(two_known_entities_output_file_path, relevant_text_test_cases_2)
             write_json_to_file(entities_suggestions_output_file_path, entities_expected_suggestions)
             write_json_to_file(attributes_suggestions_output_file_path, attributes_expected_suggestions)
-            write_json_to_file(relationships_suggestions_output_file_path, relationships1_expected_suggestions)
-            write_json_to_file(relationships2_suggestions_output_file_path, relationships2_expected_suggestions)
+            write_json_to_file(relationships_suggestions_output_file_path, associations1_expected_suggestions)
+            write_json_to_file(relationships2_suggestions_output_file_path, associations2_expected_suggestions)
             # write_json_to_file(output_file_path_generalizations2_expected_suggestions, generalizations2_suggestions)
 
 

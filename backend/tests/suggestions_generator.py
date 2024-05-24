@@ -8,13 +8,13 @@ sys.path.append('.')
 sys.path.append('utils/')
 sys.path.append('text-filtering/syntactic')
 sys.path.append('text-filtering/semantic')
-from LLM_assistant import LLMAssistant
-from text_utility import Field, FieldUI, UserChoice
+from LLM_assistant import LLMAssistant, ITEMS_COUNT
+from text_utility import Field, FieldUI, TextUtility, UserChoice
 
 
 DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
-domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
-domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
+domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb"] #, "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
+domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming"] #, "college", "zoological-gardens", "registry-of-road-vehicles"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
 ACTUAL_OUTPUT = "actual"
