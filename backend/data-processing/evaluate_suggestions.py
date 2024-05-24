@@ -99,10 +99,10 @@ def construct_expected_classes(test_data_path):
         test_data = json.load(file)
     
     expected_classes = []
-    test_cases = test_data["entities"]
+    test_cases = test_data[UserChoice.CLASSES.value]
 
     for test_case in test_cases:
-        expected_classes.append(test_case["entity"].replace(' ', '-').lower())
+        expected_classes.append(test_case["class"].replace(' ', '-').lower())
     
     checked_classes_strict = [False] * len(expected_classes)
     checked_classes_construct = [False] * len(expected_classes)
@@ -124,7 +124,7 @@ def construct_expected_attributes(test_data_path):
 
     for test_case in test_cases:
         expected_output = test_case["expected_output"]
-        source_entity = test_case["entity"]
+        source_entity = test_case["class"]
 
         for output in expected_output:
             attribute_identificator = f"{output['name']};{source_entity}".replace(' ', '-').lower()
@@ -146,11 +146,11 @@ def construct_expected_associations(test_data_path):
         test_data = json.load(file)
 
     expected_associations = []
-    test_cases = test_data["relationships"]
+    test_cases = test_data[UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value]
 
     for test_case in test_cases:
         expected_output = test_case["expected_output"]
-        inputed_entity = test_case["entity"]
+        inputed_entity = test_case["class"]
 
         for output in expected_output:
             expected_associations.append(f"{output['name']};{inputed_entity}".replace(' ', '-').lower())

@@ -4,6 +4,7 @@ import os
 import sys
 import requests
 sys.path.append('.')
+sys.path.append('backend/utils/')
 sys.path.append('utils/')
 from text_utility import Field, TextUtility, UserChoice
 
@@ -14,49 +15,13 @@ domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56c
 
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
-ENTITY_SYMBOL = "owl:Class"
+CLASS_SYMBOL = "owl:Class"
 ATTRIBUTE_SYMBOL = "owl:DatatypeProperty"
-RELATIONSHIP_SYMBOL = "owl:ObjectProperty"
+ASSOCIATION_SYMBOL = "owl:ObjectProperty"
 
 TAG_REGEX = r"<([^>]+)>"
 
 BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
-
-
-def get_items(model_file_path):
-    
-    classes_out = []
-    attributes_out = {}
-    relationships_out = {}
-    generalizations_out = {}
-
-    with open(model_file_path) as file:
-        # lines = file.readlines()
-        model = json.load(file)
-    
-    model_descriptor = model["modelDescriptors"][0]["entities"]
-
-    model_ID = model["modelDescriptors"][0]["modelId"]
-
-    url = BASE_URL + model_ID
-    model = requests.get(url=url).text
-    model = json.loads(model)
-
-
-    entities = model["classes"]
-    attributes = model["attributes"]
-    relationships = model["relationships"]
-    generalizations = model["generalizations"]
-
-
-    for entity in entities:
-        classes_out.append(entity["name"])
-
-    for attribute in attributes:
-        attributes_out[attribute["name"]] = attribute["domain"]
-
-    
-    return classes_out, attributes_out, relationships_out, generalizations_out
 
 
 def get_text_from_indexes(indexes, text):
@@ -90,78 +55,78 @@ def load_model(model_file_path):
     return model
 
 
-def create_suggestions_two_known_entities(dictionary, model, text):
+def create_suggestions_two_known_classes(dictionary, model, text):
 
-    relationships = model["relationships"]
+    associations = model["relationships"]
     generalizations = model["generalizations"]
 
-    result_two_known_entities = []
-    relationships2_out_suggestions = []
+    result_two_known_classes = []
+    associations2_out_suggestions = []
 
-    for relationship in relationships:
-        relationship_name = relationship["title"].lower()
-        source_entity = relationship["domain"].lower().replace('-', ' ')
-        target_entity = relationship["range"].lower().replace('-', ' ')
+    for association in associations:
+        association_name = association["title"].lower()
+        source_class = association["domain"].lower().replace('-', ' ')
+        target_class = association["range"].lower().replace('-', ' ')
 
-        if relationship_name not in dictionary:
+        if association_name not in dictionary:
             continue
 
-        indexes = dictionary[relationship_name]
+        indexes = dictionary[association_name]
         relevant_texts = get_text_from_indexes(indexes, text)
 
-        result_two_known_entities.append({ Field.NAME.value: relationship_name, Field.SOURCE_CLASS.value: source_entity, Field.TARGET_CLASS.value: target_entity, "relevant_texts": relevant_texts })
-        relationships2_out_suggestions.append({ Field.NAME.value: relationship_name, Field.SOURCE_CLASS.value: source_entity, Field.TARGET_CLASS.value: target_entity, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts) })
+        result_two_known_classes.append({ Field.NAME.value: association_name, Field.SOURCE_CLASS.value: source_class, Field.TARGET_CLASS.value: target_class, "relevant_texts": relevant_texts })
+        associations2_out_suggestions.append({ Field.NAME.value: association_name, Field.SOURCE_CLASS.value: source_class, Field.TARGET_CLASS.value: target_class, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts) })
 
 
     generalizations2_out_suggestions = []
     for generalization in generalizations:
         # generalization_name = "is-a"
-        source_entity = generalization["generalClass"].lower().replace('-', ' ')
-        target_entity = generalization["specialClass"].lower().replace('-', ' ')
+        source_class = generalization["generalClass"].lower().replace('-', ' ')
+        target_class = generalization["specialClass"].lower().replace('-', ' ')
 
-        generalizations2_out_suggestions.append( {"generalClass": source_entity, "specialClass": target_entity } )
+        generalizations2_out_suggestions.append( {"generalClass": source_class, "specialClass": target_class } )
 
 
-    return relationships2_out_suggestions, generalizations2_out_suggestions
+    return associations2_out_suggestions, generalizations2_out_suggestions
 
 
 def convert_to_relevant_texts(dictionary, text, model, file_path):
 
-    entities = model["classes"]
+    classes = model["classes"]
     attributes = model["attributes"]
-    relationships = model["relationships"]
+    associations = model["relationships"]
 
-    result_one_known_entity = []
-    result_two_known_entities = []
+    result_one_known_class = []
+    result_two_known_classes = []
 
-    entities_suggestions = []
+    classes_suggestions = []
     attributes_suggestions = []
-    relationships1_suggestions = []
+    associations1_suggestions = []
 
 
-    for entity in entities:
-        entity_name = entity["title"].lower().replace('-', ' ')
+    for clss in classes:
+        class_name = clss["title"].lower().replace('-', ' ')
 
-        if entity_name not in dictionary:
-            print(f"Warning: Entity \"{entity_name}\" not in annotated text: {file_path}")
+        if class_name not in dictionary:
+            print(f"Warning: Class \"{class_name}\" not in annotated text: {file_path}")
             continue
 
-        indexes = dictionary[entity_name]
-        relevant_texts_entities = get_text_from_indexes(indexes, text)
+        indexes = dictionary[class_name]
+        relevant_texts_classes = get_text_from_indexes(indexes, text)
 
-        entities_suggestions.append({"entity": entity_name, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts_entities)})
+        classes_suggestions.append({"class": class_name, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts_classes)})
 
         attributes_out = []
         attributes_out_suggestions = []
         for attribute in attributes:
             attribute_name = attribute["title"].lower().replace('-', ' ')
-            source_entity = attribute["domain"].lower().replace('-', ' ')
+            source_class = attribute["domain"].lower().replace('-', ' ')
 
             if attribute_name not in dictionary:
                 print(f"Warning: Attribute \"{attribute_name}\" not in annotated text: {file_path}")
                 continue
 
-            if source_entity == entity_name:
+            if source_class == class_name:
                 indexes = dictionary[attribute_name]
                 relevant_texts_attributes = get_text_from_indexes(indexes, text)
                 attributes_out.append({ "name": attribute_name, "relevant_texts": relevant_texts_attributes })
@@ -169,40 +134,40 @@ def convert_to_relevant_texts(dictionary, text, model, file_path):
                 attributes_out_suggestions.append({"name": attribute_name, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts_attributes)})
 
 
-        relationships_out = []
-        relationships_out_suggestions = []
-        for relationship in relationships:
-            relationship_name = relationship["title"].lower().replace('-', ' ')
-            source_entity = relationship["domain"].lower().replace('-', ' ')
-            target_entity = relationship["range"].lower().replace('-', ' ')
+        associations_out = []
+        associations_out_suggestions = []
+        for association in associations:
+            association_name = association["title"].lower().replace('-', ' ')
+            source_class = association["domain"].lower().replace('-', ' ')
+            target_class = association["range"].lower().replace('-', ' ')
 
             # TODO: Fix typo in expected model
-            if relationship_name == "is staff member of academic commumity":
-                relationship_name = "is staff member of academic community"
+            if association_name == "is staff member of academic commumity":
+                association_name = "is staff member of academic community"
 
-            if relationship_name not in dictionary:
-                print(f"Warning: Relationship \"{relationship_name}\" not in annotated text: {file_path}")
+            if association_name not in dictionary:
+                print(f"Warning: Association \"{association_name}\" not in annotated text: {file_path}")
                 continue
 
-            is_source = target_entity == entity_name
-            indexes = dictionary[relationship_name]
-            relevant_texts_relationships = get_text_from_indexes(indexes, text)
+            is_source = target_class == class_name
+            indexes = dictionary[association_name]
+            relevant_texts_associations = get_text_from_indexes(indexes, text)
 
-            if source_entity == entity_name or target_entity == entity_name:
-                relationships_out.append({ "name": relationship_name, "is_source": is_source, "relevant_texts": relevant_texts_relationships })
-                relationships_out_suggestions.append({"name": relationship_name, Field.SOURCE_CLASS.value: source_entity, Field.TARGET_CLASS.value: target_entity, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts_relationships)})
+            if source_class == class_name or target_class == class_name:
+                associations_out.append({ "name": association_name, "is_source": is_source, "relevant_texts": relevant_texts_associations })
+                associations_out_suggestions.append({"name": association_name, Field.SOURCE_CLASS.value: source_class, Field.TARGET_CLASS.value: target_class, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts_associations)})
 
 
-        result_one_known_entity.append({"entity": entity_name, "relevant_texts": relevant_texts_entities, "attributes": attributes_out,
-                       "relationships": relationships_out})
+        result_one_known_class.append({"class": class_name, "relevant_texts": relevant_texts_classes, "attributes": attributes_out,
+                       "associations": associations_out})
 
         if len(attributes_out_suggestions) > 0:
-            attributes_suggestions.append({"entity": entity_name, "expected_output": attributes_out_suggestions })
+            attributes_suggestions.append({"class": class_name, "expected_output": attributes_out_suggestions })
         
-        if len(relationships_out_suggestions) > 0:
-            relationships1_suggestions.append({"entity": entity_name, "expected_output": relationships_out_suggestions })
+        if len(associations_out_suggestions) > 0:
+            associations1_suggestions.append({"class": class_name, "expected_output": associations_out_suggestions })
 
-    return result_one_known_entity, result_two_known_entities, entities_suggestions, attributes_suggestions, relationships1_suggestions
+    return result_one_known_class, result_two_known_classes, classes_suggestions, attributes_suggestions, associations1_suggestions
 
 
 def print_result(tags_indexes, text):
@@ -271,24 +236,24 @@ def main():
 
             file_name = f"domain-description-0{i + 1}-annotated.txt"
             model_file_name = f"domain-model.json"
-            one_known_entity_output_file_name = f"relevant-texts-one-known_entity-0{i + 1}.json"
-            two_known_entities_output_file_name = f"relevant-texts-two-known-entities-0{i + 1}.json"
+            one_known_class_output_file_name = f"relevant-texts-one-known_class-0{i + 1}.json"
+            two_known_classes_output_file_name = f"relevant-texts-two-known-classes-0{i + 1}.json"
 
-            entities_suggestions_output_file_name = f"classes-expected-suggestions-0{i + 1}.json"
+            classes_suggestions_output_file_name = f"classes-expected-suggestions-0{i + 1}.json"
             attributes_suggestions_output_file_name = f"attributes-expected-suggestions-0{i + 1}.json"
-            relationships_suggestions_output_file_name = f"associations1-expected-suggestions-0{i + 1}.json"
-            relationships2_suggestions_output_file_name = f"associations2-expected-suggestions-0{i + 1}.json"
+            associations1_suggestions_output_file_name = f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{i + 1}.json"
+            associations2_suggestions_output_file_name = f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-expected-suggestions-0{i + 1}.json"
             # generalizations2_expected_suggestions_output_file_name = f"generalizations2-expected-suggestions-0{i + 1}.json"
 
             file_path = os.path.join(DIRECTORY_PATH, domain_model, file_name)
             model_file_path = os.path.join(DIRECTORY_PATH, domain_model, model_file_name)
-            one_known_entity_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, one_known_entity_output_file_name)
-            two_known_entities_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, two_known_entities_output_file_name)
+            one_known_class_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, one_known_class_output_file_name)
+            two_known_classes_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, two_known_classes_output_file_name)
             
-            entities_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, entities_suggestions_output_file_name)
+            classes_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, classes_suggestions_output_file_name)
             attributes_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, attributes_suggestions_output_file_name)
-            relationships_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, relationships_suggestions_output_file_name)
-            relationships2_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, relationships2_suggestions_output_file_name)
+            associations1_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, associations1_suggestions_output_file_name)
+            associations2_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, associations2_suggestions_output_file_name)
             # generalizations2_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, generalizations2_expected_suggestions_output_file_name)
 
             if not os.path.isfile(file_path):
@@ -307,24 +272,24 @@ def main():
             tags_indexes = get_tags_indexes(tags, text)
 
             model = load_model(model_file_path)
-            relevant_texts1, relevant_texts2, entities_suggestions, attributes_suggestions, relationships_suggestions = convert_to_relevant_texts(tags_indexes, text, model, file_path)
-            relationships2_suggestions, generalizations2_suggestions = create_suggestions_two_known_entities(tags_indexes, model, text)
+            relevant_texts1, relevant_texts2, classes_suggestions, attributes_suggestions, associations_suggestions = convert_to_relevant_texts(tags_indexes, text, model, file_path)
+            associations2_suggestions, generalizations2_suggestions = create_suggestions_two_known_classes(tags_indexes, model, text)
 
             relevant_text_test_cases_1 = { "test_cases": relevant_texts1 }
             relevant_text_test_cases_2 = { "test_cases": relevant_texts2 }
 
-            entities_expected_suggestions = { UserChoice.CLASSES.value: entities_suggestions }
+            classes_expected_suggestions = { UserChoice.CLASSES.value: classes_suggestions }
             attributes_expected_suggestions = { UserChoice.ATTRIBUTES.value: attributes_suggestions }
-            associations1_expected_suggestions = { UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value: relationships_suggestions }
-            associations2_expected_suggestions = { UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value: relationships2_suggestions }
+            associations1_expected_suggestions = { UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value: associations_suggestions }
+            associations2_expected_suggestions = { UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value: associations2_suggestions }
             # generalizations2_expected_suggestions = { "generalizations2": generalizations2_suggestions }
 
-            write_json_to_file(one_known_entity_output_file_path, relevant_text_test_cases_1)
-            write_json_to_file(two_known_entities_output_file_path, relevant_text_test_cases_2)
-            write_json_to_file(entities_suggestions_output_file_path, entities_expected_suggestions)
+            write_json_to_file(one_known_class_output_file_path, relevant_text_test_cases_1)
+            write_json_to_file(two_known_classes_output_file_path, relevant_text_test_cases_2)
+            write_json_to_file(classes_suggestions_output_file_path, classes_expected_suggestions)
             write_json_to_file(attributes_suggestions_output_file_path, attributes_expected_suggestions)
-            write_json_to_file(relationships_suggestions_output_file_path, associations1_expected_suggestions)
-            write_json_to_file(relationships2_suggestions_output_file_path, associations2_expected_suggestions)
+            write_json_to_file(associations1_suggestions_output_file_path, associations1_expected_suggestions)
+            write_json_to_file(associations2_suggestions_output_file_path, associations2_expected_suggestions)
             # write_json_to_file(output_file_path_generalizations2_expected_suggestions, generalizations2_suggestions)
 
 
