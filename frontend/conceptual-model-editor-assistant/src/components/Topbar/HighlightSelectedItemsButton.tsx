@@ -40,6 +40,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
         {
             setIsLoading(false)
             console.log(error)
+            alert("Error: request failed")
         })
 
         return

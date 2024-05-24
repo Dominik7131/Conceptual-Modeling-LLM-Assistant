@@ -10,7 +10,7 @@ const useFetchData = () =>
 {
     // TODO: Split all fetch data methods into separate files
     const [itemTypesToLoad, setItemTypesToLoad] = useRecoilState(itemTypesToLoadState)
-    const setIsLoadingSummary1 = useSetRecoilState(isLoadingSummaryPlainTextState)
+    const setIsLoadingSummaryPlainText = useSetRecoilState(isLoadingSummaryPlainTextState)
     const setIsLoadingSummaryDescriptions = useSetRecoilState(isLoadingSummaryDescriptionsState)
 
     const setSummaryText = useSetRecoilState(summaryTextState)
@@ -160,7 +160,7 @@ const useFetchData = () =>
 
   const fetchSummaryPlainText = (bodyData : any) =>
   {
-    setIsLoadingSummary1(_ => true)
+    setIsLoadingSummaryPlainText(_ => true)
 
     fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyData })
     .then(response =>
@@ -170,7 +170,7 @@ const useFetchData = () =>
         if (stream === null)
         {
           console.log("Stream is null")
-          setIsLoadingSummary1(_ => false)
+          setIsLoadingSummaryPlainText(_ => false)
           return
         }
 
@@ -184,7 +184,7 @@ const useFetchData = () =>
                     if (done)
                     {
                         console.log("Stream finished")
-                        setIsLoadingSummary1(_ => false)
+                        setIsLoadingSummaryPlainText(_ => false)
                         return
                     }
 
@@ -208,7 +208,7 @@ const useFetchData = () =>
     .catch(error =>
     {
       console.error(error)
-      setIsLoadingSummary1(_ => false)
+      setIsLoadingSummaryPlainText(_ => false)
       alert("Error: request failed")
     })
   }

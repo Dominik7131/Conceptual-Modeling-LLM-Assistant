@@ -564,7 +564,7 @@ class LLMAssistant:
             dictionary = json.loads(json.dumps(item))
 
             json_item = json.dumps(dictionary)
-            yield f"{json_item}\n"
+            return json_item
 
 
     def suggest_summary_descriptions(self, conceptual_model, domain_description):
