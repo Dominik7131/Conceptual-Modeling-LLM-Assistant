@@ -10,8 +10,9 @@ import Alert from '@mui/material/Alert';
 import { useEffect, useRef, useState } from 'react';
 import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
 import { styled } from '@mui/system';
-import { domainDescriptionState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from '../atoms';
+import { domainDescriptionState, isLoadingHighlightOriginalTextState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from '../atoms';
 import { useRecoilState, useRecoilValue } from 'recoil';
+import { Box, CircularProgress } from '@mui/material';
 
 
 
@@ -19,6 +20,8 @@ const HighlightDialog: React.FC = () =>
 {
   const [isOpened, setIsOpened] = useRecoilState(isShowHighlightDialogState)
   const domainDescription = useRecoilValue(domainDescriptionState)
+
+  const isLoading = useRecoilValue(isLoadingHighlightOriginalTextState)
 
   const inferenceIndexes = useRecoilValue(originalTextIndexesListState)
   const tooltips = useRecoilValue(tooltipsState)
@@ -135,6 +138,18 @@ const HighlightDialog: React.FC = () =>
         <DialogTitle>
           <Stack spacing={2}>
 
+            {
+              isLoading &&
+              <Alert variant="outlined" severity="info">
+
+                <Box display="flex" alignItems="center" overflow="hidden">
+                  <Box mr={1} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis"> Updating </Box>
+                  <CircularProgress size={20} />
+                </Box>
+
+              </Alert>
+            }
+
             { inferenceIndexes.length === 0 &&
               <Alert variant="outlined" severity="warning">
                 Unable to find original text in domain description
@@ -155,7 +170,8 @@ const HighlightDialog: React.FC = () =>
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={ onClose }>Close</Button>
+          <Button variant="contained" sx={{textTransform: "none"}} onClick={ onClose }>Close</Button>
+
           {/* <Button onClick={() => {
 
             let highlightedText = document.getElementById("highlightedInference-1")

@@ -1,6 +1,6 @@
 import { Button } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
-import { domainDescriptionState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
+import { domainDescriptionState, isLoadingHighlightOriginalTextState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../../interfaces";
 import { capitalizeString } from "../../utils/utility";
@@ -12,6 +12,8 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
 {
     const selectedNodes = useRecoilValue(selectedNodesState)
     const selectedEdges = useRecoilValue(selectedEdgesState)
+
+    const setIsLoading = useSetRecoilState(isLoadingHighlightOriginalTextState)
 
     const domainDescription = useRecoilValue(domainDescriptionState)
     const isDisabled = domainDescription === ""
@@ -28,12 +30,18 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
     {
         fetch(MERGE_ORIGINAL_TEXT_URL, { method: "POST", headers: HEADER, body: bodyData})
         .then(response => response.json())
-        .then(data => 
+        .then(data =>
         {
             // TODO: Specify `data` type
             onProcessMergedOriginalTexts(data)
+            setIsLoading(false)
         })
-        .catch(error => console.log(error))
+        .catch(error =>
+        {
+            setIsLoading(false)
+            console.log(error)
+        })
+
         return
     }
 
@@ -59,6 +67,8 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
     const onHighlightSelectedItems = (): void =>
     {
         // console.log("SNodes: ", selectedNodes)
+        setIsLoading(true)
+
         setIsShowTitleDialogDomainDescription(false)
 
         let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []

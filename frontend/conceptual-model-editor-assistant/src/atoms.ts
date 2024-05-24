@@ -143,6 +143,12 @@ export const isLoadingSummaryDescriptionsState = atom({
     default: false,
 })
 
+export const isLoadingHighlightOriginalTextState = atom({
+    key: 'isLoadingHighlightOriginalTextState',
+    default: false,
+})
+
+
 export const summaryTextState = atom({
     key: 'summaryTextState',
     default: "",
