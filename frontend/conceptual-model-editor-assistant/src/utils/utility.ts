@@ -3,9 +3,6 @@ import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, Sid
 import { createNameFromIRI } from "./conceptualModel";
 
 
-export const TOPBAR_DEFAULT_HEIGHT_PX = 361
-export const SIDEBAR_DEFAULT_WIDTH_PERCENTAGE = 20
-
 export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
 export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 

@@ -8,30 +8,10 @@
   /* border-bottom: 1px dotted black; */
 }
 
-.highlightAttributes
-{
-  background-color: rgb(0, 179, 255);
-}
 
-.highlightRelationships
-{
-  /* border-bottom: red 3px solid; */
-  /* text-decoration: underline orange 2px; */
-  background-color: rgb(255, 242, 0);
-}
-
-.highlightAttributes.highlightRelationships
-{
-  background-color: rgb(124, 236, 124);
-}
-
-.textGray
-{
-  color: gray;
-}
-
-.reactFlowDiv
-{
-  width: 80%;
-  height: 622px;
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
 }

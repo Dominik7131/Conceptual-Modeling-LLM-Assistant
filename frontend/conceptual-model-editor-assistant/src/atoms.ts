@@ -1,7 +1,7 @@
 import { atom, selector } from 'recoil'
 import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice } from './interfaces';
 import { Node, Edge } from 'reactflow';
-import { SIDEBAR_DEFAULT_WIDTH_PERCENTAGE, TOPBAR_DEFAULT_HEIGHT_PX, blankClass } from './utils/utility';
+import { blankClass } from './utils/utility';
 import { DATASPECER_MODEL_URL } from './utils/urls';
 
 // TODO: Divide atoms into separate files
@@ -161,12 +161,6 @@ export const isSidebarOpenState = atom({
 })
 
 
-export const sidebarWidthPercentageState = atom({
-    key: 'sidebarWidthPercentageState',
-    default: SIDEBAR_DEFAULT_WIDTH_PERCENTAGE,
-})
-
-
 export const nodesState = atom<Node[]>({
     key: 'nodesState',
     default: [],
@@ -256,11 +250,6 @@ export const isSummaryDescriptionReactButtonClickedState = atom({
     default: false,
 })
 
-
-export const topbarHeightPxState = atom({
-    key: 'topbarHeightPxState',
-    default: TOPBAR_DEFAULT_HEIGHT_PX,
-})
 
 export const isSidebarCollapsedState = atom({
     key: 'isSidebarCollapsedState',

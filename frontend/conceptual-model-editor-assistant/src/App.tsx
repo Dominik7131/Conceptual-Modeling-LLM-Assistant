@@ -6,20 +6,30 @@ import HighlightDialog from './components/DialogDomainDescription';
 import DialogCreateEdge from './components/DialogCreateEdge';
 import { RecoilRoot } from 'recoil';
 import DialogEditItem from './components/DialogEditItem/DialogEditItem';
+import { Box, Stack } from '@mui/material';
 
 
 function App()
 {
   return (
     <RecoilRoot>
-      <Topbar/>
 
-      <ReactFlowProvider>
-        <ConceptualModel/>
-      </ReactFlowProvider>
+      <Stack direction="row" sx={{ width: "100hh", height: "100vh"}}>
 
+      <Box sx={{ flex: 4 }}>
+        <Stack sx={{ width: "100%", height: "100%" }}>
 
-      <SideBar/>
+          <Topbar/>
+          
+          <ReactFlowProvider>
+            <ConceptualModel/>
+          </ReactFlowProvider>
+
+        </Stack>
+      </Box>
+
+        <SideBar/>
+      </Stack>
 
       <HighlightDialog/>
 

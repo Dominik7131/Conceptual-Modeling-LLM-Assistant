@@ -1,15 +1,10 @@
-import Drawer from '@mui/material/Drawer';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { isLoadingSuggestedItemsState, isSidebarCollapsedState, isSidebarOpenState, sidebarTabValueState, sidebarTitlesState, sidebarWidthPercentageState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState } from '../../atoms';
-import ItemDisplay from './ItemDisplay';
-import { Button, Divider, Stack, Tab, Typography } from '@mui/material';
-import { Attribute, Field, Item, ItemType } from '../../interfaces';
+import { isSidebarCollapsedState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState } from '../../atoms';
+import { Box } from '@mui/material';
+import { ItemType } from '../../interfaces';
 import { TabContext, TabList, TabPanel } from "@mui/lab"
 import Tabs from "./Tabs";
 import Suggestions from './Suggestions';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { useState } from 'react';
 
 
 const Sidebar: React.FC = () =>
@@ -20,22 +15,15 @@ const Sidebar: React.FC = () =>
     const attributes = useRecoilValue(suggestedAttributesState)
     const relationships = useRecoilValue(suggestedAssociationsState)
 
-    const isSidebarOpen = useRecoilValue(isSidebarOpenState)
-    const [sidebarWidthPercentage, setSidebarWidthPercentage] = useRecoilState(sidebarWidthPercentageState)
-
     const tabValue = useRecoilValue(sidebarTabValueState)
 
     const sidebarTitles = useRecoilValue(sidebarTitlesState)
 
+    const flexValue = isCollapsed ? 0 : 1
+
 
     return (
-        <Drawer
-            sx={{ '& .MuiDrawer-paper': { width: `${sidebarWidthPercentage}%`}, '& .MuiTabPanel-root': { paddingX: "0px", marginX: "3px" } }}
-            variant="persistent"
-            anchor="right"
-            open={isSidebarOpen}
-            >
-            
+        <Box sx={{ flex: flexValue, '& .MuiTabPanel-root': { paddingX: "0px", marginX: "3px" } }}>
             {
                 !isCollapsed &&
                 <TabContext value={tabValue}>
@@ -54,7 +42,7 @@ const Sidebar: React.FC = () =>
                     </TabPanel>
                 </TabContext>
             }
-        </Drawer>
+        </Box>
     )
 }
 
