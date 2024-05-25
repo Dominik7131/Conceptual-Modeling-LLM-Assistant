@@ -1,6 +1,6 @@
 import { Button } from "@mui/material"
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
-import { SUMMARY_PLAIN_TEXT_NAME } from "../../utils/utility";
+import { NOTHING_SELECTED_MSG, SUMMARY_PLAIN_TEXT_NAME } from "../../utils/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryPlainTextReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryTextState, topbarTabValueState } from "../../atoms";
 import { TopbarTabs, UserChoice } from "../../interfaces";
@@ -33,7 +33,7 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
     {
         if (selectedNodes.length === 0 && selectedEdges.length === 0)
         {
-            alert("Nothing was selected")
+            alert(NOTHING_SELECTED_MSG)
             return
         }
 

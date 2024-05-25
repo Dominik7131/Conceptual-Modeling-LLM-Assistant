@@ -7,6 +7,7 @@ export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
 export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 
 export const ORIGINAL_TEXT_ID = "highlightedOriginalText"
+export const NOTHING_SELECTED_MSG = "Please select some part of your conceptual model."
 
 
 // TODO: It is probably better to use "null" instead of blank item

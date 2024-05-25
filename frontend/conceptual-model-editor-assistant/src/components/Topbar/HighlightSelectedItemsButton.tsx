@@ -3,7 +3,7 @@ import HighlightIcon from '@mui/icons-material/Highlight';
 import { domainDescriptionState, isLoadingHighlightOriginalTextState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../../interfaces";
-import { capitalizeString } from "../../utils/utility";
+import { NOTHING_SELECTED_MSG, capitalizeString } from "../../utils/utility";
 import { HEADER, MERGE_ORIGINAL_TEXT_URL } from "../../utils/urls";
 import { createNameFromIRI } from "../../utils/conceptualModel";
 
@@ -67,7 +67,12 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
 
     const onHighlightSelectedItems = (): void =>
     {
-        // console.log("SNodes: ", selectedNodes)
+        if (selectedNodes.length === 0 && selectedEdges.length === 0)
+        {
+            alert(NOTHING_SELECTED_MSG)
+            return
+        }
+
         setIsLoading(true)
 
         setIsShowTitleDialogDomainDescription(false)
