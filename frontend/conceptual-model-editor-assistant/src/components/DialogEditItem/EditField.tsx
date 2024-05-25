@@ -5,14 +5,11 @@ import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isShowEditDialogState, regeneratedItemState, regeneratedOriginalTextIndexesState } from "../../atoms";
-import { Association, Attribute, Field, Item, ItemType, UserChoice } from '../../interfaces/interfaces';
+import { useRecoilState, useRecoilValue } from "recoil";
+import { domainDescriptionState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, regeneratedItemState } from "../../atoms";
+import { Association, Field, Item } from '../../interfaces/interfaces';
 import { onClearRegeneratedItem, onItemEdit } from '../../utils/editItem';
-import { getSnapshotDomainDescription, snapshotDomainDescription } from '../../utils/snapshot';
-import { HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL, SUGGEST_SINGLE_FIELD_URL } from '../../utils/urls';
-import { itemTypeToUserChoice } from '../../utils/utility';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import useGenerateSingleField from '../../hooks/useGenerateSingleField';
 import useConfirmRegeneratedField from '../../hooks/useConfirmRegeneratedField';
 

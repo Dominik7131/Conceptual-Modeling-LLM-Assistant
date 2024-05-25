@@ -1,8 +1,8 @@
-import { Attribute, Field, Item, ItemType, Association, UserChoice } from "../interfaces/interfaces";
+import { Attribute, Field, Item, ItemType, Association } from "../interfaces/interfaces";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms";
+import { sidebarErrorMsgState, itemTypesToLoadState, suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms";
 import { onClearSuggestedItems } from "../utils/utility";
-import { HEADER, SUGGEST_ITEMS_URL, SUGGEST_SUMMARY_URL } from "../utils/urls";
+import { HEADER, SUGGEST_ITEMS_URL } from "../utils/urls";
 import { createIRIFromName } from "../utils/conceptualModel";
 
 
@@ -77,7 +77,7 @@ const useFetchSuggestedItems = () =>
                       }
 
                       isEmptyResponse = false
-                      onProcessStreamedData(value, sourceClassName, itemType)
+                      parseSuggestedItem(value, sourceClassName, itemType)
 
                       // Read the next chunk
                       readChunk()
@@ -103,7 +103,7 @@ const useFetchSuggestedItems = () =>
     }
 
 
-  const onProcessStreamedData = (value: any, sourceClassName: string, itemType: ItemType): void =>
+  const parseSuggestedItem = (value: any, sourceClassName: string, itemType: ItemType): void =>
   {
     // Convert the `value` to a string
     var jsonString = new TextDecoder().decode(value)
