@@ -1,5 +1,5 @@
 import { SetterOrUpdater } from "recoil";
-import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SidebarTabs, UserChoice } from "../interfaces"
+import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SidebarTabs, UserChoice, TextFilteringVariation } from "../interfaces/interfaces"
 import { createNameFromIRI } from "./conceptualModel";
 
 
@@ -8,6 +8,8 @@ export const SUMMARY_PLAIN_TEXT_NAME = "Summary: plain text"
 
 export const ORIGINAL_TEXT_ID = "highlightedOriginalText"
 export const NOTHING_SELECTED_MSG = "Please select some part of your conceptual model."
+
+export const TEXT_FILTERING_VARIATION_DEFAULT_VALUE = TextFilteringVariation.SYNTACTIC
 
 
 // TODO: It is probably better to use "null" instead of blank item

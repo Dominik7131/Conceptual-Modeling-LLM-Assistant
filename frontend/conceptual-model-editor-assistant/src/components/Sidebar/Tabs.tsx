@@ -2,7 +2,7 @@ import { Box, Tab } from "@mui/material"
 import { sidebarErrorMsgState, sidebarTabValueState } from "../../atoms"
 import { useSetRecoilState } from "recoil"
 import { TabList } from "@mui/lab"
-import { SidebarTabs, UserChoice } from "../../interfaces"
+import { SidebarTabs, UserChoice } from "../../interfaces/interfaces"
 import { capitalizeString } from "../../utils/utility"
 
 

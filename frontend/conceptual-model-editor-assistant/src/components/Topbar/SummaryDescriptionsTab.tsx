@@ -2,7 +2,7 @@ import { Button, Typography, CircularProgress, IconButton, Stack, Tooltip } from
 import { useRecoilState, useRecoilValue } from "recoil"
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, edgesState, isLoadingSummaryDescriptionsState, isSummaryDescriptionReactButtonClickedState, nodesState, summaryDescriptionsState } from "../../atoms"
 import { capitalizeString } from "../../utils/utility"
-import { Attribute, UserChoice } from "../../interfaces"
+import { Attribute, UserChoice } from "../../interfaces/interfaces"
 import CheckIcon from '@mui/icons-material/Check';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import ThumbDownIcon from '@mui/icons-material/ThumbDown';

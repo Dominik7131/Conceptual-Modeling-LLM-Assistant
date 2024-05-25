@@ -1,7 +1,7 @@
 import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange, useOnSelectionChange, BackgroundVariant } from 'reactflow';
 import CustomNode from './CustomNode/CustomNode';
 import CustomEdge from './CustomEdge';
-import { Field, ItemType, Association } from '../../interfaces';
+import { Field, ItemType, Association } from '../../interfaces/interfaces';
 import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState } from '../../atoms';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { useCallback, useEffect } from 'react';

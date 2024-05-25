@@ -38,8 +38,9 @@ def suggest_items():
 
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
+    text_filtering_variation = body_data["textFilteringVariation"]
 
-    return llm_assistant.suggest_items(source_class, target_class, user_choice, domain_description=domain_description, count_items_to_suggest=5)
+    return llm_assistant.suggest_items(source_class, target_class, user_choice, domain_description=domain_description, text_filtering_variation=text_filtering_variation, count_items_to_suggest=5)
 
 
 
@@ -54,11 +55,13 @@ def suggest_single_field():
     field = body_data["field"]
     domain_description = body_data["domainDescription"]
     user_choice = body_data["userChoice"]
+    text_filtering_variation = body_data["textFilteringVariation"]
 
     if user_choice == "associations":
         user_choice = UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value
 
-    single_field = llm_assistant.suggest_single_field(user_choice, name, source_class, target_class, domain_description, field)
+    single_field = llm_assistant.suggest_single_field(user_choice, name, source_class, target_class, domain_description, field,text_filtering_variation=text_filtering_variation)
+
     return single_field
 
 
@@ -113,6 +116,7 @@ def save_suggested_item():
     domain_description = body_data["domainDescription"]
     item = body_data["item"]
     isPositive = body_data["isPositive"]
+    text_filtering_variation = body_data["textFilteringVariation"]
 
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
 
@@ -122,7 +126,7 @@ def save_suggested_item():
     completed_item["prompt"] = prompt
 
     if user_choice == UserChoice.ATTRIBUTES or user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
-        relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_class=item[Field.SOURCE_CLASS.value])
+        relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_class=item[Field.SOURCE_CLASS.value], filtering_variation=text_filtering_variation)
         completed_item["filtered_domain_description"] = relevant_texts
 
     save_item_to_storage(completed_item)
@@ -140,13 +144,14 @@ def save_suggested_single_field():
     source_class = body_data.get("sourceClass", "")
     domain_description = body_data["domainDescription"]
     isPositive = body_data["isPositive"]
+    text_filtering_variation = body_data["textFilteringVariation"]
 
     completed_item = { "domain_description": domain_description, "field_name": field_name, "field_text": field_text, "is_positive": isPositive }
 
     prompt = llm_assistant.get_prompt(user_choice=user_choice, field_name=field_name, is_chain_of_thoughts=False)
     completed_item["prompt"] = prompt
 
-    relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_class=source_class)
+    relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_class=source_class, filtering_variation=text_filtering_variation)
     completed_item["filtered_domain_description"] = relevant_texts
 
     save_item_to_storage(completed_item)

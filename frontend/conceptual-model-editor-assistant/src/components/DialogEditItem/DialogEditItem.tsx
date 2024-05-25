@@ -4,7 +4,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { editDialogErrorMsgState, editedSuggestedItemState, isShowEditDialogState, selectedSuggestedItemState } from '../../atoms';
-import { Association, Attribute, Field, ItemFieldUIName, ItemType } from '../../interfaces';
+import { Association, Attribute, Field, ItemFieldUIName, ItemType } from '../../interfaces/interfaces';
 import ClassListSelector from './ClassListSelector';
 import Title from './Title';
 import ControlButtons from './ControlButtons';

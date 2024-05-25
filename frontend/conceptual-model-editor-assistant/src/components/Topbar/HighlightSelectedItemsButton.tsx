@@ -2,7 +2,7 @@ import { Button } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
 import { domainDescriptionState, isLoadingHighlightOriginalTextState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../../interfaces";
+import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../../interfaces/interfaces";
 import { NOTHING_SELECTED_MSG, capitalizeString } from "../../utils/utility";
 import { HEADER, MERGE_ORIGINAL_TEXT_URL } from "../../utils/urls";
 import { createNameFromIRI } from "../../utils/conceptualModel";

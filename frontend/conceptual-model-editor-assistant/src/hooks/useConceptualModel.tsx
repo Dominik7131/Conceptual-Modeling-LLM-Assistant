@@ -1,10 +1,10 @@
 import 'reactflow/dist/style.css';
 import { changeSidebarTab, changeTitle, onClearSuggestedItems, userChoiceToItemType } from '../utils/utility';
 import useFetchData from './useFetchData';
-import { ItemType, UserChoice } from '../interfaces';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState } from '../atoms';
-import { snapshotDomainDescription } from '../utils/snapshot';
+import { ItemType, UserChoice } from '../interfaces/interfaces';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState, textFilteringVariationState, textFilteringVariationSnapshotsState } from '../atoms';
+import { snapshotDomainDescription, snapshotTextFilteringVariation } from '../utils/snapshot';
 
 
 const useConceptualModel = () =>
@@ -17,7 +17,11 @@ const useConceptualModel = () =>
 
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+  const textFilteringVariation = useRecoilValue(textFilteringVariationState)
+
   const setDomainDescriptionSnapshot = useSetRecoilState(domainDescriptionSnapshotsState)
+  const setTextFilteringVariationSnapshot = useSetRecoilState(textFilteringVariationSnapshotsState)
+  
 
   const setSidebarTab = useSetRecoilState(sidebarTabValueState)
 
@@ -38,10 +42,14 @@ const useConceptualModel = () =>
     changeSidebarTab(itemType, setSidebarTab)
     changeTitle(userChoice, sourceItemName, targetItemName, setSidebarTitles)
 
-    // Snapshot current domain description to know from what text the suggestions were generated
+    // Snapshot current configuration to know from what parameters the suggestions were generated
     snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
+    snapshotTextFilteringVariation(userChoice, textFilteringVariation, setTextFilteringVariationSnapshot)
 
-    const bodyData = JSON.stringify({"sourceClass": sourceItemName, "targetClass": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription})
+    const bodyData = JSON.stringify({
+      "sourceClass": sourceItemName, "targetClass": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription,
+      "filteringVariation": textFilteringVariation
+    })
 
     fetchStreamedData(bodyData, sourceItemName, itemType)
   }

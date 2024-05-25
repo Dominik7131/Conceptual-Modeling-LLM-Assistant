@@ -1,4 +1,4 @@
-import { Attribute, Field, Item, ItemType, Association, UserChoice } from "../interfaces";
+import { Attribute, Field, Item, ItemType, Association, UserChoice } from "../interfaces/interfaces";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { isLoadingSummaryPlainTextState, isLoadingSummaryDescriptionsState, summaryDescriptionsState, summaryTextState, sidebarErrorMsgState, itemTypesToLoadState, suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms";
 import { onClearSuggestedItems } from "../utils/utility";

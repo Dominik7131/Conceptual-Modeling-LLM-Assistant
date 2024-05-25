@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem"
 import { editedSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../../atoms"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { Node } from 'reactflow';
-import { Association, Field, ItemFieldUIName } from "../../interfaces"
+import { Association, Field, ItemFieldUIName } from "../../interfaces/interfaces"
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useState } from "react"
 import { createNameFromIRI, doesNodeAlreadyExist } from "../../utils/conceptualModel"

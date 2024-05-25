@@ -3,7 +3,7 @@ import { topbarTabValueState } from "../../atoms"
 import { useSetRecoilState } from "recoil"
 import { TabList } from "@mui/lab"
 import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME } from "../../utils/utility"
-import { TopbarTabs } from "../../interfaces"
+import { TopbarTabs } from "../../interfaces/interfaces"
 
 
 const Tabs: React.FC = (): JSX.Element =>

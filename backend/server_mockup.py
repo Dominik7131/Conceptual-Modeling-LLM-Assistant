@@ -24,6 +24,9 @@ def suggest_items():
     source_class = body_data.get("sourceClass", "")
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
+    filtering_variation = body_data["filteringVariation"]
+
+    print(f"fv: {filtering_variation}")
 
     def generate_mock_up():
         # time.sleep(2)
@@ -146,6 +149,7 @@ def save_suggested_item():
     domain_description = body_data["domainDescription"]
     item = body_data["item"]
     isPositive = body_data["isPositive"]
+    text_filtering_variation = body_data["textFilteringVariation"]
 
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
     print(completed_item)

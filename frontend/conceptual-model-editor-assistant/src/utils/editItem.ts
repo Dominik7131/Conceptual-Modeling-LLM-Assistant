@@ -1,5 +1,5 @@
 import { Node, Edge } from "reactflow"
-import { Association, Attribute, Class, Field, Item, ItemType } from "../interfaces"
+import { Association, Attribute, Class, Field, Item, ItemType } from "../interfaces/interfaces"
 import { SetterOrUpdater } from "recoil"
 import { createIRIFromName, editEdgeAssociation, editNodeAttribute, editNodeClass } from "./conceptualModel"
 

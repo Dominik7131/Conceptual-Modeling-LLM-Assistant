@@ -1,6 +1,6 @@
 import Button from "@mui/material/Button";
 import UploadIcon from '@mui/icons-material/Upload';
-import { ConceptualModelJson } from "../../interfaces";
+import { ConceptualModelJson } from "../../interfaces/interfaces";
 import DialogEnterIRI from "./DialogEnterModelID";
 import { edgesState, importedFileNameState, isDialogEnterIRIOpenedState, isDialogImportState, nodesState } from "../../atoms";
 import { useSetRecoilState } from "recoil";

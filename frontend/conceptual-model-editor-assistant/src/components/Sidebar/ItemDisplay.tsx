@@ -1,5 +1,5 @@
 import { Stack, Typography } from "@mui/material"
-import { Attribute, Field, Item, ItemFieldUIName, ItemType, Association } from "../../interfaces"
+import { Attribute, Field, Item, ItemFieldUIName, ItemType, Association } from "../../interfaces/interfaces"
 import { createNameFromIRI } from "../../utils/conceptualModel"
 
 

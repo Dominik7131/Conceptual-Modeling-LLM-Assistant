@@ -1,174 +1,187 @@
 import { atom, selector } from 'recoil'
-import { Attribute, ConceptualModelSnapshot, DomainDescriptionSnapshot, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice } from './interfaces';
+import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice, TextFilteringVariation } from './interfaces/interfaces';
 import { Node, Edge } from 'reactflow';
-import { blankClass } from './utils/utility';
+import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE, blankClass } from './utils/utility';
 import { DATASPECER_MODEL_URL } from './utils/urls';
+import { ConceptualModelSnapshot, DomainDescriptionSnapshot, TextFilteringVariationSnapshot } from './interfaces/snapshots';
 
 // TODO: Divide atoms into separate files
 
 export const isShowEditDialogState = atom({
-    key: 'isShowEditDialogState',
+    key: "isShowEditDialogState",
     default: false,
 })
 
 export const isShowHighlightDialogState = atom({
-    key: 'isShowHighlightDialogState',
+    key: "isShowHighlightDialogState",
     default: false,
 })
 
 export const isShowCreateEdgeDialogState = atom({
-    key: 'isShowCreateEdgeDialogState',
+    key: "isShowCreateEdgeDialogState",
     default: false,
 })
 
 
 // export const suggestedItemsState = atom<any>({
-//     key: 'suggestedItemsState',
+//     key: "suggestedItemsState",
 //     default: { classes: [], attributes: [], associations: []},
 // })
 
 export const suggestedClassesState = atom<Class[]>({
-    key: 'suggestedClassesState',
+    key: "suggestedClassesState",
     default: [],
 })
 
 export const suggestedAttributesState = atom<Attribute[]>({
-    key: 'suggestedAttributesState',
+    key: "suggestedAttributesState",
     default: [],
 })
 
 export const suggestedAssociationsState = atom<Association[]>({
-    key: 'suggestedAssociationsState',
+    key: "suggestedAssociationsState",
     default: [],
 })
 
 
 export const sidebarTitlesState = atom<ItemsMessage>({
-    key: 'sidebarTitlesState',
+    key: "sidebarTitlesState",
     default: { classes: "", attributes: "", associations: "" },
 })
 
 
 export const isIgnoreDomainDescriptionState = atom({
-    key: 'isIgnoreDomainDescriptionState',
+    key: "isIgnoreDomainDescriptionState",
     default: false,
 })
 
 export const domainDescriptionState = atom({
-    key: 'domainDescriptionState',
+    key: "domainDescriptionState",
     default: "",
 })
 
 export const domainDescriptionSnapshotsState = atom<DomainDescriptionSnapshot>({
-    key: 'domainDescriptionSnapshotsState',
+    key: "domainDescriptionSnapshotsState",
     default: { [UserChoice.CLASSES]: "", [UserChoice.ATTRIBUTES]: "", [UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS]: "", [UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES]: "",
     [UserChoice.SINGLE_FIELD]: "", [UserChoice.SUMMARY_PLAIN_TEXT]: "", [UserChoice.SUMMARY_DESCRIPTIONS]: ""},
 })
 
+
+export const textFilteringVariationSnapshotsState = atom<TextFilteringVariationSnapshot>({
+    key: "textFilteringVariationSnapshotsState",
+    default: {
+        [UserChoice.CLASSES]: TEXT_FILTERING_VARIATION_DEFAULT_VALUE, [UserChoice.ATTRIBUTES]: TEXT_FILTERING_VARIATION_DEFAULT_VALUE,
+        [UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS]: TEXT_FILTERING_VARIATION_DEFAULT_VALUE, [UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES]: TEXT_FILTERING_VARIATION_DEFAULT_VALUE,
+        [UserChoice.SINGLE_FIELD]: TEXT_FILTERING_VARIATION_DEFAULT_VALUE, [UserChoice.SUMMARY_PLAIN_TEXT]: TEXT_FILTERING_VARIATION_DEFAULT_VALUE,
+        [UserChoice.SUMMARY_DESCRIPTIONS]: TEXT_FILTERING_VARIATION_DEFAULT_VALUE
+    },
+})
+
+
 export const conceptualModelSnapshotState = atom<ConceptualModelSnapshot>({
-    key: 'conceptualModelSnapshotState',
+    key: "conceptualModelSnapshotState",
     default: { [UserChoice.SUMMARY_PLAIN_TEXT]: "", [UserChoice.SUMMARY_DESCRIPTIONS]: ""},
 })
 
 
 export const fieldToLoadState = atom<Field[]>({
-    key: 'fieldToLoadState',
+    key: "fieldToLoadState",
     default: [],
 })
 
 
 export const itemTypesToLoadState = atom<ItemType[]>({
-    key: 'itemTypesToLoadState',
+    key: "itemTypesToLoadState",
     default: [],
 })
 
 
 // TODO: Do not use initial invalid item, instead make a type: Item | null
 export const selectedSuggestedItemState = atom<Item>({
-    key: 'selectedSuggestedItemState',
+    key: "selectedSuggestedItemState",
     default: blankClass,
 })
 
 export const editedSuggestedItemState = atom<Item>({
-    key: 'editedSuggestedItemState',
+    key: "editedSuggestedItemState",
     default: blankClass,
 })
 
 export const regeneratedItemState = atom<Item>({
-    key: 'regeneratedItemState',
+    key: "regeneratedItemState",
     default: blankClass,
 })
 
 export const isSuggestedItemState = atom({
-    key: 'isSuggestedItemState',
+    key: "isSuggestedItemState",
     default: true,
 })
 
 
 export const isItemInConceptualModelState = atom({
-    key: 'isItemInConceptualModelState',
+    key: "isItemInConceptualModelState",
     default: true,
 })
 
 
 export const originalTextIndexesListState = atom<number[]>({
-    key: 'originalTextIndexesListState',
+    key: "originalTextIndexesListState",
     default: [],
 })
 
 export const tooltipsState = atom<string[]>({
-    key: 'tooltipsState',
+    key: "tooltipsState",
     default: [],
 })
 
 
 
 export const isLoadingSuggestedItemsState = atom({
-    key: 'isLoadingSuggestedItemsState',
+    key: "isLoadingSuggestedItemsState",
     default: false,
 })
 
 export const isLoadingEditState = atom({
-    key: 'isLoadingEditState',
+    key: "isLoadingEditState",
     default: false,
 })
 
 export const isLoadingSummaryPlainTextState = atom({
-    key: 'isLoadingSummaryPlainTextState',
+    key: "isLoadingSummaryPlainTextState",
     default: false,
 })
 
 export const isLoadingSummaryDescriptionsState = atom({
-    key: 'isLoadingSummaryDescriptionsState',
+    key: "isLoadingSummaryDescriptionsState",
     default: false,
 })
 
 export const isLoadingHighlightOriginalTextState = atom({
-    key: 'isLoadingHighlightOriginalTextState',
+    key: "isLoadingHighlightOriginalTextState",
     default: false,
 })
 
 
 export const summaryTextState = atom({
-    key: 'summaryTextState',
+    key: "summaryTextState",
     default: "",
 })
 
 // TODO: This object should contain descriptions for "classes": array of classes and "associations": array of associations
 export const summaryDescriptionsState = atom<SummaryObject>({
-    key: 'summaryDescriptionsState',
+    key: "summaryDescriptionsState",
     default: { classes: [], associations: []},
 })
 
 
 export const isSidebarOpenState = atom({
-    key: 'isSidebarOpenState',
+    key: "isSidebarOpenState",
     default: true,
 })
 
 
 export const nodesState = atom<Node[]>({
-    key: 'nodesState',
+    key: "nodesState",
     default: [],
 })
 
@@ -184,7 +197,7 @@ export const selectedNodesState = selector<Node[]>({
 })
 
 export const edgesState = atom<Edge[]>({
-    key: 'edgesState',
+    key: "edgesState",
     default: [],
 })
 
@@ -200,76 +213,82 @@ export const selectedEdgesState = selector<Edge[]>({
 
 
 export const topbarTabValueState = atom({
-    key: 'topbarTabValueState',
+    key: "topbarTabValueState",
     default: "0",
 })
 
 
 export const sidebarTabValueState = atom({
-    key: 'sidebarTabValueState',
+    key: "sidebarTabValueState",
     default: "0",
 })
 
 
 export const editDialogErrorMsgState = atom({
-    key: 'editDialogErrorMsgState',
+    key: "editDialogErrorMsgState",
     default: "",
 })
 
 
 export const sidebarErrorMsgState = atom({
-    key: 'sidebarErrorMsgState',
+    key: "sidebarErrorMsgState",
     default: "",
 })
 
 
 export const importedFileNameState = atom({
-    key: 'importedFileNameState',
+    key: "importedFileNameState",
     default: "",
 })
 
 
 export const isDialogEnterIRIOpenedState = atom({
-    key: 'isDialogEnterIRIOpenedState',
+    key: "isDialogEnterIRIOpenedState",
     default: false,
 })
 
 
 export const isShowTitleDialogDomainDescriptionState = atom({
-    key: 'isShowTitleDialogDomainDescriptionState',
+    key: "isShowTitleDialogDomainDescriptionState",
     default: true,
 })
 
 export const modelIDState = atom({
-    key: 'modelIDState',
+    key: "modelIDState",
     default: DATASPECER_MODEL_URL,
 })
 
 
 export const isSummaryPlainTextReactButtonClickedState = atom({
-    key: 'isSummaryPlainTextReactButtonClickedState',
+    key: "isSummaryPlainTextReactButtonClickedState",
     default: false,
 })
 
 export const isSummaryDescriptionReactButtonClickedState = atom({
-    key: 'isSummaryDescriptionReactButtonClickedState',
+    key: "isSummaryDescriptionReactButtonClickedState",
     default: false,
 })
 
 
 export const isSidebarCollapsedState = atom({
-    key: 'isSidebarCollapsedState',
+    key: "isSidebarCollapsedState",
     default: false,
 })
 
 
 export const isDialogImportState = atom({
-    key: 'isDialogImportState',
+    key: "isDialogImportState",
     default: true,
 })
 
 
 export const regeneratedOriginalTextIndexesState = atom<number[]>({
-    key: 'regeneratedOriginalTextIndexesState',
+    key: "regeneratedOriginalTextIndexesState",
     default: [],
+})
+
+
+export const textFilteringVariationState = atom<TextFilteringVariation>({
+    key: "textFilteringVariationState",
+    default: TEXT_FILTERING_VARIATION_DEFAULT_VALUE,
 })

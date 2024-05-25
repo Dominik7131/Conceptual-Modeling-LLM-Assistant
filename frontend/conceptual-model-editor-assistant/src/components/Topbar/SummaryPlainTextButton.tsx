@@ -3,7 +3,7 @@ import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { NOTHING_SELECTED_MSG, SUMMARY_PLAIN_TEXT_NAME } from "../../utils/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryPlainTextReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryTextState, topbarTabValueState } from "../../atoms";
-import { TopbarTabs, UserChoice } from "../../interfaces";
+import { TopbarTabs, UserChoice } from "../../interfaces/interfaces";
 import useFetchData from "../../hooks/useFetchData";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
 import { convertConceptualModelToJSONSummary } from "../../utils/serialization";

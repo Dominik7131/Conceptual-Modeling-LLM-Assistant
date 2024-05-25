@@ -1,5 +1,5 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { Field, ItemType, UserChoice } from "../interfaces"
+import { Field, ItemType, UserChoice } from "../interfaces/interfaces"
 import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, fieldToLoadState, isIgnoreDomainDescriptionState, regeneratedItemState, regeneratedOriginalTextIndexesState } from "../atoms"
 import { snapshotDomainDescription } from "../utils/snapshot"
 import { HEADER, SUGGEST_SINGLE_FIELD_URL } from "../utils/urls"

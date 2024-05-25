@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button';
 import { useState } from 'react';
 import { NodeProps, Position } from 'reactflow';
-import { Attribute, Class, Field, NodeData, PRIMARY_COLOR, Item } from '../../../interfaces';
+import { Attribute, Class, Field, NodeData, PRIMARY_COLOR, Item } from '../../../interfaces/interfaces';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';

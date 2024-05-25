@@ -1,5 +1,5 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Attribute, Field, Item, ItemType, UserChoice } from "../interfaces";
+import { Attribute, Field, Item, ItemType, UserChoice } from "../interfaces/interfaces";
 import { HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL } from "../utils/urls";
 import { itemTypeToUserChoice } from "../utils/utility";
 import { domainDescriptionSnapshotsState, editedSuggestedItemState, regeneratedItemState, regeneratedOriginalTextIndexesState } from "../atoms";

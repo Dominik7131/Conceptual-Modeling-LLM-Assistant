@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { Item } from "../../interfaces"
+import { Item } from "../../interfaces/interfaces"
 import Alert from '@mui/material/Alert';
 import { editDialogErrorMsgState } from "../../atoms";
 

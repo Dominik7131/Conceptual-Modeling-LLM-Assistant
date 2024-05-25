@@ -1,5 +1,5 @@
 import { Node, BaseEdge, EdgeLabelRenderer, EdgeProps, MarkerType, getBezierPath, getMarkerEnd, getSimpleBezierPath, getStraightPath, useStore } from 'reactflow';
-import { EdgeData, Field, ItemType, Association, PRIMARY_COLOR } from '../../interfaces';
+import { EdgeData, Field, ItemType, Association, PRIMARY_COLOR } from '../../interfaces/interfaces';
 import { useCallback, useState } from 'react';
 import Button from '@mui/material/Button';
 import EditIcon from '@mui/icons-material/Edit';

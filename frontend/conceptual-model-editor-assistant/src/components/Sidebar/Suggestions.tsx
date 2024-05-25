@@ -1,5 +1,5 @@
 import { Alert, Box, CircularProgress, Divider, ListItem, Stack, Typography } from "@mui/material"
-import { Field, Item, ItemType } from "../../interfaces"
+import { Field, Item, ItemType } from "../../interfaces/interfaces"
 import ItemDisplay from "./ItemDisplay"
 import ControlButtons from "./ControlButtons"
 import { useRecoilValue } from "recoil"

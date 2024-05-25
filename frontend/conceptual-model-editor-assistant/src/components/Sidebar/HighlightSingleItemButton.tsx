@@ -2,7 +2,7 @@ import { Button, Tooltip } from "@mui/material"
 import HighlightIcon from '@mui/icons-material/Highlight';
 import { domainDescriptionState, isIgnoreDomainDescriptionState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { RecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Attribute, Field, Item, ItemType, Association } from "../../interfaces";
+import { Attribute, Field, Item, ItemType, Association } from "../../interfaces/interfaces";
 import { capitalizeString } from "../../utils/utility";
 import { useState } from "react";
 import { SIDEBAR_BUTTON_SIZE } from "../../utils/urls";

@@ -7,7 +7,7 @@ import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, isShowEditDialogState, regeneratedItemState, regeneratedOriginalTextIndexesState } from "../../atoms";
-import { Association, Attribute, Field, Item, ItemType, UserChoice } from '../../interfaces';
+import { Association, Attribute, Field, Item, ItemType, UserChoice } from '../../interfaces/interfaces';
 import { onClearRegeneratedItem, onItemEdit } from '../../utils/editItem';
 import { getSnapshotDomainDescription, snapshotDomainDescription } from '../../utils/snapshot';
 import { HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL, SUGGEST_SINGLE_FIELD_URL } from '../../utils/urls';

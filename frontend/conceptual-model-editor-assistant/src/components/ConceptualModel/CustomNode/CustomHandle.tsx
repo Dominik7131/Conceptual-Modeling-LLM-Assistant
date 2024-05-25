@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material"
 import { Handle, Position } from "reactflow"
-import { PRIMARY_COLOR } from "../../../interfaces"
+import { PRIMARY_COLOR } from "../../../interfaces/interfaces"
 
 
 interface Props

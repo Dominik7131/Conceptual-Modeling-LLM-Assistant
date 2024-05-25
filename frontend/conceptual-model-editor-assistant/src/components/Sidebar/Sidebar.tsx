@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { isSidebarCollapsedState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState } from '../../atoms';
 import { Box, Divider } from '@mui/material';
-import { ItemType } from '../../interfaces';
+import { ItemType } from '../../interfaces/interfaces';
 import { TabContext, TabList, TabPanel } from "@mui/lab"
 import Tabs from "./Tabs";
 import Suggestions from './Suggestions';

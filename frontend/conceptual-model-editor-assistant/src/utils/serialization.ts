@@ -1,5 +1,5 @@
 import { Node, Edge } from "reactflow"
-import { Association, Attribute, AttributeJson, Class, ClassJson, ConceptualModelJson, EdgeData, Field, GeneralizationJson, ItemType, NodeData, RelationshipJson } from "../interfaces"
+import { Association, Attribute, AttributeJson, Class, ClassJson, ConceptualModelJson, EdgeData, Field, GeneralizationJson, ItemType, NodeData, RelationshipJson } from "../interfaces/interfaces"
 import { createNameFromIRI } from "./conceptualModel"
 
 

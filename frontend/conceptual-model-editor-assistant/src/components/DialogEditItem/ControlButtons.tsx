@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import { Association, Attribute, Field, Item, ItemType } from "../../interfaces"
+import { Association, Attribute, Field, Item, ItemType } from "../../interfaces/interfaces"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { edgesState, editDialogErrorMsgState, editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../../atoms";
 import { createNameFromIRI, onAddItem, onRemove } from '../../utils/conceptualModel';

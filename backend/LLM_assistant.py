@@ -10,12 +10,12 @@ sys.path.append('text-filtering/syntactic')
 sys.path.append('text-filtering/semantic')
 from text_utility import DEFINED_DATA_TYPES, LOGGER_NAME, Field, PromptFileSymbols, TextFilteringVariation, TextUtility, UserChoice, DataType
 from syntactic_text_filterer import SyntacticTextFilterer
+from semantic_text_filterer import SemanticTextFilterer
 
 
 ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 IS_IGNORE_DOMAIN_DESCRIPTION = False
-FILTERING_VARIATION = TextFilteringVariation.SYNTACTIC
 IS_RELATIONSHIPS_IS_A = False
 
 logger = logging.getLogger(LOGGER_NAME)
@@ -39,13 +39,8 @@ class LLMAssistant:
 
         self.client = openai.OpenAI(base_url=LLM_BACKEND_URL, api_key="sk-no-key-required")
 
-        if FILTERING_VARIATION == TextFilteringVariation.SYNTACTIC:
-            self.relevant_text_finder = SyntacticTextFilterer()
-
-        elif FILTERING_VARIATION == TextFilteringVariation.SEMANTIC:
-            # Import here so the model for semantic filtering does not have to load
-            from semantic_text_filterer import SemanticTextFilterer
-            self.relevant_text_finder = SemanticTextFilterer()
+        self.syntactic_text_filterer = SyntacticTextFilterer()
+        self.semantic_text_filterer = SemanticTextFilterer()
         
         self.debug_info = self.DebugInfo()
 
@@ -400,7 +395,19 @@ class LLMAssistant:
         return prompt
 
 
-    def suggest_items(self, source_class, target_class, user_choice, domain_description, count_items_to_suggest=5):
+    def __get_text_filterer(self, text_filtering_variation):
+
+        if text_filtering_variation == TextFilteringVariation.SYNTACTIC.value:
+            return self.syntactic_text_filterer
+        
+        elif text_filtering_variation == TextFilteringVariation.SEMANTIC.value:
+            return self.semantic_text_filterer
+
+        else:
+            return None
+
+
+    def suggest_items(self, source_class, target_class, user_choice, domain_description, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value, count_items_to_suggest=5):
 
         source_class = source_class.strip()
 
@@ -413,17 +420,12 @@ class LLMAssistant:
         self.__append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
 
 
-        if FILTERING_VARIATION != TextFilteringVariation.NONE and user_choice != UserChoice.CLASSES.value:
-            relevant_texts = self.relevant_text_finder.get(source_class, domain_description)
-
-            result = ""
-            for text in relevant_texts:
-                result += f"{text}\n"
-            
-            relevant_texts = result.rstrip() # Remove trailing new line
+        if user_choice != UserChoice.CLASSES.value:
+            relevant_texts = self.get_relevant_texts(self, source_class=source_class, domain_description=domain_description, filtering_variation=text_filtering_variation)
         else:
             relevant_texts = domain_description
-        
+
+
         if is_domain_description and not relevant_texts:
             logging.warn("No relevant texts found.")
             return
@@ -497,26 +499,28 @@ class LLMAssistant:
                 break
     
 
-    def get_relevant_texts(self, source_class, domain_description):
+    def get_relevant_texts(self, source_class, domain_description, filtering_variation):
 
-        if FILTERING_VARIATION != TextFilteringVariation.NONE:
-            relevant_texts = self.relevant_text_finder.get(source_class, domain_description)
+        if filtering_variation == TextFilteringVariation.NONE.value:
+            return domain_description
 
-            result = ""
-            for text in relevant_texts:
-                result += f"{text}\n"
-            
-            relevant_texts = result.rstrip() # Remove trailing new line
-        else:
-            relevant_texts = domain_description
+        text_filterer = self.__get_text_filterer(filtering_variation)
+        relevant_texts = text_filterer.get(source_class, domain_description)
+
+        result = ""
+        for text in relevant_texts:
+            result += f"{text}\n"
+        
+        relevant_texts = result.rstrip() # Remove trailing new line
         
         return relevant_texts
 
 
-    def suggest_single_field(self, user_choice, name, source_class, target_class, domain_description, field_name):
+    def suggest_single_field(self, user_choice, name, source_class, target_class, domain_description, field_name, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value):
+
         source_class = source_class.strip()
-        
-        relevant_texts = self.get_relevant_texts(source_class=source_class, domain_description=domain_description)
+
+        relevant_texts = self.get_relevant_texts(source_class=source_class, domain_description=domain_description, filtering_variation=text_filtering_variation)
         is_domain_description = domain_description != ""
 
         prompt = self.__create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class, 

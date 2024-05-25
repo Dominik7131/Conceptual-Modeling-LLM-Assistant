@@ -1,5 +1,5 @@
 import { Node, Edge } from "reactflow"
-import { Association, Attribute, Class, ConceptualModelJson, EdgeData, Field, ItemType, NodeData, UserChoice } from "../interfaces"
+import { Association, Attribute, Class, ConceptualModelJson, EdgeData, Field, ItemType, NodeData, UserChoice } from "../interfaces/interfaces"
 import { SetterOrUpdater } from "recoil"
 import { CUSTOM_EDGE_MARKER, CUSTOM_EDGE_TYPE, CUSTOM_ISA_EDGE_MARKER, createEdgeUniqueID, createIRIFromName, onAddItem } from "./conceptualModel"
 

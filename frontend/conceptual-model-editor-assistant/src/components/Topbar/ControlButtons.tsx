@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import useConceptualModel from "../../hooks/useConceptualModel";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
-import { UserChoice } from "../../interfaces";
+import { UserChoice } from "../../interfaces/interfaces";
 import { blankClass } from "../../utils/utility";
 import { useSetRecoilState } from "recoil";
 import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from "../../atoms";

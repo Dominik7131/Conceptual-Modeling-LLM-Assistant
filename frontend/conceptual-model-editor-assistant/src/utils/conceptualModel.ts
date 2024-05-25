@@ -1,5 +1,5 @@
 import { Node, Edge, MarkerType, EdgeMarker, internalsSymbol } from 'reactflow';
-import { Association, Attribute, Class, EdgeData, Field, Item, ItemType, NodeData } from '../interfaces';
+import { Association, Attribute, Class, EdgeData, Field, Item, ItemType, NodeData } from '../interfaces/interfaces';
 import { SetterOrUpdater } from 'recoil';
 import { blankClass } from './utility';
 
