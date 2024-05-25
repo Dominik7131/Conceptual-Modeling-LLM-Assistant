@@ -2,7 +2,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Attribute, Field, Item, ItemType, UserChoice } from "../interfaces/interfaces";
 import { HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL } from "../utils/urls";
 import { itemTypeToUserChoice } from "../utils/utility";
-import { domainDescriptionSnapshotsState, editedSuggestedItemState, regeneratedItemState, regeneratedOriginalTextIndexesState } from "../atoms";
+import { domainDescriptionSnapshotsState, editedSuggestedItemState, regeneratedItemState, regeneratedOriginalTextIndexesState, textFilteringVariationSnapshotsState } from "../atoms";
 import { getSnapshotDomainDescription } from "../utils/snapshot";
 import { onClearRegeneratedItem } from "../utils/editItem";
 
@@ -10,6 +10,7 @@ import { onClearRegeneratedItem } from "../utils/editItem";
 const useConfirmRegeneratedField = () =>
 {
     const domainDescriptionSnapshot = useRecoilValue(domainDescriptionSnapshotsState)
+    const textFilteringVariationSnapshot = useRecoilValue(textFilteringVariationSnapshotsState)
 
     const setEditedItem = useSetRecoilState(editedSuggestedItemState)
     const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
@@ -25,7 +26,7 @@ const useConfirmRegeneratedField = () =>
     
         const suggestionData = {
             domainDescription: currentDomainDescription, fieldName: fieldName, fieldText: fieldText,
-            userChoice: userChoice, sourceClass: sourceClass, isPositive: true
+            userChoice: userChoice, sourceClass: sourceClass, isPositive: true, textFilteringVariation: textFilteringVariationSnapshot
         }
     
         fetch(SAVE_SUGESTED_SINGLE_FIELD_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})

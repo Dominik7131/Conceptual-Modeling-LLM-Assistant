@@ -1,7 +1,7 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { Field, ItemType, UserChoice } from "../interfaces/interfaces"
-import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, fieldToLoadState, isIgnoreDomainDescriptionState, regeneratedItemState, regeneratedOriginalTextIndexesState } from "../atoms"
-import { snapshotDomainDescription } from "../utils/snapshot"
+import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, fieldToLoadState, isIgnoreDomainDescriptionState, regeneratedItemState, regeneratedOriginalTextIndexesState, textFilteringVariationSnapshotsState, textFilteringVariationState } from "../atoms"
+import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot"
 import { HEADER, SUGGEST_SINGLE_FIELD_URL } from "../utils/urls"
 
 
@@ -9,8 +9,11 @@ const useGenerateSingleField = () =>
 {
     const domainDescription = useRecoilValue(domainDescriptionState)
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
+    const textFilteringVariation = useRecoilValue(textFilteringVariationState)
+
     const setRegeneratedItem = useSetRecoilState(regeneratedItemState)
     const setSnapshotDomainDescription = useSetRecoilState(domainDescriptionSnapshotsState)
+    const setSnapshotTextFilteringVariation = useSetRecoilState(textFilteringVariationSnapshotsState)
     const setRegeneratedOriginalTextIndexes = useSetRecoilState(regeneratedOriginalTextIndexesState)
 
     const setFieldToLoad = useSetRecoilState(fieldToLoadState)
@@ -22,6 +25,7 @@ const useGenerateSingleField = () =>
     {
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         snapshotDomainDescription(UserChoice.SINGLE_FIELD, currentDomainDescription, setSnapshotDomainDescription)
+        snapshotTextFilteringVariation(UserChoice.SINGLE_FIELD, textFilteringVariation, setSnapshotTextFilteringVariation)
     
         let userChoice = UserChoice.CLASSES
     
@@ -51,8 +55,8 @@ const useGenerateSingleField = () =>
         setFieldToLoad(fieldsToLoad => [...fieldsToLoad, field])
         fetchStreamedDataGeneral(bodyData, field)
     }
-    
-    // TODO: Put this fetch function into a separate file
+
+
     const fetchStreamedDataGeneral = (bodyData: any, field: Field) =>
     {
         fetch(SUGGEST_SINGLE_FIELD_URL, { method: "POST", headers: HEADER, body: bodyData })
