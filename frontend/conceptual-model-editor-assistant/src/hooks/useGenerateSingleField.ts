@@ -3,6 +3,7 @@ import { Field, ItemType, UserChoice } from "../interfaces/interfaces"
 import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, fieldToLoadState, isIgnoreDomainDescriptionState, regeneratedItemState, regeneratedOriginalTextIndexesState, textFilteringVariationSnapshotsState, textFilteringVariationState } from "../atoms"
 import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot"
 import { HEADER, SUGGEST_SINGLE_FIELD_URL } from "../utils/urls"
+import { SingleFieldSuggestionBody } from "../interfaces/bodies"
 
 
 const useGenerateSingleField = () =>
@@ -45,21 +46,23 @@ const useGenerateSingleField = () =>
     
         if (!sourceClass) { sourceClass = "" }
         if (!targetClass) { targetClass = "" }
-    
-        const bodyData = JSON.stringify({
-            "name": name, "sourceClass": sourceClass, "targetClass": targetClass, "field": field, "userChoice": userChoice,
-            "domainDescription": currentDomainDescription, "textFilteringVariation": textFilteringVariation
-        })
+
+        const bodyData: SingleFieldSuggestionBody = {
+            name: name, sourceClass: sourceClass, targetClass: targetClass, field: field, userChoice: userChoice,
+            domainDescription: currentDomainDescription, textFilteringVariation: textFilteringVariation
+        }
+
+        const bodyDataJSON = JSON.stringify(bodyData)
     
         setErrorMessage("")
         setFieldToLoad(fieldsToLoad => [...fieldsToLoad, field])
-        fetchStreamedDataGeneral(bodyData, field)
+        fetchStreamedDataGeneral(bodyDataJSON, field)
     }
 
 
-    const fetchStreamedDataGeneral = (bodyData: any, field: Field) =>
+    const fetchStreamedDataGeneral = (bodyDataJSON: string, field: Field) =>
     {
-        fetch(SUGGEST_SINGLE_FIELD_URL, { method: "POST", headers: HEADER, body: bodyData })
+        fetch(SUGGEST_SINGLE_FIELD_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
         .then(response =>
         {
             const stream = response.body; // Get the readable stream from the response body

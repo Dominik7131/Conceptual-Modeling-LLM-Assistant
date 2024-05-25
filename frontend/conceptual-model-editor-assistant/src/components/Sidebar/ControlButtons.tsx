@@ -12,6 +12,7 @@ import { useState } from "react";
 import { HEADER, SAVE_SUGESTED_ITEM_URL, SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE } from "../../utils/urls";
 import { onAddItem } from "../../utils/conceptualModel";
 import { getSnapshotDomainDescription, getSnapshotTextFilteringVariation } from "../../utils/snapshot";
+import { SuggestedItemUserEvaluationBody } from "../../interfaces/bodies";
 
 
 interface Props
@@ -74,14 +75,14 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
         const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)
         const currentTextFilteringVariation = getSnapshotTextFilteringVariation(userChoice, textFilteringVariationSnapshot)
 
-        console.log("Snapshot: ", currentTextFilteringVariation)
-
-        const suggestionData = {
+        const suggestionData: SuggestedItemUserEvaluationBody = {
             domainDescription: currentDomainDescription, isPositive: isPositiveReaction, item: item, userChoice: userChoice,
             textFilteringVariation: currentTextFilteringVariation
         }
 
-        fetch(SAVE_SUGESTED_ITEM_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+        const bodyDataJSON = JSON.stringify(suggestionData)
+
+        fetch(SAVE_SUGESTED_ITEM_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
 
         setIsClicked(true)
     }

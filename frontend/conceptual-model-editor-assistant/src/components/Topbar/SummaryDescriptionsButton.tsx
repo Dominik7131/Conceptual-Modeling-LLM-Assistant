@@ -5,8 +5,9 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryDescriptionReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryDescriptionsState, topbarTabValueState } from "../../atoms";
 import { TopbarTabs, UserChoice } from "../../interfaces/interfaces";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
-import { convertConceptualModelToJSONSummary } from "../../utils/serialization";
+import { convertConceptualModelToObjectSummary } from "../../utils/serialization";
 import useFetchSummaryDescriptions from "../../hooks/useFetchSummaryDescriptions";
+import { SummarySuggestionBody } from "../../interfaces/bodies";
 
 
 const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
@@ -44,14 +45,18 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
 
-        const conceptualModel = convertConceptualModelToJSONSummary(selectedNodes, selectedEdges, true)
+        const conceptualModel = convertConceptualModelToObjectSummary(selectedNodes, selectedEdges, true)
         snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
 
         setTopbarTab(TopbarTabs.SUMMARY_DESCRIPTION)  
 
-        const bodyData = JSON.stringify({"summaryType": userChoice, "conceptualModel": conceptualModel, "domainDescription": currentDomainDescription})
+        const bodyData: SummarySuggestionBody = {
+            summaryType: userChoice, conceptualModelJSON: conceptualModel, domainDescription: currentDomainDescription
+        }
+        
+        const bodyDataJSON = JSON.stringify(bodyData)
     
-        fetchSummaryDescriptions(bodyData)
+        fetchSummaryDescriptions(bodyDataJSON)
     }
 
 

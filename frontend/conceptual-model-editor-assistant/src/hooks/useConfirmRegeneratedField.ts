@@ -5,6 +5,7 @@ import { itemTypeToUserChoice } from "../utils/utility";
 import { domainDescriptionSnapshotsState, editedSuggestedItemState, regeneratedItemState, regeneratedOriginalTextIndexesState, textFilteringVariationSnapshotsState } from "../atoms";
 import { getSnapshotDomainDescription, getSnapshotTextFilteringVariation } from "../utils/snapshot";
 import { onClearRegeneratedItem } from "../utils/editItem";
+import { SingleFieldUserEvaluationBody } from "../interfaces/bodies";
 
 
 const useConfirmRegeneratedField = () =>
@@ -24,13 +25,14 @@ const useConfirmRegeneratedField = () =>
         const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SINGLE_FIELD, domainDescriptionSnapshot)
         const currentFilteringVariation = getSnapshotTextFilteringVariation(UserChoice.SINGLE_FIELD, textFilteringVariationSnapshot)
         const userChoice = itemTypeToUserChoice(itemType)
-    
-        const suggestionData = {
+
+        const bodyData: SingleFieldUserEvaluationBody = {
             domainDescription: currentDomainDescription, fieldName: fieldName, fieldText: fieldText,
             userChoice: userChoice, sourceClass: sourceClass, isPositive: true, textFilteringVariation: currentFilteringVariation
         }
+        const bodyDataJSON = JSON.stringify(bodyData)
     
-        fetch(SAVE_SUGESTED_SINGLE_FIELD_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+        fetch(SAVE_SUGESTED_SINGLE_FIELD_URL, { method: 'POST', headers: HEADER, body: bodyDataJSON })
     }
     
         

@@ -5,6 +5,7 @@ import { ItemType, UserChoice } from '../interfaces/interfaces';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState, textFilteringVariationState, textFilteringVariationSnapshotsState } from '../atoms';
 import { snapshotDomainDescription, snapshotTextFilteringVariation } from '../utils/snapshot';
+import { ItemSuggestionBody } from '../interfaces/bodies';
 
 
 const useSuggestItems = () =>
@@ -43,12 +44,14 @@ const useSuggestItems = () =>
     snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
     snapshotTextFilteringVariation(userChoice, textFilteringVariation, setTextFilteringVariationSnapshot)
 
-    const bodyData = JSON.stringify({
-      "sourceClass": sourceItemName, "targetClass": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription,
-      "textFilteringVariation": textFilteringVariation
-    })
+    const bodyData: ItemSuggestionBody = {
+      sourceClass: sourceItemName, targetClass: targetItemName, userChoice: userChoice, domainDescription: currentDomainDescription,
+      textFilteringVariation: textFilteringVariation
+    }
 
-    fetchSuggestedItems(bodyData, sourceItemName, itemType)
+    const bodyDataJSON = JSON.stringify(bodyData)
+
+    fetchSuggestedItems(bodyDataJSON, sourceItemName, itemType)
   }
 
   return { onSuggestItems }

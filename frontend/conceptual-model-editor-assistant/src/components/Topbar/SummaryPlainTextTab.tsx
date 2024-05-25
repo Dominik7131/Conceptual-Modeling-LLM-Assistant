@@ -6,6 +6,7 @@ import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 import { UserChoice } from "../../interfaces/interfaces";
 import { HEADER, SAVE_SUGESTED_SUMMARY_URL } from "../../utils/urls";
 import { getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../utils/snapshot";
+import { SummaryUserEvaluationBody } from "../../interfaces/bodies";
 
 
 const SummaryPlainTextTab: React.FC = (): JSX.Element =>
@@ -25,12 +26,14 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
         const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)
         const currentConceptualModel = getSnapshotConceptualModel(userChoice, conceptualModelSnapshot)
 
-        const suggestionData = {
+        const suggestionData: SummaryUserEvaluationBody = {
             domainDescription: currentDomainDescription, isPositive: isPositiveReaction, summary: summary,
-            "summaryType": userChoice, conceptualModel: currentConceptualModel
+            summaryType: userChoice, conceptualModel: currentConceptualModel
         }
 
-        fetch(SAVE_SUGESTED_SUMMARY_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})
+        const bodyDataJSON = JSON.stringify(suggestionData)
+
+        fetch(SAVE_SUGESTED_SUMMARY_URL, { method: 'POST', headers: HEADER, body: bodyDataJSON })
 
         setIsClicked(true)
     }

@@ -9,11 +9,11 @@ const useFetchSummaryPlainText = () =>
     const setSummaryText = useSetRecoilState(summaryTextState)
 
 
-    const fetchSummaryPlainText = (bodyData : any) =>
+    const fetchSummaryPlainText = (bodyDataJSON : string) =>
     {
         setIsLoadingSummaryPlainText(_ => true)
     
-        fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyData })
+        fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
         .then(response =>
         {
             const stream = response.body // Get the readable stream from the response body
@@ -30,31 +30,28 @@ const useFetchSummaryPlainText = () =>
             const readChunk = () =>
             {
                 reader.read()
-                    .then(({value, done}) =>
+                .then(({value, done}) =>
+                {
+                    if (done)
                     {
-                        if (done)
-                        {
-                            console.log("Stream finished")
-                            setIsLoadingSummaryPlainText(_ => false)
-                            return
-                        }
-    
-                        // Convert the `value` to a string
-                        var jsonString = new TextDecoder().decode(value)
-                        console.log("JsonString: ", jsonString)
-                        
-                        const parsedData = JSON.parse(jsonString)
-                        console.log("Parsed data:", parsedData)
-                        setSummaryText(parsedData["summary"])
-    
-                        readChunk() // Read the next chunk
-                    })
-                    .catch(error =>
-                    {
+                        console.log("Stream finished")
+                        setIsLoadingSummaryPlainText(_ => false)
+                        return
+                    }
+
+                    const valueJSON: string = new TextDecoder().decode(value)
+                    const parsedData = JSON.parse(valueJSON)
+
+                    setSummaryText(parsedData["summary"])
+
+                    readChunk()
+                })
+                .catch(error =>
+                {
                     console.error(error)
-                    })
+                })
             }
-            readChunk() // Start reading the first chunk
+            readChunk()
         })
         .catch(error =>
         {

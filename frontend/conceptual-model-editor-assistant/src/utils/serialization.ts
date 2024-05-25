@@ -1,5 +1,5 @@
 import { Node, Edge } from "reactflow"
-import { Association, Attribute, AttributeJson, Class, ClassJson, ConceptualModelJson, EdgeData, Field, GeneralizationJson, ItemType, NodeData, RelationshipJson } from "../interfaces/interfaces"
+import { Association, Attribute, AttributeJson, Class, ClassJson, ConceptualModelJson, EdgeData, Field, GeneralizationJson, ItemType, NodeData, RelationshipJson, ConceptualModelObject } from "../interfaces/interfaces"
 import { createNameFromIRI } from "./conceptualModel"
 
 
@@ -71,10 +71,11 @@ export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[]): Conc
     return conceptualModel
 }
 
-export const convertConceptualModelToJSONSummary = (nodes: Node[], edges: Edge[], isOnlyNames : boolean) =>
+export const convertConceptualModelToObjectSummary = (nodes: Node[], edges: Edge[], isOnlyNames : boolean): ConceptualModelObject =>
 {
-    let result: { [key: string]: any } = {
-        classes: []
+    let result: ConceptualModelObject = {
+        classes: [],
+        associations: []
     }
 
     for (let node of nodes)
@@ -97,22 +98,11 @@ export const convertConceptualModelToJSONSummary = (nodes: Node[], edges: Edge[]
     }
 
 
-    let associations = []
+    let associations: Association[] = []
     for (let edge of edges)
     {
         const edgeData: EdgeData = edge.data
-
-        const sourceClassName = createNameFromIRI(edge[Field.SOURCE_CLASS])
-        const targetClassName = createNameFromIRI(edge[Field.TARGET_CLASS])        
-
-        if (isOnlyNames)
-        {
-            associations.push({ [Field.NAME]: edgeData.association[Field.NAME], "sourceClass": sourceClassName, "targetClass": targetClassName })
-        }
-        else
-        {
-            associations.push({ [Field.NAME]: edgeData.association[Field.NAME], [Field.ORIGINAL_TEXT]: edgeData.association[Field.ORIGINAL_TEXT], "sourceClass": sourceClassName, "targetClass": targetClassName })
-        }
+        associations.push(edgeData.association)
     }
 
     result.associations = associations

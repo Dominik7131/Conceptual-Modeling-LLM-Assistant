@@ -3,10 +3,11 @@ import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { NOTHING_SELECTED_MSG, SUMMARY_PLAIN_TEXT_NAME } from "../../utils/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryPlainTextReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryTextState, topbarTabValueState } from "../../atoms";
-import { TopbarTabs, UserChoice } from "../../interfaces/interfaces";
+import { ConceptualModelObject, TopbarTabs, UserChoice } from "../../interfaces/interfaces";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
-import { convertConceptualModelToJSONSummary } from "../../utils/serialization";
+import { convertConceptualModelToObjectSummary } from "../../utils/serialization";
 import useFetchSummaryPlainText from "../../hooks/useFetchSummaryPlainText";
+import { SummarySuggestionBody } from "../../interfaces/bodies";
 
 
 const SummaryPlainTextButton: React.FC= (): JSX.Element =>
@@ -44,14 +45,17 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
 
-        const conceptualModel = convertConceptualModelToJSONSummary(selectedNodes, selectedEdges, false)
+        const conceptualModel: ConceptualModelObject = convertConceptualModelToObjectSummary(selectedNodes, selectedEdges, false)
         snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
 
         setTopbarTab(TopbarTabs.SUMMARY_PLAIN_TEXT)
 
-        const bodyData = JSON.stringify({"summaryType": userChoice, "conceptualModel": conceptualModel, "domainDescription": currentDomainDescription})
+        const bodyData: SummarySuggestionBody = {
+            summaryType: userChoice, conceptualModelJSON: conceptualModel, domainDescription: currentDomainDescription
+        }
+        const bodyDataJSON = JSON.stringify(bodyData)
 
-        fetchSummaryPlainText(bodyData)
+        fetchSummaryPlainText(bodyDataJSON)
     }
 
 

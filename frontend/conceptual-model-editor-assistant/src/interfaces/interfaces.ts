@@ -141,7 +141,7 @@ export interface OriginalTextIndexesItem
 }
 
 
-export interface SerializedConceptualModel
+export interface ConceptualModelObject
 {
   classes: any[] // TODO: Provide correct type
   associations: Association[]

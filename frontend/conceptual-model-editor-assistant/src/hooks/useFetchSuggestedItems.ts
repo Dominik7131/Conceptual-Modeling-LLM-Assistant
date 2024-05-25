@@ -17,13 +17,8 @@ const useFetchSuggestedItems = () =>
     const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
 
 
-    const fetchSuggestedItems = (bodyData: any, sourceClassName: string, itemType: ItemType) =>
+    const fetchSuggestedItems = (bodyDataJSON: string, sourceClassName: string, itemType: ItemType) =>
     {
-      // TODO: add object interface for header and bodyData
-
-      // Fetch the event stream from the server
-      // Code from: https://medium.com/@bs903944/event-streaming-made-easy-with-event-stream-and-javascript-fetch-8d07754a4bed
-
       setItemTypesToLoad(previousItems => [...previousItems, itemType])
       setErrorMessage("")
 
@@ -31,7 +26,7 @@ const useFetchSuggestedItems = () =>
       const signal = controller.signal
       let isEmptyResponse = true
       
-      fetch(SUGGEST_ITEMS_URL, { method: "POST", headers: HEADER, body: bodyData, signal: signal })
+      fetch(SUGGEST_ITEMS_URL, { method: "POST", headers: HEADER, body: bodyDataJSON, signal: signal })
       .then(response =>
         {
           // Reset all suggested items
@@ -103,7 +98,7 @@ const useFetchSuggestedItems = () =>
     }
 
 
-  const parseSuggestedItem = (value: any, sourceClassName: string, itemType: ItemType): void =>
+  const parseSuggestedItem = (value: Uint8Array, sourceClassName: string, itemType: ItemType): void =>
   {
     // Convert the `value` to a string
     var jsonString = new TextDecoder().decode(value)
@@ -114,8 +109,6 @@ const useFetchSuggestedItems = () =>
     for (let i = 0; i < jsonStringParts.length; i++)
     {
       let item : Item = JSON.parse(jsonStringParts[i])
-
-      console.log("Parsed item: ", item)
 
       item[Field.IRI] = createIRIFromName(item[Field.NAME])
       item[Field.TYPE] = itemType

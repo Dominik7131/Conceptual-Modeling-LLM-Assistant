@@ -10,11 +10,11 @@ const useFetchSummaryDescriptions = () =>
     const setSummaryDescriptions = useSetRecoilState(summaryDescriptionsState)
 
 
-    const fetchSummaryDescriptions = (bodyData : any) =>
+    const fetchSummaryDescriptions = (bodyDataJSON : string) =>
     {
         setIsLoadingSummaryDescriptions(_ => true)
     
-        fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyData })
+        fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
         .then(response =>
         {
             const stream = response.body // Get the readable stream from the response body
@@ -60,7 +60,7 @@ const useFetchSummaryDescriptions = () =>
     }
 
 
-    const parseSummaryDescriptions = (value: any) =>
+    const parseSummaryDescriptions = (value: Uint8Array) =>
     {
         // Convert the `value` to a string
         var jsonString = new TextDecoder().decode(value)

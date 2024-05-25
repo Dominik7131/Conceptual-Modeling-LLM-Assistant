@@ -36,7 +36,7 @@ export const getSnapshotConceptualModel = (userChoice: UserChoice, snapshot: Con
 }
 
 
-export const getSnapshotTextFilteringVariation = (userChoice: UserChoice, snapshot: TextFilteringVariationSnapshot): string =>
+export const getSnapshotTextFilteringVariation = (userChoice: UserChoice, snapshot: TextFilteringVariationSnapshot): TextFilteringVariation =>
 {
     return snapshot[userChoice]
 }
