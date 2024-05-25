@@ -3,7 +3,7 @@ import { Attribute, Field, Item, ItemType, UserChoice } from "../interfaces/inte
 import { HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL } from "../utils/urls";
 import { itemTypeToUserChoice } from "../utils/utility";
 import { domainDescriptionSnapshotsState, editedSuggestedItemState, regeneratedItemState, regeneratedOriginalTextIndexesState, textFilteringVariationSnapshotsState } from "../atoms";
-import { getSnapshotDomainDescription } from "../utils/snapshot";
+import { getSnapshotDomainDescription, getSnapshotTextFilteringVariation } from "../utils/snapshot";
 import { onClearRegeneratedItem } from "../utils/editItem";
 
 
@@ -22,11 +22,12 @@ const useConfirmRegeneratedField = () =>
         // Save generated single field to the backend
     
         const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SINGLE_FIELD, domainDescriptionSnapshot)
+        const currentFilteringVariation = getSnapshotTextFilteringVariation(UserChoice.SINGLE_FIELD, textFilteringVariationSnapshot)
         const userChoice = itemTypeToUserChoice(itemType)
     
         const suggestionData = {
             domainDescription: currentDomainDescription, fieldName: fieldName, fieldText: fieldText,
-            userChoice: userChoice, sourceClass: sourceClass, isPositive: true, textFilteringVariation: textFilteringVariationSnapshot
+            userChoice: userChoice, sourceClass: sourceClass, isPositive: true, textFilteringVariation: currentFilteringVariation
         }
     
         fetch(SAVE_SUGESTED_SINGLE_FIELD_URL, { method: 'POST', headers: HEADER, body: JSON.stringify(suggestionData)})

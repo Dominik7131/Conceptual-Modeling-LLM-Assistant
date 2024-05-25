@@ -48,7 +48,7 @@ const useGenerateSingleField = () =>
     
         const bodyData = JSON.stringify({
             "name": name, "sourceClass": sourceClass, "targetClass": targetClass, "field": field, "userChoice": userChoice,
-            "domainDescription": currentDomainDescription
+            "domainDescription": currentDomainDescription, "textFilteringVariation": textFilteringVariation
         })
     
         setErrorMessage("")

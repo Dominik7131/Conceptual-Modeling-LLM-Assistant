@@ -45,7 +45,7 @@ const useSuggestItems = () =>
 
     const bodyData = JSON.stringify({
       "sourceClass": sourceItemName, "targetClass": targetItemName, "userChoice": userChoice, "domainDescription": currentDomainDescription,
-      "filteringVariation": textFilteringVariation
+      "textFilteringVariation": textFilteringVariation
     })
 
     fetchSuggestedItems(bodyData, sourceItemName, itemType)

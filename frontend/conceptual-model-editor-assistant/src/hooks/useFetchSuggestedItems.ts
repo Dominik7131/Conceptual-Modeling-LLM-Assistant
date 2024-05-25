@@ -114,6 +114,9 @@ const useFetchSuggestedItems = () =>
     for (let i = 0; i < jsonStringParts.length; i++)
     {
       let item : Item = JSON.parse(jsonStringParts[i])
+
+      console.log("Parsed item: ", item)
+
       item[Field.IRI] = createIRIFromName(item[Field.NAME])
       item[Field.TYPE] = itemType
 
