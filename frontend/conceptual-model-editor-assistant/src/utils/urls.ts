@@ -1,4 +1,6 @@
-const BASE_URL = "http://127.0.0.1:5000/" // "https://llm-backend.opendata.cz/"
+const BASE_URL = "https://llm-backend.opendata.cz/"
+// const BASE_URL = "http://127.0.0.1:5000/"
+
 export const HEADER = { "Content-Type": "application/json" }
 
 export const SIDEBAR_BUTTON_SIZE = "small"

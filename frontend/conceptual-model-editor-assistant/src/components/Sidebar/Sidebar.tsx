@@ -26,11 +26,11 @@ const Sidebar: React.FC = () =>
 
 
     return (
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'row', '& .MuiTabPanel-root': { paddingX: "0px", marginX: "3px" } }}>
+        <Box sx={{ flex: 1, display: "flex", overflowY: "auto", flexDirection: "row", "& .MuiTabPanel-root": { paddingX: "0px", marginX: "2px" } }}>
 
             <Divider orientation="vertical" />
             
-            <Box sx={{ flex: 1 }}>
+            <Box sx={{ flex: 1, width: "50%" }}>
                 <TabContext value={tabValue}>
                     <Tabs/>
 
