@@ -651,9 +651,6 @@ class TextUtility:
                 merged_tuples = (y1, y2, f"{l1}, {l2}")
                 new_2 = (y2 + 1, x2, l1)
 
-                # merged_tuples = (y1, y2, f"{l1}, {l2}")
-                # input[i] = merged_tuples
-                # input.pop(i + 1)
                 input[i] = new_1
                 input[i + 1] = merged_tuples
                 input.insert(i + 2, new_2)
