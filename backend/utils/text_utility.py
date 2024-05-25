@@ -437,14 +437,21 @@ class TextUtility:
         # Do not limit number of outputs if we are suggesting entities
         if not user_choice == UserChoice.CLASSES.value and len(result) > 10:
             result = []
-        
-        tuples = TextUtility.pair_consecutive_elements(result)
-        if len(tuples) > 2:
-            tuples = sorted(tuples, key=lambda x: (x[0], x[1]))
-            result = TextUtility.tuples_to_list(tuples)
-        
+
+        result = TextUtility.sort_original_text_indexes(result)        
 
         return result, inference_parts_found, inference_parts_total
+
+
+    def sort_original_text_indexes(numbers):
+
+        tuples = TextUtility.pair_consecutive_elements(numbers)
+
+        if len(tuples) > 2:
+            tuples = sorted(tuples, key=lambda x: (x[0], x[1]))
+            numbers = TextUtility.tuples_to_list(tuples)
+        
+        return numbers
 
 
     def pair_consecutive_elements(numbers):
