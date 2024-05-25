@@ -1,17 +1,14 @@
-/* TODO: Place all css styles into their corresponding place in the code */
+html, body
+{
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
 
 .highlight
 {
   background-color: orange;
   position: relative;
-  /* display: inline-block; */
-  /* border-bottom: 1px dotted black; */
-}
-
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
 }
