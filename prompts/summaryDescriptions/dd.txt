@@ -2,33 +2,12 @@ Solely based on the given context generate description only for the given classe
 {"class": "", "description": "", "attributes": [{"name": "", "description": ""}]}
 {"association": "", "sourceClass": "", "targetClass": "", "description": ""}
 
-EXAMPLE START
+Make sure to only generate the descriptions for the given clases, attributes and associations.
 
-Given classes, attributes and associations:
-{"classes": [{"name": "student", "attributes": [{"name": "name"}]}, {"name": "course", "attributes": [{"name": "name"}, {"name": "number of credits"}]}, {"name": "professor", "attributes": [{"name": "name"}]}, {"name": "dormitory", "attributes": [{"name": "price"}]}],
-"associations": [{"name": "has", "sourceClass": "course", "targetClass": "professor"}, {"name": "enrolled in", "SourceClass": "student", "targetClass": "course"}, {"name": "accommodated in", "SourceClass": "student", "targetClass": "dormitory"}]}
-
-Given context:
-"We know that courses have a name and a specific number of credits. Each course can have one or more professors, who have a name. Professors could participate in any number of courses. For a course to exist, it must aggregate, at least, five students, where each student has a name. Students can be enrolled in any number of courses. Finally, students can be accommodated in dormitories, where each dormitory can have from one to four students. Besides, each dormitory has a price."
-
-Output:
-{"class": "student", "description": "A student class represents an individual enrolled in an educational institution", "attributes": [{"name": "name", "description": "The name of the student"}]}
-{"class": "course", "description": "A course class representing educational modules", "attributes": [{"name": "name", "description": "The name of the course"}, {"name": "number of credits", "description": "The number of credits assigned to the course"}]}
-{"class": "professor", "description": "A professor class representing instructors teaching courses", "attributes": [{"name": "name", "description": "The name of the professor"}]}
-{"class": "dormitory", "description": "A dormitory class representing residential facilities for students", "attributes": [{"name": "name", "description": "The price of staying in the dormitory"}]}
-
-{"association": "has", "SourceClass": "course", "targetClass": "professor", "description": "Courses have professors who teach them"}
-{"association": "enrolled in", "SourceClass": "student", "targetClass": "course", "description": "Students can be enrolled in any number of courses"}
-{"association": "accommodated in", "SourceClass": "student", "targetClass": "dormitory", "description": "Students can be accommodated in dormitories"}
-
-EXAMPLE END
-
-
-Given classes, attributes and associations:
+These are the given classes, attributes and associations:
 "{conceptual_model}"
 
-
-Given context:
+This is the given context:
 "{domain_description}"
 
-Output:
+This is the output in the specified JSON format:
