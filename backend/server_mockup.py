@@ -24,9 +24,9 @@ def suggest_items():
     source_class = body_data.get("sourceClass", "")
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
-    filtering_variation = body_data["filteringVariation"]
+    text_filtering_variation = body_data["textFilteringVariation"]
 
-    print(f"fv: {filtering_variation}")
+    print(f"fv: {text_filtering_variation}")
 
     def generate_mock_up():
         # time.sleep(2)
@@ -151,6 +151,8 @@ def save_suggested_item():
     isPositive = body_data["isPositive"]
     text_filtering_variation = body_data["textFilteringVariation"]
 
+    print(f"Text filtering variation: {text_filtering_variation}")
+
     completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
     print(completed_item)
 
@@ -166,6 +168,9 @@ def save_suggested_single_field():
     field_text = body_data["fieldText"]
     domain_description = body_data["domainDescription"]
     isPositive = body_data["isPositive"]
+    text_filtering_variation = body_data["textFilteringVariation"]
+
+    print(f"Text filtering variation: {text_filtering_variation}")
 
     completed_item = { "domain_description": domain_description, "field_name": field_name, "field_text": field_text, "is_positive": isPositive }
     print(completed_item)
@@ -195,4 +200,4 @@ def index():
 
 
 if __name__ == "__main__":
-    app.run(port=5000, threaded=False)
+    app.run(port=5001, threaded=False)
