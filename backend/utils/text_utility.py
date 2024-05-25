@@ -424,7 +424,7 @@ class TextUtility:
             if is_inference_found:
                 inference_parts_found += 1
             elif not user_choice == UserChoice.CLASSES.value:
-                new_result = TextUtility.findSubstrings(inference_part, domain_description)
+                new_result = TextUtility.find_substrings(inference_part, domain_description)
                 if new_result:
                     is_inference_found = True
                     for inference_index in new_result:
@@ -437,8 +437,29 @@ class TextUtility:
         # Do not limit number of outputs if we are suggesting entities
         if not user_choice == UserChoice.CLASSES.value and len(result) > 10:
             result = []
+        
+        tuples = TextUtility.pair_consecutive_elements(result)
+        if len(tuples) > 2:
+            tuples = sorted(tuples, key=lambda x: (x[0], x[1]))
+            result = TextUtility.tuples_to_list(tuples)
+        
 
         return result, inference_parts_found, inference_parts_total
+
+
+    def pair_consecutive_elements(numbers):
+
+        # Ensure the list has an even number of elements
+        if len(numbers) % 2 != 0:
+            raise ValueError("List must contain an even number of elements")
+
+        # Use zip and list slicing to create pairs
+        return [(numbers[i], numbers[i+1]) for i in range(0, len(numbers), 2)]
+
+
+    def tuples_to_list(tuples):
+        # Use list comprehension to flatten the list of tuples into a single list
+        return [item for tup in tuples for item in tup]
 
 
     def show_inference_in_domain_description(inference_indexes, domain_description):
@@ -503,7 +524,7 @@ class TextUtility:
         return result, is_everything_found
 
 
-    def findSubstrings(inference, domain_description):
+    def find_substrings(inference, domain_description):
         longest_substring = TextUtility.longest_substring(domain_description, inference)
 
         if not longest_substring:
