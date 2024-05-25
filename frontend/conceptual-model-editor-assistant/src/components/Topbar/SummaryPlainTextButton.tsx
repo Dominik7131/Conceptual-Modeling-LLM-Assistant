@@ -4,9 +4,9 @@ import { NOTHING_SELECTED_MSG, SUMMARY_PLAIN_TEXT_NAME } from "../../utils/utili
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryPlainTextReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryTextState, topbarTabValueState } from "../../atoms";
 import { TopbarTabs, UserChoice } from "../../interfaces/interfaces";
-import useFetchData from "../../hooks/useFetchData";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
 import { convertConceptualModelToJSONSummary } from "../../utils/serialization";
+import useFetchSummaryPlainText from "../../hooks/useFetchSummaryPlainText";
 
 
 const SummaryPlainTextButton: React.FC= (): JSX.Element =>
@@ -26,7 +26,7 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
     
     const isDisabled = domainDescription === "" || isIgnoreDomainDescription
 
-    const { fetchSummaryPlainText } = useFetchData()
+    const { fetchSummaryPlainText } = useFetchSummaryPlainText()
 
     
     const handleSummaryPlainTextClick = (): void =>

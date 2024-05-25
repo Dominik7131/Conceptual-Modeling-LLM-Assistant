@@ -3,7 +3,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { Attribute, Class, Field, Item, ItemType, UserChoice } from '../../../interfaces/interfaces';
-import useConceptualModel from '../../../hooks/useConceptualModel';
+import useSuggestItems from '../../../hooks/useSuggestItems';
 import { useSetRecoilState } from 'recoil';
 import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../../../atoms';
 
@@ -29,7 +29,7 @@ const DropdownMenu: React.FC<Props> = ({ clss, anchorEl, setAnchorEl }): JSX.Ele
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
 
-    const { onSuggestItems } = useConceptualModel()
+    const { onSuggestItems } = useSuggestItems()
 
 
     const handleClose = () =>

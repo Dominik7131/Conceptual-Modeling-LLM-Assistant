@@ -4,9 +4,9 @@ import { NOTHING_SELECTED_MSG, SUMMARY_DESCRIPTIONS_NAME } from "../../utils/uti
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryDescriptionReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryDescriptionsState, topbarTabValueState } from "../../atoms";
 import { TopbarTabs, UserChoice } from "../../interfaces/interfaces";
-import useFetchData from "../../hooks/useFetchData";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
 import { convertConceptualModelToJSONSummary } from "../../utils/serialization";
+import useFetchSummaryDescriptions from "../../hooks/useFetchSummaryDescriptions";
 
 
 const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
@@ -26,7 +26,7 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
 
     const setIsReactButtonClicked = useSetRecoilState(isSummaryDescriptionReactButtonClickedState)
 
-    const { fetchSummaryDescriptions } = useFetchData()
+    const { fetchSummaryDescriptions } = useFetchSummaryDescriptions()
 
     
     const handleSummaryDescriptionsClick = (): void =>

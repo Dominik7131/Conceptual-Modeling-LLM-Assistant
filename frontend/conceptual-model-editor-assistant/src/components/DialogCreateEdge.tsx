@@ -8,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { editedSuggestedItemState, isShowCreateEdgeDialogState, isShowEditDialogState, selectedSuggestedItemState } from '../atoms';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import useConceptualModel from '../hooks/useConceptualModel';
+import useSuggestItems from '../hooks/useSuggestItems';
 import { createNameFromIRI } from '../utils/conceptualModel';
 
 
@@ -22,7 +22,7 @@ const DialogCreateEdge: React.FC = () =>
   const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
   const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
 
-  const { onSuggestItems } = useConceptualModel()
+  const { onSuggestItems } = useSuggestItems()
 
   if (!association[Field.SOURCE_CLASS] || !association[Field.TARGET_CLASS])
   {

@@ -6,15 +6,9 @@ import { HEADER, SUGGEST_ITEMS_URL, SUGGEST_SUMMARY_URL } from "../utils/urls";
 import { createIRIFromName } from "../utils/conceptualModel";
 
 
-const useFetchData = () =>
+const useFetchSuggestedItems = () =>
 {
-    // TODO: Split all fetch data methods into separate files
     const [itemTypesToLoad, setItemTypesToLoad] = useRecoilState(itemTypesToLoadState)
-    const setIsLoadingSummaryPlainText = useSetRecoilState(isLoadingSummaryPlainTextState)
-    const setIsLoadingSummaryDescriptions = useSetRecoilState(isLoadingSummaryDescriptionsState)
-
-    const setSummaryText = useSetRecoilState(summaryTextState)
-    const setSummaryDescriptions = useSetRecoilState(summaryDescriptionsState)
 
     const setSuggestedEntities = useSetRecoilState(suggestedClassesState)
     const setSuggestedAttributes = useSetRecoilState(suggestedAttributesState)
@@ -23,7 +17,7 @@ const useFetchData = () =>
     const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
 
 
-    const fetchStreamedData = (bodyData: any, sourceClassName: string, itemType: ItemType) =>
+    const fetchSuggestedItems = (bodyData: any, sourceClassName: string, itemType: ItemType) =>
     {
       // TODO: add object interface for header and bodyData
 
@@ -158,149 +152,7 @@ const useFetchData = () =>
   }
 
 
-  const fetchSummaryPlainText = (bodyData : any) =>
-  {
-    setIsLoadingSummaryPlainText(_ => true)
-
-    fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyData })
-    .then(response =>
-    {
-        const stream = response.body // Get the readable stream from the response body
-
-        if (stream === null)
-        {
-          console.log("Stream is null")
-          setIsLoadingSummaryPlainText(_ => false)
-          return
-        }
-
-        const reader = stream.getReader()
-
-        const readChunk = () =>
-        {
-            reader.read()
-                .then(({value, done}) =>
-                {
-                    if (done)
-                    {
-                        console.log("Stream finished")
-                        setIsLoadingSummaryPlainText(_ => false)
-                        return
-                    }
-
-                    // Convert the `value` to a string
-                    var jsonString = new TextDecoder().decode(value)
-                    console.log("JsonString: ", jsonString)
-                    
-                    const parsedData = JSON.parse(jsonString)
-                    console.log("Parsed data:", parsedData)
-                    setSummaryText(parsedData["summary"])
-
-                    readChunk() // Read the next chunk
-                })
-                .catch(error =>
-                {
-                  console.error(error)
-                })
-        }
-        readChunk() // Start reading the first chunk
-    })
-    .catch(error =>
-    {
-      console.error(error)
-      setIsLoadingSummaryPlainText(_ => false)
-      alert("Error: request failed")
-    })
-  }
-
-  const fetchSummaryDescriptions = (bodyData : any) =>
-  {
-    setIsLoadingSummaryDescriptions(_ => true)
-
-    fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyData })
-    .then(response =>
-    {
-        const stream = response.body // Get the readable stream from the response body
-
-        if (stream === null)
-        {
-          console.log("Stream is null")
-          setIsLoadingSummaryDescriptions(_ => false)
-          return
-        }
-
-        const reader = stream.getReader()
-
-        const readChunk = () =>
-        {
-            reader.read()
-                .then(({value, done}) =>
-                {
-                    if (done)
-                    {
-                        console.log("Stream finished")
-                        setIsLoadingSummaryDescriptions(_ => false)
-                        return
-                    }
-
-                    // Convert the `value` to a string
-                    var jsonString = new TextDecoder().decode(value)
-                    console.log("JsonString: ", jsonString)
-
-
-                    // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
-                    const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
-
-                    for (let i = 0; i < jsonStringParts.length; i++)
-                    {
-                      const parsedData = JSON.parse(jsonStringParts[i])
-
-                      if (!parsedData[UserChoice.ATTRIBUTES])
-                      {
-                        parsedData[UserChoice.ATTRIBUTES] = []
-                      }
-                      
-                      console.log("Parsed data:", parsedData)
-
-                      if (parsedData.hasOwnProperty(ItemType.CLASS))
-                      {
-                        setSummaryDescriptions(previousSummary => ({
-                          ...previousSummary,
-                          classes: [...previousSummary.classes, parsedData],
-                        }))
-                      }
-                      else if (parsedData.hasOwnProperty(ItemType.ASSOCIATION))
-                      {
-                        setSummaryDescriptions(previousSummary => ({
-                          ...previousSummary,
-                          associations: [...previousSummary.associations, parsedData],
-                        }))
-                      }
-                      else
-                      {
-                        console.log("Received unknown object: ", parsedData)
-                      }
-                    }
-
-                    readChunk()
-                })
-                .catch(error =>
-                {
-                  console.error(error)
-                })
-        }
-        readChunk()
-    })
-    .catch(error =>
-    {
-      console.error(error)
-      setIsLoadingSummaryDescriptions(_ => false)
-      alert("Error: request failed")
-    })
-  }
-
-
-  return { fetchSummaryPlainText, fetchSummaryDescriptions, fetchStreamedData }
+  return { fetchSuggestedItems }
 }
 
-export default useFetchData
+export default useFetchSuggestedItems

@@ -2,7 +2,7 @@ import { Button, Stack } from "@mui/material"
 import DomainDescriptionTextArea from "./DomainDescriptionTextArea";
 import AddIcon from '@mui/icons-material/Add';
 import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
-import useConceptualModel from "../../hooks/useConceptualModel";
+import useSuggestItems from "../../hooks/useSuggestItems";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
 import { UserChoice } from "../../interfaces/interfaces";
 import { blankClass } from "../../utils/utility";
@@ -21,7 +21,7 @@ const ControlButtons: React.FC = (): JSX.Element =>
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
 
-    const { onSuggestItems } = useConceptualModel()
+    const { onSuggestItems } = useSuggestItems()
 
 
     const onAddNewClass = () : void =>

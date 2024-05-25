@@ -1,19 +1,20 @@
 import 'reactflow/dist/style.css';
 import { changeSidebarTab, changeTitle, onClearSuggestedItems, userChoiceToItemType } from '../utils/utility';
-import useFetchData from './useFetchData';
+import useFetchSuggestedItems from './useFetchSuggestedItems';
 import { ItemType, UserChoice } from '../interfaces/interfaces';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState, textFilteringVariationState, textFilteringVariationSnapshotsState } from '../atoms';
 import { snapshotDomainDescription, snapshotTextFilteringVariation } from '../utils/snapshot';
 
 
-const useConceptualModel = () =>
+const useSuggestItems = () =>
 {
   const setSuggestedClasses = useSetRecoilState(suggestedClassesState)
   const setSuggestedAttributes = useSetRecoilState(suggestedAttributesState)
   const setSuggestedAssociations = useSetRecoilState(suggestedAssociationsState)
 
   const setSidebarTitles = useSetRecoilState(sidebarTitlesState)
+  const setSidebarTab = useSetRecoilState(sidebarTabValueState)
 
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
@@ -21,12 +22,8 @@ const useConceptualModel = () =>
 
   const setDomainDescriptionSnapshot = useSetRecoilState(domainDescriptionSnapshotsState)
   const setTextFilteringVariationSnapshot = useSetRecoilState(textFilteringVariationSnapshotsState)
-  
 
-  const setSidebarTab = useSetRecoilState(sidebarTabValueState)
-
-
-  const { fetchStreamedData } = useFetchData()
+  const { fetchSuggestedItems } = useFetchSuggestedItems()
 
 
   const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
@@ -51,11 +48,10 @@ const useConceptualModel = () =>
       "filteringVariation": textFilteringVariation
     })
 
-    fetchStreamedData(bodyData, sourceItemName, itemType)
+    fetchSuggestedItems(bodyData, sourceItemName, itemType)
   }
 
-    
   return { onSuggestItems }
 }
 
-export default useConceptualModel
+export default useSuggestItems
