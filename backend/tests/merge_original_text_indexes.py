@@ -1,8 +1,9 @@
 import sys
 sys.path.append('.')
-import json
+sys.path.append('utils/')
+sys.path.append('backend/utils/')
 from text_utility import TextUtility
-import os
+
 
 ARE_ALL_TESTS_PASSING = True
 
@@ -39,18 +40,18 @@ def test():
     check("common_first_index", common_first_index, expected)
 
 
-    continuous_sequence = [(0, 2, "l1"), (2, 4, "l2"), (4, 6, "l3")]    
+    continuous_sequence = [(0, 2, "l1"), (2, 4, "l2"), (4, 6, "l3")]
     expected = [(0, 6, "l1, l2, l3")]
     check("continuous_sequence", continuous_sequence, expected)
 
 
-    simple_full_intersection = [(0, 10, "l1"), (2, 6, "l2")]    
-    expected = [(0, 10, "l1, l2")]
+    simple_full_intersection = [(0, 10, "l1"), (2, 6, "l2")]
+    expected = [(0, 1, "l1"), (2, 6, "l1, l2"), (7, 10, "l1")]
     check("simple_full_intersection", simple_full_intersection, expected)
 
 
     full_intersection = [(0, 10, "l1"), (2, 6, "l2"), (3, 7, "l3"), (3, 10, "l4")]
-    expected = [(0, 10, "l1, l2, l3, l4")]
+    expected = [(0, 1, "l1"), (2, 2, "l1, l2"), (3, 6, "l1, l2, l3, l4"), (7, 7, "l3, l4, l1"), (8, 10, "l1, l4")]
     check("full_intersection", full_intersection, expected)
 
 
@@ -62,6 +63,10 @@ def test():
     half_intersection = [(0, 10, "l1"), (5, 15, "l2"), (5, 20, "l3")]
     expected = [(0, 4, "l1"), (5, 10, "l1, l2, l3"), (11, 15, "l2, l3"), (16, 20, "l3")]
     check("half_intersection", half_intersection, expected)
+
+    another_intersection = [(2, 9, "l1"), (37, 44, "l1"), (0, 130, "l2")]
+    expected = [(0, 1, "l2"), (2, 9, "l2, l1"), (10, 36, "l2"), (37, 44, "l2, l1"), (45, 130, "l2")]
+    check("another_intersection", another_intersection, expected)
 
 
 

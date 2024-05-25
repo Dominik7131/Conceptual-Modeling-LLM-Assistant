@@ -615,11 +615,20 @@ class TextUtility:
                 merged_tuples = (x1, y2, f"{l1}, {l2}")
                 input[i] = merged_tuples
                 input.pop(i + 1)
+
             
             elif x2 > y1 and x2 >= y2:
-                merged_tuples = (x1, x2, f"{l1}, {l2}")
-                input[i] = merged_tuples
-                input.pop(i + 1)
+
+                new_1 = (x1, y1 - 1, l1)
+                merged_tuples = (y1, y2, f"{l1}, {l2}")
+                new_2 = (y2 + 1, x2, l1)
+
+                # merged_tuples = (y1, y2, f"{l1}, {l2}")
+                # input[i] = merged_tuples
+                # input.pop(i + 1)
+                input[i] = new_1
+                input[i + 1] = merged_tuples
+                input.insert(i + 2, new_2)
             
             elif x2 > y1 and x2 < y2:
                 merged_tuples = (y1, x2, f"{l1}, {l2}")
