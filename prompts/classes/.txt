@@ -1,3 +1,3 @@
-Generate {items_count} random classes in JSON format like this: {"description": "class description", "name": "class name"}.
+Generate {items_count} random classes for some UML diagram in JSON format like this: {"description": "class description", "name": "class name"}.
 
 Output:
