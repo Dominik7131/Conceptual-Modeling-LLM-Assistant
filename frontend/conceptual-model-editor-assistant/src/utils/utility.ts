@@ -1,5 +1,5 @@
 import { SetterOrUpdater } from "recoil";
-import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SidebarTabs, UserChoice, TextFilteringVariation } from "../interfaces/interfaces"
+import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SidebarTab, UserChoice, TextFilteringVariation } from "../interfaces/interfaces"
 import { createNameFromIRI } from "./conceptualModel";
 
 
@@ -11,9 +11,11 @@ export const NOTHING_SELECTED_MSG = "Please select some part of your conceptual 
 
 export const TEXT_FILTERING_VARIATION_DEFAULT_VALUE = TextFilteringVariation.SYNTACTIC
 
+export const BLACK_COLOR = "black"
+
 
 // TODO: It is probably better to use "null" instead of blank item
-export const blankClass: Class = {
+export const BLANK_CLASS: Class = {
   [Field.IRI]: "", [Field.TYPE]: ItemType.CLASS, [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: []
 }
 
@@ -118,7 +120,7 @@ export const createErrorMessage = (item: Item, setErrorMessage: SetterOrUpdater<
 }
 
 
-export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targetItemName: string, setTitle: any): void =>
+export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targetItemName: string, setTitle: SetterOrUpdater<ItemsMessage>): void =>
 {
   if (userChoice === UserChoice.CLASSES)
   {
@@ -143,11 +145,11 @@ export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targ
 }
 
 
-export const onClearSuggestedItems = (itemType: ItemType, setSuggestedEntities: any, setSuggestedAttributes: any, setSuggestedRelationships: any): void =>
+export const onClearSuggestedItems = (itemType: ItemType, setSuggestedClasses: SetterOrUpdater<Class[]>, setSuggestedAttributes: SetterOrUpdater<Attribute[]>, setSuggestedAssociations: SetterOrUpdater<Association[]>): void =>
 {
   if (itemType === ItemType.CLASS)
   {
-    setSuggestedEntities([])
+    setSuggestedClasses([])
   }
   else if (itemType === ItemType.ATTRIBUTE)
   {
@@ -155,24 +157,24 @@ export const onClearSuggestedItems = (itemType: ItemType, setSuggestedEntities: 
   }
   else if (itemType === ItemType.ASSOCIATION)
   {
-    setSuggestedRelationships([])
+    setSuggestedAssociations([])
   }
 }
 
 
-export const changeSidebarTab = (itemType: ItemType, setSidebarTab: any) =>
+export const changeSidebarTab = (itemType: ItemType, setSidebarTab: SetterOrUpdater<SidebarTab>) =>
 {
   if (itemType === ItemType.CLASS)
   {
-    setSidebarTab(SidebarTabs.CLASSES)
+    setSidebarTab(SidebarTab.CLASSES)
   }
   else if (itemType === ItemType.ATTRIBUTE)
   {
-    setSidebarTab(SidebarTabs.ATTRIBUTES)
+    setSidebarTab(SidebarTab.ATTRIBUTES)
   }
   else if (itemType === ItemType.ASSOCIATION || itemType === ItemType.GENERALIZATION)
   {
-    setSidebarTab(SidebarTabs.ASSOCIATIONS)
+    setSidebarTab(SidebarTab.ASSOCIATIONS)
   }
   else
   {

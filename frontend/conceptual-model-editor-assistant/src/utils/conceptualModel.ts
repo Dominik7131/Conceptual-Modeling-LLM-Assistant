@@ -1,7 +1,7 @@
 import { Node, Edge, MarkerType, EdgeMarker, internalsSymbol } from 'reactflow';
 import { Association, Attribute, Class, EdgeData, Field, Item, ItemType, NodeData } from '../interfaces/interfaces';
 import { SetterOrUpdater } from 'recoil';
-import { blankClass } from './utility';
+import { BLANK_CLASS } from './utility';
 
 
 export const CUSTOM_EDGE_TYPE = "custom-edge"
@@ -206,7 +206,7 @@ const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>
     if (!doesSourceClassExist)
     {
         const name = createNameFromIRI(nodeID)
-        const newClass: Class = { ...blankClass, [Field.IRI]: nodeID, [Field.NAME]: name }
+        const newClass: Class = { ...BLANK_CLASS, [Field.IRI]: nodeID, [Field.NAME]: name }
         onAddClass(newClass, 100, 100, setNodes)
     }
 
@@ -568,6 +568,30 @@ export const invalidateAllOriginalTextIndexesEdges = (setEdges: SetterOrUpdater<
 
         return currentEdge
     }))
+}
+
+
+export const createNewAttribute = (sourceClassIRI: string): Attribute =>
+{
+    const newAttribute: Attribute = {
+        [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "",
+        [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "",
+        [Field.SOURCE_CLASS]: sourceClassIRI
+    }
+
+    return newAttribute
+}
+
+
+export const createNewAssociation = (sourceClassIRI: string, targetClassIRI: string): Association =>
+{
+    const newAssociation: Association = {
+        [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
+        [Field.TYPE]: ItemType.ASSOCIATION, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.SOURCE_CLASS]: sourceClassIRI,
+        [Field.TARGET_CLASS]: targetClassIRI
+    }
+
+    return newAssociation
 }
 
 

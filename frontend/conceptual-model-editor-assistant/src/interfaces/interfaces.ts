@@ -63,7 +63,7 @@ export const enum TextFilteringVariation
 }
 
 
-export const enum TopbarTabs
+export const enum TopbarTab
 {
   MAIN = "0",
   SUMMARY_PLAIN_TEXT = "1",
@@ -73,11 +73,26 @@ export const enum TopbarTabs
   INFO = "5",
 }
 
-export const enum SidebarTabs
+export const enum SidebarTab
 {
   CLASSES = "0",
   ATTRIBUTES = "1",
   ASSOCIATIONS = "2",
+}
+
+
+export const enum NodeHandleID
+{
+  SOURCE_TOP = "source-top",
+  SOURCE_BOTTOM = "source-bottom",
+  TARGET_LEFT = "target-left",
+  TARGET_RIGHT = "target-right",
+}
+
+export const enum NodeHandleType
+{
+  SOURCE = "source",
+  TARGET = "target",
 }
 
 

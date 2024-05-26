@@ -1,7 +1,7 @@
 import { atom, selector } from 'recoil'
-import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice, TextFilteringVariation } from './interfaces/interfaces';
+import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice, TextFilteringVariation, SidebarTab, TopbarTab } from './interfaces/interfaces';
 import { Node, Edge } from 'reactflow';
-import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE, blankClass } from './utils/utility';
+import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE, BLANK_CLASS } from './utils/utility';
 import { DATASPECER_MODEL_URL } from './utils/urls';
 import { ConceptualModelSnapshot, DomainDescriptionSnapshot, TextFilteringVariationSnapshot } from './interfaces/snapshots';
 
@@ -99,17 +99,17 @@ export const itemTypesToLoadState = atom<ItemType[]>({
 // TODO: Do not use initial invalid item, instead make a type: Item | null
 export const selectedSuggestedItemState = atom<Item>({
     key: "selectedSuggestedItemState",
-    default: blankClass,
+    default: BLANK_CLASS,
 })
 
 export const editedSuggestedItemState = atom<Item>({
     key: "editedSuggestedItemState",
-    default: blankClass,
+    default: BLANK_CLASS,
 })
 
 export const regeneratedItemState = atom<Item>({
     key: "regeneratedItemState",
-    default: blankClass,
+    default: BLANK_CLASS,
 })
 
 export const isSuggestedItemState = atom({
@@ -212,15 +212,15 @@ export const selectedEdgesState = selector<Edge[]>({
 })
 
 
-export const topbarTabValueState = atom({
+export const topbarTabValueState = atom<TopbarTab>({
     key: "topbarTabValueState",
-    default: "0",
+    default: TopbarTab.MAIN,
 })
 
 
-export const sidebarTabValueState = atom({
+export const sidebarTabValueState = atom<SidebarTab>({
     key: "sidebarTabValueState",
-    default: "0",
+    default: SidebarTab.CLASSES,
 })
 
 

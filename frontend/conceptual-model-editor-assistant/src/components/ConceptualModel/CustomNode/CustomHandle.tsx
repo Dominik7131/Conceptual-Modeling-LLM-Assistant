@@ -1,12 +1,13 @@
 import { Typography } from "@mui/material"
 import { Handle, Position } from "reactflow"
-import { PRIMARY_COLOR } from "../../../interfaces/interfaces"
+import { NodeHandleID, NodeHandleType, PRIMARY_COLOR } from "../../../interfaces/interfaces"
+import { BLACK_COLOR } from "../../../utils/utility"
 
 
 interface Props
 {
-    id: "source-top" | "source-bottom" | "target-left" | "target-right"
-    type: "source" | "target"
+    id: NodeHandleID
+    type: NodeHandleType
     handleOffset: number
     isSelected: boolean
     position: Position
@@ -16,20 +17,28 @@ interface Props
 
 const CustomHandle: React.FC<Props> = ({ id, type, handleOffset, isSelected, position, isHovered }): JSX.Element =>
 {
-    const handleText = type === "source" ? "s" : "t"
+    const sourceHandleText = "s"
+    const targetHandleText = "t"
+    const fontSize = "13px"
+    const color = isSelected ? PRIMARY_COLOR : BLACK_COLOR
+    const offset = `-${handleOffset}px`
+
+    const handleText = type === NodeHandleType.SOURCE ? sourceHandleText : targetHandleText
+
 
     return (
         <Handle
             id={id}
             type={type}
             position={position}
-            style={{ [position]: `-${handleOffset}px`, background: isSelected ? PRIMARY_COLOR : "black" }}>
+            style={{ [position]: offset, background: color }}>
         
-            { isHovered &&
+            {
+                isHovered &&
                 <Typography
-                    fontSize="13px"
-                    color={isSelected ? PRIMARY_COLOR : "black"}>
-                        { handleText }
+                    fontSize={fontSize}
+                    color={color}>
+                    { handleText }
                 </Typography>
             }
 

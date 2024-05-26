@@ -3,7 +3,7 @@ import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
 import { NOTHING_SELECTED_MSG, SUMMARY_DESCRIPTIONS_NAME } from "../../utils/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryDescriptionReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryDescriptionsState, topbarTabValueState } from "../../atoms";
-import { TopbarTabs, UserChoice } from "../../interfaces/interfaces";
+import { TopbarTab, UserChoice } from "../../interfaces/interfaces";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
 import { convertConceptualModelToObjectSummary } from "../../utils/serialization";
 import useFetchSummaryDescriptions from "../../hooks/useFetchSummaryDescriptions";
@@ -48,7 +48,7 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
         const conceptualModel = convertConceptualModelToObjectSummary(selectedNodes, selectedEdges, true)
         snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
 
-        setTopbarTab(TopbarTabs.SUMMARY_DESCRIPTION)  
+        setTopbarTab(TopbarTab.SUMMARY_DESCRIPTION)  
 
         const bodyData: SummarySuggestionBody = {
             summaryType: userChoice, conceptualModelJSON: conceptualModel, domainDescription: currentDomainDescription

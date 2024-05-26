@@ -3,13 +3,13 @@ import CustomNode from './CustomNode/CustomNode';
 import CustomEdge from './CustomEdge';
 import { Field, ItemType, Association } from '../../interfaces/interfaces';
 import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState } from '../../atoms';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { useCallback, useEffect } from 'react';
-import { loadDefaultConceptualModel } from '../../utils/import';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useCallback } from 'react';
 import { Box, Divider } from '@mui/material';
+import { createNewAssociation } from '../../utils/conceptualModel';
 
 
-const nodeTypes = { customNode: CustomNode };
+const nodeTypes = { customNode: CustomNode }
 const edgeTypes = { "custom-edge": CustomEdge }
 
 
@@ -26,6 +26,8 @@ const ConceptualModel: React.FC = () =>
   
   const setIsShowCreateEdgeDialog = useSetRecoilState(isShowCreateEdgeDialogState)
 
+  const minZoom = 0.04
+
 
   const onNodesChange = useCallback((changes: NodeChange[]) =>
   {
@@ -40,19 +42,15 @@ const ConceptualModel: React.FC = () =>
 
   const onConnect : OnConnect = useCallback((params) =>
   { 
-    const sourceClass = params[Field.SOURCE_CLASS]
-    const targetClass = params[Field.TARGET_CLASS]
+    const sourceClassIRI = params[Field.SOURCE_CLASS]
+    const targetClassIRI = params[Field.TARGET_CLASS]
 
-    if (!sourceClass || !targetClass)
+    if (!sourceClassIRI || !targetClassIRI)
     {
       return
     }
 
-    const newAssociation: Association = {
-      [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
-      [Field.TYPE]: ItemType.ASSOCIATION, [Field.SOURCE_CARDINALITY]: "", [Field.TARGET_CARDINALITY]: "", [Field.SOURCE_CLASS]: sourceClass,
-      [Field.TARGET_CLASS]: targetClass
-    }
+    const newAssociation: Association = createNewAssociation(sourceClassIRI, targetClassIRI)
 
     setSelectedSuggestedItem(_ => newAssociation)
     setEditedSuggestedItem(_ => newAssociation)
@@ -64,20 +62,9 @@ const ConceptualModel: React.FC = () =>
   }, [])
 
 
-  useEffect(() =>
-  {
-    // loadDefaultConceptualModel(setNodes, setEdges)
-  }, [])
-
-  // useEffect(() =>
-  // {
-  //   console.log(nodes)
-  // }, [nodes])
-
-
   return (
     <>
-      <Divider />
+      <Divider/>
 
       <Box sx={{ flex: 2, width: "100%", height: "100%" }}>
         <ReactFlow
@@ -88,7 +75,7 @@ const ConceptualModel: React.FC = () =>
             onConnect={onConnect}
             nodeTypes={nodeTypes}
             edgeTypes={edgeTypes}
-            minZoom={0.04}
+            minZoom={minZoom}
             >
             <MiniMap nodeStrokeWidth={3} zoomable pannable />
             <Controls />

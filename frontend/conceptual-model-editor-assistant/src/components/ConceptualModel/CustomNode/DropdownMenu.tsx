@@ -6,35 +6,43 @@ import { Attribute, Class, Field, Item, ItemType, UserChoice } from '../../../in
 import useSuggestItems from '../../../hooks/useSuggestItems';
 import { useSetRecoilState } from 'recoil';
 import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../../../atoms';
+import { createNewAttribute } from '../../../utils/conceptualModel';
 
 
 interface Props
 {
     clss: Class
-    anchorEl: any
-    setAnchorEl: any
+    anchor: any
+    setAnchor: any
 }
 
 
-const DropdownMenu: React.FC<Props> = ({ clss, anchorEl, setAnchorEl }): JSX.Element =>
+const DropdownMenu: React.FC<Props> = ({ clss, anchor, setAnchor }): JSX.Element =>
 {
     // Menu component use cases: https://mui.com/material-ui/react-menu/
     
-    const open = Boolean(anchorEl)
+    const open = Boolean(anchor)
 
     const setIsSuggestedItem = useSetRecoilState(isSuggestedItemState)
     const setIsItemInConceptualModel = useSetRecoilState(isItemInConceptualModelState)
     const setIsShowEditDialog = useSetRecoilState(isShowEditDialogState)
 
-    const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
+    const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
 
     const { onSuggestItems } = useSuggestItems()
+
+    const editClassText = "Edit class"
+    const addNewAttributeText = "Add new attribute"
+    const suggestAttributesText = "Suggest attributes"
+    const suggestAssociationsText = "Suggest associations"
+
+    const fontSize = "small"
 
 
     const handleClose = () =>
     {
-        setAnchorEl(null)
+        setAnchor(null)
     }
 
 
@@ -57,59 +65,70 @@ const DropdownMenu: React.FC<Props> = ({ clss, anchorEl, setAnchorEl }): JSX.Ele
     }
     
     
-    const handleAddNewAttribute = () =>
+    const handleAddNewAttribute = (): void =>
     {
         setIsSuggestedItem(false)
         setIsItemInConceptualModel(false)
 
-        const newAttribute: Attribute = {
-            [Field.IRI]: "", [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.DATA_TYPE]: "", [Field.ORIGINAL_TEXT]: "",
-            [Field.ORIGINAL_TEXT_INDEXES]: [], [Field.TYPE]: ItemType.ATTRIBUTE, [Field.SOURCE_CARDINALITY]: "",
-            [Field.SOURCE_CLASS]: clss[Field.IRI]
-        }
+        const newAttribute: Attribute = createNewAttribute(clss[Field.IRI])
         
-        setSelectedSuggestedItem(newAttribute)
         setEditedSuggestedItem(newAttribute)
+        setSelectedSuggestedItem(newAttribute)
+
         handleClose()
         setIsShowEditDialog(true)
+    }
+
+
+    const handleSuggestAttributes = (): void =>
+    {
+        onSuggestItems(UserChoice.ATTRIBUTES, clss[Field.NAME], null)
+        handleClose()
+    }
+
+
+    const handleSuggestAssociations = (): void =>
+    {
+        onSuggestItems(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS, clss[Field.NAME], null)
+        handleClose()
     }
 
 
     return (
         <Menu
             id="basic-menu"
-            anchorEl={anchorEl}
+            anchorEl={anchor}
             open={open}
             onClose={handleClose}
             MenuListProps={{"aria-labelledby": "basic-button"}}
         >
             <MenuItem onClick={ handleEditClass }>
                 <ListItemIcon>
-                    <EditIcon fontSize="small" />
+                    <EditIcon fontSize={fontSize} />
                 </ListItemIcon>
-                    Edit class
+                { editClassText }
             </MenuItem>
 
             <MenuItem onClick={ handleAddNewAttribute }>
                 <ListItemIcon>
-                    <AddIcon fontSize="small" />
+                    <AddIcon fontSize={fontSize} />
                 </ListItemIcon>
-                    Add new attribute
+                { addNewAttributeText }
             </MenuItem>
 
 
-            <MenuItem onClick={() => { onSuggestItems(UserChoice.ATTRIBUTES, clss[Field.NAME], null); handleClose(); }}>
+            <MenuItem onClick={ handleSuggestAttributes }>
                 <ListItemIcon>
-                    <AutoFixNormalIcon fontSize="small" />
+                    <AutoFixNormalIcon fontSize={fontSize} />
                 </ListItemIcon>
-                    Suggest attributes
+                { suggestAttributesText }
             </MenuItem>
             
-            <MenuItem onClick={() => { onSuggestItems(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS, clss[Field.NAME], null); handleClose(); }}>
+            <MenuItem onClick={ handleSuggestAssociations }>
                 <ListItemIcon>
-                    <AutoFixNormalIcon fontSize="small" />
+                    <AutoFixNormalIcon fontSize={fontSize} />
                 </ListItemIcon>
-                    Suggest associations
+                { suggestAssociationsText }
             </MenuItem>
         </Menu>
     )
