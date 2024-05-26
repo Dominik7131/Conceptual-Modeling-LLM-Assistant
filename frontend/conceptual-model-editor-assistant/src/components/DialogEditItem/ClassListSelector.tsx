@@ -1,11 +1,11 @@
 import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
-import { editedSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../../atoms"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { Node } from 'reactflow';
+import { editedSuggestedItemState, nodesState, selectedSuggestedItemState } from "../../atoms"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import { Node } from "reactflow";
 import { Association, Field, ItemFieldUIName } from "../../interfaces/interfaces"
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react"
 import { createNameFromIRI, doesNodeAlreadyExist } from "../../utils/conceptualModel"
 import { onItemEdit } from "../../utils/editItem"
@@ -36,7 +36,7 @@ const ClassListSelector: React.FC<Props> = ({ fieldName, association }) =>
         onItemEdit(fieldName, event.target.value, setEditedItem)
     }
     
-    // Documentation: https://mui.com/material-ui/react-select/#props
+    // Text field selector documentation: https://mui.com/material-ui/react-select/#props
     return (
         <FormControl fullWidth variant="standard">
             <InputLabel>{ fieldUIName }</InputLabel>

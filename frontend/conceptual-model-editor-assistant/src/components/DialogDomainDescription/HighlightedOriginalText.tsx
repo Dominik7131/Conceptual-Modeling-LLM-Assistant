@@ -1,7 +1,7 @@
 import { useRecoilValue } from "recoil"
 import { domainDescriptionState, originalTextIndexesListState, tooltipsState } from "../../atoms"
 import { Typography, styled } from "@mui/material"
-import Tooltip, { TooltipProps, tooltipClasses  } from '@mui/material/Tooltip';
+import Tooltip, { TooltipProps, tooltipClasses  } from "@mui/material/Tooltip";
 import { ORIGINAL_TEXT_ID } from "../../utils/utility";
 
 
@@ -28,7 +28,7 @@ const HighlightedOriginalText: React.FC = (): JSX.Element =>
     texts.push(domainDescription.slice(lastStop)) // Append the remaining part of the text
 
     // Define a styled span component
-    const HoverSpan = styled('span')(() => ({ transition: 'background 0.3s ease', '&:hover': { background: "#77dae6" }, }))
+    const HoverSpan = styled("span")(() => ({ transition: "background 0.3s ease", "&:hover": { background: "#77dae6" }, }))
 
     // Tooltip from https://mui.com/material-ui/react-tooltip/#customization
     const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -36,22 +36,22 @@ const HighlightedOriginalText: React.FC = (): JSX.Element =>
         ))(() => ({
         [`& .${tooltipClasses.tooltip}`]:
         {
-        backgroundColor: '#6d6d6d',
-        color: '#ffffff',
-        maxWidth: "100%",
+            backgroundColor: "#6d6d6d",
+            color: "#ffffff",
+            maxWidth: "100%",
         },
     }))
 
 
-    const getTooltip = (index : number) =>
+    const getTooltip = (originalTextIndex : number) =>
     {
-        const labelIndex = (index - 1) / 2
-        return tooltips[labelIndex]
+        const tooltipIndex = (originalTextIndex - 1) / 2
+        return tooltips[tooltipIndex]
     }
 
 
     return (
-        <Typography component='span' whiteSpace="pre-wrap">
+        <Typography component="span" whiteSpace="pre-wrap">
             { texts.map((text, index) =>
             (
                 index % 2 === 0 ? <span key={index}>{text}</span> :

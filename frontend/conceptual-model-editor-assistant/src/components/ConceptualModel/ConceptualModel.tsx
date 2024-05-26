@@ -1,12 +1,12 @@
-import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange, useOnSelectionChange, BackgroundVariant } from 'reactflow';
-import CustomNode from './CustomNode/CustomNode';
-import CustomEdge from './CustomEdge';
-import { Field, ItemType, Association } from '../../interfaces/interfaces';
-import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState } from '../../atoms';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { useCallback } from 'react';
-import { Box, Divider } from '@mui/material';
-import { createNewAssociation } from '../../utils/conceptualModel';
+import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange, useOnSelectionChange, BackgroundVariant } from "reactflow";
+import CustomNode from "./CustomNode/CustomNode";
+import CustomEdge from "./CustomEdge";
+import { Field, ItemType, Association } from "../../interfaces/interfaces";
+import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState } from "../../atoms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { useCallback } from "react";
+import { Box, Divider } from "@mui/material";
+import { createNewAssociation } from "../../utils/conceptualModel";
 
 
 const nodeTypes = { customNode: CustomNode }

@@ -1,14 +1,14 @@
-import { EdgeLabelRenderer, EdgeProps, getSimpleBezierPath, useStore } from 'reactflow';
-import { EdgeData, Field, ItemType, Association, PRIMARY_COLOR } from '../../interfaces/interfaces';
-import { useCallback, useState } from 'react';
-import Button from '@mui/material/Button';
-import EditIcon from '@mui/icons-material/Edit';
-import { Typography } from '@mui/material';
-import { BLACK_COLOR, clipString, } from '../../utils/utility';
-import { useSetRecoilState } from 'recoil';
-import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../../atoms';
-import { calculateNewEdgeSourceAndTargetPosition } from '../../utils/autoEdgeReconnect';
-import { getLoopPath } from '../../utils/conceptualModel';
+import { EdgeLabelRenderer, EdgeProps, getSimpleBezierPath, useStore } from "reactflow";
+import { EdgeData, Field, ItemType, Association, PRIMARY_COLOR } from "../../interfaces/interfaces";
+import { useCallback, useState } from "react";
+import Button from "@mui/material/Button";
+import EditIcon from "@mui/icons-material/Edit";
+import { Typography } from "@mui/material";
+import { BLACK_COLOR, clipString, } from "../../utils/utility";
+import { useSetRecoilState } from "recoil";
+import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from "../../atoms";
+import { calculateNewEdgeSourceAndTargetPosition } from "../../utils/autoEdgeReconnect";
+import { getLoopPath } from "../../utils/conceptualModel";
 
 
 export default function CustomEdge ({ id, source, target, style, selected, data, markerEnd }: EdgeProps) : JSX.Element

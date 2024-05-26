@@ -1,9 +1,10 @@
-import DialogTitle from '@mui/material/DialogTitle';
-import Stack from '@mui/material/Stack';
-import Alert from '@mui/material/Alert';
-import { Box, CircularProgress, Typography } from '@mui/material';
-import { useRecoilValue } from 'recoil';
-import { isLoadingHighlightOriginalTextState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState } from '../../atoms';
+import DialogTitle from "@mui/material/DialogTitle";
+import Stack from "@mui/material/Stack";
+import Alert from "@mui/material/Alert";
+import { Box, CircularProgress, Typography } from "@mui/material";
+import { useRecoilValue } from "recoil";
+import { isLoadingHighlightOriginalTextState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState } from "../../atoms";
+import { Field } from "../../interfaces/interfaces";
 
 
 const Title: React.FC = (): JSX.Element =>
@@ -15,6 +16,9 @@ const Title: React.FC = (): JSX.Element =>
 
     const isOriginalTextIndexesEmpty = originalTextIndexes.length === 0
 
+    const emptyOriginalTextIndexesText = "Unable to find original text in domain description"
+    const highlightingSelectedItemsText = "Highlighting selected items in domain description"
+
     
     return (
         <DialogTitle>
@@ -24,23 +28,24 @@ const Title: React.FC = (): JSX.Element =>
                 isLoading &&
                 <Alert variant="outlined" severity="info">
 
-                <Box display="flex" alignItems="center" overflow="hidden">
-                    <Box mr={1} whiteSpace="nowrap" overflow="hidden" textOverflow="ellipsis"> Updating </Box>
+                <Box display="flex" overflow="hidden">
+                    <Box mr={1}> Updating </Box>
                     <CircularProgress size={20} />
                 </Box>
 
                 </Alert>
             }
 
-            { isOriginalTextIndexesEmpty &&
+            { isOriginalTextIndexesEmpty && !isLoading &&
                 <Alert variant="outlined" severity="warning">
-                Unable to find original text in domain description
+                { emptyOriginalTextIndexesText }
                 </Alert>
             }
 
             {  isShowTitleDialogDomainDescription ?
-                <Typography variant="h5"> Selected {selectedItem.type}: <strong>{selectedItem.name}</strong> </Typography>
-                : <Typography variant="h5"> Highlighting selected items in domain description </Typography> }
+                <Typography variant="h5"> Selected { selectedItem[Field.TYPE] }: <strong>{ selectedItem[Field.NAME] }</strong> </Typography>
+                : <Typography variant="h5"> { highlightingSelectedItemsText } </Typography>
+            }
 
             </Stack>
         </DialogTitle>

@@ -33,7 +33,7 @@ def suggest_items():
         if user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.CLASSES.value:
             yield '{"originalText": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "originalTextIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
             # time.sleep(2)
-            yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [5569, 6017], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
+            yield '{"originalText": "the fuel type of the road vehicle", "name": "fuel type", "originalTextIndexes": [1000, 1030], "dataType": "string", "description": "specific type of fuel utilized by the engine of a road vehicle"}\n'
             # time.sleep(2)
             pass
         else:
@@ -100,6 +100,7 @@ def suggest_summary():
 @app.route("/merge_original_texts", methods=["POST"])
 def merge_original_texts():
 
+    time.sleep(2)
     body_data = request.get_json()
     original_text_indexes_object = body_data["originalTextIndexesObject"]
     print(f"Received: {original_text_indexes_object}\n")

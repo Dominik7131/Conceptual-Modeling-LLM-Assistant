@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { Association, Attribute, Field, Item, ItemType } from "../../interfaces/interfaces"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { edgesState, editDialogErrorMsgState, editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../../atoms";
-import { createNameFromIRI, onAddItem, onRemove } from '../../utils/conceptualModel';
+import { createNameFromIRI, onAddItem, onRemove } from "../../utils/conceptualModel";
 import { createErrorMessage } from "../../utils/utility";
 import { onClose, onSave } from "../../utils/editItem";
 import { useState } from "react";
@@ -38,6 +38,9 @@ const ControlButtons: React.FC = () =>
     const isDisableSave = !isItemInConceptualModel
     const isDisableChange = !isSuggestedItem
 
+    const buttonVariation = "contained"
+    const textTransform = "none"
+
 
     const handleAddItem = (item: Item): void =>
     {
@@ -50,7 +53,7 @@ const ControlButtons: React.FC = () =>
             return
         }
 
-        const newItem = confirmEverything()
+        const newItem = getItemWithAllConfirmedSuggestions()
 
         const isOperationSuccessful = onAddItem(newItem, setNodes, setEdges)
 
@@ -72,7 +75,7 @@ const ControlButtons: React.FC = () =>
 
     const changeAttributeToAssociation = (attribute: Attribute): Association =>
     {
-        const oldAttribute = item as Attribute
+        const oldAttribute = attribute
         
         const association : Association = {
             [Field.IRI]: oldAttribute[Field.IRI], [Field.TYPE]: ItemType.ASSOCIATION, [Field.NAME]: oldAttribute[Field.NAME],
@@ -112,7 +115,7 @@ const ControlButtons: React.FC = () =>
         // If the item is attribute then transform it into association
         // Otherwise transform association into attribute
 
-        setErrorMessage(_ => "")
+        setErrorMessage("")
     
         if (item.type === ItemType.ATTRIBUTE)
         {
@@ -124,7 +127,8 @@ const ControlButtons: React.FC = () =>
         }
     }
 
-    const confirmEverything = (): Item =>
+
+    const getItemWithAllConfirmedSuggestions = (): Item =>
     {
         const keys = Object.keys(regeneratedItem)
  
@@ -149,9 +153,10 @@ const ControlButtons: React.FC = () =>
         return newItem
     }
 
+
     const handleSave = () =>
     {
-        const newItem = confirmEverything()
+        const newItem = getItemWithAllConfirmedSuggestions()
         onSave(newItem, item, setIsOpened, setErrorMessage, setNodes, setEdges)
     }
 
@@ -161,7 +166,7 @@ const ControlButtons: React.FC = () =>
             {
                 isItemInConceptualModel ?
                 <Button
-                    variant="contained"
+                    variant={ buttonVariation }
                     color="error"
                     sx={{ textTransform: "none" }}
                     onClick={() => { onRemove(item, setNodes, setEdges); handleClose() }}>
@@ -169,7 +174,7 @@ const ControlButtons: React.FC = () =>
                 </Button>
                 :
                 <Button
-                    variant="contained"
+                    variant={ buttonVariation }
                     color="success"
                     sx={{ textTransform: "none" }}
                     onClick={() => { handleAddItem(editedItem) }}>
@@ -178,13 +183,12 @@ const ControlButtons: React.FC = () =>
 
             }
             
-
             {
                 isSuggestedItem && !isDisableChange && isAttribute &&
                     <Button
-                        variant="contained"
-                        sx={{ textTransform: "none" }}
-                        onClick={ () => onChangeItemType(item)}>
+                        variant={ buttonVariation }
+                        sx={{ textTransform: textTransform }}
+                        onClick={ () => onChangeItemType(item) }>
                         Change to association
                     </Button>
             }
@@ -192,26 +196,26 @@ const ControlButtons: React.FC = () =>
             {
                 isSuggestedItem && !isDisableChange && isAssociation &&
                     <Button
-                        variant="contained"
-                        sx={{ textTransform: "none" }}
-                        onClick={ () => onChangeItemType(item)}>
+                        variant={ buttonVariation }
+                        sx={{ textTransform: textTransform }}
+                        onClick={ () => onChangeItemType(item) }>
                         Change to attribute
                     </Button>
             }
             
             { !isDisableSave &&
                 <Button
-                    variant="contained"
+                    variant={ buttonVariation }
                     color="success"
-                    sx={{ textTransform: "none" }}
+                    sx={{ textTransform: textTransform }}
                     onClick={() => { handleSave() }}>
                     Save
                 </Button>
             }
 
             <Button
-                variant="contained"
-                sx={{ textTransform: "none" }}
+                variant={ buttonVariation }
+                sx={{ textTransform: textTransform }}
                 onClick={ () => handleClose() }>
                 Cancel
             </Button>

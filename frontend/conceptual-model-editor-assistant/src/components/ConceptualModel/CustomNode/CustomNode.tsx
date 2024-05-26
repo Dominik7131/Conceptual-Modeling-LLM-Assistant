@@ -1,17 +1,17 @@
-import Button from '@mui/material/Button';
-import { useState } from 'react';
-import { NodeProps, Position } from 'reactflow';
-import { Attribute, Class, Field, NodeData, PRIMARY_COLOR, Item, NodeHandleID, NodeHandleType } from '../../../interfaces/interfaces';
-import Stack from '@mui/material/Stack';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Typography from '@mui/material/Typography';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { BLACK_COLOR, clipString } from '../../../utils/utility';
-import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from '../../../atoms';
-import { useSetRecoilState } from 'recoil';
-import CustomHandle from './CustomHandle';
-import DropdownMenu from './DropdownMenu';
+import Button from "@mui/material/Button";
+import { useState } from "react";
+import { NodeProps, Position } from "reactflow";
+import { Attribute, Class, Field, NodeData, PRIMARY_COLOR, Item, NodeHandleID, NodeHandleType } from "../../../interfaces/interfaces";
+import Stack from "@mui/material/Stack";
+import Box from "@mui/material/Box";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { BLACK_COLOR, clipString } from "../../../utils/utility";
+import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from "../../../atoms";
+import { useSetRecoilState } from "recoil";
+import CustomHandle from "./CustomHandle";
+import DropdownMenu from "./DropdownMenu";
 
 
 export default function TextUpdaterNode({ selected, data } : NodeProps)

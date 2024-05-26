@@ -12,6 +12,9 @@ export const NOTHING_SELECTED_MSG = "Please select some part of your conceptual 
 export const TEXT_FILTERING_VARIATION_DEFAULT_VALUE = TextFilteringVariation.SYNTACTIC
 
 export const BLACK_COLOR = "black"
+export const GRAY_COLOR = "gray"
+
+export const DATA_TYPE_CHOICES = ["string", "number", "time", "boolean"]
 
 
 // TODO: It is probably better to use "null" instead of blank item

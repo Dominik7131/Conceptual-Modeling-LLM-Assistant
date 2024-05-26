@@ -1,17 +1,17 @@
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { editDialogErrorMsgState, editedSuggestedItemState, isShowEditDialogState, selectedSuggestedItemState } from '../../atoms';
-import { Association, Attribute, Field, ItemFieldUIName, ItemType } from '../../interfaces/interfaces';
-import ClassListSelector from './ClassListSelector';
-import Title from './Title';
-import ControlButtons from './ControlButtons';
-import ErrorMessage from './ErrorMessage';
-import EditField from './EditField';
-import { onClose } from '../../utils/editItem';
-import DataTypeSelector from './DataTypeSelector';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { editDialogErrorMsgState, editedSuggestedItemState, isShowEditDialogState, selectedSuggestedItemState } from "../../atoms";
+import { Association, Attribute, Field, ItemFieldUIName, ItemType } from "../../interfaces/interfaces";
+import ClassListSelector from "./ClassListSelector";
+import Title from "./Title";
+import ControlButtons from "./ControlButtons";
+import ErrorMessage from "./ErrorMessage";
+import EditField from "./EditField";
+import { onClose } from "../../utils/editItem";
+import DataTypeSelector from "./DataTypeSelector";
 
 
 const DialogEditItem: React.FC = () =>
@@ -30,8 +30,9 @@ const DialogEditItem: React.FC = () =>
     const isAssociation = item.type === ItemType.ASSOCIATION
     const isGeneralization = item.type === ItemType.GENERALIZATION
 
+
     return (
-        <Dialog open={isOpened} fullWidth maxWidth={'xl'} onClose={ () => onClose(setIsOpened, setErrorMessage) }>
+        <Dialog open={isOpened} fullWidth maxWidth={"xl"} onClose={ () => onClose(setIsOpened, setErrorMessage) }>
 
             <ErrorMessage/>
             
@@ -47,7 +48,6 @@ const DialogEditItem: React.FC = () =>
                 { 
                     isAttribute &&
                     <>
-                        {/* <EditField label={ItemFieldUIName.DATA_TYPE} field={Field.DATA_TYPE} /> */}
                         <DataTypeSelector attribute={attribute}/>
                         <EditField label={ItemFieldUIName.CARDINALITY} field={Field.SOURCE_CARDINALITY} />
                     </>
@@ -67,8 +67,6 @@ const DialogEditItem: React.FC = () =>
                 {
                     isGeneralization &&
                     <>
-                        {/* ItemFieldUIName.GENERAl_CLASS */}
-                        {/* ItemFieldUIName.SPECIAL_CLASS */}
                         <ClassListSelector fieldName={Field.SOURCE_CLASS} association={association}/>
                         <ClassListSelector fieldName={Field.TARGET_CLASS} association={association}/>
                     </>

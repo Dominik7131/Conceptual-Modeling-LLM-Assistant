@@ -1,5 +1,5 @@
-import { Item } from "../../interfaces/interfaces"
-import Typography from '@mui/material/Typography';
+import { Field, Item } from "../../interfaces/interfaces"
+import Typography from "@mui/material/Typography";
 
 
 interface Props
@@ -7,11 +7,11 @@ interface Props
     item: Item
 }
 
-const Title: React.FC<Props> = ({ item}) =>
+const Title: React.FC<Props> = ({ item }) =>
 {
     return (
         <Typography variant="h5" component="span">
-            Editing {item.type}: <strong>{item.name}</strong>
+            Editing {item[Field.TYPE]}: <strong>{item[Field.NAME]}</strong>
         </Typography>
     )
 }

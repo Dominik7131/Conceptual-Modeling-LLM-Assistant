@@ -1,17 +1,18 @@
-import Stack from '@mui/material/Stack';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
-import CircularProgress from '@mui/material/CircularProgress';
+import Stack from "@mui/material/Stack";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { domainDescriptionState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, regeneratedItemState } from "../../atoms";
-import { Association, Field, Item } from '../../interfaces/interfaces';
-import { onClearRegeneratedItem, onItemEdit } from '../../utils/editItem';
-import { useEffect } from 'react';
-import useGenerateSingleField from '../../hooks/useGenerateSingleField';
-import useConfirmRegeneratedField from '../../hooks/useConfirmRegeneratedField';
+import { Association, Field, Item } from "../../interfaces/interfaces";
+import { onClearRegeneratedItem, onItemEdit } from "../../utils/editItem";
+import { useEffect } from "react";
+import useGenerateSingleField from "../../hooks/useGenerateSingleField";
+import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField";
+import { BLACK_COLOR, GRAY_COLOR } from "../../utils/utility";
 
 
 interface Props
@@ -34,29 +35,29 @@ const EditField: React.FC<Props> = ({ label, field }) =>
     const { onConfirmRegeneratedText } = useConfirmRegeneratedField()
     
 
-    const value = editedItem[field as keyof Item]
+    const currentText = editedItem[field as keyof Item]
 
-    let newValue : string | number[] = ""
+    let newText : string | number[] = ""
     let isRegeneratedText : boolean = true
-    let color : string = "gray"
+    let textColor : string = GRAY_COLOR
 
     if (regeneratedItem.hasOwnProperty(field))
     {
-        newValue = regeneratedItem[field as keyof Item]
+        newText = regeneratedItem[field as keyof Item]
     }
 
-    if (!newValue)
+    if (!newText)
     {
-        if (value)
+        if (currentText)
         {
-            newValue = value
+            newText = currentText
         }
         isRegeneratedText = false
     }
 
     if (!isRegeneratedText)
     {
-        color = "black"
+        textColor = BLACK_COLOR
     }
 
     const isDisableOriginalTextSuggestion = field === Field.ORIGINAL_TEXT && (domainDescription === "" || isIgnoreDomainDescription)
@@ -70,24 +71,24 @@ const EditField: React.FC<Props> = ({ label, field }) =>
     }, [])
 
 
-
     return (
         <Stack direction="row" spacing={4}>
 
                 <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={label} multiline
-                    sx={{'& textarea': {color: color} }}
+                    sx={{"& textarea": { color: textColor } }}
                     onChange={(event) => onItemEdit(field, event.target.value, setEditedItem)}
-                    value={newValue}
+                    value={newText}
                 />
 
-                { !isRegeneratedText ?
-                    ( (fieldToLoad.includes(field)) ? <CircularProgress sx={{position: "relative", right: "3px", top: "5px"}} size={"30px"} /> :
+                {
+                    !isRegeneratedText ?
+                    ( (fieldToLoad.includes(field)) ? <CircularProgress sx={{ position: "relative", right: "3px", top: "5px" }} size={ "30px" } /> :
                     <IconButton disabled={isDisabledFieldSuggestion} color="primary" size="small" onClick={() => onGenerateField(editedItem[Field.TYPE], editedItem[Field.NAME], (editedItem as Association)[Field.SOURCE_CLASS], (editedItem as Association)[Field.TARGET_CLASS], field)}>
                         <AutoFixNormalIcon/>
                     </IconButton>)
                     :
                     <Stack direction="row">
-                        <IconButton onClick={() => onConfirmRegeneratedText(field)}>
+                        <IconButton onClick={ () => onConfirmRegeneratedText(field) }>
                             <CheckIcon color="success"/>
                         </IconButton>
                         <IconButton onClick={() => { onClearRegeneratedItem(field, setRegeneratedItem) }}>

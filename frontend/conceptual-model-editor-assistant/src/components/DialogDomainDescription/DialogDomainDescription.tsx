@@ -1,20 +1,26 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import { useEffect } from 'react';
-import { isShowHighlightDialogState } from '../../atoms';
-import { useRecoilState } from 'recoil';
-import Title from './Title';
-import HighlightedOriginalText from './HighlightedOriginalText';
-import { ORIGINAL_TEXT_ID } from '../../utils/utility';
-
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import { useEffect } from "react";
+import { isLoadingHighlightOriginalTextState, isShowHighlightDialogState } from "../../atoms";
+import { useRecoilState, useRecoilValue } from "recoil";
+import Title from "./Title";
+import HighlightedOriginalText from "./HighlightedOriginalText";
+import { ORIGINAL_TEXT_ID } from "../../utils/utility";
 
 
 const HighlightDialog: React.FC = () =>
 {
+  const isLoading = useRecoilValue(isLoadingHighlightOriginalTextState)
   const [isOpened, setIsOpened] = useRecoilState(isShowHighlightDialogState)
+
+
+  const onClose = () =>
+  {
+    setIsOpened(false)
+  }
 
 
   useEffect(() =>
@@ -33,18 +39,12 @@ const HighlightDialog: React.FC = () =>
 
       if (highlightedText)
       {
-        highlightedText.scrollIntoView( { behavior: 'smooth', block: 'center'})
+        highlightedText.scrollIntoView({ behavior: "smooth", block: "center"})
       }
     }
 
     delay()
-  }, [isOpened])
-
-
-  const onClose = () =>
-  {
-    setIsOpened(false)
-  }
+  }, [isOpened, isLoading])
 
 
   return (
@@ -58,11 +58,15 @@ const HighlightDialog: React.FC = () =>
 
         <Title/>
 
-        <DialogContent dividers={true}>
-          <DialogContentText>
-            <HighlightedOriginalText/>
-          </DialogContentText>
-        </DialogContent>
+        {
+          !isLoading &&
+
+          <DialogContent dividers={true}>
+            <DialogContentText>
+              <HighlightedOriginalText/>
+            </DialogContentText>
+          </DialogContent>
+        }
 
         <DialogActions>
           <Button variant="contained" sx={{textTransform: "none"}} onClick={ onClose }>
@@ -70,7 +74,7 @@ const HighlightDialog: React.FC = () =>
           </Button>
         </DialogActions>
       </Dialog>
-    )
+  )
 }
 
 export default HighlightDialog
