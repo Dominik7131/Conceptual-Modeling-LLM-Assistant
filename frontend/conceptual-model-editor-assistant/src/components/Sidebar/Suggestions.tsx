@@ -21,12 +21,20 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
 
     const createUniqueKey = (name: string, sourceEntity: string, targetEntity: string): string =>
     {
-        if (!sourceEntity) { sourceEntity = "" }
-        if (!targetEntity) { targetEntity = "" }
+        if (!sourceEntity)
+        { 
+            sourceEntity = ""
+        }
+
+        if (!targetEntity)
+        {
+            targetEntity = ""
+        }
 
         const uniqueKey = `${name}-${sourceEntity}-${targetEntity}`
         return uniqueKey
     }
+
 
     return (
 
@@ -34,7 +42,7 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
             { title &&
                 <Stack>
                     <Typography
-                        sx={{ display: "flex", justifyContent:"center"}}
+                        sx={{ display: "flex", justifyContent: "center"}}
                         variant="body1"
                         gutterBottom>
                             <strong> { title } </strong>
@@ -67,7 +75,7 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
 
             { itemTypesToLoad.includes(itemType) &&
                 <Box
-                    sx={{ display: "flex", justifyContent:"center", marginTop: "20px"}}>
+                    sx={{ display: "flex", justifyContent:"center", marginTop: "20px" }}>
                     <CircularProgress />
                 </Box>
             }

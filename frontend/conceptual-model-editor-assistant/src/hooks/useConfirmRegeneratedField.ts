@@ -32,7 +32,7 @@ const useConfirmRegeneratedField = () =>
         }
         const bodyDataJSON = JSON.stringify(bodyData)
     
-        fetch(SAVE_SUGESTED_SINGLE_FIELD_URL, { method: 'POST', headers: HEADER, body: bodyDataJSON })
+        fetch(SAVE_SUGESTED_SINGLE_FIELD_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
     }
     
         

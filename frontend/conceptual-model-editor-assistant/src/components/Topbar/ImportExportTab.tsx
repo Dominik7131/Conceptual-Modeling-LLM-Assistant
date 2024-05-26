@@ -8,7 +8,7 @@ import ImportFromDataspecerButton from "./ImportFromDataspecerButton";
 const ImportTab: React.FC = (): JSX.Element =>
 {
     return (
-        <Stack direction="row" spacing={2} sx={{ display: 'flex', justifyContent:"center" }}>
+        <Stack direction="row" spacing={2} sx={{ display: "flex", justifyContent: "center" }}>
 
             <ImportFromDataspecerButton/>
             <ImportJSONButton/>

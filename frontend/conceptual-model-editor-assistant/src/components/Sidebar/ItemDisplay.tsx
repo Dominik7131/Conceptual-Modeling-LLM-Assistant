@@ -1,6 +1,7 @@
 import { Stack, Typography } from "@mui/material"
 import { Attribute, Field, Item, ItemFieldUIName, ItemType, Association } from "../../interfaces/interfaces"
 import { createNameFromIRI } from "../../utils/conceptualModel"
+import { BLACK_COLOR } from "../../utils/utility"
 
 
 interface Props
@@ -16,18 +17,20 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
     const isAttribute = item.type === ItemType.ATTRIBUTE
     const isAssociation = item.type === ItemType.ASSOCIATION
 
-    // Display original text in gray color if generated original text was not found in domain description
     const customLightGray = "#b5b5b5"
     let originalTextColor = customLightGray
 
+    // Display original text in gray color if it was not found in domain description
     if (item[Field.ORIGINAL_TEXT_INDEXES])
     {
-        originalTextColor = item[Field.ORIGINAL_TEXT_INDEXES].length === 0 ? customLightGray : "black"
+        const isFoundInDomainDescription = item[Field.ORIGINAL_TEXT_INDEXES].length === 0
+        originalTextColor = isFoundInDomainDescription ? customLightGray : BLACK_COLOR
     }
 
 
     return (
-        <Stack marginTop={"15px"} width="342px">
+        <Stack marginTop={"15px"}>
+
             <Typography> <strong>{ ItemFieldUIName.NAME }:</strong> { item[Field.NAME] } </Typography>
 
             {
@@ -65,9 +68,11 @@ const ItemDisplay: React.FC<Props> = ({ item }): JSX.Element =>
                     <Typography> <strong> { ItemFieldUIName.SOURCE_CARDINALITY }:</strong> { association[Field.SOURCE_CARDINALITY] } </Typography>
             }
 
-            { isAssociation && association[Field.TARGET_CARDINALITY] &&
+            { 
+                isAssociation && association[Field.TARGET_CARDINALITY] &&
                     <Typography> <strong> { ItemFieldUIName.TARGET_CARDINALITY }:</strong> { association[Field.TARGET_CARDINALITY] } </Typography>
             }
+
         </Stack>
     )
 }

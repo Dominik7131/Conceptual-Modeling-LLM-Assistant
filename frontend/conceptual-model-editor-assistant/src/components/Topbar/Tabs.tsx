@@ -18,7 +18,7 @@ const Tabs: React.FC = (): JSX.Element =>
 
 
     return (
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent:"center" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider", display: "flex", justifyContent:"center" }}>
             <TabList onChange={ handleChange }>
                 <Tab sx={{textTransform: "none"}} label="Main" value={TopbarTab.MAIN} />
                 <Tab sx={{textTransform: "none"}} label={SUMMARY_PLAIN_TEXT_NAME} value={TopbarTab.SUMMARY_PLAIN_TEXT} />

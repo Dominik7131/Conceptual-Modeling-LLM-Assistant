@@ -1,13 +1,13 @@
 import { Button, ButtonGroup, IconButton, Stack, Tooltip } from "@mui/material"
 import HighlightSingleItemButton from "./HighlightSingleItemButton"
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
 import { Attribute, Field, Item, ItemType, Association } from "../../interfaces/interfaces";
 import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarErrorMsgState, textFilteringVariationSnapshotsState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { createErrorMessage, itemTypeToUserChoice } from "../../utils/utility";
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { useState } from "react";
 import { HEADER, SAVE_SUGESTED_ITEM_URL, SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE } from "../../utils/urls";
 import { onAddItem } from "../../utils/conceptualModel";
@@ -36,6 +36,10 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
     const textFilteringVariationSnapshot = useRecoilValue(textFilteringVariationSnapshotsState)
 
     const [isClicked, setIsClicked] = useState(false)
+
+    const textTransform = "none"
+    const tooltipEnterDelay = 500
+    const tooltipLeaveDelay = 200
 
 
     const handleAddItem = (): void =>
@@ -69,6 +73,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
         setIsShowEditDialog(true)
     }
 
+
     const handleSaveSuggestion = (isPositiveReaction: boolean) =>
     {
         const userChoice = itemTypeToUserChoice(item[Field.TYPE])
@@ -89,8 +94,6 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
 
     
     return (
-
-        // <Stack direction="row" spacing="30px" marginTop="10px" sx={{ display: 'flex', justifyContent:"left" }}>
         <ButtonGroup
             variant="outlined"
             color={ SIDEBAR_BUTTON_COLOR }
@@ -98,14 +101,10 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
             size="small"
             sx={{ marginTop: "15px" }}>
 
-            <Tooltip
-                title="Like"
-                enterDelay={500}
-                leaveDelay={200}>
-
+            <Tooltip title="Like" enterDelay={tooltipEnterDelay} leaveDelay={tooltipLeaveDelay}>
                 <Button
                     size={ SIDEBAR_BUTTON_SIZE }
-                    sx={{ textTransform: "none" }}
+                    sx={{ textTransform: textTransform }}
                     disabled={isClicked}
                     onClick={ () => { handleSaveSuggestion(true) } }
                     >
@@ -113,14 +112,10 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
                 </Button>
             </Tooltip>
 
-            <Tooltip
-                title="Add"
-                enterDelay={500}
-                leaveDelay={200}
-                >
+            <Tooltip title="Add" enterDelay={tooltipEnterDelay} leaveDelay={tooltipLeaveDelay}>
                 <Button
                     size={ SIDEBAR_BUTTON_SIZE }
-                    sx={{ textTransform: "none" }}
+                    sx={{ textTransform: textTransform }}
                     onClick={ handleAddItem }
                     >
                         <AddIcon/>
@@ -128,14 +123,10 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
             </Tooltip>
             
 
-            <Tooltip
-                title="Edit"
-                enterDelay={500}
-                leaveDelay={200}
-                >
+            <Tooltip title="Edit" enterDelay={tooltipEnterDelay} leaveDelay={tooltipLeaveDelay}>
                 <Button
                     size="small"
-                    sx={{ textTransform: "none" }}
+                    sx={{ textTransform: textTransform }}
                     onClick={ handleEditSuggestedItem }
                     >
                         <EditIcon/>
@@ -143,16 +134,12 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
             </Tooltip>
 
 
-            <HighlightSingleItemButton item={item}/>
+            <HighlightSingleItemButton item={item} tooltipEnterDelay={tooltipEnterDelay} tooltipLeaveDelay={tooltipLeaveDelay} textTransform={textTransform}/>
 
-            <Tooltip
-                title="Dislike"
-                enterDelay={500}
-                leaveDelay={200}>
-
+            <Tooltip title="Dislike" enterDelay={tooltipEnterDelay} leaveDelay={tooltipLeaveDelay}>
                 <Button
                     size={ SIDEBAR_BUTTON_SIZE }
-                    sx={{ textTransform: "none" }}
+                    sx={{ textTransform: textTransform }}
                     disabled={isClicked}
                     onClick={ () => { handleSaveSuggestion(false) } }
                     >

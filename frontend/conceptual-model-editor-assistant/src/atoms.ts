@@ -1,9 +1,9 @@
-import { atom, selector } from 'recoil'
-import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice, TextFilteringVariation, SidebarTab, TopbarTab } from './interfaces/interfaces';
-import { Node, Edge } from 'reactflow';
-import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE, BLANK_CLASS } from './utils/utility';
-import { DATASPECER_MODEL_URL } from './utils/urls';
-import { ConceptualModelSnapshot, DomainDescriptionSnapshot, TextFilteringVariationSnapshot } from './interfaces/snapshots';
+import { atom, selector } from "recoil"
+import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice, TextFilteringVariation, SidebarTab, TopbarTab } from "./interfaces/interfaces";
+import { Node, Edge } from "reactflow";
+import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE, BLANK_CLASS } from "./utils/utility";
+import { DATASPECER_MODEL_URL } from "./utils/urls";
+import { ConceptualModelSnapshot, DomainDescriptionSnapshot, TextFilteringVariationSnapshot } from "./interfaces/snapshots";
 
 // TODO: Divide atoms into separate files
 

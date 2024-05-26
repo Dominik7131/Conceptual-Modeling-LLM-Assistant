@@ -1,7 +1,7 @@
 import { Button, Stack } from "@mui/material"
 import DomainDescriptionTextArea from "./DomainDescriptionTextArea";
-import AddIcon from '@mui/icons-material/Add';
-import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
+import AddIcon from "@mui/icons-material/Add";
+import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import useSuggestItems from "../../hooks/useSuggestItems";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
 import { UserChoice } from "../../interfaces/interfaces";
@@ -39,7 +39,7 @@ const ControlButtons: React.FC = (): JSX.Element =>
         <>
             <DomainDescriptionTextArea/>
             
-            <Stack direction="row" justifyContent="space-between" paddingX={1} paddingY={"8px"}>
+            <Stack direction="row" justifyContent="space-between">
                 <Stack direction="row" spacing={2}>
                     <Button
                         variant="contained"

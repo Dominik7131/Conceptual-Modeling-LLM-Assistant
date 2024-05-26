@@ -17,6 +17,8 @@ const ExportJSONButton: React.FC = (): JSX.Element =>
     const export_name = (modelID === "" || modelID === DATASPECER_MODEL_URL) ? "export.json" : `${modelID}.json`
     const export_file_name = importedFileName === "" ? export_name : `${importedFileName}-${export_name}`
 
+    const buttonText = "Export into JSON"
+
 
     const onExport = () =>
     {
@@ -40,10 +42,10 @@ const ExportJSONButton: React.FC = (): JSX.Element =>
             variant="contained"
             color="secondary"
             disableElevation
-            sx={{textTransform: "none"}}
+            sx={{ textTransform: "none" }}
             startIcon={ <DownloadIcon/> }
             onClick={ onExport }>
-        Export into JSON
+        { buttonText }
     </Button>
     )
 }

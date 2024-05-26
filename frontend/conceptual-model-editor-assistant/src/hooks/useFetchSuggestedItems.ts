@@ -104,7 +104,7 @@ const useFetchSuggestedItems = () =>
     var jsonString = new TextDecoder().decode(value)
 
     // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
-    const jsonStringParts = jsonString.split('\n').filter((string => string !== ''))
+    const jsonStringParts = jsonString.split("\n").filter((string => string !== ""))
 
     for (let i = 0; i < jsonStringParts.length; i++)
     {

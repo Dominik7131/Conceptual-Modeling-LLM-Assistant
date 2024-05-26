@@ -1,8 +1,8 @@
 import { Button } from "@mui/material"
-import HighlightIcon from '@mui/icons-material/Highlight';
+import HighlightIcon from "@mui/icons-material/Highlight";
 import { domainDescriptionState, isLoadingHighlightOriginalTextState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { Attribute, EdgeData, Field, Item, ItemType, NodeData, OriginalTextIndexesItem } from "../../interfaces/interfaces";
+import { EdgeData, Field, NodeData, OriginalTextIndexesItem } from "../../interfaces/interfaces";
 import { NOTHING_SELECTED_MSG, capitalizeString } from "../../utils/utility";
 import { HEADER, MERGE_ORIGINAL_TEXT_URL } from "../../utils/urls";
 import { createNameFromIRI } from "../../utils/conceptualModel";
@@ -22,7 +22,6 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
     const setOriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
     const setTooltips = useSetRecoilState(tooltipsState)
     const setIsShowTitleDialogDomainDescription = useSetRecoilState(isShowTitleDialogDomainDescriptionState)
-
 
 
     // TODO: Put this fetch logic into a separate file

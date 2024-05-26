@@ -1,5 +1,5 @@
 import { Button } from "@mui/material"
-import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
+import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import { NOTHING_SELECTED_MSG, SUMMARY_DESCRIPTIONS_NAME } from "../../utils/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryDescriptionReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryDescriptionsState, topbarTabValueState } from "../../atoms";

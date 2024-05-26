@@ -1,14 +1,14 @@
-import { Alert, Button, Stack, TextField, Typography } from '@mui/material';
-import Dialog, { DialogProps } from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import { useState } from 'react';
-import { edgesState, isDialogEnterIRIOpenedState, isDialogImportState, modelIDState, nodesState } from '../../atoms';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { importConceptualModelFromJson } from '../../utils/import';
-import { HEADER } from '../../utils/urls';
-import { convertConceptualModelToJSON } from '../../utils/serialization';
+import { Button, Stack, TextField, Typography } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useState } from "react";
+import { edgesState, isDialogEnterIRIOpenedState, isDialogImportState, modelIDState, nodesState } from "../../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { importConceptualModelFromJson } from "../../utils/import";
+import { HEADER } from "../../utils/urls";
+import { convertConceptualModelToJSON } from "../../utils/serialization";
 
 
 const DialogEnterModelID: React.FC = (): JSX.Element =>
@@ -25,12 +25,15 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
     const [isOpened, setIsOpened] = useRecoilState(isDialogEnterIRIOpenedState)
     const isDialogImport = useRecoilValue(isDialogImportState)
 
+    const buttonVariation = "contained"
+    const textTransform = "none"
 
-    const IRI_IDENTIFICATOR = "iri="
+    const iriIdentificator = "iri="
+
 
     const getIDFromURL = (url: string): string =>
     {
-        const startIndex = url.indexOf(IRI_IDENTIFICATOR)
+        const startIndex = url.indexOf(iriIdentificator)
 
         if (startIndex === -1)
         {
@@ -38,7 +41,7 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
         }
 
         // Extract the substring starting from "iri=" to the end of the URL
-        const iriLength = IRI_IDENTIFICATOR.length
+        const iriLength = iriIdentificator.length
         const substring = url.substring(startIndex + iriLength)
         return substring
     }
@@ -70,17 +73,19 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
         fetch(enteredURL, fetchOptions)
     }
 
+
     const onClose = () =>
     {
-        setIsOpened(_ => false)
+        setIsOpened(false)
     }
+
 
     return (
         <Dialog
             open={isOpened}
             fullWidth={true}
-            maxWidth={'xl'}
-            scroll={'paper'}
+            maxWidth={"xl"}
+            scroll={"paper"}
             onClose={onClose}
         >
             <DialogTitle>
@@ -91,8 +96,7 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
 
             <DialogContent dividers={true}>
                 <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={"Model URL"} multiline
-                        // sx={{'& textarea': {color: color} }}
-                        onChange={ event => setEnteredURL(_ => event.target.value) }
+                        onChange={ event => setEnteredURL(event.target.value) }
                         value={ enteredURL }
                     />
             </DialogContent>
@@ -101,29 +105,29 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
 
                 { isDialogImport ? 
                     <Button
-                        variant="contained"
+                        variant={ buttonVariation }
                         color="success"
                         disableElevation
-                        sx={{ textTransform: "none" }}
+                        sx={{ textTransform: textTransform }}
                         onClick={ onImport }>
                             Import
                     </Button>
                     :
                     <Button
-                        variant="contained"
+                        variant={ buttonVariation }
                         color="success"
                         disableElevation
-                        sx={{ textTransform: "none" }}
+                        sx={{ textTransform: textTransform }}
                         onClick={ onExport }>
                             Export
                     </Button>
                 }
 
                 <Button
-                    variant="contained"
+                    variant={ buttonVariation }
                     color="error"
                     disableElevation
-                    sx={{ textTransform: "none" }}
+                    sx={{ textTransform: textTransform }}
                     onClick={ onClose }>
                         Close
                 </Button>

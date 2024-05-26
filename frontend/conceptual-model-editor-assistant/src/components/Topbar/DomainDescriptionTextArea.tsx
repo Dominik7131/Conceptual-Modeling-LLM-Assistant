@@ -1,11 +1,11 @@
 import { Box, TextField } from "@mui/material"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import { domainDescriptionState, edgesState, isIgnoreDomainDescriptionState, nodesState } from "../../atoms"
-import { useEffect } from "react"
 import { invalidateAllOriginalTextIndexes } from "../../utils/conceptualModel"
+import { ChangeEvent } from "react"
 
 
-const DomainDescriptionTextArea: React.FC = ():JSX.Element =>
+const DomainDescriptionTextArea: React.FC = (): JSX.Element =>
 {
     const [domainDescription, setDomainDescription] = useRecoilState(domainDescriptionState)
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
@@ -13,47 +13,30 @@ const DomainDescriptionTextArea: React.FC = ():JSX.Element =>
     const setNodes = useSetRecoilState(nodesState)
     const setEdges = useSetRecoilState(edgesState)
 
+    const width = "100%"
 
-    const loadDomainDescriptionFromFile = () =>
+
+    const handleChangeDomainDescription = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
     {
-        const domainDescriptionFileName = "input.txt"
-
-        fetch(domainDescriptionFileName)
-        .then((result) => result.text())
-        .then((text) =>
-        {
-            setDomainDescription(_ => text)
-        })
-        .catch((e) => console.error(e));
+        setDomainDescription(_ => event.target.value)
+        invalidateAllOriginalTextIndexes(setNodes, setEdges)
     }
-
-    // Just for testing automatically load a given domain description
-    // TODO: Remove this code before production
-    useEffect(() =>
-    {
-        if (domainDescription === "")
-        {
-            // loadDomainDescriptionFromFile()
-        }
-    }, [])
-
 
 
     return (
         <Box
-            sx={{ '& .MuiTextField-root': { m: 1, width: '98.9%' } }}
+            sx={{ "& .MuiTextField-root": { width: width, marginBottom: "20px"} }}
             component="form"
             noValidate
             autoComplete="off"
         >
             <TextField
-                id="domain description text area"
                 label="Domain description"
                 variant="outlined"
                 disabled={isIgnoreDomainDescription}
                 multiline
                 rows={7}
-                onChange={event => { setDomainDescription(_ => event.target.value); invalidateAllOriginalTextIndexes(setNodes, setEdges) }}
+                onChange={event => { handleChangeDomainDescription(event) }}
                 value={domainDescription}
                 spellCheck="false">
             </TextField>

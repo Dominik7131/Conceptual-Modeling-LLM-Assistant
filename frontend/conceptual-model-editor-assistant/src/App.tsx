@@ -4,6 +4,7 @@ import SideBar from './components/Sidebar/Sidebar';
 import { ReactFlowProvider } from 'reactflow';
 import HighlightDialog from './components/DialogDomainDescription/DialogDomainDescription';
 import DialogCreateEdge from './components/DialogCreateEdge';
+import DialogEnterIRI from "./components/Topbar/DialogEnterModelID";
 import { RecoilRoot } from 'recoil';
 import DialogEditItem from './components/DialogEditItem/DialogEditItem';
 import { Box, Stack } from '@mui/material';
@@ -36,6 +37,9 @@ function App()
       <DialogEditItem/>
 
       <DialogCreateEdge/>
+
+      <DialogEnterIRI/>
+
     </RecoilRoot>
   )
 }

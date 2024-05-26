@@ -3,8 +3,8 @@ import { useRecoilState, useRecoilValue } from "recoil"
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, isLoadingSummaryDescriptionsState, isSummaryDescriptionReactButtonClickedState, nodesState, summaryDescriptionsState } from "../../atoms"
 import { capitalizeString } from "../../utils/utility"
 import { Attribute, UserChoice } from "../../interfaces/interfaces"
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { HEADER, SAVE_SUGESTED_SUMMARY_URL } from "../../utils/urls"
 import { getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../utils/snapshot"
 import { SummaryUserEvaluationBody } from "../../interfaces/bodies"
@@ -31,7 +31,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
 
         const suggestionData: SummaryUserEvaluationBody = {
             domainDescription: currentDomainDescription, isPositive: isPositiveReaction, summary: summaryDescriptions,
-            conceptualModel: currentConceptualModel, summaryType: userChoice
+            summaryType: userChoice, conceptualModel: currentConceptualModel
         }
 
         const bodyDataJSON = JSON.stringify(suggestionData)
@@ -107,7 +107,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
                         <Button
                             size={ "small" }
                             color="inherit"
-                            sx={{ textTransform: "none", maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px' }}
+                            sx={{ textTransform: "none", maxWidth: "30px", maxHeight: "30px", minWidth: "30px", minHeight: "30px" }}
                             disabled={isClicked}
                             onClick={ () => { handleSaveSuggestion(true) } }
                             >
@@ -123,7 +123,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
                         <Button
                             color="inherit"
                             size={ "small" }
-                            sx={{ textTransform: "none", maxWidth: '50px', maxHeight: '30px', minWidth: '30px', minHeight: '30px', paddingRight: "10px" }}
+                            sx={{ textTransform: "none", maxWidth: "50px", maxHeight: "30px", minWidth: "30px", minHeight: "30px", paddingRight: "10px" }}
                             disabled={isClicked}
                             onClick={ () => { handleSaveSuggestion(false) } }
                             >

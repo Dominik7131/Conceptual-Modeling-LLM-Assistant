@@ -1,17 +1,9 @@
 import Stack from "@mui/material/Stack";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
-import IconButton from "@mui/material/IconButton";
-import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { domainDescriptionState, editedSuggestedItemState, fieldToLoadState, isIgnoreDomainDescriptionState, regeneratedItemState } from "../../atoms";
-import { Association, Field, Item } from "../../interfaces/interfaces";
-import { onClearRegeneratedItem, onItemEdit } from "../../utils/editItem";
-import { useEffect } from "react";
-import useGenerateSingleField from "../../hooks/useGenerateSingleField";
-import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField";
+import { domainDescriptionState, editedSuggestedItemState, isIgnoreDomainDescriptionState, regeneratedItemState } from "../../atoms";
+import { Field, Item } from "../../interfaces/interfaces";
+import { onItemEdit } from "../../utils/editItem";
 import { BLACK_COLOR, GRAY_COLOR } from "../../utils/utility";
 import Suggestion from "./Suggestion";
 

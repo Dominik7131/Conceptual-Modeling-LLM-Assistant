@@ -1,7 +1,7 @@
-import { Node, Edge, MarkerType, EdgeMarker, internalsSymbol } from 'reactflow';
-import { Association, Attribute, Class, EdgeData, Field, Item, ItemType, NodeData } from '../interfaces/interfaces';
-import { SetterOrUpdater } from 'recoil';
-import { BLANK_CLASS } from './utility';
+import { Node, Edge, MarkerType, EdgeMarker, internalsSymbol } from "reactflow";
+import { Association, Attribute, Class, EdgeData, Field, Item, ItemType, NodeData } from "../interfaces/interfaces";
+import { SetterOrUpdater } from "recoil";
+import { BLANK_CLASS } from "./utility";
 
 
 export const CUSTOM_EDGE_TYPE = "custom-edge"

@@ -11,7 +11,7 @@ const Title: React.FC<Props> = ({ item }) =>
 {
     return (
         <Typography variant="h5" component="span">
-            Editing {item[Field.TYPE]}: <strong>{item[Field.NAME]}</strong>
+            Editing { item[Field.TYPE] }: <strong>{ item[Field.NAME] }</strong>
         </Typography>
     )
 }

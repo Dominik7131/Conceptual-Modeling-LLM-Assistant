@@ -1,15 +1,15 @@
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Stack from '@mui/material/Stack';
-import { Field, Item, ItemType, Association, UserChoice } from '../interfaces/interfaces';
-import AddIcon from '@mui/icons-material/Add';
-import AutoFixNormalIcon from '@mui/icons-material/AutoFixNormal';
-import { editedSuggestedItemState, isShowCreateEdgeDialogState, isShowEditDialogState, selectedSuggestedItemState } from '../atoms';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import useSuggestItems from '../hooks/useSuggestItems';
-import { createNameFromIRI } from '../utils/conceptualModel';
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Stack from "@mui/material/Stack";
+import { Field, Item, ItemType, Association, UserChoice } from "../interfaces/interfaces";
+import AddIcon from "@mui/icons-material/Add";
+import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
+import { editedSuggestedItemState, isShowCreateEdgeDialogState, isShowEditDialogState, selectedSuggestedItemState } from "../atoms";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import useSuggestItems from "../hooks/useSuggestItems";
+import { createNameFromIRI } from "../utils/conceptualModel";
 
 
 const DialogCreateEdge: React.FC = () =>

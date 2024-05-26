@@ -1,11 +1,11 @@
-import 'reactflow/dist/style.css';
-import { changeSidebarTab, changeTitle, onClearSuggestedItems, userChoiceToItemType } from '../utils/utility';
-import useFetchSuggestedItems from './useFetchSuggestedItems';
-import { ItemType, UserChoice } from '../interfaces/interfaces';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState, textFilteringVariationState, textFilteringVariationSnapshotsState } from '../atoms';
-import { snapshotDomainDescription, snapshotTextFilteringVariation } from '../utils/snapshot';
-import { ItemSuggestionBody } from '../interfaces/bodies';
+import "reactflow/dist/style.css";
+import { changeSidebarTab, changeTitle, onClearSuggestedItems, userChoiceToItemType } from "../utils/utility";
+import useFetchSuggestedItems from "./useFetchSuggestedItems";
+import { ItemType, UserChoice } from "../interfaces/interfaces";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState, textFilteringVariationState, textFilteringVariationSnapshotsState } from "../atoms";
+import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot";
+import { ItemSuggestionBody } from "../interfaces/bodies";
 
 
 const useSuggestItems = () =>

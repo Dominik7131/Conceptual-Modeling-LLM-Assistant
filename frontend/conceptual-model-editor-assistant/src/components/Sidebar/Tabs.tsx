@@ -15,7 +15,7 @@ const Tabs: React.FC = (): JSX.Element =>
     const attributesLabel = capitalizeString(UserChoice.ATTRIBUTES)
     const associationsLabel = capitalizeString(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS).slice(0, -1)
 
-    const handleChange = (event: React.SyntheticEvent, newValue: SidebarTab) =>
+    const handleChange = (_: React.SyntheticEvent, newValue: SidebarTab) =>
     {
         setErrorMessage("")
         setTabValue(newValue)
@@ -23,7 +23,7 @@ const Tabs: React.FC = (): JSX.Element =>
 
 
     return (
-        <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', justifyContent:"center" }}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider", display: "flex", justifyContent: "center" }}>
             <TabList onChange={ handleChange }
                 indicatorColor="secondary"
                 textColor="secondary">

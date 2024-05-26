@@ -1,15 +1,12 @@
 import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
-import { editedSuggestedItemState, fieldToLoadState, regeneratedItemState } from "../../atoms"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { Attribute, Field, ItemFieldUIName, ItemType } from "../../interfaces/interfaces"
+import { editedSuggestedItemState, regeneratedItemState } from "../../atoms"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { Attribute, Field, ItemFieldUIName } from "../../interfaces/interfaces"
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-import { useEffect } from "react"
 import { onClearRegeneratedItem, onItemEdit } from "../../utils/editItem"
 import { Stack } from "@mui/material"
-import useGenerateSingleField from "../../hooks/useGenerateSingleField"
-import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField"
 import { BLACK_COLOR, DATA_TYPE_CHOICES, GRAY_COLOR } from "../../utils/utility"
 import Suggestion from "./Suggestion"
 

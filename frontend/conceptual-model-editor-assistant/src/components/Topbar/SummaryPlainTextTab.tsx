@@ -1,8 +1,8 @@
 import { Typography, CircularProgress, Button, Tooltip, Stack } from "@mui/material"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, isLoadingSummaryPlainTextState, isSummaryPlainTextReactButtonClickedState, summaryTextState } from "../../atoms"
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { UserChoice } from "../../interfaces/interfaces";
 import { HEADER, SAVE_SUGESTED_SUMMARY_URL } from "../../utils/urls";
 import { getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../utils/snapshot";
@@ -33,7 +33,7 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
 
         const bodyDataJSON = JSON.stringify(suggestionData)
 
-        fetch(SAVE_SUGESTED_SUMMARY_URL, { method: 'POST', headers: HEADER, body: bodyDataJSON })
+        fetch(SAVE_SUGESTED_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
 
         setIsClicked(true)
     }
@@ -57,7 +57,7 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
                         <Button
                             size={ "small" }
                             color="inherit"
-                            sx={{ textTransform: "none", maxWidth: '30px', maxHeight: '30px', minWidth: '30px', minHeight: '30px' }}
+                            sx={{ textTransform: "none", maxWidth: "30px", maxHeight: "30px", minWidth: "30px", minHeight: "30px" }}
                             disabled={isClicked}
                             onClick={ () => { handleSaveSuggestion(true) } }
                             >
@@ -73,7 +73,7 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
                         <Button
                             color="inherit"
                             size={ "small" }
-                            sx={{ textTransform: "none", maxWidth: '50px', maxHeight: '30px', minWidth: '30px', minHeight: '30px', paddingRight: "10px" }}
+                            sx={{ textTransform: "none", maxWidth: "50px", maxHeight: "30px", minWidth: "30px", minHeight: "30px", paddingRight: "10px" }}
                             disabled={isClicked}
                             onClick={ () => { handleSaveSuggestion(false) } }
                             >

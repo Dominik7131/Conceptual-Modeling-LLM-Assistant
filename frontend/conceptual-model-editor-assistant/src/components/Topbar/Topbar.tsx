@@ -1,7 +1,7 @@
-import Box from '@mui/material/Box';
+import Box from "@mui/material/Box";
 import { Button, Divider } from "@mui/material";
-import TabPanel from '@mui/lab/TabPanel';
-import TabContext from '@mui/lab/TabContext';
+import TabPanel from "@mui/lab/TabPanel";
+import TabContext from "@mui/lab/TabContext";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { isSidebarCollapsedState, topbarTabValueState } from "../../atoms";
 import SummaryDescriptionsTab from "./SummaryDescriptionsTab";
@@ -9,13 +9,13 @@ import SummaryPlainTextTab from "./SummaryPlainTextTab";
 import TopbarButtons from "./ControlButtons";
 import SettingsTab from "./SettingsTab";
 import Tabs from "./Tabs";
-import ImportTab from './ImportExportTab';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { useState } from 'react';
-import InfoTab from './InfoTab';
+import ImportTab from "./ImportExportTab";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import { useState } from "react";
+import InfoTab from "./InfoTab";
 
 
 const Topbar: React.FC = () =>
@@ -42,7 +42,7 @@ const Topbar: React.FC = () =>
         <Box sx={{ flex: flexValue }}>
 
             { !isCollapsed &&
-                <Box sx={{ overflow: 'auto' }}>
+                <Box sx={{ overflow: "auto" }}>
                     <TabContext value={tabValue}>
                         
                         <Tabs/>
@@ -78,7 +78,7 @@ const Topbar: React.FC = () =>
                 variant="contained"
                 color="inherit"
                 size="small"
-                sx={{ position: "absolute", left:"40px", top: "10px", zIndex: 1}}
+                sx={{ position: "absolute", left:"40px", top: "10px", zIndex: 1 }}
                 onClick={ handleChangeSize }>
                     { isCollapsed ? <KeyboardArrowDownIcon/> : <KeyboardArrowUpIcon/> }
             </Button>
@@ -87,7 +87,7 @@ const Topbar: React.FC = () =>
                 variant="contained"
                 color="inherit"
                 size="small"
-                sx={{ position: "absolute", left:`120px`, top: "10px", zIndex: 1}}
+                sx={{ position: "absolute", left:"120px", top: "10px", zIndex: 1 }}
                 onClick={ handleSidebarSize }>
                     { isSidebarCollapsed ? <KeyboardArrowLeftIcon/> : <KeyboardArrowRightIcon/> }
             </Button>

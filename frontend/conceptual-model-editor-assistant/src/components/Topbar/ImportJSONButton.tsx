@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 import Button from "@mui/material/Button";
-import UploadIcon from '@mui/icons-material/Upload';
+import UploadIcon from "@mui/icons-material/Upload";
 import { useSetRecoilState } from "recoil";
 import { edgesState, importedFileNameState, nodesState } from "../../atoms";
 import { importConceptualModelFromJson } from "../../utils/import";
@@ -12,6 +12,8 @@ const ImportJSONButton: React.FC = () =>
     const setEdges = useSetRecoilState(edgesState)
     
     const setImportedFileName = useSetRecoilState(importedFileNameState)
+
+    const buttonText = "Import from JSON"
 
 
     const handleFileUpload = (changeEvent: ChangeEvent<HTMLInputElement>) =>
@@ -45,7 +47,7 @@ const ImportJSONButton: React.FC = () =>
         }
         reader.readAsText(file)
 
-        setImportedFileName(_ => file.name.slice(0, -5))
+        setImportedFileName(file.name.slice(0, -5))
 
         // Clear the file name so the "onChange" handler fires again even when the same file is uploaded more than once
         changeEvent.target.value = ""
@@ -60,7 +62,8 @@ const ImportJSONButton: React.FC = () =>
             startIcon={ <UploadIcon/> }
             component="label"
         >
-            Import from JSON
+            { buttonText }
+
             <input
                 type="file"
                 accept=".json"
