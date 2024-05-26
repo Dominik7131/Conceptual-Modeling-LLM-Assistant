@@ -7,15 +7,11 @@ import { Attribute, Field, ItemFieldUIName, ItemType } from "../../interfaces/in
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useEffect } from "react"
 import { onClearRegeneratedItem, onItemEdit } from "../../utils/editItem"
-import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import IconButton from "@mui/material/IconButton";
 import { Stack } from "@mui/material"
 import useGenerateSingleField from "../../hooks/useGenerateSingleField"
-import CircularProgress from "@mui/material/CircularProgress";
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
 import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField"
 import { BLACK_COLOR, DATA_TYPE_CHOICES, GRAY_COLOR } from "../../utils/utility"
+import Suggestion from "./Suggestion"
 
 
 interface Props
@@ -27,16 +23,13 @@ const DataTypeSelector: React.FC<Props> = ({ attribute }) =>
 {
     const setEditedItem = useSetRecoilState(editedSuggestedItemState)
     const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
-    const fieldToLoad = useRecoilValue(fieldToLoadState)
 
     const regeneratedAttribute = regeneratedItem as Attribute
-    const isRegeneratedText = regeneratedAttribute[Field.DATA_TYPE] && regeneratedAttribute[Field.DATA_TYPE] !== ""
+
+    const isRegeneratedText: boolean = regeneratedAttribute[Field.DATA_TYPE] !== undefined && regeneratedAttribute[Field.DATA_TYPE] !== ""
     const actualValue = isRegeneratedText ? regeneratedAttribute[Field.DATA_TYPE] : attribute[Field.DATA_TYPE]
 
     const textColor = isRegeneratedText ? GRAY_COLOR : BLACK_COLOR
-
-    const { onGenerateField } = useGenerateSingleField()
-    const { onConfirmRegeneratedText } = useConfirmRegeneratedField()
 
 
     const handleChange = (event: SelectChangeEvent) =>
@@ -46,12 +39,6 @@ const DataTypeSelector: React.FC<Props> = ({ attribute }) =>
 
         onItemEdit(Field.DATA_TYPE, event.target.value, setEditedItem)
     }
-
-    // Clear the generated suggestion when the component is unmounted
-    useEffect(() =>
-    {
-        return () => { onClearRegeneratedItem(Field.DATA_TYPE, setRegeneratedItem) }
-    }, [])
 
 
     return (
@@ -72,21 +59,7 @@ const DataTypeSelector: React.FC<Props> = ({ attribute }) =>
                 
             </FormControl>
 
-                { !isRegeneratedText ?
-                    ( (fieldToLoad.includes(Field.DATA_TYPE)) ? <CircularProgress sx={{position: "relative", right: "3px", top: "5px"}} size={"30px"} /> :
-                    <IconButton color="primary" size="small" onClick={ () => onGenerateField(ItemType.ATTRIBUTE, attribute[Field.NAME], attribute[Field.SOURCE_CLASS], "", Field.DATA_TYPE) }>
-                        <AutoFixNormalIcon/>
-                    </IconButton>)
-                    :
-                    <Stack direction="row">
-                        <IconButton onClick={ () => onConfirmRegeneratedText(Field.DATA_TYPE) }>
-                            <CheckIcon color="success"/>
-                        </IconButton>
-                        <IconButton onClick={ () => { onClearRegeneratedItem(Field.DATA_TYPE, setRegeneratedItem) }}>
-                            <CloseIcon color="error"/>
-                        </IconButton>
-                    </Stack>
-                }
+            <Suggestion item={attribute} field={Field.DATA_TYPE} isRegeneratedText={isRegeneratedText} isDisabledFieldSuggestion={false}/>
         </Stack>
     )
 }

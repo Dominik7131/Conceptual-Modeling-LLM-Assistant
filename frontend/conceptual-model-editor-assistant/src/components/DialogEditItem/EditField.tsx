@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import useGenerateSingleField from "../../hooks/useGenerateSingleField";
 import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField";
 import { BLACK_COLOR, GRAY_COLOR } from "../../utils/utility";
+import Suggestion from "./Suggestion";
 
 
 interface Props
@@ -24,15 +25,10 @@ interface Props
 const EditField: React.FC<Props> = ({ label, field }) =>
 {
     const [editedItem, setEditedItem] = useRecoilState(editedSuggestedItemState)
-    const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
+    const regeneratedItem = useRecoilValue(regeneratedItemState)
 
     const domainDescription = useRecoilValue(domainDescriptionState)
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
-
-    const fieldToLoad = useRecoilValue(fieldToLoadState)
-
-    const { onGenerateField } = useGenerateSingleField()
-    const { onConfirmRegeneratedText } = useConfirmRegeneratedField()
     
 
     const currentText = editedItem[field as keyof Item]
@@ -64,38 +60,17 @@ const EditField: React.FC<Props> = ({ label, field }) =>
     const isDisabledFieldSuggestion = field === Field.NAME || field === Field.SOURCE_CLASS || field === Field.TARGET_CLASS || isDisableOriginalTextSuggestion
 
 
-    // Clear the generated suggestion when the component is unmounted
-    useEffect(() =>
-    {
-        return () => { onClearRegeneratedItem(field, setRegeneratedItem) }
-    }, [])
-
-
     return (
         <Stack direction="row" spacing={4}>
 
-                <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={label} multiline
-                    sx={{"& textarea": { color: textColor } }}
-                    onChange={(event) => onItemEdit(field, event.target.value, setEditedItem)}
-                    value={newText}
-                />
+            <TextField margin="dense" fullWidth variant="standard" spellCheck={false} label={label} multiline
+                sx={{"& textarea": { color: textColor } }}
+                onChange={(event) => onItemEdit(field, event.target.value, setEditedItem)}
+                value={newText}
+            />
 
-                {
-                    !isRegeneratedText ?
-                    ( (fieldToLoad.includes(field)) ? <CircularProgress sx={{ position: "relative", right: "3px", top: "5px" }} size={ "30px" } /> :
-                    <IconButton disabled={isDisabledFieldSuggestion} color="primary" size="small" onClick={() => onGenerateField(editedItem[Field.TYPE], editedItem[Field.NAME], (editedItem as Association)[Field.SOURCE_CLASS], (editedItem as Association)[Field.TARGET_CLASS], field)}>
-                        <AutoFixNormalIcon/>
-                    </IconButton>)
-                    :
-                    <Stack direction="row">
-                        <IconButton onClick={ () => onConfirmRegeneratedText(field) }>
-                            <CheckIcon color="success"/>
-                        </IconButton>
-                        <IconButton onClick={() => { onClearRegeneratedItem(field, setRegeneratedItem) }}>
-                            <CloseIcon color="error"/>
-                        </IconButton>
-                    </Stack>
-                }
+            <Suggestion item={editedItem} field={field} isRegeneratedText={isRegeneratedText} isDisabledFieldSuggestion={isDisabledFieldSuggestion}/>
+
         </Stack>
     )
 }
