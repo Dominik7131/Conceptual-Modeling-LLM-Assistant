@@ -1,6 +1,6 @@
 import { atom } from "recoil"
-import { Class, Attribute, Association, Field, ItemType, Item } from "../interfaces/interfaces"
-import { BLANK_CLASS } from "../utils/utility"
+import { Class, Attribute, Association, Item, BLANK_CLASS } from "../definitions/conceptualModel"
+import { Field, ItemType } from "../definitions/utility"
 
 
 export const suggestedClassesState = atom<Class[]>({

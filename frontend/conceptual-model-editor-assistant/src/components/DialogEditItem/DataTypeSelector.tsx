@@ -2,13 +2,13 @@ import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
 import { useRecoilState, useSetRecoilState } from "recoil"
-import { Attribute, Field, ItemFieldUIName } from "../../interfaces/interfaces"
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { onClearRegeneratedItem, onItemEdit } from "../../utils/editItem"
 import { Stack } from "@mui/material"
-import { BLACK_COLOR, DATA_TYPE_CHOICES, GRAY_COLOR } from "../../utils/utility"
 import Suggestion from "./Suggestion"
 import { editedSuggestedItemState, regeneratedItemState } from "../../atoms/suggestions"
+import { Attribute, DATA_TYPE_CHOICES } from "../../definitions/conceptualModel";
+import { BLACK_COLOR, Field, GRAY_COLOR, ItemFieldUIName } from "../../definitions/utility";
 
 
 interface Props

@@ -1,8 +1,8 @@
 import { useSetRecoilState } from "recoil"
-import { HEADER, MERGE_ORIGINAL_TEXT_URL } from "../utils/urls"
-import { OriginalTextIndexesProcessedItem } from "../interfaces/interfaces"
+import { HEADER, MERGE_ORIGINAL_TEXT_URL } from "../definitions/urls"
 import { originalTextIndexesListState, tooltipsState } from "../atoms/originalTextIndexes"
 import { isLoadingHighlightOriginalTextState } from "../atoms/loadings"
+import { OriginalTextIndexesProcessedItem } from "../definitions/originalTextIndexes"
 
 
 const useFetchMergedOriginalTexts = () =>

@@ -1,12 +1,13 @@
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Field, Association } from "../../interfaces/interfaces";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { createNameFromIRI } from "../../utils/conceptualModel";
 import ControlButtons from "./ControlButtons";
 import { isShowCreateEdgeDialogState } from "../../atoms/dialogs";
 import { selectedSuggestedItemState } from "../../atoms/suggestions";
+import { Association } from "../../definitions/conceptualModel";
+import { Field } from "../../definitions/utility";
 
 
 const DialogCreateEdge: React.FC = (): JSX.Element =>

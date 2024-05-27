@@ -1,7 +1,6 @@
 import { atom } from "recoil"
-import { UserChoice } from "../interfaces/interfaces"
-import { DomainDescriptionSnapshot, TextFilteringVariationSnapshot, ConceptualModelSnapshot } from "../interfaces/snapshots"
-import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE } from "../utils/utility"
+import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE, UserChoice } from "../definitions/utility"
+import { DomainDescriptionSnapshot, TextFilteringVariationSnapshot, ConceptualModelSnapshot } from "../definitions/snapshots"
 
 
 export const domainDescriptionSnapshotsState = atom<DomainDescriptionSnapshot>({

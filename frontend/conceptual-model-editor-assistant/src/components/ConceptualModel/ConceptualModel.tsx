@@ -1,7 +1,8 @@
+import 'reactflow/dist/style.css';
 import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from "reactflow";
 import CustomNode from "./CustomNode/CustomNode";
 import CustomEdge from "./CustomEdge";
-import { Field, Association } from "../../interfaces/interfaces";
+import { BLACK_COLOR, Field } from "../../definitions/utility";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { useCallback } from "react";
 import { Box, Divider } from "@mui/material";
@@ -9,10 +10,11 @@ import { createNewAssociation } from "../../utils/conceptualModel";
 import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel";
 import { isShowCreateEdgeDialogState } from "../../atoms/dialogs";
 import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState } from "../../atoms/suggestions";
+import { Association, CUSTOM_EDGE_TYPE, CUSTOM_NODE_TYPE } from "../../definitions/conceptualModel";
 
 
-const nodeTypes = { customNode: CustomNode }
-const edgeTypes = { "custom-edge": CustomEdge }
+const nodeTypes = { [CUSTOM_NODE_TYPE]: CustomNode }
+const edgeTypes = { [CUSTOM_EDGE_TYPE]: CustomEdge }
 
 
 const ConceptualModel: React.FC = () =>
@@ -54,8 +56,8 @@ const ConceptualModel: React.FC = () =>
 
     const newAssociation: Association = createNewAssociation(sourceClassIRI, targetClassIRI)
 
-    setSelectedSuggestedItem(_ => newAssociation)
-    setEditedSuggestedItem(_ => newAssociation)
+    setSelectedSuggestedItem(newAssociation)
+    setEditedSuggestedItem(newAssociation)
 
     setIsSuggestedItem(false)
     setIsItemInConceptualModel(false)
@@ -81,7 +83,7 @@ const ConceptualModel: React.FC = () =>
             >
             <MiniMap nodeStrokeWidth={3} zoomable pannable />
             <Controls />
-            <Background color="black"/>
+            <Background color={BLACK_COLOR}/>
         </ReactFlow>
       </Box>
     </>

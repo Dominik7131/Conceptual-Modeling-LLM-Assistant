@@ -1,4 +1,5 @@
-import { TextFilteringVariation, UserChoice } from "./interfaces"
+import { TextFilteringVariation } from "./textFilteringVariation"
+import { UserChoice } from "./utility"
 
 
 export interface DomainDescriptionSnapshot

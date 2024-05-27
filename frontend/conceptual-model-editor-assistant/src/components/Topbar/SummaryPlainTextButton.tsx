@@ -1,17 +1,19 @@
 import { Button } from "@mui/material"
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import { NOTHING_SELECTED_MSG, SUMMARY_PLAIN_TEXT_NAME } from "../../utils/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { ConceptualModelObject, TopbarTab, UserChoice } from "../../interfaces/interfaces";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
 import { convertConceptualModelToObjectSummary } from "../../utils/serialization";
 import useFetchSummaryPlainText from "../../hooks/useFetchSummaryPlainText";
-import { SummarySuggestionBody } from "../../interfaces/bodies";
+import { SummarySuggestionBody } from "../../definitions/bodies";
 import { selectedNodesState, selectedEdgesState } from "../../atoms/conceptualModel";
 import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms/domainDescription";
 import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";
 import { summaryTextState } from "../../atoms/summary";
 import { topbarTabValueState } from "../../atoms/topbar";
+import { ConceptualModelObject } from "../../definitions/conceptualModel";
+import { TopbarTab } from "../../definitions/tabs";
+import { NOTHING_SELECTED_MSG, UserChoice } from "../../definitions/utility";
+import { SUMMARY_PLAIN_TEXT_NAME } from "../../utils/summary";
 
 
 const SummaryPlainTextButton: React.FC= (): JSX.Element =>

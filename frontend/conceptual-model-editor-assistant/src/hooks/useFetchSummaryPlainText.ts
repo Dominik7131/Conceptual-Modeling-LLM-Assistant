@@ -1,5 +1,5 @@
 import { useSetRecoilState } from "recoil"
-import { SUGGEST_SUMMARY_URL, HEADER } from "../utils/urls"
+import { SUGGEST_SUMMARY_URL, HEADER } from "../definitions/urls"
 import { summaryTextState } from "../atoms/summary"
 import { isLoadingSummaryPlainTextState } from "../atoms/loadings"
 

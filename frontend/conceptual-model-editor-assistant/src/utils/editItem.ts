@@ -1,13 +1,14 @@
 import { Node, Edge } from "reactflow"
-import { Association, Attribute, Class, Field, Item, ItemType } from "../interfaces/interfaces"
 import { SetterOrUpdater } from "recoil"
 import { createIRIFromName, editEdgeAssociation, editNodeAttribute, editNodeClass } from "./conceptualModel"
+import { Field, ItemType } from "../definitions/utility"
+import { Item, Class, Attribute, Association } from "../definitions/conceptualModel"
 
 
 export const onClose = (setIsOpened: SetterOrUpdater<boolean>, setErrorMessage: SetterOrUpdater<string>): void =>
 {
-    setIsOpened(_ => false)
-    setErrorMessage(_ => "")
+    setIsOpened(false)
+    setErrorMessage("")
 }
 
 
@@ -43,16 +44,14 @@ export const onItemEdit = (field: Field, newValue: string, setEditedItem: Setter
 
 
 export const onSave = (newItem: Item, oldItem: Item, setIsOpened: SetterOrUpdater<boolean>, setErrorMessage: SetterOrUpdater<string>, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
-{
-    console.log("Saving: ", newItem)
-    
+{   
     if (!newItem[Field.NAME])
     {
-        setErrorMessage(_ => "Name cannot be empty")
+        setErrorMessage("Name cannot be empty")
         return
     }
 
-    setIsOpened(_ => false)
+    setIsOpened(false)
 
     if (newItem[Field.TYPE] === ItemType.CLASS)
     {

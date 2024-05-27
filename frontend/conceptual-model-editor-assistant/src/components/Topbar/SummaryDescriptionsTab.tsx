@@ -1,10 +1,11 @@
 import { Typography, CircularProgress } from "@mui/material"
 import { useRecoilValue } from "recoil"
 import { capitalizeString } from "../../utils/utility"
-import { Attribute, Field, UserChoice } from "../../interfaces/interfaces"
+import { Field, UserChoice } from "../../definitions/utility"
 import SummaryReactionButtons from "./SummaryReactionButtons"
 import { isLoadingSummaryDescriptionsState } from "../../atoms/loadings"
 import { summaryDescriptionsState } from "../../atoms/summary"
+import { Attribute } from "../../definitions/conceptualModel"
 
 
 

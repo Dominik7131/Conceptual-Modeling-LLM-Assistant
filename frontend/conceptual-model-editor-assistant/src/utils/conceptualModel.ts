@@ -1,12 +1,7 @@
 import { Node, Edge, MarkerType, EdgeMarker, internalsSymbol } from "reactflow";
-import { Association, Attribute, Class, EdgeData, Field, Item, ItemType, NodeData } from "../interfaces/interfaces";
 import { SetterOrUpdater } from "recoil";
-import { BLANK_CLASS } from "./utility";
-
-
-export const CUSTOM_EDGE_TYPE = "custom-edge"
-export const CUSTOM_EDGE_MARKER: EdgeMarker = { type: MarkerType.Arrow, width: 50, height: 50, strokeWidth: 1 }
-export const CUSTOM_ISA_EDGE_MARKER: EdgeMarker = { type: MarkerType.ArrowClosed, width: 40, height: 40, strokeWidth: 0.8 }
+import { Class, Attribute, EdgeData, Item, Association, NodeData, ItemsMessage, BLANK_CLASS, CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER } from "../definitions/conceptualModel";
+import { Field, ItemType, UserChoice } from "../definitions/utility";
 
 
 export const getNodeByID = (nodes: Node[], nodeID: string): Node | null =>
@@ -116,6 +111,7 @@ export const doesSameEdgeBetweenNodesAlreadyExistSetter = (setEdges: SetterOrUpd
     return isEdgeAlreadyPresent
 }
 
+
 export const onAddItem = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): boolean =>
 {
     if (item[Field.TYPE] === ItemType.CLASS)
@@ -217,7 +213,6 @@ const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>
 const onAddAssociation = (association : Association, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): boolean =>
 {
     // Returns "true" if the operation was successfull otherwise "false"
-    console.log("on add association: ", association)
 
     if (doesSameEdgeBetweenNodesAlreadyExistSetter(setEdges, association[Field.IRI], association[Field.TYPE], association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS]))
     {
@@ -288,7 +283,7 @@ export const createNode = (nodeName: string, positionX: number, positionY: numbe
 }
 
 
-export const addNode = (nodeName: string, positionX: number, positionY: number, setNodes: SetterOrUpdater<Node[]>) =>
+export const addNode = (nodeName: string, positionX: number, positionY: number, setNodes: SetterOrUpdater<Node[]>): void =>
 {
     if (!nodeName)
     {
@@ -513,64 +508,6 @@ export const removeNodeAttribute = (attribute: Attribute, setNodes: SetterOrUpda
 }
 
 
-export const invalidateAllOriginalTextIndexes = (setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>) =>
-{   
-    invalidateAllOriginalTextIndexesNodes(setNodes)
-    invalidateAllOriginalTextIndexesEdges(setEdges)
-}
-
-
-export const invalidateAllOriginalTextIndexesNodes = (setNodes: SetterOrUpdater<Node[]>) =>
-{
-    setNodes((nodes: Node[]) => nodes.map(currentNode => 
-    {
-        const currentNodeData: NodeData = currentNode.data
-
-        let newNode: Node = { ...currentNode }
-
-        if (currentNodeData.class.hasOwnProperty(Field.ORIGINAL_TEXT_INDEXES))
-        {
-            newNode = {...currentNode, data: { ...currentNodeData, class: { ...currentNodeData.class, [Field.ORIGINAL_TEXT_INDEXES]: [] }}}
-        }
-
-        let newAttributes: Attribute[] = []
-        const currentAttributes: Attribute[] = currentNodeData.attributes
-
-        for (let i = 0; i < currentAttributes.length; i++)
-        {
-            if (currentAttributes[i].hasOwnProperty(Field.ORIGINAL_TEXT_INDEXES))
-            {
-                newAttributes.push( {...currentAttributes[i], [Field.ORIGINAL_TEXT_INDEXES]: [] })
-            }
-            else
-            {
-                newAttributes.push(currentAttributes[i])
-            }
-        }
-
-        newNode = { ...newNode, data: { ...newNode.data, attributes: newAttributes }}
-
-        return newNode
-    }))
-}
-
-export const invalidateAllOriginalTextIndexesEdges = (setEdges: SetterOrUpdater<Edge[]>) =>
-{
-    setEdges((edges: Edge[]) => edges.map(currentEdge => 
-    {
-        const currentEdgeData: EdgeData = currentEdge.data
-
-        if (currentEdgeData.association.hasOwnProperty(Field.ORIGINAL_TEXT_INDEXES))
-        {
-            const newEdge: Edge = {...currentEdge, data: { ...currentEdgeData, association: { ...currentEdgeData.association, [Field.ORIGINAL_TEXT_INDEXES]: [] }}}
-            return newEdge
-        }
-
-        return currentEdge
-    }))
-}
-
-
 export const createNewAttribute = (sourceClassIRI: string): Attribute =>
 {
     const newAttribute: Attribute = {
@@ -616,4 +553,78 @@ export function getLoopPath(sourceNode: Node, targetNode: Node, isGeneralization
     } ${targetNode.position.y + handleTarget!.y}`
 
     return [path, position.x, position.y] as const
+}
+
+
+export const createErrorMessage = (item: Item, setErrorMessage: SetterOrUpdater<string>): void =>
+{
+    let message = ""
+
+    if (item[Field.TYPE] === ItemType.CLASS)
+    {
+        message = `Class "${item[Field.NAME]}" already exists`
+    }
+    else if (item[Field.TYPE] === ItemType.ATTRIBUTE)
+    {
+        const attribute: Attribute = item as Attribute
+        const sourceClassName = createNameFromIRI(attribute[Field.SOURCE_CLASS])
+
+        message = `Class "${sourceClassName}" already contains attribute: "${item[Field.NAME]}"`
+    }
+    else if (item[Field.TYPE] === ItemType.ASSOCIATION || item[Field.TYPE] === ItemType.GENERALIZATION)
+    {
+        const association: Association = item as Association
+        const sourceClassName = createNameFromIRI(association[Field.SOURCE_CLASS])
+        const targetClassName = createNameFromIRI(association[Field.TARGET_CLASS])
+
+        message = `Association "${item[Field.NAME]}" in between source class "${sourceClassName}" and target class "${targetClassName}" already exists`
+    }
+    else
+    {
+        throw Error("Received unexpected item type: ", item[Field.TYPE])
+    }
+
+    setErrorMessage(message)
+}
+    
+    
+export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targetItemName: string, setTitle: SetterOrUpdater<ItemsMessage>): void =>
+{
+    if (userChoice === UserChoice.CLASSES)
+    {
+        const message = "All suggested classes: "
+        setTitle((title: ItemsMessage) => { return { ...title, classes: message} })
+    }
+    else if (userChoice === UserChoice.ATTRIBUTES)
+    {
+        const message = `Selected class: ${sourceItemName}`
+        setTitle((title: ItemsMessage) => { return { ...title, attributes: message} })
+    }
+    else if (userChoice === UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS)
+    {
+        const message = `Selected class: ${sourceItemName}`
+        setTitle((title: ItemsMessage) => { return { ...title, associations: message} })
+    }
+    else if (userChoice === UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES)
+    {
+        const message = `Source class: ${sourceItemName}\nTarget class: ${targetItemName}`
+        setTitle((title: ItemsMessage) => { return { ...title, associations: message} })
+    }
+}
+    
+    
+export const onClearSuggestedItems = (itemType: ItemType, setSuggestedClasses: SetterOrUpdater<Class[]>, setSuggestedAttributes: SetterOrUpdater<Attribute[]>, setSuggestedAssociations: SetterOrUpdater<Association[]>): void =>
+{
+    if (itemType === ItemType.CLASS)
+    {
+        setSuggestedClasses([])
+    }
+    else if (itemType === ItemType.ATTRIBUTE)
+    {
+        setSuggestedAttributes([])
+    }
+    else if (itemType === ItemType.ASSOCIATION)
+    {
+        setSuggestedAssociations([])
+    }
 }

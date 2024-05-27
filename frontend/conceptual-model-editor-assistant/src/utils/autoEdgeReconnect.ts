@@ -60,7 +60,10 @@ const getHandleCoordsByPosition = (node: Node, handlePosition: Position, isTarge
         break
   }
 
-  if (!node.positionAbsolute) return DEFAULT_COORDS
+  if (!node.positionAbsolute)
+  {
+    return DEFAULT_COORDS
+  }
 
   const x = node.positionAbsolute.x + handle.x + offsetX
   const y = node.positionAbsolute.y + handle.y + offsetY

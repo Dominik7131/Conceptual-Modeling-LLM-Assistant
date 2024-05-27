@@ -1,6 +1,5 @@
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import { CircularProgress, IconButton, Stack } from "@mui/material"
-import { Association, Field, Item } from "../../interfaces/interfaces"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import useGenerateSingleField from "../../hooks/useGenerateSingleField"
 import CheckIcon from "@mui/icons-material/Check";
@@ -9,6 +8,8 @@ import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField";
 import { onClearRegeneratedItem } from "../../utils/editItem";
 import { useEffect } from "react";
 import { fieldToLoadState, regeneratedItemState } from "../../atoms/suggestions";
+import { Item, Association } from "../../definitions/conceptualModel";
+import { Field } from "../../definitions/utility";
 
 
 interface Props

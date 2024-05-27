@@ -1,5 +1,6 @@
 import { atom } from "recoil"
-import { SummaryDescriptionsObject, UserChoice } from "../interfaces/interfaces"
+import { SummaryDescriptionsObject } from "../definitions/summary"
+import { UserChoice } from "../definitions/utility"
 
 
 export const summaryTextState = atom({

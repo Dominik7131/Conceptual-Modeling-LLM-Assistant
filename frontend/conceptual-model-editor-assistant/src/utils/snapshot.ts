@@ -1,5 +1,6 @@
-import { TextFilteringVariation, UserChoice } from "../interfaces/interfaces"
-import { ConceptualModelSnapshot, DomainDescriptionSnapshot, TextFilteringVariationSnapshot } from "../interfaces/snapshots"
+import { ConceptualModelSnapshot, DomainDescriptionSnapshot, TextFilteringVariationSnapshot } from "../definitions/snapshots"
+import { TextFilteringVariation } from "../definitions/textFilteringVariation"
+import { UserChoice } from "../definitions/utility"
 
 
 export const snapshotDomainDescription = (userChoice: UserChoice, domainDescription: string, setSnapshotDomainDescription: any) =>

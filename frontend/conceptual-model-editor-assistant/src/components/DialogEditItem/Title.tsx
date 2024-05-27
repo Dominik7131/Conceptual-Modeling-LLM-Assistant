@@ -1,4 +1,5 @@
-import { Field, Item } from "../../interfaces/interfaces"
+import { Item } from "../../definitions/conceptualModel";
+import { Field } from "../../definitions/utility"
 import Typography from "@mui/material/Typography";
 
 

@@ -1,6 +1,7 @@
 import { Node, Edge } from "reactflow"
-import { Association, Attribute, AttributeJson, Class, ClassJson, ConceptualModelJson, EdgeData, Field, GeneralizationJson, ItemType, NodeData, RelationshipJson, ConceptualModelObject } from "../interfaces/interfaces"
-import { createNameFromIRI } from "./conceptualModel"
+import { NodeData, Class, Attribute, EdgeData, Association, ConceptualModelObject } from "../definitions/conceptualModel"
+import { ConceptualModelJson, ClassJson, AttributeJson, RelationshipJson, GeneralizationJson } from "../definitions/conceptualModelJSON"
+import { Field, ItemType } from "../definitions/utility"
 
 
 const JSON_SCHEMA = "https://schemas.dataspecer.com/adapters/simplified-semantic-model.v1.0.schema.json"

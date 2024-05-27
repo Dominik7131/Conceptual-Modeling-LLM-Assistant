@@ -1,10 +1,11 @@
 import { Alert, Box, CircularProgress, Divider, ListItem, Stack, Typography } from "@mui/material"
-import { Field, Item, ItemType } from "../../interfaces/interfaces"
+import { Field, ItemType } from "../../definitions/utility"
 import ItemDisplay from "./ItemDisplay"
 import ControlButtons from "./ControlButtons"
 import { useRecoilValue } from "recoil"
 import { itemTypesToLoadState } from "../../atoms/suggestions"
 import { sidebarErrorMsgState } from "../../atoms/sidebar"
+import { Item } from "../../definitions/conceptualModel"
 
 
 interface Props

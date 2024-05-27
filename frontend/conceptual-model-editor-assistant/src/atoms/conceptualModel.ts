@@ -1,6 +1,6 @@
 import { Node, Edge } from "reactflow"
 import { atom, selector } from "recoil"
-import { DATASPECER_MODEL_URL } from "../utils/urls"
+import { DATASPECER_MODEL_URL } from "../definitions/urls"
 
 
 export const nodesState = atom<Node[]>({

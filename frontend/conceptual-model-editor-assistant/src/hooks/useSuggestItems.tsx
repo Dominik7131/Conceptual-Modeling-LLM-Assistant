@@ -1,15 +1,16 @@
-import "reactflow/dist/style.css";
-import { changeSidebarTab, changeTitle, onClearSuggestedItems, userChoiceToItemType } from "../utils/utility";
 import useFetchSuggestedItems from "./useFetchSuggestedItems";
-import { ItemType, UserChoice } from "../interfaces/interfaces";
+import { ItemType, UserChoice } from "../definitions/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot";
-import { ItemSuggestionBody } from "../interfaces/bodies";
+import { ItemSuggestionBody } from "../definitions/bodies";
 import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms/domainDescription";
 import { sidebarTitlesState, sidebarTabValueState } from "../atoms/sidebar";
 import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots";
 import { suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms/suggestions";
 import { textFilteringVariationState } from "../atoms/textFiltering";
+import { onClearSuggestedItems, changeTitle } from "../utils/conceptualModel";
+import { changeSidebarTab } from "../utils/sidebar";
+import { userChoiceToItemType } from "../utils/utility";
 
 
 const useSuggestItems = () =>

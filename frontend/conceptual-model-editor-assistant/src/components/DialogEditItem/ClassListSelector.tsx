@@ -3,13 +3,14 @@ import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { Node } from "reactflow";
-import { Association, Field, ItemFieldUIName } from "../../interfaces/interfaces"
+import { Field, ItemFieldUIName } from "../../definitions/utility"
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { useState } from "react"
 import { createNameFromIRI, doesNodeAlreadyExist } from "../../utils/conceptualModel"
 import { onItemEdit } from "../../utils/editItem"
 import { nodesState } from "../../atoms/conceptualModel";
 import { selectedSuggestedItemState, editedSuggestedItemState } from "../../atoms/suggestions";
+import { Association } from "../../definitions/conceptualModel";
 
 
 interface Props

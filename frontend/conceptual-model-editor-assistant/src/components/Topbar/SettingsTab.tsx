@@ -1,8 +1,8 @@
 import { Checkbox, Divider, FormControlLabel, FormLabel, Radio, RadioGroup, Stack } from "@mui/material"
 import { useRecoilState } from "recoil"
-import { TextFilteringVariation } from "../../interfaces/interfaces"
 import { isIgnoreDomainDescriptionState } from "../../atoms/domainDescription"
 import { textFilteringVariationState } from "../../atoms/textFiltering"
+import { TextFilteringVariation } from "../../definitions/textFilteringVariation"
 
 
 const SettingsTab: React.FC = (): JSX.Element =>

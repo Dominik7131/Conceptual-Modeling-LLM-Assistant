@@ -4,14 +4,14 @@ import AddIcon from "@mui/icons-material/Add";
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import useSuggestItems from "../../hooks/useSuggestItems";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
-import { UserChoice } from "../../interfaces/interfaces";
-import { BLANK_CLASS } from "../../utils/utility";
+import { UserChoice } from "../../definitions/utility";
 import { useSetRecoilState } from "recoil";
 import SummaryPlainTextButton from "./SummaryPlainTextButton";
 import SummaryDescriptionsButton from "./SummaryDescriptionsButton";
 import { isItemInConceptualModelState } from "../../atoms/conceptualModel";
 import { isShowEditDialogState } from "../../atoms/dialogs";
 import { isSuggestedItemState, selectedSuggestedItemState, editedSuggestedItemState } from "../../atoms/suggestions";
+import { BLANK_CLASS } from "../../definitions/conceptualModel";
 
 
 const ControlButtons: React.FC = (): JSX.Element =>

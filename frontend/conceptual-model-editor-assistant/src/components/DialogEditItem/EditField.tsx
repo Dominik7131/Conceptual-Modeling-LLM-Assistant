@@ -1,12 +1,12 @@
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { Field, Item } from "../../interfaces/interfaces";
+import { BLACK_COLOR, Field, GRAY_COLOR } from "../../definitions/utility";
 import { onItemEdit } from "../../utils/editItem";
-import { BLACK_COLOR, GRAY_COLOR } from "../../utils/utility";
 import Suggestion from "./Suggestion";
 import { editedSuggestedItemState, regeneratedItemState } from "../../atoms/suggestions";
 import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms/domainDescription";
+import { Item } from "../../definitions/conceptualModel";
 
 
 interface Props

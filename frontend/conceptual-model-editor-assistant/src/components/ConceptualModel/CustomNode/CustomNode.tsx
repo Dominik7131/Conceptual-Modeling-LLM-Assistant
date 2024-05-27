@@ -1,19 +1,20 @@
 import Button from "@mui/material/Button";
 import { useState } from "react";
 import { NodeProps, Position } from "reactflow";
-import { Attribute, Class, Field, NodeData, PRIMARY_COLOR, Item, NodeHandleID, NodeHandleType } from "../../../interfaces/interfaces";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { BLACK_COLOR, clipString } from "../../../utils/utility";
 import { useSetRecoilState } from "recoil";
 import CustomHandle from "./CustomHandle";
 import DropdownMenu from "./DropdownMenu";
 import { isItemInConceptualModelState } from "../../../atoms/conceptualModel";
 import { isShowEditDialogState } from "../../../atoms/dialogs";
 import { isSuggestedItemState, selectedSuggestedItemState, editedSuggestedItemState } from "../../../atoms/suggestions";
+import { NodeData, Class, Attribute, Item, NodeHandleID, NodeHandleType } from "../../../definitions/conceptualModel";
+import { BLACK_COLOR, Field, PRIMARY_COLOR } from "../../../definitions/utility";
+import { clipString } from "../../../utils/utility";
 
 
 export default function TextUpdaterNode({ selected, data } : NodeProps)

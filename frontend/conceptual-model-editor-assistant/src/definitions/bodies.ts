@@ -1,4 +1,7 @@
-import { ConceptualModelObject, Item, SummaryDescriptionsObject, TextFilteringVariation, UserChoice } from "./interfaces"
+import { ConceptualModelObject, Item } from "./conceptualModel"
+import { SummaryDescriptionsObject } from "./summary"
+import { TextFilteringVariation } from "./textFilteringVariation"
+import { UserChoice } from "./utility"
 
 
 export interface ItemSuggestionBody

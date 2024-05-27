@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material"
 import { Handle, Position } from "reactflow"
-import { NodeHandleID, NodeHandleType, PRIMARY_COLOR } from "../../../interfaces/interfaces"
-import { BLACK_COLOR } from "../../../utils/utility"
+import { NodeHandleID, NodeHandleType } from "../../../definitions/conceptualModel"
+import { PRIMARY_COLOR, BLACK_COLOR } from "../../../definitions/utility"
 
 
 interface Props

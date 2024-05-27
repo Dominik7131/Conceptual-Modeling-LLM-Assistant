@@ -1,6 +1,6 @@
 import { Typography, CircularProgress } from "@mui/material"
 import { useRecoilValue } from "recoil"
-import { UserChoice } from "../../interfaces/interfaces";
+import { UserChoice } from "../../definitions/utility";
 import SummaryReactionButtons from "./SummaryReactionButtons";
 import { isLoadingSummaryPlainTextState } from "../../atoms/loadings";
 import { summaryTextState } from "../../atoms/summary";

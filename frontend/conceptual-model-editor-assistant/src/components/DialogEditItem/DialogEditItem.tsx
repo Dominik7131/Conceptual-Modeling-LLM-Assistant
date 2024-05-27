@@ -3,7 +3,6 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { Association, Attribute, Field, ItemFieldUIName, ItemType } from "../../interfaces/interfaces";
 import ClassListSelector from "./ClassListSelector";
 import Title from "./Title";
 import ControlButtons from "./ControlButtons";
@@ -13,6 +12,8 @@ import { onClose } from "../../utils/editItem";
 import DataTypeSelector from "./DataTypeSelector";
 import { isShowEditDialogState, editDialogErrorMsgState } from "../../atoms/dialogs";
 import { selectedSuggestedItemState, editedSuggestedItemState } from "../../atoms/suggestions";
+import { Attribute, Association } from "../../definitions/conceptualModel";
+import { ItemType, ItemFieldUIName, Field } from "../../definitions/utility";
 
 
 const DialogEditItem: React.FC = () =>

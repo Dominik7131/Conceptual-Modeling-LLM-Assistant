@@ -7,9 +7,9 @@ import { useEffect } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Title from "./Title";
 import HighlightedOriginalText from "./HighlightedOriginalText";
-import { ORIGINAL_TEXT_ID } from "../../utils/utility";
 import { isLoadingHighlightOriginalTextState } from "../../atoms/loadings";
 import { isShowHighlightDialogState } from "../../atoms/dialogs";
+import { ORIGINAL_TEXT_ID } from "../../definitions/utility";
 
 
 const HighlightDialog: React.FC = () =>

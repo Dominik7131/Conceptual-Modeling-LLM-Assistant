@@ -1,6 +1,6 @@
 import { atom } from "recoil";
-import { TextFilteringVariation } from "../interfaces/interfaces";
-import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE } from "../utils/utility";
+import { TextFilteringVariation } from "../definitions/textFilteringVariation";
+import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE } from "../definitions/utility";
 
 
 export const textFilteringVariationState = atom<TextFilteringVariation>({

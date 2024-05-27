@@ -1,6 +1,6 @@
 import { useSetRecoilState } from "recoil"
-import { UserChoice, ItemType } from "../interfaces/interfaces"
-import { SUGGEST_SUMMARY_URL, HEADER } from "../utils/urls"
+import { UserChoice, ItemType } from "../definitions/utility"
+import { SUGGEST_SUMMARY_URL, HEADER } from "../definitions/urls"
 import { isLoadingSummaryDescriptionsState } from "../atoms/loadings"
 import { summaryDescriptionsState } from "../atoms/summary"
 

@@ -5,8 +5,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { importConceptualModelFromJson } from "../../utils/import";
-import { HEADER } from "../../utils/urls";
+import { importConceptualModelFromJSON } from "../../utils/import";
+import { HEADER } from "../../definitions/urls";
 import { convertConceptualModelToJSON } from "../../utils/serialization";
 import { edgesState, modelIDState, nodesState } from "../../atoms/conceptualModel";
 import { isDialogEnterIRIOpenedState, isDialogImportState } from "../../atoms/dialogs";
@@ -56,7 +56,7 @@ const DialogEnterModelID: React.FC = (): JSX.Element =>
 
         fetch(enteredURL, fetchOptions)
             .then(response => response.json())
-            .then(json => importConceptualModelFromJson(json, setNodes, setEdges))
+            .then(json => importConceptualModelFromJSON(json, setNodes, setEdges))
         
         const modelID = getIDFromURL(enteredURL)
         setModelD(modelID)

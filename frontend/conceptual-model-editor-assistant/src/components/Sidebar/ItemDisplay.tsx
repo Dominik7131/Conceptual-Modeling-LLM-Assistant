@@ -1,7 +1,7 @@
 import { Stack, Typography } from "@mui/material"
-import { Attribute, Field, Item, ItemFieldUIName, ItemType, Association } from "../../interfaces/interfaces"
 import { createNameFromIRI } from "../../utils/conceptualModel"
-import { BLACK_COLOR } from "../../utils/utility"
+import { Item, Attribute, Association } from "../../definitions/conceptualModel"
+import { ItemType, Field, ItemFieldUIName, BLACK_COLOR } from "../../definitions/utility"
 
 
 interface Props

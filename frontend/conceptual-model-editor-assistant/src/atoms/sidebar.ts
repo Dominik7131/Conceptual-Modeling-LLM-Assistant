@@ -1,5 +1,6 @@
 import { atom } from "recoil";
-import { ItemsMessage, SidebarTab } from "../interfaces/interfaces";
+import { ItemsMessage } from "../definitions/conceptualModel";
+import { SidebarTab } from "../definitions/tabs";
 
 
 export const isSidebarOpenState = atom({

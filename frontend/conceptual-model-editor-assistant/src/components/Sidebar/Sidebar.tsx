@@ -1,6 +1,6 @@
 import { useRecoilValue } from "recoil";
 import { Box, Divider } from "@mui/material";
-import { ItemType } from "../../interfaces/interfaces";
+import { ItemType } from "../../definitions/utility";
 import { TabContext, TabPanel } from "@mui/lab"
 import Tabs from "./Tabs";
 import Suggestions from "./Suggestions";

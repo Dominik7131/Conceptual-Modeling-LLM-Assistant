@@ -1,9 +1,9 @@
-import { Box, Button, Tab } from "@mui/material"
+import { Box, Tab } from "@mui/material"
 import { useSetRecoilState } from "recoil"
 import { TabList } from "@mui/lab"
-import { SUMMARY_DESCRIPTIONS_NAME, SUMMARY_PLAIN_TEXT_NAME } from "../../utils/utility"
-import { TopbarTab } from "../../interfaces/interfaces"
 import { topbarTabValueState } from "../../atoms/topbar"
+import { TopbarTab } from "../../definitions/tabs"
+import { SUMMARY_PLAIN_TEXT_NAME, SUMMARY_DESCRIPTIONS_NAME } from "../../utils/summary"
 
 
 const Tabs: React.FC = (): JSX.Element =>
@@ -11,6 +11,7 @@ const Tabs: React.FC = (): JSX.Element =>
     const setTabValue = useSetRecoilState(topbarTabValueState)
 
     const tabSX = { textTransform: "none" }
+
 
     const handleChange = (_: React.SyntheticEvent, newValue: TopbarTab) =>
     {

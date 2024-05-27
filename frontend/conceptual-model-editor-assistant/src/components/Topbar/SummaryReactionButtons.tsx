@@ -1,11 +1,12 @@
 import { Button, Stack, Tooltip } from "@mui/material"
-import { TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS, handleSaveSuggestionSummary } from "../../utils/utility"
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import { SummaryDescriptionsObject, UserChoice } from "../../interfaces/interfaces";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";
 import { isSummaryReactionButtonClickedState } from "../../atoms/summary";
+import { SummaryDescriptionsObject } from "../../definitions/summary";
+import { TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS, UserChoice } from "../../definitions/utility";
+import { handleSaveSuggestionSummary } from "../../utils/summary";
 
 
 interface Props

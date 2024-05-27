@@ -1,9 +1,9 @@
 import { Box, TextField } from "@mui/material"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
-import { invalidateAllOriginalTextIndexes } from "../../utils/conceptualModel"
 import { ChangeEvent } from "react"
 import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms/domainDescription"
 import { nodesState, edgesState } from "../../atoms/conceptualModel"
+import { invalidateAllOriginalTextIndexes } from "../../utils/originalTextIndexes"
 
 
 const DomainDescriptionTextArea: React.FC = (): JSX.Element =>
