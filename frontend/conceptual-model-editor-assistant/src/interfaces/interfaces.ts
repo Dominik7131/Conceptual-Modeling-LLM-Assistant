@@ -156,6 +156,14 @@ export interface OriginalTextIndexesItem
 }
 
 
+export interface OriginalTextIndexesProcessedItem
+{
+  0: number
+  1: number
+  2: string
+}
+
+
 export interface ConceptualModelObject
 {
   classes: any[] // TODO: Provide correct type

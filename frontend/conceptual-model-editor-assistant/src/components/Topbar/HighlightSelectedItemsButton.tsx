@@ -1,11 +1,11 @@
 import { Button } from "@mui/material"
 import HighlightIcon from "@mui/icons-material/Highlight";
-import { domainDescriptionState, isLoadingHighlightOriginalTextState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedEdgesState, selectedNodesState, selectedSuggestedItemState, tooltipsState } from "../../atoms";
+import { domainDescriptionState, isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState, selectedEdgesState, selectedNodesState } from "../../atoms";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { EdgeData, Field, NodeData, OriginalTextIndexesItem } from "../../interfaces/interfaces";
 import { NOTHING_SELECTED_MSG, capitalizeString } from "../../utils/utility";
-import { HEADER, MERGE_ORIGINAL_TEXT_URL } from "../../utils/urls";
 import { createNameFromIRI } from "../../utils/conceptualModel";
+import useFetchMergedOriginalTexts from "../../hooks/useFetchMergedOriginalTexts";
 
 
 const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
@@ -13,55 +13,15 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
     const selectedNodes = useRecoilValue(selectedNodesState)
     const selectedEdges = useRecoilValue(selectedEdgesState)
 
-    const setIsLoading = useSetRecoilState(isLoadingHighlightOriginalTextState)
-
     const domainDescription = useRecoilValue(domainDescriptionState)
     const isDisabled = domainDescription === ""
 
     const setIsShowHighlightDialog = useSetRecoilState(isShowHighlightDialogState)
-    const setOriginalTextIndexesList = useSetRecoilState(originalTextIndexesListState)
-    const setTooltips = useSetRecoilState(tooltipsState)
     const setIsShowTitleDialogDomainDescription = useSetRecoilState(isShowTitleDialogDomainDescriptionState)
 
+    const { fetchMergedOriginalTexts } = useFetchMergedOriginalTexts()
 
-    // TODO: Put this fetch logic into a separate file
-    const fetchMergedOriginalTexts = (bodyData: any) =>
-    {
-        fetch(MERGE_ORIGINAL_TEXT_URL, { method: "POST", headers: HEADER, body: bodyData})
-        .then(response => response.json())
-        .then(data =>
-        {
-            // TODO: Specify `data` type
-            onProcessMergedOriginalTexts(data)
-            setIsLoading(false)
-        })
-        .catch(error =>
-        {
-            setIsLoading(false)
-            console.log(error)
-            alert("Error: request failed")
-        })
-
-        return
-    }
-
-
-    function onProcessMergedOriginalTexts(data: any): void
-    {
-        let tooltips : string[] = []
-        let originalTextIndexes : number[] = []
-
-        for (let index = 0; index < data.length; index++)
-        {
-            const element = data[index];
-            originalTextIndexes.push(element[0])
-            originalTextIndexes.push(element[1])
-            tooltips.push(element[2])
-        }
-
-        setOriginalTextIndexesList(_ => originalTextIndexes)
-        setTooltips(_ => tooltips)
-    }
+    let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []
 
 
     const onHighlightSelectedItems = (): void =>
@@ -72,21 +32,27 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
             return
         }
 
-        setIsLoading(true)
-
         setIsShowTitleDialogDomainDescription(false)
 
-        let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []
+        pushOriginalTextIndexesFromSelectedNodes()
+        pushOriginalTextIndexesFromSelectedEdges()
+
+        const bodyData = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects })
     
-        // Process all selected nodes
+        fetchMergedOriginalTexts(bodyData)
+        setIsShowHighlightDialog(true)
+    }
+
+
+    const pushOriginalTextIndexesFromSelectedNodes = () =>
+    {
         for (let i = 0; i < selectedNodes.length; i++)
         {
             const nodeData: NodeData = selectedNodes[i].data
-            // console.log("Node data:", nodeData)
 
-            // Process each attribute for the given entity
+            // Process each attribute for the given class
             const className: string = nodeData.class[Field.NAME]
-            // console.log("Class name: ", className)
+
             for (let j = 0; j < nodeData.attributes.length; j++)
             {
                 const attribute = nodeData.attributes[j]
@@ -108,24 +74,25 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
             }
 
             const originalTextIndexes = nodeData.class[Field.ORIGINAL_TEXT_INDEXES]
-            // console.log("OTI: ", originalTextIndexes)
 
             if (!originalTextIndexes)
             {
                 continue
             }
         
-            // Process each original text indexes for the given entity 
+            // Process each original text indexes for the given class 
             for (let k = 0; k < originalTextIndexes.length; k += 2)
             {
-                const ii1 : number = originalTextIndexes[k]
-                const ii2 : number = originalTextIndexes[k + 1]
+                const ii1: number = originalTextIndexes[k]
+                const ii2: number = originalTextIndexes[k + 1]
         
                 originalTextsIndexesObjects.push( { indexes: [ii1, ii2], label: `Class: ${nodeData.class[Field.NAME]}`} )
             }
         }
-    
-        // Process also all selected edges
+    }
+
+    const pushOriginalTextIndexesFromSelectedEdges = () =>
+    {
         for (let i = 0; i < selectedEdges.length; i++)
         {
             const edgeData: EdgeData = selectedEdges[i].data
@@ -136,7 +103,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                 continue
             }
         
-            // Process each original text indexes for the given edge 
+            // Process each original text indexes for the given edge
             for (let k = 0; k < originalTextIndexes.length; k += 2)
             {
                 const ii1 : number = originalTextIndexes[k]
@@ -150,11 +117,6 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                 })
             }
         }
-
-        const bodyData = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects})
-    
-        fetchMergedOriginalTexts(bodyData)
-        setIsShowHighlightDialog(true)
     }
 
 
