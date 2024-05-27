@@ -96,10 +96,11 @@ export const enum NodeHandleType
 }
 
 
-export interface SummaryObject
+export interface SummaryDescriptionsObject
 {
-  classes: any[]
-  associations: any[]
+  classes: Class[]
+  // attributes: Attribute[]
+  associations: Association[]
 }
 
 

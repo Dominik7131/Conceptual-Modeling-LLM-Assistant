@@ -1,5 +1,5 @@
 import { atom, selector } from "recoil"
-import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryObject, UserChoice, TextFilteringVariation, SidebarTab, TopbarTab } from "./interfaces/interfaces";
+import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SummaryDescriptionsObject, UserChoice, TextFilteringVariation, SidebarTab, TopbarTab } from "./interfaces/interfaces";
 import { Node, Edge } from "reactflow";
 import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE, BLANK_CLASS } from "./utils/utility";
 import { DATASPECER_MODEL_URL } from "./utils/urls";
@@ -167,10 +167,10 @@ export const summaryTextState = atom({
     default: "",
 })
 
-// TODO: This object should contain descriptions for "classes": array of classes and "associations": array of associations
-export const summaryDescriptionsState = atom<SummaryObject>({
+
+export const summaryDescriptionsState = atom<SummaryDescriptionsObject>({
     key: "summaryDescriptionsState",
-    default: { classes: [], associations: []},
+    default: { classes: [], associations: [] },
 })
 
 
@@ -259,14 +259,9 @@ export const modelIDState = atom({
 })
 
 
-export const isSummaryPlainTextReactButtonClickedState = atom({
-    key: "isSummaryPlainTextReactButtonClickedState",
-    default: false,
-})
-
-export const isSummaryDescriptionReactButtonClickedState = atom({
-    key: "isSummaryDescriptionReactButtonClickedState",
-    default: false,
+export const isSummaryReactionButtonClickedState = atom({
+    key: "isSummaryReactionButtonClickedState",
+    default: { [UserChoice.SUMMARY_PLAIN_TEXT]: false, [UserChoice.SUMMARY_DESCRIPTIONS]: false},
 })
 
 

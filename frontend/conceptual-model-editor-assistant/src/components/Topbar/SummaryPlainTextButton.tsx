@@ -2,7 +2,7 @@ import { Button } from "@mui/material"
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import { NOTHING_SELECTED_MSG, SUMMARY_PLAIN_TEXT_NAME } from "../../utils/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, isSummaryPlainTextReactButtonClickedState, selectedEdgesState, selectedNodesState, summaryTextState, topbarTabValueState } from "../../atoms";
+import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, selectedEdgesState, selectedNodesState, summaryTextState, topbarTabValueState } from "../../atoms";
 import { ConceptualModelObject, TopbarTab, UserChoice } from "../../interfaces/interfaces";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
 import { convertConceptualModelToObjectSummary } from "../../utils/serialization";
@@ -22,8 +22,6 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
     const setDomainDescriptionSnapshot = useSetRecoilState(domainDescriptionSnapshotsState)
     const setConceptualModelSnapshot = useSetRecoilState(conceptualModelSnapshotState)
-
-    const setIsReactButtonClicked = useSetRecoilState(isSummaryPlainTextReactButtonClickedState)
     
     const isDisabled = domainDescription === "" || isIgnoreDomainDescription
 
@@ -40,7 +38,6 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
 
         const userChoice = UserChoice.SUMMARY_PLAIN_TEXT
         setSummaryText("")
-        setIsReactButtonClicked(false)
         
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)

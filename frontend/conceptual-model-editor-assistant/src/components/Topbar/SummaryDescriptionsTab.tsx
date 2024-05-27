@@ -1,35 +1,18 @@
-import { Button, Typography, CircularProgress, Stack, Tooltip } from "@mui/material"
-import { useRecoilState, useRecoilValue } from "recoil"
-import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, isLoadingSummaryDescriptionsState, isSummaryDescriptionReactButtonClickedState, nodesState, summaryDescriptionsState } from "../../atoms"
-import { capitalizeString, handleSaveSuggestionSummary } from "../../utils/utility"
-import { Attribute, UserChoice } from "../../interfaces/interfaces"
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import { HEADER, SAVE_SUGESTED_SUMMARY_URL } from "../../utils/urls"
-import { getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../utils/snapshot"
-import { SummaryUserEvaluationBody } from "../../interfaces/bodies"
+import { Typography, CircularProgress } from "@mui/material"
+import { useRecoilValue } from "recoil"
+import { isLoadingSummaryDescriptionsState, summaryDescriptionsState } from "../../atoms"
+import { capitalizeString } from "../../utils/utility"
+import { Attribute, Field, UserChoice } from "../../interfaces/interfaces"
+import SummaryReactionButtons from "./SummaryReactionButtons"
 
 
 
 const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
 {
     const summaryDescriptions = useRecoilValue(summaryDescriptionsState)
-    const isLoadingSummaryDescriptions = useRecoilValue(isLoadingSummaryDescriptionsState)
+    const isLoading = useRecoilValue(isLoadingSummaryDescriptionsState)
 
-    const [isClicked, setIsClicked] = useRecoilState(isSummaryDescriptionReactButtonClickedState)
-    const domainDescriptionSnapshot = useRecoilValue(domainDescriptionSnapshotsState)
-    const conceptualModelSnapshot = useRecoilValue(conceptualModelSnapshotState)
-
-    const showReactButtons = (summaryDescriptions.classes.length !== 0 || summaryDescriptions.associations.length !== 0) && !isLoadingSummaryDescriptions
-
-    
-    const handleSaveSuggestion = (isPositiveReaction: boolean) =>
-    {
-        const userChoice = UserChoice.SUMMARY_DESCRIPTIONS
-        handleSaveSuggestionSummary(userChoice, isPositiveReaction, domainDescriptionSnapshot, conceptualModelSnapshot, summaryDescriptions)
-
-        setIsClicked(true)
-    }
+    const isShowReactionButtons = (summaryDescriptions.classes.length !== 0 || summaryDescriptions.associations.length !== 0) && !isLoading
 
 
     return (
@@ -40,19 +23,19 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
             
             <ul>
             {
-                summaryDescriptions.classes.map((object) =>
+                summaryDescriptions.classes.map((clss: any) =>
                     <Typography component="span">
                         <li>
-                            <strong>{ capitalizeString(object.class)}</strong>: {object.description}
+                            <strong>{ capitalizeString(clss[Field.NAME]) }</strong>: { clss[Field.DESCRIPTION] }
                         </li>
-                        { object.attributes.length > 0 &&
+                        { clss.attributes.length > 0 &&
                             <ul>
                                 <p></p>
                                 <li><strong>Attributes</strong></li>
                                 <ul>
-                                    { object.attributes.map((attribute : Attribute) =>
+                                    { clss.attributes.map((attribute : Attribute) =>
                                         <li>
-                                            <strong>{attribute.name}</strong>: {attribute.description}
+                                            <strong>{attribute[Field.NAME]}</strong>: { attribute[Field.DESCRIPTION] }
                                         </li>
                                     )}
                                 </ul>
@@ -74,53 +57,18 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
                 summaryDescriptions.associations.map((association) =>
                     <Typography component="span">
                         <li>
-                            <strong> { capitalizeString(association.sourceClass) }</strong> {association.association} <strong>{capitalizeString(association.targetClass)}</strong>: {association.description}
-                            {/* <IconButton>
-                                <CheckIcon color="success"/>
-                            </IconButton> */}
+                            <strong> { capitalizeString(association[Field.SOURCE_CLASS]) }</strong> {association[Field.NAME]} <strong>{capitalizeString(association[Field.TARGET_CLASS])}</strong>: {association[Field.DESCRIPTION]}
                         </li>
                     </Typography>
                 )
             }
             </ul>
 
-            { isLoadingSummaryDescriptions && <CircularProgress /> }
+            { isLoading && <CircularProgress /> }
 
             {
-                showReactButtons &&
-                <Stack direction="row" spacing={"8px"}>
-                    <Tooltip
-                        title="Like"
-                        enterDelay={500}
-                        leaveDelay={200}>
-
-                        <Button
-                            size={ "small" }
-                            color="inherit"
-                            sx={{ textTransform: "none", maxWidth: "30px", maxHeight: "30px", minWidth: "30px", minHeight: "30px" }}
-                            disabled={isClicked}
-                            onClick={ () => { handleSaveSuggestion(true) } }
-                            >
-                                <ThumbUpIcon sx={{ width: "20px", height: "20px" }}/>
-                        </Button>
-                    </Tooltip>
-
-                    <Tooltip
-                        title="Dislike"
-                        enterDelay={500}
-                        leaveDelay={200}>
-
-                        <Button
-                            color="inherit"
-                            size={ "small" }
-                            sx={{ textTransform: "none", maxWidth: "50px", maxHeight: "30px", minWidth: "30px", minHeight: "30px", paddingRight: "10px" }}
-                            disabled={isClicked}
-                            onClick={ () => { handleSaveSuggestion(false) } }
-                            >
-                                <ThumbDownIcon sx={{ width: "20px", height: "20px" }}/>
-                        </Button>
-                    </Tooltip>
-                </Stack>
+                isShowReactionButtons &&
+                <SummaryReactionButtons userChoice={UserChoice.SUMMARY_DESCRIPTIONS} summary={summaryDescriptions} />
             }
         </>
     )

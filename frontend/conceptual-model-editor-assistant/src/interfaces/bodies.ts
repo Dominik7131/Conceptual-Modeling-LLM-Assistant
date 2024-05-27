@@ -1,4 +1,4 @@
-import { ConceptualModelObject, Item, SummaryObject, TextFilteringVariation, UserChoice } from "./interfaces"
+import { ConceptualModelObject, Item, SummaryDescriptionsObject, TextFilteringVariation, UserChoice } from "./interfaces"
 
 
 export interface ItemSuggestionBody
@@ -57,7 +57,7 @@ export interface SummaryUserEvaluationBody
 {
   domainDescription: string
   isPositive: boolean
-  summary: SummaryObject | string
+  summary: SummaryDescriptionsObject | string
   conceptualModel: ConceptualModelObject
   summaryType: UserChoice
 }

@@ -1,5 +1,5 @@
 import { SetterOrUpdater } from "recoil";
-import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SidebarTab, UserChoice, TextFilteringVariation, SummaryObject } from "../interfaces/interfaces"
+import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SidebarTab, UserChoice, TextFilteringVariation, SummaryDescriptionsObject } from "../interfaces/interfaces"
 import { createNameFromIRI } from "./conceptualModel";
 import { getSnapshotConceptualModel, getSnapshotDomainDescription } from "./snapshot";
 import { SummaryUserEvaluationBody } from "../interfaces/bodies";
@@ -193,7 +193,7 @@ export const changeSidebarTab = (itemType: ItemType, setSidebarTab: SetterOrUpda
 }
 
 
-export const handleSaveSuggestionSummary = (userChoice: UserChoice, isPositiveReaction: boolean, domainDescriptionSnapshot: DomainDescriptionSnapshot, conceptualModelSnapshot: ConceptualModelSnapshot, summary: string | SummaryObject) =>
+export const handleSaveSuggestionSummary = (userChoice: UserChoice, isPositiveReaction: boolean, domainDescriptionSnapshot: DomainDescriptionSnapshot, conceptualModelSnapshot: ConceptualModelSnapshot, summary: string | SummaryDescriptionsObject) =>
 {
   const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)        
   const currentConceptualModel = getSnapshotConceptualModel(userChoice, conceptualModelSnapshot)
