@@ -1,6 +1,6 @@
 import re
-import time
 import os
+
 
 DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
 FILE_PATH = os.path.join(DIRECTORY_PATH, "farming 97627e23829afb", "domain-description-03-annotated.txt")
@@ -10,6 +10,7 @@ DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
 
 def check(tags):
+
     is_properly_closed_list = [False] * len(tags)
 
     for i in range(len(tags)):
@@ -42,9 +43,9 @@ def main():
             with open(file_path) as file:
                 text = file.read()
 
-            print(f"--Checking: {file_path}--")
+            print(f"-- checking: {file_path} --")
 
-            tags = re.findall(r'<([^>]+)>', text)
+            tags = re.findall(r"<([^>]+)>", text)
 
             print(f"Tags found: {len(tags)}")
 

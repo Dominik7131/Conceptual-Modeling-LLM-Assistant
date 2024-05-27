@@ -2,20 +2,20 @@ import re
 
 
 def extract_prompt_tokens_count(log_line):
-    match = re.search(r'n_prompt_tokens_processed=(\d+)', log_line)
-    if match:
-        return int(match.group(1))
-    else:
-        return 0
+  match = re.search(r"n_prompt_tokens_processed=(\d+)", log_line)
+  if match:
+    return int(match.group(1))
+  else:
+    return 0
 
 
 def extract_generated_tokens_count(log_line):
-  match = re.search(r't_token_generation=(\d+)', log_line)
+  match = re.search(r"t_token_generation=(\d+)", log_line)
   if match:
-      return int(match.group(1))
+    return int(match.group(1))
   else:
-      return 0
-  
+    return 0
+
 
 def main():
 
@@ -25,7 +25,7 @@ def main():
 
   with open(file_path, 'r') as file:
     log_lines = file.readlines()
-  
+
   for log_line in log_lines:
     prompt_tokens_count = extract_prompt_tokens_count(log_line)
     tokens_prompt_processed_sum += prompt_tokens_count
@@ -40,4 +40,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+  main()
