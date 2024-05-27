@@ -1,3 +1,6 @@
+export const JSON_SCHEMA = "https://schemas.dataspecer.com/adapters/simplified-semantic-model.v1.0.schema.json"
+
+
 export interface ItemJson
 {
   iri: string

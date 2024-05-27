@@ -1,16 +1,31 @@
 import { Node, Edge } from "reactflow"
 import { NodeData, Class, Attribute, EdgeData, Association, ConceptualModelObject } from "../definitions/conceptualModel"
-import { ConceptualModelJson, ClassJson, AttributeJson, RelationshipJson, GeneralizationJson } from "../definitions/conceptualModelJSON"
+import { ConceptualModelJson, ClassJson, AttributeJson, RelationshipJson, GeneralizationJson, JSON_SCHEMA } from "../definitions/conceptualModelJSON"
 import { Field, ItemType } from "../definitions/utility"
-
-
-const JSON_SCHEMA = "https://schemas.dataspecer.com/adapters/simplified-semantic-model.v1.0.schema.json"
 
 
 export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[]): ConceptualModelJson =>
 {
-    // TODO: Divide into smaller functions
     let conceptualModel: ConceptualModelJson = { $schema: JSON_SCHEMA, classes: [], attributes: [], relationships: [], generalizations: [] }
+
+    let { newClasses, newAttributes } = convertNodesToJSON(nodes)
+
+    conceptualModel.classes.push(...newClasses)
+    conceptualModel.attributes.push(...newAttributes)
+
+    let { newRelationships, newGeneralizations } = convertEdgesToJSON(edges)
+    
+    conceptualModel.relationships.push(...newRelationships)
+    conceptualModel.generalizations.push(...newGeneralizations)
+
+    return conceptualModel
+}
+
+
+const convertNodesToJSON = (nodes: Node[]) =>
+{
+    let newClasses: ClassJson[] = []
+    let newAttributes: AttributeJson[] = []
 
     for (let i = 0; i < nodes.length; i++)
     {
@@ -23,7 +38,7 @@ export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[]): Conc
             iri: clss[Field.IRI], title: clss[Field.NAME], description: clss[Field.DESCRIPTION]
         }
     
-        conceptualModel.classes.push(newEntityJson)
+        newClasses.push(newEntityJson)
     
         for (let j = 0; j < attributes.length; j++)
         {
@@ -35,9 +50,18 @@ export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[]): Conc
                 range: "", rangeCardinality: convertCardinality(attribute[Field.SOURCE_CARDINALITY])
             }
     
-            conceptualModel.attributes.push(newAttributeJson)
+            newAttributes.push(newAttributeJson)
         }
     }
+
+    return { newClasses, newAttributes }
+}
+
+
+const convertEdgesToJSON = (edges: Edge[]) =>
+{
+    let newRelationships: RelationshipJson[] = []
+    let newGeneralizations: GeneralizationJson[] = []
 
     for (let i = 0; i < edges.length; i++)
     {
@@ -48,29 +72,30 @@ export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[]): Conc
 
         if (relationship[Field.TYPE] !== ItemType.GENERALIZATION)
         {
-            // Relationships
+            // Process relationships
             const newRelationshipJson: RelationshipJson = {
                 iri: relationship[Field.IRI], title: relationship[Field.NAME], description: relationship[Field.DESCRIPTION],
                 domain: relationship[Field.SOURCE_CLASS], domainCardinality: relationship[Field.SOURCE_CARDINALITY],
                 range: relationship[Field.TARGET_CLASS], rangeCardinality: relationship[Field.TARGET_CARDINALITY]
             }
     
-            conceptualModel.relationships.push(newRelationshipJson)
+            newRelationships.push(newRelationshipJson)
         }
         else
         {
-            // Generalizations
+            // Process generalizations
             const newGeneralizationJson: GeneralizationJson = {
                 iri: relationship[Field.IRI], title: relationship[Field.NAME], description: relationship[Field.DESCRIPTION],
                 specialClass: relationship[Field.SOURCE_CLASS], generalClass: relationship[Field.TARGET_CLASS]
             }
     
-            conceptualModel.generalizations.push(newGeneralizationJson)
+            newGeneralizations.push(newGeneralizationJson)
         }
     }
 
-    return conceptualModel
+    return { newRelationships, newGeneralizations }
 }
+
 
 export const convertConceptualModelToObjectSummary = (nodes: Node[], edges: Edge[], isOnlyNames : boolean): ConceptualModelObject =>
 {
@@ -86,16 +111,16 @@ export const convertConceptualModelToObjectSummary = (nodes: Node[], edges: Edge
         {
             if (isOnlyNames)
             {
-                attributes.push({[Field.NAME]: attribute[Field.NAME]})
+                attributes.push({ [Field.NAME]: attribute[Field.NAME] })
             }
             else
             {
-                attributes.push({[Field.NAME]: attribute[Field.NAME], [Field.ORIGINAL_TEXT]: attribute[Field.ORIGINAL_TEXT]})
+                attributes.push({ [Field.NAME]: attribute[Field.NAME], [Field.ORIGINAL_TEXT]: attribute[Field.ORIGINAL_TEXT] })
             }
         }
 
         const nodeData: NodeData = node.data
-        result.classes.push({[Field.NAME]: nodeData.class[Field.NAME], attributes: attributes})
+        result.classes.push({ [Field.NAME]: nodeData.class[Field.NAME], attributes: attributes })
     }
 
 
