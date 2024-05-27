@@ -7,6 +7,7 @@
 |---|---|---|---|
 | userChoice  | yes |  string (`classes`, `attributes`, `associations1`, `associations2`) | What items the LLM should suggest. `associations1` means associations where the source class is provided, `associations2` means associations where both the source class and the target class is provided. |
 | domainDescription  | yes | string | Solely based on this text the LLM generates suggestions. If `domainDescription=""` then the LLM generates 5 random suggestions. |
+| textFilteringVariation  | yes | string (`none`, `semantic`, `syntactic`) | Domain description filtering variation. The domain description is not filtered when `userChoice=classes` |
 | sourceClass  | no | string  | Name of the source class if `userChoice=attributes` or `userChoice=associations1` or `userChoice=associations2`. |
 | targetClass  | no  | string | Name of the target class if `userChoice=associations2`.  |
 
@@ -35,6 +36,7 @@
 | field     | yes       | string (`originalText`, `description`, `dataType`, `sourceCardinality`, `targetCardinality`) | Item field to suggest. |
 | userChoice | yes     | string (`classes`, `attributes`, `associations`) | Type of the item. |
 | domainDescription | yes     | string | Solely based on this text the LLM generates the output.
+| textFilteringVariation  | yes | string (`none`, `semantic`, `syntactic`) | Domain description filtering variation. The domain description is not filtered when `userChoice=classes` |
 | sourceClass  | no | string  | Name of the source class when the userChoice `attribute` or `associations` is provided. |
 | targetClass  | no  | string | Name of the target target class when the userChoice `associations` is provided.  |
 
@@ -95,6 +97,7 @@
 | item          | yes | object | The item to save. |
 | userChoice  | yes |  string (`classes`, `attributes`, `associations1`, `associations2`) | What user choice was used to generate this item. |
 | domainDescription | yes | string | The domain description that was used to generate this item. | The original domain description that the item was generated from
+| textFilteringVariation  | yes | string (`none`, `semantic`, `syntactic`) | The filtering variation that was used to generate this item. |
 | isPositive | yes | bool | True if the user liked this suggestion otherwise False.  |
 
 <br/>
@@ -103,10 +106,11 @@
 
 | Parameter | Mandatory | Data type | Description |
 |-----------|-----------|-----------|-------------|
-| fieldName      | yes       | string (`originalText`, `description`, `data type`, `sourceCardinality`, `targetCardinality`)    | Name of the item's field.   |
-| fieldText     | yes       | string    | Generated text of the item field.
+| fieldName      | yes       | string (`originalText`, `description`, `data type`, `sourceCardinality`, `targetCardinality`)    | Name of the item's field. |
+| fieldText     | yes       | string    | Generated text of the item field. |
 | userChoice | yes     | string (`classes`, `attributes`, `associations1`, `associations2`) | Type of the original suggestion. |
-| domainDescription | yes     | string | The domain description that was used to generate this item. | The original domain description that the field was generated from.
+| domainDescription | yes     | string | The domain description that was used to generate this item. | The original domain description that the field was generated from. |
+| textFilteringVariation  | yes | string (`none`, `semantic`, `syntactic`) | The filtering variation that the field was generated from. |
 | sourceClass  | no | string  | Name of the source class if `userChoice=attributes` or `userChoice=associations1` or `userChoice=associations2`. |
 | targetClass  | no  | string | Name of the target class if `userChoice=associations2`.  |
 | isPositive  | yes | bool | True if the user liked this suggestion otherwise False.  |
