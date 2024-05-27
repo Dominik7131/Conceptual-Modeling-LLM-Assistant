@@ -639,40 +639,6 @@ def print_evaluation(is_csv):
     print_precision(text_index, is_csv)
 
 
-def print_elements_count(is_csv):
-
-    if is_csv:
-        header = f"text name{SEPARATOR}classes{SEPARATOR}attributes{SEPARATOR}associations"
-        print(header)
-
-    text_index = 0
-    for index, _ in enumerate(domain_models):
-        for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
-
-            if not is_csv:
-                print(f"---- Results for {domain_models_name[index]}-0{i + 1} ---- ")
-            else:
-                print(f"{domain_models_name[index]}-0{i + 1}{SEPARATOR}", end="")
-
-            if not is_csv:
-                print(f"Classes count: {recall_classes_max[text_index]}")
-                print(f"Attributes count: {recall_attributes_max[text_index]}")
-                print(f"Associations count: {recall_associations_max[text_index]}")
-            else:
-                print(f"{recall_classes_max[text_index]}{SEPARATOR}{recall_attributes_max[text_index]}{SEPARATOR}{recall_associations_max[text_index]}")
-            text_index += 1
-    
-    if not is_csv:
-        print(f"---- Results for all texts ---- ")
-        print(f"Classes count: {recall_classes_max[text_index]}")
-        print(f"Attributes count: {recall_attributes_max[text_index]}")
-        print(f"Associations count: {recall_associations_max[text_index]}")
-    else:
-        print(f"all{SEPARATOR}", end="")
-        print(f"{recall_classes_max[text_index]}{SEPARATOR}{recall_attributes_max[text_index]}{SEPARATOR}{recall_associations_max[text_index]}")
-
-
-
 def main():
     
     text_index = 0
@@ -707,9 +673,6 @@ def main():
             text_index += 1
 
     print_evaluation(IS_CSV)
-    # print_elements_count(IS_CSV)
-
-    
 
 
 if __name__ == "__main__":

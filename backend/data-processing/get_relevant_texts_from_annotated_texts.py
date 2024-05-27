@@ -11,7 +11,8 @@ from text_utility import Field, TextUtility, UserChoice
 
 DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
 
-domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
+DOMAIN_MODELS = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
+DOMAIN_MODEL_NAMES = ["aircraft manufacturing", "conference papers", "farming", "college", "zoological gardens", "registry of road vehicles"]
 
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 
@@ -22,6 +23,11 @@ ASSOCIATION_SYMBOL = "owl:ObjectProperty"
 TAG_REGEX = r"<([^>]+)>"
 
 BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
+
+DOMAIN_DESCRIPTIONS_TEXTS = 6
+classes_count = [0] * DOMAIN_DESCRIPTIONS_TEXTS
+attributes_count = [0] * DOMAIN_DESCRIPTIONS_TEXTS
+associations_count = [0] * DOMAIN_DESCRIPTIONS_TEXTS
 
 
 def get_text_from_indexes(indexes, text):
@@ -229,9 +235,30 @@ def write_json_to_file(output_file_path, content_to_write):
         json.dump(content_to_write, file)
 
 
+def count_conceptual_model_elements(model, index):
+
+    classes = model["classes"]
+    attributes = model["attributes"]
+    associations = model["relationships"]
+
+    classes_count[index] = len(classes)
+    attributes_count[index] = len(attributes)
+    associations_count[index] = len(associations)
+
+
+def print_conceptual_model_total_elements_csv():
+    
+    header = "text_name,classes_total,attributes_total,associations_total"
+    print(header)
+
+    for i in range(DOMAIN_DESCRIPTIONS_TEXTS):
+        row = f"{DOMAIN_MODEL_NAMES[i]},{classes_count[i]},{attributes_count[i]},{associations_count[i]}"
+        print(row)
+
+
 def main():
 
-    for index, domain_model in enumerate(domain_models):
+    for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
             file_name = f"domain-description-0{i + 1}-annotated.txt"
@@ -272,6 +299,10 @@ def main():
             tags_indexes = get_tags_indexes(tags, text)
 
             model = load_model(model_file_path)
+
+            if i == 0:
+                count_conceptual_model_elements(model, index)
+
             relevant_texts1, relevant_texts2, classes_suggestions, attributes_suggestions, associations_suggestions = convert_to_relevant_texts(tags_indexes, text, model, file_path)
             associations2_suggestions, generalizations2_suggestions = create_suggestions_two_known_classes(tags_indexes, model, text)
 
@@ -291,6 +322,8 @@ def main():
             write_json_to_file(associations1_suggestions_output_file_path, associations1_expected_suggestions)
             write_json_to_file(associations2_suggestions_output_file_path, associations2_expected_suggestions)
             # write_json_to_file(output_file_path_generalizations2_expected_suggestions, generalizations2_suggestions)
+
+    print_conceptual_model_total_elements_csv()
 
 
 if __name__ == "__main__":
