@@ -64,9 +64,10 @@ def test():
     expected = [(0, 4, "l1"), (5, 10, "l1, l2, l3"), (11, 15, "l2, l3"), (16, 20, "l3")]
     check("half_intersection", half_intersection, expected)
 
-    another_intersection = [(2, 9, "l1"), (37, 44, "l1"), (0, 130, "l2")]
+
+    last_element_full_intersection = [(2, 9, "l1"), (37, 44, "l1"), (0, 130, "l2")]
     expected = [(0, 1, "l2"), (2, 9, "l2, l1"), (10, 36, "l2"), (37, 44, "l2, l1"), (45, 130, "l2")]
-    check("another_intersection", another_intersection, expected)
+    check("last_element_full_intersection", last_element_full_intersection, expected)
 
 
 

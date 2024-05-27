@@ -16,7 +16,7 @@ def convert_name_to_standard_convention_test():
         if actual_name != expected_names[index]:
             are_all_tests_passing = False
             print(f"Test failed:\n- Expected output: {expected_names[index]}\n- Actual output: {actual_name}")
-    
+
     if (are_all_tests_passing):
         print("Done: All tests are passing")
 
