@@ -1,6 +1,6 @@
-import { Node, Edge, MarkerType, EdgeMarker, internalsSymbol } from "reactflow";
+import { Node, Edge, internalsSymbol } from "reactflow";
 import { SetterOrUpdater } from "recoil";
-import { Class, Attribute, EdgeData, Item, Association, NodeData, ItemsMessage, BLANK_CLASS, CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER } from "../definitions/conceptualModel";
+import { Class, Attribute, EdgeData, Item, Association, NodeData, ItemsMessage, BLANK_CLASS, CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, CUSTOM_NODE_TYPE, CUSTOM_EDGE_TYPE } from "../definitions/conceptualModel";
 import { Field, ItemType, UserChoice } from "../definitions/utility";
 
 
@@ -26,22 +26,27 @@ export const createEdgeUniqueID = (source: string, target: string, iri: string):
 
 export const doesNodeAlreadyExist = (nodes: Node[], nodeID: string): boolean =>
 {
-    for (let i = 0; i < nodes.length; i++)
-    {
-        if (nodes[i].id === nodeID)
-        {
-            return true
-        }
-    }
-
-    return false
+    return nodes.some(node => node.id === nodeID)
 }
 
 
 export const doesNodeAlreadyExistSetter = (setNodes: SetterOrUpdater<Node[]>, nodeID: string): boolean =>
 {
-    // It would be more readable to use `doesNodeAlreadyExist` function
-    // however, that triggers re-rendering any time a node is moved
+    // It would be more readable to use the following code:
+    // `return nodes.some(node => node.id === nodeID)`
+
+    // However, using nodes in any component triggers re-rendering of this component any time some node is moved
+    // Reason: each node has position variable that whenever is changed all components working with nodes are re-rendered
+    // to work with the newest version of the nodes
+    // This can cause performance issues in the debug mode
+
+    // We tried to solve this issue here: https://github.com/Dominik7131/react-flow-render
+    // by deriving node data without the position from the nodes
+    // However, this leads to a more complicated code
+
+    // So we used the following trick: instead of working with nodes we work with their corresponding setter
+    // This does not trigger the re-renderings and we have not encountered any problems with nodes synchronization
+    // as we do not care about the newest nodes position
 
     let isNodeAlreadyPresent = false
 
@@ -60,22 +65,14 @@ export const doesNodeAlreadyExistSetter = (setNodes: SetterOrUpdater<Node[]>, no
 
 export const doesEdgeAlreadyExist = (edges: Edge[], edgeID: string): boolean =>
 {
-    for (let i = 0; i < edges.length; i++)
-    {
-        const edge: Edge = edges[i]
-
-        if (edge.id === edgeID)
-        {
-            return true
-        }
-    }
-
-    return false
+    return edges.some(edge => edge.id === edgeID)
 }
 
 
 export const doesEdgeAlreadyExistSetter = (setEdges: SetterOrUpdater<Edge[]>, edgeID: string): boolean =>
 {
+    // Same trick as in `doesNodeAlreadyExistSetter`
+
     let isEdgeAlreadyPresent = false
 
     setEdges((edges: Edge[]) => edges.map(currentEdge => 
@@ -90,8 +87,11 @@ export const doesEdgeAlreadyExistSetter = (setEdges: SetterOrUpdater<Edge[]>, ed
     return isEdgeAlreadyPresent
 }
 
+
 export const doesSameEdgeBetweenNodesAlreadyExistSetter = (setEdges: SetterOrUpdater<Edge[]>, newEdgeIRI: string, associationType: string, sourceNodeID: string, targetNodeID: string): boolean =>
 {
+    // Same trick as in `doesNodeAlreadyExistSetter`
+
     let isEdgeAlreadyPresent = false
 
     setEdges((edges: Edge[]) => edges.map(currentEdge => 
@@ -149,7 +149,7 @@ export const onAddClass = (clss: Class, positionX: number, positionY: number, se
     const nodeData: NodeData = { class: clss, attributes: [] }
 
     const newNode: Node = {
-        id: clss[Field.IRI], type: "customNode", position: { x: positionX, y: positionY },
+        id: clss[Field.IRI], type: CUSTOM_NODE_TYPE, position: { x: positionX, y: positionY },
         data: nodeData
     }
 
@@ -251,11 +251,9 @@ const onAddAssociation = (association : Association, setNodes: SetterOrUpdater<N
     const markerEnd = association[Field.TYPE] === ItemType.GENERALIZATION ? CUSTOM_ISA_EDGE_MARKER : CUSTOM_EDGE_MARKER
 
     const newEdge : Edge = {
-        id: newEdgeID, type: "custom-edge", source: association[Field.SOURCE_CLASS], target: association[Field.TARGET_CLASS], data: edgeData,
+        id: newEdgeID, type: CUSTOM_EDGE_TYPE, source: association[Field.SOURCE_CLASS], target: association[Field.TARGET_CLASS], data: edgeData,
         markerEnd: markerEnd
     }
-
-    console.log("New edge: ", newEdge)
 
     setEdges((previousEdges: Edge[]) =>
     {
@@ -277,7 +275,7 @@ export const createNode = (nodeName: string, positionX: number, positionY: numbe
 
     const nodeData: NodeData = { class: newEntity, attributes: [] }
 
-    const newNode: Node = { id: nodeIRI, type: "customNode", position: { x: positionX, y: positionY }, data: nodeData }
+    const newNode: Node = { id: nodeIRI, type: CUSTOM_NODE_TYPE, position: { x: positionX, y: positionY }, data: nodeData }
 
     return newNode
 }
