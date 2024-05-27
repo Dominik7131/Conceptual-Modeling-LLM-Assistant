@@ -13,7 +13,6 @@ const DialogCreateEdge: React.FC = () =>
   const [isOpened, setIsOpened] = useRecoilState(isShowCreateEdgeDialogState)
   const association = useRecoilValue(selectedSuggestedItemState) as Association
 
-
   if (!association[Field.SOURCE_CLASS] || !association[Field.TARGET_CLASS])
   {
     return <></>
@@ -44,7 +43,7 @@ const DialogCreateEdge: React.FC = () =>
       </DialogTitle>
 
       <DialogContent dividers={true}>
-        <ControlButtons association={association} sourceClassName={sourceClassName} targetClassName={targetClassName} setIsOpened={setIsOpened}/>
+        <ControlButtons association={association} sourceClassName={sourceClassName} targetClassName={targetClassName}/>
       </DialogContent>
     </Dialog>
   )
