@@ -1,11 +1,10 @@
-import { Button, ButtonGroup, IconButton, Stack, Tooltip } from "@mui/material"
+import { Button, ButtonGroup, Tooltip } from "@mui/material"
 import HighlightSingleItemButton from "./HighlightSingleItemButton"
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import { Attribute, Field, Item, ItemType, Association } from "../../interfaces/interfaces";
-import { domainDescriptionSnapshotsState, domainDescriptionState, edgesState, editedSuggestedItemState, isIgnoreDomainDescriptionState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState, sidebarErrorMsgState, textFilteringVariationSnapshotsState } from "../../atoms";
+import { Field, Item } from "../../interfaces/interfaces";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { createErrorMessage, itemTypeToUserChoice } from "../../utils/utility";
+import { TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS, createErrorMessage, itemTypeToUserChoice } from "../../utils/utility";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { useState } from "react";
@@ -13,6 +12,11 @@ import { HEADER, SAVE_SUGESTED_ITEM_URL, SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SI
 import { onAddItem } from "../../utils/conceptualModel";
 import { getSnapshotDomainDescription, getSnapshotTextFilteringVariation } from "../../utils/snapshot";
 import { SuggestedItemUserEvaluationBody } from "../../interfaces/bodies";
+import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel";
+import { isShowEditDialogState } from "../../atoms/dialogs";
+import { sidebarErrorMsgState } from "../../atoms/sidebar";
+import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../../atoms/snapshots";
+import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState } from "../../atoms/suggestions";
 
 
 interface Props
@@ -38,8 +42,6 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
     const [isClicked, setIsClicked] = useState(false)
 
     const textTransform = "none"
-    const tooltipEnterDelay = 500
-    const tooltipLeaveDelay = 200
 
 
     const handleAddItem = (): void =>
@@ -101,7 +103,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
             size="small"
             sx={{ marginTop: "15px" }}>
 
-            <Tooltip title="Like" enterDelay={tooltipEnterDelay} leaveDelay={tooltipLeaveDelay}>
+            <Tooltip title="Like" enterDelay={TOOLTIP_ENTER_DELAY_MS} leaveDelay={TOOLTIP_LEAVE_DELAY_MS}>
                 <Button
                     size={ SIDEBAR_BUTTON_SIZE }
                     sx={{ textTransform: textTransform }}
@@ -112,7 +114,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
                 </Button>
             </Tooltip>
 
-            <Tooltip title="Add" enterDelay={tooltipEnterDelay} leaveDelay={tooltipLeaveDelay}>
+            <Tooltip title="Add" enterDelay={TOOLTIP_ENTER_DELAY_MS} leaveDelay={TOOLTIP_LEAVE_DELAY_MS}>
                 <Button
                     size={ SIDEBAR_BUTTON_SIZE }
                     sx={{ textTransform: textTransform }}
@@ -123,7 +125,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
             </Tooltip>
             
 
-            <Tooltip title="Edit" enterDelay={tooltipEnterDelay} leaveDelay={tooltipLeaveDelay}>
+            <Tooltip title="Edit" enterDelay={TOOLTIP_ENTER_DELAY_MS} leaveDelay={TOOLTIP_LEAVE_DELAY_MS}>
                 <Button
                     size="small"
                     sx={{ textTransform: textTransform }}
@@ -134,9 +136,9 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
             </Tooltip>
 
 
-            <HighlightSingleItemButton item={item} tooltipEnterDelay={tooltipEnterDelay} tooltipLeaveDelay={tooltipLeaveDelay} textTransform={textTransform}/>
+            <HighlightSingleItemButton item={item} tooltipEnterDelay={TOOLTIP_ENTER_DELAY_MS} tooltipLeaveDelay={TOOLTIP_LEAVE_DELAY_MS} textTransform={textTransform}/>
 
-            <Tooltip title="Dislike" enterDelay={tooltipEnterDelay} leaveDelay={tooltipLeaveDelay}>
+            <Tooltip title="Dislike" enterDelay={TOOLTIP_ENTER_DELAY_MS} leaveDelay={TOOLTIP_LEAVE_DELAY_MS}>
                 <Button
                     size={ SIDEBAR_BUTTON_SIZE }
                     sx={{ textTransform: textTransform }}

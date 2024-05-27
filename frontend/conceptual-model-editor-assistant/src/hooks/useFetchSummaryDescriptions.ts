@@ -1,7 +1,8 @@
 import { useSetRecoilState } from "recoil"
-import { isLoadingSummaryDescriptionsState, summaryDescriptionsState } from "../atoms"
 import { UserChoice, ItemType } from "../interfaces/interfaces"
 import { SUGGEST_SUMMARY_URL, HEADER } from "../utils/urls"
+import { isLoadingSummaryDescriptionsState } from "../atoms/loadings"
+import { summaryDescriptionsState } from "../atoms/summary"
 
 
 const useFetchSummaryDescriptions = () =>

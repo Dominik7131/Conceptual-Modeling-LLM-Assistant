@@ -4,11 +4,12 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import { useEffect } from "react";
-import { isLoadingHighlightOriginalTextState, isShowHighlightDialogState } from "../../atoms";
 import { useRecoilState, useRecoilValue } from "recoil";
 import Title from "./Title";
 import HighlightedOriginalText from "./HighlightedOriginalText";
 import { ORIGINAL_TEXT_ID } from "../../utils/utility";
+import { isLoadingHighlightOriginalTextState } from "../../atoms/loadings";
+import { isShowHighlightDialogState } from "../../atoms/dialogs";
 
 
 const HighlightDialog: React.FC = () =>

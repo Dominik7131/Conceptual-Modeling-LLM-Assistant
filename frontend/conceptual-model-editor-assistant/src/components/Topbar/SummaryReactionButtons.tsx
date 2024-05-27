@@ -4,7 +4,8 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { SummaryDescriptionsObject, UserChoice } from "../../interfaces/interfaces";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { domainDescriptionSnapshotsState, conceptualModelSnapshotState, isSummaryReactionButtonClickedState } from "../../atoms";
+import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";
+import { isSummaryReactionButtonClickedState } from "../../atoms/summary";
 
 
 interface Props

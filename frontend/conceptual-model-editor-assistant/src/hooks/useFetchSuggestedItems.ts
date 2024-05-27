@@ -1,9 +1,10 @@
 import { Attribute, Field, Item, ItemType, Association } from "../interfaces/interfaces";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { sidebarErrorMsgState, itemTypesToLoadState, suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms";
 import { onClearSuggestedItems } from "../utils/utility";
 import { HEADER, SUGGEST_ITEMS_URL } from "../utils/urls";
 import { createIRIFromName } from "../utils/conceptualModel";
+import { sidebarErrorMsgState } from "../atoms/sidebar";
+import { itemTypesToLoadState, suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms/suggestions";
 
 
 const useFetchSuggestedItems = () =>

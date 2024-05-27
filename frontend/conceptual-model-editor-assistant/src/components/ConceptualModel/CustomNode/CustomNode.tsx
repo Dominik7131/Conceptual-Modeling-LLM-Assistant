@@ -8,10 +8,12 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { BLACK_COLOR, clipString } from "../../../utils/utility";
-import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from "../../../atoms";
 import { useSetRecoilState } from "recoil";
 import CustomHandle from "./CustomHandle";
 import DropdownMenu from "./DropdownMenu";
+import { isItemInConceptualModelState } from "../../../atoms/conceptualModel";
+import { isShowEditDialogState } from "../../../atoms/dialogs";
+import { isSuggestedItemState, selectedSuggestedItemState, editedSuggestedItemState } from "../../../atoms/suggestions";
 
 
 export default function TextUpdaterNode({ selected, data } : NodeProps)

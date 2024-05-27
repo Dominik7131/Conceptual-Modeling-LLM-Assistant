@@ -6,9 +6,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Typography } from "@mui/material";
 import { BLACK_COLOR, clipString, } from "../../utils/utility";
 import { useSetRecoilState } from "recoil";
-import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from "../../atoms";
 import { calculateNewEdgeSourceAndTargetPosition } from "../../utils/autoEdgeReconnect";
 import { getLoopPath } from "../../utils/conceptualModel";
+import { isItemInConceptualModelState } from "../../atoms/conceptualModel";
+import { isShowEditDialogState } from "../../atoms/dialogs";
+import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState } from "../../atoms/suggestions";
 
 
 export default function CustomEdge ({ id, source, target, style, selected, data, markerEnd }: EdgeProps) : JSX.Element

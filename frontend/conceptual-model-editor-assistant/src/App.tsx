@@ -1,16 +1,16 @@
-import ConceptualModel from './components/ConceptualModel/ConceptualModel';
-import Topbar from './components/Topbar/Topbar'
-import SideBar from './components/Sidebar/Sidebar';
-import { ReactFlowProvider } from 'reactflow';
-import HighlightDialog from './components/DialogDomainDescription/DialogDomainDescription';
-import DialogCreateEdge from './components/DialogCreateEdge/DialogCreateEdge';
+import ConceptualModel from "./components/ConceptualModel/ConceptualModel";
+import Topbar from "./components/Topbar/Topbar"
+import SideBar from "./components/Sidebar/Sidebar";
+import { ReactFlowProvider } from "reactflow";
+import HighlightDialog from "./components/DialogDomainDescription/DialogDomainDescription";
+import DialogCreateEdge from "./components/DialogCreateEdge/DialogCreateEdge";
 import DialogEnterIRI from "./components/Topbar/DialogEnterModelID";
-import { RecoilRoot } from 'recoil';
-import DialogEditItem from './components/DialogEditItem/DialogEditItem';
-import { Box, Stack } from '@mui/material';
+import { RecoilRoot } from "recoil";
+import DialogEditItem from "./components/DialogEditItem/DialogEditItem";
+import { Box, Stack } from "@mui/material";
 
 
-function App()
+function App(): JSX.Element
 {
   return (
     <RecoilRoot>

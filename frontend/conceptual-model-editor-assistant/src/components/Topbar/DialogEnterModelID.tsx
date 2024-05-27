@@ -4,11 +4,12 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { useState } from "react";
-import { edgesState, isDialogEnterIRIOpenedState, isDialogImportState, modelIDState, nodesState } from "../../atoms";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { importConceptualModelFromJson } from "../../utils/import";
 import { HEADER } from "../../utils/urls";
 import { convertConceptualModelToJSON } from "../../utils/serialization";
+import { edgesState, modelIDState, nodesState } from "../../atoms/conceptualModel";
+import { isDialogEnterIRIOpenedState, isDialogImportState } from "../../atoms/dialogs";
 
 
 const DialogEnterModelID: React.FC = (): JSX.Element =>

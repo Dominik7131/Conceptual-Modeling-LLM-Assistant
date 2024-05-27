@@ -1,8 +1,9 @@
 import { useRecoilValue } from "recoil"
-import { domainDescriptionState, originalTextIndexesListState, tooltipsState } from "../../atoms"
 import { Typography, styled } from "@mui/material"
 import Tooltip, { TooltipProps, tooltipClasses  } from "@mui/material/Tooltip";
 import { ORIGINAL_TEXT_ID } from "../../utils/utility";
+import { domainDescriptionState } from "../../atoms/domainDescription";
+import { originalTextIndexesListState, tooltipsState } from "../../atoms/originalTextIndexes";
 
 
 const HighlightedOriginalText: React.FC = (): JSX.Element =>

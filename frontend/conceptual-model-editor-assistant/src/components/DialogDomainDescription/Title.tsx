@@ -3,8 +3,11 @@ import Stack from "@mui/material/Stack";
 import Alert from "@mui/material/Alert";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useRecoilValue } from "recoil";
-import { isLoadingHighlightOriginalTextState, isShowTitleDialogDomainDescriptionState, originalTextIndexesListState, selectedSuggestedItemState } from "../../atoms";
 import { Field } from "../../interfaces/interfaces";
+import { isShowTitleDialogDomainDescriptionState } from "../../atoms/dialogs";
+import { isLoadingHighlightOriginalTextState } from "../../atoms/loadings";
+import { originalTextIndexesListState } from "../../atoms/originalTextIndexes";
+import { selectedSuggestedItemState } from "../../atoms/suggestions";
 
 
 const Title: React.FC = (): JSX.Element =>

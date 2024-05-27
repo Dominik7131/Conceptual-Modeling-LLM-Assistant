@@ -7,9 +7,11 @@ import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
 import { UserChoice } from "../../interfaces/interfaces";
 import { BLANK_CLASS } from "../../utils/utility";
 import { useSetRecoilState } from "recoil";
-import { editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, selectedSuggestedItemState } from "../../atoms";
 import SummaryPlainTextButton from "./SummaryPlainTextButton";
 import SummaryDescriptionsButton from "./SummaryDescriptionsButton";
+import { isItemInConceptualModelState } from "../../atoms/conceptualModel";
+import { isShowEditDialogState } from "../../atoms/dialogs";
+import { isSuggestedItemState, selectedSuggestedItemState, editedSuggestedItemState } from "../../atoms/suggestions";
 
 
 const ControlButtons: React.FC = (): JSX.Element =>

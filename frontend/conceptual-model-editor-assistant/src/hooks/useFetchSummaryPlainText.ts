@@ -1,6 +1,7 @@
 import { useSetRecoilState } from "recoil"
-import { isLoadingSummaryPlainTextState, summaryTextState } from "../atoms"
 import { SUGGEST_SUMMARY_URL, HEADER } from "../utils/urls"
+import { summaryTextState } from "../atoms/summary"
+import { isLoadingSummaryPlainTextState } from "../atoms/loadings"
 
 
 const useFetchSummaryPlainText = () =>

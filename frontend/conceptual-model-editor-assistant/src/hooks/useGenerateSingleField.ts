@@ -1,9 +1,14 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { useRecoilValue, useSetRecoilState } from "recoil"
 import { Field, ItemType, UserChoice } from "../interfaces/interfaces"
-import { domainDescriptionSnapshotsState, domainDescriptionState, editDialogErrorMsgState, fieldToLoadState, isIgnoreDomainDescriptionState, regeneratedItemState, regeneratedOriginalTextIndexesState, textFilteringVariationSnapshotsState, textFilteringVariationState } from "../atoms"
 import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot"
 import { HEADER, SUGGEST_SINGLE_FIELD_URL } from "../utils/urls"
 import { SingleFieldSuggestionBody } from "../interfaces/bodies"
+import { editDialogErrorMsgState } from "../atoms/dialogs"
+import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms/domainDescription"
+import { regeneratedOriginalTextIndexesState } from "../atoms/originalTextIndexes"
+import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots"
+import { regeneratedItemState, fieldToLoadState } from "../atoms/suggestions"
+import { textFilteringVariationState } from "../atoms/textFiltering"
 
 
 const useGenerateSingleField = () =>

@@ -1,9 +1,9 @@
 import { Box, Tab } from "@mui/material"
-import { sidebarErrorMsgState, sidebarTabValueState } from "../../atoms"
 import { useSetRecoilState } from "recoil"
 import { TabList } from "@mui/lab"
 import { SidebarTab, UserChoice } from "../../interfaces/interfaces"
 import { capitalizeString } from "../../utils/utility"
+import { sidebarTabValueState, sidebarErrorMsgState } from "../../atoms/sidebar"
 
 
 const Tabs: React.FC = (): JSX.Element =>

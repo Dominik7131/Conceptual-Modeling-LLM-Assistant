@@ -3,7 +3,9 @@ import { Field, Item, ItemType } from "../../interfaces/interfaces"
 import ItemDisplay from "./ItemDisplay"
 import ControlButtons from "./ControlButtons"
 import { useRecoilValue } from "recoil"
-import { itemTypesToLoadState, sidebarErrorMsgState } from "../../atoms"
+import { itemTypesToLoadState } from "../../atoms/suggestions"
+import { sidebarErrorMsgState } from "../../atoms/sidebar"
+
 
 interface Props
 {

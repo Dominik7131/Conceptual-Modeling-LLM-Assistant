@@ -3,8 +3,9 @@ import { Association, Field, ItemType, UserChoice } from "../../interfaces/inter
 import AddIcon from "@mui/icons-material/Add";
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import { useSetRecoilState } from "recoil";
-import { isShowEditDialogState, selectedSuggestedItemState, editedSuggestedItemState, isShowCreateEdgeDialogState } from "../../atoms";
 import useSuggestItems from "../../hooks/useSuggestItems";
+import { isShowCreateEdgeDialogState, isShowEditDialogState } from "../../atoms/dialogs";
+import { selectedSuggestedItemState, editedSuggestedItemState } from "../../atoms/suggestions";
 
 
 interface Props

@@ -1,10 +1,11 @@
 import { useRecoilValue } from "recoil";
-import { isSidebarCollapsedState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState } from "../../atoms";
 import { Box, Divider } from "@mui/material";
 import { ItemType } from "../../interfaces/interfaces";
 import { TabContext, TabPanel } from "@mui/lab"
 import Tabs from "./Tabs";
 import Suggestions from "./Suggestions";
+import { isSidebarCollapsedState, sidebarTabValueState, sidebarTitlesState } from "../../atoms/sidebar";
+import { suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../../atoms/suggestions";
 
 
 const Sidebar: React.FC = () =>

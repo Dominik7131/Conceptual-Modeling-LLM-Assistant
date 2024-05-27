@@ -1,7 +1,7 @@
 import { Button } from "@mui/material"
 import DownloadIcon from "@mui/icons-material/Download";
-import { isDialogEnterIRIOpenedState, isDialogImportState } from "../../atoms";
 import { useSetRecoilState } from "recoil";
+import { isDialogEnterIRIOpenedState, isDialogImportState } from "../../atoms/dialogs";
 
 
 const ExportJSONButton: React.FC = (): JSX.Element =>

@@ -2,10 +2,12 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { Attribute, Field, Item, ItemType, UserChoice } from "../interfaces/interfaces";
 import { HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL } from "../utils/urls";
 import { itemTypeToUserChoice } from "../utils/utility";
-import { domainDescriptionSnapshotsState, editedSuggestedItemState, regeneratedItemState, regeneratedOriginalTextIndexesState, textFilteringVariationSnapshotsState } from "../atoms";
 import { getSnapshotDomainDescription, getSnapshotTextFilteringVariation } from "../utils/snapshot";
 import { onClearRegeneratedItem } from "../utils/editItem";
 import { SingleFieldUserEvaluationBody } from "../interfaces/bodies";
+import { regeneratedOriginalTextIndexesState } from "../atoms/originalTextIndexes";
+import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots";
+import { editedSuggestedItemState, regeneratedItemState } from "../atoms/suggestions";
 
 
 const useConfirmRegeneratedField = () =>

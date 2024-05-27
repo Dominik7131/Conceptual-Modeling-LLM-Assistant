@@ -1,12 +1,14 @@
-import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange, useOnSelectionChange, BackgroundVariant } from "reactflow";
+import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from "reactflow";
 import CustomNode from "./CustomNode/CustomNode";
 import CustomEdge from "./CustomEdge";
-import { Field, ItemType, Association } from "../../interfaces/interfaces";
-import { edgesState, editedSuggestedItemState, isItemInConceptualModelState, isShowCreateEdgeDialogState, isSuggestedItemState, nodesState, selectedSuggestedItemState } from "../../atoms";
+import { Field, Association } from "../../interfaces/interfaces";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { useCallback } from "react";
 import { Box, Divider } from "@mui/material";
 import { createNewAssociation } from "../../utils/conceptualModel";
+import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel";
+import { isShowCreateEdgeDialogState } from "../../atoms/dialogs";
+import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState } from "../../atoms/suggestions";
 
 
 const nodeTypes = { customNode: CustomNode }

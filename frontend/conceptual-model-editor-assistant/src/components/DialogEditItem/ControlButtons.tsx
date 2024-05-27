@@ -1,12 +1,14 @@
 import { Button } from "@mui/material";
 import { Association, Attribute, Field, Item, ItemType } from "../../interfaces/interfaces"
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { edgesState, editDialogErrorMsgState, editedSuggestedItemState, isItemInConceptualModelState, isShowEditDialogState, isSuggestedItemState, nodesState, regeneratedItemState, selectedSuggestedItemState } from "../../atoms";
 import { createNameFromIRI, onAddItem, onRemove } from "../../utils/conceptualModel";
 import { createErrorMessage } from "../../utils/utility";
 import { onClose, onSave } from "../../utils/editItem";
 import { useState } from "react";
 import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField";
+import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel";
+import { isShowEditDialogState, editDialogErrorMsgState } from "../../atoms/dialogs";
+import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState, regeneratedItemState } from "../../atoms/suggestions";
 
 
 const ControlButtons: React.FC = () =>

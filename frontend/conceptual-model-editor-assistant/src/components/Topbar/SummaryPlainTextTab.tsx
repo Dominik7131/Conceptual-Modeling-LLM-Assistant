@@ -1,8 +1,9 @@
 import { Typography, CircularProgress } from "@mui/material"
 import { useRecoilValue } from "recoil"
-import { isLoadingSummaryPlainTextState, summaryTextState } from "../../atoms"
 import { UserChoice } from "../../interfaces/interfaces";
 import SummaryReactionButtons from "./SummaryReactionButtons";
+import { isLoadingSummaryPlainTextState } from "../../atoms/loadings";
+import { summaryTextState } from "../../atoms/summary";
 
 
 const SummaryPlainTextTab: React.FC = (): JSX.Element =>

@@ -1,9 +1,8 @@
 import Box from "@mui/material/Box";
-import { Button, Divider } from "@mui/material";
+import { Button } from "@mui/material";
 import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { isSidebarCollapsedState, topbarTabValueState } from "../../atoms";
 import SummaryDescriptionsTab from "./SummaryDescriptionsTab";
 import SummaryPlainTextTab from "./SummaryPlainTextTab";
 import TopbarButtons from "./ControlButtons";
@@ -16,6 +15,8 @@ import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import { useState } from "react";
 import InfoTab from "./InfoTab";
+import { topbarTabValueState } from "../../atoms/topbar";
+import { isSidebarCollapsedState } from "../../atoms/sidebar";
 
 
 const Topbar: React.FC = () =>

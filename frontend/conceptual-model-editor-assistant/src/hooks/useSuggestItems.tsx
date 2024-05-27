@@ -3,9 +3,13 @@ import { changeSidebarTab, changeTitle, onClearSuggestedItems, userChoiceToItemT
 import useFetchSuggestedItems from "./useFetchSuggestedItems";
 import { ItemType, UserChoice } from "../interfaces/interfaces";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, sidebarTabValueState, sidebarTitlesState, suggestedAttributesState, suggestedClassesState, suggestedAssociationsState, textFilteringVariationState, textFilteringVariationSnapshotsState } from "../atoms";
 import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot";
 import { ItemSuggestionBody } from "../interfaces/bodies";
+import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms/domainDescription";
+import { sidebarTitlesState, sidebarTabValueState } from "../atoms/sidebar";
+import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots";
+import { suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms/suggestions";
+import { textFilteringVariationState } from "../atoms/textFiltering";
 
 
 const useSuggestItems = () =>

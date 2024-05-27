@@ -2,12 +2,16 @@ import { Button } from "@mui/material"
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import { NOTHING_SELECTED_MSG, SUMMARY_DESCRIPTIONS_NAME } from "../../utils/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, domainDescriptionState, isIgnoreDomainDescriptionState, selectedEdgesState, selectedNodesState, summaryDescriptionsState, topbarTabValueState } from "../../atoms";
 import { TopbarTab, UserChoice } from "../../interfaces/interfaces";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
 import { convertConceptualModelToObjectSummary } from "../../utils/serialization";
 import useFetchSummaryDescriptions from "../../hooks/useFetchSummaryDescriptions";
 import { SummarySuggestionBody } from "../../interfaces/bodies";
+import { selectedNodesState, selectedEdgesState } from "../../atoms/conceptualModel";
+import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms/domainDescription";
+import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";
+import { summaryDescriptionsState } from "../../atoms/summary";
+import { topbarTabValueState } from "../../atoms/topbar";
 
 
 const SummaryDescriptionsButton: React.FC= (): JSX.Element =>

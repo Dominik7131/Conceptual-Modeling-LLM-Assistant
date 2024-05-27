@@ -2,8 +2,8 @@ import { ChangeEvent } from "react";
 import Button from "@mui/material/Button";
 import UploadIcon from "@mui/icons-material/Upload";
 import { useSetRecoilState } from "recoil";
-import { edgesState, importedFileNameState, nodesState } from "../../atoms";
 import { importConceptualModelFromJson } from "../../utils/import";
+import { nodesState, edgesState, importedFileNameState } from "../../atoms/conceptualModel";
 
 
 const ImportJSONButton: React.FC = () =>
