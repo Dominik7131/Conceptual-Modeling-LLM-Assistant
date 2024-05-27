@@ -1,6 +1,10 @@
 import { SetterOrUpdater } from "recoil";
-import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SidebarTab, UserChoice, TextFilteringVariation } from "../interfaces/interfaces"
+import { Attribute, Class, Field, Item, ItemType, ItemsMessage, Association, SidebarTab, UserChoice, TextFilteringVariation, SummaryObject } from "../interfaces/interfaces"
 import { createNameFromIRI } from "./conceptualModel";
+import { getSnapshotConceptualModel, getSnapshotDomainDescription } from "./snapshot";
+import { SummaryUserEvaluationBody } from "../interfaces/bodies";
+import { HEADER, SAVE_SUGESTED_SUMMARY_URL } from "./urls";
+import { ConceptualModelSnapshot, DomainDescriptionSnapshot } from "../interfaces/snapshots";
 
 
 export const SUMMARY_DESCRIPTIONS_NAME = "Summary: descriptions"
@@ -13,6 +17,9 @@ export const TEXT_FILTERING_VARIATION_DEFAULT_VALUE = TextFilteringVariation.SYN
 
 export const BLACK_COLOR = "black"
 export const GRAY_COLOR = "gray"
+
+export const TOOLTIP_ENTER_DELAY_MS = 500
+export const TOOLTIP_LEAVE_DELAY_MS = 200
 
 export const DATA_TYPE_CHOICES = ["string", "number", "time", "boolean"]
 
@@ -183,4 +190,20 @@ export const changeSidebarTab = (itemType: ItemType, setSidebarTab: SetterOrUpda
   {
     throw Error(`Received unknown item type: ${itemType}`)
   }
+}
+
+
+export const handleSaveSuggestionSummary = (userChoice: UserChoice, isPositiveReaction: boolean, domainDescriptionSnapshot: DomainDescriptionSnapshot, conceptualModelSnapshot: ConceptualModelSnapshot, summary: string | SummaryObject) =>
+{
+  const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)        
+  const currentConceptualModel = getSnapshotConceptualModel(userChoice, conceptualModelSnapshot)
+
+  const suggestionData: SummaryUserEvaluationBody = {
+      domainDescription: currentDomainDescription, isPositive: isPositiveReaction, summary: summary,
+      summaryType: userChoice, conceptualModel: currentConceptualModel
+  }
+
+  const bodyDataJSON = JSON.stringify(suggestionData)
+
+  fetch(SAVE_SUGESTED_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
 }

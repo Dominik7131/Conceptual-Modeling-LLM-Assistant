@@ -4,9 +4,7 @@ import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, isLoadin
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { UserChoice } from "../../interfaces/interfaces";
-import { HEADER, SAVE_SUGESTED_SUMMARY_URL } from "../../utils/urls";
-import { getSnapshotConceptualModel, getSnapshotDomainDescription } from "../../utils/snapshot";
-import { SummaryUserEvaluationBody } from "../../interfaces/bodies";
+import { TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS, handleSaveSuggestionSummary } from "../../utils/utility";
 
 
 const SummaryPlainTextTab: React.FC = (): JSX.Element =>
@@ -19,21 +17,15 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
     const domainDescriptionSnapshot = useRecoilValue(domainDescriptionSnapshotsState)
     const conceptualModelSnapshot = useRecoilValue(conceptualModelSnapshotState)
 
+    const reactionIconsColor = "inherit"
+    const reactionIconsSize = "20px"
+    const reactionButtonsMinSize = "30px"
+
 
     const handleSaveSuggestion = (isPositiveReaction: boolean) =>
     {
         const userChoice = UserChoice.SUMMARY_PLAIN_TEXT
-        const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)
-        const currentConceptualModel = getSnapshotConceptualModel(userChoice, conceptualModelSnapshot)
-
-        const suggestionData: SummaryUserEvaluationBody = {
-            domainDescription: currentDomainDescription, isPositive: isPositiveReaction, summary: summary,
-            summaryType: userChoice, conceptualModel: currentConceptualModel
-        }
-
-        const bodyDataJSON = JSON.stringify(suggestionData)
-
-        fetch(SAVE_SUGESTED_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
+        handleSaveSuggestionSummary(userChoice, isPositiveReaction, domainDescriptionSnapshot, conceptualModelSnapshot, summary)
 
         setIsClicked(true)
     }
@@ -51,33 +43,33 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
                 <Stack direction="row" spacing={"8px"}>
                     <Tooltip
                         title="Like"
-                        enterDelay={500}
-                        leaveDelay={200}>
+                        enterDelay={TOOLTIP_ENTER_DELAY_MS}
+                        leaveDelay={TOOLTIP_LEAVE_DELAY_MS}>
 
                         <Button
                             size={ "small" }
-                            color="inherit"
-                            sx={{ textTransform: "none", maxWidth: "30px", maxHeight: "30px", minWidth: "30px", minHeight: "30px" }}
-                            disabled={isClicked}
+                            color={ reactionIconsColor }
+                            sx={{ minWidth: reactionButtonsMinSize, minHeight: reactionButtonsMinSize }}
+                            disabled={ isClicked }
                             onClick={ () => { handleSaveSuggestion(true) } }
                             >
-                                <ThumbUpIcon sx={{ width: "20px", height: "20px" }}/>
+                                <ThumbUpIcon sx={{ width: reactionIconsSize, height: reactionIconsSize }}/>
                         </Button>
                     </Tooltip>
 
                     <Tooltip
                         title="Dislike"
-                        enterDelay={500}
-                        leaveDelay={200}>
+                        enterDelay={TOOLTIP_ENTER_DELAY_MS}
+                        leaveDelay={TOOLTIP_LEAVE_DELAY_MS}>
 
                         <Button
-                            color="inherit"
+                            color={ reactionIconsColor }
                             size={ "small" }
-                            sx={{ textTransform: "none", maxWidth: "50px", maxHeight: "30px", minWidth: "30px", minHeight: "30px", paddingRight: "10px" }}
+                            sx={{ minWidth: reactionButtonsMinSize, minHeight: reactionButtonsMinSize }}
                             disabled={isClicked}
                             onClick={ () => { handleSaveSuggestion(false) } }
                             >
-                                <ThumbDownIcon sx={{ width: "20px", height: "20px" }}/>
+                                <ThumbDownIcon sx={{ width: reactionIconsSize, height: reactionIconsSize }}/>
                         </Button>
                     </Tooltip>
                 </Stack>

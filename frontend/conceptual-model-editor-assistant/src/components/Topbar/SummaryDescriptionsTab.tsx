@@ -1,7 +1,7 @@
 import { Button, Typography, CircularProgress, Stack, Tooltip } from "@mui/material"
 import { useRecoilState, useRecoilValue } from "recoil"
 import { conceptualModelSnapshotState, domainDescriptionSnapshotsState, isLoadingSummaryDescriptionsState, isSummaryDescriptionReactButtonClickedState, nodesState, summaryDescriptionsState } from "../../atoms"
-import { capitalizeString } from "../../utils/utility"
+import { capitalizeString, handleSaveSuggestionSummary } from "../../utils/utility"
 import { Attribute, UserChoice } from "../../interfaces/interfaces"
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
@@ -26,17 +26,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
     const handleSaveSuggestion = (isPositiveReaction: boolean) =>
     {
         const userChoice = UserChoice.SUMMARY_DESCRIPTIONS
-        const currentDomainDescription = getSnapshotDomainDescription(userChoice, domainDescriptionSnapshot)        
-        const currentConceptualModel = getSnapshotConceptualModel(userChoice, conceptualModelSnapshot)
-
-        const suggestionData: SummaryUserEvaluationBody = {
-            domainDescription: currentDomainDescription, isPositive: isPositiveReaction, summary: summaryDescriptions,
-            summaryType: userChoice, conceptualModel: currentConceptualModel
-        }
-
-        const bodyDataJSON = JSON.stringify(suggestionData)
-
-        fetch(SAVE_SUGESTED_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
+        handleSaveSuggestionSummary(userChoice, isPositiveReaction, domainDescriptionSnapshot, conceptualModelSnapshot, summaryDescriptions)
 
         setIsClicked(true)
     }

@@ -21,6 +21,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
 
     const { fetchMergedOriginalTexts } = useFetchMergedOriginalTexts()
 
+    const buttonText = "Highlight original text"
     let originalTextsIndexesObjects : OriginalTextIndexesItem[] = []
 
 
@@ -63,7 +64,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                     continue
                 }
         
-                // Process each original text indexes for the given attribute
+                // Process each of the original text indexes for the given attribute
                 for (let k = 0; k < originalTextIndexes.length; k += 2)
                 {
                     const ii1: number = originalTextIndexes[k]
@@ -80,7 +81,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                 continue
             }
         
-            // Process each original text indexes for the given class 
+            // Process each of the original text indexes for the given class 
             for (let k = 0; k < originalTextIndexes.length; k += 2)
             {
                 const ii1: number = originalTextIndexes[k]
@@ -103,7 +104,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
                 continue
             }
         
-            // Process each original text indexes for the given edge
+            // Process each of the original text indexes for the given edge
             for (let k = 0; k < originalTextIndexes.length; k += 2)
             {
                 const ii1 : number = originalTextIndexes[k]
@@ -122,13 +123,13 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
 
     return (
         <Button
-            disabled={isDisabled}
-            startIcon={<HighlightIcon/>}
+            disabled={ isDisabled }
+            startIcon={ <HighlightIcon/> }
             variant="contained"
-            sx={{textTransform: "none"}}
+            sx={{ textTransform: "none" }}
             disableElevation 
             onClick={ onHighlightSelectedItems }>
-                { capitalizeString("Highlight original text") }
+                { buttonText }
         </Button>
 
     )
