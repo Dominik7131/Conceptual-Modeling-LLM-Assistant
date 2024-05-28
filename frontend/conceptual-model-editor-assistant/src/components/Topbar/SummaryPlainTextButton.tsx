@@ -1,75 +1,38 @@
 import { Button } from "@mui/material"
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
-import { convertConceptualModelToObjectSummary } from "../../utils/serialization";
+import { useSetRecoilState } from "recoil";
 import useFetchSummaryPlainText from "../../hooks/useFetchSummaryPlainText";
-import { SummarySuggestionBody } from "../../definitions/fetch";
-import { selectedNodesState, selectedEdgesState } from "../../atoms/conceptualModel";
-import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms/domainDescription";
-import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";
 import { summaryTextState } from "../../atoms/summary";
-import { topbarTabValueState } from "../../atoms/topbar";
-import { TopbarTab } from "../../definitions/tabs";
-import { NOTHING_SELECTED_MSG, UserChoiceSummary } from "../../definitions/utility";
+import { UserChoiceSummary } from "../../definitions/utility";
 import { SUMMARY_PLAIN_TEXT_NAME } from "../../utils/summary";
-import { SummaryConceptualModel } from "../../definitions/summary";
+import useSummaryButtonClick from "../../hooks/useSummaryButtonClick";
 
 
 const SummaryPlainTextButton: React.FC= (): JSX.Element =>
 {
-    const selectedNodes = useRecoilValue(selectedNodesState)
-    const selectedEdges = useRecoilValue(selectedEdgesState)
-
-    const setTopbarTab = useSetRecoilState(topbarTabValueState)
     const setSummaryText = useSetRecoilState(summaryTextState)
 
-    const domainDescription = useRecoilValue(domainDescriptionState)
-    const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
-    const setDomainDescriptionSnapshot = useSetRecoilState(domainDescriptionSnapshotsState)
-    const setConceptualModelSnapshot = useSetRecoilState(conceptualModelSnapshotState)
-    
-    const isDisabled = domainDescription === "" || isIgnoreDomainDescription
-
+    const { onButtonClick } = useSummaryButtonClick()
     const { fetchSummaryPlainText } = useFetchSummaryPlainText()
 
     
-    const handleSummaryPlainTextClick = (): void =>
+    const handleClick = (): void =>
     {
-        if (selectedNodes.length === 0 && selectedEdges.length === 0)
-        {
-            alert(NOTHING_SELECTED_MSG)
-            return
-        }
+        setSummaryText("")
 
         const userChoice = UserChoiceSummary.SUMMARY_PLAIN_TEXT
-        setSummaryText("")
-        
-        const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
-        snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
-
-        const conceptualModel: SummaryConceptualModel = convertConceptualModelToObjectSummary(selectedNodes, selectedEdges)
-        snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
-
-        setTopbarTab(TopbarTab.SUMMARY_PLAIN_TEXT)
-
-        const bodyData: SummarySuggestionBody = {
-            summaryType: userChoice, conceptualModel: conceptualModel, domainDescription: currentDomainDescription
-        }
-        const bodyDataJSON = JSON.stringify(bodyData)
-
+        const bodyDataJSON = onButtonClick(userChoice)
         fetchSummaryPlainText(bodyDataJSON)
     }
 
 
     return (
         <Button
-            disabled={isDisabled}
             variant="contained"
-            sx={{textTransform: "none"}}
+            sx={{ textTransform: "none" }}
             disableElevation
-            startIcon={<AutoFixNormalIcon/>}
-            onClick={ handleSummaryPlainTextClick }>
+            startIcon={ <AutoFixNormalIcon/> }
+            onClick={ handleClick }>
                 { SUMMARY_PLAIN_TEXT_NAME }
         </Button>
     )

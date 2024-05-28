@@ -3,6 +3,8 @@ import { UserChoiceItem, ItemType } from "../definitions/utility"
 import { SUGGEST_SUMMARY_URL, HEADER } from "../definitions/urls"
 import { isLoadingSummaryDescriptionsState } from "../atoms/loadings"
 import { summaryDescriptionsState } from "../atoms/summary"
+import { SummaryClass } from "../definitions/summary"
+import { Association } from "../definitions/conceptualModel"
 
 
 const useFetchSummaryDescriptions = () =>
@@ -13,7 +15,7 @@ const useFetchSummaryDescriptions = () =>
 
     const fetchSummaryDescriptions = (bodyDataJSON : string) =>
     {
-        setIsLoadingSummaryDescriptions(_ => true)
+        setIsLoadingSummaryDescriptions(true)
     
         fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
         .then(response =>
@@ -23,7 +25,7 @@ const useFetchSummaryDescriptions = () =>
             if (stream === null)
             {
                 console.log("Stream is null")
-                setIsLoadingSummaryDescriptions(_ => false)
+                setIsLoadingSummaryDescriptions(false)
                 return
             }
     
@@ -37,7 +39,7 @@ const useFetchSummaryDescriptions = () =>
                     if (done)
                     {
                         console.log("Stream finished")
-                        setIsLoadingSummaryDescriptions(_ => false)
+                        setIsLoadingSummaryDescriptions(false)
                         return
                     }
 
@@ -55,7 +57,7 @@ const useFetchSummaryDescriptions = () =>
         .catch(error =>
         {
             console.error(error)
-            setIsLoadingSummaryDescriptions(_ => false)
+            setIsLoadingSummaryDescriptions(false)
             alert("Error: request failed")
         })
     }
@@ -63,42 +65,56 @@ const useFetchSummaryDescriptions = () =>
 
     const parseSummaryDescriptions = (value: Uint8Array) =>
     {
-        // Convert the `value` to a string
-        var jsonString = new TextDecoder().decode(value)
-        console.log("JsonString: ", jsonString)
+        const stringJSON: string = new TextDecoder().decode(value)
+        console.log("JsonString: ", stringJSON)
 
 
         // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
-        const jsonStringParts = jsonString.split('\n').filter((string => string !== ""))
+        const jsonStringParts = stringJSON.split('\n').filter((string => string !== ""))
 
         for (let i = 0; i < jsonStringParts.length; i++)
         {
             const parsedData = JSON.parse(jsonStringParts[i])
 
-            if (!parsedData[UserChoiceItem.ATTRIBUTES])
-            {
-                parsedData[UserChoiceItem.ATTRIBUTES] = []
-            }
-            
             console.log("Parsed data:", parsedData)
 
-            if (parsedData.hasOwnProperty(ItemType.CLASS))
+            let classes: SummaryClass[] = []
+            let associations: Association[] = []
+
+            if (parsedData.hasOwnProperty(UserChoiceItem.CLASSES))
             {
-                setSummaryDescriptions(previousSummary => ({
-                    ...previousSummary,
-                    classes: [...previousSummary.classes, parsedData],
-                }))
-            }
-            else if (parsedData.hasOwnProperty(ItemType.ASSOCIATION))
-            {
-                setSummaryDescriptions(previousSummary => ({
-                    ...previousSummary,
-                    associations: [...previousSummary.associations, parsedData],
-                }))
+                classes = parsedData[UserChoiceItem.CLASSES]
             }
             else
             {
                 console.log("Received unknown object: ", parsedData)
+            }
+
+            if (parsedData.hasOwnProperty("associations"))
+            {
+                associations = parsedData["associations"]
+            }
+            else
+            {
+                console.log("Received unknown object: ", parsedData)
+            }
+
+            for (let index = 0; index < classes.length; index++)
+            {
+                console.log("Class: ", classes[index])
+                setSummaryDescriptions(previousSummary => ({
+                    ...previousSummary,
+                    classes: [...previousSummary.classes, classes[index]],
+                }))
+            }
+
+            for (let index = 0; index < associations.length; index++)
+            {
+                console.log("Association: ", associations[index])
+                setSummaryDescriptions(previousSummary => ({
+                    ...previousSummary,
+                    associations: [...previousSummary.associations, associations[index]],
+                }))
             }
         }
     }

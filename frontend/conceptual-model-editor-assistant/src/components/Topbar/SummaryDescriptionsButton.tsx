@@ -1,62 +1,28 @@
 import { Button } from "@mui/material"
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { NOTHING_SELECTED_MSG, UserChoiceSummary } from "../../definitions/utility";
-import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
-import { convertConceptualModelToObjectSummary } from "../../utils/serialization";
+import { useSetRecoilState } from "recoil";
+import { UserChoiceSummary } from "../../definitions/utility";
 import useFetchSummaryDescriptions from "../../hooks/useFetchSummaryDescriptions";
-import { SummarySuggestionBody } from "../../definitions/fetch";
-import { selectedNodesState, selectedEdgesState } from "../../atoms/conceptualModel";
-import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms/domainDescription";
-import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";
 import { summaryDescriptionsState } from "../../atoms/summary";
-import { topbarTabValueState } from "../../atoms/topbar";
-import { TopbarTab } from "../../definitions/tabs";
 import { SUMMARY_DESCRIPTIONS_NAME } from "../../utils/summary";
+import { EMPTY_SUMMARY_CONCEPTUAL_MODEL } from "../../definitions/summary";
+import useSummaryButtonClick from "../../hooks/useSummaryButtonClick";
 
 
 const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
 {
-    const selectedNodes = useRecoilValue(selectedNodesState)
-    const selectedEdges = useRecoilValue(selectedEdgesState)
-
-    const setTopbarTab = useSetRecoilState(topbarTabValueState)
     const setSummaryDescriptions = useSetRecoilState(summaryDescriptionsState)
 
-    const domainDescription = useRecoilValue(domainDescriptionState)
-    const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
-    const setDomainDescriptionSnapshot = useSetRecoilState(domainDescriptionSnapshotsState)
-    const setConceptualModelSnapshot = useSetRecoilState(conceptualModelSnapshotState)
-
-    const isDisabled = domainDescription === "" || isIgnoreDomainDescription
-
+    const { onButtonClick } = useSummaryButtonClick()
     const { fetchSummaryDescriptions } = useFetchSummaryDescriptions()
 
     
-    const handleSummaryDescriptionsClick = (): void =>
+    const handleClick = (): void =>
     {
-        if (selectedNodes.length === 0 && selectedEdges.length === 0)
-        {
-            alert(NOTHING_SELECTED_MSG)
-            return
-        }
+        setSummaryDescriptions(EMPTY_SUMMARY_CONCEPTUAL_MODEL)
 
         const userChoice = UserChoiceSummary.SUMMARY_DESCRIPTIONS
-        setSummaryDescriptions({classes: [], associations: []})
-
-        const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
-        snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
-
-        const conceptualModel = convertConceptualModelToObjectSummary(selectedNodes, selectedEdges)
-        snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
-
-        setTopbarTab(TopbarTab.SUMMARY_DESCRIPTION)
-
-        const bodyData: SummarySuggestionBody = {
-            summaryType: userChoice, conceptualModel: conceptualModel, domainDescription: currentDomainDescription
-        }
-        
-        const bodyDataJSON = JSON.stringify(bodyData)
+        const bodyDataJSON = onButtonClick(userChoice)
     
         fetchSummaryDescriptions(bodyDataJSON)
     }
@@ -64,12 +30,11 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
 
     return (
         <Button
-            disabled={isDisabled}
             variant="contained"
             sx={{textTransform: "none"}}
             disableElevation
             startIcon={<AutoFixNormalIcon/>}
-            onClick={ handleSummaryDescriptionsClick }>
+            onClick={ handleClick }>
                 { SUMMARY_DESCRIPTIONS_NAME }
         </Button>
     )

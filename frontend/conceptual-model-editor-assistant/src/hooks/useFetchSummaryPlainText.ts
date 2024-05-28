@@ -12,7 +12,7 @@ const useFetchSummaryPlainText = () =>
 
     const fetchSummaryPlainText = (bodyDataJSON : string) =>
     {
-        setIsLoadingSummaryPlainText(_ => true)
+        setIsLoadingSummaryPlainText(true)
     
         fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
         .then(response =>
@@ -22,7 +22,7 @@ const useFetchSummaryPlainText = () =>
             if (stream === null)
             {
                 console.log("Stream is null")
-                setIsLoadingSummaryPlainText(_ => false)
+                setIsLoadingSummaryPlainText(false)
                 return
             }
     
@@ -36,7 +36,7 @@ const useFetchSummaryPlainText = () =>
                     if (done)
                     {
                         console.log("Stream finished")
-                        setIsLoadingSummaryPlainText(_ => false)
+                        setIsLoadingSummaryPlainText(false)
                         return
                     }
 
@@ -57,7 +57,7 @@ const useFetchSummaryPlainText = () =>
         .catch(error =>
         {
             console.error(error)
-            setIsLoadingSummaryPlainText(_ => false)
+            setIsLoadingSummaryPlainText(false)
             alert("Error: request failed")
         })
     }
