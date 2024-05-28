@@ -41,11 +41,11 @@ def create_classes_expected_output(test_cases):
 
     result = []
     for test_case in test_cases:
-        entity_name = test_case['entity']
+        class_name = test_case["class"]
         original_text = test_case[Field.ORIGINAL_TEXT.value]
         
-        entity = f"Entity: {entity_name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n"
-        result.append(entity)
+        clss = f"Class: {class_name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n"
+        result.append(clss)
 
     return result
 
@@ -54,10 +54,10 @@ def create_attributes_expected_output(test_cases):
 
     result = []
     for test_case in test_cases:
-        entity = f"Entity: {test_case['entity']}"
-        result.append(entity)
+        clss = f"Class: {test_case["class"]}"
+        result.append(clss)
 
-        expected_output = test_case['expected_output']
+        expected_output = test_case["expected_output"]
 
         for index, output in enumerate(expected_output):
             name = output[Field.NAME.value]
@@ -68,38 +68,38 @@ def create_attributes_expected_output(test_cases):
     return result
 
 
-def create_relationships_expected_output(test_cases):
+def create_associations1_expected_output(test_cases):
 
     result = []
     for test_case in test_cases:
-        entity = f"Entity: {test_case['entity']}"
-        result.append(entity)
+        clss = f"Class: {test_case["class"]}"
+        result.append(clss)
 
         expected_output = test_case['expected_output']
 
         for index, output in enumerate(expected_output):
             name = output[Field.NAME.value]
             original_text = output[Field.ORIGINAL_TEXT.value]
-            source_entity = output[Field.SOURCE_CLASS.value]
-            target_entity = output[Field.TARGET_CLASS.value]
+            source_class = output[Field.SOURCE_CLASS.value]
+            target_class = output[Field.TARGET_CLASS.value]
 
-            entry = f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n"
+            entry = f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_CLASS.value}: {source_class}\n- {FieldUI.TARGET_CLASS.value}: {target_class}\n\n"
             result.append(entry)
 
     return result
 
 
-def create_relationships2_expected_output(test_cases):
+def create_associations1_expected_output(test_cases):
 
     result = []
     for test_case in test_cases:
         name = test_case[Field.NAME.value]
         original_text = test_case[Field.ORIGINAL_TEXT.value]
-        source_entity = test_case[Field.SOURCE_CLASS.value]
-        target_entity = test_case[Field.TARGET_CLASS.value]
+        source_class = test_case[Field.SOURCE_CLASS.value]
+        target_class = test_case[Field.TARGET_CLASS.value]
 
 
-        entry = f"{name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n"
+        entry = f"{name}\n- {Field.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_CLASS.value}: {source_class}\n- {FieldUI.TARGET_CLASS.value}: {target_class}\n\n"
         result.append(entry)
 
     return result
@@ -119,10 +119,10 @@ def generate_expected_output(test_file_path, output_file_path, user_choice):
         expected_output = create_attributes_expected_output(test_cases)
     
     elif user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
-        expected_output = create_relationships_expected_output(test_cases)
+        expected_output = create_associations1_expected_output(test_cases)
     
     elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
-        expected_output = create_relationships2_expected_output(test_cases)
+        expected_output = create_associations1_expected_output(test_cases)
 
     else:
         raise ValueError(f"Unexpected user choice: \"{user_choice}\".")
@@ -150,14 +150,14 @@ def write_to_file(file, index, output):
     file.write("\n")
 
 
-def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output):
+def create_classes_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output):
 
-    expected_entities = []
+    expected_classes = []
     for test_case in test_cases:
-        expected_entities.append(test_case["entity"])
+        expected_classes.append(test_case["class"])
     
-    matched_entities = 0
-    total_expected_entities = len(test_cases)
+    matched_classes = 0
+    total_expected_classes = len(test_cases)
 
     iterator = llm_assistant.suggest_items(source_class="", target_class="", user_choice=user_choice, domain_description=domain_description)
     result = []
@@ -168,16 +168,16 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
     for index, suggested_item in enumerate(iterator):
         suggested_item = json.loads(suggested_item)
 
-        entity_name = suggested_item[Field.NAME.value]
+        class_name = suggested_item[Field.NAME.value]
 
         # Warn about examples being leaked into actual output
-        if entity_name in CLASSES_IN_EXAMPLE:
-            print(f"Warning: {entity_name}")
+        if class_name in CLASSES_IN_EXAMPLE:
+            print(f"Warning: {class_name}")
 
         if is_csv_output:
-            result.append(f"\"{entity_name}\"")
+            result.append(f"\"{class_name}\"")
         else:
-            result.append(f"Entity: {entity_name}")
+            result.append(f"Class: {class_name}")
 
         if Field.ORIGINAL_TEXT.value in suggested_item:
             original_text = suggested_item[Field.ORIGINAL_TEXT.value]
@@ -186,10 +186,10 @@ def create_entities_actual_output(llm_assistant, test_cases, user_choice, domain
             if not is_csv_output:
                 result.append("\n")
         
-        if entity_name in expected_entities:
-            matched_entities += 1
+        if class_name in expected_classes:
+            matched_classes += 1
     
-    print(f"Found {matched_entities} / {total_expected_entities} entities\n")
+    print(f"Found {matched_classes} / {total_expected_classes} classes\n")
 
     return result
 
@@ -202,14 +202,14 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
         result.append(f"Generated attribute{CSV_SEPARATOR}Source class{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}{CSV_HEADER}")
 
     for test_case in test_cases:
-        source_entity = test_case["entity"]
+        source_class = test_case["class"]
 
-        print(f"Generating attributes for: {source_entity}")
+        print(f"Generating attributes for: {source_class}")
 
         if not is_csv_output:
-            result.append(f"Entity: {source_entity}")
+            result.append(f"Class: {source_class}")
 
-        iterator = llm_assistant.suggest_items(source_class=source_entity, target_class="", user_choice=user_choice, domain_description=domain_description)
+        iterator = llm_assistant.suggest_items(source_class=source_class, target_class="", user_choice=user_choice, domain_description=domain_description)
 
         for index, suggested_item in enumerate(iterator):
             suggested_item = json.loads(suggested_item)
@@ -219,14 +219,14 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
 
             if is_csv_output:
                 original_text = original_text.replace('"', "'")
-                result.append(f"\"{name}\"{CSV_SEPARATOR}\"{source_entity}\"{CSV_SEPARATOR}\"{original_text}\"")
+                result.append(f"\"{name}\"{CSV_SEPARATOR}\"{source_class}\"{CSV_SEPARATOR}\"{original_text}\"")
             else:
                 result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n")
 
     return result
 
 
-def create_relationships_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output):
+def create_associations1_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output):
 
     result = []
 
@@ -234,14 +234,14 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
         result.append(f"Generated association{CSV_SEPARATOR}Inputed class{CSV_SEPARATOR}Source class{CSV_SEPARATOR}Target class{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}{CSV_HEADER}")
 
     for test_case in test_cases:
-        inputed_entity = test_case["entity"]
+        inputed_class = test_case["class"]
 
-        print(f"Generating associations for: {inputed_entity}")
+        print(f"Generating associations for: {inputed_class}")
 
         if not is_csv_output:
-            result.append(f"Entity: {source_entity}")
+            result.append(f"Class: {source_class}")
 
-        iterator = llm_assistant.suggest_items(source_class=inputed_entity, target_class="", user_choice=user_choice, domain_description=domain_description)
+        iterator = llm_assistant.suggest_items(source_class=inputed_class, target_class="", user_choice=user_choice, domain_description=domain_description)
 
         for index, suggested_item in enumerate(iterator):
             suggested_item = json.loads(suggested_item)
@@ -253,27 +253,27 @@ def create_relationships_actual_output(llm_assistant, test_cases, user_choice, d
             else:
                 original_text = ""
 
-            source_entity = suggested_item[Field.SOURCE_CLASS.value].lower()
-            target_entity = suggested_item[Field.TARGET_CLASS.value].lower()
+            source_class = suggested_item[Field.SOURCE_CLASS.value].lower()
+            target_class = suggested_item[Field.TARGET_CLASS.value].lower()
 
             if is_csv_output:
                 original_text = original_text.replace('"', "'")
-                result.append(f"\"{name}\"{CSV_SEPARATOR}\"{inputed_entity}\"{CSV_SEPARATOR}\"{source_entity}\"{CSV_SEPARATOR}\"{target_entity}\"{CSV_SEPARATOR}\"{original_text}\"")
+                result.append(f"\"{name}\"{CSV_SEPARATOR}\"{inputed_class}\"{CSV_SEPARATOR}\"{source_class}\"{CSV_SEPARATOR}\"{target_class}\"{CSV_SEPARATOR}\"{original_text}\"")
             else:
-                result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_ENTITY.value}: {source_entity}\n- {FieldUI.TARGET_ENTITY.value}: {target_entity}\n\n")
+                result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_CLASS.value}: {source_class}\n- {FieldUI.TARGET_CLASS.value}: {target_class}\n\n")
 
     return result
 
 
-def create_relationships2_actual_output(llm_assistant, test_cases, user_choice, domain_description):
+def create_associations2_actual_output(llm_assistant, test_cases, user_choice, domain_description):
 
     result = []
     for test_case in test_cases:
-        source_entity = test_case[Field.SOURCE_CLASS.value]
-        target_entity = test_case[Field.TARGET_CLASS.value]
+        source_class = test_case[Field.SOURCE_CLASS.value]
+        target_class = test_case[Field.TARGET_CLASS.value]
 
-        result.append(f"Source entity: {source_entity}, Target entity: {target_entity}")
-        iterator = llm_assistant.suggest_items(source_class=source_entity, target_class=target_entity, user_choice=user_choice, domain_description=domain_description)
+        result.append(f"Source class: {source_class}, Target class: {target_class}")
+        iterator = llm_assistant.suggest_items(source_class=source_class, target_class=target_class, user_choice=user_choice, domain_description=domain_description)
 
         for index, suggested_item in enumerate(iterator):
             suggested_item = json.loads(suggested_item)
@@ -294,16 +294,16 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
     test_cases = test_data[user_choice]
 
     if user_choice == UserChoice.CLASSES.value:
-        results = create_entities_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
+        results = create_classes_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
 
     elif user_choice == UserChoice.ATTRIBUTES.value:
         results = create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
     
     elif user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
-        results = create_relationships_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
+        results = create_associations1_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
     
     elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
-        results = create_relationships2_actual_output(llm_assistant, test_cases, user_choice, domain_description)
+        results = create_associations2_actual_output(llm_assistant, test_cases, user_choice, domain_description)
 
     else:
         raise ValueError(f"Unexpected user choice: \"{user_choice}\".")

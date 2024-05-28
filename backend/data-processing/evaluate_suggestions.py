@@ -124,10 +124,10 @@ def construct_expected_attributes(test_data_path):
 
     for test_case in test_cases:
         expected_output = test_case["expected_output"]
-        source_entity = test_case["class"]
+        source_class = test_case["class"]
 
         for output in expected_output:
-            attribute_identificator = f"{output['name']};{source_entity}".replace(' ', '-').lower()
+            attribute_identificator = f"{output['name']};{source_class}".replace(' ', '-').lower()
             expected_attributes.append(attribute_identificator)
     
     checked_attributes_strict = [False] * len(expected_attributes)
@@ -150,10 +150,10 @@ def construct_expected_associations(test_data_path):
 
     for test_case in test_cases:
         expected_output = test_case["expected_output"]
-        inputed_entity = test_case["class"]
+        inputed_class = test_case["class"]
 
         for output in expected_output:
-            expected_associations.append(f"{output['name']};{inputed_entity}".replace(' ', '-').lower())
+            expected_associations.append(f"{output['name']};{inputed_class}".replace(' ', '-').lower())
     
     checked_associations_strict = [False] * len(expected_associations)
     checked_associations_construct = [False] * len(expected_associations)
@@ -426,7 +426,7 @@ def evaluate_associations(evaluated_path, text_index):
             if index == 0 or len(row) == 0:
                 continue
 
-            inputed_entity = row[1]
+            inputed_class = row[1]
             matched_class = row[5]
             matched_attribute = row[6]
             matched_association = row[7]
@@ -440,13 +440,13 @@ def evaluate_associations(evaluated_path, text_index):
             compute_precision(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, text_index, matched_class, matched_attribute, matched_association)
 
             # Check if suggested association matches some expected class
-            check_suggestion(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, UserChoice.CLASSES.value, matched_class, evaluated_path, source_class=inputed_entity)
+            check_suggestion(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, UserChoice.CLASSES.value, matched_class, evaluated_path, source_class=inputed_class)
             
             # Check if suggested association matches some expected attribute
-            check_suggestion(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, UserChoice.ATTRIBUTES.value, matched_attribute, evaluated_path, source_class=inputed_entity)
+            check_suggestion(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, UserChoice.ATTRIBUTES.value, matched_attribute, evaluated_path, source_class=inputed_class)
 
             # Check if suggested association matches some expected association
-            check_suggestion(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, matched_association, evaluated_path, source_class=inputed_entity)
+            check_suggestion(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, matched_association, evaluated_path, source_class=inputed_class)
 
 
 def check_file(path, user_choice):
