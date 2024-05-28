@@ -9,7 +9,7 @@ import { useState } from "react";
 import { HEADER, SAVE_SUGESTED_ITEM_URL, SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE } from "../../definitions/urls";
 import { createErrorMessage, onAddItem } from "../../utils/conceptualModel";
 import { getSnapshotDomainDescription, getSnapshotTextFilteringVariation } from "../../utils/snapshot";
-import { SuggestedItemUserEvaluationBody } from "../../definitions/bodies";
+import { SuggestedItemUserEvaluationBody } from "../../definitions/fetch";
 import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel";
 import { isShowEditDialogState } from "../../atoms/dialogs";
 import { sidebarErrorMsgState } from "../../atoms/sidebar";

@@ -1,4 +1,4 @@
-import { SummaryUserEvaluationBody } from "../definitions/bodies"
+import { SummaryUserEvaluationBody } from "../definitions/fetch"
 import { UserChoiceSummary } from "../definitions/utility"
 import { DomainDescriptionSnapshot, ConceptualModelSnapshot } from "../definitions/snapshots"
 import { getSnapshotDomainDescription, getSnapshotConceptualModel } from "./snapshot"

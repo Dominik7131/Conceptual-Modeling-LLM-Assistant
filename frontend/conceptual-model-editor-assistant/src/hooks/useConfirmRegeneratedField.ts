@@ -3,7 +3,7 @@ import { HEADER, SAVE_SUGESTED_SINGLE_FIELD_URL } from "../definitions/urls";
 import { itemTypeToUserChoice } from "../utils/utility";
 import { getSnapshotDomainDescription, getSnapshotTextFilteringVariation } from "../utils/snapshot";
 import { onClearRegeneratedItem } from "../utils/editItem";
-import { SingleFieldUserEvaluationBody } from "../definitions/bodies";
+import { SingleFieldUserEvaluationBody } from "../definitions/fetch";
 import { regeneratedOriginalTextIndexesState } from "../atoms/originalTextIndexes";
 import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots";
 import { editedSuggestedItemState, regeneratedItemState } from "../atoms/suggestions";

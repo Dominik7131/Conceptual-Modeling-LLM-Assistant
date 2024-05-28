@@ -4,7 +4,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
 import { convertConceptualModelToObjectSummary } from "../../utils/serialization";
 import useFetchSummaryPlainText from "../../hooks/useFetchSummaryPlainText";
-import { SummarySuggestionBody } from "../../definitions/bodies";
+import { SummarySuggestionBody } from "../../definitions/fetch";
 import { selectedNodesState, selectedEdgesState } from "../../atoms/conceptualModel";
 import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms/domainDescription";
 import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";

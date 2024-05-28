@@ -8,7 +8,7 @@ import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState } f
 import { domainDescriptionState } from "../../atoms/domainDescription";
 import { NodeData, EdgeData } from "../../definitions/conceptualModel";
 import { Field, NOTHING_SELECTED_MSG } from "../../definitions/utility";
-import { OriginalTextIndexesItemBody } from "../../definitions/bodies";
+import { OriginalTextIndexesItemBody } from "../../definitions/fetch";
 import { OriginalTextIndexesItem } from "../../definitions/originalTextIndexes";
 
 

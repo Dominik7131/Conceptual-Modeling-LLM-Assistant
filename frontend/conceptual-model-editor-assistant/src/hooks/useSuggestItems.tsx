@@ -2,7 +2,7 @@ import useFetchSuggestedItems from "./useFetchSuggestedItems";
 import { ItemType, UserChoiceItem } from "../definitions/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot";
-import { ItemSuggestionBody } from "../definitions/bodies";
+import { ItemSuggestionBody } from "../definitions/fetch";
 import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms/domainDescription";
 import { sidebarTitlesState, sidebarTabValueState } from "../atoms/sidebar";
 import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots";
