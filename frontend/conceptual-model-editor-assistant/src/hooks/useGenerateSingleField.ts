@@ -1,5 +1,5 @@
 import { useRecoilValue, useSetRecoilState } from "recoil"
-import { Field, ItemType, UserChoice } from "../definitions/utility"
+import { Field, ItemType, UserChoiceSingleField, UserChoiceItem } from "../definitions/utility"
 import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot"
 import { HEADER, SUGGEST_SINGLE_FIELD_URL } from "../definitions/urls"
 import { SingleFieldSuggestionBody } from "../definitions/bodies"
@@ -9,6 +9,7 @@ import { regeneratedOriginalTextIndexesState } from "../atoms/originalTextIndexe
 import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots"
 import { regeneratedItemState, fieldToLoadState } from "../atoms/suggestions"
 import { textFilteringVariationState } from "../atoms/textFiltering"
+import { itemTypeToUserChoice } from "../utils/utility"
 
 
 const useGenerateSingleField = () =>
@@ -30,21 +31,12 @@ const useGenerateSingleField = () =>
     const onGenerateField = (itemType: ItemType, name: string, sourceClass: string, targetClass: string, field: Field) =>
     {
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
-        snapshotDomainDescription(UserChoice.SINGLE_FIELD, currentDomainDescription, setSnapshotDomainDescription)
-        snapshotTextFilteringVariation(UserChoice.SINGLE_FIELD, textFilteringVariation, setSnapshotTextFilteringVariation)
+        snapshotDomainDescription(UserChoiceSingleField.SINGLE_FIELD, currentDomainDescription, setSnapshotDomainDescription)
+        snapshotTextFilteringVariation(UserChoiceSingleField.SINGLE_FIELD, textFilteringVariation, setSnapshotTextFilteringVariation)
     
-        let userChoice = UserChoice.CLASSES
+        const userChoice = itemTypeToUserChoice(itemType)
     
-        if (itemType === ItemType.ATTRIBUTE)
-        {
-            userChoice = UserChoice.ATTRIBUTES 
-        }
-        else if (itemType === ItemType.ASSOCIATION)
-        {
-            userChoice = UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS
-        }
-    
-        if (userChoice === UserChoice.CLASSES)
+        if (userChoice === UserChoiceItem.CLASSES)
         {
             sourceClass = name
         }

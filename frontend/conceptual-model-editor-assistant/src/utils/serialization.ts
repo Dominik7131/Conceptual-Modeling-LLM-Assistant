@@ -1,7 +1,8 @@
 import { Node, Edge } from "reactflow"
-import { NodeData, Class, Attribute, EdgeData, Association, ConceptualModelObject } from "../definitions/conceptualModel"
+import { NodeData, Class, Attribute, EdgeData, Association } from "../definitions/conceptualModel"
 import { ConceptualModelJson, ClassJson, AttributeJson, RelationshipJson, GeneralizationJson, JSON_SCHEMA } from "../definitions/conceptualModelJSON"
 import { Field, ItemType } from "../definitions/utility"
+import { SummaryAttribute, SummaryClass, SummaryConceptualModel } from "../definitions/summary"
 
 
 export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[]): ConceptualModelJson =>
@@ -97,30 +98,33 @@ const convertEdgesToJSON = (edges: Edge[]) =>
 }
 
 
-export const convertConceptualModelToObjectSummary = (nodes: Node[], edges: Edge[], isOnlyNames : boolean): ConceptualModelObject =>
+export const convertConceptualModelToObjectSummary = (nodes: Node[], edges: Edge[]): SummaryConceptualModel =>
 {
-    let result: ConceptualModelObject = {
+    let result: SummaryConceptualModel = {
         classes: [],
         associations: []
     }
 
     for (let node of nodes)
     {
-        let attributes = []
+        let attributes: SummaryAttribute[] = []
         for (let attribute of node.data.attributes)
         {
-            if (isOnlyNames)
-            {
-                attributes.push({ [Field.NAME]: attribute[Field.NAME] })
+            const summaryAttribute: SummaryAttribute = {
+                [Field.NAME]: attribute[Field.NAME], [Field.DESCRIPTION]: attribute[Field.DESCRIPTION],
+                [Field.ORIGINAL_TEXT]: attribute[Field.ORIGINAL_TEXT]
             }
-            else
-            {
-                attributes.push({ [Field.NAME]: attribute[Field.NAME], [Field.ORIGINAL_TEXT]: attribute[Field.ORIGINAL_TEXT] })
-            }
+            attributes.push(summaryAttribute)
         }
 
         const nodeData: NodeData = node.data
-        result.classes.push({ [Field.NAME]: nodeData.class[Field.NAME], attributes: attributes })
+        const originalClass: Class = nodeData.class
+
+        const summaryClass: SummaryClass = {
+            [Field.NAME]: originalClass[Field.NAME], [Field.DESCRIPTION]: originalClass[Field.DESCRIPTION],
+            [Field.ORIGINAL_TEXT]: originalClass[Field.ORIGINAL_TEXT], attributes: attributes
+        }
+        result.classes.push(summaryClass)
     }
 
 

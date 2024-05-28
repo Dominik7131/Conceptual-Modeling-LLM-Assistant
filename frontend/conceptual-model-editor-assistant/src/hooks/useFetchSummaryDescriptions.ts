@@ -1,5 +1,5 @@
 import { useSetRecoilState } from "recoil"
-import { UserChoice, ItemType } from "../definitions/utility"
+import { UserChoiceItem, ItemType } from "../definitions/utility"
 import { SUGGEST_SUMMARY_URL, HEADER } from "../definitions/urls"
 import { isLoadingSummaryDescriptionsState } from "../atoms/loadings"
 import { summaryDescriptionsState } from "../atoms/summary"
@@ -75,9 +75,9 @@ const useFetchSummaryDescriptions = () =>
         {
             const parsedData = JSON.parse(jsonStringParts[i])
 
-            if (!parsedData[UserChoice.ATTRIBUTES])
+            if (!parsedData[UserChoiceItem.ATTRIBUTES])
             {
-                parsedData[UserChoice.ATTRIBUTES] = []
+                parsedData[UserChoiceItem.ATTRIBUTES] = []
             }
             
             console.log("Parsed data:", parsedData)

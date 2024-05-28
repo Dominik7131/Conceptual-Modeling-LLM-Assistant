@@ -2,7 +2,7 @@ import { useSetRecoilState } from "recoil"
 import { HEADER, MERGE_ORIGINAL_TEXT_URL } from "../definitions/urls"
 import { originalTextIndexesListState, tooltipsState } from "../atoms/originalTextIndexes"
 import { isLoadingHighlightOriginalTextState } from "../atoms/loadings"
-import { OriginalTextIndexesProcessedItem } from "../definitions/originalTextIndexes"
+import { OriginalTextIndexesResponse } from "../definitions/originalTextIndexes"
 
 
 const useFetchMergedOriginalTexts = () =>
@@ -34,14 +34,14 @@ const useFetchMergedOriginalTexts = () =>
     }
 
 
-    const onProcessMergedOriginalTexts = (data: OriginalTextIndexesProcessedItem[]): void =>
+    const onProcessMergedOriginalTexts = (data: OriginalTextIndexesResponse[]): void =>
     {
         let tooltips : string[] = []
         let originalTextIndexes : number[] = []
 
         for (let index = 0; index < data.length; index++)
         {
-            const element: OriginalTextIndexesProcessedItem = data[index]
+            const element: OriginalTextIndexesResponse = data[index]
             originalTextIndexes.push(element[0])
             originalTextIndexes.push(element[1])
             tooltips.push(element[2])

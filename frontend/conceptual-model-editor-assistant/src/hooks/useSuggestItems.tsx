@@ -1,5 +1,5 @@
 import useFetchSuggestedItems from "./useFetchSuggestedItems";
-import { ItemType, UserChoice } from "../definitions/utility";
+import { ItemType, UserChoiceItem } from "../definitions/utility";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot";
 import { ItemSuggestionBody } from "../definitions/bodies";
@@ -32,7 +32,7 @@ const useSuggestItems = () =>
   const { fetchSuggestedItems } = useFetchSuggestedItems()
 
 
-  const onSuggestItems = (userChoice: UserChoice, sourceItemName: string | null, targetItemName: string | null): void =>
+  const onSuggestItems = (userChoice: UserChoiceItem, sourceItemName: string | null, targetItemName: string | null): void =>
   {
     const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
 
@@ -48,6 +48,7 @@ const useSuggestItems = () =>
     // Snapshot current configuration to know from what parameters the suggestions were generated
     snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
     snapshotTextFilteringVariation(userChoice, textFilteringVariation, setTextFilteringVariationSnapshot)
+
 
     const bodyData: ItemSuggestionBody = {
       sourceClass: sourceItemName, targetClass: targetItemName, userChoice: userChoice, domainDescription: currentDomainDescription,

@@ -9,7 +9,7 @@ import { editedSuggestedItemState, isSuggestedItemState, selectedSuggestedItemSt
 import { isItemInConceptualModelState } from "../../../atoms/conceptualModel";
 import { isShowEditDialogState } from "../../../atoms/dialogs";
 import { Class, Item, Attribute } from "../../../definitions/conceptualModel";
-import { Field, UserChoice } from "../../../definitions/utility";
+import { Field, UserChoiceItem } from "../../../definitions/utility";
 
 
 interface Props
@@ -85,14 +85,14 @@ const DropdownMenu: React.FC<Props> = ({ clss, anchor, setAnchor }): JSX.Element
 
     const handleSuggestAttributes = (): void =>
     {
-        onSuggestItems(UserChoice.ATTRIBUTES, clss[Field.NAME], null)
+        onSuggestItems(UserChoiceItem.ATTRIBUTES, clss[Field.NAME], null)
         handleClose()
     }
 
 
     const handleSuggestAssociations = (): void =>
     {
-        onSuggestItems(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS, clss[Field.NAME], null)
+        onSuggestItems(UserChoiceItem.ASSOCIATIONS_ONE_KNOWN_CLASS, clss[Field.NAME], null)
         handleClose()
     }
 

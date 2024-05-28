@@ -1,11 +1,12 @@
 import { Typography, CircularProgress } from "@mui/material"
 import { useRecoilValue } from "recoil"
 import { capitalizeString } from "../../utils/utility"
-import { Field, UserChoice } from "../../definitions/utility"
+import { Field, UserChoiceSummary } from "../../definitions/utility"
 import SummaryReactionButtons from "./SummaryReactionButtons"
 import { isLoadingSummaryDescriptionsState } from "../../atoms/loadings"
 import { summaryDescriptionsState } from "../../atoms/summary"
 import { Attribute } from "../../definitions/conceptualModel"
+import { SummaryAttribute, SummaryClass } from "../../definitions/summary"
 
 
 
@@ -25,7 +26,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
             
             <ul>
             {
-                summaryDescriptions.classes.map((clss: any) =>
+                summaryDescriptions.classes.map((clss: SummaryClass) =>
                     <Typography component="span">
                         <li>
                             <strong>{ capitalizeString(clss[Field.NAME]) }</strong>: { clss[Field.DESCRIPTION] }
@@ -35,7 +36,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
                                 <p></p>
                                 <li><strong>Attributes</strong></li>
                                 <ul>
-                                    { clss.attributes.map((attribute : Attribute) =>
+                                    { clss.attributes.map((attribute : SummaryAttribute) =>
                                         <li>
                                             <strong>{attribute[Field.NAME]}</strong>: { attribute[Field.DESCRIPTION] }
                                         </li>
@@ -70,7 +71,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
 
             {
                 isShowReactionButtons &&
-                <SummaryReactionButtons userChoice={UserChoice.SUMMARY_DESCRIPTIONS} summary={summaryDescriptions} />
+                <SummaryReactionButtons userChoice={UserChoiceSummary.SUMMARY_DESCRIPTIONS} summary={summaryDescriptions} />
             }
         </>
     )

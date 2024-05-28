@@ -1,6 +1,6 @@
 import { atom } from "recoil"
-import { SummaryDescriptionsObject } from "../definitions/summary"
-import { UserChoice } from "../definitions/utility"
+import { SummaryConceptualModel } from "../definitions/summary"
+import { UserChoiceSummary } from "../definitions/utility"
 
 
 export const summaryTextState = atom({
@@ -9,7 +9,7 @@ export const summaryTextState = atom({
 })
 
 
-export const summaryDescriptionsState = atom<SummaryDescriptionsObject>({
+export const summaryDescriptionsState = atom<SummaryConceptualModel>({
     key: "summaryDescriptionsState",
     default: { classes: [], associations: [] },
 })
@@ -17,5 +17,5 @@ export const summaryDescriptionsState = atom<SummaryDescriptionsObject>({
 
 export const isSummaryReactionButtonClickedState = atom({
     key: "isSummaryReactionButtonClickedState",
-    default: { [UserChoice.SUMMARY_PLAIN_TEXT]: false, [UserChoice.SUMMARY_DESCRIPTIONS]: false},
+    default: { [UserChoiceSummary.SUMMARY_PLAIN_TEXT]: false, [UserChoiceSummary.SUMMARY_DESCRIPTIONS]: false},
 })

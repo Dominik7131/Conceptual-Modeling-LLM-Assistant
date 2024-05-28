@@ -14,16 +14,27 @@ export const TOOLTIP_ENTER_DELAY_MS = 500
 export const TOOLTIP_LEAVE_DELAY_MS = 200
 
 
-export const enum UserChoice
+export const enum UserChoiceItem
 {
   CLASSES = "classes",
   ATTRIBUTES = "attributes",
   ASSOCIATIONS_ONE_KNOWN_CLASS = "associations1",
   ASSOCIATIONS_TWO_KNOWN_CLASSES = "associations2",
+}
+
+export const enum UserChoiceSummary
+{
   SUMMARY_PLAIN_TEXT = "summaryPlainText",
   SUMMARY_DESCRIPTIONS = "summaryDescriptions",
+}
+
+export const enum UserChoiceSingleField
+{
   SINGLE_FIELD = "singleField"
 }
+
+export type UserChoice = UserChoiceItem | UserChoiceSummary | UserChoiceSingleField
+
 
 export const enum ItemType
 {

@@ -75,11 +75,6 @@ export interface Association extends BaseItem
   targetCardinality: string
 }
 
-export interface ConceptualModelObject
-{
-  classes: any[] // TODO: Provide correct type
-  associations: Association[]
-}
 
 export interface ItemsMessage
 {

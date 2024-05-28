@@ -1,6 +1,6 @@
 import { Typography, CircularProgress } from "@mui/material"
 import { useRecoilValue } from "recoil"
-import { UserChoice } from "../../definitions/utility";
+import { UserChoiceSummary } from "../../definitions/utility";
 import SummaryReactionButtons from "./SummaryReactionButtons";
 import { isLoadingSummaryPlainTextState } from "../../atoms/loadings";
 import { summaryTextState } from "../../atoms/summary";
@@ -23,7 +23,7 @@ const SummaryPlainTextTab: React.FC = (): JSX.Element =>
 
             {
                 isShowReactionButtons &&
-                <SummaryReactionButtons userChoice={UserChoice.SUMMARY_PLAIN_TEXT} summary={summary} />
+                <SummaryReactionButtons userChoice={UserChoiceSummary.SUMMARY_PLAIN_TEXT} summary={summary} />
             }
         </>
     )

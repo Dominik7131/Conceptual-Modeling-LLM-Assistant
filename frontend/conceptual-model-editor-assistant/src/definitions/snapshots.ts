@@ -1,32 +1,32 @@
+import { SummaryConceptualModel } from "./summary"
 import { TextFilteringVariation } from "./textFilteringVariation"
-import { UserChoice } from "./utility"
+import { UserChoiceItem, UserChoiceSingleField, UserChoiceSummary } from "./utility"
 
 
 export interface DomainDescriptionSnapshot
 {
-  [UserChoice.CLASSES]: string
-  [UserChoice.ATTRIBUTES]: string
-  [UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS]: string
-  [UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES]: string
-  [UserChoice.SINGLE_FIELD]: string
-  [UserChoice.SUMMARY_PLAIN_TEXT]: string
-  [UserChoice.SUMMARY_DESCRIPTIONS]: string
+  [UserChoiceItem.CLASSES]: string
+  [UserChoiceItem.ATTRIBUTES]: string
+  [UserChoiceItem.ASSOCIATIONS_ONE_KNOWN_CLASS]: string
+  [UserChoiceItem.ASSOCIATIONS_TWO_KNOWN_CLASSES]: string
+  [UserChoiceSingleField.SINGLE_FIELD]: string
+  [UserChoiceSummary.SUMMARY_PLAIN_TEXT]: string
+  [UserChoiceSummary.SUMMARY_DESCRIPTIONS]: string
 }
 
 export interface TextFilteringVariationSnapshot
 {
-  [UserChoice.CLASSES]: TextFilteringVariation
-  [UserChoice.ATTRIBUTES]: TextFilteringVariation
-  [UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS]: TextFilteringVariation
-  [UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES]: TextFilteringVariation
-  [UserChoice.SINGLE_FIELD]: TextFilteringVariation
-  [UserChoice.SUMMARY_PLAIN_TEXT]: TextFilteringVariation
-  [UserChoice.SUMMARY_DESCRIPTIONS]: TextFilteringVariation
+  [UserChoiceItem.CLASSES]: TextFilteringVariation
+  [UserChoiceItem.ATTRIBUTES]: TextFilteringVariation
+  [UserChoiceItem.ASSOCIATIONS_ONE_KNOWN_CLASS]: TextFilteringVariation
+  [UserChoiceItem.ASSOCIATIONS_TWO_KNOWN_CLASSES]: TextFilteringVariation
+  [UserChoiceSingleField.SINGLE_FIELD]: TextFilteringVariation
+  [UserChoiceSummary.SUMMARY_PLAIN_TEXT]: TextFilteringVariation
+  [UserChoiceSummary.SUMMARY_DESCRIPTIONS]: TextFilteringVariation
 }
 
 export interface ConceptualModelSnapshot
 {
-  // TODO: Fill in the correct type
-  [UserChoice.SUMMARY_PLAIN_TEXT]: any
-  [UserChoice.SUMMARY_DESCRIPTIONS]: any
+  [UserChoiceSummary.SUMMARY_PLAIN_TEXT]: SummaryConceptualModel
+  [UserChoiceSummary.SUMMARY_DESCRIPTIONS]: SummaryConceptualModel
 }

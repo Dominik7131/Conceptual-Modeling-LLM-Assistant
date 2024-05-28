@@ -1,7 +1,7 @@
 import { Node, Edge, internalsSymbol } from "reactflow";
 import { SetterOrUpdater } from "recoil";
 import { Class, Attribute, EdgeData, Item, Association, NodeData, ItemsMessage, BLANK_CLASS, CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, CUSTOM_NODE_TYPE, CUSTOM_EDGE_TYPE } from "../definitions/conceptualModel";
-import { Field, ItemType, UserChoice } from "../definitions/utility";
+import { Field, ItemType, UserChoiceItem } from "../definitions/utility";
 
 
 export const getNodeByID = (nodes: Node[], nodeID: string): Node | null =>
@@ -586,24 +586,24 @@ export const createErrorMessage = (item: Item, setErrorMessage: SetterOrUpdater<
 }
     
     
-export const changeTitle = (userChoice: UserChoice, sourceItemName: string, targetItemName: string, setTitle: SetterOrUpdater<ItemsMessage>): void =>
+export const changeTitle = (userChoice: UserChoiceItem, sourceItemName: string, targetItemName: string, setTitle: SetterOrUpdater<ItemsMessage>): void =>
 {
-    if (userChoice === UserChoice.CLASSES)
+    if (userChoice === UserChoiceItem.CLASSES)
     {
         const message = "All suggested classes: "
         setTitle((title: ItemsMessage) => { return { ...title, classes: message} })
     }
-    else if (userChoice === UserChoice.ATTRIBUTES)
+    else if (userChoice === UserChoiceItem.ATTRIBUTES)
     {
         const message = `Selected class: ${sourceItemName}`
         setTitle((title: ItemsMessage) => { return { ...title, attributes: message} })
     }
-    else if (userChoice === UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS)
+    else if (userChoice === UserChoiceItem.ASSOCIATIONS_ONE_KNOWN_CLASS)
     {
         const message = `Selected class: ${sourceItemName}`
         setTitle((title: ItemsMessage) => { return { ...title, associations: message} })
     }
-    else if (userChoice === UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES)
+    else if (userChoice === UserChoiceItem.ASSOCIATIONS_TWO_KNOWN_CLASSES)
     {
         const message = `Source class: ${sourceItemName}\nTarget class: ${targetItemName}`
         setTitle((title: ItemsMessage) => { return { ...title, associations: message} })

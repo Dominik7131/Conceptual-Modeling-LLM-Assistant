@@ -4,7 +4,7 @@ import AddIcon from "@mui/icons-material/Add";
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import useSuggestItems from "../../hooks/useSuggestItems";
 import HighlightSelectedItemsButton from "./HighlightSelectedItemsButton";
-import { UserChoice } from "../../definitions/utility";
+import { UserChoiceItem } from "../../definitions/utility";
 import { useSetRecoilState } from "recoil";
 import SummaryPlainTextButton from "./SummaryPlainTextButton";
 import SummaryDescriptionsButton from "./SummaryDescriptionsButton";
@@ -48,7 +48,7 @@ const ControlButtons: React.FC = (): JSX.Element =>
                         sx={{textTransform: "none"}}
                         disableElevation
                         startIcon={<AutoFixNormalIcon/>}
-                        onClick={() => onSuggestItems(UserChoice.CLASSES, null, null)}>
+                        onClick={() => onSuggestItems(UserChoiceItem.CLASSES, null, null)}>
                             Suggest classes
                     </Button>
 

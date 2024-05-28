@@ -5,7 +5,7 @@ import ControlButtons from "./ControlButtons"
 import { useRecoilValue } from "recoil"
 import { itemTypesToLoadState } from "../../atoms/suggestions"
 import { sidebarErrorMsgState } from "../../atoms/sidebar"
-import { Item } from "../../definitions/conceptualModel"
+import { Item, Association } from "../../definitions/conceptualModel"
 
 
 interface Props
@@ -45,7 +45,7 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
             { title &&
                 <Stack>
                     <Typography
-                        sx={{ display: "flex", justifyContent: "center"}}
+                        sx={{ display: "flex", justifyContent: "center" }}
                         variant="body1"
                         gutterBottom>
                             <strong> { title } </strong>
@@ -67,8 +67,8 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
 
             {
                 items.map(item =>
-                    <ListItem key={ createUniqueKey(item[Field.NAME], (item as any)[Field.SOURCE_CLASS], (item as any)[Field.TARGET_CLASS]) }>
-                        <Stack>
+                    <ListItem key={ createUniqueKey(item[Field.NAME], (item as Association)[Field.SOURCE_CLASS], (item as Association)[Field.TARGET_CLASS]) }>
+                        <Stack width="100%" height="100%">
                             <ItemDisplay item={item}/>
                             <ControlButtons item={item}/>
                         </Stack>

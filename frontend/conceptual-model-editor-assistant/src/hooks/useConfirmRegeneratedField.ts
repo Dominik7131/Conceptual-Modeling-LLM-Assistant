@@ -8,7 +8,7 @@ import { regeneratedOriginalTextIndexesState } from "../atoms/originalTextIndexe
 import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots";
 import { editedSuggestedItemState, regeneratedItemState } from "../atoms/suggestions";
 import { Item, Attribute } from "../definitions/conceptualModel";
-import { ItemType, UserChoice, Field } from "../definitions/utility";
+import { ItemType, UserChoiceSingleField, Field } from "../definitions/utility";
 
 
 const useConfirmRegeneratedField = () =>
@@ -25,8 +25,8 @@ const useConfirmRegeneratedField = () =>
     {
         // Save generated single field to the backend
     
-        const currentDomainDescription = getSnapshotDomainDescription(UserChoice.SINGLE_FIELD, domainDescriptionSnapshot)
-        const currentFilteringVariation = getSnapshotTextFilteringVariation(UserChoice.SINGLE_FIELD, textFilteringVariationSnapshot)
+        const currentDomainDescription = getSnapshotDomainDescription(UserChoiceSingleField.SINGLE_FIELD, domainDescriptionSnapshot)
+        const currentFilteringVariation = getSnapshotTextFilteringVariation(UserChoiceSingleField.SINGLE_FIELD, textFilteringVariationSnapshot)
         const userChoice = itemTypeToUserChoice(itemType)
 
         const bodyData: SingleFieldUserEvaluationBody = {

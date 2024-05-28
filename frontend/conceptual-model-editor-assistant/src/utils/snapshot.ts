@@ -1,23 +1,25 @@
+import { SetterOrUpdater } from "recoil"
 import { ConceptualModelSnapshot, DomainDescriptionSnapshot, TextFilteringVariationSnapshot } from "../definitions/snapshots"
+import { SummaryConceptualModel } from "../definitions/summary"
 import { TextFilteringVariation } from "../definitions/textFilteringVariation"
-import { UserChoice } from "../definitions/utility"
+import { UserChoice, UserChoiceSummary } from "../definitions/utility"
 
 
-export const snapshotDomainDescription = (userChoice: UserChoice, domainDescription: string, setSnapshotDomainDescription: any) =>
+export const snapshotDomainDescription = (userChoice: UserChoice, domainDescription: string, setSnapshotDomainDescription: SetterOrUpdater<DomainDescriptionSnapshot>) =>
 {
-    setSnapshotDomainDescription((previousDomain: DomainDescriptionSnapshot) => ({...previousDomain, [userChoice]: domainDescription}))
+    setSnapshotDomainDescription((previousDomain: DomainDescriptionSnapshot) => ({ ...previousDomain, [userChoice]: domainDescription }))
 }
 
 
-export const snapshotConceptualModel = (userChoice: UserChoice, conceptualModel: any, setSnapshotConceptualModel: any) =>
+export const snapshotConceptualModel = (userChoice: UserChoice, conceptualModel: SummaryConceptualModel, setSnapshotConceptualModel: SetterOrUpdater<ConceptualModelSnapshot>) =>
 {
-    setSnapshotConceptualModel((previousModel: ConceptualModelSnapshot) => ({...previousModel, [userChoice]: conceptualModel}))
+    setSnapshotConceptualModel((previousModel: ConceptualModelSnapshot) => ({ ...previousModel, [userChoice]: conceptualModel }))
 }
 
 
-export const snapshotTextFilteringVariation = (userChoice: UserChoice, textFilteringVariation: TextFilteringVariation, setTextFilteringVariation: any) =>
+export const snapshotTextFilteringVariation = (userChoice: UserChoice, textFilteringVariation: TextFilteringVariation, setTextFilteringVariation: SetterOrUpdater<TextFilteringVariationSnapshot>) =>
 {
-    setTextFilteringVariation((previousFilteringVariation: ConceptualModelSnapshot) => ({...previousFilteringVariation, [userChoice]: textFilteringVariation}))
+    setTextFilteringVariation((previousFilteringVariation: TextFilteringVariationSnapshot) => ({ ...previousFilteringVariation, [userChoice]: textFilteringVariation }))
 }
 
 
@@ -27,9 +29,9 @@ export const getSnapshotDomainDescription = (userChoice: UserChoice, snapshot: D
 }
 
 
-export const getSnapshotConceptualModel = (userChoice: UserChoice, snapshot: ConceptualModelSnapshot) =>
+export const getSnapshotConceptualModel = (userChoice: UserChoiceSummary, snapshot: ConceptualModelSnapshot) =>
 {
-    if (userChoice === UserChoice.SUMMARY_PLAIN_TEXT || userChoice === UserChoice.SUMMARY_DESCRIPTIONS)
+    if (userChoice === UserChoiceSummary.SUMMARY_PLAIN_TEXT || userChoice === UserChoiceSummary.SUMMARY_DESCRIPTIONS)
     {
         return snapshot[userChoice]
     }

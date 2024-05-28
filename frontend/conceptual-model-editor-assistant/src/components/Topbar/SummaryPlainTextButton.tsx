@@ -10,10 +10,10 @@ import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../at
 import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";
 import { summaryTextState } from "../../atoms/summary";
 import { topbarTabValueState } from "../../atoms/topbar";
-import { ConceptualModelObject } from "../../definitions/conceptualModel";
 import { TopbarTab } from "../../definitions/tabs";
-import { NOTHING_SELECTED_MSG, UserChoice } from "../../definitions/utility";
+import { NOTHING_SELECTED_MSG, UserChoiceSummary } from "../../definitions/utility";
 import { SUMMARY_PLAIN_TEXT_NAME } from "../../utils/summary";
+import { SummaryConceptualModel } from "../../definitions/summary";
 
 
 const SummaryPlainTextButton: React.FC= (): JSX.Element =>
@@ -42,19 +42,19 @@ const SummaryPlainTextButton: React.FC= (): JSX.Element =>
             return
         }
 
-        const userChoice = UserChoice.SUMMARY_PLAIN_TEXT
+        const userChoice = UserChoiceSummary.SUMMARY_PLAIN_TEXT
         setSummaryText("")
         
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
 
-        const conceptualModel: ConceptualModelObject = convertConceptualModelToObjectSummary(selectedNodes, selectedEdges, false)
+        const conceptualModel: SummaryConceptualModel = convertConceptualModelToObjectSummary(selectedNodes, selectedEdges)
         snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
 
         setTopbarTab(TopbarTab.SUMMARY_PLAIN_TEXT)
 
         const bodyData: SummarySuggestionBody = {
-            summaryType: userChoice, conceptualModelJSON: conceptualModel, domainDescription: currentDomainDescription
+            summaryType: userChoice, conceptualModel: conceptualModel, domainDescription: currentDomainDescription
         }
         const bodyDataJSON = JSON.stringify(bodyData)
 

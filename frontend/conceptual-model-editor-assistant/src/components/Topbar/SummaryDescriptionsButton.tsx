@@ -1,7 +1,7 @@
 import { Button } from "@mui/material"
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { NOTHING_SELECTED_MSG, UserChoice } from "../../definitions/utility";
+import { NOTHING_SELECTED_MSG, UserChoiceSummary } from "../../definitions/utility";
 import { snapshotConceptualModel, snapshotDomainDescription } from "../../utils/snapshot";
 import { convertConceptualModelToObjectSummary } from "../../utils/serialization";
 import useFetchSummaryDescriptions from "../../hooks/useFetchSummaryDescriptions";
@@ -41,19 +41,19 @@ const SummaryDescriptionsButton: React.FC= (): JSX.Element =>
             return
         }
 
-        const userChoice = UserChoice.SUMMARY_DESCRIPTIONS
+        const userChoice = UserChoiceSummary.SUMMARY_DESCRIPTIONS
         setSummaryDescriptions({classes: [], associations: []})
 
         const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
         snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
 
-        const conceptualModel = convertConceptualModelToObjectSummary(selectedNodes, selectedEdges, true)
+        const conceptualModel = convertConceptualModelToObjectSummary(selectedNodes, selectedEdges)
         snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
 
-        setTopbarTab(TopbarTab.SUMMARY_DESCRIPTION)  
+        setTopbarTab(TopbarTab.SUMMARY_DESCRIPTION)
 
         const bodyData: SummarySuggestionBody = {
-            summaryType: userChoice, conceptualModelJSON: conceptualModel, domainDescription: currentDomainDescription
+            summaryType: userChoice, conceptualModel: conceptualModel, domainDescription: currentDomainDescription
         }
         
         const bodyDataJSON = JSON.stringify(bodyData)

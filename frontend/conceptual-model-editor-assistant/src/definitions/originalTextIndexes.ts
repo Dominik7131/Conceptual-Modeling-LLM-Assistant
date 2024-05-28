@@ -5,7 +5,7 @@ export interface OriginalTextIndexesItem
 }
 
 
-export interface OriginalTextIndexesProcessedItem
+export interface OriginalTextIndexesResponse
 {
   0: number
   1: number

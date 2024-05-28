@@ -1,55 +1,62 @@
-import { ConceptualModelObject, Item } from "./conceptualModel"
-import { SummaryDescriptionsObject } from "./summary"
+import { Item } from "./conceptualModel"
+import { OriginalTextIndexesItem } from "./originalTextIndexes"
+import { SummaryConceptualModel } from "./summary"
 import { TextFilteringVariation } from "./textFilteringVariation"
-import { UserChoice } from "./utility"
+import { UserChoiceItem, UserChoiceSummary } from "./utility"
 
 
 export interface ItemSuggestionBody
 {
-  sourceClass: string
-  targetClass: string
-  userChoice: UserChoice
+  userChoice: UserChoiceItem
   domainDescription: string
   textFilteringVariation: TextFilteringVariation
-}
-
-
-export interface SummarySuggestionBody
-{
-  summaryType: UserChoice,
-  conceptualModelJSON: ConceptualModelObject
-  domainDescription: string
+  sourceClass: string
+  targetClass: string
 }
 
 
 export interface SingleFieldSuggestionBody
 {
   name: string
+  field: string
+  domainDescription: string
+  userChoice: UserChoiceItem
+  textFilteringVariation: TextFilteringVariation
   sourceClass: string
   targetClass: string
-  field: string
-  userChoice: UserChoice
+}
+
+
+export interface SummarySuggestionBody
+{
+  summaryType: UserChoiceSummary
   domainDescription: string
-  textFilteringVariation: TextFilteringVariation
+  conceptualModel: SummaryConceptualModel
+}
+
+
+export interface OriginalTextIndexesItemBody
+{
+  originalTextIndexesObject: OriginalTextIndexesItem[]
 }
 
 
 export interface SuggestedItemUserEvaluationBody
 {
-  domainDescription: string
-  isPositive: boolean
   item: Item
-  userChoice: UserChoice
+  userChoice: UserChoiceItem
+  domainDescription: string
   textFilteringVariation: TextFilteringVariation
+  isPositive: boolean
 }
 
 
 export interface SingleFieldUserEvaluationBody
 {
-  domainDescription: string
   fieldName: string
   fieldText: string
-  userChoice: UserChoice
+  userChoice: UserChoiceItem
+  domainDescription: string
   sourceClass: string
   isPositive: boolean
   textFilteringVariation: TextFilteringVariation
@@ -58,9 +65,9 @@ export interface SingleFieldUserEvaluationBody
 
 export interface SummaryUserEvaluationBody
 {
+  summaryType: UserChoiceSummary
   domainDescription: string
+  conceptualModel: SummaryConceptualModel
   isPositive: boolean
-  summary: SummaryDescriptionsObject | string
-  conceptualModel: ConceptualModelObject
-  summaryType: UserChoice
+  summary: SummaryConceptualModel | string
 }

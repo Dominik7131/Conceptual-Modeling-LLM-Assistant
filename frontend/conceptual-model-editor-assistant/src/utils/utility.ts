@@ -1,4 +1,4 @@
-import { ItemType, UserChoice } from "../definitions/utility"
+import { ItemType, UserChoiceItem } from "../definitions/utility"
 
 
 export const capitalizeString = (inputString : string) =>
@@ -23,19 +23,19 @@ export const clipString = (string: string, maxLength: number): string =>
 }
 
 
-export const userChoiceToItemType = (userChoice: UserChoice): ItemType =>
+export const userChoiceToItemType = (userChoice: UserChoiceItem): ItemType =>
 {
-  if (userChoice === UserChoice.CLASSES)
+  if (userChoice === UserChoiceItem.CLASSES)
   {
     return ItemType.CLASS 
   }
 
-  if (userChoice === UserChoice.ATTRIBUTES)
+  if (userChoice === UserChoiceItem.ATTRIBUTES)
   {
     return ItemType.ATTRIBUTE
   }
 
-  if (userChoice === UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS || userChoice === UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES)
+  if (userChoice === UserChoiceItem.ASSOCIATIONS_ONE_KNOWN_CLASS || userChoice === UserChoiceItem.ASSOCIATIONS_TWO_KNOWN_CLASSES)
   {
     return ItemType.ASSOCIATION
   }
@@ -44,19 +44,19 @@ export const userChoiceToItemType = (userChoice: UserChoice): ItemType =>
 }
 
 
-export const itemTypeToUserChoice = (itemType: ItemType): UserChoice =>
+export const itemTypeToUserChoice = (itemType: ItemType): UserChoiceItem =>
 {
   if (itemType === ItemType.CLASS)
   {
-    return UserChoice.CLASSES
+    return UserChoiceItem.CLASSES
   }
   else if (itemType === ItemType.ATTRIBUTE)
   {
-    return UserChoice.ATTRIBUTES
+    return UserChoiceItem.ATTRIBUTES
   }
   else if (itemType === ItemType.ASSOCIATION || itemType === ItemType.GENERALIZATION)
   {
-    return UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS
+    return UserChoiceItem.ASSOCIATIONS_ONE_KNOWN_CLASS
   }
 
   throw Error(`Received unknown item type: ${itemType}`)

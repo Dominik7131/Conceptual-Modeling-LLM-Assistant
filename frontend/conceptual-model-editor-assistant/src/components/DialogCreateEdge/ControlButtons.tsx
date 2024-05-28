@@ -6,7 +6,7 @@ import useSuggestItems from "../../hooks/useSuggestItems";
 import { isShowCreateEdgeDialogState, isShowEditDialogState } from "../../atoms/dialogs";
 import { selectedSuggestedItemState, editedSuggestedItemState } from "../../atoms/suggestions";
 import { Association } from "../../definitions/conceptualModel";
-import { ItemType, Field, UserChoice } from "../../definitions/utility";
+import { ItemType, Field, UserChoiceItem } from "../../definitions/utility";
 
 
 interface Props
@@ -54,7 +54,7 @@ const ControlButtons: React.FC<Props> = ({ association, sourceClassName, targetC
 
     const handleSuggestAssociations = (): void =>
     {
-        onSuggestItems(UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES, sourceClassName, targetClassName)
+        onSuggestItems(UserChoiceItem.ASSOCIATIONS_TWO_KNOWN_CLASSES, sourceClassName, targetClassName)
         handleClose()
     }
     

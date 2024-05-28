@@ -4,15 +4,15 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";
 import { isSummaryReactionButtonClickedState } from "../../atoms/summary";
-import { SummaryDescriptionsObject } from "../../definitions/summary";
-import { TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS, UserChoice } from "../../definitions/utility";
+import { SummaryConceptualModel } from "../../definitions/summary";
+import { TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS, UserChoiceSummary } from "../../definitions/utility";
 import { handleSaveSuggestionSummary } from "../../utils/summary";
 
 
 interface Props
 {
-    userChoice: UserChoice.SUMMARY_PLAIN_TEXT | UserChoice.SUMMARY_DESCRIPTIONS
-    summary: string | SummaryDescriptionsObject
+    userChoice: UserChoiceSummary
+    summary: string | SummaryConceptualModel
 }
 
 const SummaryReactionButtons: React.FC<Props> = ({ userChoice, summary }): JSX.Element =>

@@ -6,9 +6,10 @@ import useFetchMergedOriginalTexts from "../../hooks/useFetchMergedOriginalTexts
 import { selectedNodesState, selectedEdgesState } from "../../atoms/conceptualModel";
 import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState } from "../../atoms/dialogs";
 import { domainDescriptionState } from "../../atoms/domainDescription";
-import { OriginalTextIndexesItem } from "../../definitions/originalTextIndexes";
 import { NodeData, EdgeData } from "../../definitions/conceptualModel";
 import { Field, NOTHING_SELECTED_MSG } from "../../definitions/utility";
+import { OriginalTextIndexesItemBody } from "../../definitions/bodies";
+import { OriginalTextIndexesItem } from "../../definitions/originalTextIndexes";
 
 
 const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
@@ -41,9 +42,13 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
         pushOriginalTextIndexesFromSelectedNodes()
         pushOriginalTextIndexesFromSelectedEdges()
 
-        const bodyData = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects })
+        const bodyData: OriginalTextIndexesItemBody = {
+            originalTextIndexesObject: originalTextsIndexesObjects
+        }
+
+        const bodyDataJSON = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects })
     
-        fetchMergedOriginalTexts(bodyData)
+        fetchMergedOriginalTexts(bodyDataJSON)
         setIsShowHighlightDialog(true)
     }
 
