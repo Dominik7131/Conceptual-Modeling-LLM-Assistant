@@ -421,7 +421,7 @@ class LLMAssistant:
 
 
         if user_choice != UserChoice.CLASSES.value:
-            relevant_texts = self.get_relevant_texts(self, source_class=source_class, domain_description=domain_description, filtering_variation=text_filtering_variation)
+            relevant_texts = self.get_relevant_texts(source_class=source_class, domain_description=domain_description, filtering_variation=text_filtering_variation)
         else:
             relevant_texts = domain_description
 
@@ -551,8 +551,11 @@ class LLMAssistant:
 
     def suggest_summary_plain_text(self, conceptual_model, domain_description):
         
-        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY_PLAIN_TEXT.value, conceptual_model=conceptual_model,
-            relevant_texts=domain_description, is_chain_of_thoughts=False)
+        user_choice = UserChoice.SUMMARY_PLAIN_TEXT.value
+
+        is_domain_description = domain_description != ""
+        prompt = self.__create_prompt(user_choice=user_choice, conceptual_model=conceptual_model,
+            relevant_texts=domain_description, is_chain_of_thoughts=False, is_domain_description=is_domain_description)
 
         self.messages = []
         new_messages = self.messages.copy()
@@ -562,7 +565,7 @@ class LLMAssistant:
 
         logging.info(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
-        items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY_PLAIN_TEXT.value, "")
+        items_iterator = self.__parse_streamed_output(new_messages, user_choice, "")
 
         for item in items_iterator:
             dictionary = json.loads(json.dumps(item))
@@ -573,8 +576,11 @@ class LLMAssistant:
 
     def suggest_summary_descriptions(self, conceptual_model, domain_description):
 
-        prompt = self.__create_prompt(user_choice=UserChoice.SUMMARY_DESCRIPTIONS.value, conceptual_model=conceptual_model, 
-            relevant_texts=domain_description, is_chain_of_thoughts=False)
+        user_choice = UserChoice.SUMMARY_DESCRIPTIONS.value
+
+        is_domain_description = domain_description != ""
+        prompt = self.__create_prompt(user_choice=user_choice, conceptual_model=conceptual_model, 
+            relevant_texts=domain_description, is_chain_of_thoughts=False, is_domain_description=is_domain_description)
 
         self.messages = []
         new_messages = self.messages.copy()
@@ -584,10 +590,10 @@ class LLMAssistant:
 
         logging.info(f"\nSending this prompt to llm:\n{messages_prettified}\n")
 
-        items_iterator = self.__parse_streamed_output(new_messages, UserChoice.SUMMARY_DESCRIPTIONS.value, "")
+        items_iterator = self.__parse_streamed_output(new_messages, user_choice, "")
 
         for item in items_iterator:
             dictionary = json.loads(json.dumps(item))
 
             json_item = json.dumps(dictionary)
-            yield f"{json_item}\n"
+            return json_item
