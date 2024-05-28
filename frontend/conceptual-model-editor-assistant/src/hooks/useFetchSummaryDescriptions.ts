@@ -1,5 +1,5 @@
 import { useSetRecoilState } from "recoil"
-import { UserChoiceItem, ItemType } from "../definitions/utility"
+import { UserChoiceItem } from "../definitions/utility"
 import { SUGGEST_SUMMARY_URL, HEADER } from "../definitions/urls"
 import { isLoadingSummaryDescriptionsState } from "../atoms/loadings"
 import { summaryDescriptionsState } from "../atoms/summary"
@@ -20,7 +20,7 @@ const useFetchSummaryDescriptions = () =>
         fetch(SUGGEST_SUMMARY_URL, { method: "POST", headers: HEADER, body: bodyDataJSON })
         .then(response =>
         {
-            const stream = response.body // Get the readable stream from the response body
+            const stream = response.body
     
             if (stream === null)
             {
@@ -66,8 +66,6 @@ const useFetchSummaryDescriptions = () =>
     const parseSummaryDescriptions = (value: Uint8Array) =>
     {
         const stringJSON: string = new TextDecoder().decode(value)
-        console.log("JsonString: ", stringJSON)
-
 
         // Handle situation when the `jsonString` contains more than one JSON object because of stream buffering
         const jsonStringParts = stringJSON.split('\n').filter((string => string !== ""))
@@ -75,8 +73,6 @@ const useFetchSummaryDescriptions = () =>
         for (let i = 0; i < jsonStringParts.length; i++)
         {
             const parsedData = JSON.parse(jsonStringParts[i])
-
-            console.log("Parsed data:", parsedData)
 
             let classes: SummaryClass[] = []
             let associations: Association[] = []
@@ -87,7 +83,7 @@ const useFetchSummaryDescriptions = () =>
             }
             else
             {
-                console.log("Received unknown object: ", parsedData)
+                console.error("Received unknown object: ", parsedData)
             }
 
             if (parsedData.hasOwnProperty("associations"))
@@ -96,12 +92,11 @@ const useFetchSummaryDescriptions = () =>
             }
             else
             {
-                console.log("Received unknown object: ", parsedData)
+                console.error("Received unknown object: ", parsedData)
             }
 
             for (let index = 0; index < classes.length; index++)
             {
-                console.log("Class: ", classes[index])
                 setSummaryDescriptions(previousSummary => ({
                     ...previousSummary,
                     classes: [...previousSummary.classes, classes[index]],
@@ -110,7 +105,6 @@ const useFetchSummaryDescriptions = () =>
 
             for (let index = 0; index < associations.length; index++)
             {
-                console.log("Association: ", associations[index])
                 setSummaryDescriptions(previousSummary => ({
                     ...previousSummary,
                     associations: [...previousSummary.associations, associations[index]],
