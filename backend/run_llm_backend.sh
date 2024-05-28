@@ -16,7 +16,7 @@ UBATCH_SIZE=4096
 N_GPU_LAYERS=100
 CONTEXT_SIZE=8192
 CHAT_TEMPLATE=llama2
-SYSTEM_PROMPT_FILE=../system_prompt_default.json
+SYSTEM_PROMPT_FILE=../../prompts/system_prompt_default.json
 LOG_FORMAT=text
 TOKENS_TO_PREDICT=8192
 
