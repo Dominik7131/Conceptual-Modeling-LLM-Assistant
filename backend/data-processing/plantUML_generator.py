@@ -1,7 +1,8 @@
 import os
 import csv
 import sys
-sys.path.append('utils/')
+sys.path.append("utils")
+sys.path.append(os.path.join("backend", "utils"))
 from text_utility import UserChoice
 
 

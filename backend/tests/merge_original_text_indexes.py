@@ -1,7 +1,8 @@
+import os
 import sys
-sys.path.append('.')
-sys.path.append('utils/')
-sys.path.append('backend/utils/')
+sys.path.append(".")
+sys.path.append("utils")
+sys.path.append(os.path.join("backend", "utils"))
 from text_utility import TextUtility
 
 

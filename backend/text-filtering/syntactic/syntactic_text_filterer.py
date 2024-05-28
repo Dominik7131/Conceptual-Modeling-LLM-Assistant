@@ -1,7 +1,12 @@
-from text_utility import TextUtility
 from morphodita_tagger import Morphodita_Tagger
 import json
 import os
+import sys
+
+sys.path.append("utils")
+sys.path.append(os.path.join("backend", "utils"))
+from text_utility import TextUtility
+
 
 PATH_TO_DATA_DIRECTORY = os.path.join("data", "56-2001-extract-llm-assistant-test-case")
 INPUT_DOMAIN_DESCRIPTION_FILE_NAME = "56-2001-extract-llm-assistant-test-case.txt"

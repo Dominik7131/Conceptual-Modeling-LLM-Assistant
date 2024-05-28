@@ -7,7 +7,8 @@ import logging
 import sys
 from llm_assistant import LLMAssistant
 
-sys.path.append("utils/")
+sys.path.append("utils")
+sys.path.append(os.path.join("backend", "utils"))
 from text_utility import LOGGER_NAME, Field, TextUtility, UserChoice
 
 

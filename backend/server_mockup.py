@@ -1,10 +1,12 @@
+import os
 from flask import Flask, request
 from flask_cors import CORS, cross_origin
 import json
 import time
 import sys
 
-sys.path.append("utils/")
+sys.path.append("utils")
+sys.path.append(os.path.join("backend", "utils"))
 from text_utility import TextUtility, UserChoice
 
 
