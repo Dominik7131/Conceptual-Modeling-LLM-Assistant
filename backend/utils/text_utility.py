@@ -52,8 +52,8 @@ class FieldUI(Enum):
     ORIGINAL_TEXT_INDEXES = "original text indexes"
     DATA_TYPE = "data type"
     CARDINALITY = "cardinality"
-    SOURCE_ENTITY = "source entity"
-    TARGET_ENTITY = "target entity"
+    SOURCE_CLASS = "source class"
+    TARGET_CLASS = "target class"
 
 
 class PromptFileSymbols(Enum):
@@ -85,36 +85,6 @@ class TextUtility:
         result = ""
         for message in messages:
             result += f"{message['role']}: {message['content']}\n"
-        
-        return result
-
-
-    def json_to_pretty_text(json_item, index, user_choice, ATTRIBUTES_STRING):
-
-        result = ""
-        result += f"{index + 1}: {json_item['name'].capitalize()}\n"
-
-        if "description" in json_item:
-            result += f"- Description: {json_item['description']}\n"
-
-
-        if user_choice == ATTRIBUTES_STRING:
-            if "inference" in json_item:
-                result += f"- Inference: {json_item['inference']}\n"
-            if "data_type" in json_item:
-                result += f"- Data type: {json_item['data_type']}\n"
-
-        else:
-            if "source" in json_item:
-                result += f"- Source: {json_item['source']}\n"
-            if "target" in json_item:
-                result += f"- Target: {json_item['target']}\n"
-            if "sentence" in json_item:
-                result += f"- Sentence: {json_item['sentence']}\n"
-            if "inference" in json_item:
-                result += f"- Inference: {json_item['inference']}\n"
-            if "cardinality" in json_item:
-                result += f"- Cardinality: {json_item['cardinality']}\n"
         
         return result
 
@@ -284,13 +254,6 @@ class TextUtility:
         return pattern.sub(lambda match: replacements[normalize_old(match.group(0))], string)
 
 
-    def create_query(entity):
-        #query = f'What attributes does \"{entity}\" have?'
-        #query = f"Information about {entity}"
-        query = f"What are the information about {entity}?"
-        return query
-
-
     def is_bullet_point(text):
         # E.g.: - text, * text, (a) text
         if text[0] == '-' or text[0] == '*' or text[0] == '(':
@@ -307,7 +270,6 @@ class TextUtility:
         return False
 
 
-    # TODO: This method is for syntactic filtering so it should be in the script `syntactit_text_filterer.py`
     def split_text_into_chunks(domain_description):
         # Divide the text into: sentences and bullets
         lines = domain_description.split(sep='\n')
@@ -393,56 +355,56 @@ class TextUtility:
         return sentences
     
 
-    def find_text_in_domain_description(inference, domain_description, user_choice):
+    def find_text_in_domain_description(original_text, domain_description, user_choice):
 
-        # Convert all text to lower-case as LLM sometimes does not generate case-sensitive inference
+        # Convert all text to lower-case as LLM sometimes does not generate case-sensitive original text
         domain_description = domain_description.lower()
         
-        # Split inference if it contains more inferences:
-        # E.g.: "The insurance contract shall always contain... the limit of the insurance benefit..."
-        # -> ["The insurance contract shall always contain", "the limit of the insurance benefit"]
         result = []
 
-        inference_parts = inference.split(sep="...")
-        inference_parts = list(filter(None, inference_parts)) # Remove empty strings
+        # Split original text if it contains more parts:
+        # E.g.: "The insurance contract shall always contain... the limit of the insurance benefit..."
+        # -> ["The insurance contract shall always contain", "the limit of the insurance benefit"]
+        original_text_parts = original_text.split(sep="...")
+        original_text_parts = list(filter(None, original_text_parts)) # Remove empty strings
 
-        inference_parts_total = len(inference_parts)
-        inference_parts_found = 0
+        original_text_parts_total = len(original_text_parts)
+        original_text_parts_found = 0
 
-        for inference_part in inference_parts:
-            inference_part = inference_part.lower().strip()
-            is_inference_found = False
+        for original_text_part in original_text_parts:
+            original_text_part = original_text_part.lower().strip()
+            is_original_text_found = False
 
-            # TODO: Do not iterate from 0 every time because each inference part should not be at index < the previous part index
+            # TODO: Do not iterate from 0 every time because each original text part should not be at index < the previous part index
             for i in range(len(domain_description)):
-                # Append all occurencies of the `inference_part` in the `domain_description`
-                if domain_description[i:].startswith(inference_part):
-                    is_inference_found = True
+                # Append all occurencies of the `original text_part` in the `domain_description`
+                if domain_description[i:].startswith(original_text_part):
+                    is_original_text_found = True
                     result.append(i)
-                    result.append(i + len(inference_part))
+                    result.append(i + len(original_text_part))
 
-            # TODO: Backup plan: if an inference is not found at least try to find some relevant setence with lemmatization
-            # Relevant sentece = sentence that contains all lemmas in `inference_part` (probably except brackets, punctuation etc.)        
-            if is_inference_found:
-                inference_parts_found += 1
+            # TODO: Backup plan: if an original text is not found at least try to find some relevant setence with lemmatization
+            # Relevant sentece = sentence that contains all lemmas in `original_text_part` (probably except brackets, punctuation etc.)        
+            if is_original_text_found:
+                original_text_parts_found += 1
             elif not user_choice == UserChoice.CLASSES.value:
-                new_result = TextUtility.find_substrings(inference_part, domain_description)
+                new_result = TextUtility.find_substrings(original_text_part, domain_description)
                 if new_result:
-                    is_inference_found = True
-                    for inference_index in new_result:
-                        result.append(inference_index)
+                    is_original_text_found = True
+                    for original_text_index in new_result:
+                        result.append(original_text_index)
                 else:
-                    print(f"Warning: inference not found: {inference_part}")
+                    print(f"Warning: original text not found: {original_text_part}")
 
 
-        # TODO: Fix bug with too many inference indexes
-        # Do not limit number of outputs if we are suggesting entities
+        # Limit count of original text indexes as this indicates that we encountered some bug
+        # Do not do this when suggesting classes because they usually contain a lot of original text indexes
         if not user_choice == UserChoice.CLASSES.value and len(result) > 10:
             result = []
 
-        result = TextUtility.sort_original_text_indexes(result)        
+        result = TextUtility.sort_original_text_indexes(result)
 
-        return result, inference_parts_found, inference_parts_total
+        return result, original_text_parts_found, original_text_parts_total
 
 
     def sort_original_text_indexes(numbers):
@@ -453,7 +415,29 @@ class TextUtility:
             tuples = sorted(tuples, key=lambda x: (x[0], x[1]))
             numbers = TextUtility.tuples_to_list(tuples)
         
+        numbers = TextUtility.merge_simple_same_original_text_indexes(numbers)
+
         return numbers
+    
+
+    def merge_simple_same_original_text_indexes(numbers):
+
+        for i in range(len(numbers)):
+
+            if i + 3 >= len(numbers):
+                continue
+
+            x1, x2 = numbers[i], numbers[i + 1]
+            y1, y2 = numbers[i + 2], numbers[i + 3]
+
+            if x1 == y1:
+                numbers.pop(i + 2)
+                numbers.pop(i + 2)
+                numbers[i + 1] = y2
+        
+        return numbers
+
+
 
 
     def pair_consecutive_elements(numbers):
@@ -471,20 +455,18 @@ class TextUtility:
         return [item for tup in tuples for item in tup]
 
 
-    def show_inference_in_domain_description(inference_indexes, domain_description):
-        # TODO: Add domain description as an method argument
-        # E.g. inference_indexes = [4, 10, 20, 24]
+    def show_original_text_in_domain_description(original_text_indexes, domain_description):
 
         from termcolor import cprint
 
         start_at_index = 0
         
-        for i in range(0, len(inference_indexes), 2):
-            inference_index_start = inference_indexes[i]
-            inference_index_end = inference_indexes[i + 1]
-            print(domain_description[start_at_index : inference_index_start], end="")
-            cprint(domain_description[inference_index_start : inference_index_end], "green", "on_black", end='')
-            start_at_index = inference_index_end
+        for i in range(0, len(original_text_indexes), 2):
+            original_text_index_start = original_text_indexes[i]
+            original_text_index_end = original_text_indexes[i + 1]
+            print(domain_description[start_at_index : original_text_index_start], end="")
+            cprint(domain_description[original_text_index_start : original_text_index_end], "green", "on_black", end='')
+            start_at_index = original_text_index_end
 
         
         print(domain_description[start_at_index:])
@@ -504,26 +486,27 @@ class TextUtility:
             return ("")
 
 
-    def find_inference_indexes(inference_parts, domain_description):
+    def find_original_text_indexes(original_text_parts, domain_description):
+
         result = []
-        for inference_part in inference_parts:
-            inference_part = inference_part.lower().strip()
+        for part in original_text_parts:
+            part = part.lower().strip()
 
             last_result_index = 0
             append_only_first_occurence = False
 
-            # Skip immediately to the previous detected inference as the next inference part should not be before the previous one
-            # We cannot skip immediately to the index at result[-1] if there are more inferences found for the previous inference part
+            # Skip immediately to the previous detected original text as the next original text part should not be before the previous one
+            # We cannot skip immediately to the index at result[-1] if there are more original texts found for the previous original text part
             if result:
                 last_result_index = result[1]
                 append_only_first_occurence = True
 
             for i in range(last_result_index, len(domain_description)):
 
-                # Append all occurencies of the `inference_part` in the `domain_description`
-                if domain_description[i:].startswith(inference_part):
+                # Append all occurencies of the `original_text_part` in the `domain_description`
+                if domain_description[i:].startswith(part):
                     result.append(i)
-                    result.append(i + len(inference_part))
+                    result.append(i + len(part))
 
                     if append_only_first_occurence:
                         break
@@ -533,47 +516,49 @@ class TextUtility:
         return result, is_everything_found
 
 
-    def find_substrings(inference, domain_description):
-        longest_substring = TextUtility.longest_substring(domain_description, inference)
+    def find_substrings(original_text, domain_description):
+        longest_substring = TextUtility.longest_substring(domain_description, original_text)
 
         if not longest_substring:
             return
 
-        if inference.startswith(longest_substring):
-            inference_parts = [inference[0:len(longest_substring)], inference[len(longest_substring):]]
-            result, is_everything_found = TextUtility.find_inference_indexes(inference_parts, domain_description)
+        if original_text.startswith(longest_substring):
+            original_text_parts = [original_text[0:len(longest_substring)], original_text[len(longest_substring):]]
+            result, is_everything_found = TextUtility.find_original_text_indexes(original_text_parts, domain_description)
 
-            # Try to detect one typo by dividing inference into two inferences and skipping the character at which it failed
+            # Try to detect one typo by dividing original text into two parts and skipping the character at which it failed
             if not is_everything_found:
-                inference_parts = [inference[0:len(longest_substring)], inference[len(longest_substring) + 1:]]
-                result, is_everything_found = TextUtility.find_inference_indexes(inference_parts, domain_description)
+                original_text_parts = [original_text[0:len(longest_substring)], original_text[len(longest_substring) + 1:]]
+                result, is_everything_found = TextUtility.find_original_text_indexes(original_text_parts, domain_description)
             
             return result
         
-        elif inference.endswith(longest_substring):
+        elif original_text.endswith(longest_substring):
             # Symmetrically do the same thing as before
-            split = len(inference) - len(longest_substring)
-            inference_parts = [inference[:split], inference[split:]]
-            result, is_everything_found = TextUtility.find_inference_indexes(inference_parts, domain_description)
+            split = len(original_text) - len(longest_substring)
+            original_text_parts = [original_text[:split], original_text[split:]]
+            result, is_everything_found = TextUtility.find_original_text_indexes(original_text_parts, domain_description)
 
-            # Try to detect one typo by dividing inference into two inferences and skipping the character at which it failed
+            # Try to detect one typo by dividing original text into two parts and skipping the character at which it failed
             if not is_everything_found:
-                inference_parts = [inference[0:len(longest_substring)], inference[len(longest_substring) + 1:]]
-                result, is_everything_found = TextUtility.find_inference_indexes(inference_parts, domain_description)
+                original_text_parts = [original_text[0:len(longest_substring)], original_text[len(longest_substring) + 1:]]
+                result, is_everything_found = TextUtility.find_original_text_indexes(original_text_parts, domain_description)
             
             return result
 
-        else: # Longest substring was detected in the middle of the inference
+        else: # Longest substring detected in the middle of the original text
 
-            # Get start index and end index of the middle part of the inference
-            for i in range(len(inference)):
-                if inference[i:].startswith(longest_substring):
+            # Get start index and end index of the middle part of the original text
+            for i in range(len(original_text)):
+                if original_text[i:].startswith(longest_substring):
                     start_index = i
                     end_index = i + len(longest_substring)
                     break
 
-            inference_parts = [inference[:start_index], inference[start_index : end_index], inference[end_index:]]
-            result, is_everything_found = TextUtility.find_inference_indexes(inference_parts, domain_description)
+            original_text_parts = [original_text[:start_index], original_text[start_index : end_index], original_text[end_index:]]
+
+            # TODO: continue from the last processed index
+            result, is_everything_found = TextUtility.find_original_text_indexes(original_text_parts, domain_description)
 
             return result
 
