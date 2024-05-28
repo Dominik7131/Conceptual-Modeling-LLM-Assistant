@@ -50,6 +50,7 @@ const useFetchSummaryPlainText = () =>
                 .catch(error =>
                 {
                     console.error(error)
+                    setIsLoadingSummaryPlainText(false)
                 })
             }
             readChunk()

@@ -50,6 +50,7 @@ const useFetchSummaryDescriptions = () =>
                 .catch(error =>
                 {
                     console.error(error)
+                    setIsLoadingSummaryDescriptions(false)
                 })
             }
             readChunk()
