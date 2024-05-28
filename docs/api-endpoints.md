@@ -34,7 +34,7 @@
 |-----------|-----------|-----------|-------------|
 | name      | yes       | string    | Item name.  |
 | field     | yes       | string (`originalText`, `description`, `dataType`, `sourceCardinality`, `targetCardinality`) | Item field to suggest. |
-| userChoice | yes     | string (`classes`, `attributes`, `associations`) | Type of the item. |
+| userChoice | yes     | string (`classes`, `attributes`, `associations1`, `associations2`) | Type of the item. |
 | domainDescription | yes     | string | Solely based on this text the LLM generates the output.
 | textFilteringVariation  | yes | string (`none`, `semantic`, `syntactic`) | Domain description filtering variation. The domain description is not filtered when `userChoice=classes`. |
 | sourceClass  | no | string  | Name of the source class when the userChoice `attribute` or `associations` is provided. |
@@ -122,6 +122,7 @@
 | Parameter | Mandatory | Data type | Description |
 |-----------|-----------|-----------|-------------|
 | summaryType | yes     | string (`summaryPlainText`, `summaryDescriptions`) | Type of the summary. |
+| summary | yes | object | The summary to save. |
 | domainDescription | yes     | string | The exact domain description that was used to generate this item.
 | conceptualModel | yes | object | The exact conceptual model in JSON format used to generate this summary. |
 | isPositive  | yes | bool | True if the user liked the suggested summary otherwise False.  |
