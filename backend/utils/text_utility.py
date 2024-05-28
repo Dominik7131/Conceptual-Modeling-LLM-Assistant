@@ -6,6 +6,8 @@ import string
 
 LOGGER_NAME = "LLM_logger"
 
+CLASSES_BLACK_LIST = ["employee", "department", "manager"]
+
 
 class UserChoice(Enum):
     CLASSES = "classes"

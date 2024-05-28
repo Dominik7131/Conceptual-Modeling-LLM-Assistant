@@ -5,7 +5,7 @@ import os
 import time
 import logging
 import sys
-from LLM_assistant import LLMAssistant
+from llm_assistant import LLMAssistant
 
 sys.path.append("utils/")
 from text_utility import LOGGER_NAME, Field, TextUtility, UserChoice
