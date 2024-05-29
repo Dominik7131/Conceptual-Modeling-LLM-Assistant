@@ -2,7 +2,7 @@ from morphodita_tagger import Morphodita_Tagger
 import sys
 
 sys.path.append("utils")
-from text_utility import TextUtility
+from text_splitter import TextSplitter
 
 
 class SyntacticTextFilterer:
@@ -14,7 +14,7 @@ class SyntacticTextFilterer:
 
     def load_chunks(self, domain_description):
 
-        self.enhanced_chunks, self.chunks, self.is_bullet_point_list, self.title_references = TextUtility.split_text_into_chunks(domain_description)
+        self.enhanced_chunks, self.chunks = TextSplitter.split_into_chunks(domain_description)
 
 
     def get(self, clss, domain_description):
@@ -24,9 +24,8 @@ class SyntacticTextFilterer:
         self.load_chunks(domain_description)
         class_lemmas = self.tagger.get_lemmas_one_by_one(clss)        
 
-        for index, chunk in enumerate(self.chunks):
+        for index, enhanced_chunk in enumerate(self.enhanced_chunks):
 
-            enhanced_chunk = self.enhanced_chunks[index]
             enhanced_chunk_lemmas = self.tagger.get_lemmas_one_by_one(enhanced_chunk)
 
             are_class_lemmas_contained = True
@@ -36,7 +35,7 @@ class SyntacticTextFilterer:
                     break
             
             if are_class_lemmas_contained:
-                result.append(chunk)
+                result.append(self.chunks[index])
 
         return result
 
@@ -45,7 +44,7 @@ def main():
 
     # Simple usage example
     clss = "student"
-    domain_description = "Students are at school. Hello world. Professors teach students."
+    domain_description = "Students are at school. They are studying. Hello world. Professors teach students."
 
     filterer = SyntacticTextFilterer()
     relevant_texts = filterer.get(clss, domain_description)

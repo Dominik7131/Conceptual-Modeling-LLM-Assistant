@@ -3,7 +3,8 @@ import sys
 
 sys.path.append("utils")
 sys.path.append(os.path.join("backend", "utils"))
-from text_utility import TextUtility
+
+from original_text_merger import OriginalTextMerger
 
 
 def check_tests(tests):
@@ -14,7 +15,7 @@ def check_tests(tests):
         name = test["name"]
         input = test["input"]
         expected = test["expected"]
-        actual = TextUtility.merge_original_texts(input)
+        actual = OriginalTextMerger.merge(input)
 
         is_test_failed = expected != actual
         if is_test_failed:

@@ -1,10 +1,13 @@
 import os
 import csv
 import sys
+
+
+sys.path.append(".")
 sys.path.append("utils")
-sys.path.append(os.path.join("backend", "utils"))
-from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS_NAME
-from text_utility import UserChoice
+
+from definitions.utility import UserChoice
+from definitions.domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS_NAME
 
 
 DIRECTORY_PATH = os.path.join("out", "actual")

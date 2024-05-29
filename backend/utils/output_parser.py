@@ -1,7 +1,9 @@
 import json
-from text_utility import DEFINED_DATA_TYPES, LOGGER_NAME, Field, TextUtility, UserChoice
 import logging
 import openai
+
+from backend.definitions.utility import DEFINED_DATA_TYPES, LOGGER_NAME, Field, UserChoice
+from convention_convertor import ConventionConvertor
 
 
 LLM_BACKEND_URL = "http://localhost:8080/v1"
@@ -225,13 +227,13 @@ class OutputParser:
     def __convert_names_into_standard_convention(completed_item):
 
         is_item_ok = True
-        completed_item[Field.NAME.value] = TextUtility.convert_string_to_standard_convention(completed_item[Field.NAME.value])
+        completed_item[Field.NAME.value] = ConventionConvertor.convert_string_to_standard_convention(completed_item[Field.NAME.value])
 
         if Field.SOURCE_CLASS.value in completed_item:
-            completed_item[Field.SOURCE_CLASS.value] = TextUtility.convert_string_to_standard_convention(completed_item[Field.SOURCE_CLASS.value])
+            completed_item[Field.SOURCE_CLASS.value] = ConventionConvertor.convert_string_to_standard_convention(completed_item[Field.SOURCE_CLASS.value])
 
         if Field.TARGET_CLASS.value in completed_item:
-            completed_item[Field.TARGET_CLASS.value] = TextUtility.convert_string_to_standard_convention(completed_item[Field.TARGET_CLASS.value])
+            completed_item[Field.TARGET_CLASS.value] = ConventionConvertor.convert_string_to_standard_convention(completed_item[Field.TARGET_CLASS.value])
         
         return completed_item, is_item_ok
 
@@ -249,9 +251,9 @@ class OutputParser:
         self.logger.info("\n")
 
 
-    # Returns (parsed_item, is_item_ok)
-    # is_item_ok: False if there is any issue while parsing otherwise True
     def __parse_item_streamed_output(self):
+        # Returns (parsed_item, is_item_ok)
+        # is_item_ok: False if there is any issue while parsing otherwise True
 
         try:
             # Replace invalid JSON characters

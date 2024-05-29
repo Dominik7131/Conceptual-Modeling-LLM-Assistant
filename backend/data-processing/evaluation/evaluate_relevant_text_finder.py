@@ -3,15 +3,18 @@ import sys
 
 TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 
+sys.path.append(".")
 sys.path.append("utils")
+sys.path.append("definitions")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
 import argparse
 import json
-from text_utility import TextFilteringVariation, TextUtility, UserChoice
+from text_splitter import TextSplitter
+from definitions.utility import TextFilteringVariation, UserChoice
 from syntactic_text_filterer import SyntacticTextFilterer
-from domain_modeling import DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
+from definitions.domain_modeling import DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
 
 
 # Indexes correspond to texts in domain models and last index corresponds to all texts together
@@ -77,7 +80,7 @@ def compare_texts(expected_relevant_texts, actual_relevant_texts, domain_descrip
 def get_actual_relevant_texts(filtering_variation, domain_description, source_class, text_finder=None):
 
     if filtering_variation == TextFilteringVariation.NONE.value:
-        actual_relevant_texts = TextUtility.split_into_sentences(domain_description)
+        actual_relevant_texts = TextSplitter.split_into_sentences(domain_description)
     else:
         actual_relevant_texts = text_finder.get(source_class, domain_description)
     

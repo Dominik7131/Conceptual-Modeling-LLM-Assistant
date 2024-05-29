@@ -6,13 +6,14 @@ import sys
 
 TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 
-sys.path.append("utils")
+sys.path.append(".")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
-from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
+from definitions.utility import Field, FieldUI, UserChoice
+from definitions.domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
 from llm_assistant import LLMAssistant
-from text_utility import Field, FieldUI, UserChoice
+
 
 ACTUAL_OUTPUT = "actual"
 EXPECTED_OUTPUT = "expected"
@@ -48,7 +49,7 @@ def create_attributes_expected_output(test_cases):
 
     result = []
     for test_case in test_cases:
-        clss = f"Class: {test_case["class"]}"
+        clss = f"Class: {test_case['class']}"
         result.append(clss)
 
         expected_output = test_case["expected_output"]
@@ -66,7 +67,7 @@ def create_associations1_expected_output(test_cases):
 
     result = []
     for test_case in test_cases:
-        clss = f"Class: {test_case["class"]}"
+        clss = f"Class: {test_case['class']}"
         result.append(clss)
 
         expected_output = test_case['expected_output']

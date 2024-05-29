@@ -1,9 +1,12 @@
 import os
 import sys
 
+
 sys.path.append("utils")
+sys.path.append(".")
 sys.path.append(os.path.join("backend", "utils"))
-from text_utility import TextUtility, UserChoice
+from original_text_finder import OriginalTextFinder
+from definitions.utility import UserChoice
 
 
 def check_tests(tests):
@@ -16,13 +19,13 @@ def check_tests(tests):
         original_text = test["original_text"]
         expected_original_text_indexes = test["expected_original_text_indexes"]
 
-        actual_original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(original_text, domain_description, user_choice=UserChoice.ATTRIBUTES.value)
+        actual_original_text_indexes, _, _ = OriginalTextFinder.find_in_domain_description(original_text, domain_description, user_choice=UserChoice.ATTRIBUTES.value)
         is_test_failed = actual_original_text_indexes != expected_original_text_indexes
 
         if is_test_failed:
             are_all_tests_passing = False
             print(f"Test failed:\n- name: {name}\n- domain description: {domain_description}\n- original text: {original_text}\n- expected original text indexes: {expected_original_text_indexes}\n- actual original text indexes: {actual_original_text_indexes}\n")
-            TextUtility.show_original_text_in_domain_description(actual_original_text_indexes, domain_description)
+            OriginalTextFinder.show_in_domain_description(actual_original_text_indexes, domain_description)
     
     if are_all_tests_passing:
         print("All tests are passing")
@@ -81,10 +84,10 @@ def run_tests():
     # on further recovery techniques
 
     # Next possible test:
-    # "name": "the longest substring in the middle"
-    # "domain_description": "This is the first sentence and the third sentence."
-    # "original_text": "This is sentence and the sentence"
-    # "expected_original_text_indexes": [0, 7, 18, 34, 41, 49]
+    # "name": "the longest substring in the middle",
+    # "domain_description": "This is the first sentence and the third sentence.",
+    # "original_text": "This is sentence and the sentence",
+    # "expected_original_text_indexes": [0, 7, 18, 34, 41, 49],
 
     check_tests(tests)
 

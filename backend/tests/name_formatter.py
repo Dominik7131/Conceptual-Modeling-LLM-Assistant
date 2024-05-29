@@ -3,7 +3,7 @@ import sys
 
 sys.path.append("utils")
 sys.path.append(os.path.join("backend", "utils"))
-from text_utility import TextUtility
+from convention_convertor import ConventionConvertor
 
 
 def convert_name_to_standard_convention_test():
@@ -14,7 +14,7 @@ def convert_name_to_standard_convention_test():
     are_all_tests_passing = True
 
     for index, name in enumerate(input_names):
-        actual_name = TextUtility.convert_string_to_standard_convention(name)
+        actual_name = ConventionConvertor.convert_string_to_standard_convention(name)
         if actual_name != expected_names[index]:
             are_all_tests_passing = False
             print(f"Test failed:\n- Expected output: {expected_names[index]}\n- Actual output: {actual_name}")

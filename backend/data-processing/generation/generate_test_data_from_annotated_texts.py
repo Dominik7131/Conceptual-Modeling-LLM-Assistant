@@ -5,8 +5,10 @@ import sys
 import requests
 
 sys.path.append("utils")
-from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
-from text_utility import Field, TextUtility, UserChoice
+
+from text_splitter import TextSplitter
+from definitions.utility import Field, UserChoice
+from definitions.domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
 
 
 BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
@@ -26,7 +28,7 @@ def get_text_from_indexes(indexes, text):
         sub_text = text[indexes[index] : indexes[index + 1]]
         relevant_text_raw = re.sub(r"<[^>]+>", "", sub_text)
 
-        sentences = TextUtility.split_into_sentences(relevant_text_raw)
+        sentences = TextSplitter.split_into_sentences(relevant_text_raw)
         
         for sentence in sentences:
             relevant_texts.append(sentence)

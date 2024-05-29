@@ -4,15 +4,17 @@ import logging
 import json
 import sys
 
+from text_utility import TextUtility
+
 TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 
 sys.path.append("utils")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
+from definitions.utility import CLASSES_BLACK_LIST, LOGGER_NAME, Field, TextFilteringVariation, UserChoice
 from output_parser import OutputParser
 from prompt_manager import PromptManager
-from text_utility import CLASSES_BLACK_LIST, LOGGER_NAME, Field, TextFilteringVariation, TextUtility, UserChoice, DataType
 from syntactic_text_filterer import SyntacticTextFilterer
 from semantic_text_filterer import SemanticTextFilterer
 
@@ -176,7 +178,7 @@ class LLMAssistant:
             new_messages = self.messages.copy()
             new_messages.append({"role": "user", "content": prompt})
 
-            messages_prettified = TextUtility.messages_prettify(new_messages)
+            messages_prettified = TextUtility.prettify_messages(new_messages)
             self.__log_sending_prompt_message(messages_prettified)
 
             self.debug_info.prompt = messages_prettified
@@ -203,7 +205,7 @@ class LLMAssistant:
         self.messages = []
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
-        messages_prettified = TextUtility.messages_prettify(new_messages)
+        messages_prettified = TextUtility.prettify_messages(new_messages)
         self.debug_info.prompt = messages_prettified
 
         self.__log_sending_prompt_message(messages_prettified)
@@ -234,7 +236,7 @@ class LLMAssistant:
         self.messages = []
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
-        messages_prettified = TextUtility.messages_prettify(new_messages)
+        messages_prettified = TextUtility.prettify_messages(new_messages)
         self.debug_info.prompt = messages_prettified
 
         self.__log_sending_prompt_message(messages_prettified)
@@ -260,7 +262,7 @@ class LLMAssistant:
         self.messages = []
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
-        messages_prettified = TextUtility.messages_prettify(new_messages)
+        messages_prettified = TextUtility.prettify_messages(new_messages)
         self.debug_info.prompt = messages_prettified
 
         self.__log_sending_prompt_message(messages_prettified)

@@ -1,7 +1,8 @@
 import json
 import os
 
-from text_utility import PromptFileSymbols, TextUtility
+from backend.definitions.prompt_symbols import PromptSymbols
+from multireplacer import Multireplacer
 
 
 PROMPT_DIRECTORY = os.path.join("..", "prompts")
@@ -37,17 +38,17 @@ class PromptManager:
         original_prompt = self.get_prompt(user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description, is_chain_of_thoughts=is_chain_of_thoughts)
 
         replacements = {
-            PromptFileSymbols.SOURCE_CLASS.value: source_class,
-            PromptFileSymbols.TARGET_CLASS.value: target_class,
-            PromptFileSymbols.DOMAIN_DESCRIPTION.value: relevant_texts,
-            PromptFileSymbols.ITEMS_COUNT_TO_SUGGEST.value: str(items_count_to_suggest),
-            PromptFileSymbols.CONCEPTUAL_MODEL.value: json.dumps(conceptual_model),
-            PromptFileSymbols.ATTRIBUTE_NAME.value: attribute_name,
-            PromptFileSymbols.ASSOCIATION_NAME.value: association_name,
+            PromptSymbols.SOURCE_CLASS.value: source_class,
+            PromptSymbols.TARGET_CLASS.value: target_class,
+            PromptSymbols.DOMAIN_DESCRIPTION.value: relevant_texts,
+            PromptSymbols.ITEMS_COUNT_TO_SUGGEST.value: str(items_count_to_suggest),
+            PromptSymbols.CONCEPTUAL_MODEL.value: json.dumps(conceptual_model),
+            PromptSymbols.ATTRIBUTE_NAME.value: attribute_name,
+            PromptSymbols.ASSOCIATION_NAME.value: association_name,
         }
         
         # Substitute all special symbols in the given prompt
-        prompt = TextUtility.multireplace(original_prompt, replacements)
+        prompt = Multireplacer.replace(original_prompt, replacements)
 
         return prompt
 

@@ -1,8 +1,12 @@
 import sys
 
+
+
 sys.path.append("utils")
+sys.path.append(".")
+from text_splitter import TextSplitter
+from definitions.utility import PRONOUNS_TO_DETECT
 from sentence_transformers import SentenceTransformer, util
-from text_utility import PRONOUNS_TO_DETECT, TextUtility
 
 
 # Settings for "all-MiniLM-L6-v2"
@@ -18,9 +22,9 @@ class SemanticTextFilterer:
 
     def __init__(self):
 
-        self.model = SentenceTransformer('all-MiniLM-L6-v2')
-        # self.model = SentenceTransformer('all-mpnet-base-v2') # Symmetric language model
-        # self.model = SentenceTransformer('msmarco-distilbert-base-v4') # Asymmetric language model
+        self.model = SentenceTransformer("all-MiniLM-L6-v2")
+        # self.model = SentenceTransformer("all-mpnet-base-v2") # Symmetric language model
+        # self.model = SentenceTransformer("msmarco-distilbert-base-v4") # Asymmetric language model
     
     def encode(self, queries):
 
@@ -51,7 +55,7 @@ class SemanticTextFilterer:
 
     def get(self, clss, domain_description):
 
-        chunks = TextUtility.split_into_sentences(domain_description)
+        chunks = TextSplitter.split_into_sentences(domain_description)
         chunks = self.enhance_chunks(chunks)
 
         query = f"Info about {clss}"
@@ -79,7 +83,7 @@ def main():
 
     # Simple usage example
     clss = "student"
-    domain_description = "Students are at school. Hello world. Professors teach students."
+    domain_description = "Students are at school. They are studying. Hello world. Professors teach students."
 
     filterer = SemanticTextFilterer()
     actual_texts = filterer.get(clss, domain_description)

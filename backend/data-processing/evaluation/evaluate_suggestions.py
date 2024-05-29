@@ -3,9 +3,10 @@ import json
 import os
 import sys
 
-sys.path.append("utils")
-from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
-from text_utility import UserChoice
+sys.path.append(".")
+
+from definitions.utility import UserChoice
+from definitions.domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
 
 
 MANUAL_EVALUATION_DIRECTORY_PATH = os.path.join("out", "evaluated", "actual")
