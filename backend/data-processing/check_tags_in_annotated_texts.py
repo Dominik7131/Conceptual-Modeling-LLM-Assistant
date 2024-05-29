@@ -1,12 +1,9 @@
 import re
 import os
+import sys
 
-
-DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
-FILE_PATH = os.path.join(DIRECTORY_PATH, "farming 97627e23829afb", "domain-description-03-annotated.txt")
-
-domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
-DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
+sys.path.append("utils")
+from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS
 
 
 def check(tags):
@@ -34,16 +31,16 @@ def check(tags):
 
 def main():
 
-    for index, domain_model in enumerate(domain_models):
+    for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
             file_name = f"domain-description-0{i + 1}-annotated.txt"
-            file_path = os.path.join(DIRECTORY_PATH, domain_model, file_name)
+            file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, file_name)
 
             with open(file_path) as file:
                 text = file.read()
 
-            print(f"-- checking: {file_path} --")
+            print(f"-- Checking: {file_path} --")
 
             tags = re.findall(r"<([^>]+)>", text)
 

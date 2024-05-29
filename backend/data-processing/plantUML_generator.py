@@ -3,14 +3,13 @@ import csv
 import sys
 sys.path.append("utils")
 sys.path.append(os.path.join("backend", "utils"))
+from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS_NAME
 from text_utility import UserChoice
 
 
 DIRECTORY_PATH = os.path.join("out", "actual")
-domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
-DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
-
 SEPARATOR = ','
+
 
 def process_classes(path):
 
@@ -65,7 +64,7 @@ def process_associations(path):
 
 def main():
     
-    for index, model_name in enumerate(domain_models_name):
+    for index, model_name in enumerate(DOMAIN_MODELS_NAME):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
             classes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")

@@ -5,26 +5,14 @@ import sys
 import requests
 sys.path.append(".")
 sys.path.append("utils")
-sys.path.append(os.path.join("backend", "utils"))
+from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
 from text_utility import Field, TextUtility, UserChoice
 
 
-DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
-
-DOMAIN_MODELS = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
-DOMAIN_MODEL_NAMES = ["aircraft manufacturing", "conference papers", "farming", "college", "zoological gardens", "registry of road vehicles"]
-
-DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
-
-CLASS_SYMBOL = "owl:Class"
-ATTRIBUTE_SYMBOL = "owl:DatatypeProperty"
-ASSOCIATION_SYMBOL = "owl:ObjectProperty"
-
+BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
 TAG_REGEX = r"<([^>]+)>"
 
-BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
-
-DOMAIN_DESCRIPTIONS_TEXTS = 6
+DOMAIN_DESCRIPTIONS_TEXTS = len(DOMAIN_DESCRIPTIONS_COUNT)
 classes_count = [0] * DOMAIN_DESCRIPTIONS_TEXTS
 attributes_count = [0] * DOMAIN_DESCRIPTIONS_TEXTS
 associations_count = [0] * DOMAIN_DESCRIPTIONS_TEXTS
@@ -252,7 +240,7 @@ def print_conceptual_model_total_elements_csv():
     print(header)
 
     for i in range(DOMAIN_DESCRIPTIONS_TEXTS):
-        row = f"{DOMAIN_MODEL_NAMES[i]},{classes_count[i]},{attributes_count[i]},{associations_count[i]}"
+        row = f"{DOMAIN_MODELS_NAME[i]},{classes_count[i]},{attributes_count[i]},{associations_count[i]}"
         print(row)
 
 
@@ -272,15 +260,15 @@ def main():
             associations2_suggestions_output_file_name = f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-expected-suggestions-0{i + 1}.json"
             # generalizations2_expected_suggestions_output_file_name = f"generalizations2-expected-suggestions-0{i + 1}.json"
 
-            file_path = os.path.join(DIRECTORY_PATH, domain_model, file_name)
-            model_file_path = os.path.join(DIRECTORY_PATH, domain_model, model_file_name)
-            one_known_class_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, one_known_class_output_file_name)
-            two_known_classes_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, two_known_classes_output_file_name)
+            file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, file_name)
+            model_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, model_file_name)
+            one_known_class_output_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, one_known_class_output_file_name)
+            two_known_classes_output_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, two_known_classes_output_file_name)
             
-            classes_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, classes_suggestions_output_file_name)
-            attributes_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, attributes_suggestions_output_file_name)
-            associations1_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, associations1_suggestions_output_file_name)
-            associations2_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, associations2_suggestions_output_file_name)
+            classes_suggestions_output_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, classes_suggestions_output_file_name)
+            attributes_suggestions_output_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, attributes_suggestions_output_file_name)
+            associations1_suggestions_output_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, associations1_suggestions_output_file_name)
+            associations2_suggestions_output_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, associations2_suggestions_output_file_name)
             # generalizations2_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, generalizations2_expected_suggestions_output_file_name)
 
             if not os.path.isfile(file_path):

@@ -10,7 +10,7 @@ Purpose: Test the quality of suggested items by LLM both syntactically and manua
 
 
 `relevant_text_finder.py`
-- test data: domain description, entity to filter the domain description, expected filtered texts
+- test data: domain description, class to filter the domain description, expected filtered texts
 - output: actual filtered texts
 
 Purpose: Compute recall and precision of automatic domain description filtering

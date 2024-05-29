@@ -4,18 +4,13 @@ import os
 import sys
 
 sys.path.append("utils")
-sys.path.append(os.path.join("backend", "utils"))
+from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
 from text_utility import UserChoice
 
 
-INPUT_DIRECTORY_PATH = os.path.join("backend/domain-modeling-benchmark", "evaluation domain models")
-domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
+INPUT_DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
+OUTPUT_DIRECTORY_PATH = os.path.join("out", "evaluated", "actual")
 
-OUTPUT_DIRECTORY_PATH = os.path.join("backend", "out", "evaluated", "actual")
-domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
-
-DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
-DOMAIN_TEXTS_COUNT = 12
 
 IS_CSV = True
 SEPARATOR = ','
@@ -617,13 +612,13 @@ def print_evaluation(is_csv):
         print(f"{header_text_name}{SEPARATOR}{header_recall}{SEPARATOR}{header_precision}")
 
     text_index = 0
-    for index, _ in enumerate(domain_models):
+    for index, _ in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
             if not is_csv:
-                print(f"---- Results for {domain_models_name[index]}-0{i + 1} ---- ")
+                print(f"---- Results for {DOMAIN_MODELS_NAME[index]}-0{i + 1} ---- ")
             else:
-                print(f"{domain_models_name[index]}-0{i + 1}{SEPARATOR}", end="")
+                print(f"{DOMAIN_MODELS_NAME[index]}-0{i + 1}{SEPARATOR}", end="")
 
             print_recall(text_index, is_csv)
             print_precision(text_index, is_csv)
@@ -642,16 +637,16 @@ def print_evaluation(is_csv):
 def main():
     
     text_index = 0
-    for index, domain_model in enumerate(domain_models):
+    for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
             classes_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.CLASSES.value}-expected-suggestions-0{i + 1}.json")
             attributes_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ATTRIBUTES.value}-expected-suggestions-0{i + 1}.json")
             associations_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{i + 1}.json")
 
-            classes_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
-            attributes_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
-            associations_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{domain_models_name[index]}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
+            classes_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
+            attributes_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
+            associations_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
 
             is_file = check_file(classes_evaluated_path, UserChoice.CLASSES.value)
             is_file = is_file and check_file(attributes_evaluated_path, UserChoice.ATTRIBUTES.value)

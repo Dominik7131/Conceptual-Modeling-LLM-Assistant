@@ -1,5 +1,7 @@
 # Scripts
 
+To use any of the scripts first change directory to the `backend` directory
+
 ## Used for manual evaluation
 
 
