@@ -1,6 +1,8 @@
+import sys
+
+sys.path.append("utils")
 from sentence_transformers import SentenceTransformer, util
 from text_utility import PRONOUNS_TO_DETECT, TextUtility
-import os
 
 
 # Settings for "all-MiniLM-L6-v2"
@@ -15,11 +17,13 @@ RANGE_FROM_TOP = 0.46 # E.g. if max score is 0.7 then invalidate any text with s
 class SemanticTextFilterer:
 
     def __init__(self):
+
         self.model = SentenceTransformer('all-MiniLM-L6-v2')
-        # self.model = SentenceTransformer('all-mpnet-base-v2') # Symmetric
-        # self.model = SentenceTransformer('msmarco-distilbert-base-v4') # Asymmetric
+        # self.model = SentenceTransformer('all-mpnet-base-v2') # Symmetric language model
+        # self.model = SentenceTransformer('msmarco-distilbert-base-v4') # Asymmetric language model
     
     def encode(self, queries):
+
         self.model.encode(queries, convert_to_tensor=True)
     
 
@@ -28,7 +32,7 @@ class SemanticTextFilterer:
         enhanced_chunks = []
 
         for index, sentence in enumerate(chunks):
-            if (index == 0):
+            if index == 0:
                 enhanced_chunks.append(sentence)
                 continue
 
@@ -44,14 +48,13 @@ class SemanticTextFilterer:
         
         return enhanced_chunks
 
-    
 
-    def get(self, entity, domain_description):
+    def get(self, clss, domain_description):
 
         chunks = TextUtility.split_into_sentences(domain_description)
         chunks = self.enhance_chunks(chunks)
 
-        query = f"Info about {entity}"
+        query = f"Info about {clss}"
 
         queries_embeddings = self.model.encode(query, convert_to_tensor=True)
         chunks_embeddings = self.model.encode(chunks, convert_to_tensor=True)
@@ -75,13 +78,11 @@ class SemanticTextFilterer:
 def main():
 
     # Simple usage example
-    path = os.path.join("domain-modeling-benchmark", "evaluation domain models", "farming 97627e23829afb", "domain-description-01.txt")
-    with open(path) as file:
-        domain_description = file.read()
+    clss = "student"
+    domain_description = "Students are at school. Hello world. Professors teach students."
 
     filterer = SemanticTextFilterer()
-    entity = "farmer"
-    actual_texts = filterer.get(entity, domain_description)
+    actual_texts = filterer.get(clss, domain_description)
     print(actual_texts)
 
 
