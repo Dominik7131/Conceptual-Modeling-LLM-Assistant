@@ -5,7 +5,7 @@ from ufal.morphodita import *
 
 CONFIG_FILE_PATH = os.path.join("text-filtering", "syntactic", "morphodita-config.json")
 
-# Code based on the `run_tagger` documentation https://pypi.org/project/ufal.morphodita/
+# Code based on the `run_tagger` documentation: https://pypi.org/project/ufal.morphodita/
 class Morphodita_Tagger:
 
     def __init__(self):
@@ -30,10 +30,12 @@ class Morphodita_Tagger:
 
 
     def encode_entities(self, text):
+
         return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
 
 
     def split_into_tokens(self, text):
+
         self.tokenizer.setText(text)
         result = []
 
@@ -48,6 +50,7 @@ class Morphodita_Tagger:
 
 
     def get_lemmas(self, text):
+
         self.tokenizer.setText(text)
         result = []
 
@@ -61,14 +64,16 @@ class Morphodita_Tagger:
         return result
 
 
-    # Same as `get_lemmas` method but instead of lemmatizing whole sentences lemmatize word by word
     def get_lemmas_one_by_one(self, text):
+
+        # Same as `get_lemmas` method but instead of lemmatizing whole sentences lemmatize word by word
+
         tokens = self.split_into_tokens(text)
         result = []
 
         for i in range(len(tokens)):
 
-            # For example: "non-motorised vehicle" split into "non", "motorised", "vehicle"
+            # For example split "non-motorised vehicle" into "non", "motorised", "vehicle"
             if '-' in tokens[i]:
                 words = tokens[i].split('-')
                 for word in words:
@@ -86,11 +91,6 @@ class Morphodita_Tagger:
 def main():
 
     # Simple usage example
-    # text = "road's vehicles"
-    # morphodita_tagger = Morphodita_Tagger()
-    # result = morphodita_tagger.get_lemmas(text)
-    # print(result)
-
     text = "It contains records of user's road vehicles, the owners and operators of these vehicles, lost, stolen, damaged and destroyed road vehicle registration certificates and registration plates."
     morphodita_tagger = Morphodita_Tagger()
     result = morphodita_tagger.get_lemmas_one_by_one(text)
