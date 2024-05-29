@@ -1,85 +1,93 @@
 import os
 import sys
-sys.path.append(".")
+
 sys.path.append("utils")
 sys.path.append(os.path.join("backend", "utils"))
 from text_utility import TextUtility
 
 
-ARE_ALL_TESTS_PASSING = True
+def check_tests(tests):
 
-def check(test_name, input, expected):
-    global ARE_ALL_TESTS_PASSING
-    actual = TextUtility.merge_original_texts(input)
+    are_all_tests_passing = True
 
-    if expected != actual:
-        print(f"Test failed: {test_name}\n")
-        print(f"Expected: {expected}\n")
-        print(f"Actual: {actual}\n")
-        ARE_ALL_TESTS_PASSING = False
+    for test in tests:
+        name = test["name"]
+        input = test["input"]
+        expected = test["expected"]
+        actual = TextUtility.merge_original_texts(input)
 
+        is_test_failed = expected != actual
+        if is_test_failed:
+            print(f"Test failed: {name}\n")
+            print(f"Expected: {expected}\n")
+            print(f"Actual: {actual}\n")
+            are_all_tests_passing = False
 
-def test():
-
-    no_overlap = [(0, 2, "l1"), (4, 8, "l2"), (9, 10, "l3")]
-    expected = [(0, 2, "l1"), (4, 8, "l2"), (9, 10, "l3")]
-    check("no_overlap", no_overlap, expected)
-    
-
-    no_overlap_unsorted = [(9, 10, "l3"), (0, 2, "l1"), (4, 8, "l2")]
-    expected = [(0, 2, "l1"), (4, 8, "l2"), (9, 10, "l3")]
-    check("no_overlap_unsorted", no_overlap_unsorted, expected)
+    if are_all_tests_passing:
+        print("All tests are passing")
 
 
-    duplicity = [(2, 4, "l1"), (2, 4, "l2"), (2, 4, "l3")]
-    expected = [(2, 4, "l1, l2, l3")]
-    check("duplicity", duplicity, expected)
+def run_tests():
 
+    tests = [
+        {
+            "name": "no overlap",
+            "input": [(0, 2, "l1"), (4, 8, "l2"), (9, 10, "l3")],
+            "expected": [(0, 2, "l1"), (4, 8, "l2"), (9, 10, "l3")],
+        },
+        {
+            "name": "no overlap unsorted",
+            "input": [(9, 10, "l3"), (0, 2, "l1"), (4, 8, "l2")],
+            "expected": [(0, 2, "l1"), (4, 8, "l2"), (9, 10, "l3")],
+        },
+        {
+            "name": "duplicity",
+            "input": [(2, 4, "l1"), (2, 4, "l2"), (2, 4, "l3")],
+            "expected": [(2, 4, "l1, l2, l3")],
+        },
+        {
+            "name": "common first index",
+            "input": [(2, 4, "l1"), (2, 6, "l2"), (2, 8, "l3")],
+            "expected": [(2, 4, "l1, l2, l3"), (5, 6, "l2, l3"), (7, 8, "l3")],
+        },
+        {
+            "name": "continuous sequence",
+            "input": [(0, 2, "l1"), (2, 4, "l2"), (4, 6, "l3")],
+            "expected": [(0, 6, "l1, l2, l3")],
+        },
+        {
+            "name": "simple full intersection",
+            "input": [(0, 10, "l1"), (2, 6, "l2")],
+            "expected": [(0, 1, "l1"), (2, 6, "l1, l2"), (7, 10, "l1")],
+        },
+        {
+            "name": "full intersection",
+            "input": [(0, 10, "l1"), (2, 6, "l2"), (3, 7, "l3"), (3, 10, "l4")],
+            "expected": [(0, 1, "l1"), (2, 2, "l1, l2"), (3, 6, "l1, l2, l3, l4"), (7, 7, "l3, l4, l1"), (8, 10, "l1, l4")],
+        },
+        {
+            "name": "half intersection simple",
+            "input": [(0, 10, "l1"), (5, 15, "l2")],
+            "expected": [(0, 4, "l1"), (5, 10, "l1, l2"), (11, 15, "l2")],
+        },
+        {
+            "name": "half intersection",
+            "input": [(0, 10, "l1"), (5, 15, "l2"), (5, 20, "l3")],
+            "expected": [(0, 4, "l1"), (5, 10, "l1, l2, l3"), (11, 15, "l2, l3"), (16, 20, "l3")],
+        },
+        {
+            "name": "last element full intersection",
+            "input": [(2, 9, "l1"), (37, 44, "l1"), (0, 130, "l2")],
+            "expected": [(0, 1, "l2"), (2, 9, "l2, l1"), (10, 36, "l2"), (37, 44, "l2, l1"), (45, 130, "l2")],
+        },
+    ]
 
-    common_first_index = [(2, 4, "l1"), (2, 6, "l2"), (2, 8, "l3")]
-    expected = [(2, 4, "l1, l2, l3"), (5, 6, "l2, l3"), (7, 8, "l3")]
-    check("common_first_index", common_first_index, expected)
-
-
-    continuous_sequence = [(0, 2, "l1"), (2, 4, "l2"), (4, 6, "l3")]
-    expected = [(0, 6, "l1, l2, l3")]
-    check("continuous_sequence", continuous_sequence, expected)
-
-
-    simple_full_intersection = [(0, 10, "l1"), (2, 6, "l2")]
-    expected = [(0, 1, "l1"), (2, 6, "l1, l2"), (7, 10, "l1")]
-    check("simple_full_intersection", simple_full_intersection, expected)
-
-
-    full_intersection = [(0, 10, "l1"), (2, 6, "l2"), (3, 7, "l3"), (3, 10, "l4")]
-    expected = [(0, 1, "l1"), (2, 2, "l1, l2"), (3, 6, "l1, l2, l3, l4"), (7, 7, "l3, l4, l1"), (8, 10, "l1, l4")]
-    check("full_intersection", full_intersection, expected)
-
-
-    half_intersection_simple = [(0, 10, "l1"), (5, 15, "l2")]
-    expected = [(0, 4, "l1"), (5, 10, "l1, l2"), (11, 15, "l2")]
-    check("half_intersection_simple", half_intersection_simple, expected)
-
-
-    half_intersection = [(0, 10, "l1"), (5, 15, "l2"), (5, 20, "l3")]
-    expected = [(0, 4, "l1"), (5, 10, "l1, l2, l3"), (11, 15, "l2, l3"), (16, 20, "l3")]
-    check("half_intersection", half_intersection, expected)
-
-
-    last_element_full_intersection = [(2, 9, "l1"), (37, 44, "l1"), (0, 130, "l2")]
-    expected = [(0, 1, "l2"), (2, 9, "l2, l1"), (10, 36, "l2"), (37, 44, "l2, l1"), (45, 130, "l2")]
-    check("last_element_full_intersection", last_element_full_intersection, expected)
-
+    check_tests(tests)
 
 
 def main():
 
-    test()
-
-    if ARE_ALL_TESTS_PASSING:
-        print("All tests are passing")
-    return
-
+    run_tests()
 
 
 if __name__ == '__main__':

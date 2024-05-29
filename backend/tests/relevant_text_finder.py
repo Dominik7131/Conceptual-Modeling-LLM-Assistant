@@ -3,7 +3,6 @@ import sys
 
 TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 
-sys.path.append(".")
 sys.path.append("utils")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
@@ -15,8 +14,8 @@ from syntactic_text_filterer import SyntacticTextFilterer
 
 
 DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
-domain_models = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
-domain_models_name = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
+DOMAIN_MODELS = ["aircraft manufacturing 48982a787d8d25", "conference papers 56cd5f7cf40f52", "farming 97627e23829afb", "college 1dc8e791-1d0e-477c-b5c2-24e376e3f6f1", "zoological gardens e95b5ea472deb8", "registry of road vehicles 60098f15-668b-4a39-8503-285e0b51d56d"]
+DOMAIN_MODELS_NAME = ["aircraft-manufacturing", "conference-papers", "farming", "college", "zoological-gardens", "registry-of-road-vehicles"]
 DOMAIN_DESCRIPTIONS_COUNT = [3, 3, 3, 1, 1, 1]
 DOMAIN_TEXTS_COUNT = 12
 
@@ -186,7 +185,7 @@ class RAGTester:
 
 
         text_index = 0
-        for index, domain_model in enumerate(domain_models):
+        for index, domain_model in enumerate(DOMAIN_MODELS):
             for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
                 domain_description_file_name = f"domain-description-0{i + 1}.txt"
@@ -264,10 +263,10 @@ def print_precision(index):
 def print_evaluation():
 
     text_index = 0
-    for index, _ in enumerate(domain_models):
+    for index, _ in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            print(f"---- {domain_models_name[index]}-0{i + 1} ---- ")
+            print(f"---- {DOMAIN_MODELS_NAME[index]}-0{i + 1} ---- ")
             print_recall(text_index)
             print_precision(text_index)
             text_index += 1
