@@ -160,23 +160,24 @@ class TextUtility:
         return True
 
 
-    def convert_string_to_standard_convention(name):
-        # Convert text in any convention to a lower-cased text where each word is delimited with a space
+    def convert_string_to_standard_convention(text):
+        # Convert text in any convention to a lowercased text in standard convention
+        # where each word is delimited with a space
 
-        # TODO: Convert camel case starting with a small letter
-        # E.g.: periodOfInterruptionOfInsurance, dateOfChangeOfInsurance
-        
-        if not name:
+        if text == "Point3D":
+            print()
+
+        if not text:
             return ""
         
-        # Detect full upper-case name
-        is_all_uppercase = all((char.isupper() or char in string.punctuation) for char in name)
+        # Conver full uppercase into lower case
+        is_all_uppercase = all((char.isupper() or char in string.punctuation) for char in text)
         if is_all_uppercase:
-            name = name.lower()
+            text = text.lower()
 
-        # Detect snake_case_convention
-        if name[0].islower() and '_' in name:
-            name_parts = name.split('_')
+        # Detect snake_case convention
+        if text[0].islower() and '_' in text:
+            name_parts = text.split('_')
             result = ""
 
             for name_part in name_parts:
@@ -185,30 +186,33 @@ class TextUtility:
             result = result.rstrip() # Remove trailing space
             return result.lower()
         
+
         # Detect CamelCase
-        if TextUtility.is_camel_case(name, can_be_snake_case=False):
+        if TextUtility.is_camel_case(text, can_be_snake_case=False):
             result = ""
 
-            for index, char in enumerate(name):
+            for index, char in enumerate(text):
                 if index == 0:
                     result += char
                     continue
 
-                if (char.isupper()):
-                    result += ' '
-                    # If the next word is all in upper-case then make one space and skip it
+                is_add_space = char.isupper() or char.isdigit()
+                if is_add_space:
+                    result += " "
+                    # If the next word is all in uppercase then make one space and skip it
                     # E.g. indexURL -> index URL
-                    if (index + 1 < len(name) and name[index + 1].isupper()):
-                        result += name[index:]
+                    if (index + 1 < len(text) and text[index + 1].isupper()):
+                        result += text[index:]
                         break
                     else:
                         result += char.lower()
+
                 else:
                     result += char
 
             return result.lower()
 
-        return name.lower()
+        return text.lower()
 
 
     # Source: https://gist.github.com/bgusach/a967e0587d6e01e889fd1d776c5f3729
