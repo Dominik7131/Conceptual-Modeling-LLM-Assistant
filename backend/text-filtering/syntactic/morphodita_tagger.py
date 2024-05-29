@@ -10,7 +10,7 @@ class Morphodita_Tagger:
 
     def __init__(self):
 
-        with open(CONFIG_FILE_PATH, 'r') as file:
+        with open(CONFIG_FILE_PATH, "r") as file:
             config = json.load(file)
 
         tagger_path = config["tagger_path"]
@@ -31,7 +31,7 @@ class Morphodita_Tagger:
 
     def encode_entities(self, text):
 
-        return text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
     def split_into_tokens(self, text):
@@ -74,8 +74,8 @@ class Morphodita_Tagger:
         for i in range(len(tokens)):
 
             # For example split "non-motorised vehicle" into "non", "motorised", "vehicle"
-            if '-' in tokens[i]:
-                words = tokens[i].split('-')
+            if "-" in tokens[i]:
+                words = tokens[i].split("-")
                 for word in words:
                     lemma = self.get_lemmas(word)
                     result.append(lemma)
