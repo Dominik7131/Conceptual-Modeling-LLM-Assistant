@@ -62,8 +62,8 @@ def process_associations(path):
     return associations
 
 
-def main():
-    
+def generate_plantUML():
+
     for index, model_name in enumerate(DOMAIN_MODELS_NAME):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
@@ -114,6 +114,11 @@ def main():
             with open(plantUML_output_file_path, 'w') as file:
                 for result in plantUML:
                     file.write(result)
+
+
+def main():
+
+    generate_plantUML()
 
 
 if __name__ == "__main__":

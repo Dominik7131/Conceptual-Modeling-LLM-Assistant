@@ -4,16 +4,14 @@ import os
 import sys
 
 sys.path.append("utils")
-from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
+from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
 from text_utility import UserChoice
 
 
-INPUT_DIRECTORY_PATH = os.path.join("domain-modeling-benchmark", "evaluation domain models")
-OUTPUT_DIRECTORY_PATH = os.path.join("out", "evaluated", "actual")
-
+MANUAL_EVALUATION_DIRECTORY_PATH = os.path.join("out", "evaluated", "actual")
 
 IS_CSV = True
-SEPARATOR = ','
+SEPARATOR = ","
 SCORE_LENGTH = DOMAIN_TEXTS_COUNT + 1
 
 expected_classes, expected_attributes, expected_associations = [], [], []
@@ -43,8 +41,6 @@ recall_classes_max = [0] * SCORE_LENGTH
 recall_attributes_max = [0] * SCORE_LENGTH
 recall_associations_max = [0] * SCORE_LENGTH
 
-
-# TODO: Add reference to reasoning why we compute this types of recall and precision
 precision_classes_strict = [0] * SCORE_LENGTH
 precision_attributes_strict = [0] * SCORE_LENGTH
 precision_associations_strict = [0] * SCORE_LENGTH
@@ -97,7 +93,7 @@ def construct_expected_classes(test_data_path):
     test_cases = test_data[UserChoice.CLASSES.value]
 
     for test_case in test_cases:
-        expected_classes.append(test_case["class"].replace(' ', '-').lower())
+        expected_classes.append(test_case["class"].replace(" ", "-").lower())
     
     checked_classes_strict = [False] * len(expected_classes)
     checked_classes_construct = [False] * len(expected_classes)
@@ -122,7 +118,7 @@ def construct_expected_attributes(test_data_path):
         source_class = test_case["class"]
 
         for output in expected_output:
-            attribute_identificator = f"{output['name']};{source_class}".replace(' ', '-').lower()
+            attribute_identificator = f"{output['name']};{source_class}".replace(" ", "-").lower()
             expected_attributes.append(attribute_identificator)
     
     checked_attributes_strict = [False] * len(expected_attributes)
@@ -148,7 +144,7 @@ def construct_expected_associations(test_data_path):
         inputed_class = test_case["class"]
 
         for output in expected_output:
-            expected_associations.append(f"{output['name']};{inputed_class}".replace(' ', '-').lower())
+            expected_associations.append(f"{output['name']};{inputed_class}".replace(" ", "-").lower())
     
     checked_associations_strict = [False] * len(expected_associations)
     checked_associations_construct = [False] * len(expected_associations)
@@ -182,9 +178,9 @@ def check_suggestion(user_choice, matched_user_choice, matched_element, evaluate
 
 
     elements_to_check = [matched_element]
-    is_list = ';' in matched_element or matched_element.startswith('-')
+    is_list = ";" in matched_element or matched_element.startswith("-")
     if is_list:
-        elements_to_check = matched_element.split(';')
+        elements_to_check = matched_element.split(";")
 
     
     is_match_found = [False] * len(elements_to_check)
@@ -195,20 +191,20 @@ def check_suggestion(user_choice, matched_user_choice, matched_element, evaluate
         if is_match_found[element_index]:
             continue
 
-        if element.startswith('-'):
+        if element.startswith("-"):
             element = element[1:]
 
-        is_isa = element.startswith(':')
+        is_isa = element.startswith(":")
         if is_isa:
             element = element[1:]
 
         if user_choice == UserChoice.CLASSES.value or matched_user_choice == UserChoice.CLASSES.value:
-            matched_element_id = element.replace(' ', '-').lower()
+            matched_element_id = element.replace(" ", "-").lower()
         else:
             if is_isa:
-                matched_element_id = element.replace(' ', '-').lower()
+                matched_element_id = element.replace(" ", "-").lower()
             else:
-                matched_element_id = f"{element};{source_class}".replace(' ', '-').lower()
+                matched_element_id = f"{element};{source_class}".replace(" ", "-").lower()
 
 
         for i, expected_element in enumerate(expected_elements):
@@ -217,7 +213,7 @@ def check_suggestion(user_choice, matched_user_choice, matched_element, evaluate
             # However, class does not have source class in its ID so when class matches some attribute and association
             # we need to remove this source class from ID
             if (user_choice == UserChoice.CLASSES.value and matched_user_choice != UserChoice.CLASSES.value) or is_isa:
-                expected_element = expected_element.split(';')[0]
+                expected_element = expected_element.split(";")[0]
 
             if expected_element != matched_element_id:
                 continue
@@ -249,19 +245,17 @@ def check_suggestion(user_choice, matched_user_choice, matched_element, evaluate
 
     for is_match in is_match_found:
 
-        if is_match or element == '*':
+        if is_match or element == "*":
             continue
 
         is_isa_match = False
         if not is_match:
-            # print(f"Element not found: {element}\n- original matches element: {matched_element}\n- source class: {source_class}\n- user choice: {user_choice}\n- matched column: {matched_user_choice}\nfile: {evaluated_path}\n")
-
             # Element is not found = either typo or source class of the element does not correspond => set `is_isa` to True
 
             for i, expected_element in enumerate(expected_elements):
 
-                expected_element = expected_element.split(';')[0]
-                matched_element_id = matched_element_id.split(';')[0]
+                expected_element = expected_element.split(";")[0]
+                matched_element_id = matched_element_id.split(";")[0]
 
                 if expected_element != matched_element_id:
                     continue
@@ -313,19 +307,18 @@ def compute_precision(user_choice, text_index, matched_class, matched_attribute,
     precision_elements_list[-1] += 1
     precision_elements_list[text_index] += 1
 
-    is_class_list = matched_class.startswith('+') or matched_class.startswith('-')
-    is_attribute_list = matched_attribute.startswith('+') or matched_attribute.startswith('-')
-    is_association_list = matched_association.startswith('+') or matched_association.startswith('-')
+    is_class_list = matched_class.startswith("+") or matched_class.startswith("-")
+    is_attribute_list = matched_attribute.startswith("+") or matched_attribute.startswith("-")
+    is_association_list = matched_association.startswith("+") or matched_association.startswith("-")
 
-    is_class_isa = matched_class.startswith(':')
-    is_attribute_isa = matched_attribute.startswith(':')
-    is_association_isa = matched_association.startswith(':')
+    is_class_isa = matched_class.startswith(":")
+    is_attribute_isa = matched_attribute.startswith(":")
+    is_association_isa = matched_association.startswith(":")
 
     is_strict_class = not is_class_list and not is_class_isa and matched_class != ""
     is_strict_attribute = not is_attribute_list and not is_attribute_isa and matched_attribute != ""
     is_strict_association = not is_association_list and not is_association_isa and matched_association != ""
 
-    # is_not_construct = is_strict_attribute or is_strict_association
     is_not_construct = (user_choice != UserChoice.CLASSES.value and is_strict_class) or (user_choice != UserChoice.ATTRIBUTES.value and is_strict_attribute) or (user_choice != UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value and is_strict_association)
 
     is_isa = is_not_construct and (is_class_isa or is_attribute_isa or is_association_isa)
@@ -359,7 +352,6 @@ def evaluate_classes(evaluated_path, text_index):
             if index == 0 or len(row) == 0:
                 continue
 
-            # TODO: Make enum to give each row a name
             matched_class = row[1]
             matched_attribute = row[2]
             matched_association = row[3]
@@ -525,9 +517,9 @@ def print_recall(index, is_csv):
     recall_associations_list_percentage = (recall_associations_list[index] / recall_associations_max[index])
 
     if is_csv:
-        row_classes = "{:.2f}".format(recall_classes_strict_percentage) + ',' + "{:.2f}".format(recall_classes_construct_percentage) + ',' + "{:.2f}".format(recall_classes_isa_percentage) + ',' + "{:.2f}".format(recall_classes_list_percentage)
-        row_attributes = "{:.2f}".format(recall_attributes_strict_percentage) + ',' + "{:.2f}".format(recall_attributes_construct_percentage) + ',' + "{:.2f}".format(recall_attributes_isa_percentage) + ',' + "{:.2f}".format(recall_attributes_list_percentage)
-        row_associations = "{:.2f}".format(recall_associations_strict_percentage) + ',' + "{:.2f}".format(recall_associations_construct_percentage) + ',' + "{:.2f}".format(recall_associations_isa_percentage) + ',' + "{:.2f}".format(recall_associations_list_percentage)
+        row_classes = "{:.2f}".format(recall_classes_strict_percentage) + SEPARATOR + "{:.2f}".format(recall_classes_construct_percentage) + SEPARATOR + "{:.2f}".format(recall_classes_isa_percentage) + SEPARATOR + "{:.2f}".format(recall_classes_list_percentage)
+        row_attributes = "{:.2f}".format(recall_attributes_strict_percentage) + SEPARATOR + "{:.2f}".format(recall_attributes_construct_percentage) + SEPARATOR + "{:.2f}".format(recall_attributes_isa_percentage) + SEPARATOR + "{:.2f}".format(recall_attributes_list_percentage)
+        row_associations = "{:.2f}".format(recall_associations_strict_percentage) + SEPARATOR + "{:.2f}".format(recall_associations_construct_percentage) + SEPARATOR + "{:.2f}".format(recall_associations_isa_percentage) + SEPARATOR + "{:.2f}".format(recall_associations_list_percentage)
         print(f"{row_classes},{row_attributes},{row_associations}", end="")
         return
 
@@ -573,9 +565,9 @@ def print_precision(index, is_csv):
     precision_associations_list_percentage = (precision_associations_list[index] / precision_associations_max[index])
 
     if is_csv:
-        row_classes = "{:.2f}".format(precision_classes_strict_percentage) + ',' + "{:.2f}".format(precision_classes_construct_percentage) + ',' + "{:.2f}".format(precision_classes_isa_percentage) + ',' + "{:.2f}".format(precision_classes_list_percentage)
-        row_attributes = "{:.2f}".format(precision_attributes_strict_percentage) + ',' + "{:.2f}".format(precision_attributes_construct_percentage) + ',' + "{:.2f}".format(precision_attributes_isa_percentage) + ',' + "{:.2f}".format(precision_attributes_list_percentage)
-        row_associations = "{:.2f}".format(precision_associations_strict_percentage) + ',' + "{:.2f}".format(precision_associations_construct_percentage) + ',' + "{:.2f}".format(precision_associations_isa_percentage) + ',' + "{:.2f}".format(precision_associations_list_percentage)
+        row_classes = "{:.2f}".format(precision_classes_strict_percentage) + SEPARATOR + "{:.2f}".format(precision_classes_construct_percentage) + SEPARATOR + "{:.2f}".format(precision_classes_isa_percentage) + SEPARATOR + "{:.2f}".format(precision_classes_list_percentage)
+        row_attributes = "{:.2f}".format(precision_attributes_strict_percentage) + SEPARATOR + "{:.2f}".format(precision_attributes_construct_percentage) + SEPARATOR + "{:.2f}".format(precision_attributes_isa_percentage) + SEPARATOR + "{:.2f}".format(precision_attributes_list_percentage)
+        row_associations = "{:.2f}".format(precision_associations_strict_percentage) + SEPARATOR + "{:.2f}".format(precision_associations_construct_percentage) + SEPARATOR + "{:.2f}".format(precision_associations_isa_percentage) + SEPARATOR + "{:.2f}".format(precision_associations_list_percentage)
         print(f",{row_classes},{row_attributes},{row_associations}")
         return
 
@@ -640,13 +632,13 @@ def main():
     for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            classes_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.CLASSES.value}-expected-suggestions-0{i + 1}.json")
-            attributes_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ATTRIBUTES.value}-expected-suggestions-0{i + 1}.json")
-            associations_expected_suggestions_path = os.path.join(INPUT_DIRECTORY_PATH, domain_model, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{i + 1}.json")
+            classes_expected_suggestions_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.CLASSES.value}-expected-suggestions-0{i + 1}.json")
+            attributes_expected_suggestions_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.ATTRIBUTES.value}-expected-suggestions-0{i + 1}.json")
+            associations_expected_suggestions_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{i + 1}.json")
 
-            classes_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
-            attributes_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
-            associations_evaluated_path = os.path.join(OUTPUT_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
+            classes_evaluated_path = os.path.join(MANUAL_EVALUATION_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
+            attributes_evaluated_path = os.path.join(MANUAL_EVALUATION_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
+            associations_evaluated_path = os.path.join(MANUAL_EVALUATION_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
 
             is_file = check_file(classes_evaluated_path, UserChoice.CLASSES.value)
             is_file = is_file and check_file(attributes_evaluated_path, UserChoice.ATTRIBUTES.value)

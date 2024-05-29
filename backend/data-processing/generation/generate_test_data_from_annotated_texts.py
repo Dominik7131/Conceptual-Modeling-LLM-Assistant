@@ -3,7 +3,7 @@ import re
 import os
 import sys
 import requests
-sys.path.append(".")
+
 sys.path.append("utils")
 from domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
 from text_utility import Field, TextUtility, UserChoice
@@ -24,7 +24,7 @@ def get_text_from_indexes(indexes, text):
     index = 0
     while index < len(indexes):
         sub_text = text[indexes[index] : indexes[index + 1]]
-        relevant_text_raw = re.sub(r'<[^>]+>', '', sub_text)
+        relevant_text_raw = re.sub(r"<[^>]+>", "", sub_text)
 
         sentences = TextUtility.split_into_sentences(relevant_text_raw)
         
@@ -59,8 +59,8 @@ def create_suggestions_two_known_classes(dictionary, model, text):
 
     for association in associations:
         association_name = association["title"].lower()
-        source_class = association["domain"].lower().replace('-', ' ')
-        target_class = association["range"].lower().replace('-', ' ')
+        source_class = association["domain"].lower().replace("-", " ")
+        target_class = association["range"].lower().replace("-", " ")
 
         if association_name not in dictionary:
             continue
@@ -69,14 +69,13 @@ def create_suggestions_two_known_classes(dictionary, model, text):
         relevant_texts = get_text_from_indexes(indexes, text)
 
         result_two_known_classes.append({ Field.NAME.value: association_name, Field.SOURCE_CLASS.value: source_class, Field.TARGET_CLASS.value: target_class, "relevant_texts": relevant_texts })
-        associations2_out_suggestions.append({ Field.NAME.value: association_name, Field.SOURCE_CLASS.value: source_class, Field.TARGET_CLASS.value: target_class, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts) })
+        associations2_out_suggestions.append({ Field.NAME.value: association_name, Field.SOURCE_CLASS.value: source_class, Field.TARGET_CLASS.value: target_class, Field.ORIGINAL_TEXT.value: " ".join(relevant_texts) })
 
 
     generalizations2_out_suggestions = []
     for generalization in generalizations:
-        # generalization_name = "is-a"
-        source_class = generalization["generalClass"].lower().replace('-', ' ')
-        target_class = generalization["specialClass"].lower().replace('-', ' ')
+        source_class = generalization["generalClass"].lower().replace("-", " ")
+        target_class = generalization["specialClass"].lower().replace("-", " ")
 
         generalizations2_out_suggestions.append( {"generalClass": source_class, "specialClass": target_class } )
 
@@ -99,7 +98,7 @@ def convert_to_relevant_texts(dictionary, text, model, file_path):
 
 
     for clss in classes:
-        class_name = clss["title"].lower().replace('-', ' ')
+        class_name = clss["title"].lower().replace("-", " ")
 
         if class_name not in dictionary:
             print(f"Warning: Class \"{class_name}\" not in annotated text: {file_path}")
@@ -108,13 +107,13 @@ def convert_to_relevant_texts(dictionary, text, model, file_path):
         indexes = dictionary[class_name]
         relevant_texts_classes = get_text_from_indexes(indexes, text)
 
-        classes_suggestions.append({"class": class_name, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts_classes)})
+        classes_suggestions.append({"class": class_name, Field.ORIGINAL_TEXT.value: " ".join(relevant_texts_classes)})
 
         attributes_out = []
         attributes_out_suggestions = []
         for attribute in attributes:
-            attribute_name = attribute["title"].lower().replace('-', ' ')
-            source_class = attribute["domain"].lower().replace('-', ' ')
+            attribute_name = attribute["title"].lower().replace("-", " ")
+            source_class = attribute["domain"].lower().replace("-", " ")
 
             if attribute_name not in dictionary:
                 print(f"Warning: Attribute \"{attribute_name}\" not in annotated text: {file_path}")
@@ -125,15 +124,15 @@ def convert_to_relevant_texts(dictionary, text, model, file_path):
                 relevant_texts_attributes = get_text_from_indexes(indexes, text)
                 attributes_out.append({ "name": attribute_name, "relevant_texts": relevant_texts_attributes })
 
-                attributes_out_suggestions.append({"name": attribute_name, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts_attributes)})
+                attributes_out_suggestions.append({"name": attribute_name, Field.ORIGINAL_TEXT.value: " ".join(relevant_texts_attributes)})
 
 
         associations_out = []
         associations_out_suggestions = []
         for association in associations:
-            association_name = association["title"].lower().replace('-', ' ')
-            source_class = association["domain"].lower().replace('-', ' ')
-            target_class = association["range"].lower().replace('-', ' ')
+            association_name = association["title"].lower().replace("-", " ")
+            source_class = association["domain"].lower().replace("-", " ")
+            target_class = association["range"].lower().replace("-", " ")
 
             # TODO: Fix typo in expected model
             if association_name == "is staff member of academic commumity":
@@ -149,7 +148,7 @@ def convert_to_relevant_texts(dictionary, text, model, file_path):
 
             if source_class == class_name or target_class == class_name:
                 associations_out.append({ "name": association_name, "is_source": is_source, "relevant_texts": relevant_texts_associations })
-                associations_out_suggestions.append({"name": association_name, Field.SOURCE_CLASS.value: source_class, Field.TARGET_CLASS.value: target_class, Field.ORIGINAL_TEXT.value: ' '.join(relevant_texts_associations)})
+                associations_out_suggestions.append({"name": association_name, Field.SOURCE_CLASS.value: source_class, Field.TARGET_CLASS.value: target_class, Field.ORIGINAL_TEXT.value: " ".join(relevant_texts_associations)})
 
 
         result_one_known_class.append({"class": class_name, "relevant_texts": relevant_texts_classes, "attributes": attributes_out,
@@ -178,7 +177,7 @@ def print_result(tags_indexes, text):
 
 def find_end_index(tag, text, text_index):
 
-    end_enclosed_tag = "</" + tag + '>'
+    end_enclosed_tag = "</" + tag + ">"
     while text_index < len(text):
         if text[text_index:].startswith(end_enclosed_tag):
             return text_index
@@ -195,14 +194,14 @@ def get_tags_indexes(tags, text):
     text_index = 0
 
     for tag in tags:
-        enclosed_tag = '<' + tag + '>'
+        enclosed_tag = "<" + tag + ">"
 
         while text_index < len(text):
             if text[text_index:].startswith(enclosed_tag):
                 start_index = text_index + len(enclosed_tag)
                 end_index = find_end_index(tag, text, text_index + len(enclosed_tag))
 
-                parsed_tag = tag.replace('-', ' ')
+                parsed_tag = tag.replace("-", " ")
                 if parsed_tag not in dictionary:
                     dictionary[parsed_tag] = [start_index, end_index]
                 else:
@@ -219,7 +218,7 @@ def get_tags_indexes(tags, text):
 
 def write_json_to_file(output_file_path, content_to_write):
 
-    with open(output_file_path, 'w') as file:
+    with open(output_file_path, "w") as file:
         json.dump(content_to_write, file)
 
 
@@ -281,8 +280,8 @@ def main():
             with open(file_path) as file:
                 text = file.read()
 
-            tags = re.findall(r'<([^>]+)>', text)
-            tags = list(filter(lambda x: x[0] != '/', tags)) # Remove closed tags
+            tags = re.findall(r"<([^>]+)>", text)
+            tags = list(filter(lambda x: x[0] != "/", tags)) # Remove closed tags
 
             tags_indexes = get_tags_indexes(tags, text)
 
