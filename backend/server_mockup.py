@@ -5,18 +5,15 @@ import json
 import time
 import sys
 
-sys.path.append(".")
+sys.path.append("utils")
 
 from backend.definitions.utility import UserChoice
 from original_text_merger import OriginalTextMerger
 
 
-
 app = Flask(__name__)
 llm_assistant = None
 
-
-# CORS error from frontend solution: https://stackoverflow.com/a/33091782
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type" 
 
@@ -33,6 +30,7 @@ def suggest_items():
     print(f"fv: {text_filtering_variation}")
 
     def generate_mock_up():
+
         # time.sleep(2)
         if user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.CLASSES.value:
             yield '{"originalText": "the type of engine specified by the manufacturer of the road vehicle", "name": "type of engine", "originalTextIndexes": [], "dataType": "string", "description": ""}\n' #specific classification or categorization denoting the particular design and specifications of the engine installed in a motorized vehicle
@@ -51,6 +49,7 @@ def suggest_items():
 def suggest_single_field():
 
     def generator_function(field):
+
         if field == "name": dictionary = { field: "Regenerated name" }
         elif field == "description": dictionary = { field: "The engine type attribute of a road vehicle refers to the specific classification assigned by the manufacturer to denote the kind of engine installed in the vehicle. It encompasses various types such as internal combustion engines or other alternative propulsion systems. This attribute provides crucial information about the power source and characteristics of the engine, aiding in regulatory compliance, maintenance, and performance assessment."}
         elif field == "originalText": dictionary = { field: "Regenerated original text" }
@@ -70,11 +69,13 @@ def suggest_single_field():
 
 
 def generate_summary_plain_text_mock_up():
+
     yield '{"summary": "The conceptual model includes four main entities: Student, Course, Dormitory, and Professor. The Student entity has a name attribute and can be enrolled in any number of Courses. The Course entity has a name and a number of credits attribute, and can have one or more Professors. The Dormitory entity has a price attribute, and students can be accommodated in it. The Professor entity has a name attribute. Additionally, there is a relationship between Student and Person through an \'is-a\' relationship."}\n'
     return
 
 
 def generate_summary_descriptions_mock_up():
+
     yield '{"class": "engine","description": "An engine entity represents the power source of a vehicle.","attributes": [{"name": "engine type","description": "The type of engine, such as internal combustion, electric, etc."},{"name": "engine power","description": "The power output of the engine, typically measured in kilowatts (kW)."},{"name": "fuel type","description": "The type of fuel used by the engine, such as gasoline, diesel, electricity, etc."}]}\n'
     time.sleep(1)
     yield '{"association": "has", "sourceEntity": "course", "targetEntity": "professor", "description": "Courses have professors who teach them"}\n'
@@ -201,6 +202,7 @@ def save_suggested_summary():
 
 @app.route('/')
 def index():
+
     return "LLM assistant backend"
 
 
