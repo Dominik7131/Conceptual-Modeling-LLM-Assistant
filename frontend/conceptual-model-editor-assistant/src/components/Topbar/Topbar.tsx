@@ -19,7 +19,7 @@ import { isSidebarCollapsedState } from "../../atoms/sidebar";
 import { CustomTabPanel } from "../CustomElements/CustomTabPanel";
 
 
-const Topbar: React.FC = () =>
+const Topbar: React.FC = (): JSX.Element =>
 {
     const [isCollapsed, setIsCollapsed] = useState(false)
     const [isSidebarCollapsed, setIsSidebarCollapsed] = useRecoilState(isSidebarCollapsedState)
