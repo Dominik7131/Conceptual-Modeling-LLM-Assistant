@@ -84,7 +84,7 @@ const useGenerateSingleField = () =>
                             setFieldToLoad(fields => fields.filter(currentField => currentField !== field))
                             return
                         }
-    
+
                         onProcessStreamedDataGeneral(value, field)
                         
                         readChunk()
@@ -109,15 +109,12 @@ const useGenerateSingleField = () =>
     
     function onProcessStreamedDataGeneral(value: any, field: Field): void
     {
-        // Convert the `value` to a string
-        var jsonString = new TextDecoder().decode(value)
-        console.log(jsonString)
-        console.log("\n")
+        const jsonString = new TextDecoder().decode(value)
     
         const parsedData = JSON.parse(jsonString)
         setRegeneratedItem((regeneratedItem) =>
         {
-            return {...regeneratedItem, [field]: parsedData[field]}
+            return { ...regeneratedItem, [field]: parsedData[field] }
         })
 
         if (field === Field.ORIGINAL_TEXT)
