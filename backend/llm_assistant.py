@@ -1,10 +1,7 @@
 import os
-import time
 import logging
 import json
 import sys
-
-from text_utility import TextUtility
 
 TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 
@@ -12,7 +9,9 @@ sys.path.append("utils")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
-from definitions.utility import CLASSES_BLACK_LIST, LOGGER_NAME, Field, TextFilteringVariation, UserChoice
+from definitions.logging import LOG_DIRECTORY, LOG_FILE_PATH, LOGGER_NAME
+from text_utility import TextUtility
+from definitions.utility import CLASSES_BLACK_LIST, Field, TextFilteringVariation, UserChoice
 from output_parser import OutputParser
 from prompt_manager import PromptManager
 from syntactic_text_filterer import SyntacticTextFilterer
@@ -22,17 +21,12 @@ from semantic_text_filterer import SemanticTextFilterer
 ITEMS_COUNT = 5
 IS_SYSTEM_MSG = True
 
-# TODO: Try to setup the logger somewhere else
-logger = logging.getLogger(LOGGER_NAME)
-
-TIMESTAMP = time.strftime("%Y-%m-%d-%H-%M-%S")
-LOG_DIRECTORY = "logs"
-LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, f"{TIMESTAMP}-log.txt")
-logging.basicConfig(level=logging.INFO, format="%(message)s", filename=LOG_FILE_PATH, filemode='w')
-
 
 class LLMAssistant:
+
     def __init__(self):   
+
+        self.__setup_logging()
 
         self.syntactic_text_filterer = SyntacticTextFilterer()
         self.semantic_text_filterer = SemanticTextFilterer()
@@ -40,6 +34,15 @@ class LLMAssistant:
         self.prompt_manager = PromptManager()
         
         self.debug_info = self.DebugInfo()
+
+
+    def __setup_logging(self):
+
+        if (not os.path.exists(LOG_DIRECTORY)):
+            os.makedirs(LOG_DIRECTORY)
+
+        logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode="w")
+        self.logger = logging.getLogger(LOGGER_NAME)
 
 
     class DebugInfo:
@@ -90,9 +93,9 @@ class LLMAssistant:
         return relevant_texts
     
 
-    def __log_sending_prompt_message(messages):
+    def __log_sending_prompt_message(self, messages):
 
-        logging.info(f"\nSending this prompt to llm:\n{messages}\n")
+        self.logger.info(f"\nSending this prompt to llm:\n{messages}\n")
     
 
     def __process_suggested_item(self, user_choice, items_iterator, domain_description):
@@ -107,11 +110,11 @@ class LLMAssistant:
 
             if user_choice == UserChoice.CLASSES.value:
                 if suggestion_dictionary["name"] in suggested_classes:
-                    logging.info(f"Skipping duplicate class: {suggestion_dictionary['name']}")
+                    self.logger.info(f"Skipping duplicate class: {suggestion_dictionary['name']}")
                     continue
 
                 if suggestion_dictionary["name"] in CLASSES_BLACK_LIST:
-                    logging.info(f"Skipping black-listed class: {suggestion_dictionary['name']}")
+                    self.logger.info(f"Skipping black-listed class: {suggestion_dictionary['name']}")
                     continue
 
                 suggested_classes.append(suggestion_dictionary["name"])
@@ -126,7 +129,7 @@ class LLMAssistant:
                 original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(original_text, domain_description, user_choice)
                 suggestion_dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
             else:
-                logging.warn(f"Warning: original text not in item: {item}")
+                self.logger.warn(f"Warning: original text not in item: {item}")
 
             json_item = json.dumps(suggestion_dictionary)
             yield f"{json_item}\n"
@@ -150,7 +153,7 @@ class LLMAssistant:
 
         is_no_relevant_text = is_domain_description and not relevant_texts
         if is_no_relevant_text:
-            logging.warn("No relevant texts found.")
+            self.logger.warn("No relevant texts found.")
             return
 
         is_chain_of_thoughts = True
@@ -164,7 +167,7 @@ class LLMAssistant:
         self.is_some_item_generated = False
 
         # Some LLMs sometimes stop too early
-        # When this happens try to generate the output again with a little bit different prompt to force different outcome
+        # When this happens try to generate the output again with a little bit different prompt to force different output
         for attempt_number in range(max_attempts_count):
 
             prompt = self.prompt_manager.create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class,
@@ -172,7 +175,7 @@ class LLMAssistant:
                 is_chain_of_thoughts=is_chain_of_thoughts)
 
             if attempt_number > 0:
-                logging.info(f"Attempt: {attempt_number}")
+                self.logger.info(f"Attempt: {attempt_number}")
                 prompt = self.prompt_manager.remove_last_n_lines_from_prompt(prompt, attempt_number)
             
             new_messages = self.messages.copy()

@@ -1,8 +1,6 @@
 from enum import Enum
 
 
-LOGGER_NAME = "LLM_logger"
-
 CLASSES_BLACK_LIST = ["employee", "department", "manager"]
 
 PRONOUNS_TO_DETECT = ["It", "This", "The", "They"]

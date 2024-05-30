@@ -5,9 +5,11 @@ import json
 import time
 import sys
 
-sys.path.append("utils")
-sys.path.append(os.path.join("backend", "utils"))
-from text_utility import TextUtility, UserChoice
+sys.path.append(".")
+
+from backend.definitions.utility import UserChoice
+from original_text_merger import OriginalTextMerger
+
 
 
 app = Flask(__name__)
@@ -110,7 +112,7 @@ def merge_original_texts():
     parsed_original_text_indexes_object = [(item["indexes"][0], item["indexes"][1], item["label"]) for item in original_text_indexes_object]
     # print(f"Parsed object: {parsed_original_text_indexes_object}\n")
 
-    result = TextUtility.merge_original_texts(parsed_original_text_indexes_object)
+    result = OriginalTextMerger.merge(parsed_original_text_indexes_object)
 
     print(f"{result}\n")
     return result

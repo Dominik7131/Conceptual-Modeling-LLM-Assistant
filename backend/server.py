@@ -3,29 +3,19 @@ from flask_cors import CORS, cross_origin
 import json
 import os
 import time
-import logging
 import sys
+
+sys.path.append(".")
+
+from original_text_merger import OriginalTextMerger
 from llm_assistant import LLMAssistant
-
-sys.path.append("utils")
-sys.path.append(os.path.join("backend", "utils"))
-from text_utility import LOGGER_NAME, Field, TextUtility, UserChoice
-
+from definitions.utility import Field, UserChoice
 
 app = Flask(__name__)
 llm_assistant = None
 
-TIMESTAMP = time.strftime("%Y-%m-%d-%H-%M-%S")
-LOG_DIRECTORY = "logs"
-LOG_FILE_PATH = os.path.join(LOG_DIRECTORY, f"{TIMESTAMP}-log.txt")
-
-logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode="w")
-logger = logging.getLogger(LOGGER_NAME)
-
-
 STORAGE_DIRECTORY = "storage"
 
-# CORS error from frontend solution: https://stackoverflow.com/a/33091782
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
 
@@ -92,7 +82,7 @@ def merge_original_texts():
     # print(f"Received: {original_text_indexes_object}\n")
 
     parsed_original_text_indexes_object = [(item["indexes"][0], item["indexes"][1], item["label"]) for item in original_text_indexes_object]
-    result = TextUtility.merge_original_texts(parsed_original_text_indexes_object)
+    result = OriginalTextMerger.merge(parsed_original_text_indexes_object)
 
     return result
 
@@ -186,10 +176,7 @@ def index():
 
 
 if __name__ == "__main__":
-
-    if (not os.path.exists(LOG_DIRECTORY)):
-        os.makedirs(LOG_DIRECTORY)
-    
+   
     if (not os.path.exists(STORAGE_DIRECTORY)):
         os.makedirs(STORAGE_DIRECTORY)
 
