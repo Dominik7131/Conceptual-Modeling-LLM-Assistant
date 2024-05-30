@@ -3,15 +3,11 @@ __pycache__/
 
 commands.txt
 llama/
-out/*
-
-notes/2024-01-28 Návrh schématu konceptuálního modelu.pdf
-notes/odkaz na 2024-01-28 Návrh schématu konceptuálního modelu.txt
-notes/measurement-approach-cz.md
 
 domain-modeling-benchmark/
 
 backend/get_stream.py
 backend/x.py
-backend/storage/*
+backend/logs
+backend/storage
 backend/out/*
