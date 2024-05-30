@@ -16,6 +16,9 @@ const Tabs: React.FC = (): JSX.Element =>
     const attributesLabel = capitalizeString(UserChoiceItem.ATTRIBUTES)
     const associationsLabel = capitalizeString(UserChoiceItem.ASSOCIATIONS_ONE_KNOWN_CLASS).slice(0, -1)
 
+    const tabColor = "secondary"
+    const tabSx = { textTransform: "capitalize" }
+
     const handleChange = (_: React.SyntheticEvent, newValue: SidebarTab) =>
     {
         setErrorMessage("")
@@ -25,13 +28,13 @@ const Tabs: React.FC = (): JSX.Element =>
 
     return (
         <Box sx={{ borderBottom: 1, borderColor: "divider", display: "flex", justifyContent: "center" }}>
-            <TabList onChange={ handleChange }
-                indicatorColor="secondary"
-                textColor="secondary">
-                    <Tab sx={{textTransform: "capitalize"}} label={classesLabel} value={SidebarTab.CLASSES} />
-                    <Tab sx={{textTransform: "none"}} label={attributesLabel} value={SidebarTab.ATTRIBUTES} />
-                    <Tab sx={{textTransform: "none"}} label={associationsLabel} value={SidebarTab.ASSOCIATIONS}/>
+
+            <TabList onChange={ handleChange } indicatorColor={ tabColor } textColor={ tabColor }>
+                <Tab sx={tabSx} label={classesLabel} value={SidebarTab.CLASSES} />
+                <Tab sx={tabSx} label={attributesLabel} value={SidebarTab.ATTRIBUTES} />
+                <Tab sx={tabSx} label={associationsLabel} value={SidebarTab.ASSOCIATIONS}/>
             </TabList>
+
         </Box>
     )
 }

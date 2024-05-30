@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import { Button } from "@mui/material";
-import TabPanel from "@mui/lab/TabPanel";
 import TabContext from "@mui/lab/TabContext";
 import { useRecoilState, useRecoilValue } from "recoil";
 import SummaryDescriptionsTab from "./SummaryDescriptionsTab";
@@ -17,6 +16,7 @@ import { useState } from "react";
 import InfoTab from "./InfoTab";
 import { topbarTabValueState } from "../../atoms/topbar";
 import { isSidebarCollapsedState } from "../../atoms/sidebar";
+import { CustomTabPanel } from "../CustomElements/CustomTabPanel";
 
 
 const Topbar: React.FC = () =>
@@ -48,29 +48,29 @@ const Topbar: React.FC = () =>
                         
                         <Tabs/>
 
-                        <TabPanel value="0">
+                        <CustomTabPanel value="0">
                             <TopbarButtons/>
-                        </TabPanel>
+                        </CustomTabPanel>
 
-                        <TabPanel value="1">
+                        <CustomTabPanel value="1">
                             <SummaryPlainTextTab/>
-                        </TabPanel>
+                        </CustomTabPanel>
 
-                        <TabPanel value="2">
+                        <CustomTabPanel value="2">
                             <SummaryDescriptionsTab/>                    
-                        </TabPanel>
+                        </CustomTabPanel>
 
-                        <TabPanel value="3">
+                        <CustomTabPanel value="3">
                             <ImportTab/>
-                        </TabPanel>
+                        </CustomTabPanel>
 
-                        <TabPanel value="4">
+                        <CustomTabPanel value="4">
                             <SettingsTab/>
-                        </TabPanel>
+                        </CustomTabPanel>
 
-                        <TabPanel value="5">
+                        <CustomTabPanel value="5">
                             <InfoTab/>
-                        </TabPanel>
+                        </CustomTabPanel>
                     </TabContext>
                 </Box>
             }

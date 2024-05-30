@@ -22,26 +22,26 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
     const itemTypesToLoad = useRecoilValue(itemTypesToLoadState)
 
 
-    const createUniqueKey = (name: string, sourceEntity: string, targetEntity: string): string =>
+    const createUniqueKey = (name: string, sourceClass: string, targetClass: string): string =>
     {
-        if (!sourceEntity)
+        if (!sourceClass)
         { 
-            sourceEntity = ""
+            sourceClass = ""
         }
 
-        if (!targetEntity)
+        if (!targetClass)
         {
-            targetEntity = ""
+            targetClass = ""
         }
 
-        const uniqueKey = `${name}-${sourceEntity}-${targetEntity}`
+        const uniqueKey = `${name}-${sourceClass}-${targetClass}`
         return uniqueKey
     }
 
 
     return (
 
-        <Stack style={{ whiteSpace: "pre-line" }}>
+        <Stack style={{ whiteSpace: "pre-line", marginLeft: "-20px", marginRight: "-20px" }}>
             { title &&
                 <Stack>
                     <Typography
@@ -78,7 +78,7 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
 
             { itemTypesToLoad.includes(itemType) &&
                 <Box
-                    sx={{ display: "flex", justifyContent:"center", marginTop: "20px" }}>
+                    sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
                     <CircularProgress />
                 </Box>
             }

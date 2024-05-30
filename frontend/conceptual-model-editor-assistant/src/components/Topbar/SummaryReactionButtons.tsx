@@ -1,12 +1,12 @@
 import { Button, Stack, Tooltip } from "@mui/material"
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";
-import { isSummaryReactionButtonClickedState } from "../../atoms/summary";
 import { SummaryConceptualModel } from "../../definitions/summary";
 import { TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS, UserChoiceSummary } from "../../definitions/utility";
 import { handleSaveSuggestionSummary } from "../../utils/summary";
+import { useState } from "react";
 
 
 interface Props
@@ -17,11 +17,9 @@ interface Props
 
 const SummaryReactionButtons: React.FC<Props> = ({ userChoice, summary }): JSX.Element =>
 {
-    const [isClickedSummary, setIsClickedSummary] = useRecoilState(isSummaryReactionButtonClickedState)
+    const [isReactionButtonClicked, setIsReactionButtonClicked] = useState(false)
     const domainDescriptionSnapshot = useRecoilValue(domainDescriptionSnapshotsState)
     const conceptualModelSnapshot = useRecoilValue(conceptualModelSnapshotState)
-
-    const isClicked = isClickedSummary[userChoice]
 
     const reactionIconsColor = "inherit"
     const reactionIconsSize = "20px"
@@ -31,7 +29,7 @@ const SummaryReactionButtons: React.FC<Props> = ({ userChoice, summary }): JSX.E
     const handleSaveSuggestion = (isPositiveReaction: boolean) =>
     {
         handleSaveSuggestionSummary(userChoice, isPositiveReaction, domainDescriptionSnapshot, conceptualModelSnapshot, summary)
-        setIsClickedSummary(previousValue => { return { ...previousValue, [userChoice]: true } })
+        setIsReactionButtonClicked(true)
     }
 
 
@@ -46,7 +44,7 @@ const SummaryReactionButtons: React.FC<Props> = ({ userChoice, summary }): JSX.E
                     size={ "small" }
                     color={ reactionIconsColor }
                     sx={{ minWidth: reactionButtonsMinSize, minHeight: reactionButtonsMinSize }}
-                    disabled={ isClicked }
+                    disabled={ isReactionButtonClicked }
                     onClick={ () => { handleSaveSuggestion(true) } }
                     >
                         <ThumbUpIcon sx={{ width: reactionIconsSize, height: reactionIconsSize }}/>
@@ -62,7 +60,7 @@ const SummaryReactionButtons: React.FC<Props> = ({ userChoice, summary }): JSX.E
                     color={ reactionIconsColor }
                     size={ "small" }
                     sx={{ minWidth: reactionButtonsMinSize, minHeight: reactionButtonsMinSize }}
-                    disabled={ isClicked }
+                    disabled={ isReactionButtonClicked }
                     onClick={ () => { handleSaveSuggestion(false) } }
                     >
                         <ThumbDownIcon sx={{ width: reactionIconsSize, height: reactionIconsSize }}/>
