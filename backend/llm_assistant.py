@@ -3,12 +3,14 @@ import logging
 import json
 import sys
 
+
 TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 
 sys.path.append("utils")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
+from original_text_finder import OriginalTextFinder
 from definitions.logging import LOG_DIRECTORY, LOG_FILE_PATH, LOGGER_NAME
 from text_utility import TextUtility
 from definitions.utility import CLASSES_BLACK_LIST, Field, TextFilteringVariation, UserChoice
@@ -24,7 +26,7 @@ IS_SYSTEM_MSG = True
 
 class LLMAssistant:
 
-    def __init__(self):   
+    def __init__(self):
 
         self.__setup_logging()
 
@@ -32,8 +34,7 @@ class LLMAssistant:
         self.semantic_text_filterer = SemanticTextFilterer()
 
         self.prompt_manager = PromptManager()
-        
-        self.debug_info = self.DebugInfo()
+        self.output_parser = OutputParser()
 
 
     def __setup_logging(self):
@@ -43,13 +44,6 @@ class LLMAssistant:
 
         logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode="w")
         self.logger = logging.getLogger(LOGGER_NAME)
-
-
-    class DebugInfo:
-        def __init__(self):
-            self.prompt = ""
-            self.assistant_message = ""
-            self.deleted_items = []
 
 
     def __append_default_messages(self, user_choice, is_domain_description=False):
@@ -98,44 +92,83 @@ class LLMAssistant:
         self.logger.info(f"\nSending this prompt to llm:\n{messages}\n")
     
 
-    def __process_suggested_item(self, user_choice, items_iterator, domain_description):
+    def __empty_generator(self):
 
-        if user_choice == UserChoice.CLASSES.value:
-            suggested_classes = []
+        if False:
+            yield
 
-        for item in items_iterator:
 
-            self.is_some_item_generated = True
-            suggestion_dictionary = json.loads(json.dumps(item))
+
+    def get_output(self, user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest):
+
+        # Some LLMs sometimes stop too early
+        # When this happens try to generate the output again with a little bit different prompt to force different output
+
+        max_attempts_count = 2
+
+        for attempt_number in range(max_attempts_count):
+
+            prompt = self.prompt_manager.create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class,
+                is_domain_description=is_domain_description, items_count_to_suggest=items_count_to_suggest, relevant_texts=relevant_texts,
+                is_chain_of_thoughts=is_chain_of_thoughts)
+
+            if attempt_number > 0:
+                self.logger.info(f"Attempt: {attempt_number}")
+                prompt = self.prompt_manager.remove_last_n_lines_from_prompt(prompt, attempt_number)
+            
+            new_messages = self.messages.copy()
+            new_messages.append({"role": "user", "content": prompt})
+
+            messages_prettified = TextUtility.prettify_messages(new_messages)
+            self.__log_sending_prompt_message(messages_prettified)
+
+            self.logger.error("Starting to parse stream")
+            items_iterator = self.output_parser.parse_stream(messages=new_messages, user_choice=user_choice, source_class=source_class, target_class=target_class)
+            self.logger.error("Starting to go through first item in iterator")
+            self.logger.error(f"Iterator: {items_iterator}")
 
             if user_choice == UserChoice.CLASSES.value:
-                if suggestion_dictionary["name"] in suggested_classes:
-                    self.logger.info(f"Skipping duplicate class: {suggestion_dictionary['name']}")
-                    continue
+                suggested_classes = []
 
-                if suggestion_dictionary["name"] in CLASSES_BLACK_LIST:
-                    self.logger.info(f"Skipping black-listed class: {suggestion_dictionary['name']}")
-                    continue
+            for item in items_iterator:
 
-                suggested_classes.append(suggestion_dictionary["name"])
+                self.is_some_item_generated = True
+                suggestion_dictionary = json.loads(json.dumps(item))
 
-                if not Field.ORIGINAL_TEXT.value in suggestion_dictionary:
-                    # Find occurencies of the class name in the domain description
-                    item[Field.ORIGINAL_TEXT.value] = suggestion_dictionary["name"]
+                if user_choice == UserChoice.CLASSES.value:
+                    if suggestion_dictionary["name"] in suggested_classes:
+                        self.logger.info(f"Skipping duplicate class: {suggestion_dictionary['name']}")
+                        continue
 
-            # Find originalText indexes for `item["originalText"]` in `domain_description`
-            if Field.ORIGINAL_TEXT.value in item:
-                original_text = item[Field.ORIGINAL_TEXT.value]
-                original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(original_text, domain_description, user_choice)
-                suggestion_dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
-            else:
-                self.logger.warn(f"Warning: original text not in item: {item}")
+                    if suggestion_dictionary["name"] in CLASSES_BLACK_LIST:
+                        self.logger.info(f"Skipping black-listed class: {suggestion_dictionary['name']}")
+                        continue
 
-            json_item = json.dumps(suggestion_dictionary)
-            yield f"{json_item}\n"
+                    suggested_classes.append(suggestion_dictionary["name"])
+
+                    if not Field.ORIGINAL_TEXT.value in suggestion_dictionary:
+                        # Find occurencies of the class name in the domain description
+                        item[Field.ORIGINAL_TEXT.value] = suggestion_dictionary["name"]
+
+                # Find originalText indexes for `item["originalText"]` in `domain_description`
+                if Field.ORIGINAL_TEXT.value in item:
+                    original_text = item[Field.ORIGINAL_TEXT.value]
+                    original_text_indexes, _, _ = OriginalTextFinder.find_in_domain_description(original_text, domain_description, user_choice)
+                    suggestion_dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
+                else:
+                    self.logger.warn(f"Original text not in item: {item}")
+
+                json_item = json.dumps(suggestion_dictionary)
+                yield f"{json_item}\n"
+
+            if self.is_some_item_generated:
+                break
+
+        self.logger.info("Returning empty generator")
+        return self.__empty_generator()
 
 
-    def suggest_items(self, source_class, target_class, user_choice, domain_description, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value, count_items_to_suggest=5):
+    def suggest_items(self, source_class, target_class, user_choice, domain_description, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value, items_count_to_suggest=5):
 
         source_class = source_class.strip()
         target_class = target_class.strip()
@@ -154,7 +187,7 @@ class LLMAssistant:
         is_no_relevant_text = is_domain_description and not relevant_texts
         if is_no_relevant_text:
             self.logger.warn("No relevant texts found.")
-            return
+            return self.__empty_generator()
 
         is_chain_of_thoughts = True
 
@@ -162,36 +195,9 @@ class LLMAssistant:
         if user_choice == UserChoice.CLASSES.value:
             is_chain_of_thoughts = False    
 
-
-        max_attempts_count = 2
         self.is_some_item_generated = False
 
-        # Some LLMs sometimes stop too early
-        # When this happens try to generate the output again with a little bit different prompt to force different output
-        for attempt_number in range(max_attempts_count):
-
-            prompt = self.prompt_manager.create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class,
-                is_domain_description=is_domain_description, items_count_to_suggest=count_items_to_suggest, relevant_texts=relevant_texts,
-                is_chain_of_thoughts=is_chain_of_thoughts)
-
-            if attempt_number > 0:
-                self.logger.info(f"Attempt: {attempt_number}")
-                prompt = self.prompt_manager.remove_last_n_lines_from_prompt(prompt, attempt_number)
-            
-            new_messages = self.messages.copy()
-            new_messages.append({"role": "user", "content": prompt})
-
-            messages_prettified = TextUtility.prettify_messages(new_messages)
-            self.__log_sending_prompt_message(messages_prettified)
-
-            self.debug_info.prompt = messages_prettified
-
-            output_parser = OutputParser()
-            items_iterator = output_parser.parse_streamed_output(new_messages, user_choice=user_choice, source_class=source_class, target_class=target_class)
-            yield self.__process_suggested_item(user_choice=user_choice, items_iterator=items_iterator, domain_description=domain_description)
-
-            if self.is_some_item_generated:
-                break
+        return self.get_output(user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest)
 
 
     def suggest_single_field(self, user_choice, name, source_class, target_class, domain_description, field_name, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value):
@@ -209,19 +215,17 @@ class LLMAssistant:
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
         messages_prettified = TextUtility.prettify_messages(new_messages)
-        self.debug_info.prompt = messages_prettified
 
         self.__log_sending_prompt_message(messages_prettified)
 
-        output_parser = OutputParser()
-        items_iterator = output_parser.parse_streamed_output(new_messages, user_choice, source_class, field_name=field_name)
+        items_iterator = self.output_parser.parse_stream(messages=new_messages, user_choice=user_choice, source_class=source_class, field_name=field_name)
 
         for item in items_iterator:
 
             item_object = json.loads(json.dumps(item)) # Convert `item` of type string into JSON and then into python dictionary
 
             if field_name == Field.ORIGINAL_TEXT.value:
-                original_text_indexes, _, _ = TextUtility.find_text_in_domain_description(item_object[Field.ORIGINAL_TEXT.value], domain_description, user_choice)
+                original_text_indexes, _, _ = OriginalTextFinder.find_in_domain_description(item_object[Field.ORIGINAL_TEXT.value], domain_description, user_choice)
                 item_object[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
             
             json_item = json.dumps(item_object)
@@ -240,18 +244,19 @@ class LLMAssistant:
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
         messages_prettified = TextUtility.prettify_messages(new_messages)
-        self.debug_info.prompt = messages_prettified
 
         self.__log_sending_prompt_message(messages_prettified)
 
-        output_parser = OutputParser()
-        items_iterator = output_parser.parse_streamed_output(messages=new_messages, user_choice=user_choice, source_class="")
+        items_iterator = self.output_parser.parse_stream(messages=new_messages, user_choice=user_choice, source_class="")
 
         for item in items_iterator:
+            self.logger.info(f"Processing summary: {item}")
             dictionary = json.loads(json.dumps(item))
 
             json_item = json.dumps(dictionary)
             return json_item
+
+        return self.__empty_generator()
 
 
     def suggest_summary_descriptions(self, conceptual_model, domain_description):
@@ -266,12 +271,10 @@ class LLMAssistant:
         new_messages = self.messages.copy()
         new_messages.append({"role": "user", "content": prompt})
         messages_prettified = TextUtility.prettify_messages(new_messages)
-        self.debug_info.prompt = messages_prettified
 
         self.__log_sending_prompt_message(messages_prettified)
 
-        output_parser = OutputParser()
-        items_iterator = output_parser.parse_streamed_output(messages=new_messages, user_choice=user_choice, source_class="")
+        items_iterator = self.output_parser.parse_stream(messages=new_messages, user_choice=user_choice, source_class="")
 
         for item in items_iterator:
             dictionary = json.loads(json.dumps(item))

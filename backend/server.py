@@ -5,14 +5,17 @@ import os
 import time
 import sys
 
-sys.path.append(".")
+
+sys.path.append("utils")
 
 from original_text_merger import OriginalTextMerger
 from llm_assistant import LLMAssistant
 from definitions.utility import Field, UserChoice
+from prompt_manager import PromptManager
 
 app = Flask(__name__)
 llm_assistant = None
+prompt_manager = None
 
 STORAGE_DIRECTORY = "storage"
 
@@ -31,8 +34,7 @@ def suggest_items():
     domain_description = body_data["domainDescription"]
     text_filtering_variation = body_data["textFilteringVariation"]
 
-    return llm_assistant.suggest_items(source_class, target_class, user_choice, domain_description=domain_description, text_filtering_variation=text_filtering_variation, count_items_to_suggest=5)
-
+    return llm_assistant.suggest_items(source_class, target_class, user_choice, domain_description=domain_description, text_filtering_variation=text_filtering_variation, items_count_to_suggest=5)
 
 
 @app.route("/suggest/single_field", methods=["POST"])
@@ -113,7 +115,7 @@ def save_suggested_item():
 
     is_domain_description = domain_description != ""
     is_chain_of_thoughts = (user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value)
-    prompt = llm_assistant.get_prompt(user_choice=user_choice, is_chain_of_thoughts=is_chain_of_thoughts, is_domain_description=is_domain_description)
+    prompt = prompt_manager.get_prompt(user_choice=user_choice, is_chain_of_thoughts=is_chain_of_thoughts, is_domain_description=is_domain_description)
     completed_item["prompt"] = prompt
 
     if user_choice == UserChoice.ATTRIBUTES or user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
@@ -139,7 +141,7 @@ def save_suggested_single_field():
 
     completed_item = { "domain_description": domain_description, "field_name": field_name, "field_text": field_text, "is_positive": isPositive }
 
-    prompt = llm_assistant.get_prompt(user_choice=user_choice, field_name=field_name, is_chain_of_thoughts=False)
+    prompt = prompt_manager.get_prompt(user_choice=user_choice, field_name=field_name, is_chain_of_thoughts=False)
     completed_item["prompt"] = prompt
 
     relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_class=source_class, filtering_variation=text_filtering_variation)
@@ -162,7 +164,7 @@ def save_suggested_summary():
 
     completed_item = { "domain_description": domain_description, "summary": summary, "is_positive": isPositive, "conceptual_model": conceptual_model }
 
-    prompt = llm_assistant.get_prompt(user_choice=summaryType, is_chain_of_thoughts=False)
+    prompt = prompt_manager.get_prompt(user_choice=summaryType, is_chain_of_thoughts=False)
     completed_item["prompt"] = prompt
 
     save_item_to_storage(completed_item)
@@ -181,5 +183,6 @@ if __name__ == "__main__":
         os.makedirs(STORAGE_DIRECTORY)
 
     llm_assistant = LLMAssistant()
+    prompt_manager = PromptManager()
 
     app.run(port=5000, threaded=False, host="0.0.0.0")

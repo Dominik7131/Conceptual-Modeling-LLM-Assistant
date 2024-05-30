@@ -2,7 +2,8 @@ import json
 import logging
 import openai
 
-from backend.definitions.utility import DEFINED_DATA_TYPES, LOGGER_NAME, Field, UserChoice
+from definitions.logging import LOGGER_NAME
+from definitions.utility import DEFINED_DATA_TYPES, Field, UserChoice
 from convention_convertor import ConventionConvertor
 
 
@@ -14,85 +15,43 @@ MODEL_ID = ""
 
 class OutputParser:
 
-    def __init__(self, user_choice, source_class, target_class="", field_name=""):
+    def __init__(self):
+
         self.client = openai.OpenAI(base_url=LLM_BACKEND_URL, api_key="sk-no-key-required")
-
         self.logger = logging.getLogger(LOGGER_NAME)
-
-        self.user_choice = user_choice
-        self.source_class = source_class.lower()
-        self.target_class = target_class.lower()
-        self.field_name = field_name
-
-        self.debug_info = self.DebugInfo()
 
         self.item = ""
         self.new_lines_in_a_row = 0
         self.last_char = ""
         self.opened_curly_brackets_count = 0
-
-
-    class DebugInfo:
-        def __init__(self):
-            self.parsed_message = ""
-            self.deleted_items = [] 
-
-
-    def process_parsed_item(self, iterator):
-
-        for completed_item, is_item_ok in iterator:
-            if is_item_ok:
-                yield completed_item
-            else:
-                self.debug_info.deleted_items.append(completed_item)
+        self.parsed_message = ""
     
 
-    def process_character(self, char):
+    def __reset(self, user_choice="", source_class="", messages={}, target_class="", field_name=""):
 
-        if char == "{":
-            if self.opened_curly_brackets_count == 1 and self.is_disable_JSON_nesting:
-                self.item = ""
-            else:
-                self.opened_curly_brackets_count += 1
+        self.user_choice = user_choice
+        self.source_class = source_class.lower()
+        self.messages = messages
+        self.target_class = target_class.lower()
+        self.field_name = field_name
 
-        if char == "\n" and self.last_char == "\n":
-            self.new_lines_in_a_row += 1
-        else:
-            self.new_lines_in_a_row = 0
+        self.item = ""
+        self.new_lines_in_a_row = 0
+        self.last_char = ""
+        self.opened_curly_brackets_count = 0
+        self.parsed_message = ""
 
-        
-        # Return when LLM gets stuck in printing only new lines
-        if self.new_lines_in_a_row > 3:
-            logging.warning("Too many new lines")
-            return False
-        
-        if self.opened_curly_brackets_count > 0:
-            self.item += char
-        
-        if char == "}":
-            self.opened_curly_brackets_count -= 1
-
-
-        is_item_detected = self.opened_curly_brackets_count == 0 and self.item != ""
-        if is_item_detected:
-            parsed_item_iterator = self.__parse_item_streamed_output(self.item)
-            yield self.process_parsed_item(parsed_item_iterator)
-
-            self.item = ""
-
-        self.last_char = char
-        return True
-    
 
     def __log_full_message(self):
 
-        self.logger.info(f"\nFull message: {self.debug_info.parsed_message}")
+        self.logger.info(f"\nFull message: {self.parsed_message}")
 
 
+    def parse_stream(self, user_choice, source_class, messages, target_class="", field_name=""):
 
-    def parse_streamed_output(self, messages):
+        self.__reset(user_choice, source_class, messages, target_class, field_name)
 
-        output = self.client.chat.completions.create(messages=messages, model=MODEL_ID, stream=True, temperature=TEMPERATURE)
+        output = self.client.chat.completions.create(messages=self.messages, model=MODEL_ID, stream=True, temperature=TEMPERATURE)
 
         # E.g.: "classNames": {[{ "name": "customer"}, {...}]}
         # To parse only the inner item {"name": "customer"}, we need to reset parsing when we encounter the "{" symbol
@@ -105,14 +64,48 @@ class OutputParser:
 
             text = text.choices[0].delta.content
 
-            self.debug_info.parsed_message += text
+            self.parsed_message += text
 
             for char in text:
-                is_continue = self.process_character(char)
+                if char == "{":
+                    if self.opened_curly_brackets_count == 1 and self.is_disable_JSON_nesting:
+                        self.item = ""
+                    else:
+                        self.opened_curly_brackets_count += 1
 
-                if not is_continue:
+                if char == "\n" and self.last_char == "\n":
+                    self.new_lines_in_a_row += 1
+                else:
+                    self.new_lines_in_a_row = 0
+
+                
+                # Return when LLM gets stuck in printing only new lines
+                if self.new_lines_in_a_row > 3:
+                    self.logger.warning("Too many new lines")
                     self.__log_full_message()
                     return
+                
+                if self.opened_curly_brackets_count > 0:
+                    self.item += char
+                
+                if char == "}":
+                    self.opened_curly_brackets_count -= 1
+
+
+                is_item_detected = self.opened_curly_brackets_count == 0 and self.item != ""
+                if is_item_detected:
+                    parsed_item_iterator = self.__parse_item_streamed_output()
+
+                    for completed_item, is_item_ok in parsed_item_iterator:
+
+                        if is_item_ok:
+                            yield completed_item
+                        else:
+                            self.logger.info(f"Removing: {completed_item}")
+
+                    self.item = ""
+
+                self.last_char = char
             
 
         # If the JSON object is not properly finished then insert the needed amount of closed curly brackets
@@ -120,8 +113,14 @@ class OutputParser:
             self.logger.info(f"JSON object is not properly finished: {self.item}")
             self.item += "}" * self.opened_curly_brackets_count
 
-            parsed_item_iterator = self.__parse_item_streamed_output(self.item)
-            yield self.process_parsed_item(parsed_item_iterator)
+            parsed_item_iterator = self.__parse_item_streamed_output()
+
+            for completed_item, is_item_ok in parsed_item_iterator:
+
+                if is_item_ok:
+                    yield completed_item
+                else:
+                    self.logger.info(f"Removing: {completed_item}")
 
 
         self.__log_full_message()
@@ -184,12 +183,13 @@ class OutputParser:
     def __parse_associations2(self, completed_item):
 
         is_item_ok = True
+
         if Field.SOURCE_CLASS.value in completed_item and Field.TARGET_CLASS.value in completed_item:                
             source_class_generated = completed_item["source"].lower().replace("s", "z")
             target_class_generated = completed_item["target"].lower().replace("s", "z")
 
-            source_class = source_class.lower().replace("s", "z")
-            target_class = target_class.lower().replace("s", "z")
+            source_class = self.source_class.lower().replace("s", "z")
+            target_class = self.target_class.lower().replace("s", "z")
 
             is_match = (source_class == source_class_generated and target_class == target_class_generated) or (target_class == source_class_generated and source_class == target_class_generated)
             is_none = (source_class_generated == "none") or (target_class_generated == "none")
@@ -204,27 +204,27 @@ class OutputParser:
         return completed_item, is_item_ok
     
 
-    def __parse_summary_plain_text(self, completed_item):
+    def __check_summary_plain_text(self, completed_item):
 
         is_item_ok = "summary" in completed_item
 
         if not is_item_ok:
             self.logger.error("No summary in the item")
 
-        return completed_item, is_item_ok
+        return is_item_ok
 
 
-    def __parse_single_field(self, completed_item):
+    def __check_single_field(self, completed_item):
 
         is_item_ok = self.field_name in completed_item
 
         if not is_item_ok:
             self.logger.error(f"No {self.field_name} in the item")
 
-        return completed_item, is_item_ok
+        return is_item_ok
 
 
-    def __convert_names_into_standard_convention(completed_item):
+    def __convert_names_into_standard_convention(self, completed_item):
 
         is_item_ok = True
         completed_item[Field.NAME.value] = ConventionConvertor.convert_string_to_standard_convention(completed_item[Field.NAME.value])
@@ -261,6 +261,7 @@ class OutputParser:
             self.item = self.item.replace("\n", " ")
 
             completed_item = json.loads(self.item)
+            self.logger.warn(f"Checking: {completed_item}")
 
         except ValueError:
             self.logger.error(f"Cannot decode JSON: {self.item}\n")
@@ -272,24 +273,30 @@ class OutputParser:
 
         is_single_field_item = self.field_name != ""
         if is_single_field_item:
-            return self.__parse_single_field(completed_item)
+            is_item_ok = self.__check_single_field(completed_item)
+            yield completed_item, is_item_ok
+            return
 
         if self.user_choice == UserChoice.SUMMARY_PLAIN_TEXT.value:
-            return self.__parse_summary_plain_text(completed_item)
+            is_item_ok = self.__check_summary_plain_text(completed_item)
+            yield completed_item, is_item_ok
 
         elif self.user_choice == UserChoice.SUMMARY_DESCRIPTIONS.value:
-            return completed_item, is_item_ok
+            yield completed_item, is_item_ok
+            return
             
 
         if "name" not in completed_item or not completed_item["name"] or completed_item["name"] == "none":
             completed_item["name"] = "error: no name"
             is_item_ok = False
-            return completed_item, is_item_ok
+            yield completed_item, is_item_ok
+            return
 
         completed_item, is_item_ok = self.__convert_names_into_standard_convention(completed_item)
 
         if not is_item_ok:
-            return completed_item, is_item_ok
+            yield completed_item, is_item_ok
+            return
 
 
         if self.user_choice == UserChoice.ATTRIBUTES.value:

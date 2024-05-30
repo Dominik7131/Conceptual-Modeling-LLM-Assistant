@@ -1,7 +1,7 @@
 import json
 import os
 
-from backend.definitions.prompt_symbols import PromptSymbols
+from definitions.prompt_symbols import PromptSymbols
 from multireplacer import Multireplacer
 
 
