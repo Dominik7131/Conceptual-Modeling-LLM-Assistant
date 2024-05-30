@@ -107,7 +107,7 @@ const useGenerateSingleField = () =>
     }
     
     
-    function onProcessStreamedDataGeneral(value: any, field: Field): void
+    const onProcessStreamedDataGeneral = (value: Uint8Array, field: Field): void =>
     {
         const jsonString = new TextDecoder().decode(value)
     

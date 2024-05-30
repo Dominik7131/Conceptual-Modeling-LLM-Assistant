@@ -7,7 +7,7 @@ import { SingleFieldUserEvaluationBody } from "../definitions/fetch";
 import { regeneratedOriginalTextIndexesState } from "../atoms/originalTextIndexes";
 import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots";
 import { editedSuggestedItemState, regeneratedItemState } from "../atoms/suggestions";
-import { Item, Attribute } from "../definitions/conceptualModel";
+import { Item, Attribute, Association } from "../definitions/conceptualModel";
 import { ItemType, UserChoiceSingleField, Field } from "../definitions/utility";
 
 
@@ -39,41 +39,40 @@ const useConfirmRegeneratedField = () =>
     }
     
         
-    const onConfirmRegeneratedText = (field : Field) =>
+    const onConfirmRegeneratedText = (field: Field): void =>
     {
         let itemType = ItemType.CLASS
         let sourceClass = ""
     
         setEditedItem((editedItem: Item) =>
         {
-            // Set type to "any" because Typescript doesn't recognise that we already did the check
-            // Otherwise we need to write an if-statement for each field of type Item
-            if (regeneratedItem.hasOwnProperty(field))
+            if (!regeneratedItem.hasOwnProperty(field))
             {
-                itemType = editedItem[Field.TYPE]
-    
-                if (itemType === ItemType.CLASS)
-                {
-                    sourceClass = editedItem[Field.NAME]
-                }
-                else
-                {
-                    sourceClass = (editedItem as Attribute)[Field.SOURCE_CLASS]
-                }
-
-                if (field === Field.ORIGINAL_TEXT)
-                {
-                    return { ...editedItem, [field]: (regeneratedItem as any)[field], [Field.ORIGINAL_TEXT_INDEXES]: regeneratedOriginalTextIndexes }
-                }
-                else
-                {
-                    return { ...editedItem, [field]: (regeneratedItem as any)[field] }
-                }
+                return editedItem
             }
-            return editedItem
+
+            itemType = editedItem[Field.TYPE]
+
+            if (itemType === ItemType.CLASS)
+            {
+                sourceClass = editedItem[Field.NAME]
+            }
+            else
+            {
+                sourceClass = (editedItem as Attribute)[Field.SOURCE_CLASS]
+            }
+
+            if (field === Field.ORIGINAL_TEXT)
+            {
+                return { ...editedItem, [field]: regeneratedItem[field], [Field.ORIGINAL_TEXT_INDEXES]: regeneratedOriginalTextIndexes }
+            }
+            else
+            {
+                return { ...editedItem, [field]: regeneratedItem[field as keyof Item] }
+            }
         })
     
-        saveSingleFieldSuggestion(field, (regeneratedItem as any)[field], itemType, sourceClass)
+        saveSingleFieldSuggestion(field, regeneratedItem[field as keyof Item] as string, itemType, sourceClass)
     
         onClearRegeneratedItem(field, setRegeneratedItem)
     }
