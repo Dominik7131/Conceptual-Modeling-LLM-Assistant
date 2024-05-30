@@ -55,8 +55,8 @@ def suggest_single_field():
         elif field == "originalText": dictionary = { field: "Regenerated original text" }
         elif field == "dataType": dictionary = { field: "string" }
         elif field == "sourceCardinality" or field == "targetCardinality": dictionary = { field: "one-many"}
-        elif field == "source": dictionary = { field: "New source entity"}
-        elif field == "target": dictionary = { field: "New target entity"}
+        elif field == "source": dictionary = { field: "New source class"}
+        elif field == "target": dictionary = { field: "New target class"}
         else: dictionary = { field: "Some new text"}
 
         yield json.dumps(dictionary)
@@ -70,19 +70,19 @@ def suggest_single_field():
 
 def generate_summary_plain_text_mock_up():
 
-    yield '{"summary": "The conceptual model includes four main entities: Student, Course, Dormitory, and Professor. The Student entity has a name attribute and can be enrolled in any number of Courses. The Course entity has a name and a number of credits attribute, and can have one or more Professors. The Dormitory entity has a price attribute, and students can be accommodated in it. The Professor entity has a name attribute. Additionally, there is a relationship between Student and Person through an \'is-a\' relationship."}\n'
+    yield '{"summary": "The conceptual model includes four main classes: Student, Course, Dormitory, and Professor. The Student class has a name attribute and can be enrolled in any number of Courses. The Course class has a name and a number of credits attribute, and can have one or more Professors. The Dormitory class has a price attribute, and students can be accommodated in it. The Professor class has a name attribute. Additionally, there is an association between Student and Person through an \'is-a\' association."}\n'
     return
 
 
 def generate_summary_descriptions_mock_up():
 
-    yield '{"class": "engine","description": "An engine entity represents the power source of a vehicle.","attributes": [{"name": "engine type","description": "The type of engine, such as internal combustion, electric, etc."},{"name": "engine power","description": "The power output of the engine, typically measured in kilowatts (kW)."},{"name": "fuel type","description": "The type of fuel used by the engine, such as gasoline, diesel, electricity, etc."}]}\n'
+    yield '{"class": "engine","description": "An engine class represents the power source of a vehicle.","attributes": [{"name": "engine type","description": "The type of engine, such as internal combustion, electric, etc."},{"name": "engine power","description": "The power output of the engine, typically measured in kilowatts (kW)."},{"name": "fuel type","description": "The type of fuel used by the engine, such as gasoline, diesel, electricity, etc."}]}\n'
     time.sleep(1)
-    yield '{"association": "has", "sourceEntity": "course", "targetEntity": "professor", "description": "Courses have professors who teach them"}\n'
+    yield '{"association": "has", "sourceClass": "course", "targetClass": "professor", "description": "Courses have professors who teach them"}\n'
     time.sleep(1)
-    yield '{"association": "enrolled in", "sourceEntity": "student", "targetEntity": "course", "description": "Students can be enrolled in any number of courses"}\n'
+    yield '{"association": "enrolled in", "sourceClass": "student", "targetClass": "course", "description": "Students can be enrolled in any number of courses"}\n'
     time.sleep(1)
-    yield '{"association": "accommodated in", "sourceEntity": "student", "targetEntity": "dormitory", "description": "Students can be accommodated in dormitories"}\n'
+    yield '{"association": "accommodated in", "sourceClass": "student", "targetClass": "dormitory", "description": "Students can be accommodated in dormitories"}\n'
     return
 
 
@@ -119,31 +119,32 @@ def merge_original_texts():
     return result
 
 
-def create_summary_mockup(entities : list[str]) -> list[dict]:
+def create_summary_mockup(classes):
+
     result = []
 
-    if "student" in entities:
-        result.append(json.dumps({"entity": "student",
+    if "student" in classes:
+        result.append(json.dumps({"class": "student",
                                   "attributes": [{"name": "name", "description": "Represents the name of the student."}],
-                                  "relationships": [{"name": "accommodated in", "description": "Describes the relationship between a student and a dormitory. A student can be accommodated in a dormitory."},
-                                                    {"name": "enrolled in", "description": "Indicates the enrollment relationship between a student and a course. A student can be enrolled in multiple courses."}] }))
+                                  "associations": [{"name": "accommodated in", "description": "Describes the association between a student and a dormitory. A student can be accommodated in a dormitory."},
+                                                    {"name": "enrolled in", "description": "Indicates the enrollment association between a student and a course. A student can be enrolled in multiple courses."}] }))
     
-    if "course" in entities:
-        result.append(json.dumps({"entity": "course",
+    if "course" in classes:
+        result.append(json.dumps({"class": "course",
                                   "attributes": [{"name": "name", "description": "Represents the name of the course"},
                                                  {"name": "number of credits", "description": "Indicates the number of credits associated with the course"}],
-                                  "relationships": [{"name": "has", "description": "Describes the relationship between a course and a professor. A course can be taught by one or more professors."},
-                                                    {"name": "aggregates", "description": "Indicates the relationship between a course and a student. A course can have multiple students enrolled in it."}]}))
+                                  "associations": [{"name": "has", "description": "Describes the association between a course and a professor. A course can be taught by one or more professors."},
+                                                    {"name": "aggregates", "description": "Indicates the association between a course and a student. A course can have multiple students enrolled in it."}]}))
     
-    if "professor" in entities:
-        result.append(json.dumps({"entity": "professor",
+    if "professor" in classes:
+        result.append(json.dumps({"class": "professor",
                                   "attributes": [{"name": "name", "description": "Represents the name of the professor."}],
-                                  "relationships": [{"name": "participates in", "description": "Describes the participation relationship between a professor and a course. A professor can participate in teaching multiple courses."}]}))
+                                  "associations": [{"name": "participates in", "description": "Describes the participation association between a professor and a course. A professor can participate in teaching multiple courses."}]}))
     
-    if "dormitory" in entities:
-        result.append(json.dumps({"entity": "dormitory",
+    if "dormitory" in classes:
+        result.append(json.dumps({"class": "dormitory",
                                   "attributes": [{"name": "price", "description": "Represents the price of accommodation in the dormitory."}],
-                                  "relationships": [{"name": "accommodates", "description": "Indicates the relationship between a dormitory and a student. A dormitory can accommodate multiple students."}]}))
+                                  "associations": [{"name": "accommodates", "description": "Indicates the association between a dormitory and a student. A dormitory can accommodate multiple students."}]}))
     return result
 
 

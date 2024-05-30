@@ -11,9 +11,9 @@ const useFetchSuggestedItems = () =>
 {
     const [itemTypesToLoad, setItemTypesToLoad] = useRecoilState(itemTypesToLoadState)
 
-    const setSuggestedEntities = useSetRecoilState(suggestedClassesState)
+    const setSuggestedClasses = useSetRecoilState(suggestedClassesState)
     const setSuggestedAttributes = useSetRecoilState(suggestedAttributesState)
-    const setSuggestedRelationships = useSetRecoilState(suggestedAssociationsState)
+    const setSuggestedAssociations = useSetRecoilState(suggestedAssociationsState)
 
     const setErrorMessage = useSetRecoilState(sidebarErrorMsgState)
 
@@ -31,7 +31,7 @@ const useFetchSuggestedItems = () =>
       .then(response =>
         {
           // Reset all suggested items
-          onClearSuggestedItems(itemType, setSuggestedEntities, setSuggestedAttributes, setSuggestedRelationships)
+          onClearSuggestedItems(itemType, setSuggestedClasses, setSuggestedAttributes, setSuggestedAssociations)
           setErrorMessage("")
 
           if (!itemTypesToLoad.includes(itemType))
@@ -116,7 +116,7 @@ const useFetchSuggestedItems = () =>
 
       if (itemType === ItemType.CLASS)
       {
-        setSuggestedEntities(previousSuggestedItems => {
+        setSuggestedClasses(previousSuggestedItems => {
           return [...previousSuggestedItems, item]
         })
       }
@@ -141,7 +141,7 @@ const useFetchSuggestedItems = () =>
         association[Field.SOURCE_CLASS] = sourceClassIRI
         association[Field.TARGET_CLASS] = targetClassIRI
 
-        setSuggestedRelationships(previousSuggestedItems => {
+        setSuggestedAssociations(previousSuggestedItems => {
           return [...previousSuggestedItems, association]
         })
       }

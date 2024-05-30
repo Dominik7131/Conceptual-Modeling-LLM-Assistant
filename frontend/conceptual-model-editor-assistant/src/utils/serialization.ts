@@ -35,11 +35,11 @@ const convertNodesToJSON = (nodes: Node[]) =>
         const clss: Class = nodeData.class
         const attributes: Attribute[] = nodeData.attributes
     
-        const newEntityJson: ClassJson = {
+        const newClassJson: ClassJson = {
             iri: clss[Field.IRI], title: clss[Field.NAME], description: clss[Field.DESCRIPTION]
         }
     
-        newClasses.push(newEntityJson)
+        newClasses.push(newClassJson)
     
         for (let j = 0; j < attributes.length; j++)
         {
@@ -69,15 +69,15 @@ const convertEdgesToJSON = (edges: Edge[]) =>
         const edge: Edge = edges[i]
         const edgeData: EdgeData = edge.data
     
-        const relationship: Association = edgeData.association
+        const association: Association = edgeData.association
 
-        if (relationship[Field.TYPE] !== ItemType.GENERALIZATION)
+        if (association[Field.TYPE] !== ItemType.GENERALIZATION)
         {
             // Process relationships
             const newRelationshipJson: RelationshipJson = {
-                iri: relationship[Field.IRI], title: relationship[Field.NAME], description: relationship[Field.DESCRIPTION],
-                domain: relationship[Field.SOURCE_CLASS], domainCardinality: relationship[Field.SOURCE_CARDINALITY],
-                range: relationship[Field.TARGET_CLASS], rangeCardinality: relationship[Field.TARGET_CARDINALITY]
+                iri: association[Field.IRI], title: association[Field.NAME], description: association[Field.DESCRIPTION],
+                domain: association[Field.SOURCE_CLASS], domainCardinality: association[Field.SOURCE_CARDINALITY],
+                range: association[Field.TARGET_CLASS], rangeCardinality: association[Field.TARGET_CARDINALITY]
             }
     
             newRelationships.push(newRelationshipJson)
@@ -86,8 +86,8 @@ const convertEdgesToJSON = (edges: Edge[]) =>
         {
             // Process generalizations
             const newGeneralizationJson: GeneralizationJson = {
-                iri: relationship[Field.IRI], title: relationship[Field.NAME], description: relationship[Field.DESCRIPTION],
-                specialClass: relationship[Field.SOURCE_CLASS], generalClass: relationship[Field.TARGET_CLASS]
+                iri: association[Field.IRI], title: association[Field.NAME], description: association[Field.DESCRIPTION],
+                specialClass: association[Field.SOURCE_CLASS], generalClass: association[Field.TARGET_CLASS]
             }
     
             newGeneralizations.push(newGeneralizationJson)

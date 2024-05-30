@@ -268,12 +268,12 @@ export const createNode = (nodeName: string, positionX: number, positionY: numbe
 {
     const nodeIRI = createIRIFromName(nodeName)
 
-    const newEntity: Class = {
+    const newClass: Class = {
         [Field.IRI]: nodeIRI, [Field.NAME]: nodeName, [Field.TYPE]: ItemType.CLASS, [Field.DESCRIPTION]: "",
         [Field.ORIGINAL_TEXT]: "", [Field.ORIGINAL_TEXT_INDEXES]: [],
     }
 
-    const nodeData: NodeData = { class: newEntity, attributes: [] }
+    const nodeData: NodeData = { class: newClass, attributes: [] }
 
     const newNode: Node = { id: nodeIRI, type: CUSTOM_NODE_TYPE, position: { x: positionX, y: positionY }, data: nodeData }
 
@@ -365,7 +365,7 @@ export const editNodeClass = (newClass: Class, oldClass: Class, setNodes: Setter
         {
             let newAttributes = currentNode.data.attributes
 
-            // For each attribute update their source entity if the iri of the entity changed
+            // For each attribute update their source class if the iri of the class changed
             if (oldClass.iri !== newClass.iri)
             {                   
                 newAttributes = currentNode.data.attributes.map((attribute: Attribute) =>
