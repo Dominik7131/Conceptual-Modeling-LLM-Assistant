@@ -24,7 +24,7 @@ const DataTypeSelector: React.FC<Props> = ({ attribute }) =>
     const regeneratedAttribute = regeneratedItem as Attribute
 
     const isRegeneratedText: boolean = regeneratedAttribute[Field.DATA_TYPE] !== undefined && regeneratedAttribute[Field.DATA_TYPE] !== ""
-    const actualValue = isRegeneratedText ? regeneratedAttribute[Field.DATA_TYPE] : attribute[Field.DATA_TYPE]
+    const actualValue = isRegeneratedText ? regeneratedAttribute[Field.DATA_TYPE] : attribute[Field.DATA_TYPE] ?? ""
 
     const textColor = isRegeneratedText ? GRAY_COLOR : BLACK_COLOR
 
