@@ -5,7 +5,6 @@ import { Field, UserChoiceSummary } from "../../definitions/utility"
 import SummaryReactionButtons from "./SummaryReactionButtons"
 import { isLoadingSummaryDescriptionsState } from "../../atoms/loadings"
 import { summaryDescriptionsState } from "../../atoms/summary"
-import { Attribute } from "../../definitions/conceptualModel"
 import { SummaryAttribute, SummaryClass } from "../../definitions/summary"
 
 
@@ -27,7 +26,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
             <ul>
             {
                 summaryDescriptions.classes.map((clss: SummaryClass) =>
-                    <Typography component="span">
+                    <Typography component="span" key={ clss[Field.NAME] }>
                         <li>
                             <strong>{ capitalizeString(clss[Field.NAME]) }</strong>: { clss[Field.DESCRIPTION] }
                         </li>
