@@ -98,14 +98,53 @@ class LLMAssistant:
             yield
 
 
+    def __get_original_text_indexes(self, item, user_choice, domain_description):
 
-    def get_output(self, user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest):
+        original_text_indexes = []
 
-        # Some LLMs sometimes stop too early
-        # When this happens try to generate the output again with a little bit different prompt to force different output
+        if Field.ORIGINAL_TEXT.value in item:
+            original_text = item[Field.ORIGINAL_TEXT.value]
+            original_text_indexes, _, _ = OriginalTextFinder.find_in_domain_description(original_text=original_text, user_choice=user_choice, domain_description=domain_description)
+
+        else:
+            self.logger.warn(f"Original text not in item: {item}")
+        
+        return original_text_indexes
+
+
+    def process_item(self, item, user_choice, domain_description):
+
+        suggestion_dictionary = json.loads(json.dumps(item))
+
+        if user_choice == UserChoice.CLASSES.value:
+
+            if suggestion_dictionary["name"] in self.suggested_classes:
+                self.logger.info(f"Skipping duplicate class: {suggestion_dictionary['name']}")
+                return True
+
+            if suggestion_dictionary["name"] in CLASSES_BLACK_LIST:
+                self.logger.info(f"Skipping black-listed class: {suggestion_dictionary['name']}")
+                return True
+
+            self.suggested_classes.append(suggestion_dictionary["name"])
+
+            if not Field.ORIGINAL_TEXT.value in suggestion_dictionary:
+                # Find occurencies of the class name in the domain description
+                item[Field.ORIGINAL_TEXT.value] = suggestion_dictionary["name"]
+
+        original_text_indexes = self.__get_original_text_indexes(item=item, user_choice=user_choice, domain_description=domain_description)
+        suggestion_dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
+
+        json_item = json.dumps(suggestion_dictionary)
+        return json_item, False
+
+
+    def __get_output(self, user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest):
 
         max_attempts_count = 2
 
+        # Some LLMs sometimes stop too early
+        # When this happens try to generate the output again with a little bit different prompt to force different output
         for attempt_number in range(max_attempts_count):
 
             prompt = self.prompt_manager.create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class,
@@ -122,43 +161,19 @@ class LLMAssistant:
             messages_prettified = TextUtility.prettify_messages(new_messages)
             self.__log_sending_prompt_message(messages_prettified)
 
-            self.logger.error("Starting to parse stream")
             items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class=source_class, target_class=target_class)
-            self.logger.error("Starting to go through first item in iterator")
-            self.logger.error(f"Iterator: {items_iterator}")
 
             if user_choice == UserChoice.CLASSES.value:
-                suggested_classes = []
+                self.suggested_classes = []
 
             for item in items_iterator:
 
                 self.is_some_item_generated = True
-                suggestion_dictionary = json.loads(json.dumps(item))
+                json_item, is_continue = self.process_item(item=item, user_choice=user_choice, domain_description=domain_description)
 
-                if user_choice == UserChoice.CLASSES.value:
-                    if suggestion_dictionary["name"] in suggested_classes:
-                        self.logger.info(f"Skipping duplicate class: {suggestion_dictionary['name']}")
-                        continue
+                if is_continue:
+                    continue
 
-                    if suggestion_dictionary["name"] in CLASSES_BLACK_LIST:
-                        self.logger.info(f"Skipping black-listed class: {suggestion_dictionary['name']}")
-                        continue
-
-                    suggested_classes.append(suggestion_dictionary["name"])
-
-                    if not Field.ORIGINAL_TEXT.value in suggestion_dictionary:
-                        # Find occurencies of the class name in the domain description
-                        item[Field.ORIGINAL_TEXT.value] = suggestion_dictionary["name"]
-
-                # Find originalText indexes for `item["originalText"]` in `domain_description`
-                if Field.ORIGINAL_TEXT.value in item:
-                    original_text = item[Field.ORIGINAL_TEXT.value]
-                    original_text_indexes, _, _ = OriginalTextFinder.find_in_domain_description(original_text, domain_description, user_choice)
-                    suggestion_dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
-                else:
-                    self.logger.warn(f"Original text not in item: {item}")
-
-                json_item = json.dumps(suggestion_dictionary)
                 yield f"{json_item}\n"
 
             if self.is_some_item_generated:
@@ -197,7 +212,7 @@ class LLMAssistant:
 
         self.is_some_item_generated = False
 
-        return self.get_output(user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest)
+        return self.__get_output(user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest)
 
 
     def suggest_single_field(self, user_choice, name, source_class, target_class, domain_description, field_name, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value):
@@ -222,12 +237,12 @@ class LLMAssistant:
 
         for item in items_iterator:
 
-            item_object = json.loads(json.dumps(item)) # Convert `item` of type string into JSON and then into python dictionary
+            # Convert `item` of type string into JSON and then into python dictionary
+            item_object = json.loads(json.dumps(item))
 
-            if field_name == Field.ORIGINAL_TEXT.value:
-                original_text_indexes, _, _ = OriginalTextFinder.find_in_domain_description(item_object[Field.ORIGINAL_TEXT.value], domain_description, user_choice)
-                item_object[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
-            
+            original_text_indexes = self.__get_original_text_indexes(item=item, user_choice=user_choice, domain_description=domain_description)
+            item_object[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
+
             json_item = json.dumps(item_object)
             return json_item
 
@@ -250,10 +265,8 @@ class LLMAssistant:
         items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class="")
 
         for item in items_iterator:
-            self.logger.info(f"Processing summary: {item}")
-            dictionary = json.loads(json.dumps(item))
 
-            json_item = json.dumps(dictionary)
+            json_item = json.dumps(item)
             return json_item
 
         return self.__empty_generator()
@@ -277,7 +290,6 @@ class LLMAssistant:
         items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class="")
 
         for item in items_iterator:
-            dictionary = json.loads(json.dumps(item))
 
-            json_item = json.dumps(dictionary)
+            json_item = json.dumps(item)
             return json_item
