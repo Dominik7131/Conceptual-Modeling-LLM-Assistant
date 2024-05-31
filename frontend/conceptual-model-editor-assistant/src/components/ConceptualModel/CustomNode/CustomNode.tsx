@@ -28,7 +28,7 @@ export default function TextUpdaterNode({ selected, data } : NodeProps)
     const setSelectedSuggestedItem = useSetRecoilState(selectedSuggestedItemState)
     const setEditedSuggestedItem = useSetRecoilState(editedSuggestedItemState)
 
-    const [anchor, setAnchor] = useState<null | HTMLElement>(null)
+    const [anchor, setAnchor] = useState<HTMLElement | null>(null)
     const [isClassHovered, setIsClassHovered] = useState<boolean>(false)
 
     const nodeData: NodeData = data as NodeData

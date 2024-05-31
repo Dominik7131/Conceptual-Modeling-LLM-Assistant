@@ -10,13 +10,14 @@ import { isItemInConceptualModelState } from "../../../atoms/conceptualModel";
 import { isShowEditDialogState } from "../../../atoms/dialogs";
 import { Class, Item, Attribute } from "../../../definitions/conceptualModel";
 import { Field, UserChoiceItem } from "../../../definitions/utility";
+import { Dispatch, SetStateAction } from "react";
 
 
 interface Props
 {
     clss: Class
-    anchor: any
-    setAnchor: any
+    anchor: HTMLElement | null
+    setAnchor: Dispatch<SetStateAction<HTMLElement | null>>
 }
 
 
