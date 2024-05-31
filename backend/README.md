@@ -42,4 +42,10 @@ To use any of the scripts:
 
 
 ## How to run LLM assistant
-- `python server.py`
+- download a model for syntactic text filtering from [this page](https://lindat.mff.cuni.cz/repository/xmlui/handle/11858/00-097C-0000-0023-68D9-0)
+    - here is a [link to download model english-morphium-wsj-140407.zip](https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11858/00-097C-0000-0023-68D9-0/english-morphium-wsj-140407.zip?sequence=3&isAllowed=y)
+    - extract the files
+    - set path to the `.tagger` file inside `backend/text-filtering/syntactic/morphodita-config.json`
+
+- run python server
+    - `python server.py`
