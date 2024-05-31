@@ -136,7 +136,7 @@ def get_relevant_texts(dictionary, text, model, file_path):
             source_class = association["domain"].lower().replace("-", " ")
             target_class = association["range"].lower().replace("-", " ")
 
-            # TODO: Fix typo in expected model
+            # Typo in expected model
             if association_name == "is staff member of academic commumity":
                 association_name = "is staff member of academic community"
 

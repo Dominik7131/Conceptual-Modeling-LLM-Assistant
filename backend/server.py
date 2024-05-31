@@ -1,23 +1,24 @@
 from flask import Flask, request
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 import json
 import os
 import time
 import sys
 
-
-sys.path.append("utils")
-
 from original_text_merger import OriginalTextMerger
 from llm_assistant import LLMAssistant
-from definitions.utility import Field, UserChoice
 from prompt_manager import PromptManager
+
+sys.path.append("utils")
+from definitions.utility import Field, UserChoice
+
+
+PORT = 5000
+STORAGE_DIRECTORY = "storage"
 
 app = Flask(__name__)
 llm_assistant = None
 prompt_manager = None
-
-STORAGE_DIRECTORY = "storage"
 
 cors = CORS(app)
 app.config["CORS_HEADERS"] = "Content-Type"
@@ -90,9 +91,6 @@ def merge_original_texts():
 
 
 def save_item_to_storage(item):
-
-    # TODO: Check storage size
-    # If the storage size > 1GB then print warning and do not store anything
 
     timestamp = time.strftime("%Y-%m-%d-%H-%M-%S")
     file_to_write_path = f"{os.path.join(STORAGE_DIRECTORY, timestamp)}.json"
@@ -185,4 +183,4 @@ if __name__ == "__main__":
     llm_assistant = LLMAssistant()
     prompt_manager = PromptManager()
 
-    app.run(port=5000, threaded=False, host="0.0.0.0")
+    app.run(port=PORT, threaded=False, host="0.0.0.0")

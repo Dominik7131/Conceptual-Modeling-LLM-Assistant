@@ -38,6 +38,7 @@ To use any of the scripts:
 
 - run llm backend:
     - `./llm_backend.sh`
+    - default port is 8080
     - note: first time loading LLM is slow
 
 
@@ -49,3 +50,4 @@ To use any of the scripts:
 
 - run python server
     - `python server.py`
+    - default port is 5000

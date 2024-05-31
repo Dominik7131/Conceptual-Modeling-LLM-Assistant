@@ -1,14 +1,14 @@
 import os
 from flask import Flask, request
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
 import json
 import time
 import sys
 
-sys.path.append("utils")
-
-from definitions.utility import UserChoice
 from original_text_merger import OriginalTextMerger
+
+sys.path.append("utils")
+from definitions.utility import UserChoice
 
 
 app = Flask(__name__)
