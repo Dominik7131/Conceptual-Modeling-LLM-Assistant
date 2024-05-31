@@ -3,7 +3,7 @@
 ## `merge_original_text_indexes.py`
 - purpose: test if we are correctly merging the original text indexes for highlighting in domain description all elements that the user has already modelled
 - test data: list of original text indexes with their labels, list of expected original text indexes with their labels
-- output: list of actual merged original text indexes including their labels
+- output: list of actual merged original text indexes with their corresponding labels
 
 <br />
 

@@ -85,7 +85,7 @@ def create_suggestions_two_known_classes(dictionary, model, text):
     return associations2_out_suggestions, generalizations2_out_suggestions
 
 
-def convert_to_relevant_texts(dictionary, text, model, file_path):
+def get_relevant_texts(dictionary, text, model, file_path):
 
     classes = model["classes"]
     attributes = model["attributes"]
@@ -259,7 +259,6 @@ def main():
             attributes_suggestions_output_file_name = f"attributes-expected-suggestions-0{i + 1}.json"
             associations1_suggestions_output_file_name = f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{i + 1}.json"
             associations2_suggestions_output_file_name = f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-expected-suggestions-0{i + 1}.json"
-            # generalizations2_expected_suggestions_output_file_name = f"generalizations2-expected-suggestions-0{i + 1}.json"
 
             file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, file_name)
             model_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, model_file_name)
@@ -270,7 +269,6 @@ def main():
             attributes_suggestions_output_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, attributes_suggestions_output_file_name)
             associations1_suggestions_output_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, associations1_suggestions_output_file_name)
             associations2_suggestions_output_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, associations2_suggestions_output_file_name)
-            # generalizations2_suggestions_output_file_path = os.path.join(DIRECTORY_PATH, domain_model, generalizations2_expected_suggestions_output_file_name)
 
             if not os.path.isfile(file_path):
                 raise ValueError(f"Annotated domain description not found: {file_path}")
@@ -292,8 +290,8 @@ def main():
             if i == 0:
                 count_conceptual_model_elements(model, index)
 
-            relevant_texts1, relevant_texts2, classes_suggestions, attributes_suggestions, associations_suggestions = convert_to_relevant_texts(tags_indexes, text, model, file_path)
-            associations2_suggestions, generalizations2_suggestions = create_suggestions_two_known_classes(tags_indexes, model, text)
+            relevant_texts1, relevant_texts2, classes_suggestions, attributes_suggestions, associations_suggestions = get_relevant_texts(tags_indexes, text, model, file_path)
+            associations2_suggestions, _ = create_suggestions_two_known_classes(tags_indexes, model, text)
 
             relevant_text_test_cases_1 = { "test_cases": relevant_texts1 }
             relevant_text_test_cases_2 = { "test_cases": relevant_texts2 }
@@ -302,7 +300,6 @@ def main():
             attributes_expected_suggestions = { UserChoice.ATTRIBUTES.value: attributes_suggestions }
             associations1_expected_suggestions = { UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value: associations_suggestions }
             associations2_expected_suggestions = { UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value: associations2_suggestions }
-            # generalizations2_expected_suggestions = { "generalizations2": generalizations2_suggestions }
 
             write_json_to_file(one_known_class_output_file_path, relevant_text_test_cases_1)
             write_json_to_file(two_known_classes_output_file_path, relevant_text_test_cases_2)
@@ -310,7 +307,6 @@ def main():
             write_json_to_file(attributes_suggestions_output_file_path, attributes_expected_suggestions)
             write_json_to_file(associations1_suggestions_output_file_path, associations1_expected_suggestions)
             write_json_to_file(associations2_suggestions_output_file_path, associations2_expected_suggestions)
-            # write_json_to_file(output_file_path_generalizations2_expected_suggestions, generalizations2_suggestions)
 
     print_conceptual_model_total_elements_csv()
 
