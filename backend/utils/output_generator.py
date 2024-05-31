@@ -108,6 +108,7 @@ class OutputGenerator:
             self.parsed_message += text
 
             for char in text:
+
                 is_return = self.process_character(char)
 
                 if is_return:
@@ -274,8 +275,7 @@ class OutputGenerator:
 
     def __parse_item_streamed_output(self):
         """
-        Returns (parsed_item, is_item_ok).
-        `is_item_ok` is False if there is any issue while parsing otherwise True.
+        Returns generator object containing parsed object and True if parsing of this object was successful.
         :rtype: Generator[tuple[dict[str, bool]
         """
 
