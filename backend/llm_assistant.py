@@ -14,7 +14,7 @@ from original_text_finder import OriginalTextFinder
 from definitions.logging import LOG_DIRECTORY, LOG_FILE_PATH, LOGGER_NAME
 from text_utility import TextUtility
 from definitions.utility import CLASSES_BLACK_LIST, Field, TextFilteringVariation, UserChoice
-from output_parser import OutputParser
+from output_generator import OutputGenerator
 from prompt_manager import PromptManager
 from syntactic_text_filterer import SyntacticTextFilterer
 from semantic_text_filterer import SemanticTextFilterer
@@ -34,7 +34,7 @@ class LLMAssistant:
         self.semantic_text_filterer = SemanticTextFilterer()
 
         self.prompt_manager = PromptManager()
-        self.output_parser = OutputParser()
+        self.output_generator = OutputGenerator()
 
 
     def __setup_logging(self):
@@ -123,7 +123,7 @@ class LLMAssistant:
             self.__log_sending_prompt_message(messages_prettified)
 
             self.logger.error("Starting to parse stream")
-            items_iterator = self.output_parser.parse_stream(messages=new_messages, user_choice=user_choice, source_class=source_class, target_class=target_class)
+            items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class=source_class, target_class=target_class)
             self.logger.error("Starting to go through first item in iterator")
             self.logger.error(f"Iterator: {items_iterator}")
 
@@ -218,7 +218,7 @@ class LLMAssistant:
 
         self.__log_sending_prompt_message(messages_prettified)
 
-        items_iterator = self.output_parser.parse_stream(messages=new_messages, user_choice=user_choice, source_class=source_class, field_name=field_name)
+        items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class=source_class, field_name=field_name)
 
         for item in items_iterator:
 
@@ -247,7 +247,7 @@ class LLMAssistant:
 
         self.__log_sending_prompt_message(messages_prettified)
 
-        items_iterator = self.output_parser.parse_stream(messages=new_messages, user_choice=user_choice, source_class="")
+        items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class="")
 
         for item in items_iterator:
             self.logger.info(f"Processing summary: {item}")
@@ -274,7 +274,7 @@ class LLMAssistant:
 
         self.__log_sending_prompt_message(messages_prettified)
 
-        items_iterator = self.output_parser.parse_stream(messages=new_messages, user_choice=user_choice, source_class="")
+        items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class="")
 
         for item in items_iterator:
             dictionary = json.loads(json.dumps(item))

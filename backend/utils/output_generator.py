@@ -13,7 +13,7 @@ TEMPERATURE = 0
 MODEL_ID = ""
 
 
-class OutputParser:
+class OutputGenerator:
 
     def __init__(self):
 
@@ -27,7 +27,7 @@ class OutputParser:
         self.parsed_message = ""
     
 
-    def __reset(self, user_choice="", source_class="", messages={}, target_class="", field_name=""):
+    def __reset(self, messages={}, user_choice="", source_class="", target_class="", field_name=""):
 
         self.user_choice = user_choice
         self.source_class = source_class.lower()
@@ -45,11 +45,53 @@ class OutputParser:
     def __log_full_message(self):
 
         self.logger.info(f"\nFull message: {self.parsed_message}")
+    
+
+    def __log_remove_item(self, completed_item):
+        
+        self.logger.info(f"Removing: {completed_item}")
 
 
-    def parse_stream(self, user_choice, source_class, messages, target_class="", field_name=""):
+    def process_character(self, char):
 
-        self.__reset(user_choice, source_class, messages, target_class, field_name)
+        if char == "{":
+            if self.opened_curly_brackets_count == 1 and self.is_disable_JSON_nesting:
+                self.item = ""
+            else:
+                self.opened_curly_brackets_count += 1
+
+        if char == "\n" and self.last_char == "\n":
+            self.new_lines_in_a_row += 1
+        else:
+            self.new_lines_in_a_row = 0
+
+        # Return when LLM gets stuck in printing only new lines
+        if self.new_lines_in_a_row > 3:
+            self.logger.warning("Too many new lines")
+            self.__log_full_message()
+            return True
+        
+        if self.opened_curly_brackets_count > 0:
+            self.item += char
+        
+        if char == "}":
+            self.opened_curly_brackets_count -= 1
+        
+        return False
+
+
+    def generate_stream(self, messages, user_choice, source_class, target_class="", field_name=""):
+        """
+        Sends given messages to LLM and returns generator object containing all successfully parsed objects.
+        :param messages list: messages to send to the LLM.
+        :param user_choice UserChoice: what type of items should LLM generate.
+        :param source_class string: name of the source class.
+        :param target_class string: name of the target class.
+        :param field_class string: name of the field to generate.
+        :rtype: Generator[tuple[dict[str, bool]
+        """
+
+        self.__reset(messages, user_choice, source_class, target_class, field_name)
 
         output = self.client.chat.completions.create(messages=self.messages, model=MODEL_ID, stream=True, temperature=TEMPERATURE)
 
@@ -63,34 +105,13 @@ class OutputParser:
                 continue
 
             text = text.choices[0].delta.content
-
             self.parsed_message += text
 
             for char in text:
-                if char == "{":
-                    if self.opened_curly_brackets_count == 1 and self.is_disable_JSON_nesting:
-                        self.item = ""
-                    else:
-                        self.opened_curly_brackets_count += 1
+                is_return = self.process_character(char)
 
-                if char == "\n" and self.last_char == "\n":
-                    self.new_lines_in_a_row += 1
-                else:
-                    self.new_lines_in_a_row = 0
-
-                
-                # Return when LLM gets stuck in printing only new lines
-                if self.new_lines_in_a_row > 3:
-                    self.logger.warning("Too many new lines")
-                    self.__log_full_message()
+                if is_return:
                     return
-                
-                if self.opened_curly_brackets_count > 0:
-                    self.item += char
-                
-                if char == "}":
-                    self.opened_curly_brackets_count -= 1
-
 
                 is_item_detected = self.opened_curly_brackets_count == 0 and self.item != ""
                 if is_item_detected:
@@ -101,7 +122,7 @@ class OutputParser:
                         if is_item_ok:
                             yield completed_item
                         else:
-                            self.logger.info(f"Removing: {completed_item}")
+                            self.__log_remove_item(completed_item)
 
                     self.item = ""
 
@@ -120,7 +141,7 @@ class OutputParser:
                 if is_item_ok:
                     yield completed_item
                 else:
-                    self.logger.info(f"Removing: {completed_item}")
+                    self.__log_remove_item(completed_item)
 
 
         self.__log_full_message()
@@ -252,8 +273,11 @@ class OutputParser:
 
 
     def __parse_item_streamed_output(self):
-        # Returns (parsed_item, is_item_ok)
-        # is_item_ok: False if there is any issue while parsing otherwise True
+        """
+        Returns (parsed_item, is_item_ok).
+        `is_item_ok` is False if there is any issue while parsing otherwise True.
+        :rtype: Generator[tuple[dict[str, bool]
+        """
 
         try:
             # Replace invalid JSON characters
