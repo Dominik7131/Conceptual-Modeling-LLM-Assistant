@@ -3,32 +3,41 @@
 To use any of the scripts:
 - change directory to the `backend`:
 
-    cd backend
+        cd backend
 
 
 - create Python virtual environment
-    - `python -m venv llm_assistant`
+
+        python -m venv llm_assistant
 
 - activate Python virtual environment:
-    - Linux: `source llm_assistant/bin/activate`
-    - Windows: `.\llm_assistant\Scripts\activate`
+    - Linux:
+    
+            source llm_assistant/bin/activate
+    - Windows:
+
+            llm_assistant\Scripts\activate
 
 - install Python packages
-    - `pip install -r requirements.txt`
+
+        pip install -r requirements.txt
 
 <br/>
 
 ## How to run LLM backend powered by llama.cpp
 
 - clone [llama.cpp repository](https://github.com/ggerganov/llama.cpp):
-    - `git clone https://github.com/ggerganov/llama.cpp.git`
+
+        git clone https://github.com/ggerganov/llama.cpp.git
 
 - [here is a detailed guide of how to build llama.cpp with different configurations](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#build)
+    - we will show only how to run llama.cpp server on Linux with CUDA
 
-- build llama.cpp server on Linux with CUDA:
+- build llama.cpp server:
     - update CUDA to at least version 11.7.1
     - install compatible version of [nvidia-cuda-toolkit](https://developer.nvidia.com/cuda-downloads)
-    - `make server LLAMA_CUDA=1`
+
+            make server LLAMA_CUDA=1
     - if this doesn't work [here is a more detailed description](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#cuda)
 
 - download one of the [supported models](https://github.com/ggerganov/llama.cpp#description) in `GGUF` format
@@ -40,18 +49,20 @@ To use any of the scripts:
 - for more information you can check [llama.cpp server documentation](https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md)
 
 - run llm backend:
-    - `./llm_backend.sh`
+
+        ./llm_backend.sh
     - default port is 8080
-    - note: first time loading LLM is slow
+    - note: loading LLM for the first time is slow
 
 <br/>
 
-## How to run LLM assistant
+## How to run LLM assistant server
 - download a model for syntactic text filtering from [this page](https://lindat.mff.cuni.cz/repository/xmlui/handle/11858/00-097C-0000-0023-68D9-0)
     - here is a [link to download model english-morphium-wsj-140407.zip](https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11858/00-097C-0000-0023-68D9-0/english-morphium-wsj-140407.zip?sequence=3&isAllowed=y)
     - extract the files
     - set path to the `.tagger` file inside `backend/text-filtering/syntactic/morphodita-config.json`
 
 - run python server
-    - `python server.py`
+
+        python server.py
     - default port is 5000
