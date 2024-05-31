@@ -1,4 +1,4 @@
-# Scripts
+# Scripts brief description
 
 ## `generate_test_data.py`
 - from annotated domain descriptions and expected domain models:
@@ -7,7 +7,7 @@
 
 
 ## `generate_suggestions.sh`
-- generates classes, attributes and associations suggested by LLM in a format ready for manual evaluation
+- generates classes, attributes and associations suggested by LLM in csv format ready for manual evaluation
 
 
 ## `generate_plantUML.py`

@@ -6,11 +6,9 @@ set -euo pipefail
 cd llama.cpp/
 
 MODEL_PATH=/data/LLMs/models--TheBloke--Mixtral-8x7B-Instruct-v0.1-GGUF/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf
-# MODEL_PATH=/data/LLMs/Llama-3-8B-GGUF/Meta-Llama-3-8B-Instruct.Q8_0.gguf
-
 BATCH_SIZE=8192
 UBATCH_SIZE=4096
-N_GPU_LAYERS=100
+N_GPU_LAYERS=44
 CONTEXT_SIZE=8192
 CHAT_TEMPLATE=llama2
 SYSTEM_PROMPT_FILE=../../prompts/system_prompt_default.json

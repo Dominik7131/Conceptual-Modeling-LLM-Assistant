@@ -1,4 +1,4 @@
-# Scripts
+# Scripts brief description
 
 ## `evaluate_suggestions.py`
 - computes recall and precision of manually matched classes, attributes and associations
