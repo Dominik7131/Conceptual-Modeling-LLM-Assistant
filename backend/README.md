@@ -3,7 +3,7 @@
 To use any of the scripts:
 - change directory to the `backend`:
 
-    `cd backend`
+    cd backend
 
 
 - create Python virtual environment
