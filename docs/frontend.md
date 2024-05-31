@@ -15,4 +15,4 @@
 <br/>
 
 ## Input and output conceptual model JSON format
-- [json schema](https://schemas.dataspecer.com/adapters/simplified-semantic-model.v1.0.schema.json)
+- we are sending and receiving the conceptual model in [this JSON format](https://schemas.dataspecer.com/adapters/simplified-semantic-model.v1.0.schema.json)

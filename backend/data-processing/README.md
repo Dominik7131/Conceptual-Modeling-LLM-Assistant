@@ -1,5 +1,8 @@
 # Manual evaluation workflow of LLM suggestions
 
+- clone [our data repository](https://github.com/dataspecer/domain-modeling-benchmark)
+    - `git clone https://github.com/dataspecer/domain-modeling-benchmark.git`
+
 - activate Python virtual environment
 - change directory to `backend`:
     - `cd backend`

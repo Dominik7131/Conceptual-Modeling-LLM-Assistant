@@ -1,8 +1,10 @@
-# General info
+## General info
 
 To use any of the scripts:
 - change directory to the `backend`:
-    - `cd backend`
+
+    `cd backend`
+
 
 - create Python virtual environment
     - `python -m venv llm_assistant`
@@ -14,6 +16,7 @@ To use any of the scripts:
 - install Python packages
     - `pip install -r requirements.txt`
 
+<br/>
 
 ## How to run LLM backend powered by llama.cpp
 
@@ -41,6 +44,7 @@ To use any of the scripts:
     - default port is 8080
     - note: first time loading LLM is slow
 
+<br/>
 
 ## How to run LLM assistant
 - download a model for syntactic text filtering from [this page](https://lindat.mff.cuni.cz/repository/xmlui/handle/11858/00-097C-0000-0023-68D9-0)
