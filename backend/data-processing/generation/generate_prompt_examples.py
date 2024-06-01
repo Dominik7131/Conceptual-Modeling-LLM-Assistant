@@ -5,7 +5,7 @@ import sys
 sys.path.append(".")
 
 from definitions.utility import Field, FieldUI, UserChoice
-from backend.definitions.domain_modelling import DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL_NAME
+from definitions.domain_modelling import DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL_NAME
 
 FILE_NAME = "domain-description-01-annotated.txt"
 IN_FILE_PATH_END = "expected-suggestions-01.json"

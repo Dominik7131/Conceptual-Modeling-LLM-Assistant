@@ -2,6 +2,7 @@
 class TextUtility:
 
     def prettify_messages(messages):
+
         result = ""
         for message in messages:
             result += f"{message['role']}: {message['content']}\n"

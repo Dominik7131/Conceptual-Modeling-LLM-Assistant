@@ -8,19 +8,36 @@ To use any of the scripts:
 
 - create Python virtual environment
 
-        python -m venv llm_assistant
+        python -m venv [virtual-environment-name]
 
 - activate Python virtual environment:
     - Linux:
     
-            source llm_assistant/bin/activate
+            source [virtual-environment-name]/bin/activate
     - Windows:
 
-            llm_assistant\Scripts\activate
+            [virtual-environment-name]\Scripts\activate
 
 - install Python packages
 
         pip install -r requirements.txt
+
+<br/>
+
+
+## How to run LLM assistant server
+- download a model for syntactic text filtering from [this page](https://lindat.mff.cuni.cz/repository/xmlui/handle/11858/00-097C-0000-0023-68D9-0)
+    - here is a [link to download model english-morphium-wsj-140407.zip](https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11858/00-097C-0000-0023-68D9-0/english-morphium-wsj-140407.zip?sequence=3&isAllowed=y)
+    - extract the files
+    - set path to the `.tagger` file inside `backend/text-filtering/syntactic/morphodita-config.json`
+- note: the model for semantic text filtering will download automatically
+
+- run python server
+
+        python server.py
+    - default port is 5000
+    - different port can be passed via `--port` argument
+
 
 <br/>
 
@@ -52,18 +69,5 @@ To use any of the scripts:
 
         ./llm_server.sh
     - the default port is 8080 and can be changed via the `PORT` parameter
+        - when changing the port make sure that the [LLM Manager](utils/llm_manager.py) works with the corresponding port
     - note: loading LLM for the first time is slow
-
-<br/>
-
-## How to run LLM assistant server
-- download a model for syntactic text filtering from [this page](https://lindat.mff.cuni.cz/repository/xmlui/handle/11858/00-097C-0000-0023-68D9-0)
-    - here is a [link to download model english-morphium-wsj-140407.zip](https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11858/00-097C-0000-0023-68D9-0/english-morphium-wsj-140407.zip?sequence=3&isAllowed=y)
-    - extract the files
-    - set path to the `.tagger` file inside `backend/text-filtering/syntactic/morphodita-config.json`
-- note: the model for semantic text filtering will download automatically
-
-- run python server
-
-        python server.py
-    - default port is 5000 and it can be changed via the `PORT` variable

@@ -6,8 +6,8 @@ from definitions.logging import LOGGER_NAME
 from definitions.utility import DEFINED_DATA_TYPES, Field, UserChoice
 from convention_convertor import ConventionConvertor
 
-
-LLM_BACKEND_URL = "http://localhost:8080/v1"
+PORT = 8080
+LLM_BACKEND_URL = f"http://localhost:{PORT}/v1"
 
 TEMPERATURE = 0
 MODEL_ID = ""

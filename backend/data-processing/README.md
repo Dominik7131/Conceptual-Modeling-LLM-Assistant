@@ -5,6 +5,9 @@
         git clone https://github.com/dataspecer/domain-modeling-benchmark.git
 
 - activate Python virtual environment
+
+        source [virtual-environment-name]/bin/activate
+
 - change directory to `backend`:
 
         cd backend

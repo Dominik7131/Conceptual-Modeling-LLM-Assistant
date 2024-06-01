@@ -1,4 +1,21 @@
-# Getting Started with Create React App
+## How to run
+
+- download some package manager such as [Node.js](https://nodejs.org/en/download/package-manager)
+- change directory into `frontend/conceptual-model-editor-assistant`
+
+        cd frontend/conceptual-model-editor-assistant
+
+- install all dependencies
+
+        npm install
+
+- run the app in the development mode
+
+        npm start
+
+<br/>
+
+## Info
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 

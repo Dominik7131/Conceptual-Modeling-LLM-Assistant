@@ -8,7 +8,7 @@ sys.path.append("utils")
 
 from text_splitter import TextSplitter
 from definitions.utility import Field, UserChoice
-from backend.definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
+from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
 
 
 BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
