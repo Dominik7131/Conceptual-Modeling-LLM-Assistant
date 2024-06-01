@@ -1,27 +1,35 @@
 # Architecture
 
-TODO: C4 model picture
-
-## Main components
-- frontend
-- LLM backend
-- LLM assistant server
+## Complete overview
+<img src="images/complete-overview.png" alt="drawing" width="800"/>
 
 
 ## Dataspecer integration
+<img src="images/dataspecer-containers.png" alt="drawing" width="600"/>
+
+<br/>
+
 - the frontend is integrated with the [Dataspecer tool](https://github.com/mff-uk/dataspecer)
-    - a conceptual model can be imported from this tool or exported into this tool by inserting the corresponding model ID
+    - a conceptual model can be imported from this tool or exported into this tool by specifying the corresponding model ID see (TODO: Tutorial)
 
 
 ## LLM assistant workflow
-- when the user creates his domain model on the frontend he can call our LLM assistant throught the UI for some help
+<img src="images/llm-assistant-server-containers.png" alt="drawing" width="1000"/>
+
+<br/>
+
+- when the user is creating his conceptual model on the frontend he can call our LLM assistant throught the UI for some help
 - when our assistant is called a REST-API request is sent to our [Flask](https://flask.palletsprojects.com/en/3.0.x/) server
     - this server is run by our `server.py` script
     - it contains an instance of the `LLMAssistant` class from the `utils/llm_assistant.py` script
     - all endpoints of this server are [documented here](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/docs/api-endpoints.md)
 
 - then the corresponding method on the instance of the `LLMAssistant` class is called
-- now the main goal is to find corresponding prompt in form of a template then fill in all the prompt symbols and then send this prompt to the LLM
+- now the following needs to be done:
+    1) get corresponding prompt template
+    2) fill in all prompt symbols in the prompt template
+    3) send this prompt to the LLM
+    4) parse the output from the LLM
 
 
 ### Prompt processing
