@@ -179,8 +179,8 @@ def main():
 
     global llm_assistant, prompt_manager
 
-    parser = argparse.ArgumentParser(description = "Start LLM assistant server")
-    parser.add_argument("--port", type=int, default=5000, help = "Port to run the server on")
+    parser = argparse.ArgumentParser(description="Start LLM assistant server")
+    parser.add_argument("--port", type=int, default=5000, help="Port to run the server on")
     
     if (not os.path.exists(STORAGE_DIRECTORY)):
         os.makedirs(STORAGE_DIRECTORY)
