@@ -1,6 +1,6 @@
 ## General info
 
-To use any of the scripts:
+To use any of the backend scripts:
 - change directory to the `backend`:
 
         cd backend
@@ -47,7 +47,7 @@ To use any of the scripts:
 
         git clone https://github.com/ggerganov/llama.cpp.git
 
-- [here is a detailed guide of how to build llama.cpp with different configurations](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#build)
+- [here is a detailed guide on how to build llama.cpp with different configurations](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#build)
     - we will show only how to run llama.cpp server on Linux with CUDA
 
 - build llama.cpp server:
@@ -68,6 +68,6 @@ To use any of the scripts:
 - run llm server:
 
         ./llm_server.sh
-    - the default port is 8080 and can be changed via the `PORT` parameter
+    - the default port is 8080 and can be changed via the `PORT` variable
         - when changing the port make sure that the [LLM Manager](utils/llm_manager.py) works with the corresponding port
     - note: loading LLM for the first time is slow
