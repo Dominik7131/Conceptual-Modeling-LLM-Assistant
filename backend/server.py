@@ -1,3 +1,4 @@
+import argparse
 from flask import Flask, request
 from flask_cors import CORS
 import json
@@ -13,7 +14,6 @@ sys.path.append("utils")
 from definitions.utility import Field, UserChoice
 
 
-PORT = 5000
 STORAGE_DIRECTORY = "storage"
 
 app = Flask(__name__)
@@ -175,12 +175,24 @@ def index():
     return "<p>LLM assistant server</p>"
 
 
-if __name__ == "__main__":
-   
+def main():
+
+    global llm_assistant, prompt_manager
+
+    parser = argparse.ArgumentParser(description = "Start LLM assistant server")
+    parser.add_argument("--port", type=int, default=5000, help = "Port to run the server on")
+    
     if (not os.path.exists(STORAGE_DIRECTORY)):
         os.makedirs(STORAGE_DIRECTORY)
+
+    args = parser.parse_args()
+    port = args.port
 
     llm_assistant = LLMAssistant()
     prompt_manager = PromptManager()
 
-    app.run(port=PORT, threaded=False, host="0.0.0.0")
+    app.run(port=port, threaded=False, host="0.0.0.0")
+
+
+if __name__ == "__main__":
+    main()
