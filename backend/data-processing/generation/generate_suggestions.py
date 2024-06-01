@@ -11,7 +11,7 @@ sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
 from definitions.utility import Field, FieldUI, UserChoice
-from definitions.domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
+from backend.definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
 from llm_assistant import LLMAssistant
 
 

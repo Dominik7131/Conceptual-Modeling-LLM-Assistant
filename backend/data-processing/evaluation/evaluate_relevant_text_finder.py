@@ -14,7 +14,7 @@ import json
 from text_splitter import TextSplitter
 from definitions.utility import TextFilteringVariation, UserChoice
 from syntactic_text_filterer import SyntacticTextFilterer
-from definitions.domain_modeling import DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
+from backend.definitions.domain_modelling import DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
 
 
 # Indexes correspond to texts in domain models and last index corresponds to all texts together

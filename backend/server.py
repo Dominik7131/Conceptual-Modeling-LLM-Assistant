@@ -172,7 +172,7 @@ def save_suggested_summary():
 
 @app.route('/')
 def index():
-    return "LLM assistant backend"
+    return "<p>LLM assistant server</p>"
 
 
 if __name__ == "__main__":

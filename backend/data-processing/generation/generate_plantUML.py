@@ -7,7 +7,7 @@ sys.path.append(".")
 sys.path.append("utils")
 
 from definitions.utility import UserChoice
-from definitions.domain_modeling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS_NAME
+from backend.definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS_NAME
 
 
 DIRECTORY_PATH = os.path.join("out", "actual")

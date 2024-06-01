@@ -24,7 +24,7 @@ To use any of the scripts:
 
 <br/>
 
-## How to run LLM backend powered by llama.cpp
+## How to run LLM server powered by llama.cpp
 
 - clone [llama.cpp repository](https://github.com/ggerganov/llama.cpp):
 
@@ -42,16 +42,16 @@ To use any of the scripts:
 
 - download one of the [supported models](https://github.com/ggerganov/llama.cpp#description) in `GGUF` format
 
-- inside `llm_backend.sh`:
+- inside `llm_server.sh`:
     - set corresponding `MODEL_PATH` variable
     - set corresponding `CHAT_TEMPLATE` variable
 
 - for more information you can check [llama.cpp server documentation](https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md)
 
-- run llm backend:
+- run llm server:
 
-        ./llm_backend.sh
-    - default port is 8080
+        ./llm_server.sh
+    - the default port is 8080 and can be changed via the `PORT` parameter
     - note: loading LLM for the first time is slow
 
 <br/>
@@ -61,8 +61,9 @@ To use any of the scripts:
     - here is a [link to download model english-morphium-wsj-140407.zip](https://lindat.mff.cuni.cz/repository/xmlui/bitstream/handle/11858/00-097C-0000-0023-68D9-0/english-morphium-wsj-140407.zip?sequence=3&isAllowed=y)
     - extract the files
     - set path to the `.tagger` file inside `backend/text-filtering/syntactic/morphodita-config.json`
+- note: the model for semantic text filtering will download automatically
 
 - run python server
 
         python server.py
-    - default port is 5000
+    - default port is 5000 and it can be changed via the `PORT` variable
