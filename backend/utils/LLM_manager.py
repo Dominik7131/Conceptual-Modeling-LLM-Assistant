@@ -13,7 +13,7 @@ TEMPERATURE = 0
 MODEL_ID = ""
 
 
-class OutputGenerator:
+class LLMManager:
 
     def __init__(self):
 

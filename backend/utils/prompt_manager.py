@@ -2,7 +2,7 @@ import json
 import os
 
 from definitions.prompt_symbols import PromptSymbols
-from multireplacer import Multireplacer
+from replacer import Replacer
 
 
 PROMPT_DIRECTORY = os.path.join("..", "prompts")
@@ -48,7 +48,7 @@ class PromptManager:
         }
         
         # Substitute all special symbols in the given prompt
-        prompt = Multireplacer.replace(original_prompt, replacements)
+        prompt = Replacer.replace(original_prompt, replacements)
 
         return prompt
 

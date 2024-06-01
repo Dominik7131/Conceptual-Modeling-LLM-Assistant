@@ -14,7 +14,7 @@ from original_text_finder import OriginalTextFinder
 from definitions.logging import LOG_DIRECTORY, LOG_FILE_PATH, LOGGER_NAME
 from text_utility import TextUtility
 from definitions.utility import CLASSES_BLACK_LIST, Field, TextFilteringVariation, UserChoice
-from output_generator import OutputGenerator
+from LLM_manager import LLMManager
 from prompt_manager import PromptManager
 from syntactic_text_filterer import SyntacticTextFilterer
 from semantic_text_filterer import SemanticTextFilterer
@@ -34,7 +34,7 @@ class LLMAssistant:
         self.semantic_text_filterer = SemanticTextFilterer()
 
         self.prompt_manager = PromptManager()
-        self.output_generator = OutputGenerator()
+        self.output_generator = LLMManager()
 
 
     def __setup_logging(self):

@@ -3,7 +3,7 @@ import re
 
 # Source: https://gist.github.com/bgusach/a967e0587d6e01e889fd1d776c5f3729
 
-class Multireplacer:
+class Replacer:
 
     def replace(string, replacements, ignore_case=False):
         """
@@ -14,8 +14,8 @@ class Multireplacer:
         :rtype: str
         """
 
+        # Edge case that'd produce a funny regex and cause a KeyError
         if not replacements:
-            # Edge case that'd produce a funny regex and cause a KeyError
             return string
         
         # If case insensitive, we need to normalize the old string so that later a replacement
