@@ -9,4 +9,3 @@ class PromptSymbols(Enum):
     CONCEPTUAL_MODEL = "{conceptual_model}"
     ATTRIBUTE_NAME = "{attribute_name}"
     ASSOCIATION_NAME = "{association_name}"
-    FIELD_NAME = "{field_name}"
