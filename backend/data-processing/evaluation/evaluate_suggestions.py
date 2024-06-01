@@ -6,7 +6,7 @@ import sys
 sys.path.append(".")
 
 from definitions.utility import UserChoice
-from backend.definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
+from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
 
 
 MANUAL_EVALUATION_DIRECTORY_PATH = os.path.join("out", "evaluated", "actual")
