@@ -2,6 +2,8 @@
 
 [Here is a tutorial on how to run the frontend.](../frontend/conceptual-model-editor-assistant/README.md#how-to-run)
 
+[Here is a tutorial on how to import and export conceptual models into and from the Dataspecer.](frontend-import-export.md)
+
 Our frontend is a conceptual model editor extended by features of our LLM assistant. The assistant helps a human modelling expert in creating domain models.
 
 First, we present the main features of our LLM assistant and then we provide demo links with the demonstration of how the assistant can be used.
