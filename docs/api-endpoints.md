@@ -55,13 +55,13 @@
 |-----------|-----------|-----------|-------------|
 | summaryType | yes     | string (`summaryPlainText`, `summaryDescriptions`) | Type of the summary to suggest. |
 | domainDescription | yes     | string | Solely based on this text the LLM generates the summary.
-| conceptualModel | yes | object | Conceptual model in JSON format preferably exactly as specified in the example of [this prompt](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/prompts/summary-descriptions/dd.txt#L8-L9). |
+| conceptualModel | yes | object | Conceptual model in JSON format preferably as specified by [this interface](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/1ae0b95bc5cd753fc5feba83c13df9b110ef9872/frontend/conceptual-model-editor-assistant/src/definitions/summary.ts#L10). |
 
 <br/>
 
 **Response**
 - if `userChoice=summaryPlainText` then a single JSON object with a single field `summary`
-- otherwise stream of JSON objects as specified in [this prompt](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/prompts/summary-descriptions/dd.txt#L15-L22)
+- otherwise stream of JSON objects as specified in [this prompt](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/1ae0b95bc5cd753fc5feba83c13df9b110ef9872/prompts/summaryDescriptions/.txt#L2)
 
 <br/>
 <br/>
@@ -73,7 +73,7 @@
 
 | Parameter | Mandatory | Data type | Description |
 |-----------|-----------|-----------|-------------|
-| originalTextIndexesObject          | yes  | object[] | Array of JSON objects like this: `{"indexes": [10, 20], "label": "Employee: ID"}`. |
+| originalTextIndexesObject          | yes  | object[] | List of JSON objects defined by [this interface](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/1ae0b95bc5cd753fc5feba83c13df9b110ef9872/frontend/conceptual-model-editor-assistant/src/definitions/originalTextIndexes.ts#L1). |
 
 <br/>
 
