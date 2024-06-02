@@ -21,7 +21,7 @@ The frontend is developed with:
 <br/>
 
 
-## Code structure
+## Project structure
 
 - [atoms](../frontend/conceptual-model-editor-assistant/src/atoms/) contains [Recoil states](https://recoiljs.org/docs/basic-tutorial/atoms/)
 - [components](../frontend/conceptual-model-editor-assistant/src/components/) contains all the building blocks of the application, the main components are:
