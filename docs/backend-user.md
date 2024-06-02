@@ -1,6 +1,6 @@
 # Backend user documentation
 
-- [here is a installation documentation on how to run the LLM assistant server, the LLM server and other backend scripts](../backend/README.md)
+- [here is an installation documentation on how to run the LLM assistant server, the LLM server and other backend scripts](../backend/README.md)
 
 - here is a brief description of:
     - [data-processing scripts](../backend/data-processing/README.md)
