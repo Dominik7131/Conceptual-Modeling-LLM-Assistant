@@ -11,13 +11,14 @@ First, we present the main features of our LLM assistant and then we provide dem
 ### 1) suggestions of classes, attributes and associations
 - if a domain description is provided then the assistents suggestions are solely based on the given domain description
     - we support only English
-- you can insert the domain description in this text box:
+- you can insert the domain description in the text box on the topbar:
 
-    <img src="images/frontend/insert-domain-description.png" alt="drawing" width="800"/>
+    <img src="images/frontend/insert-domain-description.png" alt="drawing" width="900"/>
 
 <br/>
 
 - for trying out the application you can choose one of the following domain descriptions:
+
     - [data catalog](https://github.com/dataspecer/domain-modeling-benchmark/blob/main/front-end%20evaluation%20domains/data%20catalog/domain-description-01.txt)
     - [gaming](https://github.com/dataspecer/domain-modeling-benchmark/blob/main/front-end%20evaluation%20domains/gaming/domain-description-01.txt)
 
@@ -26,13 +27,13 @@ First, we present the main features of our LLM assistant and then we provide dem
 - when the domain description is not provided the assistant suggests anything it considers reasonable
     - in this case it's better to start modelling by adding a class manually with the "Add new class" button:
 
-        <img src="images/frontend/add-new-class-manually.png" alt="drawing" width="800"/>
+        <img src="images/frontend/add-new-class-manually.png" alt="drawing" width="900"/>
 
 <br/>
 
 - for suggesting classes by the assistant use the "Suggest classes" button:
 
-    <img src="images/frontend/suggest-classes.png" alt="drawing" width="800"/>
+    <img src="images/frontend/suggest-classes.png" alt="drawing" width="900"/>
 
 <br/>
 
@@ -45,7 +46,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 - the generated suggestions are shown on the sidebar on the right
 - this is an example of generated suggestions with the "Suggest classes" button without a domain description:
 
-    <img src="images/frontend/suggested-classes.png" alt="drawing" width="260"/>
+    <img src="images/frontend/suggested-classes.png" alt="drawing" width="300"/>
 
     <br/>
 
@@ -86,7 +87,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 - when you hover your mouse over any class the handles show "s" or "t":
 
-    <img src="images/frontend/handles.png" alt="drawing" width="300"/>
+    <img src="images/frontend/handles.png" alt="drawing" width="400"/>
 
     - "s" stands for the source class and "t" stands for the target class of the association
     - you can drag an edge either from "s" to "t" or from "t" to "s"
@@ -112,7 +113,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 - when you select some part of your conceptual model you can let the assistant to summarize it
 - the easiest way to select some part of your conceptual model is by holding shift and left mouse button:
 
-    <img src="images/frontend/selection.png" alt="drawing" width="800"/>
+    <img src="images/frontend/selection.png" alt="drawing" width="900"/>
 
 <br/>
 
@@ -126,7 +127,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 - for example when this part of the conceptual model is selected (the light blue color denotes the selected classes, attributes and associations):
 
-    <img src="images/frontend/selection-aircraft.png" alt="drawing" width="900"/>
+    <img src="images/frontend/selection-aircraft.png" alt="drawing" width="1000"/>
 
 <br/>
 
