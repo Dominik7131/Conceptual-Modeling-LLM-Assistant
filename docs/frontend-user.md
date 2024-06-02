@@ -1,32 +1,186 @@
 # Frontend user documentation
 
-**TODO: Process info from the survey**
+Our frontend is a conceptual model editor extended by features of our LLM assistant. The assistant helps a human modelling expert in creating domain models.
 
-The assistant helps a human modeling expert in creating domain models. It suggests classes, attributes, and associations. You can work with or without a domain description. We support only English, not other languages!
+First, we present the main features of our LLM assistant and then we provide demo links with the demonstration of how the assistant can be used.
 
-If you do not provide a description, the assistant suggests anything it considers reasonable. In that case you can start by adding a class manually, e.g. "Patient" or "Train".
+<br/>
 
-If you provide a description it strictly follows this description by suggesting only classes, attributes and associations described by the description. You can choose one of the following descriptions for your experiments with the assistant:
-online gaming platform
-data catalog
-Video demonstrating the work with the domain description.
+## Features of our LLM assistent
 
-Video demonstrating the work without the domain description.
+### 1) suggestions of classes, attributes and associations
+- if a domain description is provided then the assistents suggestions are solely based on the given domain description
+    - we support only English
+- you can insert the domain description in this text box:
 
-Video demonstrating combination of working with and without the domain description.
+    <img src="images/frontend/insert-domain-description.png" alt="drawing" width="800"/>
 
-After you finish your experiments, please fill in the questionnaire below.
+<br/>
 
-Tip: When hovering over a node click on the three vertical dots to suggest attributes and associations for the corresponding class.
+- for trying out the application you can choose one of the following domain descriptions:
+    - [data catalog](https://github.com/dataspecer/domain-modeling-benchmark/blob/main/front-end%20evaluation%20domains/data%20catalog/domain-description-01.txt)
+    - [gaming](https://github.com/dataspecer/domain-modeling-benchmark/blob/main/front-end%20evaluation%20domains/gaming/domain-description-01.txt)
 
-Tip: You can drag an edge between two nodes and then click on "Suggest associations" button to suggest associations only between the corresponding two classes.
+<br/>
 
-Tip: When considering a given suggestion in the right-hand side panel, you can use the edit and highlight buttons before adding the suggestion to the model.
+- when the domain description is not provided the assistant suggests anything it considers reasonable
+    - in this case it's better to start modelling by adding a class manually with the "Add new class" button:
 
-Tip: When editing an attribute or association suggestion, you can also use "Change to attribute/association" button as the assistant can offer a given property in a form of attribute/association interchangably.
+        <img src="images/frontend/add-new-class-manually.png" alt="drawing" width="800"/>
 
-Tip: For each suggested class, attribute or association, use the description suggestion feature that is available on the right side of the dialog when editing any class, attribute or association.
+<br/>
 
-Tip: As you approach to the model finalization use also the "Highlight original text" button at the bottom right corner of the Domain description text area. Use it to check what part of the domain description is already represented by the model
+- for suggesting classes by the assistant use the "Suggest classes" button:
 
-Tip: Hold shift and then left mouse button on the canvas to easily select multiple nodes and edges.
+    <img src="images/frontend/suggest-classes.png" alt="drawing" width="800"/>
+
+<br/>
+
+- for suggesting attributes and associations by the assistant first create some class and then hover your mouse over this class, click on the three dots on the right and select the "Suggest attributes" or "Suggest associations" button respectively
+
+    <img src="images/frontend/suggest-attributes.png" alt="drawing" width="400"/>
+
+<br/>
+
+- the generated suggestions are shown on the sidebar on the right
+- this is an example of generated suggestions with the "Suggest classes" button without a domain description:
+
+    <img src="images/frontend/suggested-classes.png" alt="drawing" width="260"/>
+
+    <br/>
+
+    - the "plus" button can be used to add the given suggestion to your conceptual model
+    - the "edit" button can be used to first edit the given suggestion and then add it to your conceptual model
+    - the "like" or "dislike" button can be used to rate the given suggestion if it is appropriate or not
+
+<br/>
+
+- when editting an attribute you can change it into an association and vice versa:
+
+    <img src="images/frontend/change-to-association.png" alt="drawing" width="1000"/>
+
+<br/>
+
+- if the domain description is provided then for each suggestion is also available "highlight" button that for attributes and associations shows in which part of the domain description the assistant found the given suggestion
+
+- for example the highlighted original text for the attribute "homepage" of the class "catalog" looks like this:
+    
+    <img src="images/frontend/highlight-original-text.png" alt="drawing" width="1000"/>
+
+<br/>
+
+- for suggesting associations in between two classes you can drag an edge between two nodes:
+
+    <img src="images/frontend/edge-drag.png" alt="drawing" width="600"/>
+
+<br/>
+
+
+- and then click on "Suggest associations" button
+
+    <img src="images/frontend/suggest-associations-2.png" alt="drawing" width="600"/>
+
+<br/>
+
+- note that you can drag the edge only between the handles (the "black dots") of the classes
+
+- when you hover your mouse over any class the handles show "s" or "t":
+
+    <img src="images/frontend/handles.png" alt="drawing" width="300"/>
+
+    - "s" stands for the source class and "t" stands for the target class of the association
+    - you can drag an edge either from "s" to "t" or from "t" to "s"
+
+<br/>
+
+- when editting any element you can use the "magic wand" button on the right to let the assistant suggest the corresponding field:
+
+    <img src="images/frontend/suggest-single-field.png" alt="drawing" width="1000"/>
+
+<br/>
+
+- for example the suggested description for the attribute "homepage" of the class "catalog" looks like this:
+
+    <img src="images/frontend/suggested-single-field.png" alt="drawing" width="1000"/>
+
+    - you can accept or reject the suggestion with the icons on the right side
+
+<br/>
+
+### 2) summarization of the conceptual model
+
+- when you select some part of your conceptual model you can let the assistant to summarize it
+- the easiest way to select some part of your conceptual model is by holding shift and left mouse button:
+
+    <img src="images/frontend/selection.png" alt="drawing" width="800"/>
+
+<br/>
+
+- then you can let the assistant to summarize the selected part:
+    - either in a few sentences by clicking on the topbar on the button "Summary: plain text"
+    - or in a bullet points by clicking on the topbar on the button "Summary: descriptions"
+
+    <img src="images/frontend/summary-buttons.png" alt="drawing" width="900"/>
+
+<br/>
+
+- for example when this part of the conceptual model is selected (the light blue color denotes the selected classes, attributes and associations):
+
+    <img src="images/frontend/selection-aircraft.png" alt="drawing" width="900"/>
+
+<br/>
+
+- this is what the button "Summary: plain text" generates:
+
+    <img src="images/frontend/summary-plain-text.png" alt="drawing" width="1100"/>
+
+<br/>
+
+- and this is what the button "Summary: descriptions" generates:
+
+    <img src="images/frontend/summary-descriptions.png" alt="drawing" width="900"/>
+
+<br/>
+
+- note: the assistant ignores the domain description when generating the summary
+
+<br/>
+
+
+### 3) highlighting in the domain description which parts are represented by the conceptual model
+
+- this feature can be for example used to check whether the conceptual model is completely representing the given domain description
+
+- when creating conceptual model with the help of the assistant each suggested element contains also the already mentioned original text
+- when some part of the conceptual model is selected all these original texts can be highlighted in the domain description using the "Highlight original text" button on the topbar
+
+    <img src="images/frontend/highlight-original-text-button.png" alt="drawing" width="900"/>
+
+<br/>
+
+- for example for a domain description about conference papers and this class:
+
+    <img src="images/frontend/class-example.png" alt="drawing" width="280"/>
+
+<br/>
+
+- this is what the button "Highlight original text" can show:
+
+    <img src="images/frontend/highlight-all-example.png" alt="drawing" width="800"/>
+
+<br/>
+
+- note that the assistant can make mistakes and that some part of the domain description is highlighted doesn't necessarily mean that it is represented by the conceptual model
+    - also the reverse thing apply: some non-highlighted parts of the domain description can already be represented by the conceptual model
+
+- for simplicity whenever the domain description changes the computed original text indexes are discarded so nothing will be highlighted
+    - this means that if you want to use this feature then work with one domain description and don't edit it in the process
+
+
+### Demos
+
+- [video demonstrating the work with the domain description](https://youtu.be/1GPYFALsyrw)
+
+- [video demonstrating the work without the domain description](https://youtu.be/wy60G8cuN-M)
+
+- [video demonstrating combination of working with and without the domain description](https://youtu.be/Lw8fMqqCwPY)
