@@ -1,3 +1,4 @@
+import argparse
 from morphodita_tagger import Morphodita_Tagger
 import sys
 
@@ -43,14 +44,27 @@ class SyntacticTextFilterer:
 def main():
 
     # Simple usage example
-    clss = "student"
-    domain_description = "Students are at school. They are studying. Hello world. Professors teach students."
+    default_class = "student"
+    default_domain_description = "Students are at school. They are studying. Hello world. Professors teach students."
+
+    parser = argparse.ArgumentParser(description="Syntactic text filterer")
+    parser.add_argument("-c", "--clss", type=str, default=default_class, help="Provide class for filtering the given text")
+    parser.add_argument("-t", "--text", type=str, default=default_domain_description, help="Provide text to filter")
+
+    args = parser.parse_args()
+    clss = args.clss
+    text = args.text
 
     filterer = SyntacticTextFilterer()
-    relevant_texts = filterer.get(clss, domain_description)
+
+    print(f"Inputed class: {clss}")
+    print(f"Inputed text: {text}\n")
+    print("Relevant texts: ")
+
+    relevant_texts = filterer.get(clss, text)
 
     for relevant_text in relevant_texts:
-        print(f"{relevant_text}")
+        print(f"{relevant_text} ", end="")
 
 
 if __name__ == "__main__":
