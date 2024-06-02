@@ -13,6 +13,12 @@
 
         npm start
 
+- or build the app for production
+
+        npm run build
+
+- [here is a simple tutorial on how to deploy the frontend](https://create-react-app.dev/docs/deployment/)
+
 <br/>
 
 ## Info
