@@ -1,6 +1,9 @@
 ## General info
 
 To use any of the backend scripts:
+
+- download and install [Python](https://www.python.org/downloads/) if you haven't already
+
 - change directory to the `backend`:
 
         cd backend
@@ -72,3 +75,40 @@ To use any of the backend scripts:
     - the default port is 8080 and can be changed via the `PORT` variable
         - when changing the port make sure that the [LLM Manager](utils/llm_manager.py) works with the corresponding port
     - note: loading LLM for the first time is slow
+
+
+<br/>
+
+## How to run test scripts
+- run the Python scripts without any arguments
+- example how to run script [find_original_text_indexes.py](tests/find_original_text_indexes.py)
+
+        python tests/find_original_text_indexes.py
+
+
+<br/>
+
+## How to run text filtering scripts
+- you can run these scripts without any arguments and then a simple example will be used
+    - note that when a sentence starts with a pronoun then it gets a reference to the previous sentence
+    - example:
+        - inputed class: "student"
+        - inputed text: "Students are at school. They are studying."
+        - in this case the second sentence won't be removed because it has reference to the first sentence that talks about the students
+
+- how to run the syntactic algorithm with arguments:
+
+        python text-filtering/syntactic/syntactic_text_filterer.py --clss [class name used for filtering] --text [text to filter]
+
+- how to run the syntactic algorithm with arguments:
+
+        python text-filtering/semantic/semantic_text_filterer.py --clss [class name used for filtering] --text [text to filter]
+
+
+<br/>
+
+## How to run data-processing scripts
+- these scripts are usually used in the order described [here](../backend/data-processing/README.md)
+- only the script [../backend/data-processing/evaluation/evaluate_relevant_text_finder.py](../backend/data-processing/evaluation/evaluate_relevant_text_finder.py) takes any arguments and is run like this:
+
+        python data-processing/evaluation/evaluate_relevant_text_finder.py --filtering [filtering variation: none|syntactic|semantic]

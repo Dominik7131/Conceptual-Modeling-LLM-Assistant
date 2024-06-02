@@ -260,9 +260,9 @@ def print_evaluation():
 
 def main():
 
-    parser = argparse.ArgumentParser(description = "Relevant texts tester")
-    parser.add_argument("--filtering", choices = [TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value, TextFilteringVariation.SEMANTIC.value], type=str, default=TextFilteringVariation.SYNTACTIC.value, help = "Choose variation for domain description filtering")
-    parser.add_argument("--print_failed_tests", action = "store_true", default=False, help = "")
+    parser = argparse.ArgumentParser(description="Relevant texts tester")
+    parser.add_argument("--filtering", choices=[TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value, TextFilteringVariation.SEMANTIC.value], type=str, default=TextFilteringVariation.SYNTACTIC.value, help="Choose variation for domain description filtering")
+    parser.add_argument("--print_failed_tests", action="store_true", default=False, help="")
 
     args = parser.parse_args()
     is_print_failed_tests = args.print_failed_tests
