@@ -1,4 +1,4 @@
-## General info
+## Backend general info
 
 To use any of the backend scripts:
 
@@ -40,7 +40,7 @@ To use any of the backend scripts:
         python server.py
     - default port is 5000
     - different port can be passed via `--port` argument
-    - if you are using our frontend then make sure that it is sending requests to the corresponding port which can be set in [here](../frontend/conceptual-model-editor-assistant/src/definitions/urls.ts)
+    - if you are using our frontend, then make sure that it is sending requests to the corresponding port which can be set [here](../frontend/conceptual-model-editor-assistant/src/definitions/urls.ts) in the `PORT` variable
 
 
 <br/>
@@ -62,8 +62,9 @@ To use any of the backend scripts:
     - if this doesn't work [here is a more detailed description](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#cuda)
 
 - download one of the [supported models](https://github.com/ggerganov/llama.cpp#description) in `GGUF` format
+    - make sure that the LLM fits in your GPU (or GPUs) otherwise the LLM will generate the output very slowly
 
-- inside `llm_server.sh`:
+- inside [llm_server.sh](llm_server.sh):
     - set corresponding `MODEL_PATH` variable
     - set corresponding `CHAT_TEMPLATE` variable
 
@@ -74,14 +75,14 @@ To use any of the backend scripts:
         ./llm_server.sh
     - the default port is 8080 and can be changed via the `PORT` variable
         - when changing the port make sure that the [LLM Manager](utils/llm_manager.py) works with the corresponding port
-    - note: loading LLM for the first time is slow
+    - note: loading a LLM for the first time is slow
 
 
 <br/>
 
 ## How to run test scripts
-- run the Python scripts without any arguments
-- example how to run script [find_original_text_indexes.py](tests/find_original_text_indexes.py)
+- you can run these Python scripts without any arguments
+- example how to run script [find_original_text_indexes.py](tests/find_original_text_indexes.py):
 
         python tests/find_original_text_indexes.py
 
@@ -89,7 +90,7 @@ To use any of the backend scripts:
 <br/>
 
 ## How to run text filtering scripts
-- you can run these scripts without any arguments and then a simple example will be used
+- you can run these scripts without any arguments and then a default simple example will be used
     - note that when a sentence starts with a pronoun then it gets a reference to the previous sentence
     - example:
         - inputed class: "student"
@@ -100,7 +101,7 @@ To use any of the backend scripts:
 
         python text-filtering/syntactic/syntactic_text_filterer.py --clss [class name used for filtering] --text [text to filter]
 
-- how to run the syntactic algorithm with arguments:
+- how to run the semantic algorithm with arguments:
 
         python text-filtering/semantic/semantic_text_filterer.py --clss [class name used for filtering] --text [text to filter]
 

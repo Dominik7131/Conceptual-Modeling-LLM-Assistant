@@ -1,4 +1,4 @@
-# Brief description
+# Generation scripts brief description
 
 ## [generate_test_data.py](generate_test_data.py)
 - from annotated domain descriptions and expected domain models:

@@ -1,4 +1,4 @@
-# Brief description
+# Utils scripts brief description
 
 ## [convention_convertor.py](convention_convertor.py)
 - purpose: LLM can generate plain text output in any convention (such as snake_case, camelCase, UPPERCASE, etc.) so for consistency we convert this output into the standard convention (for simplicity all letters are lower cased and each word is divided by a single white space)
