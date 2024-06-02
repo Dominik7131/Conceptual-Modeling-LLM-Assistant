@@ -23,7 +23,7 @@ const DialogCreateEdge: React.FC = (): JSX.Element =>
   const sourceClassName = createNameFromIRI(association[Field.SOURCE_CLASS])
   const targetClassName = createNameFromIRI(association[Field.TARGET_CLASS])
 
-  const titleText = `Select how to create association with source as "${sourceClassName}" and target as "${targetClassName}\"`
+  const titleText = `Select how to create association with source as "${sourceClassName}" and target as "${targetClassName}"`
 
 
   const handleClose = (): void =>

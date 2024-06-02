@@ -1,5 +1,5 @@
 import 'reactflow/dist/style.css';
-import ReactFlow, { Node, Edge, OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from "reactflow";
+import ReactFlow, { OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from "reactflow";
 import CustomNode from "./CustomNode/CustomNode";
 import CustomEdge from "./CustomEdge";
 import { BLACK_COLOR, Field } from "../../definitions/utility";
@@ -36,12 +36,12 @@ const ConceptualModel: React.FC = () =>
   const onNodesChange = useCallback((changes: NodeChange[]) =>
   {
     setNodes((currentNodes) => applyNodeChanges(changes, currentNodes))
-  },[],)
+  },[setNodes],)
 
   const onEdgesChange = useCallback((changes: EdgeChange[]) =>
   {
     setEdges((currentEdges) => applyEdgeChanges(changes, currentEdges))
-  },[],)
+  },[setEdges],)
 
 
   const onConnect : OnConnect = useCallback((params) =>
@@ -63,7 +63,7 @@ const ConceptualModel: React.FC = () =>
     setIsItemInConceptualModel(false)
 
     setIsShowCreateEdgeDialog(true)
-  }, [])
+  }, [setSelectedSuggestedItem, setEditedSuggestedItem, setIsSuggestedItem, setIsItemInConceptualModel, setIsShowCreateEdgeDialog])
 
 
   return (

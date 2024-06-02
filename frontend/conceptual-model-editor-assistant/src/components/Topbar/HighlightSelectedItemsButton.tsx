@@ -46,7 +46,7 @@ const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>
             originalTextIndexesObject: originalTextsIndexesObjects
         }
 
-        const bodyDataJSON = JSON.stringify({ "originalTextIndexesObject": originalTextsIndexesObjects })
+        const bodyDataJSON = JSON.stringify(bodyData)
     
         fetchMergedOriginalTexts(bodyDataJSON)
         setIsShowHighlightDialog(true)

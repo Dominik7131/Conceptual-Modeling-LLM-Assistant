@@ -52,7 +52,7 @@ const Suggestion: React.FC<Props> = ({ item, field, isRegeneratedText, isDisable
     useEffect(() =>
     {
         return () => { onClearRegeneratedItem(field, setRegeneratedItem) }
-    }, [])
+    }, [field, setRegeneratedItem])
 
 
     // Let user confirm or reject given suggestion

@@ -7,7 +7,7 @@ import { SingleFieldUserEvaluationBody } from "../definitions/fetch";
 import { regeneratedOriginalTextIndexesState } from "../atoms/originalTextIndexes";
 import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots";
 import { editedSuggestedItemState, regeneratedItemState } from "../atoms/suggestions";
-import { Item, Attribute, Association } from "../definitions/conceptualModel";
+import { Item, Attribute } from "../definitions/conceptualModel";
 import { ItemType, UserChoiceSingleField, Field } from "../definitions/utility";
 
 
