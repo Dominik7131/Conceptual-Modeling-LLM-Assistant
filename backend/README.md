@@ -37,6 +37,7 @@ To use any of the backend scripts:
         python server.py
     - default port is 5000
     - different port can be passed via `--port` argument
+    - if you are using our frontend then make sure that it is sending requests to the corresponding port which can be set in [here](../frontend/conceptual-model-editor-assistant/src/definitions/urls.ts)
 
 
 <br/>
