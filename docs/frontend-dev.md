@@ -38,3 +38,12 @@ The frontend is developed with:
 
 ## Import and export format
 We are importing and exporting the conceptual model in [this JSON format](https://schemas.dataspecer.com/adapters/simplified-semantic-model.v1.0.schema.json).
+
+
+<br/>
+
+## Saving rated assistant suggestions
+- when user wants to generate some suggestion, first all parameters set on the frontend are saved to remember based on which configuration each suggestion was generated
+- the user can rate with "like" or "dislike" any generated class, attribute, association and any generated summary
+- if the user accepts any generated field we interpret it as rating the suggestion with a "like"
+- when any element is rated, it is sent to the LLM assistant server and saved in the persistent storage on the backend with the necessary parameters needed to know how the corresponding suggestion was generated
