@@ -9,7 +9,8 @@ import { onClearRegeneratedItem } from "../../utils/editItem";
 import { useEffect } from "react";
 import { fieldToLoadState, regeneratedItemState } from "../../atoms/suggestions";
 import { Item, Association } from "../../definitions/conceptualModel";
-import { Field } from "../../definitions/utility";
+import { Field, ItemType } from "../../definitions/utility";
+import { createNameFromIRI } from "../../utils/conceptualModel";
 
 
 interface Props
@@ -32,7 +33,26 @@ const Suggestion: React.FC<Props> = ({ item, field, isRegeneratedText, isDisable
 
     const handleGenerateField = (): void =>
     {
-        onGenerateField(item[Field.TYPE], item[Field.NAME], (item as Association)[Field.SOURCE_CLASS], (item as Association)[Field.TARGET_CLASS], field)
+        let source_class = (item as Association)[Field.SOURCE_CLASS]
+
+        if (item[Field.TYPE] === ItemType.CLASS)
+        {
+            source_class = item[Field.IRI]
+        }
+
+        if (source_class)
+        {
+            source_class = createNameFromIRI(source_class)
+        }
+
+        let target_class = (item as Association)[Field.TARGET_CLASS]
+
+        if (target_class)
+        {
+            target_class = createNameFromIRI(target_class)
+        }
+
+        onGenerateField(item[Field.TYPE], item[Field.NAME], source_class, target_class, field)
     }
 
 
