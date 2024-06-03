@@ -29,12 +29,12 @@ class Morphodita_Tagger:
             exit(1)
 
 
-    def encode_entities(self, text):
+    def _encode_entities(self, text):
 
         return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
 
 
-    def split_into_tokens(self, text):
+    def _split_into_tokens(self, text):
 
         self.tokenizer.setText(text)
         result = []
@@ -44,7 +44,7 @@ class Morphodita_Tagger:
 
             for i in range(len(self.lemmas)):
                 token = self.tokens[i]
-                token = self.encode_entities(text[token.start : token.start + token.length])
+                token = self._encode_entities(text[token.start : token.start + token.length])
                 result.append(token.lower())
         return result
 
@@ -59,7 +59,7 @@ class Morphodita_Tagger:
 
             for i in range(len(self.lemmas)):
                 lemma = self.lemmas[i]
-                result.append(self.encode_entities(lemma.lemma).lower())
+                result.append(self._encode_entities(lemma.lemma).lower())
         
         return result
 
@@ -68,7 +68,7 @@ class Morphodita_Tagger:
 
         # Same as `get_lemmas` method but instead of lemmatizing whole sentences lemmatize word by word
 
-        tokens = self.split_into_tokens(text)
+        tokens = self._split_into_tokens(text)
         result = []
 
         for token in tokens:

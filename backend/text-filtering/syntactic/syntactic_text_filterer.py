@@ -13,7 +13,7 @@ class SyntacticTextFilterer:
         self.tagger = Morphodita_Tagger()
 
 
-    def load_chunks(self, domain_description):
+    def _load_chunks(self, domain_description):
 
         self.enhanced_chunks, self.chunks = TextSplitter.split_into_chunks(domain_description)
 
@@ -22,7 +22,7 @@ class SyntacticTextFilterer:
 
         result = []
 
-        self.load_chunks(domain_description)
+        self._load_chunks(domain_description)
         class_lemmas = self.tagger.get_lemmas_one_by_one(clss)        
 
         for index, enhanced_chunk in enumerate(self.enhanced_chunks):

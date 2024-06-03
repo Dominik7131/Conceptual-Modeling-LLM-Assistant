@@ -28,7 +28,7 @@ class LLMAssistant:
 
     def __init__(self):
 
-        self.__setup_logging()
+        self._setup_logging()
 
         self.syntactic_text_filterer = SyntacticTextFilterer()
         self.semantic_text_filterer = SemanticTextFilterer()
@@ -37,7 +37,7 @@ class LLMAssistant:
         self.output_generator = LLMManager()
 
 
-    def __setup_logging(self):
+    def _setup_logging(self):
 
         if (not os.path.exists(LOG_DIRECTORY)):
             os.makedirs(LOG_DIRECTORY)
@@ -46,7 +46,7 @@ class LLMAssistant:
         self.logger = logging.getLogger(LOGGER_NAME)
 
 
-    def __append_default_messages(self, user_choice, is_domain_description=False):
+    def _append_default_messages(self, user_choice, is_domain_description=False):
 
         if IS_SYSTEM_MSG:
             system_prompt = self.prompt_manager.create_system_prompt(user_choice, is_domain_description)
@@ -58,7 +58,7 @@ class LLMAssistant:
         return
     
 
-    def __get_text_filterer(self, text_filtering_variation):
+    def _get_text_filterer(self, text_filtering_variation):
 
         if text_filtering_variation == TextFilteringVariation.SYNTACTIC.value:
             return self.syntactic_text_filterer
@@ -75,7 +75,7 @@ class LLMAssistant:
         if filtering_variation == TextFilteringVariation.NONE.value:
             return domain_description
 
-        text_filterer = self.__get_text_filterer(filtering_variation)
+        text_filterer = self._get_text_filterer(filtering_variation)
         relevant_texts = text_filterer.get(source_class, domain_description)
 
         result = ""
@@ -87,18 +87,18 @@ class LLMAssistant:
         return relevant_texts
     
 
-    def __log_sending_prompt_message(self, messages):
+    def _log_sending_prompt_message(self, messages):
 
         self.logger.info(f"\nSending this prompt to llm:\n{messages}\n")
     
 
-    def __empty_generator(self):
+    def _empty_generator(self):
 
         if False:
             yield
 
 
-    def __get_original_text_indexes(self, item, user_choice, domain_description):
+    def _get_original_text_indexes(self, item, user_choice, domain_description):
 
         original_text_indexes = []
 
@@ -132,14 +132,14 @@ class LLMAssistant:
                 # Find occurencies of the class name in the domain description
                 item[Field.ORIGINAL_TEXT.value] = suggestion_dictionary["name"]
 
-        original_text_indexes = self.__get_original_text_indexes(item=item, user_choice=user_choice, domain_description=domain_description)
+        original_text_indexes = self._get_original_text_indexes(item=item, user_choice=user_choice, domain_description=domain_description)
         suggestion_dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
 
         json_item = json.dumps(suggestion_dictionary)
         return json_item, False
 
 
-    def __get_output(self, user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest):
+    def _get_output(self, user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest):
 
         max_attempts_count = 2
 
@@ -159,7 +159,7 @@ class LLMAssistant:
             new_messages.append({"role": "user", "content": prompt})
 
             messages_prettified = TextUtility.prettify_messages(new_messages)
-            self.__log_sending_prompt_message(messages_prettified)
+            self._log_sending_prompt_message(messages_prettified)
 
             items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class=source_class, target_class=target_class)
 
@@ -180,7 +180,7 @@ class LLMAssistant:
                 break
 
         self.logger.info("Returning empty generator")
-        return self.__empty_generator()
+        return self._empty_generator()
 
 
     def suggest_items(self, source_class, target_class, user_choice, domain_description, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value, items_count_to_suggest=5):
@@ -191,7 +191,7 @@ class LLMAssistant:
         is_domain_description = domain_description != ""
 
         self.messages = []
-        self.__append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
+        self._append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)        
 
 
         if user_choice != UserChoice.CLASSES.value:
@@ -202,7 +202,7 @@ class LLMAssistant:
         is_no_relevant_text = is_domain_description and not relevant_texts
         if is_no_relevant_text:
             self.logger.warn("No relevant texts found.")
-            return self.__empty_generator()
+            return self._empty_generator()
 
         is_chain_of_thoughts = True
 
@@ -212,7 +212,7 @@ class LLMAssistant:
 
         self.is_some_item_generated = False
 
-        return self.__get_output(user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest)
+        return self._get_output(user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest)
 
 
     def suggest_single_field(self, user_choice, name, source_class, target_class, domain_description, field_name, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value):
@@ -231,7 +231,7 @@ class LLMAssistant:
         new_messages.append({"role": "user", "content": prompt})
         messages_prettified = TextUtility.prettify_messages(new_messages)
 
-        self.__log_sending_prompt_message(messages_prettified)
+        self._log_sending_prompt_message(messages_prettified)
 
         items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class=source_class, field_name=field_name)
 
@@ -240,7 +240,7 @@ class LLMAssistant:
             # Convert `item` of type string into JSON and then into python dictionary
             item_object = json.loads(json.dumps(item))
 
-            original_text_indexes = self.__get_original_text_indexes(item=item, user_choice=user_choice, domain_description=domain_description)
+            original_text_indexes = self._get_original_text_indexes(item=item, user_choice=user_choice, domain_description=domain_description)
             item_object[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
 
             json_item = json.dumps(item_object)
@@ -260,7 +260,7 @@ class LLMAssistant:
         new_messages.append({"role": "user", "content": prompt})
         messages_prettified = TextUtility.prettify_messages(new_messages)
 
-        self.__log_sending_prompt_message(messages_prettified)
+        self._log_sending_prompt_message(messages_prettified)
 
         items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class="")
 
@@ -269,7 +269,7 @@ class LLMAssistant:
             json_item = json.dumps(item)
             return json_item
 
-        return self.__empty_generator()
+        return self._empty_generator()
 
 
     def suggest_summary_descriptions(self, conceptual_model, domain_description):
@@ -285,7 +285,7 @@ class LLMAssistant:
         new_messages.append({"role": "user", "content": prompt})
         messages_prettified = TextUtility.prettify_messages(new_messages)
 
-        self.__log_sending_prompt_message(messages_prettified)
+        self._log_sending_prompt_message(messages_prettified)
 
         items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class="")
 

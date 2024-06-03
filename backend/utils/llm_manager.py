@@ -27,7 +27,7 @@ class LLMManager:
         self.parsed_message = ""
     
 
-    def __reset(self, messages={}, user_choice="", source_class="", target_class="", field_name=""):
+    def _reset(self, messages={}, user_choice="", source_class="", target_class="", field_name=""):
 
         self.user_choice = user_choice
         self.source_class = source_class.lower()
@@ -42,12 +42,12 @@ class LLMManager:
         self.parsed_message = ""
 
 
-    def __log_full_message(self):
+    def _log_full_message(self):
 
         self.logger.info(f"\nFull message: {self.parsed_message}")
     
 
-    def __log_remove_item(self, completed_item):
+    def _log_remove_item(self, completed_item):
         
         self.logger.info(f"Removing: {completed_item}")
 
@@ -68,7 +68,7 @@ class LLMManager:
         # Return when LLM gets stuck in printing only new lines
         if self.new_lines_in_a_row > 3:
             self.logger.warning("Too many new lines")
-            self.__log_full_message()
+            self._log_full_message()
             return True
         
         if self.opened_curly_brackets_count > 0:
@@ -91,7 +91,7 @@ class LLMManager:
         :rtype: Generator[tuple[dict[str, bool]
         """
 
-        self.__reset(messages, user_choice, source_class, target_class, field_name)
+        self._reset(messages, user_choice, source_class, target_class, field_name)
 
         output = self.client.chat.completions.create(messages=self.messages, model=MODEL_ID, stream=True, temperature=TEMPERATURE)
 
@@ -116,14 +116,14 @@ class LLMManager:
 
                 is_item_detected = self.opened_curly_brackets_count == 0 and self.item != ""
                 if is_item_detected:
-                    parsed_item_iterator = self.__parse_item_streamed_output()
+                    parsed_item_iterator = self._parse_item_streamed_output()
 
                     for completed_item, is_item_ok in parsed_item_iterator:
 
                         if is_item_ok:
                             yield completed_item
                         else:
-                            self.__log_remove_item(completed_item)
+                            self._log_remove_item(completed_item)
 
                     self.item = ""
 
@@ -135,21 +135,21 @@ class LLMManager:
             self.logger.info(f"JSON object is not properly finished: {self.item}")
             self.item += "}" * self.opened_curly_brackets_count
 
-            parsed_item_iterator = self.__parse_item_streamed_output()
+            parsed_item_iterator = self._parse_item_streamed_output()
 
             for completed_item, is_item_ok in parsed_item_iterator:
 
                 if is_item_ok:
                     yield completed_item
                 else:
-                    self.__log_remove_item(completed_item)
+                    self._log_remove_item(completed_item)
 
 
-        self.__log_full_message()
+        self._log_full_message()
         return
 
 
-    def __parse_attribute(self, completed_item):
+    def _parse_attribute(self, completed_item):
 
         is_item_ok = True
 
@@ -163,7 +163,7 @@ class LLMManager:
         return completed_item, is_item_ok
 
 
-    def __parse_associations1(self, completed_item):
+    def _parse_associations1(self, completed_item):
 
         is_item_ok = True
 
@@ -202,7 +202,7 @@ class LLMManager:
         return completed_item, is_item_ok
 
 
-    def __parse_associations2(self, completed_item):
+    def _parse_associations2(self, completed_item):
 
         is_item_ok = True
 
@@ -226,7 +226,7 @@ class LLMManager:
         return completed_item, is_item_ok
     
 
-    def __check_summary_plain_text(self, completed_item):
+    def _check_summary_plain_text(self, completed_item):
 
         is_item_ok = "summary" in completed_item
 
@@ -236,7 +236,7 @@ class LLMManager:
         return is_item_ok
 
 
-    def __check_single_field(self, completed_item):
+    def _check_single_field(self, completed_item):
 
         is_item_ok = self.field_name in completed_item
 
@@ -246,7 +246,7 @@ class LLMManager:
         return is_item_ok
 
 
-    def __convert_names_into_standard_convention(self, completed_item):
+    def _convert_names_into_standard_convention(self, completed_item):
 
         is_item_ok = True
         completed_item[Field.NAME.value] = ConventionConvertor.convert_string_to_standard_convention(completed_item[Field.NAME.value])
@@ -260,7 +260,7 @@ class LLMManager:
         return completed_item, is_item_ok
 
 
-    def __log_debug_info(self, completed_item):
+    def _log_debug_info(self, completed_item):
 
         self.logger.info(f"Completed item: {completed_item['name']}")
 
@@ -273,7 +273,7 @@ class LLMManager:
         self.logger.info("\n")
 
 
-    def __parse_item_streamed_output(self):
+    def _parse_item_streamed_output(self):
         """
         Returns generator object containing parsed object and True if parsing of this object was successful.
         :rtype: Generator[tuple[dict[str, bool]
@@ -297,12 +297,12 @@ class LLMManager:
 
         is_single_field_item = self.field_name != ""
         if is_single_field_item:
-            is_item_ok = self.__check_single_field(completed_item)
+            is_item_ok = self._check_single_field(completed_item)
             yield completed_item, is_item_ok
             return
 
         if self.user_choice == UserChoice.SUMMARY_PLAIN_TEXT.value:
-            is_item_ok = self.__check_summary_plain_text(completed_item)
+            is_item_ok = self._check_summary_plain_text(completed_item)
             yield completed_item, is_item_ok
 
         elif self.user_choice == UserChoice.SUMMARY_DESCRIPTIONS.value:
@@ -316,7 +316,7 @@ class LLMManager:
             yield completed_item, is_item_ok
             return
 
-        completed_item, is_item_ok = self.__convert_names_into_standard_convention(completed_item)
+        completed_item, is_item_ok = self._convert_names_into_standard_convention(completed_item)
 
         if not is_item_ok:
             yield completed_item, is_item_ok
@@ -324,15 +324,15 @@ class LLMManager:
 
 
         if self.user_choice == UserChoice.ATTRIBUTES.value:
-            completed_item, is_item_ok = self.__parse_attribute(completed_item)
+            completed_item, is_item_ok = self._parse_attribute(completed_item)
 
         elif self.user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
-            completed_item, is_item_ok = self.__parse_associations1(completed_item)
+            completed_item, is_item_ok = self._parse_associations1(completed_item)
 
         elif self.user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
-            completed_item, is_item_ok = self.__parse_associations2(completed_item)
+            completed_item, is_item_ok = self._parse_associations2(completed_item)
 
 
-        self.__log_debug_info(completed_item)
+        self._log_debug_info(completed_item)
 
         yield completed_item, is_item_ok

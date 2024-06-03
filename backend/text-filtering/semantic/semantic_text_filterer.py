@@ -26,13 +26,9 @@ class SemanticTextFilterer:
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
         # self.model = SentenceTransformer("all-mpnet-base-v2") # Symmetric language model
         # self.model = SentenceTransformer("msmarco-distilbert-base-v4") # Asymmetric language model
-    
-    def encode(self, queries):
 
-        self.model.encode(queries, convert_to_tensor=True)
-    
 
-    def enhance_chunks(self, chunks):
+    def _enhance_chunks(self, chunks):
 
         enhanced_chunks = []
 
@@ -57,7 +53,7 @@ class SemanticTextFilterer:
     def get(self, clss, domain_description):
 
         chunks = TextSplitter.split_into_sentences(domain_description)
-        enhanced_chunks = self.enhance_chunks(chunks)
+        enhanced_chunks = self._enhance_chunks(chunks)
 
         query = f"Info about {clss}"
 
