@@ -1,16 +1,16 @@
-import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
+import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal"
 import { CircularProgress, IconButton, Stack } from "@mui/material"
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import useGenerateSingleField from "../../hooks/useGenerateSingleField"
-import CheckIcon from "@mui/icons-material/Check";
-import CloseIcon from "@mui/icons-material/Close";
-import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField";
-import { onClearRegeneratedItem } from "../../utils/editItem";
-import { useEffect } from "react";
-import { fieldToLoadState, regeneratedItemState } from "../../atoms/suggestions";
-import { Item, Association } from "../../definitions/conceptualModel";
-import { Field, ItemType } from "../../definitions/utility";
-import { createNameFromIRI } from "../../utils/conceptualModel";
+import CheckIcon from "@mui/icons-material/Check"
+import CloseIcon from "@mui/icons-material/Close"
+import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField"
+import { onClearRegeneratedItem } from "../../utils/editItem"
+import { useEffect } from "react"
+import { fieldToLoadState, regeneratedItemState } from "../../atoms/suggestions"
+import { Item, Association } from "../../definitions/conceptualModel"
+import { Field, ItemType } from "../../definitions/utility"
+import { createNameFromIRI } from "../../utils/conceptualModel"
 
 
 interface Props

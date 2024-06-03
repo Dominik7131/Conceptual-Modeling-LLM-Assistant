@@ -1,23 +1,23 @@
 import { Button, ButtonGroup, Tooltip } from "@mui/material"
 import HighlightSingleItemButton from "./HighlightSingleItemButton"
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import { useState } from "react";
-import { HEADER, SAVE_SUGESTED_ITEM_URL, SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE } from "../../definitions/urls";
-import { createErrorMessage, onAddItem } from "../../utils/conceptualModel";
-import { getSnapshotDomainDescription, getSnapshotTextFilteringVariation } from "../../utils/snapshot";
-import { SuggestedItemUserEvaluationBody } from "../../definitions/fetch";
-import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel";
-import { isShowEditDialogState } from "../../atoms/dialogs";
-import { sidebarErrorMsgState } from "../../atoms/sidebar";
-import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../../atoms/snapshots";
-import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState } from "../../atoms/suggestions";
-import { Item } from "../../definitions/conceptualModel";
-import { Field, TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS } from "../../definitions/utility";
-import { itemTypeToUserChoice } from "../../utils/utility";
+import AddIcon from "@mui/icons-material/Add"
+import EditIcon from "@mui/icons-material/Edit"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import ThumbUpIcon from "@mui/icons-material/ThumbUp"
+import ThumbDownIcon from "@mui/icons-material/ThumbDown"
+import { useState } from "react"
+import { HEADER, SAVE_SUGESTED_ITEM_URL, SIDEBAR_BUTTON_COLOR, SIDEBAR_BUTTON_SIZE } from "../../definitions/urls"
+import { createErrorMessage, onAddItem } from "../../utils/conceptualModel"
+import { getSnapshotDomainDescription, getSnapshotTextFilteringVariation } from "../../utils/snapshot"
+import { SuggestedItemUserEvaluationBody } from "../../definitions/fetch"
+import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel"
+import { isShowEditDialogState } from "../../atoms/dialogs"
+import { sidebarErrorMsgState } from "../../atoms/sidebar"
+import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../../atoms/snapshots"
+import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState } from "../../atoms/suggestions"
+import { Item } from "../../definitions/conceptualModel"
+import { Field, TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS } from "../../definitions/utility"
+import { itemTypeToUserChoice } from "../../utils/utility"
 
 
 interface Props

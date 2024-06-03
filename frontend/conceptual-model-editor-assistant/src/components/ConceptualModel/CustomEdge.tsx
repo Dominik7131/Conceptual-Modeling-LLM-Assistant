@@ -1,17 +1,17 @@
-import { EdgeLabelRenderer, EdgeProps, getSimpleBezierPath, useStore } from "reactflow";
-import { useCallback, useState } from "react";
-import Button from "@mui/material/Button";
-import EditIcon from "@mui/icons-material/Edit";
-import { Typography } from "@mui/material";
-import { useSetRecoilState } from "recoil";
-import { calculateNewEdgeSourceAndTargetPosition } from "../../utils/autoEdgeReconnect";
-import { getLoopPath } from "../../utils/conceptualModel";
-import { isItemInConceptualModelState } from "../../atoms/conceptualModel";
-import { isShowEditDialogState } from "../../atoms/dialogs";
-import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState } from "../../atoms/suggestions";
-import { EdgeData, Association } from "../../definitions/conceptualModel";
-import { BLACK_COLOR, Field, ItemType, PRIMARY_COLOR } from "../../definitions/utility";
-import { clipString } from "../../utils/utility";
+import { EdgeLabelRenderer, EdgeProps, getSimpleBezierPath, useStore } from "reactflow"
+import { useCallback, useState } from "react"
+import Button from "@mui/material/Button"
+import EditIcon from "@mui/icons-material/Edit"
+import { Typography } from "@mui/material"
+import { useSetRecoilState } from "recoil"
+import { calculateNewEdgeSourceAndTargetPosition } from "../../utils/autoEdgeReconnect"
+import { getLoopPath } from "../../utils/conceptualModel"
+import { isItemInConceptualModelState } from "../../atoms/conceptualModel"
+import { isShowEditDialogState } from "../../atoms/dialogs"
+import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState } from "../../atoms/suggestions"
+import { EdgeData, Association } from "../../definitions/conceptualModel"
+import { BLACK_COLOR, Field, ItemType, PRIMARY_COLOR } from "../../definitions/utility"
+import { clipString } from "../../utils/utility"
 
 
 export default function CustomEdge ({ id, source, target, style, selected, data, markerEnd }: EdgeProps) : JSX.Element

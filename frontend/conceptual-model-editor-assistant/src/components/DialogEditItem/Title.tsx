@@ -1,6 +1,6 @@
-import { Item } from "../../definitions/conceptualModel";
+import { Item } from "../../definitions/conceptualModel"
 import { Field } from "../../definitions/utility"
-import Typography from "@mui/material/Typography";
+import Typography from "@mui/material/Typography"
 
 
 interface Props

@@ -1,16 +1,16 @@
-import { ListItemIcon, Menu, MenuItem } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import AddIcon from "@mui/icons-material/Add";
-import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import useSuggestItems from "../../../hooks/useSuggestItems";
-import { useSetRecoilState } from "recoil";
-import { createNewAttribute } from "../../../utils/conceptualModel";
-import { editedSuggestedItemState, isSuggestedItemState, selectedSuggestedItemState } from "../../../atoms/suggestions";
-import { isItemInConceptualModelState } from "../../../atoms/conceptualModel";
-import { isShowEditDialogState } from "../../../atoms/dialogs";
-import { Class, Item, Attribute } from "../../../definitions/conceptualModel";
-import { Field, UserChoiceItem } from "../../../definitions/utility";
-import { Dispatch, SetStateAction } from "react";
+import { ListItemIcon, Menu, MenuItem } from "@mui/material"
+import EditIcon from "@mui/icons-material/Edit"
+import AddIcon from "@mui/icons-material/Add"
+import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal"
+import useSuggestItems from "../../../hooks/useSuggestItems"
+import { useSetRecoilState } from "recoil"
+import { createNewAttribute } from "../../../utils/conceptualModel"
+import { editedSuggestedItemState, isSuggestedItemState, selectedSuggestedItemState } from "../../../atoms/suggestions"
+import { isItemInConceptualModelState } from "../../../atoms/conceptualModel"
+import { isShowEditDialogState } from "../../../atoms/dialogs"
+import { Class, Item, Attribute } from "../../../definitions/conceptualModel"
+import { Field, UserChoiceItem } from "../../../definitions/utility"
+import { Dispatch, SetStateAction } from "react"
 
 
 interface Props

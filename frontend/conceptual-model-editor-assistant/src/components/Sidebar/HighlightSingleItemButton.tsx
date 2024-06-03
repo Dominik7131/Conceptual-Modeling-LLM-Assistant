@@ -1,14 +1,14 @@
 import { Button, Tooltip } from "@mui/material"
-import HighlightIcon from "@mui/icons-material/Highlight";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { SIDEBAR_BUTTON_SIZE } from "../../definitions/urls";
-import { createNameFromIRI } from "../../utils/conceptualModel";
-import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState } from "../../atoms/dialogs";
-import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms/domainDescription";
-import { originalTextIndexesListState, tooltipsState } from "../../atoms/originalTextIndexes";
-import { selectedSuggestedItemState } from "../../atoms/suggestions";
-import { Item, Attribute, Association } from "../../definitions/conceptualModel";
-import { Field, ItemType } from "../../definitions/utility";
+import HighlightIcon from "@mui/icons-material/Highlight"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import { SIDEBAR_BUTTON_SIZE } from "../../definitions/urls"
+import { createNameFromIRI } from "../../utils/conceptualModel"
+import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState } from "../../atoms/dialogs"
+import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../../atoms/domainDescription"
+import { originalTextIndexesListState, tooltipsState } from "../../atoms/originalTextIndexes"
+import { selectedSuggestedItemState } from "../../atoms/suggestions"
+import { Item, Attribute, Association } from "../../definitions/conceptualModel"
+import { Field, ItemType } from "../../definitions/utility"
 
 
 interface Props

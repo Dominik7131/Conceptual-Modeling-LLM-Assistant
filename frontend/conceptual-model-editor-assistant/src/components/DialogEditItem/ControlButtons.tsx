@@ -1,14 +1,14 @@
-import { Button } from "@mui/material";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { createErrorMessage, createNameFromIRI, onAddItem, onRemove } from "../../utils/conceptualModel";
-import { onClose, onSave } from "../../utils/editItem";
-import { useState } from "react";
-import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField";
-import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel";
-import { isShowEditDialogState, editDialogErrorMsgState } from "../../atoms/dialogs";
-import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState, regeneratedItemState } from "../../atoms/suggestions";
-import { Item, Attribute, Association } from "../../definitions/conceptualModel";
-import { ItemType, Field } from "../../definitions/utility";
+import { Button } from "@mui/material"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { createErrorMessage, createNameFromIRI, onAddItem, onRemove } from "../../utils/conceptualModel"
+import { onClose, onSave } from "../../utils/editItem"
+import { useState } from "react"
+import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField"
+import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel"
+import { isShowEditDialogState, editDialogErrorMsgState } from "../../atoms/dialogs"
+import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState, regeneratedItemState } from "../../atoms/suggestions"
+import { Item, Attribute, Association } from "../../definitions/conceptualModel"
+import { ItemType, Field } from "../../definitions/utility"
 
 
 const ControlButtons: React.FC = () =>

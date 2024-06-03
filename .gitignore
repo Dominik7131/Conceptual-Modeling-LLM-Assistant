@@ -6,6 +6,7 @@ llama/
 
 domain-modeling-benchmark/
 
+backend/server_mockup.py
 backend/get_stream.py
 backend/x.py
 backend/logs

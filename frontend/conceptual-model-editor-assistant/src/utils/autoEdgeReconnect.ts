@@ -1,6 +1,5 @@
 import { Node, Position, internalsSymbol } from "reactflow"
 
-
 // Inspired by code from Adam Polický
 // This logic automatically reconnects all edges to their closest node handles to make the edge end marker better visible
 // https://github.com/mff-uk/dataspecer/blob/dd97ac02b12dd993e6fe3b54ecc51f9cef475742/applications/conceptual-model-editor/src/app/core-v2/reactflow/utils.ts

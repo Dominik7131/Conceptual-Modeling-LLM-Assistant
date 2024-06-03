@@ -1,11 +1,11 @@
 import { Button } from "@mui/material"
-import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import { useSetRecoilState } from "recoil";
-import useFetchSummaryPlainText from "../../hooks/useFetchSummaryPlainText";
-import { summaryTextState } from "../../atoms/summary";
-import { UserChoiceSummary } from "../../definitions/utility";
-import { SUMMARY_PLAIN_TEXT_NAME } from "../../utils/summary";
-import useSummaryButtonClick from "../../hooks/useSummaryButtonClick";
+import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal"
+import { useSetRecoilState } from "recoil"
+import useFetchSummaryPlainText from "../../hooks/useFetchSummaryPlainText"
+import { summaryTextState } from "../../atoms/summary"
+import { UserChoiceSummary } from "../../definitions/utility"
+import { SUMMARY_PLAIN_TEXT_NAME } from "../../utils/summary"
+import useSummaryButtonClick from "../../hooks/useSummaryButtonClick"
 
 
 const SummaryPlainTextButton: React.FC= (): JSX.Element =>

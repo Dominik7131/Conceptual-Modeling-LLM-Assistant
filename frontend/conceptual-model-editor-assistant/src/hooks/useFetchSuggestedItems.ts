@@ -1,10 +1,10 @@
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { HEADER, SUGGEST_ITEMS_URL } from "../definitions/urls";
-import { createIRIFromName, onClearSuggestedItems } from "../utils/conceptualModel";
-import { sidebarErrorMsgState } from "../atoms/sidebar";
-import { itemTypesToLoadState, suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms/suggestions";
-import { Item, Attribute, Association } from "../definitions/conceptualModel";
-import { ItemType, Field } from "../definitions/utility";
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { HEADER, SUGGEST_ITEMS_URL } from "../definitions/urls"
+import { createIRIFromName, onClearSuggestedItems } from "../utils/conceptualModel"
+import { sidebarErrorMsgState } from "../atoms/sidebar"
+import { itemTypesToLoadState, suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms/suggestions"
+import { Item, Attribute, Association } from "../definitions/conceptualModel"
+import { ItemType, Field } from "../definitions/utility"
 
 
 const useFetchSuggestedItems = () =>

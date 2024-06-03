@@ -1,5 +1,5 @@
-import { atom } from "recoil";
-import { TopbarTab } from "../definitions/tabs";
+import { atom } from "recoil"
+import { TopbarTab } from "../definitions/tabs"
 
 
 export const topbarTabValueState = atom<TopbarTab>({

@@ -1,12 +1,12 @@
-import { Stack, Button } from "@mui/material";
-import AddIcon from "@mui/icons-material/Add";
-import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal";
-import { useSetRecoilState } from "recoil";
-import useSuggestItems from "../../hooks/useSuggestItems";
-import { isShowCreateEdgeDialogState, isShowEditDialogState } from "../../atoms/dialogs";
-import { selectedSuggestedItemState, editedSuggestedItemState } from "../../atoms/suggestions";
-import { Association } from "../../definitions/conceptualModel";
-import { ItemType, Field, UserChoiceItem } from "../../definitions/utility";
+import { Stack, Button } from "@mui/material"
+import AddIcon from "@mui/icons-material/Add"
+import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal"
+import { useSetRecoilState } from "recoil"
+import useSuggestItems from "../../hooks/useSuggestItems"
+import { isShowCreateEdgeDialogState, isShowEditDialogState } from "../../atoms/dialogs"
+import { selectedSuggestedItemState, editedSuggestedItemState } from "../../atoms/suggestions"
+import { Association } from "../../definitions/conceptualModel"
+import { ItemType, Field, UserChoiceItem } from "../../definitions/utility"
 
 
 interface Props

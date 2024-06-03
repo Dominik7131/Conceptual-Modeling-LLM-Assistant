@@ -1,15 +1,15 @@
 import { Button } from "@mui/material"
-import HighlightIcon from "@mui/icons-material/Highlight";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { createNameFromIRI } from "../../utils/conceptualModel";
-import useFetchMergedOriginalTexts from "../../hooks/useFetchMergedOriginalTexts";
-import { selectedNodesState, selectedEdgesState } from "../../atoms/conceptualModel";
-import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState } from "../../atoms/dialogs";
-import { domainDescriptionState } from "../../atoms/domainDescription";
-import { NodeData, EdgeData } from "../../definitions/conceptualModel";
-import { Field, NOTHING_SELECTED_MSG } from "../../definitions/utility";
-import { OriginalTextIndexesItemBody } from "../../definitions/fetch";
-import { OriginalTextIndexesItem } from "../../definitions/originalTextIndexes";
+import HighlightIcon from "@mui/icons-material/Highlight"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import { createNameFromIRI } from "../../utils/conceptualModel"
+import useFetchMergedOriginalTexts from "../../hooks/useFetchMergedOriginalTexts"
+import { selectedNodesState, selectedEdgesState } from "../../atoms/conceptualModel"
+import { isShowHighlightDialogState, isShowTitleDialogDomainDescriptionState } from "../../atoms/dialogs"
+import { domainDescriptionState } from "../../atoms/domainDescription"
+import { NodeData, EdgeData } from "../../definitions/conceptualModel"
+import { Field, NOTHING_SELECTED_MSG } from "../../definitions/utility"
+import { OriginalTextIndexesItemBody } from "../../definitions/fetch"
+import { OriginalTextIndexesItem } from "../../definitions/originalTextIndexes"
 
 
 const HighlightSelectedItemsButton: React.FC = ():JSX.Element =>

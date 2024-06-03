@@ -1,8 +1,8 @@
-import Button from "@mui/material/Button";
-import UploadIcon from '@mui/icons-material/Upload';
-import { useSetRecoilState } from "recoil";
-import { importedFileNameState } from "../../atoms/conceptualModel";
-import { isDialogEnterIRIOpenedState, isDialogImportState } from "../../atoms/dialogs";
+import Button from "@mui/material/Button"
+import UploadIcon from '@mui/icons-material/Upload'
+import { useSetRecoilState } from "recoil"
+import { importedFileNameState } from "../../atoms/conceptualModel"
+import { isDialogEnterIRIOpenedState, isDialogImportState } from "../../atoms/dialogs"
 
 
 const ImportFromDataspecerButton: React.FC = (): JSX.Element =>

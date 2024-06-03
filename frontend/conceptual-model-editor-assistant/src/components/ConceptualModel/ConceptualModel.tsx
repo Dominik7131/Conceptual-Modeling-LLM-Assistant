@@ -1,16 +1,16 @@
-import 'reactflow/dist/style.css';
-import ReactFlow, { OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from "reactflow";
-import CustomNode from "./CustomNode/CustomNode";
-import CustomEdge from "./CustomEdge";
-import { BLACK_COLOR, Field } from "../../definitions/utility";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { useCallback } from "react";
-import { Box, Divider } from "@mui/material";
-import { createNewAssociation } from "../../utils/conceptualModel";
-import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel";
-import { isShowCreateEdgeDialogState } from "../../atoms/dialogs";
-import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState } from "../../atoms/suggestions";
-import { Association, CUSTOM_EDGE_TYPE, CUSTOM_NODE_TYPE } from "../../definitions/conceptualModel";
+import "reactflow/dist/style.css"
+import ReactFlow, { OnConnect, MiniMap, Controls, Background, applyNodeChanges, applyEdgeChanges, NodeChange, EdgeChange } from "reactflow"
+import CustomNode from "./CustomNode/CustomNode"
+import CustomEdge from "./CustomEdge"
+import { BLACK_COLOR, Field } from "../../definitions/utility"
+import { useRecoilState, useSetRecoilState } from "recoil"
+import { useCallback } from "react"
+import { Box, Divider } from "@mui/material"
+import { createNewAssociation } from "../../utils/conceptualModel"
+import { nodesState, edgesState, isItemInConceptualModelState } from "../../atoms/conceptualModel"
+import { isShowCreateEdgeDialogState } from "../../atoms/dialogs"
+import { selectedSuggestedItemState, editedSuggestedItemState, isSuggestedItemState } from "../../atoms/suggestions"
+import { Association, CUSTOM_EDGE_TYPE, CUSTOM_NODE_TYPE } from "../../definitions/conceptualModel"
 
 
 const nodeTypes = { [CUSTOM_NODE_TYPE]: CustomNode }

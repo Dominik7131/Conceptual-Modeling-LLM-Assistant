@@ -1,22 +1,22 @@
-import Box from "@mui/material/Box";
-import { Button } from "@mui/material";
-import TabContext from "@mui/lab/TabContext";
-import { useRecoilState, useRecoilValue } from "recoil";
-import SummaryDescriptionsTab from "./SummaryDescriptionsTab";
-import SummaryPlainTextTab from "./SummaryPlainTextTab";
-import TopbarButtons from "./ControlButtons";
-import SettingsTab from "./SettingsTab";
-import Tabs from "./Tabs";
-import ImportTab from "./ImportExportTab";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
-import { useState } from "react";
-import InfoTab from "./InfoTab";
-import { topbarTabValueState } from "../../atoms/topbar";
-import { isSidebarCollapsedState } from "../../atoms/sidebar";
-import { CustomTabPanel } from "../CustomElements/CustomTabPanel";
+import Box from "@mui/material/Box"
+import { Button } from "@mui/material"
+import TabContext from "@mui/lab/TabContext"
+import { useRecoilState, useRecoilValue } from "recoil"
+import SummaryDescriptionsTab from "./SummaryDescriptionsTab"
+import SummaryPlainTextTab from "./SummaryPlainTextTab"
+import TopbarButtons from "./ControlButtons"
+import SettingsTab from "./SettingsTab"
+import Tabs from "./Tabs"
+import ImportTab from "./ImportExportTab"
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown"
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft"
+import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight"
+import { useState } from "react"
+import InfoTab from "./InfoTab"
+import { topbarTabValueState } from "../../atoms/topbar"
+import { isSidebarCollapsedState } from "../../atoms/sidebar"
+import { CustomTabPanel } from "../CustomElements/CustomTabPanel"
 
 
 const Topbar: React.FC = (): JSX.Element =>

@@ -1,15 +1,15 @@
-import { Button, Stack, TextField, Typography } from "@mui/material";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import { useState } from "react";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { importConceptualModelFromJSON } from "../../utils/import";
-import { HEADER } from "../../definitions/urls";
-import { convertConceptualModelToJSON } from "../../utils/serialization";
-import { edgesState, modelIDState, nodesState } from "../../atoms/conceptualModel";
-import { isDialogEnterIRIOpenedState, isDialogImportState } from "../../atoms/dialogs";
+import { Button, Stack, TextField, Typography } from "@mui/material"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogTitle from "@mui/material/DialogTitle"
+import { useState } from "react"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { importConceptualModelFromJSON } from "../../utils/import"
+import { HEADER } from "../../definitions/urls"
+import { convertConceptualModelToJSON } from "../../utils/serialization"
+import { edgesState, modelIDState, nodesState } from "../../atoms/conceptualModel"
+import { isDialogEnterIRIOpenedState, isDialogImportState } from "../../atoms/dialogs"
 
 
 const DialogEnterModelID: React.FC = (): JSX.Element =>

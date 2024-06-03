@@ -1,7 +1,7 @@
-import { Node, Edge, internalsSymbol } from "reactflow";
-import { SetterOrUpdater } from "recoil";
-import { Class, Attribute, EdgeData, Item, Association, NodeData, ItemsMessage, BLANK_CLASS, CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, CUSTOM_NODE_TYPE, CUSTOM_EDGE_TYPE } from "../definitions/conceptualModel";
-import { Field, ItemType, UserChoiceItem } from "../definitions/utility";
+import { Node, Edge, internalsSymbol } from "reactflow"
+import { SetterOrUpdater } from "recoil"
+import { Class, Attribute, EdgeData, Item, Association, NodeData, ItemsMessage, BLANK_CLASS, CUSTOM_EDGE_MARKER, CUSTOM_ISA_EDGE_MARKER, CUSTOM_NODE_TYPE, CUSTOM_EDGE_TYPE } from "../definitions/conceptualModel"
+import { Field, ItemType, UserChoiceItem } from "../definitions/utility"
 
 
 export const getNodeByID = (nodes: Node[], nodeID: string): Node | null =>

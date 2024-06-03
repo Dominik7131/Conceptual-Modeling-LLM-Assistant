@@ -1,12 +1,12 @@
 import { Button, Stack, Tooltip } from "@mui/material"
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import { useRecoilValue } from "recoil";
-import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots";
-import { SummaryConceptualModel } from "../../definitions/summary";
-import { TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS, UserChoiceSummary } from "../../definitions/utility";
-import { handleSaveSuggestionSummary } from "../../utils/summary";
-import { useState } from "react";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp"
+import ThumbDownIcon from "@mui/icons-material/ThumbDown"
+import { useRecoilValue } from "recoil"
+import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots"
+import { SummaryConceptualModel } from "../../definitions/summary"
+import { TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS, UserChoiceSummary } from "../../definitions/utility"
+import { handleSaveSuggestionSummary } from "../../utils/summary"
+import { useState } from "react"
 
 
 interface Props

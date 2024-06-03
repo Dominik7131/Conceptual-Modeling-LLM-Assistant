@@ -1,6 +1,6 @@
-import { useRecoilValue } from "recoil";
-import Alert from "@mui/material/Alert";
-import { editDialogErrorMsgState } from "../../atoms/dialogs";
+import { useRecoilValue } from "recoil"
+import Alert from "@mui/material/Alert"
+import { editDialogErrorMsgState } from "../../atoms/dialogs"
 
 
 const ErrorMessage: React.FC = (): JSX.Element =>

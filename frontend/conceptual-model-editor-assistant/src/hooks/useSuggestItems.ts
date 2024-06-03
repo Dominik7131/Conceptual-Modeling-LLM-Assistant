@@ -1,16 +1,16 @@
-import useFetchSuggestedItems from "./useFetchSuggestedItems";
-import { ItemType, UserChoiceItem } from "../definitions/utility";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot";
-import { ItemSuggestionBody } from "../definitions/fetch";
-import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms/domainDescription";
-import { sidebarTitlesState, sidebarTabValueState } from "../atoms/sidebar";
-import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots";
-import { suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms/suggestions";
-import { textFilteringVariationState } from "../atoms/textFiltering";
-import { onClearSuggestedItems, changeTitle } from "../utils/conceptualModel";
-import { changeSidebarTab } from "../utils/sidebar";
-import { userChoiceToItemType } from "../utils/utility";
+import useFetchSuggestedItems from "./useFetchSuggestedItems"
+import { ItemType, UserChoiceItem } from "../definitions/utility"
+import { useRecoilValue, useSetRecoilState } from "recoil"
+import { snapshotDomainDescription, snapshotTextFilteringVariation } from "../utils/snapshot"
+import { ItemSuggestionBody } from "../definitions/fetch"
+import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms/domainDescription"
+import { sidebarTitlesState, sidebarTabValueState } from "../atoms/sidebar"
+import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots"
+import { suggestedClassesState, suggestedAttributesState, suggestedAssociationsState } from "../atoms/suggestions"
+import { textFilteringVariationState } from "../atoms/textFiltering"
+import { onClearSuggestedItems, changeTitle } from "../utils/conceptualModel"
+import { changeSidebarTab } from "../utils/sidebar"
+import { userChoiceToItemType } from "../utils/utility"
 
 
 const useSuggestItems = () =>

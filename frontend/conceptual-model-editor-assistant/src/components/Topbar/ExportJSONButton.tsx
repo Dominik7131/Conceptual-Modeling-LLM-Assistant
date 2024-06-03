@@ -1,9 +1,9 @@
 import { Button } from "@mui/material"
-import DownloadIcon from '@mui/icons-material/Download';
-import { useRecoilValue } from "recoil";
-import { convertConceptualModelToJSON } from "../../utils/serialization";
-import { DATASPECER_MODEL_URL } from "../../definitions/urls";
-import { edgesState, importedFileNameState, modelIDState, nodesState } from "../../atoms/conceptualModel";
+import DownloadIcon from '@mui/icons-material/Download'
+import { useRecoilValue } from "recoil"
+import { convertConceptualModelToJSON } from "../../utils/serialization"
+import { DATASPECER_MODEL_URL } from "../../definitions/urls"
+import { edgesState, importedFileNameState, modelIDState, nodesState } from "../../atoms/conceptualModel"
 
 
 const ExportJSONButton: React.FC = (): JSX.Element =>

@@ -1,13 +1,13 @@
-import DialogTitle from "@mui/material/DialogTitle";
-import Stack from "@mui/material/Stack";
-import Alert from "@mui/material/Alert";
-import { Box, CircularProgress, Typography } from "@mui/material";
-import { useRecoilValue } from "recoil";
-import { Field } from "../../definitions/utility";
-import { isShowTitleDialogDomainDescriptionState } from "../../atoms/dialogs";
-import { isLoadingHighlightOriginalTextState } from "../../atoms/loadings";
-import { originalTextIndexesListState } from "../../atoms/originalTextIndexes";
-import { selectedSuggestedItemState } from "../../atoms/suggestions";
+import DialogTitle from "@mui/material/DialogTitle"
+import Stack from "@mui/material/Stack"
+import Alert from "@mui/material/Alert"
+import { Box, CircularProgress, Typography } from "@mui/material"
+import { useRecoilValue } from "recoil"
+import { Field } from "../../definitions/utility"
+import { isShowTitleDialogDomainDescriptionState } from "../../atoms/dialogs"
+import { isLoadingHighlightOriginalTextState } from "../../atoms/loadings"
+import { originalTextIndexesListState } from "../../atoms/originalTextIndexes"
+import { selectedSuggestedItemState } from "../../atoms/suggestions"
 
 
 const Title: React.FC = (): JSX.Element =>

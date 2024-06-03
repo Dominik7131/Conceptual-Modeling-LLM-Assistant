@@ -1,15 +1,15 @@
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import { useEffect } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
-import Title from "./Title";
-import HighlightedOriginalText from "./HighlightedOriginalText";
-import { isLoadingHighlightOriginalTextState } from "../../atoms/loadings";
-import { isShowHighlightDialogState } from "../../atoms/dialogs";
-import { ORIGINAL_TEXT_ID } from "../../definitions/utility";
+import Button from "@mui/material/Button"
+import Dialog from "@mui/material/Dialog"
+import DialogActions from "@mui/material/DialogActions"
+import DialogContent from "@mui/material/DialogContent"
+import DialogContentText from "@mui/material/DialogContentText"
+import { useEffect } from "react"
+import { useRecoilState, useRecoilValue } from "recoil"
+import Title from "./Title"
+import HighlightedOriginalText from "./HighlightedOriginalText"
+import { isLoadingHighlightOriginalTextState } from "../../atoms/loadings"
+import { isShowHighlightDialogState } from "../../atoms/dialogs"
+import { ORIGINAL_TEXT_ID } from "../../definitions/utility"
 
 
 const HighlightDialog: React.FC = () =>
