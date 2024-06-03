@@ -112,6 +112,7 @@ export const doesSameEdgeBetweenNodesAlreadyExistSetter = (setEdges: SetterOrUpd
 }
 
 
+// Returns "true" if the operation was successfull otherwise "false"
 export const onAddItem = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): boolean =>
 {
     if (item[Field.TYPE] === ItemType.CLASS)
@@ -136,6 +137,7 @@ export const onAddItem = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdge
 }
 
 
+// Returns "true" if the operation was successfull otherwise "false"
 export const onAddClass = (clss: Class, positionX: number, positionY: number, setNodes: SetterOrUpdater<Node[]>): boolean =>
 {
     if (doesNodeAlreadyExistSetter(setNodes, clss[Field.IRI]))
@@ -161,6 +163,7 @@ export const onAddClass = (clss: Class, positionX: number, positionY: number, se
 }
 
 
+// Returns "true" if the operation was successfull otherwise "false"
 const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>) =>
 {
     const nodeID = attribute[Field.SOURCE_CLASS]
@@ -210,10 +213,9 @@ const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>
 }
 
 
+// Returns "true" if the operation was successfull otherwise "false"
 const onAddAssociation = (association : Association, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): boolean =>
 {
-    // Returns "true" if the operation was successfull otherwise "false"
-
     if (doesSameEdgeBetweenNodesAlreadyExistSetter(setEdges, association[Field.IRI], association[Field.TYPE], association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS]))
     {
         return false

@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "LLM Modeling Assistant",
+  "name": "LLM Conceptual Modeling Assistant",
   "icons": [
     {
       "src": "favicon.ico",
