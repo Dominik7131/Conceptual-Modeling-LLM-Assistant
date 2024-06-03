@@ -7,7 +7,7 @@
 
 - install all dependencies
 
-        npm install
+        npm ci
 
 - run the app in the development mode
 
