@@ -8,7 +8,7 @@
 <br/>
 
 ## [generate_suggestions.sh](generate_suggestions.sh)
-- generates classes, attributes and associations suggested by the LLM in csv format ready for manual evaluation
+- generates classes, attributes and associations suggested by the LLM in the CSV format ready for manual evaluation
 
 <br/>
 
@@ -18,4 +18,4 @@
 <br/>
 
 ## [generate_prompt_examples.py](generate_prompt_examples.py)
-- from prompting domain description and corresponding expected domain model generates examples that are used for N-shot prompting
+- from prompting domain description and corresponding expected domain model generates examples that are used in prompts as a N-shot prompting technique

@@ -10,9 +10,9 @@
 
 <br/>
 
-- the frontend is integrated with the [Dataspecer tool](https://github.com/mff-uk/dataspecer)
+- the frontend is integrated with the [Dataspecer](https://github.com/mff-uk/dataspecer)
     - a conceptual model can be imported from this tool or exported into this tool by specifying the corresponding model ID
-        - [here is a tutorial on how to import and export conceptual model from and into Dataspecer](frontend-import-export.md)
+    - [here is a tutorial on how to import and export conceptual model from and into the Dataspecer](frontend-import-export.md)
 
 <br/>
 
