@@ -117,12 +117,12 @@ class LLMAssistant:
             if suggestion_dictionary["name"] in self.suggested_classes:
                 self.logger.info(
                     f"Skipping duplicate class: {suggestion_dictionary['name']}")
-                return True
+                return item, True
 
             if suggestion_dictionary["name"] in CLASSES_BLACK_LIST:
                 self.logger.info(
                     f"Skipping black-listed class: {suggestion_dictionary['name']}")
-                return True
+                return item, True
 
             self.suggested_classes.append(suggestion_dictionary["name"])
 
