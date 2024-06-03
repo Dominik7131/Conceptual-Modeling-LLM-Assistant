@@ -1,5 +1,5 @@
 import { Node, Edge } from "reactflow"
-import { NodeData, Class, Attribute, EdgeData, Association } from "../definitions/conceptualModel"
+import { NodeData, Class, Attribute, EdgeData, Association, DEFAULT_CARDINALITY } from "../definitions/conceptualModel"
 import { ConceptualModelJson, ClassJson, AttributeJson, RelationshipJson, GeneralizationJson, JSON_SCHEMA } from "../definitions/conceptualModelJSON"
 import { Field, ItemType } from "../definitions/utility"
 import { SummaryAttribute, SummaryClass, SummaryConceptualModel } from "../definitions/summary"
@@ -148,6 +148,5 @@ export const convertCardinality = (cardinality: string): string =>
         return cardinality
     }
 
-    const defaultCardinality = "many"
-    return defaultCardinality
+    return DEFAULT_CARDINALITY
 }

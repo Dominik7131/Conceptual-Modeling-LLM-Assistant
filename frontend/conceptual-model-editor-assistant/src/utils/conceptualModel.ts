@@ -308,47 +308,46 @@ export const createIRIFromName = (name: string): string =>
     // global ('g') flag is used so the regex does not stop after the first match
     name = name.replace(/\s+/g, ' ')
 
-    const iri = name.split(' ').join('-').toLowerCase() // Replace every whitespace character with '-'
-    return iri
+    return name.split(' ').join('-').toLowerCase() // Replace every whitespace character with '-'
 }
 
 
 export const createNameFromIRI = (iri: string): string =>
 {
-    const name = iri.split('-').join(' ').toLowerCase()
-    return name
+    return iri.split('-').join(' ').toLowerCase()
 }
 
 
 export const editNodeClass = (newClass: Class, oldClass: Class, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
 {
+    let editedClass = newClass
     if (newClass.name !== oldClass.name)
     {
         // Update iri
         const newIRI = createIRIFromName(newClass[Field.NAME])
-        newClass = {...newClass, [Field.IRI]: newIRI}
+        editedClass = {...newClass, [Field.IRI]: newIRI}
 
         // Update all edges that connect to the changed source or target class
         setEdges((edges) => edges.map((currentEdge: Edge) =>
         {
             if (currentEdge.source === oldClass.iri)
             {
-                const newAssociation: Association = { ...currentEdge.data.association, source: newClass[Field.IRI] }
+                const newAssociation: Association = { ...currentEdge.data.association, source: editedClass[Field.IRI] }
                 const newEdgeData: EdgeData = { ...currentEdge.data, association: newAssociation }
-                const edgeID = createEdgeUniqueID(newClass[Field.IRI], currentEdge.target, currentEdge.data.association[Field.IRI])
+                const edgeID = createEdgeUniqueID(editedClass[Field.IRI], currentEdge.target, currentEdge.data.association[Field.IRI])
                 const updatedEdge: Edge = {
-                    ...currentEdge, id: edgeID, source: newClass[Field.IRI], data: newEdgeData
+                    ...currentEdge, id: edgeID, source: editedClass[Field.IRI], data: newEdgeData
                 }
 
                 return updatedEdge
             }
             else if (currentEdge.target === oldClass.iri)
             {
-                const newAssociation: Association = { ...currentEdge.data.association, target: newClass[Field.IRI] }
+                const newAssociation: Association = { ...currentEdge.data.association, target: editedClass[Field.IRI] }
                 const newEdgeData: EdgeData = { ...currentEdge.data, association: newAssociation }
-                const edgeID = createEdgeUniqueID(currentEdge.source, newClass[Field.IRI], currentEdge.data.association[Field.IRI])
+                const edgeID = createEdgeUniqueID(currentEdge.source, editedClass[Field.IRI], currentEdge.data.association[Field.IRI])
                 const updatedEdge: Edge = {
-                    ...currentEdge, id:edgeID, target: newClass[Field.IRI], data: newEdgeData
+                    ...currentEdge, id:edgeID, target: editedClass[Field.IRI], data: newEdgeData
                 }
 
                 console.log(updatedEdge)
@@ -361,22 +360,22 @@ export const editNodeClass = (newClass: Class, oldClass: Class, setNodes: Setter
 
     setNodes((nodes: Node[]) => nodes.map((currentNode : Node) =>
     {
-        if (currentNode.id === oldClass.iri)
+        if (currentNode.id === oldClass[Field.IRI])
         {
             let newAttributes = currentNode.data.attributes
 
             // For each attribute update their source class if the iri of the class changed
-            if (oldClass.iri !== newClass.iri)
+            if (oldClass.iri !== editedClass[Field.IRI])
             {                   
                 newAttributes = currentNode.data.attributes.map((attribute: Attribute) =>
                 {
-                    return { ...attribute, [Field.SOURCE_CLASS]: newClass[Field.IRI] }
+                    return { ...attribute, [Field.SOURCE_CLASS]: editedClass[Field.IRI] }
                 })
             }
 
 
-            const newData: NodeData = { ...currentNode.data, class: newClass, attributes: newAttributes }
-            const newNode: Node = {...currentNode, id: newClass[Field.IRI], data: newData}
+            const newData: NodeData = { ...currentNode.data, class: editedClass, attributes: newAttributes }
+            const newNode: Node = {...currentNode, id: editedClass[Field.IRI], data: newData}
 
             return newNode
         }

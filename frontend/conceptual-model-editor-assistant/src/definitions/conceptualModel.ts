@@ -7,6 +7,8 @@ export const CUSTOM_EDGE_TYPE = "custom-edge"
 export const CUSTOM_EDGE_MARKER: EdgeMarker = { type: MarkerType.Arrow, width: 50, height: 50, strokeWidth: 1 }
 export const CUSTOM_ISA_EDGE_MARKER: EdgeMarker = { type: MarkerType.ArrowClosed, width: 40, height: 40, strokeWidth: 0.8 }
 
+export const DEFAULT_CARDINALITY = "many"
+
 export const DATA_TYPE_CHOICES = ["string", "number", "time", "boolean"]
 
 export const BLANK_CLASS: Class = {
