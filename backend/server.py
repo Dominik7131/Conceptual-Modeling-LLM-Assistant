@@ -1,17 +1,17 @@
 import argparse
-from flask import Flask, request
-from flask_cors import CORS
 import json
 import os
-import time
 import sys
-
-from original_text_merger import OriginalTextMerger
-from llm_assistant import LLMAssistant
-from prompt_manager import PromptManager
+import time
 
 sys.path.append("utils")
 from definitions.utility import Field, UserChoice
+from flask import Flask, request
+from flask_cors import CORS
+from llm_assistant import LLMAssistant
+from original_text_merger import OriginalTextMerger
+from prompt_manager import PromptManager
+
 
 
 STORAGE_DIRECTORY = "storage"
@@ -54,7 +54,8 @@ def suggest_single_field():
     if user_choice == "associations":
         user_choice = UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value
 
-    single_field = llm_assistant.suggest_single_field(user_choice, name, source_class, target_class, domain_description, field,text_filtering_variation=text_filtering_variation)
+    single_field = llm_assistant.suggest_single_field(
+        user_choice, name, source_class, target_class, domain_description, field, text_filtering_variation=text_filtering_variation)
 
     return single_field
 
@@ -84,7 +85,8 @@ def merge_original_texts():
     original_text_indexes_object = body_data["originalTextIndexesObject"]
     # print(f"Received: {original_text_indexes_object}\n")
 
-    parsed_original_text_indexes_object = [(item["indexes"][0], item["indexes"][1], item["label"]) for item in original_text_indexes_object]
+    parsed_original_text_indexes_object = [
+        (item["indexes"][0], item["indexes"][1], item["label"]) for item in original_text_indexes_object]
     result = OriginalTextMerger.merge(parsed_original_text_indexes_object)
 
     return result
@@ -95,7 +97,7 @@ def save_item_to_storage(item):
     timestamp = time.strftime("%Y-%m-%d-%H-%M-%S")
     file_to_write_path = f"{os.path.join(STORAGE_DIRECTORY, timestamp)}.json"
 
-    with open(file_to_write_path, "w") as file:
+    with open(file_to_write_path, "w", encoding="utf-8") as file:
         json.dump(item, file)
 
 
@@ -106,18 +108,21 @@ def save_suggested_item():
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
     item = body_data["item"]
-    isPositive = body_data["isPositive"]
+    is_positive = body_data["isPositive"]
     text_filtering_variation = body_data["textFilteringVariation"]
 
-    completed_item = { "domain_description": domain_description, "item": item, "is_positive": isPositive }
+    completed_item = {"domain_description": domain_description,
+                      "item": item, "is_positive": is_positive}
 
     is_domain_description = domain_description != ""
-    is_chain_of_thoughts = (user_choice == UserChoice.ATTRIBUTES.value or user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value)
-    prompt = prompt_manager.get_prompt(user_choice=user_choice, is_chain_of_thoughts=is_chain_of_thoughts, is_domain_description=is_domain_description)
+    is_chain_of_thoughts = user_choice in (UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value)
+    prompt = prompt_manager.get_prompt(
+        user_choice=user_choice, is_chain_of_thoughts=is_chain_of_thoughts, is_domain_description=is_domain_description)
     completed_item["prompt"] = prompt
 
-    if user_choice == UserChoice.ATTRIBUTES or user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
-        relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_class=item[Field.SOURCE_CLASS.value], filtering_variation=text_filtering_variation)
+    if user_choice in (UserChoice.ATTRIBUTES,  UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value):
+        relevant_texts = llm_assistant.get_relevant_texts(
+            domain_description=domain_description, source_class=item[Field.SOURCE_CLASS.value], filtering_variation=text_filtering_variation)
         completed_item["filtered_domain_description"] = relevant_texts
 
     save_item_to_storage(completed_item)
@@ -134,15 +139,18 @@ def save_suggested_single_field():
     field_text = body_data["fieldText"]
     source_class = body_data.get("sourceClass", "")
     domain_description = body_data["domainDescription"]
-    isPositive = body_data["isPositive"]
+    is_positive = body_data["isPositive"]
     text_filtering_variation = body_data["textFilteringVariation"]
 
-    completed_item = { "domain_description": domain_description, "field_name": field_name, "field_text": field_text, "is_positive": isPositive }
+    completed_item = {"domain_description": domain_description,
+                      "field_name": field_name, "field_text": field_text, "is_positive": is_positive}
 
-    prompt = prompt_manager.get_prompt(user_choice=user_choice, field_name=field_name, is_chain_of_thoughts=False)
+    prompt = prompt_manager.get_prompt(
+        user_choice=user_choice, field_name=field_name, is_chain_of_thoughts=False)
     completed_item["prompt"] = prompt
 
-    relevant_texts = llm_assistant.get_relevant_texts(domain_description=domain_description, source_class=source_class, filtering_variation=text_filtering_variation)
+    relevant_texts = llm_assistant.get_relevant_texts(
+        domain_description=domain_description, source_class=source_class, filtering_variation=text_filtering_variation)
     completed_item["filtered_domain_description"] = relevant_texts
 
     save_item_to_storage(completed_item)
@@ -154,15 +162,17 @@ def save_suggested_single_field():
 def save_suggested_summary():
 
     body_data = request.get_json()
-    summaryType = body_data["summaryType"]
+    summary_type = body_data["summaryType"]
     domain_description = body_data["domainDescription"]
     conceptual_model = body_data["conceptualModel"]
     summary = body_data["summary"]
-    isPositive = body_data["isPositive"]
+    is_positive = body_data["isPositive"]
 
-    completed_item = { "domain_description": domain_description, "summary": summary, "is_positive": isPositive, "conceptual_model": conceptual_model }
+    completed_item = {"domain_description": domain_description, "summary": summary,
+                      "is_positive": is_positive, "conceptual_model": conceptual_model}
 
-    prompt = prompt_manager.get_prompt(user_choice=summaryType, is_chain_of_thoughts=False)
+    prompt = prompt_manager.get_prompt(
+        user_choice=summary_type, is_chain_of_thoughts=False)
     completed_item["prompt"] = prompt
 
     save_item_to_storage(completed_item)
@@ -172,6 +182,7 @@ def save_suggested_summary():
 
 @app.route('/')
 def index():
+    
     return "<p>LLM assistant server</p>"
 
 
@@ -180,8 +191,9 @@ def main():
     global llm_assistant, prompt_manager
 
     parser = argparse.ArgumentParser(description="Start LLM assistant server")
-    parser.add_argument("--port", type=int, default=5000, help="Port to run the server on")
-    
+    parser.add_argument("--port", type=int, default=5000,
+                        help="Port to run the server on")
+
     if (not os.path.exists(STORAGE_DIRECTORY)):
         os.makedirs(STORAGE_DIRECTORY)
 

@@ -1,8 +1,6 @@
 import argparse
 import sys
 
-
-
 sys.path.append("utils")
 sys.path.append(".")
 from text_splitter import TextSplitter
@@ -12,7 +10,8 @@ from sentence_transformers import SentenceTransformer, util
 
 # Best settings for "all-MiniLM-L6-v2"
 SCORE_NECESSARY_THRESHOLD = 0.08
-RANGE_FROM_TOP = 0.46 # E.g. if max score is 0.7 then invalidate any text with score lower than 0.7 - `RANGE_FROM_TOP`
+# E.g. if max score is 0.7 then invalidate any text with score lower than 0.7 - `RANGE_FROM_TOP`
+RANGE_FROM_TOP = 0.46
 
 # Best settings for "all-mpnet-base-v2"
 # SCORE_NECESSARY_THRESHOLD = 0.04
@@ -26,7 +25,6 @@ class SemanticTextFilterer:
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
         # self.model = SentenceTransformer("all-mpnet-base-v2") # Symmetric language model
         # self.model = SentenceTransformer("msmarco-distilbert-base-v4") # Asymmetric language model
-
 
     def _enhance_chunks(self, chunks):
 
@@ -43,12 +41,11 @@ class SemanticTextFilterer:
                     is_sentence_enhanced = True
                     enhanced_chunks.append(f"{chunks[index - 1]} {sentence}")
                     break
-            
-            if not is_sentence_enhanced:
-               enhanced_chunks.append(sentence)
-        
-        return enhanced_chunks
 
+            if not is_sentence_enhanced:
+                enhanced_chunks.append(sentence)
+
+        return enhanced_chunks
 
     def get(self, clss, domain_description):
 
@@ -58,7 +55,8 @@ class SemanticTextFilterer:
         query = f"Info about {clss}"
 
         queries_embeddings = self.model.encode(query, convert_to_tensor=True)
-        chunks_embeddings = self.model.encode(enhanced_chunks, convert_to_tensor=True)
+        chunks_embeddings = self.model.encode(
+            enhanced_chunks, convert_to_tensor=True)
 
         scores = util.cos_sim(queries_embeddings, chunks_embeddings)
         max_score = scores[0].max().item()
@@ -67,12 +65,12 @@ class SemanticTextFilterer:
 
         result = []
 
-        for i in range(len(chunks)):
-            score = scores[0, i]
-            
+        for index, chunk in enumerate(chunks):
+            score = scores[0, index]
+
             if score > threshold:
-                result.append(chunks[i])
-        
+                result.append(chunk)
+
         return result
 
 
@@ -83,8 +81,10 @@ def main():
     default_domain_description = "Students are at school. They are studying. Hello world. Professors teach students."
 
     parser = argparse.ArgumentParser(description="Semantic text filterer")
-    parser.add_argument("-c", "--clss", type=str, default=default_class, help="Provide class for filtering the given text")
-    parser.add_argument("-t", "--text", type=str, default=default_domain_description, help="Provide text to filter")
+    parser.add_argument("-c", "--clss", type=str, default=default_class,
+                        help="Provide class for filtering the given text")
+    parser.add_argument("-t", "--text", type=str,
+                        default=default_domain_description, help="Provide text to filter")
 
     args = parser.parse_args()
     clss = args.clss

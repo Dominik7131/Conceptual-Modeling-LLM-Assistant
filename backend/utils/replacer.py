@@ -5,6 +5,7 @@ import re
 
 class Replacer:
 
+    @staticmethod
     def replace(string, replacements, ignore_case=False):
         """
         Given a string and a replacement map, it returns the replaced string.
@@ -17,7 +18,7 @@ class Replacer:
         # Edge case that'd produce a funny regex and cause a KeyError
         if not replacements:
             return string
-        
+
         # If case insensitive, we need to normalize the old string so that later a replacement
         # can be found. For instance with {"HEY": "lol"} we should match and find a replacement for "hey",
         # "HEY", "hEy", etc.
@@ -34,15 +35,15 @@ class Replacer:
             re_mode = 0
 
         replacements = {normalize_old(key): val for key, val in replacements.items()}
-        
+
         # Place longer ones first to keep shorter substrings from matching where the longer ones should take place
         # For instance given the replacements {'ab': 'AB', 'abc': 'ABC'} against the string 'hey abc', it should produce
         # 'hey ABC' and not 'hey ABc'
         rep_sorted = sorted(replacements, key=len, reverse=True)
         rep_escaped = map(re.escape, rep_sorted)
-        
+
         # Create a big OR regex that matches any of the substrings to replace
         pattern = re.compile("|".join(rep_escaped), re_mode)
-        
+
         # For each match, look up the new string in the replacements, being the key the normalized old string
         return pattern.sub(lambda match: replacements[normalize_old(match.group(0))], string)

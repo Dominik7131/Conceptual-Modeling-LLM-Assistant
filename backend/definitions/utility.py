@@ -28,7 +28,9 @@ class DataType(Enum):
     TIME = "time"
     BOOLEAN = "boolean"
 
-DEFINED_DATA_TYPES = [DataType.STRING.value, DataType.NUMBER.value, DataType.TIME.value, DataType.BOOLEAN.value]
+
+DEFINED_DATA_TYPES = [DataType.STRING.value, DataType.NUMBER.value,
+                      DataType.TIME.value, DataType.BOOLEAN.value]
 
 
 class Field(Enum):

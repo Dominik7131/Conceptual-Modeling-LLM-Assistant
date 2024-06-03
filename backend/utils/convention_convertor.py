@@ -3,32 +3,33 @@ import string
 
 class ConventionConvertor:
 
+    @staticmethod
     def is_camel_case(text):
 
         if not text:
             return False
-        
+
         if " " in text:
             return False
-        
+
         if text.isspace():
             return False
 
         return True
 
-
+    @staticmethod
     def from_snake_case_to_standard_convention(text):
- 
+
         result = ""
         name_parts = text.split("_")
 
         for name_part in name_parts:
             result += name_part + " "
-        
-        result = result.rstrip() # Remove trailing space
-        return result
-    
 
+        result = result.rstrip()  # Remove trailing space
+        return result
+
+    @staticmethod
     def from_camel_case_to_standard_convention(text):
 
         result = ""
@@ -46,15 +47,15 @@ class ConventionConvertor:
                 if (index + 1 < len(text) and text[index + 1].isupper()):
                     result += text[index:]
                     break
-                else:
-                    result += char.lower()
+
+                result += char.lower()
 
             else:
                 result += char
 
         return result
 
-
+    @staticmethod
     def convert_string_to_standard_convention(text):
         """
         Convert text from any convention to a lowercased text in standard convention
@@ -69,20 +70,22 @@ class ConventionConvertor:
 
         if not text:
             return ""
-        
+
         # Convert fully uppercase text into lower case
-        is_all_uppercase = all((char.isupper() or char in string.punctuation) for char in text)
+        is_all_uppercase = all(
+            (char.isupper() or char in string.punctuation) for char in text)
         if is_all_uppercase:
             text = text.lower()
 
         is_snake_case = text[0].islower() and "_" in text
         if is_snake_case:
-            result = ConventionConvertor.from_snake_case_to_standard_convention(text)
+            result = ConventionConvertor.from_snake_case_to_standard_convention(
+                text)
             return result.lower()
-        
 
         if ConventionConvertor.is_camel_case(text):
-            result = ConventionConvertor.from_camel_case_to_standard_convention(text)
+            result = ConventionConvertor.from_camel_case_to_standard_convention(
+                text)
             return result.lower()
 
         return text.lower()

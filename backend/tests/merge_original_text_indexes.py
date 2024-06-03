@@ -13,9 +13,9 @@ def check_tests(tests):
 
     for test in tests:
         name = test["name"]
-        input = test["input"]
+        numbers = test["input"]
         expected = test["expected"]
-        actual = OriginalTextMerger.merge(input)
+        actual = OriginalTextMerger.merge(numbers)
 
         is_test_failed = expected != actual
         if is_test_failed:
