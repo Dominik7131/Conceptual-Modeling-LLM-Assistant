@@ -71,17 +71,17 @@ class Morphodita_Tagger:
         tokens = self.split_into_tokens(text)
         result = []
 
-        for i in range(len(tokens)):
+        for token in tokens:
 
             # For example split "non-motorised vehicle" into "non", "motorised", "vehicle"
-            if "-" in tokens[i]:
-                words = tokens[i].split("-")
+            if "-" in token:
+                words = token.split("-")
                 for word in words:
                     lemma = self.get_lemmas(word)
                     result.append(lemma)
 
             else:
-                lemma = self.get_lemmas(tokens[i])
+                lemma = self.get_lemmas(token)
                 result.append(lemma)
         
         flatten_result = [x for xs in result for x in xs]
