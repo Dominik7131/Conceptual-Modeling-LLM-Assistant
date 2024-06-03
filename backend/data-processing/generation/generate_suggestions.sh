@@ -29,7 +29,7 @@ execution_time_associations=$(echo "$end_associations - $start_associations" | b
 echo "Associations execution time: $execution_time_associations seconds"
 
 # Generate PlantUML diagrams for the generated results
-python data-processing/generate_plantUML.py
+python data-processing/generate_plantuml.py
 
 execution_time_total=$(echo "$end_associations - $start" | bc)
 echo "Total execution time: $execution_time_total seconds"

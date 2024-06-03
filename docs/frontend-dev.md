@@ -23,15 +23,15 @@ The frontend is developed with:
 
 ## Project structure
 
-- [atoms](../frontend/conceptual-model-editor-assistant/src/atoms/) contains [Recoil states](https://recoiljs.org/docs/basic-tutorial/atoms/)
-- [components](../frontend/conceptual-model-editor-assistant/src/components/) contains all the building blocks of the application, the main components are:
+- [atoms](../frontend/conceptual-model-editor-assistant/src/atoms/) contain [Recoil states](https://recoiljs.org/docs/basic-tutorial/atoms/)
+- [components](../frontend/conceptual-model-editor-assistant/src/components/) contain all the building blocks of the application, the main components are:
     - [ConceptualModel](../frontend/conceptual-model-editor-assistant/src/components/ConceptualModel/) for working with the conceptual model
     - [Topbar](../frontend/conceptual-model-editor-assistant/src/components/Topbar/) and [Sidebar](../frontend/conceptual-model-editor-assistant/src/components/Sidebar/) mainly for showing to the user the suggestions from the LLM assistant
-- [definitions](../frontend/conceptual-model-editor-assistant/src/definitions/) contains definitions of the constant variables, interfaces, enums and custom types, the most important scripts are:
+- [definitions](../frontend/conceptual-model-editor-assistant/src/definitions/) contain definitions of the constant variables, interfaces, enums and custom types, the most important scripts are:
     - [fetch.ts](../frontend/conceptual-model-editor-assistant/src/definitions/fetch.ts): defines the interfaces for communicating with the LLM assistant server based on the [API endpoints documentation](api-endpoints.md)
-    - [urls.ts](../frontend/conceptual-model-editor-assistant/src/definitions/urls.ts): defines the URLs used for communicating with the LLM assistant server
-- [hooks](../frontend/conceptual-model-editor-assistant/src/hooks/) contains custom hooks mainly for fetching the data from the LLM assistant server
-- [utils](../frontend/conceptual-model-editor-assistant/src/utils/) contains functions usually used by more than one component
+    - [urls.ts](../frontend/conceptual-model-editor-assistant/src/definitions/urls.ts): defines the endpoints used for communicating with the LLM assistant server based on the [API endpoints documentation](api-endpoints.md)
+- [hooks](../frontend/conceptual-model-editor-assistant/src/hooks/) contain custom hooks mainly for fetching the data from the LLM assistant server
+- [utils](../frontend/conceptual-model-editor-assistant/src/utils/) contain functions usually used by more than one component
 
 
 <br/>

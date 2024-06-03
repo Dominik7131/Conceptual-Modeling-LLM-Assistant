@@ -2,16 +2,16 @@
 
 ## Project structure
 The code is divided into these main directories:
-- [definitions](../backend/definitions/): contains definitions of constant variables and enums
-- [text-filtering](../backend/text-filtering/): contains semantic and syntactic algorithm for domain description filtering
-- [utils](../backend/utils/): contains scripts used by the LLM assistant server
+- [definitions](../backend/definitions/) contain definitions of constant variables and enums
+- [text-filtering](../backend/text-filtering/) contains semantic and syntactic algorithm for domain description filtering
+- [utils](../backend/utils/) contain scripts used by the LLM assistant server
     - all these scripts are briefly described:
         - [here separately](../backend/utils/README.md)
-        - [here in the context of the control flow of the architecture](architecture.md#llm-assistant-workflow)
-- [tests](../backend/tests/) contains scripts for testing correctness of the implementation of some components
+        - later on in [the control flow of the architecture](architecture.md#llm-assistant-workflow)
+- [tests](../backend/tests/) contain scripts for testing correctness of the implementation of some components
     - all these scripts are briefly described:
         - [here separately](../backend/tests/README.md)
-        - [here in the context of the control flow of the architecture](architecture.md#llm-assistant-workflow)
+        - later on in [the control flow of the architecture](architecture.md#llm-assistant-workflow)
 - [data-processing](../backend/data-processing/) contains scripts for experimenting with different configurations such as different prompts, text filtering strategies, LLMs, etc.
     - scripts in the [generation](../backend/data-processing/generation/) directory are used for generating test data
         - [here is a brief description of each script](../backend/data-processing/generation/README.md)
