@@ -7,6 +7,7 @@ import sys
 TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 
 sys.path.append(".")
+sys.path.append("utils/")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
