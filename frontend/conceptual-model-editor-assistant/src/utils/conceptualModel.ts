@@ -452,6 +452,7 @@ export const editEdgeAssociation = (newAssociation: Association, oldAssociation 
 
 export const onRemove = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
 {
+    console.log("Removing: ", item)
     if (item[Field.TYPE] === ItemType.CLASS)
     {
         const nodeID = item[Field.IRI]
@@ -464,7 +465,7 @@ export const onRemove = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges
     else if (item[Field.TYPE] === ItemType.ASSOCIATION || item[Field.TYPE] === ItemType.GENERALIZATION)
     {
         const association: Association = (item as Association)
-        const edgeID = createEdgeUniqueID(association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS], association[Field.NAME])
+        const edgeID = createEdgeUniqueID(association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS], association[Field.IRI])
         removeEdge(edgeID, setEdges)
     }
     else
