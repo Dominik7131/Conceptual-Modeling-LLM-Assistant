@@ -70,7 +70,7 @@ class LLMAssistant:
 
     def get_relevant_texts(self, source_class, domain_description, filtering_variation):
 
-        if filtering_variation == TextFilteringVariation.NONE.value:
+        if filtering_variation == TextFilteringVariation.NONE.value or domain_description == "":
             return domain_description
 
         text_filterer = self._get_text_filterer(filtering_variation)
