@@ -70,7 +70,7 @@ def main():
 
     for relevant_text in relevant_texts:
         print(f"{relevant_text} ", end="")
-
+    print()
 
 if __name__ == "__main__":
     main()
