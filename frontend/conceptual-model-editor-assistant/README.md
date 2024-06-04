@@ -3,19 +3,19 @@
 - download some package manager such as [Node.js](https://nodejs.org/en/download/package-manager)
 - change directory into `frontend/conceptual-model-editor-assistant`
 
-        cd frontend/conceptual-model-editor-assistant
+      cd frontend/conceptual-model-editor-assistant
 
 - install all dependencies
 
-        npm ci
+      npm ci
 
 - run the app in the development mode
 
-        npm start
+      npm start
 
 - build the app for production
 
-        npm run build
+      npm run build
 
 - [here is a simple tutorial on how to deploy the frontend](https://create-react-app.dev/docs/deployment/)
 
