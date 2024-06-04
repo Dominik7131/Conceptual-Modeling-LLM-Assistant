@@ -26,6 +26,13 @@ class LLMManager:
         self.last_char = ""
         self.opened_curly_brackets_count = 0
         self.parsed_message = ""
+        self.is_disable_json_nesting = True
+
+        self.user_choice = ""
+        self.messages = []
+        self.source_class = ""
+        self.target_class = ""
+        self.field_name = ""
 
     def _reset(self, messages, user_choice="", source_class="", target_class="", field_name=""):
 
@@ -145,18 +152,25 @@ class LLMManager:
         self._log_full_message()
         return
 
-    def _parse_attribute(self, completed_item):
+    def _parse_attribute(self, item):
 
         is_item_ok = True
 
-        if Field.DATA_TYPE.value in completed_item:
+        item = self._parse_data_type(item)
 
-            is_unknown_data_type = not completed_item[Field.DATA_TYPE.value] in DEFINED_DATA_TYPES
-            if is_unknown_data_type:
-                self.logger.info("Converting unknown data type to string")
-                completed_item[Field.DATA_TYPE.value] = "string"
+        return item, is_item_ok
+    
+    def _parse_data_type(self, item):
 
-        return completed_item, is_item_ok
+        if not Field.DATA_TYPE.value in item:
+            return item
+        
+        is_unknown_data_type = item[Field.DATA_TYPE.value] not in DEFINED_DATA_TYPES
+        if is_unknown_data_type:
+            self.logger.info("Converting unknown data type to string")
+            item[Field.DATA_TYPE.value] = "string"
+        
+        return item
 
     def _parse_associations1(self, completed_item):
 
@@ -239,14 +253,16 @@ class LLMManager:
 
         return is_item_ok
 
-    def _check_single_field(self, completed_item):
+    def _parse_single_field(self, item):
 
-        is_item_ok = self.field_name in completed_item
+        is_item_ok = self.field_name in item
 
         if not is_item_ok:
             self.logger.error(f"No {self.field_name} in the item")
+        
+        item = self._parse_data_type(item)
 
-        return is_item_ok
+        return item, is_item_ok
 
     def _convert_names_into_standard_convention(self, completed_item):
 
@@ -300,7 +316,7 @@ class LLMManager:
 
         is_single_field_item = self.field_name != ""
         if is_single_field_item:
-            is_item_ok = self._check_single_field(completed_item)
+            completed_item, is_item_ok = self._parse_single_field(completed_item)
             yield completed_item, is_item_ok
             return
 
@@ -318,8 +334,7 @@ class LLMManager:
             yield completed_item, is_item_ok
             return
 
-        completed_item, is_item_ok = self._convert_names_into_standard_convention(
-            completed_item)
+        completed_item, is_item_ok = self._convert_names_into_standard_convention(completed_item)
 
         if not is_item_ok:
             yield completed_item, is_item_ok
@@ -329,12 +344,10 @@ class LLMManager:
             completed_item, is_item_ok = self._parse_attribute(completed_item)
 
         elif self.user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
-            completed_item, is_item_ok = self._parse_associations1(
-                completed_item)
+            completed_item, is_item_ok = self._parse_associations1(completed_item)
 
         elif self.user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
-            completed_item, is_item_ok = self._parse_associations2(
-                completed_item)
+            completed_item, is_item_ok = self._parse_associations2(completed_item)
 
         self._log_debug_info(completed_item)
 
