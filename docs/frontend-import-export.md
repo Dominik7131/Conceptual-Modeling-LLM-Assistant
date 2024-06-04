@@ -116,7 +116,7 @@
 
 - now our goal is to open the same conceptual model but in a different Dataspecer tool
 
-- for example in our directory we can add "visual model" like this:
+- for example in our directory in the [Dataspecer package manager](https://tool.dataspecer.com/manager/) we can add "visual model" like this:
 
     <img src="images/frontend/add-visual-model.png" alt="drawing" width="800"/>
 
