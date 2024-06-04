@@ -1,6 +1,8 @@
 import argparse
 from morphodita_tagger import MorphoditaTagger
+import sys
 
+sys.path.append(".")
 from utils.text_splitter import TextSplitter
 
 

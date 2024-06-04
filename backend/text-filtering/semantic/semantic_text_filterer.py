@@ -1,5 +1,8 @@
 import argparse
 from sentence_transformers import SentenceTransformer, util
+import sys
+
+sys.path.append(".")
 
 from utils.text_splitter import TextSplitter
 from definitions.utility import PRONOUNS_TO_DETECT
