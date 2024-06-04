@@ -449,10 +449,8 @@ export const editEdgeAssociation = (newAssociation: Association, oldAssociation 
 }
 
 
-
 export const onRemove = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
 {
-    console.log("Removing: ", item)
     if (item[Field.TYPE] === ItemType.CLASS)
     {
         const nodeID = item[Field.IRI]
@@ -470,7 +468,7 @@ export const onRemove = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges
     }
     else
     {
-        alert("Unknown action")
+        throw Error("Received unexpected item type: ", item[Field.TYPE])
     }
 }
 
