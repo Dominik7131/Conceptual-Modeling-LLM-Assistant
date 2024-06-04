@@ -1,16 +1,14 @@
 import argparse
 import json
 import os
-import sys
 import time
-
-sys.path.append("utils")
-from definitions.utility import Field, UserChoice
 from flask import Flask, request
 from flask_cors import CORS
-from llm_assistant import LLMAssistant
-from original_text_merger import OriginalTextMerger
-from prompt_manager import PromptManager
+
+from definitions.utility import Field, UserChoice
+from utils.llm_assistant import LLMAssistant
+from utils.original_text_merger import OriginalTextMerger
+from utils.prompt_manager import PromptManager
 
 
 

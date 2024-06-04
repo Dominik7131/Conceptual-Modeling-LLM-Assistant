@@ -1,9 +1,6 @@
 import argparse
-import sys
 from morphodita_tagger import MorphoditaTagger
-
-sys.path.append("utils")
-from text_splitter import TextSplitter
+from utils.text_splitter import TextSplitter
 
 
 class SyntacticTextFilterer:
