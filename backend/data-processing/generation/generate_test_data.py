@@ -2,6 +2,9 @@ import json
 import re
 import os
 import requests
+import sys
+
+sys.path.append(".")
 
 from utils.text_splitter import TextSplitter
 from definitions.utility import Field, UserChoice
