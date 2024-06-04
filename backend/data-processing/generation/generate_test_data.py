@@ -14,6 +14,8 @@ from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODEL
 BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
 TAG_REGEX = r"<([^>]+)>"
 
+IS_PRINT_TOTAL_ELEMENTS_COUNT = False
+
 DOMAIN_DESCRIPTIONS_TEXTS = len(DOMAIN_DESCRIPTIONS_COUNT)
 classes_count = [0] * DOMAIN_DESCRIPTIONS_TEXTS
 attributes_count = [0] * DOMAIN_DESCRIPTIONS_TEXTS
@@ -339,7 +341,8 @@ def main():
             write_json_to_file(
                 associations2_suggestions_output_file_path, associations2_expected_suggestions)
 
-    print_conceptual_model_total_elements_csv()
+    if (IS_PRINT_TOTAL_ELEMENTS_COUNT):
+        print_conceptual_model_total_elements_csv()
 
 
 if __name__ == "__main__":
