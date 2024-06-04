@@ -25,6 +25,9 @@ To use any of the backend scripts:
 
       pip install -r requirements.txt
 
+- or you can manually install these packages:
+    - flask, flask-cors, openai, ufal.morphodita, [pytorch with CUDA](https://pytorch.org/get-started/locally/), sentence-transformers, termcolor
+
 <br/>
 
 
@@ -41,6 +44,7 @@ To use any of the backend scripts:
     - default port is 5000
     - different port can be passed via `--port` argument
     - if you are using our frontend, then make sure that it is sending requests to the corresponding port which can be set [here](../frontend/conceptual-model-editor-assistant/src/definitions/urls.ts) in the `PORT` variable
+    - if you encounter some error, check `logs` directory
 
 
 <br/>
@@ -53,7 +57,7 @@ To use any of the backend scripts:
 
 - change directory to `llama.cpp` directory
 
-      cd `llama.cpp`
+      cd llama.cpp
 
 - [here is a detailed guide on how to build llama.cpp with different configurations](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#build)
     - we will show only how to run llama.cpp server on Linux with CUDA
@@ -75,7 +79,11 @@ To use any of the backend scripts:
 
 - for more information you can check [llama.cpp server documentation](https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md)
 
-- run llm server:
+- change directory back to the `backend` directory
+
+      cd ..
+
+- run the LLM server:
 
       ./llm_server.sh
     - the default port is 8080 and can be changed via the `PORT` variable

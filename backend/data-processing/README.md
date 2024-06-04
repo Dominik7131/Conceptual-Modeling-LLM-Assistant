@@ -16,7 +16,7 @@
 
       python data-processing/generation/generate_test_data.py
 
-- generate LLM suggestions from the test data:
+- generate LLM suggestions from the test data (the LLM assistant server and the LLM server needs to be running):
 
       ./data-processing/generation/generate_suggestions.sh
 
