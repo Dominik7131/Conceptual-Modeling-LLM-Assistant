@@ -1,12 +1,9 @@
 import json
 import re
 import os
-import sys
 import requests
 
-sys.path.append("utils")
-
-from text_splitter import TextSplitter
+from utils.text_splitter import TextSplitter
 from definitions.utility import Field, UserChoice
 from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
 

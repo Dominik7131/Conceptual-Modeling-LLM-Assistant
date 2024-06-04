@@ -1,6 +1,7 @@
 import logging
 import json
 import os
+
 from ufal.morphodita import Tagger, Forms, TaggedLemmas, TokenRanges
 
 CONFIG_FILE_PATH = os.path.join(

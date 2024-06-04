@@ -1,9 +1,7 @@
-import sys
 import re
 
-sys.path.append(".")
 from definitions.utility import PRONOUNS_TO_DETECT
-from text_utility import TextUtility
+from utils.text_utility import TextUtility
 
 ALPHABETS = "([A-Za-z])"
 PREFIXES = "(Mr|St|Mrs|Ms|Dr)[.]"

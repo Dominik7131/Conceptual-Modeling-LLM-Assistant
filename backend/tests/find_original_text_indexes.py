@@ -1,10 +1,6 @@
-import os
 import sys
-
-sys.path.append("utils")
 sys.path.append(".")
-sys.path.append(os.path.join("backend", "utils"))
-from original_text_finder import OriginalTextFinder
+from utils.original_text_finder import OriginalTextFinder
 from definitions.utility import UserChoice
 
 

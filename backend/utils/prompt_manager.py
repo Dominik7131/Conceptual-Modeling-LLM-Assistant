@@ -2,7 +2,7 @@ import json
 import os
 
 from definitions.prompt_symbols import PromptSymbols
-from replacer import Replacer
+from utils.replacer import Replacer
 
 
 PROMPT_DIRECTORY = os.path.join("..", "prompts")

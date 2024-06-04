@@ -1,5 +1,6 @@
 import argparse
 from morphodita_tagger import MorphoditaTagger
+
 from utils.text_splitter import TextSplitter
 
 

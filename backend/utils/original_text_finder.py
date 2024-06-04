@@ -1,7 +1,4 @@
 from difflib import SequenceMatcher
-import sys
-
-sys.path.append("backend")
 from definitions.utility import UserChoice
 
 

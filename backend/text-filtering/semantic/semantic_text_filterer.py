@@ -1,11 +1,8 @@
 import argparse
-import sys
-
-sys.path.append("utils")
-sys.path.append(".")
-from text_splitter import TextSplitter
-from definitions.utility import PRONOUNS_TO_DETECT
 from sentence_transformers import SentenceTransformer, util
+
+from utils.text_splitter import TextSplitter
+from definitions.utility import PRONOUNS_TO_DETECT
 
 
 # Best settings for "all-MiniLM-L6-v2"

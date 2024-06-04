@@ -1,9 +1,6 @@
-import os
 import sys
-
-sys.path.append("utils")
-sys.path.append(os.path.join("backend", "utils"))
-from convention_convertor import ConventionConvertor
+sys.path.append(".")
+from utils.convention_convertor import ConventionConvertor
 
 
 def convert_name_to_standard_convention_test():

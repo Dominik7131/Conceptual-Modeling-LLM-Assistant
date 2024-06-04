@@ -2,9 +2,7 @@ import os
 import csv
 import sys
 
-
 sys.path.append(".")
-sys.path.append("utils")
 
 from definitions.utility import UserChoice
 from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS_NAME

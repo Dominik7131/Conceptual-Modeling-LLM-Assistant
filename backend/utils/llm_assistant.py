@@ -3,19 +3,18 @@ import logging
 import json
 import sys
 
+from utils.original_text_finder import OriginalTextFinder
+from definitions.logging import LOG_DIRECTORY, LOG_FILE_PATH, LOGGER_NAME
+from utils.text_utility import TextUtility
+from definitions.utility import CLASSES_BLACK_LIST, Field, TextFilteringVariation, UserChoice
+from utils.llm_manager import LLMManager
+from utils.prompt_manager import PromptManager
 
 TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 
-sys.path.append("utils")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
-from original_text_finder import OriginalTextFinder
-from definitions.logging import LOG_DIRECTORY, LOG_FILE_PATH, LOGGER_NAME
-from text_utility import TextUtility
-from definitions.utility import CLASSES_BLACK_LIST, Field, TextFilteringVariation, UserChoice
-from llm_manager import LLMManager
-from prompt_manager import PromptManager
 from syntactic_text_filterer import SyntacticTextFilterer
 from semantic_text_filterer import SemanticTextFilterer
 
