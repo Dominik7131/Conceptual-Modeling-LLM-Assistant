@@ -1,27 +1,27 @@
 # Manual evaluation workflow of LLM suggestions
 
+- change directory to `backend`:
+
+      cd backend
+
 - clone our [data repository](https://github.com/dataspecer/domain-modeling-benchmark)
 
-        git clone https://github.com/dataspecer/domain-modeling-benchmark.git
+      git clone https://github.com/dataspecer/domain-modeling-benchmark.git
 
 - activate Python virtual environment
 
-        source [virtual-environment-name]/bin/activate
-
-- change directory to `backend`:
-
-        cd backend
+      source [virtual-environment-name]/bin/activate
 
 - generate test data:
 
-        python data-processing/generation/generate_test_data.py
+      python data-processing/generation/generate_test_data.py
 
 - generate LLM suggestions from the test data:
 
-        ./data-processing/generation/generate_suggestions.sh
+      ./data-processing/generation/generate_suggestions.sh
 
 - manually match the outputted suggestions with the expected outputs from the test data
 
 - evaluate manually matched elements:
 
-        python data-processing/evaluation/evaluate_suggestions.py
+      python data-processing/evaluation/evaluate_suggestions.py
