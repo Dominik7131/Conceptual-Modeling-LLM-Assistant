@@ -4,7 +4,7 @@ import openai
 
 from definitions.logging import LOGGER_NAME
 from definitions.utility import DEFINED_DATA_TYPES, Field, UserChoice
-from convention_convertor import ConventionConvertor
+from utils.convention_convertor import ConventionConvertor
 
 PORT = 8080
 LLM_BACKEND_URL = f"http://localhost:{PORT}/v1"
