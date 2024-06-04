@@ -13,7 +13,7 @@
 
         npm start
 
-- or build the app for production
+- build the app for production
 
         npm run build
 
