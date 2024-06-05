@@ -294,8 +294,7 @@ class LLMManager:
 
     def _parse_item_streamed_output(self):
         """
-        Returns generator object containing parsed object and True if parsing of this object was successful.
-        :rtype: Generator[tuple[dict[str, bool]
+        Yields a tuple containing parsed item and True if parsing of this item was successful otherwise False.
         """
 
         try:
