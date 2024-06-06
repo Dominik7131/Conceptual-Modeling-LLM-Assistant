@@ -7,9 +7,6 @@ const BASE_URL = "https://llm-backend.opendata.cz/"
 
 export const HEADER = { "Content-Type": "application/json" }
 
-export const SIDEBAR_BUTTON_SIZE = "small"
-export const SIDEBAR_BUTTON_COLOR = "secondary"
-
 const SUGGEST_ITEMS_ENDPOINT = "suggest/items"
 const SUGGEST_SINGLE_FIELD_ENDPOINT = "suggest/single_field"
 const SUGGEST_SUMMARY_ENDPOINT = "suggest/summary"

@@ -13,6 +13,9 @@ export const GRAY_COLOR = "gray"
 export const TOOLTIP_ENTER_DELAY_MS = 500
 export const TOOLTIP_LEAVE_DELAY_MS = 200
 
+export const SIDEBAR_BUTTON_SIZE = "small"
+export const SIDEBAR_BUTTON_COLOR = "secondary"
+
 
 export const enum UserChoiceItem
 {
