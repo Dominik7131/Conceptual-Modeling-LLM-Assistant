@@ -3,7 +3,7 @@ from enum import Enum
 
 CLASSES_BLACK_LIST = ["employee", "department", "manager"]
 
-PRONOUNS_TO_DETECT = ["It", "This", "The", "They"]
+PRONOUNS_TO_DETECT = ["It", "He", "She", "This", "The", "They"]
 
 
 class UserChoice(Enum):
