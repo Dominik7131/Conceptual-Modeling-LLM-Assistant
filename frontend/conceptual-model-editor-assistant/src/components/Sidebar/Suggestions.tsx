@@ -66,11 +66,11 @@ const Suggestions: React.FC<Props> = ({ items, title, itemType }): JSX.Element =
             }
 
             {
-                items.map(item =>
+                items.map((item, index) =>
                     <ListItem key={ createUniqueKey(item[Field.NAME], (item as Association)[Field.SOURCE_CLASS], (item as Association)[Field.TARGET_CLASS]) }>
                         <Stack width="100%" height="100%">
                             <ItemDisplay item={item}/>
-                            <ControlButtons item={item}/>
+                            <ControlButtons item={item} isDisabled={false}/>
                         </Stack>
                     </ListItem>
                 )

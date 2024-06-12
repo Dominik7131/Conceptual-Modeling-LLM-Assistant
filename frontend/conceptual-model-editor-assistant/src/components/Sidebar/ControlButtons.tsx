@@ -23,9 +23,10 @@ import { itemTypeToUserChoice } from "../../utils/utility"
 interface Props
 {
     item: Item
+    isDisabled: boolean
 }
 
-const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
+const ControlButtons: React.FC<Props> = ({ item, isDisabled }): JSX.Element =>
 {
     const setNodes = useSetRecoilState(nodesState)
     const setEdges = useSetRecoilState(edgesState)
@@ -52,7 +53,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
         if (item.name === "")
         {
             const message = "Name cannot be empty"
-            setErrorMessage(_ => message)
+            setErrorMessage(message)
             return
         }
 
@@ -102,6 +103,7 @@ const ControlButtons: React.FC<Props> = ({ item }): JSX.Element =>
             color={ SIDEBAR_BUTTON_COLOR }
             fullWidth
             size="small"
+            disabled={ isDisabled }
             sx={{ marginTop: "15px" }}>
 
             <Tooltip title="Like" enterDelay={TOOLTIP_ENTER_DELAY_MS} leaveDelay={TOOLTIP_LEAVE_DELAY_MS}>
