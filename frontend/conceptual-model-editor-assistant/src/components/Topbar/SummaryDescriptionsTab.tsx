@@ -6,6 +6,7 @@ import SummaryReactionButtons from "./SummaryReactionButtons"
 import { isLoadingSummaryDescriptionsState } from "../../atoms/loadings"
 import { summaryDescriptionsState } from "../../atoms/summary"
 import { SummaryAttribute, SummaryClass } from "../../definitions/summary"
+import { createNameFromIRI } from "../../utils/conceptualModel"
 
 
 
@@ -59,7 +60,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
                 summaryDescriptions.associations.map((association) =>
                     <Typography component="span">
                         <li>
-                            <strong> { capitalizeString(association[Field.SOURCE_CLASS]) }</strong> {association[Field.NAME]} <strong>{capitalizeString(association[Field.TARGET_CLASS])}</strong>: {association[Field.DESCRIPTION]}
+                            <strong> {capitalizeString(createNameFromIRI(association[Field.SOURCE_CLASS]))}</strong> {association[Field.NAME]} <strong>{ capitalizeString(createNameFromIRI(association[Field.TARGET_CLASS]))}</strong>: {association[Field.DESCRIPTION]}
                         </li>
                     </Typography>
                 )
