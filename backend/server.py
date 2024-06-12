@@ -169,8 +169,8 @@ def save_suggested_summary():
     completed_item = {"domain_description": domain_description, "summary": summary,
                       "is_positive": is_positive, "conceptual_model": conceptual_model}
 
-    prompt = prompt_manager.get_prompt(
-        user_choice=summary_type, is_chain_of_thoughts=False)
+    is_domain_description = domain_description != ""
+    prompt = prompt_manager.get_prompt(user_choice=summary_type, is_domain_description=is_domain_description, is_chain_of_thoughts=False)
     completed_item["prompt"] = prompt
 
     save_item_to_storage(completed_item)
