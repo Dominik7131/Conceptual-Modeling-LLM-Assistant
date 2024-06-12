@@ -2,7 +2,8 @@ import { Node, Edge } from "reactflow"
 import { NodeData, Class, Attribute, EdgeData, Association, DEFAULT_CARDINALITY } from "../definitions/conceptualModel"
 import { ConceptualModelJson, ClassJson, AttributeJson, RelationshipJson, GeneralizationJson, JSON_SCHEMA } from "../definitions/conceptualModelJSON"
 import { Field, ItemType } from "../definitions/utility"
-import { SummaryAttribute, SummaryClass, SummaryConceptualModel } from "../definitions/summary"
+import { SummaryAssociation, SummaryAttribute, SummaryClass, SummaryConceptualModel } from "../definitions/summary"
+import { createNameFromIRI } from "./conceptualModel"
 
 
 export const convertConceptualModelToJSON = (nodes: Node[], edges: Edge[]): ConceptualModelJson =>
@@ -101,8 +102,7 @@ const convertEdgesToJSON = (edges: Edge[]) =>
 export const convertConceptualModelToObjectSummary = (nodes: Node[], edges: Edge[]): SummaryConceptualModel =>
 {
     let result: SummaryConceptualModel = {
-        classes: [],
-        associations: []
+        classes: [], associations: []
     }
 
     for (let node of nodes)
@@ -128,11 +128,20 @@ export const convertConceptualModelToObjectSummary = (nodes: Node[], edges: Edge
     }
 
 
-    let associations: Association[] = []
+    let associations: SummaryAssociation[] = []
+
     for (let edge of edges)
     {
         const edgeData: EdgeData = edge.data
-        associations.push(edgeData.association)
+        const association = edgeData.association
+
+        const summaryAssociation: SummaryAssociation = {
+            [Field.NAME]: association[Field.NAME], [Field.DESCRIPTION]: association[Field.DESCRIPTION],
+            [Field.ORIGINAL_TEXT]: association[Field.ORIGINAL_TEXT], [Field.SOURCE_CLASS]: createNameFromIRI(association[Field.SOURCE_CLASS]),
+            [Field.TARGET_CLASS]: createNameFromIRI(association[Field.TARGET_CLASS])
+        }
+
+        associations.push(summaryAssociation)
     }
 
     result.associations = associations

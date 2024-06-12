@@ -4,13 +4,13 @@ import { Association } from "./conceptualModel"
 export const FORCE_NO_DOMAIN_DESCRIPTION = true
 
 export const EMPTY_SUMMARY_CONCEPTUAL_MODEL = {
-  classes: [], associations: []
+  classes: [], associations: [], generalizations: []
 }
 
 export interface SummaryConceptualModel
 {
   classes: SummaryClass[]
-  associations: Association[]
+  associations: SummaryAssociation[]
 }
 
 
@@ -29,3 +29,9 @@ export interface SummaryClass extends SummaryBaseItem
 
 
 export interface SummaryAttribute extends SummaryBaseItem { }
+
+export interface SummaryAssociation extends SummaryBaseItem
+{
+  source: string
+  target: string
+}
