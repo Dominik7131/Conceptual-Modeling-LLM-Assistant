@@ -1,6 +1,5 @@
 import { Typography, CircularProgress } from "@mui/material"
 import { useRecoilValue } from "recoil"
-import { capitalizeString } from "../../utils/utility"
 import { Field, UserChoiceSummary } from "../../definitions/utility"
 import SummaryReactionButtons from "./SummaryReactionButtons"
 import { isLoadingSummaryDescriptionsState } from "../../atoms/loadings"
@@ -29,7 +28,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
                 summaryDescriptions.classes.map((clss: SummaryClass) =>
                     <Typography component="span" key={ clss[Field.NAME] }>
                         <li>
-                            <strong>{ capitalizeString(clss[Field.NAME]) }</strong>: { clss[Field.DESCRIPTION] }
+                            <strong>{ clss[Field.NAME] }</strong>: { clss[Field.DESCRIPTION] }
                         </li>
                         { clss.attributes.length > 0 &&
                             <ul>
@@ -60,7 +59,7 @@ const SummaryDescriptionsTab: React.FC = (): JSX.Element =>
                 summaryDescriptions.associations.map((association) =>
                     <Typography component="span">
                         <li>
-                            <strong> {capitalizeString(createNameFromIRI(association[Field.SOURCE_CLASS]))}</strong> {association[Field.NAME]} <strong>{ capitalizeString(createNameFromIRI(association[Field.TARGET_CLASS]))}</strong>: {association[Field.DESCRIPTION]}
+                            <strong> {createNameFromIRI(association[Field.SOURCE_CLASS])}</strong> {association[Field.NAME]} <strong>{ createNameFromIRI(association[Field.TARGET_CLASS])}</strong>: {association[Field.DESCRIPTION]}
                         </li>
                     </Typography>
                 )
