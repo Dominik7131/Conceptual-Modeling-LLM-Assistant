@@ -50,6 +50,8 @@ const DialogEditItem: React.FC = () =>
                 { 
                     isAttribute &&
                     <>
+                        <ClassListSelector fieldName={Field.SOURCE_CLASS} association={association}/>
+
                         <DataTypeSelector attribute={attribute}/>
                         <EditField label={ItemFieldUIName.CARDINALITY} field={Field.SOURCE_CARDINALITY} />
                     </>

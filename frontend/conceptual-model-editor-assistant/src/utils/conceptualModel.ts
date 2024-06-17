@@ -164,9 +164,10 @@ export const onAddClass = (clss: Class, positionX: number, positionY: number, se
 
 
 // Returns "true" if the operation was successfull otherwise "false"
-const onAddAttribute = (attribute : Attribute, setNodes: SetterOrUpdater<Node[]>) =>
+const onAddAttribute = (attribute: Attribute, setNodes: SetterOrUpdater<Node[]>) =>
 {
     const nodeID = attribute[Field.SOURCE_CLASS]
+
     let isAttributePresent = false
     let isAttributeAdded = false
 
@@ -388,14 +389,40 @@ export const editNodeClass = (newClass: Class, oldClass: Class, setNodes: Setter
     }))
 }
 
-    
+
 export const editNodeAttribute = (newAttribute: Attribute, oldAttribute: Attribute, setNodes: SetterOrUpdater<Node[]>): void =>
 {
-    const id: string = oldAttribute.source
+    const oldID: string = oldAttribute[Field.SOURCE_CLASS]
+    const newID: string = newAttribute[Field.SOURCE_CLASS]
+
+    // Attribute's source class was changed so move the attribute into a different node
+    if (oldID !== newID)
+    {
+        onRemoveNodeAttribute(oldAttribute, setNodes)
+        onAddAttribute(newAttribute, setNodes)
+    }
 
     setNodes((nodes: Node[]) => nodes.map((currentNode: Node) =>
     {
-        if (currentNode.id === id)
+        if (currentNode.id === oldID)
+        {
+            const newAttributes = currentNode.data.attributes.map((attribute: Attribute) =>
+            {
+                if (attribute.name === oldAttribute.name)
+                {
+                    return newAttribute
+                }
+                else
+                {
+                    return attribute
+                }
+            })
+
+            const newData: NodeData = { ...currentNode.data, attributes: newAttributes}
+            const newNode: Node = { ...currentNode, data: newData}
+            return newNode
+        }
+        else if (currentNode.id === newAttribute[Field.SOURCE_CLASS])
         {
             const newAttributes = currentNode.data.attributes.map((attribute: Attribute) =>
             {
@@ -454,17 +481,17 @@ export const onRemove = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges
     if (item[Field.TYPE] === ItemType.CLASS)
     {
         const nodeID = item[Field.IRI]
-        removeNode(nodeID, setNodes)
+        onRemoveNode(nodeID, setNodes)
     }
     else if (item[Field.TYPE] === ItemType.ATTRIBUTE)
     {
-        removeNodeAttribute(item as Attribute, setNodes)
+        onRemoveNodeAttribute(item as Attribute, setNodes)
     }
     else if (item[Field.TYPE] === ItemType.ASSOCIATION || item[Field.TYPE] === ItemType.GENERALIZATION)
     {
         const association: Association = (item as Association)
         const edgeID = createEdgeUniqueID(association[Field.SOURCE_CLASS], association[Field.TARGET_CLASS], association[Field.IRI])
-        removeEdge(edgeID, setEdges)
+        onRemoveEdge(edgeID, setEdges)
     }
     else
     {
@@ -473,19 +500,19 @@ export const onRemove = (item: Item, setNodes: SetterOrUpdater<Node[]>, setEdges
 }
 
 
-export const removeNode = (nodeID: string, setNodes: SetterOrUpdater<Node[]>): void =>
+export const onRemoveNode = (nodeID: string, setNodes: SetterOrUpdater<Node[]>): void =>
 {
     setNodes((previousNodes) => previousNodes.filter(node => node.id !== nodeID))
 }
 
 
-export const removeEdge = (edgeID: string, setEdges: SetterOrUpdater<Edge[]>): void =>
+export const onRemoveEdge = (edgeID: string, setEdges: SetterOrUpdater<Edge[]>): void =>
 {
     setEdges((edges: Edge[]) => edges.filter(edge => edge.id !== edgeID))
 }
 
 
-export const removeNodeAttribute = (attribute: Attribute, setNodes: SetterOrUpdater<Node[]>): void =>
+export const onRemoveNodeAttribute = (attribute: Attribute, setNodes: SetterOrUpdater<Node[]>): void =>
 {
     const nodeID: string = attribute.source
 

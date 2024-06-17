@@ -44,7 +44,7 @@ export const onItemEdit = (field: Field, newValue: string, setEditedItem: Setter
 
 
 export const onSave = (newItem: Item, oldItem: Item, setIsOpened: SetterOrUpdater<boolean>, setErrorMessage: SetterOrUpdater<string>, setNodes: SetterOrUpdater<Node[]>, setEdges: SetterOrUpdater<Edge[]>): void =>
-{   
+{ 
     if (!newItem[Field.NAME])
     {
         setErrorMessage("Name cannot be empty")
