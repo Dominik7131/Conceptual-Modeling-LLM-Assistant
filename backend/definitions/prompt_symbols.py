@@ -9,3 +9,5 @@ class PromptSymbols(Enum):
     CONCEPTUAL_MODEL = "{conceptual_model}"
     ATTRIBUTE_NAME = "{attribute_name}"
     ASSOCIATION_NAME = "{association_name}"
+    DESCRIPTION = "{description}"
+    ORIGINAL_TEXT = "{original_text}"

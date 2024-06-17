@@ -11,8 +11,8 @@ from utils.original_text_merger import OriginalTextMerger
 from utils.prompt_manager import PromptManager
 
 
-
 STORAGE_DIRECTORY = "storage"
+DEFAULT_PORT = 5001
 
 app = Flask(__name__)
 llm_assistant = None
@@ -44,6 +44,8 @@ def suggest_single_field():
     target_class = body_data.get("targetClass", "")
 
     name = body_data["name"]
+    description = body_data["description"]
+    original_text = body_data["originalText"]
     field = body_data["field"]
     domain_description = body_data["domainDescription"]
     user_choice = body_data["userChoice"]
@@ -53,7 +55,9 @@ def suggest_single_field():
         user_choice = UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value
 
     single_field = llm_assistant.suggest_single_field(
-        user_choice, name, source_class, target_class, domain_description, field, text_filtering_variation=text_filtering_variation)
+        user_choice=user_choice, name=name, description=description, original_text=original_text,
+        source_class=source_class, target_class=target_class, domain_description=domain_description,
+        field_name=field, text_filtering_variation=text_filtering_variation)
 
     return single_field
 
@@ -143,8 +147,9 @@ def save_suggested_single_field():
     completed_item = {"domain_description": domain_description,
                       "field_name": field_name, "field_text": field_text, "is_positive": is_positive}
 
+    is_domain_description = domain_description != ""
     prompt = prompt_manager.get_prompt(
-        user_choice=user_choice, field_name=field_name, is_chain_of_thoughts=False)
+        user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description, is_chain_of_thoughts=False)
     completed_item["prompt"] = prompt
 
     relevant_texts = llm_assistant.get_relevant_texts(
@@ -189,7 +194,7 @@ def main():
     global llm_assistant, prompt_manager
 
     parser = argparse.ArgumentParser(description="Start LLM assistant server")
-    parser.add_argument("--port", type=int, default=5000,
+    parser.add_argument("--port", type=int, default=DEFAULT_PORT,
                         help="Port to run the server on")
 
     if (not os.path.exists(STORAGE_DIRECTORY)):

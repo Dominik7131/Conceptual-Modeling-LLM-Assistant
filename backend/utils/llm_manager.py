@@ -259,7 +259,12 @@ class LLMManager:
 
         if not is_item_ok:
             self.logger.error(f"No {self.field_name} in the item")
-        
+
+        # If we generated the field "name" then convert the name into a standard convention
+        is_field_name = self.field_name == Field.NAME.value
+        if is_field_name:
+            item[Field.NAME.value] = ConventionConvertor.convert_string_to_standard_convention(item[Field.NAME.value])
+
         item = self._parse_data_type(item)
 
         return item, is_item_ok

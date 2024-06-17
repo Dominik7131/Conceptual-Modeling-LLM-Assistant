@@ -214,17 +214,21 @@ class LLMAssistant:
 
         return self._get_output(user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest)
 
-    def suggest_single_field(self, user_choice, name, source_class, target_class, domain_description, field_name, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value):
+    def suggest_single_field(self, user_choice, name, description, original_text, source_class, target_class, domain_description, field_name, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value):
 
         source_class = source_class.strip()
         target_class = target_class.strip()
 
         relevant_texts = self.get_relevant_texts(
             source_class=source_class, domain_description=domain_description, filtering_variation=text_filtering_variation)
+
         is_domain_description = domain_description != ""
 
-        prompt = self.prompt_manager.create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class,
-                                                   attribute_name=name, association_name=name, relevant_texts=relevant_texts, field_name=field_name, is_chain_of_thoughts=False, is_domain_description=is_domain_description)
+        prompt = self.prompt_manager.create_prompt(
+            user_choice=user_choice, source_class=source_class, target_class=target_class,
+            attribute_name=name, association_name=name, description=description, original_text=original_text,
+            relevant_texts=relevant_texts, field_name=field_name,
+            is_chain_of_thoughts=False, is_domain_description=is_domain_description)
 
         self.messages = []
         new_messages = self.messages.copy()

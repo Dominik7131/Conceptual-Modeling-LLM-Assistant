@@ -25,14 +25,14 @@ class PromptManager:
         prompt_file_path = os.path.join(
             SYSTEM_PROMPT_DIRECTORY, prompt_file_name)
 
-        with open(prompt_file_path, "r") as file:
+        with open(prompt_file_path, "r", encoding="utf-8") as file:
             system_prompt = file.read()
 
         return system_prompt
 
     def create_prompt(self, user_choice, source_class="", target_class="", relevant_texts="", is_domain_description=True,
                       items_count_to_suggest=5, is_chain_of_thoughts=True, conceptual_model=None, field_name="",
-                      attribute_name="", association_name=""):
+                      attribute_name="", association_name="", description="", original_text=""):
 
         original_prompt = self.get_prompt(user_choice=user_choice, field_name=field_name,
                                           is_domain_description=is_domain_description, is_chain_of_thoughts=is_chain_of_thoughts)
@@ -48,9 +48,11 @@ class PromptManager:
             PromptSymbols.CONCEPTUAL_MODEL.value: json.dumps(conceptual_model),
             PromptSymbols.ATTRIBUTE_NAME.value: attribute_name,
             PromptSymbols.ASSOCIATION_NAME.value: association_name,
+            PromptSymbols.DESCRIPTION.value: description,
+            PromptSymbols.ORIGINAL_TEXT.value: original_text,
         }
 
-        # Substitute all special symbols in the given prompt
+        # Substitute all the special symbols in the given prompt
         prompt = Replacer.replace(original_prompt, replacements)
 
         return prompt
@@ -79,7 +81,7 @@ class PromptManager:
         prompt_file_path = os.path.join(
             PROMPT_DIRECTORY, user_choice, prompt_file_name)
 
-        with open(prompt_file_path, "r") as file:
+        with open(prompt_file_path, "r", encoding="utf-8") as file:
             prompt = file.read()
 
         return prompt
