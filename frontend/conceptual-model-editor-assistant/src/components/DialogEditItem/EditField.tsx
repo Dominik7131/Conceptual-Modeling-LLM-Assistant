@@ -50,7 +50,19 @@ const EditField: React.FC<Props> = ({ label, field }) =>
     }
 
     const isDisableOriginalTextSuggestion = field === Field.ORIGINAL_TEXT && (domainDescription === "" || isIgnoreDomainDescription)
-    const isDisabledFieldSuggestion = field === Field.NAME || field === Field.SOURCE_CLASS || field === Field.TARGET_CLASS || isDisableOriginalTextSuggestion
+
+    let isDisableFieldName = false
+
+    if (field === Field.NAME)
+    {
+        const description = editedItem[Field.DESCRIPTION] ?? ""
+        const originalText = editedItem[Field.ORIGINAL_TEXT] ?? ""
+        const isNotEnoughInfoToGenerateName: boolean = description === "" && originalText === ""
+
+        isDisableFieldName = field === Field.NAME && isNotEnoughInfoToGenerateName
+    }
+
+    const isDisabledFieldSuggestion = isDisableFieldName || field === Field.SOURCE_CLASS || field === Field.TARGET_CLASS || isDisableOriginalTextSuggestion
 
 
     return (

@@ -28,9 +28,16 @@ const useGenerateSingleField = () =>
     const setErrorMessage = useSetRecoilState(editDialogErrorMsgState)
     
 
-    const onGenerateField = (itemType: ItemType, name: string, sourceClass: string, targetClass: string, field: Field) =>
+    const onGenerateField = (itemType: ItemType, name: string, description: string, originalText: string, sourceClass: string, targetClass: string, field: Field) =>
     {
-        const currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
+        let currentDomainDescription = isIgnoreDomainDescription ? "" : domainDescription
+
+        const isDisableDomainDescription = field === Field.NAME
+        if (isDisableDomainDescription)
+        {
+            currentDomainDescription = ""
+        }
+
         snapshotDomainDescription(UserChoiceSingleField.SINGLE_FIELD, currentDomainDescription, setSnapshotDomainDescription)
         snapshotTextFilteringVariation(UserChoiceSingleField.SINGLE_FIELD, textFilteringVariation, setSnapshotTextFilteringVariation)
     
@@ -40,13 +47,11 @@ const useGenerateSingleField = () =>
         {
             sourceClass = name
         }
-    
-        if (!sourceClass) { sourceClass = "" }
-        if (!targetClass) { targetClass = "" }
 
         const bodyData: SingleFieldSuggestionBody = {
-            name: name, sourceClass: sourceClass, targetClass: targetClass, field: field, userChoice: userChoice,
-            domainDescription: currentDomainDescription, textFilteringVariation: textFilteringVariation
+            name: name, description: description, originalText: originalText, sourceClass: sourceClass, targetClass: targetClass,
+            field: field, userChoice: userChoice, domainDescription: currentDomainDescription,
+            textFilteringVariation: textFilteringVariation
         }
 
         const bodyDataJSON = JSON.stringify(bodyData)

@@ -33,26 +33,32 @@ const Suggestion: React.FC<Props> = ({ item, field, isRegeneratedText, isDisable
 
     const handleGenerateField = (): void =>
     {
-        let source_class = (item as Association)[Field.SOURCE_CLASS]
+        let sourceClass = (item as Association)[Field.SOURCE_CLASS]
 
         if (item[Field.TYPE] === ItemType.CLASS)
         {
-            source_class = item[Field.IRI]
+            sourceClass = item[Field.IRI]
         }
 
-        if (source_class)
+        if (sourceClass)
         {
-            source_class = createNameFromIRI(source_class)
+            sourceClass = createNameFromIRI(sourceClass)
         }
 
-        let target_class = (item as Association)[Field.TARGET_CLASS]
+        let targetClass = (item as Association)[Field.TARGET_CLASS]
 
-        if (target_class)
+        if (targetClass)
         {
-            target_class = createNameFromIRI(target_class)
+            targetClass = createNameFromIRI(targetClass)
         }
 
-        onGenerateField(item[Field.TYPE], item[Field.NAME], source_class, target_class, field)
+        sourceClass = sourceClass ?? ""
+        targetClass = targetClass ?? ""
+
+        const description = item[Field.DESCRIPTION] ?? ""
+        const originalText = item[Field.ORIGINAL_TEXT] ?? ""
+
+        onGenerateField(item[Field.TYPE], item[Field.NAME], description, originalText, sourceClass, targetClass, field)
     }
 
 

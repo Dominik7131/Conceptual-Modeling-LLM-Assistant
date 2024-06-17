@@ -18,6 +18,8 @@ export interface ItemSuggestionBody
 export interface SingleFieldSuggestionBody
 {
   name: string
+  description: string
+  originalText: string
   field: string
   domainDescription: string
   userChoice: UserChoiceItem

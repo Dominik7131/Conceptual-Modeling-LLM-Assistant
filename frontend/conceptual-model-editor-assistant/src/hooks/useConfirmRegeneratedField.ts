@@ -25,7 +25,14 @@ const useConfirmRegeneratedField = () =>
     {
         // Save generated single field to the backend
     
-        const currentDomainDescription = getSnapshotDomainDescription(UserChoiceSingleField.SINGLE_FIELD, domainDescriptionSnapshot)
+        let currentDomainDescription = getSnapshotDomainDescription(UserChoiceSingleField.SINGLE_FIELD, domainDescriptionSnapshot)
+
+        const isDisableDomainDescription = fieldName === Field.NAME
+        if (isDisableDomainDescription)
+        {
+            currentDomainDescription = ""
+        }
+
         const currentFilteringVariation = getSnapshotTextFilteringVariation(UserChoiceSingleField.SINGLE_FIELD, textFilteringVariationSnapshot)
         const userChoice = itemTypeToUserChoice(itemType)
 
