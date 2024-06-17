@@ -1,0 +1,7 @@
+Solely based on the given description and original text of the association of the source class "{source_class}" and the target class "{target_class}" generate this association name and output this name in this JSON object: {"name": ""}.
+
+This is the given description:
+"{description}"
+
+This is the given original text:
+"{original_text}"
