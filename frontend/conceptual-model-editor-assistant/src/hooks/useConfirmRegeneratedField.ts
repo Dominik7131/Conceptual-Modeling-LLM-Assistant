@@ -21,7 +21,7 @@ const useConfirmRegeneratedField = () =>
     const regeneratedOriginalTextIndexes = useRecoilValue(regeneratedOriginalTextIndexesState)
 
     
-    const saveSingleFieldSuggestion = (fieldName: string, fieldText: string, itemType: ItemType, sourceClass: string): void =>
+    const saveSingleFieldSuggestion = (fieldName: string, fieldText: string, itemType: ItemType, sourceClass: string, isPositive: boolean): void =>
     {
         // Save generated single field to the backend
     
@@ -38,7 +38,7 @@ const useConfirmRegeneratedField = () =>
 
         const bodyData: SingleFieldUserEvaluationBody = {
             domainDescription: currentDomainDescription, fieldName: fieldName, fieldText: fieldText,
-            userChoice: userChoice, sourceClass: sourceClass, isPositive: true, textFilteringVariation: currentFilteringVariation
+            userChoice: userChoice, sourceClass: sourceClass, isPositive: isPositive, textFilteringVariation: currentFilteringVariation
         }
         const bodyDataJSON = JSON.stringify(bodyData)
     
@@ -47,26 +47,12 @@ const useConfirmRegeneratedField = () =>
     
         
     const onConfirmRegeneratedText = (field: Field): void =>
-    {
-        let itemType = ItemType.CLASS
-        let sourceClass = ""
-    
+    {    
         setEditedItem((editedItem: Item) =>
         {
             if (!regeneratedItem.hasOwnProperty(field))
             {
                 return editedItem
-            }
-
-            itemType = editedItem[Field.TYPE]
-
-            if (itemType === ItemType.CLASS)
-            {
-                sourceClass = editedItem[Field.NAME]
-            }
-            else
-            {
-                sourceClass = (editedItem as Attribute)[Field.SOURCE_CLASS]
             }
 
             if (field === Field.ORIGINAL_TEXT)
@@ -78,9 +64,7 @@ const useConfirmRegeneratedField = () =>
                 return { ...editedItem, [field]: regeneratedItem[field as keyof Item] }
             }
         })
-    
-        saveSingleFieldSuggestion(field, regeneratedItem[field as keyof Item] as string, itemType, sourceClass)
-    
+        
         onClearRegeneratedItem(field, setRegeneratedItem)
     }
 

@@ -1,16 +1,18 @@
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal"
-import { CircularProgress, IconButton, Stack } from "@mui/material"
-import { useRecoilValue, useSetRecoilState } from "recoil"
+import { Button, CircularProgress, IconButton, Stack, Tooltip } from "@mui/material"
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
 import useGenerateSingleField from "../../hooks/useGenerateSingleField"
 import CheckIcon from "@mui/icons-material/Check"
 import CloseIcon from "@mui/icons-material/Close"
 import useConfirmRegeneratedField from "../../hooks/useConfirmRegeneratedField"
 import { onClearRegeneratedItem } from "../../utils/editItem"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { fieldToLoadState, regeneratedItemState } from "../../atoms/suggestions"
-import { Item, Association } from "../../definitions/conceptualModel"
-import { Field, ItemType } from "../../definitions/utility"
+import { Item, Association, Attribute } from "../../definitions/conceptualModel"
+import { Field, ItemType, TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS } from "../../definitions/utility"
 import { createNameFromIRI } from "../../utils/conceptualModel"
+import ThumbUpIcon from "@mui/icons-material/ThumbUp"
+import ThumbDownIcon from "@mui/icons-material/ThumbDown"
 
 
 interface Props
@@ -25,10 +27,11 @@ interface Props
 const Suggestion: React.FC<Props> = ({ item, field, isRegeneratedText, isDisabledFieldSuggestion }) =>
 {
     const fieldToLoad = useRecoilValue(fieldToLoadState)
-    const setRegeneratedItem = useSetRecoilState(regeneratedItemState)
+    const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
+    const [isReactionButtonClicked, setIsReactionButtonClicked] = useState(false)
     
     const { onGenerateField } = useGenerateSingleField()
-    const { onConfirmRegeneratedText } = useConfirmRegeneratedField()
+    const { onConfirmRegeneratedText, saveSingleFieldSuggestion } = useConfirmRegeneratedField()
 
 
     const handleGenerateField = (): void =>
@@ -64,13 +67,37 @@ const Suggestion: React.FC<Props> = ({ item, field, isRegeneratedText, isDisable
 
     const handleSuggestionConfirmation = (): void =>
     {
+        setIsReactionButtonClicked(false)
         onConfirmRegeneratedText(field)
     }
 
 
     const handleSuggestionRejection = (): void =>
     {
+        setIsReactionButtonClicked(false)
         onClearRegeneratedItem(field, setRegeneratedItem)
+    }
+
+
+    const handleSaveSuggestion = (isPositive: boolean): void =>
+    {
+        setIsReactionButtonClicked(true)
+
+        let itemType = ItemType.CLASS
+        let sourceClass = ""
+
+        itemType = regeneratedItem[Field.TYPE]
+
+        if (itemType === ItemType.CLASS)
+        {
+            sourceClass = regeneratedItem[Field.NAME]
+        }
+        else
+        {
+            sourceClass = (regeneratedItem as Attribute)[Field.SOURCE_CLASS]
+        }
+
+        saveSingleFieldSuggestion(field, regeneratedItem[field as keyof Item] as string, itemType, sourceClass, isPositive)
     }
 
 
@@ -81,19 +108,52 @@ const Suggestion: React.FC<Props> = ({ item, field, isRegeneratedText, isDisable
     }, [field, setRegeneratedItem])
 
 
+    const reactionIconsColor = "inherit"
+    const reactionIconsSize = "20px"
+    const reactionButtonsMinSize = "20px"
+    const tooltipPlacement = "top"
+
     // Let user confirm or reject given suggestion
     if (isRegeneratedText)
     {
         return (
             <Stack direction="row">
 
-                <IconButton onClick={ handleSuggestionConfirmation }>
-                    <CheckIcon color="success"/>
-                </IconButton>
+                <Tooltip title="Like" enterDelay={TOOLTIP_ENTER_DELAY_MS} leaveDelay={TOOLTIP_LEAVE_DELAY_MS} placement={tooltipPlacement}>
+                    <IconButton
+                        size={ "small" }
+                        color={ reactionIconsColor }
+                        sx={{ minWidth: reactionButtonsMinSize, minHeight: reactionButtonsMinSize }}
+                        disabled={ isReactionButtonClicked }
+                        onClick={ () => { handleSaveSuggestion(true) } }
+                        >
+                            <ThumbUpIcon sx={{ width: reactionIconsSize, height: reactionIconsSize }}/>
+                    </IconButton>
+                </Tooltip>
 
-                <IconButton onClick={ handleSuggestionRejection }>
-                    <CloseIcon color="error"/>
-                </IconButton>
+                <Tooltip title="Confirm" enterDelay={TOOLTIP_ENTER_DELAY_MS} leaveDelay={TOOLTIP_LEAVE_DELAY_MS} placement={tooltipPlacement}>
+                    <IconButton onClick={ handleSuggestionConfirmation }>
+                        <CheckIcon color="success"/>
+                    </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Reject" enterDelay={TOOLTIP_ENTER_DELAY_MS} leaveDelay={TOOLTIP_LEAVE_DELAY_MS} placement={tooltipPlacement}>
+                    <IconButton onClick={ handleSuggestionRejection }>
+                        <CloseIcon color="error"/>
+                    </IconButton>
+                </Tooltip>
+
+                <Tooltip title="Dislike" enterDelay={TOOLTIP_ENTER_DELAY_MS} leaveDelay={TOOLTIP_LEAVE_DELAY_MS} placement={tooltipPlacement}>
+                    <IconButton
+                        color={ reactionIconsColor }
+                        size={ "small" }
+                        sx={{ minWidth: reactionButtonsMinSize, minHeight: reactionButtonsMinSize }}
+                        disabled={ isReactionButtonClicked }
+                        onClick={ () => { handleSaveSuggestion(false) } }
+                        >
+                            <ThumbDownIcon sx={{ width: reactionIconsSize, height: reactionIconsSize }}/>
+                    </IconButton>
+                </Tooltip>
 
             </Stack>
         )

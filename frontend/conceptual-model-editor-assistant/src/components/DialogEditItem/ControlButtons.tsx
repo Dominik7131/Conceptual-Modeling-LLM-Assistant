@@ -145,8 +145,6 @@ const ControlButtons: React.FC = () =>
                 if (regeneratedItem[key as keyof Item] !== "")
                 {
                     const newText = regeneratedItem[key as keyof Item] as string
-                    const sourceClass = newItem[Field.TYPE] === ItemType.CLASS ? newItem[Field.NAME] : (newItem as Attribute)[Field.SOURCE_CLASS]
-                    saveSingleFieldSuggestion(key, newText, newItem[Field.TYPE], sourceClass)
                     newItem = { ...newItem, [key]: newText}
                 }
             }
