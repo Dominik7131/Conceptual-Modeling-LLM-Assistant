@@ -12,7 +12,7 @@ from utils.prompt_manager import PromptManager
 
 
 STORAGE_DIRECTORY = "storage"
-DEFAULT_PORT = 5001
+DEFAULT_PORT = 5000
 
 app = Flask(__name__)
 llm_assistant = None
