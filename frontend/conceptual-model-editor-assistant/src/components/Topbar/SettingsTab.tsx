@@ -3,18 +3,27 @@ import { useRecoilState } from "recoil"
 import { isIgnoreDomainDescriptionState } from "../../atoms/domainDescription"
 import { textFilteringVariationState } from "../../atoms/textFiltering"
 import { TextFilteringVariation } from "../../definitions/textFilteringVariation"
+import { SummaryPlainTextStyle } from "../../definitions/summary"
+import { summaryTextStyleState } from "../../atoms/summary"
 
 
 const SettingsTab: React.FC = (): JSX.Element =>
 {
     const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useRecoilState(isIgnoreDomainDescriptionState)
     const [textFilteringVariation, setTextFilteringVariation] = useRecoilState(textFilteringVariationState)
+    const [summaryStyle, setSummaryStyle] = useRecoilState(summaryTextStyleState)
 
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    const handleTextFilteringChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     {
         const newTextFilteringVariation = event.target.value as TextFilteringVariation
         setTextFilteringVariation(newTextFilteringVariation)
+    }
+
+    const handleSummaryStyleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    {
+        const newSummaryStyle = event.target.value as SummaryPlainTextStyle
+        setSummaryStyle(newSummaryStyle)
     }
 
 
@@ -28,14 +37,24 @@ const SettingsTab: React.FC = (): JSX.Element =>
                         onChange={ () => setIsIgnoreDomainDescription(previousValue => !previousValue) }/>
                 }/>
 
-            <Divider sx={{ marginY: "50px" }}></Divider>
+            <Divider sx={{ marginY: "30px" }}></Divider>
+
+            <FormLabel> Summary plain text style </FormLabel>
+            <RadioGroup row onChange={ handleSummaryStyleChange } value={ summaryStyle }>
+                <FormControlLabel value={SummaryPlainTextStyle.DEFAULT} control={<Radio />} label={SummaryPlainTextStyle.DEFAULT} />
+                <FormControlLabel value={SummaryPlainTextStyle.EDUCATIONAL} control={<Radio />} label={SummaryPlainTextStyle.EDUCATIONAL} />
+                <FormControlLabel value={SummaryPlainTextStyle.FUNNY_STORY} control={<Radio />} label={SummaryPlainTextStyle.FUNNY_STORY} />
+            </RadioGroup>
+
+            <Divider sx={{ marginY: "30px" }}></Divider>
 
             <FormLabel> Domain description filtering </FormLabel>
-            <RadioGroup row onChange={ handleChange } value={textFilteringVariation}>
+            <RadioGroup row onChange={ handleTextFilteringChange } value={ textFilteringVariation }>
                 <FormControlLabel value={TextFilteringVariation.NONE} control={<Radio />} label={TextFilteringVariation.NONE} />
                 <FormControlLabel value={TextFilteringVariation.SEMANTIC} control={<Radio />} label={TextFilteringVariation.SEMANTIC} />
                 <FormControlLabel value={TextFilteringVariation.SYNTACTIC} control={<Radio />} label={TextFilteringVariation.SYNTACTIC} />
             </RadioGroup>
+
 
         </Stack>
     )

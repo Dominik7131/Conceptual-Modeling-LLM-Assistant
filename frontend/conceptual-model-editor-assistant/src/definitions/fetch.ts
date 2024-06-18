@@ -1,6 +1,6 @@
 import { Item } from "./conceptualModel"
 import { OriginalTextIndexesItem } from "./originalTextIndexes"
-import { SummaryConceptualModel } from "./summary"
+import { SummaryConceptualModel, SummaryPlainTextStyle } from "./summary"
 import { TextFilteringVariation } from "./textFilteringVariation"
 import { UserChoiceItem, UserChoiceSummary } from "./utility"
 
@@ -34,6 +34,7 @@ export interface SummarySuggestionBody
   summaryType: UserChoiceSummary
   domainDescription: string
   conceptualModel: SummaryConceptualModel
+  style: SummaryPlainTextStyle
 }
 
 

@@ -1,11 +1,16 @@
-import { Association } from "./conceptualModel"
-
-
 export const FORCE_NO_DOMAIN_DESCRIPTION = true
 
 export const EMPTY_SUMMARY_CONCEPTUAL_MODEL = {
   classes: [], associations: [], generalizations: []
 }
+
+export const enum SummaryPlainTextStyle
+{
+  DEFAULT = "default",
+  EDUCATIONAL = "educational",
+  FUNNY_STORY = "funny story",
+}
+
 
 export interface SummaryConceptualModel
 {

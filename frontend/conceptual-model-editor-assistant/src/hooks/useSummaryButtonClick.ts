@@ -4,7 +4,7 @@ import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms
 import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../atoms/snapshots"
 import { topbarTabValueState } from "../atoms/topbar"
 import { SummarySuggestionBody } from "../definitions/fetch"
-import { FORCE_NO_DOMAIN_DESCRIPTION } from "../definitions/summary"
+import { FORCE_NO_DOMAIN_DESCRIPTION, SummaryPlainTextStyle } from "../definitions/summary"
 import { TopbarTab } from "../definitions/tabs"
 import { NOTHING_SELECTED_MSG, UserChoiceSummary } from "../definitions/utility"
 import { convertConceptualModelToObjectSummary } from "../utils/serialization"
@@ -23,8 +23,8 @@ const useSummaryButtonClick = () =>
     const setDomainDescriptionSnapshot = useSetRecoilState(domainDescriptionSnapshotsState)
     const setConceptualModelSnapshot = useSetRecoilState(conceptualModelSnapshotState)
 
-    
-    const onButtonClick = (userChoice: UserChoiceSummary): string =>
+
+    const onButtonClick = (userChoice: UserChoiceSummary, summaryStyle: SummaryPlainTextStyle = SummaryPlainTextStyle.DEFAULT): string =>
     {
         if (selectedNodes.length === 0 && selectedEdges.length === 0)
         {
@@ -54,7 +54,7 @@ const useSummaryButtonClick = () =>
         }
 
         const bodyData: SummarySuggestionBody = {
-            summaryType: userChoice, conceptualModel: conceptualModel, domainDescription: currentDomainDescription
+            summaryType: userChoice, conceptualModel: conceptualModel, domainDescription: currentDomainDescription, style: summaryStyle
         }
         
         const bodyDataJSON = JSON.stringify(bodyData)
