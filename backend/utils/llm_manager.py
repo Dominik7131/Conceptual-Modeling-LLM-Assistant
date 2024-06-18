@@ -308,7 +308,6 @@ class LLMManager:
             self.item = self.item.replace("\n", " ")
 
             completed_item = json.loads(self.item)
-            self.logger.warn(f"Checking: {completed_item}")
 
         except ValueError:
             self.logger.error(f"Cannot decode JSON: {self.item}\n")

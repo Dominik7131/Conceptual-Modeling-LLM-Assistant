@@ -252,13 +252,14 @@ class LLMAssistant:
             json_item = json.dumps(item_object)
             return json_item
 
-    def suggest_summary_plain_text(self, conceptual_model, domain_description):
+    def suggest_summary_plain_text(self, conceptual_model, domain_description, style):
 
         user_choice = UserChoice.SUMMARY_PLAIN_TEXT.value
 
         is_domain_description = domain_description != ""
-        prompt = self.prompt_manager.create_prompt(user_choice=user_choice, conceptual_model=conceptual_model,
-                                                   relevant_texts=domain_description, is_chain_of_thoughts=False, is_domain_description=is_domain_description)
+        prompt = self.prompt_manager.create_prompt(
+            user_choice=user_choice, conceptual_model=conceptual_model, relevant_texts=domain_description,
+            is_chain_of_thoughts=False, is_domain_description=is_domain_description, summaryPlainTextStyle=style)
 
         self.messages = []
         new_messages = self.messages.copy()

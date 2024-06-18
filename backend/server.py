@@ -5,7 +5,7 @@ import time
 from flask import Flask, request
 from flask_cors import CORS
 
-from definitions.utility import Field, UserChoice
+from definitions.utility import Field, SummaryPlainTextStyle, UserChoice
 from utils.llm_assistant import LLMAssistant
 from utils.original_text_merger import OriginalTextMerger
 from utils.prompt_manager import PromptManager
@@ -69,9 +69,10 @@ def suggest_summary():
     summary_type = body_data["summaryType"]
     domain_description = body_data["domainDescription"]
     conceptual_model = body_data["conceptualModel"]
+    style = body_data.get("style", SummaryPlainTextStyle.DEFAULT.value)
 
     if summary_type == UserChoice.SUMMARY_PLAIN_TEXT.value:
-        return llm_assistant.suggest_summary_plain_text(conceptual_model, domain_description)
+        return llm_assistant.suggest_summary_plain_text(conceptual_model, domain_description, style)
 
     elif summary_type == UserChoice.SUMMARY_DESCRIPTIONS.value:
         return llm_assistant.suggest_summary_descriptions(conceptual_model, domain_description)

@@ -1,6 +1,7 @@
 import json
 import os
 
+from definitions.utility import SummaryPlainTextStyle
 from definitions.prompt_symbols import PromptSymbols
 from utils.replacer import Replacer
 
@@ -32,10 +33,11 @@ class PromptManager:
 
     def create_prompt(self, user_choice, source_class="", target_class="", relevant_texts="", is_domain_description=True,
                       items_count_to_suggest=5, is_chain_of_thoughts=True, conceptual_model=None, field_name="",
-                      attribute_name="", association_name="", description="", original_text=""):
+                      attribute_name="", association_name="", description="", original_text="", summaryPlainTextStyle=SummaryPlainTextStyle.DEFAULT.value):
 
-        original_prompt = self.get_prompt(user_choice=user_choice, field_name=field_name,
-                                          is_domain_description=is_domain_description, is_chain_of_thoughts=is_chain_of_thoughts)
+        original_prompt = self.get_prompt(
+            user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description,
+            is_chain_of_thoughts=is_chain_of_thoughts, summaryPlainTextStyle=summaryPlainTextStyle)
 
         if conceptual_model is None:
             conceptual_model = {}
@@ -50,6 +52,7 @@ class PromptManager:
             PromptSymbols.ASSOCIATION_NAME.value: association_name,
             PromptSymbols.DESCRIPTION.value: description,
             PromptSymbols.ORIGINAL_TEXT.value: original_text,
+            PromptSymbols.SUMMARY_STYLE.value: summaryPlainTextStyle,
         }
 
         # Substitute all the special symbols in the given prompt
@@ -57,7 +60,7 @@ class PromptManager:
 
         return prompt
 
-    def get_prompt(self, user_choice, field_name="", is_domain_description=True, is_chain_of_thoughts=True):
+    def get_prompt(self, user_choice, field_name="", is_domain_description=True, is_chain_of_thoughts=True, summaryPlainTextStyle=SummaryPlainTextStyle.DEFAULT.value):
 
         prompt_file_name = ""
 
@@ -72,14 +75,16 @@ class PromptManager:
 
         if is_chain_of_thoughts:
             prompt_file_name += "-cot"
+        
+        if summaryPlainTextStyle != SummaryPlainTextStyle.DEFAULT.value:
+            prompt_file_name += "-style"
 
         prompt_file_name += ".txt"
 
         if prompt_file_name[0] == "-":
             prompt_file_name = prompt_file_name[1:]
 
-        prompt_file_path = os.path.join(
-            PROMPT_DIRECTORY, user_choice, prompt_file_name)
+        prompt_file_path = os.path.join(PROMPT_DIRECTORY, user_choice, prompt_file_name)
 
         with open(prompt_file_path, "r", encoding="utf-8") as file:
             prompt = file.read()
