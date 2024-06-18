@@ -4,14 +4,14 @@ import { isIgnoreDomainDescriptionState } from "../../atoms/domainDescription"
 import { textFilteringVariationState } from "../../atoms/textFiltering"
 import { TextFilteringVariation } from "../../definitions/textFilteringVariation"
 import { SummaryPlainTextStyle } from "../../definitions/summary"
-import { summaryTextStyleState } from "../../atoms/summary"
+import { summaryPlainTextStyleState } from "../../atoms/summary"
 
 
 const SettingsTab: React.FC = (): JSX.Element =>
 {
     const [isIgnoreDomainDescription, setIsIgnoreDomainDescription] = useRecoilState(isIgnoreDomainDescriptionState)
     const [textFilteringVariation, setTextFilteringVariation] = useRecoilState(textFilteringVariationState)
-    const [summaryStyle, setSummaryStyle] = useRecoilState(summaryTextStyleState)
+    const [summaryStyle, setSummaryStyle] = useRecoilState(summaryPlainTextStyleState)
 
 
     const handleTextFilteringChange = (event: React.ChangeEvent<HTMLInputElement>) =>
