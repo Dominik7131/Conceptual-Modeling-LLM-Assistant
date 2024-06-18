@@ -11,6 +11,9 @@ import { textFilteringVariationState } from "../atoms/textFiltering"
 import { onClearSuggestedItems, changeTitle } from "../utils/conceptualModel"
 import { changeSidebarTab } from "../utils/sidebar"
 import { userChoiceToItemType } from "../utils/utility"
+import { edgesState, nodesState } from "../atoms/conceptualModel"
+import { ConceptualModelJson } from "../definitions/conceptualModelJSON"
+import { convertConceptualModelToJSON } from "../utils/serialization"
 
 
 const useSuggestItems = () =>
@@ -21,6 +24,9 @@ const useSuggestItems = () =>
 
   const setSidebarTitles = useSetRecoilState(sidebarTitlesState)
   const setSidebarTab = useSetRecoilState(sidebarTabValueState)
+
+  const nodes = useRecoilValue(nodesState)
+  const edges = useRecoilValue(edgesState)
 
   const domainDescription = useRecoilValue(domainDescriptionState)
   const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
@@ -45,14 +51,15 @@ const useSuggestItems = () =>
     changeSidebarTab(itemType, setSidebarTab)
     changeTitle(userChoice, sourceItemName, targetItemName, setSidebarTitles)
 
-    // Snapshot current configuration to know from what parameters the suggestions were generated
+    // Save current configuration to know from what parameters the suggestions were generated
     snapshotDomainDescription(userChoice, currentDomainDescription, setDomainDescriptionSnapshot)
     snapshotTextFilteringVariation(userChoice, textFilteringVariation, setTextFilteringVariationSnapshot)
 
+    const conceptualModelJSON: ConceptualModelJson = convertConceptualModelToJSON(nodes, edges)
 
     const bodyData: ItemSuggestionBody = {
       sourceClass: sourceItemName, targetClass: targetItemName, userChoice: userChoice, domainDescription: currentDomainDescription,
-      textFilteringVariation: textFilteringVariation
+      textFilteringVariation: textFilteringVariation, conceptualModel: conceptualModelJSON
     }
 
     const bodyDataJSON = JSON.stringify(bodyData)

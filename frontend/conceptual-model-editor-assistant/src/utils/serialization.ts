@@ -127,7 +127,6 @@ export const convertConceptualModelToObjectSummary = (nodes: Node[], edges: Edge
         result.classes.push(summaryClass)
     }
 
-
     let associations: SummaryAssociation[] = []
 
     for (let edge of edges)

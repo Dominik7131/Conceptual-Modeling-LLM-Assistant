@@ -1,4 +1,5 @@
 import { Item } from "./conceptualModel"
+import { ConceptualModelJson } from "./conceptualModelJSON"
 import { OriginalTextIndexesItem } from "./originalTextIndexes"
 import { SummaryConceptualModel, SummaryPlainTextStyle } from "./summary"
 import { TextFilteringVariation } from "./textFilteringVariation"
@@ -12,6 +13,7 @@ export interface ItemSuggestionBody
   textFilteringVariation: TextFilteringVariation
   sourceClass: string
   targetClass: string
+  conceptualModel: ConceptualModelJson
 }
 
 
