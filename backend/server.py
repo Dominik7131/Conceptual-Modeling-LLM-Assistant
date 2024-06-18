@@ -201,7 +201,7 @@ def main():
     parser.add_argument("--port", type=int, default=DEFAULT_PORT,
                         help="Port to run the server on")
 
-    if (not os.path.exists(STORAGE_DIRECTORY)):
+    if not os.path.exists(STORAGE_DIRECTORY):
         os.makedirs(STORAGE_DIRECTORY)
 
     args = parser.parse_args()
