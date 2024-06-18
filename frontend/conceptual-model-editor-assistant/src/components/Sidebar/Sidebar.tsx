@@ -31,7 +31,7 @@ const Sidebar: React.FC = () =>
 
             <Divider orientation="vertical" />
             
-            <Box sx={{ flex: 1, width: "50%" }}>
+            <Box sx={{ flex: 1, width: "50%", overflowY: "auto" }}>
                 <TabContext value={tabValue}>
                     <Tabs/>
 
