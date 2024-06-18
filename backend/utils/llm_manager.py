@@ -33,14 +33,20 @@ class LLMManager:
         self.source_class = ""
         self.target_class = ""
         self.field_name = ""
+        self.conceptual_model = {}
 
-    def _reset(self, messages, user_choice="", source_class="", target_class="", field_name=""):
+    def _reset(self, messages, user_choice="", source_class="", target_class="", field_name="", conceptual_model=None):
 
         self.user_choice = user_choice
         self.source_class = source_class.lower()
         self.messages = messages
         self.target_class = target_class.lower()
         self.field_name = field_name
+
+        if conceptual_model == None:
+            conceptual_model = {}
+
+        self.conceptual_model = conceptual_model
 
         self.item = ""
         self.new_lines_in_a_row = 0
@@ -83,7 +89,7 @@ class LLMManager:
 
         return False
 
-    def generate_stream(self, messages, user_choice, source_class, target_class="", field_name=""):
+    def generate_stream(self, messages, user_choice, source_class, target_class="", field_name="", conceptual_model=None):
         """
         Sends given messages to LLM and returns generator object containing all successfully parsed objects.
         :param messages list: messages to send to the LLM.
@@ -91,11 +97,11 @@ class LLMManager:
         :param source_class string: name of the source class.
         :param target_class string: name of the target class.
         :param field_class string: name of the field to generate.
+        :param conceptual_model dictionary: user's conceptual model.
         :rtype: Generator[tuple[dict[str, bool]
         """
 
-        self._reset(messages, user_choice, source_class,
-                    target_class, field_name)
+        self._reset(messages, user_choice, source_class, target_class, field_name, conceptual_model)
 
         output = self.client.chat.completions.create(
             messages=self.messages, model=MODEL_ID, stream=True, temperature=TEMPERATURE)
@@ -151,14 +157,22 @@ class LLMManager:
 
         self._log_full_message()
         return
+    
+    def _parse_classes(self, item):
+
+        if self._does_class_already_exist(item):
+            return item, False
+
+        return item, True
 
     def _parse_attribute(self, item):
 
-        is_item_ok = True
+        if self._does_attribute_already_exist(item):
+            return item, False
 
         item = self._parse_data_type(item)
 
-        return item, is_item_ok
+        return item, True
     
     def _parse_data_type(self, item):
 
@@ -174,27 +188,22 @@ class LLMManager:
 
     def _parse_associations1(self, completed_item):
 
-        is_item_ok = True
+        is_no_source_class = not Field.SOURCE_CLASS.value in completed_item or not completed_item[Field.SOURCE_CLASS.value]
+        if is_no_source_class:
+            self.logger.info(f"No source class: {completed_item}")
+            return completed_item, False
 
-        if not Field.SOURCE_CLASS.value in completed_item or not completed_item[Field.SOURCE_CLASS.value]:
-            completed_item[Field.NAME.value] = "Error: no source class"
-            is_item_ok = False
-
-        if not Field.TARGET_CLASS.value in completed_item or not completed_item[Field.TARGET_CLASS.value]:
-            completed_item[Field.NAME.value] = "Error: no target class"
-            is_item_ok = False
-
-        if not is_item_ok:
-            return completed_item, is_item_ok
+        is_no_target_class = not Field.TARGET_CLASS.value in completed_item or not completed_item[Field.TARGET_CLASS.value]
+        if is_no_target_class:
+            self.logger.info(f"No target class: {completed_item}")
+            return completed_item, False
 
         # Replace "s" for "z" to solve differences between British and American English
         # E.g.:
         # - input: motoriSed vehicle with S
         # - LLM output: motoriZed vehicle with Z
-        source_class_generated = completed_item[Field.SOURCE_CLASS.value].lower(
-        ).replace("s", "z")
-        target_class_generated = completed_item[Field.TARGET_CLASS.value].lower(
-        ).replace("s", "z")
+        source_class_generated = completed_item[Field.SOURCE_CLASS.value].lower().replace("s", "z")
+        target_class_generated = completed_item[Field.TARGET_CLASS.value].lower().replace("s", "z")
 
         source_class_replaced = self.source_class.replace("s", "z")
         target_class_replaced = self.source_class.replace("s", "z")
@@ -209,37 +218,38 @@ class LLMManager:
                 self.logger.info(
                     f"{self.source_class} != {source_class_generated} and {self.target_class} != {target_class_generated}")
 
-            completed_item["name"] = "(Deleted: Inputed class is not source/target class) " + \
-                completed_item["name"]
-            is_item_ok = False
+            self.logger.info(f"Inputed class is not source or target class: {completed_item}")
+            return completed_item, False
 
-        return completed_item, is_item_ok
+        if self._does_association_already_exist(completed_item):
+            return completed_item, False
+
+        return completed_item, True
 
     def _parse_associations2(self, completed_item):
+
+        if self._does_association_already_exist(completed_item):
+            return completed_item, False
 
         is_item_ok = True
 
         if Field.SOURCE_CLASS.value in completed_item and Field.TARGET_CLASS.value in completed_item:
-            source_class_generated = completed_item["source"].lower().replace(
-                "s", "z")
-            target_class_generated = completed_item["target"].lower().replace(
-                "s", "z")
+            source_class_generated = completed_item["source"].lower().replace("s", "z")
+            target_class_generated = completed_item["target"].lower().replace("s", "z")
 
             source_class = self.source_class.lower().replace("s", "z")
             target_class = self.target_class.lower().replace("s", "z")
 
             is_match = (source_class == source_class_generated and target_class == target_class_generated) or (
                 target_class == source_class_generated and source_class == target_class_generated)
-            is_none = (source_class_generated == "none") or (
-                target_class_generated == "none")
+            is_none = (source_class_generated == "none") or (target_class_generated == "none")
 
             if not is_match:
                 self.logger.info(
                     f"Not matched:\n- given classes: {source_class}, {target_class}\n- generated classes: {source_class_generated}, {target_class_generated}\n")
 
             if not is_match or is_none:
-                completed_item[
-                    "name"] = f"Deleted: Inputed classes are not contained in source and target classes: {completed_item['name']}"
+                completed_item[Field.NAME.value] = f"Deleted: Inputed classes are not contained in source and target classes: {completed_item['name']}"
                 is_item_ok = False
 
         return completed_item, is_item_ok
@@ -268,6 +278,70 @@ class LLMManager:
         item = self._parse_data_type(item)
 
         return item, is_item_ok
+    
+    def _does_class_already_exist(self, completed_item):
+
+        if UserChoice.CLASSES.value not in self.conceptual_model:
+            return False
+        
+        classes = self.conceptual_model[UserChoice.CLASSES.value]
+
+        for clss in classes:
+
+            is_class_present = completed_item[Field.NAME.value] == clss["title"].lower()
+            if is_class_present:
+                self.logger.info(f"Class is already present: {completed_item}")
+                return True
+        
+        return False
+    
+    def _does_attribute_already_exist(self, completed_item):
+
+        if UserChoice.ATTRIBUTES.value not in self.conceptual_model:
+            return False
+        
+        attributes = self.conceptual_model[UserChoice.ATTRIBUTES.value]
+
+        for attribute in attributes:
+
+            is_name_same = completed_item[Field.NAME.value] == attribute["iri"].replace("-", " ")
+            is_source_class_same = self.source_class == attribute["domain"].replace("-", " ")
+
+            is_attribute_present = is_name_same and is_source_class_same
+            if is_attribute_present:
+                self.logger.info(f"Attribute is already present: {completed_item}")
+                return True
+        
+        return False
+
+    def _does_association_already_exist(self, completed_item):
+
+        associations_string = "relationships"
+        if associations_string not in self.conceptual_model:
+            return False
+        
+        associations = self.conceptual_model[associations_string]
+
+        for association in associations:
+
+            is_name_same = completed_item[Field.NAME.value] == association[Field.IRI.value].replace("-", " ")
+            domain_association = association[Field.DOMAIN.value].replace("-", " ")
+            range_association = association[Field.RANGE.value].replace("-", " ")
+
+            is_source_class_same = self.source_class == domain_association
+            is_target_class_same = self.target_class == range_association
+
+            is_target_class_not_specified = self.target_class == ""
+            if is_target_class_not_specified:
+                is_source_class_same = is_source_class_same or self.source_class == range_association
+                is_target_class_same = True
+
+            is_association_present = is_name_same and is_source_class_same and is_target_class_same
+            if is_association_present:
+                self.logger.info(f"Association is already present: {completed_item}")
+                return True
+        
+        return False
 
     def _convert_names_into_standard_convention(self, completed_item):
 
@@ -287,15 +361,15 @@ class LLMManager:
 
     def _log_debug_info(self, completed_item):
 
-        self.logger.info(f"Completed item: {completed_item['name']}")
+        self.logger.debug(f"Completed item: {completed_item['name']}")
 
         for key in completed_item:
-            if key == "name":
+            if key == Field.NAME.value:
                 continue
 
-            self.logger.info(f"- {key}: {completed_item[key]}")
+            self.logger.debug(f"- {key}: {completed_item[key]}")
 
-        self.logger.info("\n")
+        self.logger.debug("\n")
 
     def _parse_item_streamed_output(self):
         """
@@ -311,7 +385,7 @@ class LLMManager:
 
         except ValueError:
             self.logger.error(f"Cannot decode JSON: {self.item}\n")
-            completed_item = {"name": f"Error: {self.item}"}
+            completed_item = {Field.NAME.value: f"Error: {self.item}"}
             yield completed_item, False
             return
 
@@ -331,8 +405,8 @@ class LLMManager:
             yield completed_item, is_item_ok
             return
 
-        if "name" not in completed_item or not completed_item["name"] or completed_item["name"] == "none":
-            completed_item["name"] = "error: no name"
+        if Field.NAME.value not in completed_item or not completed_item[Field.NAME.value] or completed_item[Field.NAME.value] == "none":
+            self.logger.info(f"No name: {completed_item}")
             is_item_ok = False
             yield completed_item, is_item_ok
             return
@@ -342,6 +416,9 @@ class LLMManager:
         if not is_item_ok:
             yield completed_item, is_item_ok
             return
+        
+        if self.user_choice == UserChoice.CLASSES.value:
+            completed_item, is_item_ok = self._parse_classes(completed_item)
 
         if self.user_choice == UserChoice.ATTRIBUTES.value:
             completed_item, is_item_ok = self._parse_attribute(completed_item)

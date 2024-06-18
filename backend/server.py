@@ -32,8 +32,11 @@ def suggest_items():
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
     text_filtering_variation = body_data["textFilteringVariation"]
+    conceptual_model = body_data["conceptualModel"]
 
-    return llm_assistant.suggest_items(source_class, target_class, user_choice, domain_description=domain_description, text_filtering_variation=text_filtering_variation, items_count_to_suggest=5)
+    return llm_assistant.suggest_items(
+        source_class=source_class, target_class=target_class, user_choice=user_choice, domain_description=domain_description,
+        text_filtering_variation=text_filtering_variation, conceptual_model=conceptual_model, items_count_to_suggest=5)
 
 
 @app.route("/suggest/single_field", methods=["POST"])

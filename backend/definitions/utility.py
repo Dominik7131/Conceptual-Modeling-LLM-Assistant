@@ -22,6 +22,12 @@ class TextFilteringVariation(Enum):
     SEMANTIC = "semantic"
 
 
+class SummaryPlainTextStyle(Enum):
+    DEFAULT = "default"
+    EDUCATIONAL = "educational"
+    FUNNY_STORY = "funny story"
+
+
 class DataType(Enum):
     STRING = "string"
     NUMBER = "number"
@@ -34,7 +40,11 @@ DEFINED_DATA_TYPES = [DataType.STRING.value, DataType.NUMBER.value,
 
 
 class Field(Enum):
+    IRI = "iri"
     NAME = "name"
+    TITLE = "title"
+    DOMAIN = "domain"
+    RANGE = "range"
     DESCRIPTION = "description"
     ORIGINAL_TEXT = "originalText"
     ORIGINAL_TEXT_INDEXES = "originalTextIndexes"

@@ -136,7 +136,7 @@ class LLMAssistant:
         json_item = json.dumps(suggestion_dictionary)
         return json_item, False
 
-    def _get_output(self, user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest):
+    def _get_output(self, user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest, conceptual_model):
 
         max_attempts_count = 2
 
@@ -144,9 +144,10 @@ class LLMAssistant:
         # When this happens try to generate the output again with a little bit different prompt to force different output
         for attempt_number in range(max_attempts_count):
 
-            prompt = self.prompt_manager.create_prompt(user_choice=user_choice, source_class=source_class, target_class=target_class,
-                                                       is_domain_description=is_domain_description, items_count_to_suggest=items_count_to_suggest, relevant_texts=relevant_texts,
-                                                       is_chain_of_thoughts=is_chain_of_thoughts)
+            prompt = self.prompt_manager.create_prompt(
+                user_choice=user_choice, source_class=source_class, target_class=target_class,
+                is_domain_description=is_domain_description, items_count_to_suggest=items_count_to_suggest,
+                relevant_texts=relevant_texts, is_chain_of_thoughts=is_chain_of_thoughts)
 
             if attempt_number > 0:
                 self.logger.info(f"Attempt: {attempt_number}")
@@ -160,7 +161,7 @@ class LLMAssistant:
             self._log_sending_prompt_message(messages_prettified)
 
             items_iterator = self.output_generator.generate_stream(
-                messages=new_messages, user_choice=user_choice, source_class=source_class, target_class=target_class)
+                messages=new_messages, user_choice=user_choice, source_class=source_class, target_class=target_class, conceptual_model=conceptual_model)
 
             if user_choice == UserChoice.CLASSES.value:
                 self.suggested_classes = []
@@ -182,10 +183,13 @@ class LLMAssistant:
         self.logger.info("Returning empty generator")
         return self._empty_generator()
 
-    def suggest_items(self, source_class, target_class, user_choice, domain_description, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value, items_count_to_suggest=5):
+    def suggest_items(self, source_class, target_class, user_choice, domain_description, conceptual_model=None, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value, items_count_to_suggest=5):
 
         source_class = source_class.strip()
         target_class = target_class.strip()
+
+        if conceptual_model == None:
+            conceptual_model = {}
 
         is_domain_description = domain_description != ""
 
@@ -212,7 +216,7 @@ class LLMAssistant:
 
         self.is_some_item_generated = False
 
-        return self._get_output(user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest)
+        return self._get_output(user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest, conceptual_model)
 
     def suggest_single_field(self, user_choice, name, description, original_text, source_class, target_class, domain_description, field_name, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value):
 
