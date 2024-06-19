@@ -2,7 +2,7 @@ import json
 import logging
 import openai
 
-from definitions.logging import LOGGER_NAME
+from definitions.logging import LOGGER_NAME, LOGGING_LEVEL
 from definitions.utility import DEFINED_DATA_TYPES, Field, UserChoice
 from utils.convention_convertor import ConventionConvertor
 
@@ -17,9 +17,9 @@ class LLMManager:
 
     def __init__(self):
 
-        self.client = openai.OpenAI(
-            base_url=LLM_BACKEND_URL, api_key="sk-no-key-required")
+        self.client = openai.OpenAI(base_url=LLM_BACKEND_URL, api_key="sk-no-key-required")
         self.logger = logging.getLogger(LOGGER_NAME)
+        self.logger.setLevel(LOGGING_LEVEL)
 
         self.item = ""
         self.new_lines_in_a_row = 0
