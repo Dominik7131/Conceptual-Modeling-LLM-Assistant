@@ -11,3 +11,4 @@ class PromptSymbols(Enum):
     ASSOCIATION_NAME = "{association_name}"
     DESCRIPTION = "{description}"
     ORIGINAL_TEXT = "{original_text}"
+    SUMMARY_STYLE = "{summary_style}"

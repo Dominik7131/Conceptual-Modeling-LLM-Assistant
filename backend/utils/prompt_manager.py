@@ -33,11 +33,11 @@ class PromptManager:
 
     def create_prompt(self, user_choice, source_class="", target_class="", relevant_texts="", is_domain_description=True,
                       items_count_to_suggest=5, is_chain_of_thoughts=True, conceptual_model=None, field_name="",
-                      attribute_name="", association_name="", description="", original_text="", summaryPlainTextStyle=SummaryPlainTextStyle.DEFAULT.value):
+                      attribute_name="", association_name="", description="", original_text="", summaryPlainTextStyle=""):
 
         original_prompt = self.get_prompt(
             user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description,
-            is_chain_of_thoughts=is_chain_of_thoughts, summaryPlainTextStyle=summaryPlainTextStyle)
+            is_chain_of_thoughts=is_chain_of_thoughts, summary_plain_text_style=summaryPlainTextStyle)
 
         if conceptual_model is None:
             conceptual_model = {}
@@ -60,7 +60,7 @@ class PromptManager:
 
         return prompt
 
-    def get_prompt(self, user_choice, field_name="", is_domain_description=True, is_chain_of_thoughts=True, summaryPlainTextStyle=SummaryPlainTextStyle.DEFAULT.value):
+    def get_prompt(self, user_choice, field_name="", is_domain_description=True, is_chain_of_thoughts=True, summary_plain_text_style=""):
 
         prompt_file_name = ""
 
@@ -76,7 +76,7 @@ class PromptManager:
         if is_chain_of_thoughts:
             prompt_file_name += "-cot"
         
-        if summaryPlainTextStyle != SummaryPlainTextStyle.DEFAULT.value:
+        if summary_plain_text_style != "":
             prompt_file_name += "-style"
 
         prompt_file_name += ".txt"
