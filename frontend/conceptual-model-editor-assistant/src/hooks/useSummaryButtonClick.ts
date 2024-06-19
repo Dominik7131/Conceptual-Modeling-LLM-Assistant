@@ -24,7 +24,7 @@ const useSummaryButtonClick = () =>
     const setConceptualModelSnapshot = useSetRecoilState(conceptualModelSnapshotState)
 
 
-    const onButtonClick = (userChoice: UserChoiceSummary, summaryStyle: SummaryPlainTextStyle = SummaryPlainTextStyle.DEFAULT): string =>
+    const onButtonClick = (userChoice: UserChoiceSummary, summaryStyle: SummaryPlainTextStyle = SummaryPlainTextStyle.NOT_SPECIFIED): string =>
     {
         if (selectedNodes.length === 0 && selectedEdges.length === 0)
         {

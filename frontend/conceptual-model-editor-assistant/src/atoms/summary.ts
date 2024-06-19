@@ -16,5 +16,5 @@ export const summaryDescriptionsState = atom<SummaryConceptualModel>({
 
 export const summaryPlainTextStyleState = atom({
     key: "summaryPlainTextStyleState",
-    default: SummaryPlainTextStyle.DEFAULT,
+    default: SummaryPlainTextStyle.NOT_SPECIFIED,
 })

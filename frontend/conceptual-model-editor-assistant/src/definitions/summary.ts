@@ -6,8 +6,9 @@ export const EMPTY_SUMMARY_CONCEPTUAL_MODEL = {
 
 export const enum SummaryPlainTextStyle
 {
-  DEFAULT = "default",
+  NOT_SPECIFIED = "",
   EDUCATIONAL = "educational",
+  ANALYTICAL = "analytical",
   FUNNY_STORY = "funny story",
 }
 

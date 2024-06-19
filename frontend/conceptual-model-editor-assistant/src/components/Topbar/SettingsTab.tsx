@@ -41,7 +41,8 @@ const SettingsTab: React.FC = (): JSX.Element =>
 
             <FormLabel> Summary plain text style </FormLabel>
             <RadioGroup row onChange={ handleSummaryStyleChange } value={ summaryStyle }>
-                <FormControlLabel value={SummaryPlainTextStyle.DEFAULT} control={<Radio />} label={SummaryPlainTextStyle.DEFAULT} />
+                <FormControlLabel value={SummaryPlainTextStyle.NOT_SPECIFIED} control={<Radio />} label={"not specified"} />
+                <FormControlLabel value={SummaryPlainTextStyle.ANALYTICAL} control={<Radio />} label={SummaryPlainTextStyle.ANALYTICAL} />
                 <FormControlLabel value={SummaryPlainTextStyle.EDUCATIONAL} control={<Radio />} label={SummaryPlainTextStyle.EDUCATIONAL} />
                 <FormControlLabel value={SummaryPlainTextStyle.FUNNY_STORY} control={<Radio />} label={SummaryPlainTextStyle.FUNNY_STORY} />
             </RadioGroup>
