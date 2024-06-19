@@ -1,5 +1,52 @@
-\chapter{Data}
-
-%An~example citation: \cite{Andel07}
+\chapter{Related work and possible approaches}
 
 
+TODO: take inspiration from:
+\begin{itemize}
+\item related work from our article
+\item related work from "Navigating Ontology Development with LLMs"
+\item related work from "Automated Domain Modeling with Large Language Models: A Comparative Study"
+\item related work from "On the assessment of generative AI in modeling tasks an experience report with ChatGPT and UML" \\~\\
+\end{itemize}
+
+Outline:
+\begin{itemize}
+\item make subsection for each main approach to automatically or semi automatically creating conceptual models (TODO: mainly focus on the approaches that use the LLM)
+\begin{itemize}
+\item this will probably include the subsection "rule-based" and something like "machine learning"
+\end{itemize}
+\end{itemize}
+
+\subsection*{Approaches using LLM}
+\begin{itemize}
+\item generate completed conceptual model: fully automated from domain description as input without user interaction create a conceptual model (Automated Domain Modeling with Large Language Models: A Comparative Study)
+\item generate parts of conceptual model: user directly asks some LLM to generate a conceptual model and then the writes following prompts to improve the generated conceptual model (On the assessment of generative AI in modeling tasks an experience report with ChatGPT and UML)
+\end{itemize}
+
+
+\section*{Approaches to creating LLM assistant}
+
+\subsection*{Training own LLM}
+- cons: requires a ton of resources: money, time, data
+
+
+\subsection*{Fine-tuning existing LLM}
+- cons: requires a lot of data
+
+
+\subsection*{Prompt engineering of existing LLM}
+- pros: doesn't require that much resources
+
+
+\section*{Selected approach}
+
+- definition of our problems (entities, attributes and relationships extraction) \\
+- (when extracting entities first LLM needs to locate the entity in the text) \\
+
+\section*{How to achieve better results with using an existing LLM}
+- RAG (provide LLM only the part of domain description that contains the wanted info) \\
+- advanced prompt engineering techniques (CoT, ToT, few-shot prompting) \\
+
+
+
+--- Výsledkem této kapitole bude odůvodnění našeho přístupu ---
