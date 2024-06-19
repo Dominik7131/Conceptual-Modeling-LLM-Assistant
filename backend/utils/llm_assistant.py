@@ -263,7 +263,7 @@ class LLMAssistant:
         is_domain_description = domain_description != ""
         prompt = self.prompt_manager.create_prompt(
             user_choice=user_choice, conceptual_model=conceptual_model, relevant_texts=domain_description,
-            is_chain_of_thoughts=False, is_domain_description=is_domain_description, summaryPlainTextStyle=style)
+            is_chain_of_thoughts=False, is_domain_description=is_domain_description, summary_plain_text_style=style)
 
         self.messages = []
         new_messages = self.messages.copy()
