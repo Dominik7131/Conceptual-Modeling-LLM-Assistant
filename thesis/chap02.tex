@@ -1,21 +1,97 @@
-\chapter{Methodology}
+\chapter{Background}
+
+TOOD: Možná tuto celou kapitolu pak bude lepší nějak zakomponovat do intra
+
+\section{Large language models}
+
+Něco jako: "Language modeling is a traditional task in natural language processing that aims to estimate the conditional probability of a sequence of tokens. Recently, large language models (LLMs) have gained significant attention for this task. LLMs use deep neural networks, typically with transformer architecture [16], to estimate this probability distribution. Given a sequence of tokens $s = \{ s_1, s_2, \ldots, s_{k-1} \}$, LLMs estimate the conditional probability of the next token $P(sk \mid s1,\ldots, s_{k-1})$.
+These models are typically used for text generation through auto-regression. Specifically, in each time step, the LLM predicts a new token that is added to the input. As the scale of LLMs (i.e., the number of parameters) increases, some models can be fine-tuned to perform other specific tasks beyond text generation [17]." (zdroj: Automated Domain Modeling with LLMs A Comparative Study) \\
 
 
-\section{Prompting methods}
-
-\subsection{What are they}
-
+\section{Prompts}
 Něco jako: "In the field of LLMs, a prompt is an input that guides the model’s response
  generation. A prompting technique entails the strategic formulation of these
  prompts to maximize the efficacy of LLMs. It involves the deliberate structuring
- and phrasing of prompts to align with the model’s training and capabilities." (zdroj: Navigating Ontology Development with LLMs)
-
-\subsection{Prompt structure}
-
-We created prompts in form of templates where before sending this prompt to the LLM each symbol is replaced by a given argument.
+ and phrasing of prompts to align with the model’s training and capabilities." (zdroj: Navigating Ontology Development with LLMs) \\
 
 
-\subsection{Prompting techniques}
+
+
+\chapter{Approach}
+
+
+\section{Prompts}
+
+
+\subsection{General rules}
+As we use already existing LLMs we design our prompts in a way that resembles their training data as most as possible. Because usually most of the training data come from the internet we follow these rules:
+\begin{itemize}
+\item our prompts are only in English
+\item unstructured data are in plain text format
+\item structured data are in JSON format \
+\end{itemize}
+
+NOTE: Tady možná bych mohl napsat, že jako future work by se dal zkoumat vliv konkrétního strukturovaného formátu na kvalitu výstupu, tedy že dává smysl vyzkoušet i něco jiného než JSON \\~\\
+
+
+\subsection{General tips}
+There exists a lot of general tips for writing prompts independent on the chosen prompting technique.
+When developing our prompts we took inspiration mostly from the Microsoft's prompt engineering guide\footnote{\url{https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions}} and from OpenAI's prompt engineering guide\footnote{\url{https://platform.openai.com/docs/guides/prompt-engineering}}. In our experience the more parameters some LLM has the less it is sensitive to a slight differences in the prompt. The most notable tips are:
+
+
+\subsubsection{Starting or ending with the most important instructions}
+LLMs place the greatest emphasis on the information at the start and at the end of the prompt. Therefore, defining the main task at the start of the prompt and then repeating it at the end can increase the output quality.
+
+
+\subsubsection{Adding clear consistent syntax}
+Adding clear and consistent syntax makes the prompt more human readable and also can improve the output quality.
+
+
+\subsubsection{Breaking the task down}
+LLMs usually perform better when they are given order in which to generate the output. Also the order of the steps matter as the LLM generates the next token both based on the prompt and based on it's previous output.
+
+
+%\subsubsection{Priming the output}
+%In our experience the LLMs are usually trained in a way to start their response by some preliminary description of the output. This can be reduced by for example putting ``Output:'' at the end of the prompt.
+
+TODO: Možná by se ty jednotlivé body hodilo jinak strukturovat, například mít jako název kapitoly prompts, aby potom ty subsekce byly 3.1.1, 3.1.2, atd.
+
+TODO: Možná něco o tom, že LLM typicky kladou velký důraz na system message, proto je dobré sem také uvést hlavní instrukci \\
+
+TODO: Projít si ty odkazy ve footnotech, jestli tam ještě nenajdu něco důležitého \\
+
+
+\subsection{Structure}
+
+As we saw the way the prompts are written greatly influences the quality of the LLM output thus our prompts are prepared in advance in form of a templates with placeholders that are later on replaced by the user's specific arguments. These templates have usually the following structure:
+
+\begin{enumerate}
+\item control instruction
+\item modeling procedure
+\item output specification
+\item the context specification \\
+\end{enumerate}
+
+TODO: každý item udělat jako referenci na příslušnou subsubsekci \\
+
+TODO: asi zmínit, že tato struktura se týká hlavně generování tříd, atributů, asociací
+
+
+\subsubsection{Control instruction}
+The control instruction defines the main task. We aim to name the task as it is mostly called on the internet.
+It is put at the start of the prompt so the LLM puts the most emphasis on this instruction and also from the same reason this instruction is sometimes repeated.
+
+For example for generating attributes the control instruction can look like this:
+``Solely based on the given context generate all attributes for the class: "\{source\_class\}".''
+
+\subsubsection{Modeling procedure}
+
+The modeling procedure provides step by step plan on how the LLM should generate the output. \\
+
+TODO: explain why is "context" in front of "name"
+
+
+\subsection{Specific techniques}
 \begin{itemize}
 \item subsections: CoT, ToT, few-shot prompting \\
 \item CoT can be further divided into more approaches
@@ -23,6 +99,6 @@ We created prompts in form of templates where before sending this prompt to the 
 
 
 
-\section{RAG methods}
+\section{RAG}
 - TODO: brief explanation of what RAG is, how it works and why it works \\
 - RAG approaches: semantic vs. syntactic (more in GAO, Yunfan, et al. Retrieval-augmented generation for large language models: A survey.) \\

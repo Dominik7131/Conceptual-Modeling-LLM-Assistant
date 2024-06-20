@@ -145,7 +145,7 @@
     - například: "Generate attributes for given entity: {source_entity}"
         - {source_entity} je značka, za kterou se doplní ta entita, pro kterou uživatel chce vygenerovat atributy
             - seznam všech značek je [zde](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/e2b741a5bba4e1776b45c62111f797d4d69767a0/text_utility.py#L53)
-                - TODO: zdokumentovat všechny značky na GitHubu
+
         - chceme ten problém pojmenovat podle toho, jak se mu nejčastěji říká na internetu, protože odtud je typicky většina trénovacích dat, aby LLM jen podle názvu daného problému už s co největší pravděpodobností věděl, co se po něm chce
             - poznámka: jako future work by bylo zajímavé vyzkoušet, jakým způsobem se u vztahů změní kvalita výstupu, když místo pojmu "relationship" použijeme pojem "association"
                 - přijde mi, že ve chvíli, kdy jsem v promptu pro generování vztahů nahradil "relationships" za "associations" a "entities" za "classes", tak najednou Mixtral začal rozumět tomu, co po něm chci

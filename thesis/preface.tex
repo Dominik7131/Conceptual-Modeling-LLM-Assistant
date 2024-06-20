@@ -6,26 +6,27 @@
 When a team is working on any project, it is beneficial to unify the language and define the terms 
 that everyone will use. This is addressed by creating conceptual models. In a nutshell, conceptual 
 models capture classes, their attributes and associations. However, creating these conceptual 
-models takes a non-trivial amount of time. \\
+models takes a non-trivial amount of time and requires trained experts (TODO: cite source 18 from our article?). \\
 
 Recently, there has been a lot of progress in the development of Large Language Models (LLMs) such 
-as ChatGPT. We hypothesize that these LLMs could be used in such a way as to make it easier for 
+as ChatGPT (TODO: Cite ChatGPT and maybe cite source [5] from Automated Domain Modeling with LLMs A Comparative Study). We hypothesize that these LLMs could be used in such a way as to make it easier for 
 users to create conceptual models. We know that current LLMs are not smart enough to directly 
-create the conceptual model one expects for a given textual description (TODO: cite). However, one possible solution is to use an LLM as an assistant, which we see around us a lot today (e.g. Copilot) (TODO: cite). \\
+create the conceptual model one expects for a given textual description (TODO: cite). However, one possible solution is to use an LLM as an assistant, which we see around us a lot today (e.g. Copilot) (TODO: cite Copilot). \\
 
 
 
 \section*{Goals}
-Aim of this thesis is to create this aforementioned LLM assistant. This assistant is intended to help users to make conceptual models faster and also to help the users to better describe these newly created conceptual models. \\
-
-The main goals are:
+Aim of this thesis is to create this aforementioned LLM assistant that cooperates with a human modeling expert. The expert provides unstructured domain description as input into the domain modeling process.
+This assistant is mainly intended to help users to make conceptual models faster and also to help the users to better describe their newly created conceptual models. This assistant should be:
 \begin{enumerate}
-\item experiment with different prompting techniques
-\item experiment with different LLMs
-\item experiment with different Retrieval augemented generation techniques
+\item intuitive to use
+\item suggesting mostly appropriate classes, attributes and associations
+\item suggesting mostly appropriate descriptions of classes, attributes and associations
+\item able to summarize a selected part of user's conceptual model
+\item able to highlight in the domain description what the user has already modeled \\
 \end{enumerate}
 
-TODO: Tady je možná problém, že mluvím o prompting technikách a RAGu předtím než jsem vůbec řekl co to je
+TODO: Měl bych více rozvést to, že navrhujeme asociace pro jednu zadanou třídu, nebo pro dvě zadané třídy? \\
 
 
 \section*{Publication}
