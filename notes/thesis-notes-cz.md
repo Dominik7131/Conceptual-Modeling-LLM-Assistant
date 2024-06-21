@@ -149,7 +149,7 @@
         - chceme ten problém pojmenovat podle toho, jak se mu nejčastěji říká na internetu, protože odtud je typicky většina trénovacích dat, aby LLM jen podle názvu daného problému už s co největší pravděpodobností věděl, co se po něm chce
             - poznámka: jako future work by bylo zajímavé vyzkoušet, jakým způsobem se u vztahů změní kvalita výstupu, když místo pojmu "relationship" použijeme pojem "association"
                 - přijde mi, že ve chvíli, kdy jsem v promptu pro generování vztahů nahradil "relationships" za "associations" a "entities" za "classes", tak najednou Mixtral začal rozumět tomu, co po něm chci
-                    - ale chci to ještě více otestovat, jestli to třeba není jenom náhoda
+                - hypotéza: čím lépe natrénovaný LLM použijeme, tím méně bude záviset na tom, který ze synonymních pojmů použijeme, protože by se ty prompty měly namapovat do téměř identického prostoru a tudíž bychom měli dostat téměř stejný výsledek
 
     - chceme toto udělat úplně na začátku, protože podle několika zdrojů, LLM jsou typicky natrénovány tak, aby největší prioritu přiřadily textu na začátku promptu
 
@@ -194,13 +194,13 @@
 - provádíme tzv. few-shot prompting
 
 - hlavní důvody použití:
-    1. možné zvýšení kvality výstupu díky tomu, že LLM lépe promptu porozumí
+    1. možné zvýšení kvality výstupu díky tomu, že LLM lépe porozumí zadané úloze
         - neboli v promptu nejdříve slovy popíšeme a pak názorně ukážeme, co chceme
         - pokud LLM nerozumí tomu, co například znamená "generate relationships", tak to aspoň může zkusit pochopit z těchto konkrétních příkladů
             - pokud LLM slovnímu zadání rozumí, tak na tom příkladu se aspoň ujistí, že ví, co má generovat
         - poznámka: zde lze uvést některé články ukazující, že few-shot prompting v některých úlohách o hodně zlepšuje kvalitu výstupu
     
-    2. zlepšení názvů návrhů a obecně i ostatních položek
+    2. detailnější specifikace formátu JSON položek
         - bez konkrétního příklad není jasné, v jakém formátu mají být například názvy jednotlivých atributů
             - například jestli slova mají být oddělena podtržítkem (snake_case), velkým písmenem (camelCase, PascalCase), nebo standardně mezerou
             - ale pro jistotu stejně kontrolujeme, že každá položka výstupu je ve standardním formátu
@@ -226,8 +226,7 @@
 
 #### 5) Vstupní data
 1. pro některé prompty zde dáme konceptuální model v JSON formátu
-    - future work: hodily by se experimenty s dalšími formáty, jestli by to vylepšilo kvalitu výstupu
-        - hypotéza: kvalitu výstupu to znatelně neovlivní, dokud použijeme formát, který příslušný LLM viděl hodněkrát v trénovacích datech
+    - hypotéza: čím kvalitnější LLM používáme, tím méně záleží na konkrétním JSON formátu, protože vzniknout ekvivalentní prompty a následně ekvivalentní výstupy
 
 2. pro některé prompty zde dáme popis domény v plain textu
     - provádíme filtrování popisu domény
@@ -269,7 +268,6 @@
     - plus pro přidání kontextu každá věta obsahuje metadata, kde například může být odkaz na nějakou jinou větu
         - například text za odrážkou k sobě vždy do metadat dostane nadpis nad odrážkami (neboli nejbližší větu, před kterou není odrážka)
 
-
 - poznámka: zde lze navázat na tu zmiňovanou ztrátu kontextu u příliš malých částí textu a mít tu podkapitolu o řešení problému se zájmeny
     - toto zlepší recall i precision pro syntaktické i sémantické filtrování
     - zjednodušená varianta: pokud věta začíná zájmenem, tak té větě dáme do metadat odkaz na předchozí větu, protože typicky předchozí věta obsahuje tu entitu, na kterou se to zájmeno odkazuje
@@ -295,7 +293,7 @@
 - základní princip: uživatel nám zadá entitu, pro kterou chce vygenerovat atributy, nebo vztahy
     - název této entity jazykový model převede do vektorového prostoru
     - následně odstraníme ty věty z popisu domény, které ve vektorovém prostoru si nejsou podobné příslušnému názvu entity
-        - "nejsou podobné" záleží na tom, jak nastavíme hranici podobnosti
+        - určování podobnosti záleží na tom, jak nastavíme její hranici
         - jazykový model vrací podobnost například v rozmezí -1 až 1
             - je na nás, jestli například odstraníme každou větu se skórem < 0.5
             - problém: skóre jsou relativní
