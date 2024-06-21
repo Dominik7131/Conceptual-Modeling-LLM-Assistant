@@ -13,3 +13,8 @@ aux/
 *.xmpdata
 *.xmpi
 *.synctex.gz
+*.blg
+
+thesis-blx.bib
+thesis.bbl
+thesis.blg
