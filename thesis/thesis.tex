@@ -86,7 +86,7 @@
 \usepackage{listings}       % pretty-printer of source code
 
 % You might want to use cleveref for references
-% \usepackage{cleveref}
+%\usepackage{cleveref}
 
 % Set up formatting of bibliography (references to literature)
 % Details can be adjusted in macros.tex.
@@ -96,7 +96,7 @@
 % format with your supervisor.
 %
 % The basic format according to the ISO 690 standard with numbered references
-\usepackage[natbib,style=iso-numeric,sorting=none]{biblatex}
+\usepackage[natbib,style=iso-numeric,sorting=none,backend=bibtex]{biblatex}
 % ISO 690 with alphanumeric references (abbreviations of authors' names)
 %\usepackage[natbib,style=iso-alphabetic]{biblatex}
 % ISO 690 with references Author (year)
@@ -127,9 +127,10 @@
 %%% Each chapter is kept in a separate file
 \include{preface}
 \include{chap01}
-\include{chap02}
+\include{chapPrompts}
+\include{chapRAG}
+\include{chapEvaluation}
 \include{chap03}
-
 \include{epilog}
 
 %%% Bibliography
