@@ -1,0 +1,74 @@
+\chapter{Retrieval-augmented generation}
+Initially, we introduce the concept of Retrieval-Augmented Generation (RAG). Following this, we elucidate the application of RAG within our specific framework. Subsequently, we delineate the challenges encountered during the implementation process and the strategies employed to address these issues.
+
+\section{Motivation}
+When a LLM generates output, it relies on its trained parameters, which may contain outdated information. This occurs because, after the training phase, these parameters are no longer updated. Consequently, the output produced by the LLM can be outdated or irrelevant. To address this issue, RAG can be employed to incorporate external knowledge into the LLM's output generation process.
+
+\section{Basic RAG flow}
+The RAG process typically involves three main steps: First, the creation of an external knowledge base. Second, the identification of relevant information within this knowledge base based on the user's input. And third, the generation of a prompt that combines the user's input with the retrieved relevant information from the external knowledge base. \cite{Gao2023} \\
+
+NOTE: Jestli bude potřeba, tak ty jednotlivé body můžu klidně více rozepsat viz Indexing, Retrieval, Generation v \cite{Gao2023} \\
+
+NOTE: Tady můžu nakreslit nějaký obrázek, obsahově by se sem hodilo něco jako \url{https://pvml.com/wp-content/uploads/2024/04/rag.png}
+
+
+\section{How we use RAG}
+In terms of our application the knowledge base is the user's domain description. When generating attributes and associations our goal is to find the relevant parts of this domain description based on the given source class and target class if it is provided.
+
+For example, if in domain description the first sentence informs us about employees and the second sentence informs us about projects, when suggestion attributes for the class ``employee'' we insert only the first sentence in the prompt. This is mainly done to reduce the LLM's hallucination. But it can also help to reduce the prompt length when working with a domain description that does not fit into the LLM's context window size.
+
+
+
+\section{Challenges}
+
+Now we will describe the most significant challenges we encountered and the corresponding solutions we implemented to address them.
+
+\subsection{Domain description segmentation}
+First, we need to split the domain descriptions into chunks so for each chunk we can evaluate if it is relevant for the provided classes.
+
+Determining the chunk size is a challenging task since with too big chunks we are risking having irrelevant parts of domain description in the prompt. On the other hand, with too small chunks we are risking that the chunks will be miss-classified as they will not contain enough information about their context for deciding if they are relevant.
+
+In result, we consider each sentence of the domain description as a one chunk since it usually contains information about one thing and later on it is easy to concatenate the relevant chunks together simply by putting them next to each other in the original order from the domain description.
+
+
+\subsection{Texts comparison}
+
+Typically, as the first step in RAG the chunks are embedded into a vector database by usually some Bidirectional Encoder Representations from Transformers (BERT) based language model specifically trained for semantic comparison of texts. And in the next step the user's instruction is embedded into the vector space with the same language model. Then the language model computes the distance between the embedded instruction and each of the chunks and the closest $k$ chunks are retrieved.
+
+There are many language models that can be used for text embedding into a vector space. They mainly differ in their input format such as length of the input and whether the given query should be in form of a question or not. Also other methods can be used such as using the LLM to output the $k$ closest chunks. We use semantic and syntactic approach. We do not use some LLM for the text comparison as it usually takes many seconds to generate the output especially when in the worst case scenario the output can be very long when a large portion of the domain description has to be copied to the output.
+
+The semantic approach uses the ``\textit{all-MiniLM-L6-v2}'' model\footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}} that executes the described comparison in the vector space. It's intended use is a sentence and short paragraph encoder. As a comparison function we use cosine-similarity (TODO: Mám tady dát nějaký odkaz na cosine-similarity?).
+
+The syntactic approach compares lemmas of the mentioned texts. We use the \textit{MorphoDiTa} tool \cite{Strakova2014} with the ``\textit{english-morphium-wsj-140407}'' model \cite{Straka2014}. As one word in a different contexts can have a different lemma, we lemmatize each word by word in isolation.
+
+
+\subsection{Top k search}
+
+In traditional RAG systems, a fixed number $k$ of the most relevant results are retrieved. However, in our specific application, $k$ is not a fixed number because the domain description may encompass a variable number of relevant sentences. To address this variability, we need to define the cosine-similarity threshold which is a value in between 0 and 1. The challenge lies in the fact that the computed cosine-similarity is always relative to the given input. Consequently, in one scenario, sentences with a cosine similarity higher than a certain threshold $x$ may be deemed relevant, while in another scenario, sentences with a cosine similarity higher than $x$ may be considered irrelevant.
+
+We found out that our semantic RAG approach works a little bit better when setting the threshold based on the cosine-similarity of the most relevant sentence. This experiment can be found in the RAG evaluation section. (TODO: provide reference to the RAG evaluation section)
+
+
+\subsection{Missing context}
+
+Our segmentation into sentences can fail when for example some sentence contains pronoun referencing anything from a different sentence. For example consider this domain description: ``The book contains a lot of pages. It is very heavy.'' and input class named ``book''. Now when considering only the second sentence it doesn't contain any syntactic information about the book therefore it most probably would be discarded by any syntactic or semantic comparison algorithm even thought for example the attribute ``weight of the book'' could be derived from it.
+
+One possible solution is to use some language model that can accurately solve the co-reference resolution task where each pronoun is replace with the corresponding words that are referenced. This way the previous example would look like this: ``The book contains a lot of pages. The book is very heavy.''
+
+However, we did not find any working model with a high accuracy for a various domain descriptions so instead, we implemented a simple naive solution where each sentence has it's own metadata. If a sentence starts with a pronoun we insert in this metadata a reference into the previous sentence. This means that when some algorithm is testing relevancy of the sentence ``It is very heavy''. In reality it is testing relevancy of this sentence and also the previous sentence ``The book contains a lot of pages.''
+
+Similar issue can happen when a text contains some bullet point, such as:
+
+\begin{center}
+``The book contains: \\
+- info about it's author \\
+- date of publication'' \\
+\end{center}
+
+TODO: Najít nějaký hezký styl, který budu konzistentně používat pro examply. \\
+
+TODO: Jak ty bullet pointy hezky zarovnat? \\
+
+In this case each of the bullet points gets into it's metadata reference to the sentence before the first bullet points which in this case is ``The book contains:''.
+
+However, other issues can appear such as unexpressed subject. In these cases the user can either manually edit his domain description or he can disable the domain description filtering in our application.

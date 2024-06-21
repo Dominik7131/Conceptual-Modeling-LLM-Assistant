@@ -1,0 +1,139 @@
+\chapter{Prompts}
+
+TODO: Description of what we will discuss in this chapter.
+
+\section{General rules}
+As we use already existing LLMs we design our prompts in a way that resembles their training data as most as possible. Because usually most of the training data come from the internet we follow these rules:
+\begin{itemize}
+\item our prompts are only in English
+\item unstructured data are in plain text format
+\item structured data are in JSON format \
+\end{itemize}
+
+NOTE: Tady možná bych mohl napsat, že jako future work by se dal zkoumat vliv konkrétního strukturovaného formátu na kvalitu výstupu, tedy že dává smysl vyzkoušet i něco jiného než JSON \\~\\
+
+
+\section{General tips}
+There exists a lot of general tips for writing prompts independent on the chosen prompting technique. In our experience these tips helped mostly when working with less quality LLMs as the more quality LLMs are less sensitive to a slight differences in the prompt.
+
+When developing our prompts we took inspiration mostly from the Microsoft's prompt engineering guide\footnote{\url{https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions}} and from OpenAI's prompt engineering guide\footnote{\url{https://platform.openai.com/docs/guides/prompt-engineering}}. In our experience the most notable tips are:
+
+
+
+\subsection{Starting or ending with the most important instructions}
+LLMs place the greatest emphasis on the information at the start and at the end of the prompt. Therefore, defining the main task at the start of the prompt and then repeating it at the end can increase the output quality.
+
+
+\subsection{Adding clear consistent syntax}
+Adding clear and consistent syntax makes the prompt more human readable and also can improve the output quality.
+
+
+\subsection{Breaking the task down}
+LLMs usually perform better when they are given order in which to generate the output. Also the order of the steps matter as the LLM generates the next token both based on the prompt and based on it's previous output.
+
+
+%\subsubsection{Priming the output}
+%In our experience the LLMs are usually trained in a way to start their response by some preliminary description of the output. This can be reduced by for example putting ``Output:'' at the end of the prompt.
+
+TODO: Možná by se ty jednotlivé body hodilo jinak strukturovat, například mít jako název kapitoly prompts, aby potom ty subsekce byly 3.1.1, 3.1.2, atd.
+
+TODO: Možná něco o tom, že LLM typicky kladou velký důraz na system message, proto je dobré sem také uvést hlavní instrukci \\
+
+TODO: Projít si ty odkazy ve footnotech, jestli tam ještě nenajdu něco důležitého \\
+
+
+\section{Structure}
+
+As we saw the way the prompts are written greatly influences the quality of the LLM output thus our prompts are prepared in advance in form of a templates with placeholders that are later on replaced by the user's specific arguments. These templates have usually the following structure:
+
+\begin{enumerate}
+\item control instruction
+\item modeling procedure
+\item output specification
+\item example specification
+\item input specification \\
+\end{enumerate}
+
+TODO: každý item udělat jako referenci na příslušnou subsubsekci \\
+
+TODO: asi zmínit, že tato struktura se týká hlavně generování tříd, atributů, asociací
+
+
+\subsection{Control instruction}
+The control instruction defines the main task. It is put at the start of the prompt so the LLM puts the most emphasis on this instruction and also from the same reason this instruction is sometimes repeated. If we want the LLM to respond solely based on the given input then the prompts starts with the words ``solely based on the given$\ldots$''
+
+For example for generating attributes the control instruction can look like this:
+``Solely based on the given context generate all attributes for the class: "\{source\_class\}".'' Where the ``\{source\_class\}'' is the mentioned placeholder that is replaced later on.
+
+On the other hand, if want the LLM to extract the output only from it's trained parameters then for example the prompt for generating attributes can start with the words: ``Generate attributes for the class: "\{source\_class\}"''. \\
+
+TODO: Tady možná by stačilo říct, že tam nedáváme to solely based on the given context \\
+
+
+\subsection{Modeling procedure}
+The modeling procedure provides step by step plan on how the LLM should generate the output. This the place suitable for experimenting with various prompt techniques such as chain of thoughts. \\
+
+TODO: možná vysvětlit, že při generování návrhů, necháváme nejdřív vygenerovat original text (context) před vygenerování názvu návrhu. Ale toto možná dává smysl pouze pokud provedeme ruční měření kvality výstupů, protože nevím, jestli má smysl tady psát, že to tak dělá pouze, protože máme hypotézu, že je to lepší.
+
+
+\subsection{Output specification}
+Specifies output in JSON format so we can automatically parse the LLM output.
+
+
+\subsection{Example specification}
+Optionally, the prompt can contain examples of the input and corresponding output.
+
+
+\subsection{Context specification}
+Contains the input such as user's domain description or user's domain model. This is a place suitable for experimenting with various filtering algorithms for filtering the input to provide to the LLM only the necessary input that it needs for generating the wanted output to provide less opportunity for errors such as hallucination.
+
+
+\section{Specific techniques}
+
+There exists a lot of specific prompting techniques that can significantly improve the LLMs performance. Here we write about those that we experimented with.
+
+
+\subsection{Chain of thoughts}
+
+TODO: Zkusit najít nějakou definici, nebo aspoň vystihující popis. \\
+
+TODO: Možná trochu více rozepsat, co je to CoT: "CoT prompting can be categorized into two major paradigms. One adds a single prompt like “Let’s think step by step”
+ after the test question to facilitate the reasoning chains in LLMs" (zdroj: Automatic CoT prompting in LLMs) \\
+
+TODO: Asi nejlepší bude uvést typický obrázek slovní úlohy, kde když LLM pouze generuje odpověď, tak dojde ke špatnému výsledku oproti variantě s cot. \\
+
+TODO: potom můžu provést úvahu, jakým způsobem by se cot dalo aplikovat pro generování tříd, atribut, asociací \\
+
+We came up with a simple CoT technique where the LLM is instructed to generate the  suggestion in JSON object step by step. This means that the LLM first generates single fields of this object and then it puts all those fields together into a one object. (TODO: Example) \\
+
+This simple CoT technique improved output quality in terms of generating attributes and associations however, it decreased output quality when generating classes. \\
+
+TODO: Možná vyjmenovat nějaké další možné přístupy, jako například automatic CoT, tu self-consistency CoT atd. \\
+
+
+\subsection{Tree of thoughts}
+
+TODO: Asi nějak navázat na to cot, ale že místo jedné myšlenky rozvíjíme více myšlenek najednou, což lze buď udělat v rámci jednoho promptu, nebo iterativně (ale to samé platí u CoT, takže možná to zmínit tam)
+
+
+\subsection{N-shot prompting}
+
+TODO: Nějaký basic popis. \\
+
+Main advantages of this techniques are:
+
+\begin{enumerate}
+\item output quality improvement as LLM better understands the given task
+\item more detailed specification of the output format
+\item possible improvement of user experience for faster response time
+\end{enumerate}
+
+(1) output quality improvement as LLM better understands the given task. Especially when using lower quality LLM it can improve understanding of the given task by learning from the provided examples.
+
+(2) more detailed specification of the output format provides for example the opportunity to define in what naming conventions the output fields should be. For example if the LLM generates class names without examples some of the names can be in snake case and some other in camel case. When providing examples with a consistent naming style the LLM then adopts this style. This also helps to for example define how the names should start with. For example without providing any example attribute names can sometimes start with ``has'' but with providing specific examples we can make the LLM to use only nouns for attribute names. \\
+
+TODO: Zkusit lépe a jednodušeji strukturovat, možná je zbytečné rozepisovat dva příklady a zvládnu to dát do jednoho. \\
+
+(3) in combination with some other prompting technique such as chain of thoughts the examples help us to specify in what order the final JSON objects should be outputted. For example with the specific examples we can instruct the LLM to output the JSON object one by one and not as a whole at the end so we can show the output faster to the user.
+
+Further, it can be experimented with how many examples we insert into the prompt. Not enough examples can lead to LLM not understanding details of our task. However, too much examples can lead to over-training the LLM and leaking the inserted examples into the output or if we work with some smaller context window size the examples could fill in the available prompt length.
