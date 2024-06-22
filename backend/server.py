@@ -116,8 +116,7 @@ def save_suggested_item():
     is_positive = body_data["isPositive"]
     text_filtering_variation = body_data["textFilteringVariation"]
 
-    completed_item = {"domain_description": domain_description,
-                      "item": item, "is_positive": is_positive}
+    completed_item = {"domain_description": domain_description, "item": item, "is_positive": is_positive}
 
     is_domain_description = domain_description != ""
     is_chain_of_thoughts = user_choice in (UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value)
@@ -147,8 +146,8 @@ def save_suggested_single_field():
     is_positive = body_data["isPositive"]
     text_filtering_variation = body_data["textFilteringVariation"]
 
-    completed_item = {"domain_description": domain_description,
-                      "field_name": field_name, "field_text": field_text, "is_positive": is_positive}
+    completed_item = {"domain_description": domain_description, "field_name": field_name,
+                      "field_text": field_text, "is_positive": is_positive}
 
     is_domain_description = domain_description != ""
     prompt = prompt_manager.get_prompt(
@@ -188,7 +187,7 @@ def save_suggested_summary():
 
 @app.route('/')
 def index():
-    
+
     return "<p>LLM assistant server</p>"
 
 
@@ -197,8 +196,7 @@ def main():
     global llm_assistant, prompt_manager
 
     parser = argparse.ArgumentParser(description="Start LLM assistant server")
-    parser.add_argument("--port", type=int, default=DEFAULT_PORT,
-                        help="Port to run the server on")
+    parser.add_argument("--port", type=int, default=DEFAULT_PORT, help="Port to run the server on")
 
     if not os.path.exists(STORAGE_DIRECTORY):
         os.makedirs(STORAGE_DIRECTORY)
