@@ -1,52 +1,66 @@
-\chapter{Related work and possible approaches}
+\chapter{Related work}
+
+TODO: Podobně jako v článku zmínit hlavní rozdělení výzkumu na rule-based a machine learning metody: \\
+
+"The difficulty of domain modeling has long been a well-known problem that has been the focus of many authors [7]. We can observe two research directions, one exploring the methodological possibilities of allowing domain experts to create domain models without requiring modeling expertise [7,22,13], the other focusing on domain modeling automation [4,24,17,9]."
+
+TODO: Brief chapter description \\
 
 
-TODO: take inspiration from:
-\begin{itemize}
-\item related work from our article
-\item related work from "Navigating Ontology Development with LLMs"
-\item related work from "Automated Domain Modeling with Large Language Models: A Comparative Study"
-\item related work from "On the assessment of generative AI in modeling tasks an experience report with ChatGPT and UML" \\~\\
-\end{itemize}
+\section{Recent approaches using LLMs}
 
-Outline:
-\begin{itemize}
-\item make subsection for each main approach to automatically or semi automatically creating conceptual models (TODO: mainly focus on the approaches that use the LLM)
-\begin{itemize}
-\item this will probably include the subsection "rule-based" and something like "machine learning"
-\end{itemize}
-\end{itemize}
-
-\subsection*{Approaches using LLM}
+TODO: Možná zmínit, že jsou typicky tyto hlavní přístupy:
 \begin{itemize}
 \item generate completed conceptual model: fully automated from domain description as input without user interaction create a conceptual model (Automated Domain Modeling with Large Language Models: A Comparative Study)
 \item generate parts of conceptual model: user directly asks some LLM to generate a conceptual model and then the writes following prompts to improve the generated conceptual model (On the assessment of generative AI in modeling tasks an experience report with ChatGPT and UML)
+\item start from a smaller conceptual model and iteratively build it \\
+\end{itemize}
+
+The following section presents examples of research papers that investigate the generation of conceptual models from provided domain descriptions.
+
+``On the assessment of generative AI in modeling tasks: an experience report with ChatGPT and UML'' \cite{Camara2023} experiments with ChatGPT-3.5 to generate domain models in PlantUML format. Their experiments show that generating domain models with more than 8--10 classes leads to unusable conceptual models. However, they found out that it works better to start from a smaller conceptual model and than build it step by step.
+
+``Conceptual Modeling and Large Language Models: Impressions From First Experiments With ChatGPT'' \cite{Fill2023} and ``Conceptual Model Interpreter for Large Language Models'' \cite{Haerer2023} further explore abilities of ChatGPT-4 in generating conceptual models. They experiment with different output formats. The previous study conclude that the LLMs show enormous potential for modelling tasks and the later task concludes that their results show that iterative modeling in a conversational dialogue could be practical, however, further systematic evaluations need to be conducted.
+
+``LLMs4OL: Large Language Models for Ontology Learning'' \cite{BabaeiGiglou2023} experiments with different types of LLMs and concludes that ChatGPT-4 usually provides the the best output quality.
+
+``Automated Domain Modeling with Large Language Models: A Comparative Study'' \cite{Chen2023} experiments with 0-shot prompting, N-shot prompting and chain of thoughts with ChatGPT-3.5 and ChatGPT-4. They conclude that fully domain modeling still remains impractical.
+
+``Navigating Ontology Development with Large Language Models'' \cite{Saeedizade2024} additionally try many different iterative prompting methods to generate the resulting domain model step by step in the turtle format. Their experiments reveal that using one of their prompting technique with GPT-4 outperforms the average quality of the initial submission of novice ontology engineering students. \\
+
+
+NOTE: Některé věci pak tady můžu více rozepsat na základě toho, co pak budu říkat v kapitole o promptech, abych odůvodnil, proč například používámě nějakou promptovací techniku \\
+
+TODO: Měl bych tu zdůvodnit náš přístup? Tedy že používáme asistenta, který pomáhá uživateli vytvářet konceptuální model postupně? \\
+
+
+\section{LLM as an assistant}
+TODO: Tady plánuji zmínit Copilota, Grammarly a možná ještě něco dalšího. Odůvodním některá naše designová rozhodnutí na základě toho, co mají tyto nástroje společného:
+
+\begin{itemize}
+\item LLM generuje pouze návrhy, které nejprve uživatel musí přijmout
+\item vygenerovaný návrh by ideálně měl být v takovém formátu, aby se uživatel dokázal co nejrychleji rozhodnout \\
 \end{itemize}
 
 
-\section*{Approaches to creating LLM assistant}
 
-\subsection*{Training own LLM}
+\section{Approaches to using own LLM}
+
+\subsection{Training own LLM}
 - cons: requires a ton of resources: money, time, data
 
 
-\subsection*{Fine-tuning existing LLM}
+\subsection{Fine-tuning existing LLM}
 - cons: requires a lot of data
 
 
-\subsection*{Prompt engineering of existing LLM}
+\subsection{Prompt engineering of existing LLM}
 - pros: doesn't require that much resources
 
 
-\section*{Selected approach}
+\section{Selected approach}
 
-- definition of our problems (entities, attributes and relationships extraction) \\
-- (when extracting entities first LLM needs to locate the entity in the text) \\
-
-\section*{How to achieve better results with using an existing LLM}
-- RAG (provide LLM only the part of domain description that contains the wanted info) \\
-- advanced prompt engineering techniques (CoT, ToT, few-shot prompting) \\
+TODO: Tady bych mohl definovat generování tříd, atributů, asociací jako to je v našem článku
 
 
-
---- Výsledkem této kapitole bude odůvodnění našeho přístupu ---
+--- Ideálně by výsledkem této kapitoly bylo odůvodnění našeho přístupu, abychom se pak už následně jenom mohli věnovat tomu, co jsme udělali ---
