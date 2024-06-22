@@ -3,33 +3,31 @@
 
 
 \section*{Motivation}
-When a team is working on any project, it is beneficial to unify the language and define the terms 
-that everyone will use. This is addressed by creating conceptual models. In a nutshell, conceptual 
-models capture classes, their attributes and associations. However, creating these conceptual 
-models takes a non-trivial amount of time and requires trained experts (TODO: cite source 18 from our article?). \\
+When a team is working on any project, it is beneficial to unify the language and define the terms that everyone will use. This is addressed by creating conceptual models. In a nutshell, conceptual models capture classes, their attributes and associations. However, creating these conceptual models takes a non-trivial amount of time and requires trained experts.
 
-Recently, there has been a lot of progress in the development of Large Language Models (LLMs) such 
-as ChatGPT (TODO: Cite ChatGPT and maybe cite source [5] from Automated Domain Modeling with LLMs A Comparative Study). We hypothesize that these LLMs could be used in such a way as to make it easier for 
-users to create conceptual models. We know that current LLMs are not smart enough to directly 
-create the conceptual model one expects for a given textual description (TODO: cite). However, one possible solution is to use an LLM as an assistant, which we see around us a lot today (e.g. Copilot) (TODO: cite Copilot). \\
+Recently, there has been a lot of progress in the development of Large Language Models (LLMs) \cite{Zhao2023} such as ChatGPT\footnote{\url{https://chatgpt.com/}}. We hypothesize that these LLMs could be used in such a way as to make it easier for users to create conceptual models. Current LLMs are not smart enough to directly create the conceptual model one expects for a given textual description \cite{Chen2023}. However, one possible solution is to use some LLM as an assistant, which we see around us a lot today (e.g. Copilot\footnote{\url{https://github.com/features/copilot}}). \\
+
+
+TODO: Možná před těmi cíli by se hodilo ještě trochu více uvést náš přístup, protože v motivaci říkáme, že chceme používat LLM jako asistenta a v cílech hned bez žádné úvahy říkáme, co ten asistent bude dostávat za vstup a jaký bude jeho výstup. \\
 
 
 
 \section*{Goals}
-Aim of this thesis is to create this aforementioned LLM assistant that cooperates with a human modeling expert. The expert provides unstructured domain description as input into the domain modeling process.
-This assistant is mainly intended to help users to make conceptual models faster and also to help the users to better describe their newly created conceptual models. This assistant should be:
+Aim of this thesis is to create this aforementioned LLM assistant that cooperates with a human modeling expert. The expert provides unstructured domain description as input into the domain modeling process. The assistant based on the given input suggests classes, their attributes and their binary associations.
+
+This assistant is mainly intended to help the users to make conceptual models faster and also to better describe their newly created conceptual models. This assistant should be:
 \begin{enumerate}
 \item intuitive to use
 \item suggesting mostly appropriate classes, attributes and associations
 \item suggesting mostly appropriate descriptions of classes, attributes and associations
 \item able to summarize a selected part of user's conceptual model
-\item able to highlight in the domain description what the user has already modeled \\
+\item able to highlight in the domain description the parts that the user already modeled
 \end{enumerate}
-
-TODO: Měl bych více rozvést to, že navrhujeme asociace pro jednu zadanou třídu, nebo pro dvě zadané třídy? \\
 
 
 \section*{Publication}
-We created an article summarizing our main findings and submitted it into the International Conference on Conceptual Modeling ER 2024. (TODO: reference (https://insights.sei.cmu.edu/news/international-conference-on-conceptual-modeling-er-2024-opens-call-for-papers/)?)
+We summarized our main finding into a research paper, which we subsequently submitted to the International Conference on Conceptual Modeling ER 2024\footnote{\url{https://resources.sei.cmu.edu/news-events/events/er2024/index.cfm}}.
+
 
 \section*{Outline}
+TODO: Brief description of the thesis chapters

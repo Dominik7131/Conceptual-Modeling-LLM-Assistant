@@ -33,7 +33,7 @@ In result, we consider each sentence of the domain description as a one chunk si
 
 \subsection{Texts comparison}
 
-Typically, as the first step in RAG the chunks are embedded into a vector database by usually some Bidirectional Encoder Representations from Transformers (BERT) based language model specifically trained for semantic comparison of texts. And in the next step the user's instruction is embedded into the vector space with the same language model. Then the language model computes the distance between the embedded instruction and each of the chunks and the closest $k$ chunks are retrieved.
+Typically, as the first step in RAG the chunks are embedded into a vector database by usually some small-scale language model typically based on Bidirectional Encoder Representations from Transformers (BERT). And in the next step the user's instruction is embedded into the vector space with the same language model. Then the language model computes the distance between the embedded instruction and each of the chunks and the closest $k$ chunks are retrieved.
 
 There are many language models that can be used for text embedding into a vector space. They mainly differ in their input format such as length of the input and whether the given query should be in form of a question or not. Also other methods can be used such as using the LLM to output the $k$ closest chunks. We use semantic and syntactic approach. We do not use some LLM for the text comparison as it usually takes many seconds to generate the output especially when in the worst case scenario the output can be very long when a large portion of the domain description has to be copied to the output.
 
