@@ -31,41 +31,17 @@ NOTE: Některé věci pak tady můžu více rozepsat na základě toho, co pak b
 \section{Using LLM as an assistant}
 \label{section:llm_as_an_assistant}
 
-Applications that use LLM as an assistant such as GitHub Copilot, Microsoft Office Copilot, Grammarly, Notion AI, etc. has the following things in common.
+Applications that use LLM as an assistant such as GitHub Copilot\footnote{\url{https://github.com/features/copilot}}, Microsoft Office Copilot\footnote{\url{https://www.microsoft.com/en-us/microsoft-copilot}}, Grammarly\footnote{\url{https://app.grammarly.com/}} and Notion AI\footnote{\url{https://www.notion.so/product/ai}}, have the following features in common.
 
-First, the LLM provides only suggestions that the user can accept, reject, or in some cases regenerate a new suggestion. The reason is that the LLMs still make a lot of mistakes and directly applying their output can lead to a lot of mistakes that can overtime accumulate into even bigger mistakes.
+First, the LLM provides only suggestions that the user can accept, reject, or in some cases regenerate a new suggestion. The reason is that the LLMs still make a lot of mistakes so direct application of their output is not wanted. Furthermore, these mistakes can accumulate over time and create even worse output.
 
-Second, the suggestions are usually in a form where the user can quickly decide if he wants to use it. For example, in Grammarly each mistake is underlined and a reason is provided. In GitHub Copilot it is usually an easy task to decide if suggested comment or code or etc. is relevant.
-
-
-\section{Our approach}
-
-TODO: Na základě zmíněných related worků zdůvodním naše designová rozhodnutí, tedy:
-\begin{itemize}
-\item nechceme generovat kompletní konceptuální modely, protože to LLM ještě neumí
-\item mohl bych tu definovat problém generování tříd, atributů, asociací jako to je v našem článku
-\item protože se LLM kdykoliv můžou splést, tak nechceme, aby LLM iterativně přímo vylepšoval nějaký existující konceptuální model, ale místo toho budeme pouze generovat návrhy, které jsou na uživateli, jestli je využije a nebo ne.
-\item tady bych asi rovnou mohl zmínit, že z těch studií vyplývá, že pro začátek je lepší použít nějaký předtrénovaný LLM, než si trénovat vlastní buď úplně from scratch a nebo fine-tunovat, hlavně protože na to ani nemáme data \\
-\end{itemize}
-
-TODO: Na základě zmíněných použití asistenta zdůvodním, že:
-\begin{itemize}
-\item chceme uživatelům zjednodušit rozhodování u každého návrhu, jestli ho použijí, nebo ne, proto budeme chtít generovat i "original text" k návrhům ve formě přesných citací z popisu domény, abychom je pak rovnou mohli uživatelům ukázat \\
-\end{itemize}
+Second, the suggestions are usually in a form such that the user can quickly decide if he wants to use them. For example, in Grammarly each mistake is underlined and a reason is provided. In GitHub Copilot it is usually a simple task to decide if suggested comment or code is relevant and so on.
 
 
-\section{Approaches to using own LLM}
+\chapter{Approach}
 
-\subsection{Training own LLM}
-- cons: requires a ton of resources: money, time, data
+As mentioned in the previous section, automatic generation of complete conceptual model with a LLM is yet not reliable thus we use the LLM as an assistant that co-operates with a human modeling expert based on a given domain description. This assistant always generates output in form of suggestions as the LLM can any time make some mistake. We divided the domain modeling tasks into problem of generating classes, attributes and associations, therefore the assistant is able to suggest classes, their attributes and their associations either based on one provided class or based on two provided classes.
 
+To help the user decide if he wants to apply generated suggestions of attributes and associations we highlight each generated class, attribute and association in the given domain description. This is done by letting the LLM generate exact citation from the domain description which is then automatically highlighted in the given domain description. \\
 
-\subsection{Fine-tuning existing LLM}
-- cons: requires a lot of data
-
-
-\subsection{Prompt engineering of existing LLM}
-- pros: doesn't require that much resources \\
-
-
---- NOTE: Ideálně by výsledkem této kapitoly bylo odůvodnění našeho přístupu, abychom se pak už následně jenom mohli věnovat tomu, co jsme udělali ---
+TODO: Toto by se nejspíš hodilo zakomponovat do nějaké jiné kapitoly.
