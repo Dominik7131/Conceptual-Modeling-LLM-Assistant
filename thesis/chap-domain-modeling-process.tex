@@ -1,0 +1,16 @@
+\chapter{Domain modeling process}
+
+In this paper, we consider a domain modeling process stating with a domain description $T$ acquired from stakeholders and knowledge sources such as internal documentation, manuals, or state law. $T$ can be a well-curated text, but may also encompass varied interpretations articulated by different stakeholders at various levels of detail. A modeling expert translates $T$ into a domain model $M$ in a sequence of steps.
+
+A domain model $M = (\mathcal{C}, \mathcal{P})$ consists of a set of classes $\mathcal{C}$ and properties $\mathcal{P}$. A class $\mathcal{C} \in C$ has its $name(C)$ which identifies $C$ in $M$ and briefly characterizes the semantics of $C$. A Property $P \in \mathcal{P}$ has also $name(P)$ used for the same purposes. It has a source class, such that $source(P) \in \mathcal{C}$ and it can have a target class such that $target(P) \in \mathcal{C}$. $P$ is a binary association if $target(P)$ is defined otherwise, $P$ is an attribute. These basic modeling constructs are prevalent in real conceptual models \cite{Keet2015}, so their automation could have a significant impact. We distinguish the following steps:
+
+
+\section{Design a class}
+For a concept in $T$, create a class $C$ with a designated $name(C)$.
+
+\section{Design an attribute for a class}
+For a class $C$ and a concept in $T$ that characterizes $C$, create an attribute $P$, where $C = source(P)$, and define its $name(P)$.
+
+
+\section{Design an association for a class}
+For a class $C$ and a concept in $T$ that describes a relationship of $C$ with another concept, create an association $P$ such that $C = source(P)$ or $C = target(P)$, and define its $name(P)$. If not yet represented, create a class $D$ for the other concept and specify its $name(D)$.
