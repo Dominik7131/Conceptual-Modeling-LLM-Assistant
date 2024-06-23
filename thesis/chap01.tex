@@ -1,47 +1,57 @@
 \chapter{Related work}
 
-TODO: Podobně jako v článku zmínit hlavní rozdělení výzkumu na rule-based a machine learning metody: \\
+Automated domain modeling encompasses two primary research directions: rule-based methods and statistical methods.
 
-"The difficulty of domain modeling has long been a well-known problem that has been the focus of many authors [7]. We can observe two research directions, one exploring the methodological possibilities of allowing domain experts to create domain models without requiring modeling expertise [7,22,13], the other focusing on domain modeling automation [4,24,17,9]."
+Rule-based methods usually contain hand-written rules and heuristics to automatically identify model elements in a given domain description. For example, \citet{Raharjana2021} and \citet{Sonbol2022} provide recent field surveys for further details.
 
-TODO: Brief chapter description \\
+Statistical methods typically use machine learning techniques to based on a given domain description to either generate the complete domain model \cite{Chen2023,Saeedizade2024} or to start from some smaller conceptual model and based on the user's instructions to iteratively generate a completed conceptual model \cite{Camara2023} or to suggest only specific components that the user can build his conceptual model with.
+
+In the section \ref{section:ref_recent_approaches_using_llms} we dive deeper into recent approaches to automated domain modeling with LLMs and then in the section \ref{section:llm_as_an_assistant} we examine approaches that use LLMs as an assistant. \\
+
+NOTE: Zde můžu něco více rozvést především podle sekce "Related work" v našem článku
 
 
 \section{Recent approaches using LLMs}
+\label{section:ref_recent_approaches_using_llms}
 
-TODO: Možná zmínit, že jsou typicky tyto hlavní přístupy:
-\begin{itemize}
-\item generate completed conceptual model: fully automated from domain description as input without user interaction create a conceptual model (Automated Domain Modeling with Large Language Models: A Comparative Study)
-\item generate parts of conceptual model: user directly asks some LLM to generate a conceptual model and then the writes following prompts to improve the generated conceptual model (On the assessment of generative AI in modeling tasks an experience report with ChatGPT and UML)
-\item start from a smaller conceptual model and iteratively build it \\
-\end{itemize}
+\citet{Camara2023} experiment with ChatGPT-3.5 to generate domain models in PlantUML format. Their experiments demonstrate that generating complete conceptual models comprising more than 8 to 10 classes results into unusable conceptual models. However, they show that it works better to start from a smaller conceptual model and then iteratively enhance it based on user's instructions.
 
-The following section presents examples of research papers that investigate the generation of conceptual models from provided domain descriptions.
+\citet{Fill2023} and \citet{Haerer2023} additionally explore abilities of ChatGPT-4 in generating conceptual models and they experiment with different output formats. \citet{Fill2023} conclude that the LLMs show enormous potential for modeling tasks and the \citet{Haerer2023} concludes that their results show that iterative modeling in a conversational dialogue could be practical, however, further systematic evaluations need to be conducted.
 
-``On the assessment of generative AI in modeling tasks: an experience report with ChatGPT and UML'' \cite{Camara2023} experiments with ChatGPT-3.5 to generate domain models in PlantUML format. Their experiments show that generating domain models with more than 8--10 classes leads to unusable conceptual models. However, they found out that it works better to start from a smaller conceptual model and than build it step by step.
+\citet{BabaeiGiglou2023} experiment with different types of LLMs and concludes that ChatGPT-4 usually provides the best output quality for conceptual modeling tasks.
 
-``Conceptual Modeling and Large Language Models: Impressions From First Experiments With ChatGPT'' \cite{Fill2023} and ``Conceptual Model Interpreter for Large Language Models'' \cite{Haerer2023} further explore abilities of ChatGPT-4 in generating conceptual models. They experiment with different output formats. The previous study conclude that the LLMs show enormous potential for modelling tasks and the later task concludes that their results show that iterative modeling in a conversational dialogue could be practical, however, further systematic evaluations need to be conducted.
+\citet{Chen2023} evaluate generating classes, attributes and associations with 0-shot prompting, N-shot prompting and chain of thoughts with ChatGPT-3.5 and ChatGPT-4. They conclude that the combination of N-shot prompting with ChatGPT-4 achieved the best results however, they also add that fully domain modeling still remains impractical.
 
-``LLMs4OL: Large Language Models for Ontology Learning'' \cite{BabaeiGiglou2023} experiments with different types of LLMs and concludes that ChatGPT-4 usually provides the the best output quality.
-
-``Automated Domain Modeling with Large Language Models: A Comparative Study'' \cite{Chen2023} experiments with 0-shot prompting, N-shot prompting and chain of thoughts with ChatGPT-3.5 and ChatGPT-4. They conclude that fully domain modeling still remains impractical.
-
-``Navigating Ontology Development with Large Language Models'' \cite{Saeedizade2024} additionally try many different iterative prompting methods to generate the resulting domain model step by step in the turtle format. Their experiments reveal that using one of their prompting technique with GPT-4 outperforms the average quality of the initial submission of novice ontology engineering students. \\
+\citet{Saeedizade2024} try many different step by step prompting methods to iteratively generate complete conceptual model. Their experiments reveal that using their prompting technique `` Competency Question by Competency Question'' with GPT-4 outperforms the average quality of the initial submission of novice ontology engineering students. \\
 
 
 NOTE: Některé věci pak tady můžu více rozepsat na základě toho, co pak budu říkat v kapitole o promptech, abych odůvodnil, proč například používámě nějakou promptovací techniku \\
 
-TODO: Měl bych tu zdůvodnit náš přístup? Tedy že používáme asistenta, který pomáhá uživateli vytvářet konceptuální model postupně? \\
+
+\section{Using LLM as an assistant}
+\label{section:llm_as_an_assistant}
+
+Applications that use LLM as an assistant such as GitHub Copilot, Microsoft Office Copilot, Grammarly, Notion AI, etc. has the following things in common.
+
+First, the LLM provides only suggestions that the user can accept, reject, or in some cases regenerate a new suggestion. The reason is that the LLMs still make a lot of mistakes and directly applying their output can lead to a lot of mistakes that can overtime accumulate into even bigger mistakes.
+
+Second, the suggestions are usually in a form where the user can quickly decide if he wants to use it. For example, in Grammarly each mistake is underlined and a reason is provided. In GitHub Copilot it is usually an easy task to decide if suggested comment or code or etc. is relevant.
 
 
-\section{LLM as an assistant}
-TODO: Tady plánuji zmínit Copilota, Grammarly a možná ještě něco dalšího. Odůvodním některá naše designová rozhodnutí na základě toho, co mají tyto nástroje společného:
+\section{Our approach}
 
+TODO: Na základě zmíněných related worků zdůvodním naše designová rozhodnutí, tedy:
 \begin{itemize}
-\item LLM generuje pouze návrhy, které nejprve uživatel musí přijmout
-\item vygenerovaný návrh by ideálně měl být v takovém formátu, aby se uživatel dokázal co nejrychleji rozhodnout \\
+\item nechceme generovat kompletní konceptuální modely, protože to LLM ještě neumí
+\item mohl bych tu definovat problém generování tříd, atributů, asociací jako to je v našem článku
+\item protože se LLM kdykoliv můžou splést, tak nechceme, aby LLM iterativně přímo vylepšoval nějaký existující konceptuální model, ale místo toho budeme pouze generovat návrhy, které jsou na uživateli, jestli je využije a nebo ne.
+\item tady bych asi rovnou mohl zmínit, že z těch studií vyplývá, že pro začátek je lepší použít nějaký předtrénovaný LLM, než si trénovat vlastní buď úplně from scratch a nebo fine-tunovat, hlavně protože na to ani nemáme data \\
 \end{itemize}
 
+TODO: Na základě zmíněných použití asistenta zdůvodním, že:
+\begin{itemize}
+\item chceme uživatelům zjednodušit rozhodování u každého návrhu, jestli ho použijí, nebo ne, proto budeme chtít generovat i "original text" k návrhům ve formě přesných citací z popisu domény, abychom je pak rovnou mohli uživatelům ukázat \\
+\end{itemize}
 
 
 \section{Approaches to using own LLM}
@@ -55,12 +65,7 @@ TODO: Tady plánuji zmínit Copilota, Grammarly a možná ještě něco dalšíh
 
 
 \subsection{Prompt engineering of existing LLM}
-- pros: doesn't require that much resources
+- pros: doesn't require that much resources \\
 
 
-\section{Selected approach}
-
-TODO: Tady bych mohl definovat generování tříd, atributů, asociací jako to je v našem článku
-
-
---- Ideálně by výsledkem této kapitoly bylo odůvodnění našeho přístupu, abychom se pak už následně jenom mohli věnovat tomu, co jsme udělali ---
+--- NOTE: Ideálně by výsledkem této kapitoly bylo odůvodnění našeho přístupu, abychom se pak už následně jenom mohli věnovat tomu, co jsme udělali ---
