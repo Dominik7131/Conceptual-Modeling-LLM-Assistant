@@ -75,9 +75,13 @@ TODO: možná zmínit problém se snahou vygenerovat pokaždé jiný výstup \\
 TODO: zmínit hlavní věci, které se dějí při parsování výstupu + odkázat se na to, že odstraňování duplicitních elementů jsme již pokryli v předchozí subsekci \\
 
 
-\section{User's reactions saving}
+\section{Saving user data}
 
-TODO: Proč to děláme a přibližně jak to funguje \\
+For each generated suggestion the user can optionally click on the like button or the dislike dislike button. The corresponding evaluated suggestion is sent to the backend and saved there with all the parameters that were used to generate this suggestion. To remember these parameters, the frontend remembers for each suggestion the parameters that were used for generation.
+
+We use these user's reactions for two main reasons. First reason is that we can use these data as a feedback. For example, we can automatically detect if some set of parameters repeatedly ended up with too many negative reactions. After that we can analyse the issue and fix it. Second reason is that we can use these data to fine-tuning some LLM to further improve the quality for our specific tasks.
+
+The downside of our approach is that it does not collect many user data. One possible solution is to save each user action such as saving each suggestion that the user added into his domain model. However, this approach has a lot of disadvantages due to it's complexity. For example, if the user adds some suggestion and then later on removes it we need to save this removal action too as it can mean that the original suggestion turned out to be unwanted. This means that the saved data would need to be post-processed to remove these pairs of data. Similar issue arise when user adds some suggestion but then later on edits it. Because of this complexity we decided to use the explicit reactions buttons.
 
 
 \section{Work-flow}
