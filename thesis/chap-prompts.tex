@@ -46,27 +46,19 @@ TODO: Projít si ty odkazy ve footnotech, jestli tam ještě nenajdu něco důle
 
 \section{Structure}
 
-As we saw the way the prompts are written greatly influences the quality of the LLM output thus our prompts are prepared in advance in form of a templates with placeholders that are later on replaced by the user's specific arguments. These templates have usually the following structure:
+As we saw the way the prompts are written greatly influences the quality of the LLM output thus our prompts are prepared in advance in form of a templates with placeholders that are later on replaced by the user's specific arguments. These templates have usually the following structure: (1) control instruction, (2) modeling procedure, (3) output specification, (4) example specification, (5) input specification. \\
 
-\begin{enumerate}
-\item control instruction
-\item modeling procedure
-\item output specification
-\item example specification
-\item input specification \\
-\end{enumerate}
+TODO: zkusit každý item udělat jako referenci na příslušnou subsubsekci \\
 
 TODO: možná někam přidat poznámku, že prompty ve formě šablon mají tu výhodu, že se s nimi jednodušeji experimentuje, protože například pro přidání uživatelova konceptuálního modelu do promptu, stačí tam přidat příslušný placeholder \\
 
-TODO: každý item udělat jako referenci na příslušnou subsubsekci \\
-
 TODO: asi zmínit, že tato struktura se týká hlavně generování tříd, atributů, asociací \\
 
-TODO: potom přidat ukázky konkrétních promptů ve formě tabulek
+TODO: potom přidat ukázky konkrétních promptů podobně, jako to je v článku \\
 
 
 \subsection{Control instruction}
-The control instruction defines the main task. It is put at the start of the prompt so the LLM puts the most emphasis on this instruction and also from the same reason this instruction is sometimes repeated. If we want the LLM to respond solely based on the given input then the prompts starts with the words ``solely based on the given$\ldots$''
+The control instruction defines the main task. It is put at the start of the prompt so the LLM puts the most emphasis on this instruction and also from the same reason this instruction is sometimes repeated. If we want the LLM to respond solely based on the given input then the prompts starts with the words ``Solely based on the given$\ldots$''
 
 For example for generating attributes the control instruction can look like this:
 ``Solely based on the given context generate all attributes for the class: "\{source\_class\}".'' Where the ``\{source\_class\}'' is the mentioned placeholder that is replaced later on.

@@ -8,7 +8,7 @@ Statistical methods typically use machine learning techniques to based on a give
 
 In the section \ref{section:ref_recent_approaches_using_llms} we dive deeper into recent approaches to automated domain modeling with LLMs and then in the section \ref{section:llm_as_an_assistant} we examine approaches that use LLMs as an assistant. \\
 
-NOTE: Zde můžu něco více rozvést především podle sekce "Related work" v našem článku
+NOTE: Zde můžu něco více rozvést především podle našeho článku a jeho sekce "Related work"
 
 
 \section{Recent approaches using LLMs}
@@ -38,10 +38,8 @@ First, the LLM provides only suggestions that the user can accept, reject, or in
 Second, the suggestions are usually in a form such that the user can quickly decide if he wants to use them. For example, in Grammarly each mistake is underlined and a reason is provided. In GitHub Copilot it is usually a simple task to decide if suggested comment or code is relevant and so on.
 
 
-\chapter{Approach}
+\section{Approach}
 
 As mentioned in the previous section, automatic generation of complete conceptual model with a LLM is yet not reliable thus we use the LLM as an assistant that co-operates with a human modeling expert based on a given domain description. This assistant always generates output in form of suggestions as the LLM can any time make some mistake. We divided the domain modeling tasks into problem of generating classes, attributes and associations, therefore the assistant is able to suggest classes, their attributes and their associations either based on one provided class or based on two provided classes.
 
-To help the user decide if he wants to apply generated suggestions of attributes and associations we highlight each generated class, attribute and association in the given domain description. This is done by letting the LLM generate exact citation from the domain description which is then automatically highlighted in the given domain description. \\
-
-TODO: Toto by se nejspíš hodilo zakomponovat do nějaké jiné kapitoly.
+To help the user decide if he wants to apply generated suggestions of attributes and associations we highlight each generated class, attribute and association in the given domain description. This is done by letting the LLM generate exact citation from the domain description which is then automatically highlighted in the given domain description.
