@@ -21,10 +21,15 @@
         - návrh vztahů pro zadanou zdrojovou a cílovou entitu
 
     - poznámka: dále by bylo možné i navrhovat generalizace (možná to v rámci diplomky přidám)
-    - TODO: podrobněji popsat všechny jednotlivé úlohy a nejspíš uvést konkrétní příklady
+    - poznámka: nejspíš se bude hodit uvést konkrétní příklady ve formě obrázků
     - ke každému návrhu snaha ukázat kontext kolem něj, aby se uživatel mohl rychle rozhodnout, jestli chce příslušný návrh použít, nebo ne
         - například pokud je zadán popis domény, tak lze si každý návrh nechat zobrazit v popisu domény
         - to slouží k tomu, aby se s aplikací rychleji a lépe pracovalo
+    - návržené atributy lze změnit na asociace a obráceně
+        - TODO: vysvětlit, jakým způsobem se to dělá
+    - pokud příslušný návrh má uživatel již namodelovaný, tak ho nezobrazujeme
+        - děláme to pouze přímočarým přístupem, protože sémantický přístup má několik úskalí
+            - TODO: ukázat challenge sémantického přístupu
 
 
 <br />
@@ -331,26 +336,24 @@
 
 ## LLM asistent pipelina
 
-- TODO: tohle by se pro přehled hodilo někde na začátku, aby si čtenář hned udělal obrázek o tom, jak funguje naše aplikace
-    - možná by se hodilo strukturovat diplomku takovým způsobem, abychom postupně popisovali jednotlivé krabičky
-    - možná lze obrázek pipeliny ukázat už v úvodu diplomky a popsat na tom, čím se postupně v textu budeme zabývat
+- použijeme obrázek work-flow naší aplikace a popíšeme ho:
 
-Obrázek ze zadání výzkumného projektu:
+<img src="images/work-flow.jpg" alt="drawing" width="800"/>
 
-<img src="images/LLM-assistant-pipeline.jpg" alt="drawing" width="600"/>
-
-- chtělo by to:
-    - vyznačit, kde dělám filtrování popisu domény
-    - naznačit variantnost (semantic/syntactic, CoT/non-CoT)
-
-
-- TODO: lze se inspirovat architekturou z "Automated Domain Modeling with Large Language Models: A Comparative Study"
-
-<img src="images/architecture-simplified.png" alt="drawing" width="600"/>
+1. zadání popisu domény
+2. kliknutí na tlačítko pro generování návrhů elementů
+3. filtrování popisu domény
+4. promptovací techniky
+5. LLM
+6. výstup
 
 
 
-## Ostatní poznámky, které je pak potřeba někam umístit
+<br />
+
+## Ostatní poznámky
+
+- zatím nevím, kam tyto poznámky pasují nejlépe, takže je pak potřeba pro ně někde najít místo
 
 ### Extrakce výstupu z LLM
 - nefunguje moc dobře si nechat nejdřív vygenerovat celý výstup a ten pak naparsovat
