@@ -1,8 +1,5 @@
 \chapter{Prompts}
 
-A prompt in the context of LLMs refers to the input provided to the LLM. The prompt sets the context for the LLM, guiding it to produce a relevant and coherent output based on the given information.
-
-A prompting technique is a strategy used to structure or format the prompt to increase the quality of the output by aligning the prompt with the LLM's training and capabilities. \\
  
 TODO: Brief chapter description.
 
@@ -13,35 +10,6 @@ As we use already existing LLMs we try to design our prompts to resemble their t
 \item unstructured data are in plain text format
 \item structured data are in JSON format
 \end{itemize}
-
-
-\section{General tips}
-There exists a lot of general tips for writing prompts independent on the chosen prompting technique. In our experience these tips helped mostly when working with less quality LLMs as the more quality LLMs are less sensitive to a slight differences in the prompt.
-
-When developing our prompts we took inspiration mostly from the Microsoft's prompt engineering guide\footnote{\url{https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions}} and from OpenAI's prompt engineering guide\footnote{\url{https://platform.openai.com/docs/guides/prompt-engineering}}. In our experience the most notable tips are:
-
-
-
-\subsection{Starting or ending with the most important instructions}
-LLMs place the greatest emphasis on the information at the start and at the end of the prompt. Therefore, defining the main task at the start of the prompt and then repeating it at the end can increase the output quality.
-
-
-\subsection{Adding clear consistent syntax}
-Adding clear and consistent syntax makes the prompt more human readable and also can improve the output quality.
-
-
-\subsection{Breaking the task down}
-LLMs usually perform better when they are given order in which to generate the output. Also the order of the steps matter as the LLM generates the next token both based on the prompt and based on it's previous output.
-
-
-%\subsubsection{Priming the output}
-%In our experience the LLMs are usually trained in a way to start their response by some preliminary description of the output. This can be reduced by for example putting ``Output:'' at the end of the prompt.
-
-TODO: Možná by se ty jednotlivé body hodilo jinak strukturovat, například mít jako název kapitoly prompts, aby potom ty subsekce byly 3.1.1, 3.1.2, atd.
-
-TODO: Možná něco o tom, že LLM typicky kladou velký důraz na system message, proto je dobré sem také uvést hlavní instrukci \\
-
-TODO: Projít si ty odkazy ve footnotech, jestli tam ještě nenajdu něco důležitého \\
 
 
 \section{Structure}

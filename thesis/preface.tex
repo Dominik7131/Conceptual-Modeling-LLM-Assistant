@@ -3,31 +3,25 @@
 
 
 \section*{Motivation}
-When a team is working on any project, it is beneficial to unify the language and define the terms that everyone will use. This is addressed by creating conceptual models. In a nutshell, conceptual models capture classes, their attributes and associations. However, creating these conceptual models takes a non-trivial amount of time and requires trained experts.
+When a team is working on any project, it is beneficial to unify the language and define the terms that everyone will use. This is addressed by creating domain models. In a nutshell, domain models capture classes, their attributes and associations. However, creating these domain models takes a non-trivial amount of time and requires trained experts.
 
-Recently, there has been a lot of progress in the development of Large Language Models (LLMs) \cite{Zhao2023} such as ChatGPT\footnote{\url{https://chatgpt.com/}}. We hypothesize that these LLMs could be used in such a way as to make it easier for users to create conceptual models. Current LLMs are not smart enough to directly create the conceptual model one expects for a given domain description \cite{Chen2023}. However, one possible solution is to use some LLM as an assistant, which we see around us a lot today (e.g. GitHub Copilot\footnote{\url{https://github.com/features/copilot}}). \\
+Recently, there has been a lot of progress in the development of Large Language Models (LLMs) \cite{Zhao2023} such as ChatGPT\footnote{\url{https://chatgpt.com/}}. We hypothesize that these LLMs could be used in such a way as to make it easier for users to create domain models. Current LLMs are not smart enough to directly create the domain model one expects for a given domain description \cite{Chen2023}. However, one possible solution is to use some LLM as an assistant, which we see around us a lot today (e.g. GitHub Copilot\footnote{\url{https://github.com/features/copilot}}).
 
-
-TODO: Možná před sekcí "Goals" by se hodilo ještě trochu více zdůvodnit některá naše rozhodnutí, protože v motivaci pouze říkáme, že chceme používat LLM jako asistenta, ale v cílech hned přesně říkáme, co ten asistent bude umět. Zase ale na druhou stranu tato kaptiola je pouze úvodní, takže asi čtenářovi dojde, že více detailů se dozví v dalších kapitolách. \\
-
+%NOTE: We could put the section "Goals" a little bit later. However, we are basically only saying there that the LLM assistant generates some suggestions so there is probably no need for some additional context.
 
 
 \section*{Goals}
-Aim of this thesis is to create this aforementioned LLM assistant that cooperates with a human modeling expert. The expert provides unstructured domain description as input into the domain modeling process and the assistant  based on this domain description is able to suggest classes, their attributes and their associations.
+Aim of this thesis is to create a tool for domain modeling where the aforementioned LLM assistant cooperates with a human modeling expert. The expert provides unstructured domain description as input into the domain modeling process and the assistant generates suggestions solely based on this domain description.
 
-This assistant is mainly intended to help the users to make conceptual models faster and also to better describe their newly created conceptual models. This assistant should be:
+This assistant is mainly intended to help the users to create their domain models faster and also to better document their domain models. This assistant should be:
 \begin{enumerate}
 \item intuitive to use
 \item suggesting mostly appropriate classes, attributes and associations
 \item suggesting mostly appropriate descriptions of classes, attributes and associations
-\item able to summarize a selected part of user's conceptual model
+\item able to summarize a selected part of user's domain model
 \item able to highlight in the domain description the parts that the user already modeled
 \item able to generate corresponding suggestions in a few a seconds
 \end{enumerate}
-
-
-\section*{Publication}
-We summarized our main finding in a research paper, which we subsequently submitted to the International Conference on Conceptual Modeling ER 2024\footnote{\url{https://resources.sei.cmu.edu/news-events/events/er2024/index.cfm}}.
 
 
 \section*{Outline}

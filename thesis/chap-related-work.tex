@@ -4,28 +4,23 @@ Automated domain modeling encompasses two primary research directions: rule-base
 
 Rule-based methods usually contain hand-written rules and heuristics to automatically identify model elements in a given domain description. For example, \citet{Raharjana2021} and \citet{Sonbol2022} provide recent field surveys for further details.
 
-Statistical methods typically use machine learning techniques to based on a given domain description to either generate the complete domain model \cite{Chen2023,Saeedizade2024} or to start from some smaller conceptual model and based on the user's instructions to iteratively generate a completed conceptual model \cite{Camara2023} or to suggest only specific components that the user can build his conceptual model with.
+Statistical methods typically use machine learning techniques to based on a given domain description to either generate the complete domain model \cite{Chen2023,Saeedizade2024} or to start from some smaller domain model and based on the user's instructions to iteratively generate a completed domain model \cite{Camara2023} or to suggest only specific components that the user can build his domain model with.
 
-In the section \ref{section:ref_recent_approaches_using_llms} we dive deeper into recent approaches to automated domain modeling with LLMs and then in the section \ref{section:llm_as_an_assistant} we examine approaches that use LLMs as an assistant. \\
-
-NOTE: Zde můžu něco více rozvést především podle našeho článku a jeho sekce "Related work"
+In the section \ref{section:ref_recent_approaches_using_llms} we dive deeper into recent approaches to automated domain modeling with LLMs and then in the section \ref{section:llm_as_an_assistant} we examine approaches that use LLMs as an assistant.
 
 
 \section{Recent approaches using LLMs}
 \label{section:ref_recent_approaches_using_llms}
 
-\citet{Camara2023} experiment with ChatGPT-3.5 to generate domain models in PlantUML format. Their experiments demonstrate that generating complete conceptual models comprising more than 8 to 10 classes results into unusable conceptual models. However, they show that it works better to start from a smaller conceptual model and then iteratively enhance it based on user's instructions.
+\citet{Camara2023} experiment with ChatGPT-3.5 to generate domain models in PlantUML format. Their experiments demonstrate that generating complete domain models comprising more than 8 to 10 classes results into unusable domain models. However, they show that it works better to start from a smaller domain model and then iteratively enhance it based on user's instructions.
 
-\citet{Fill2023} and \citet{Haerer2023} additionally explore abilities of ChatGPT-4 in generating conceptual models and they experiment with different output formats. \citet{Fill2023} conclude that the LLMs show enormous potential for modeling tasks and the \citet{Haerer2023} concludes that their results show that iterative modeling in a conversational dialogue could be practical, however, further systematic evaluations need to be conducted.
+\citet{Fill2023} and \citet{Haerer2023} additionally explore abilities of ChatGPT-4 in generating domain models and they experiment with different output formats. \citet{Fill2023} conclude that the LLMs show enormous potential for modeling tasks and the \citet{Haerer2023} concludes that their results show that iterative modeling in a conversational dialogue could be practical, however, further systematic evaluations need to be conducted.
 
-\citet{BabaeiGiglou2023} experiment with different types of LLMs and concludes that ChatGPT-4 usually provides the best output quality for conceptual modeling tasks.
+\citet{BabaeiGiglou2023} experiment with different types of LLMs and concludes that ChatGPT-4 usually provides the best output quality for domain modeling tasks.
 
 \citet{Chen2023} evaluate generating classes, attributes and associations with 0-shot prompting, N-shot prompting and chain of thoughts with ChatGPT-3.5 and ChatGPT-4. They conclude that the combination of N-shot prompting with ChatGPT-4 achieved the best results however, they also add that fully domain modeling still remains impractical.
 
-\citet{Saeedizade2024} try many different step by step prompting methods to iteratively generate complete conceptual model. Their experiments reveal that using their prompting technique `` Competency Question by Competency Question'' with GPT-4 outperforms the average quality of the initial submission of novice ontology engineering students. \\
-
-
-NOTE: Některé věci pak tady můžu více rozepsat na základě toho, co pak budu říkat v kapitole o promptech, abych odůvodnil, proč například používámě nějakou promptovací techniku \\
+\citet{Saeedizade2024} try many different step by step prompting methods to iteratively generate complete domain model. Their experiments reveal that using their prompting technique `` Competency Question by Competency Question'' with GPT-4 outperforms the average quality of the initial submission of novice ontology engineering students. 
 
 
 \section{Using LLM as an assistant}
@@ -38,8 +33,8 @@ First, the LLM provides only suggestions that the user can accept, reject, or in
 Second, the suggestions are usually in a form such that the user can quickly decide if he wants to use them. For example, in Grammarly each mistake is underlined and a reason is provided. In GitHub Copilot it is usually a simple task to decide if suggested comment or code is relevant and so on.
 
 
-\section{Approach}
+\chapter{Related work discussion}
 
-As mentioned in the previous section, automatic generation of complete conceptual model with a LLM is yet not reliable thus we use the LLM as an assistant that co-operates with a human modeling expert based on a given domain description. This assistant always generates output in form of suggestions as the LLM can any time make some mistake. We divided the domain modeling tasks into problem of generating classes, attributes and associations, therefore the assistant is able to suggest classes, their attributes and their associations either based on one provided class or based on two provided classes.
+As mentioned in the previous section, automatic generation of complete domain models with a LLM is yet not reliable thus we use the LLM as an assistant that co-operates with a human modeling expert based on a given domain description. This assistant always generates output in form of suggestions as the LLM can any time make some mistake. We divided the domain modeling tasks into problem of generating classes, attributes and associations, therefore the assistant is able to suggest classes, their attributes and their associations either based on one provided class or based on two provided classes.
 
 To help the user decide if he wants to apply generated suggestions of attributes and associations we highlight each generated class, attribute and association in the given domain description. This is done by letting the LLM generate exact citation from the domain description which is then automatically highlighted in the given domain description.

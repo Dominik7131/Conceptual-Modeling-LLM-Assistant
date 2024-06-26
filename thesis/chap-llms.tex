@@ -1,25 +1,25 @@
-\chapter{Large Language Models}
+\chapter{LLM-based Modeling Assistant Framework}
+
+We propose solving the automation of these domain modeling steps as text generation problems similarly to \citet{Chen2023}, where the authors consider a domain description $T$ with an underlying ground truth model $M$, and approach the problem of model generation as the problem of defining a text generator $f$ with $M' = f(T)$, where $M'$ is the generated model similar to $M$. The generator $f$ is an LLM-based operator defined by a predesigned prompt that instructs an LLM to return a structured textual representation of $M'$ for the input $T$. \\
 
 TODO: Brief chapter description
 
-\section{Background}
-Large Language Models are neural network based models that primarily use transformers architecture \cite{Vaswani2017} to generate natural language text. These models usually contain hundreds of billions parameters that are trained on a huge amount of data.
 
-Each LLM has a defined context window size that refers to the maximum amount of input tokens that the model can process at once.
+\section{Generators}
 
+We consider more fine-grained text generation problems solved by the following generators:
 
-\section{Selection}
+\textbf{Class generator}: $gen_c$ that for $T$ suggests classes $\{C_1, \ldots, C_n\}$ each with a suggested $name(Ci)$.
 
-As running a LLM requires a lot of resources, using LLM through some API typically costs some money. To have more freedom with our experiments we run open-source LLMs locally with LLaMA.cpp server\footnote{\url{https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md}} on a single NVIDIA A100 40GB GPU.
+\textbf{Attribute generator}: $gen_a$ that for $T$ and a class $C$ suggests attributes $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$, suggested $name(P_i)$, and original text $orig(Pi)$ that is part of $T$ on which base $gen_a$ suggested $P_i$.
 
-We decided to use a pre-trained open-source LLM because training own model requires a ton of resources and fine-tuning some existing LLM requires a lot of data.
+\textbf{Association generator 1}: $gen_r$ that for $T$ and a class $C$ suggests associations $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$ (or $target(Pi) = C$), suggested $name(Pi)$, and with the original text $orig(P_i)$ that is part of $T$ on which base $gen_r$ suggested $P_i$. It also suggests the other class $D$, with $target(Pi)= D$ (or $source(Pi) = D$), and suggested $name(D)$. \\
 
-Because of our hardware limitation we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter.
+TODO: Association generator 2 \\
 
-Mixtral-8x7B has a context window size of 32k tokens and it outperforms or matches ChatGPT-3.5 across all evaluated benchmarks. This LLM has in total 47B parameters, which are distributed among 8 experts. To achieve faster output generation, for each generated token 2 of the 8 experts are selected. The selection of the experts can be different for each token \cite{Jiang2024}.
+TODO: Description generator \\
 
-Llama-3-70B has 8k tokens context window size and is allegedly  the first open-source LLM to match the ChatGPT-4's performance. However, as of writing this thesis, Meta's research paper about Llama 3 is not released yet.
+TODO: Data type generator \\
 
-For LLM's output comparison, we also frequently used ChatGPT-3.5 through the web UI. \\
+TODO: Description generator \\
 
-NOTE: Potom až otestujeme i ChatGPT-4o, tak sem o tom LLM něco napíšu.

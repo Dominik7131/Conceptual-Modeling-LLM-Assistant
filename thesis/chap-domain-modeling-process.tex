@@ -1,8 +1,14 @@
 \chapter{Domain modeling process}
 
-In this paper, we consider a domain modeling process stating with a domain description $T$ acquired from stakeholders and knowledge sources such as internal documentation, manuals, or state law. $T$ can be a well-curated text, but may also encompass varied interpretations articulated by different stakeholders at various levels of detail. A modeling expert translates $T$ into a domain model $M$ in a sequence of steps.
+In our thesis, we consider a domain modeling process stating with a domain description $T$ acquired from stakeholders and knowledge sources such as internal documentation, manuals, or state law. $T$ can be a well-curated text, but may also encompass varied interpretations articulated by different stakeholders at various levels of detail. A modeling expert translates $T$ into a domain model $M$ in a sequence of steps.
 
-A domain model $M = (\mathcal{C}, \mathcal{P})$ consists of a set of classes $\mathcal{C}$ and properties $\mathcal{P}$. A class $\mathcal{C} \in C$ has its $name(C)$ which identifies $C$ in $M$ and briefly characterizes the semantics of $C$. A Property $P \in \mathcal{P}$ has also $name(P)$ used for the same purposes. It has a source class, such that $source(P) \in \mathcal{C}$ and it can have a target class such that $target(P) \in \mathcal{C}$. $P$ is a binary association if $target(P)$ is defined otherwise, $P$ is an attribute. These basic modeling constructs are prevalent in real conceptual models \cite{Keet2015}, so their automation could have a significant impact. We distinguish the following steps.
+A domain model $M = (\mathcal{C}, \mathcal{P})$ consists of a set of classes $\mathcal{C}$ and properties $\mathcal{P}$.
+
+A class $C \in \mathcal{C}$ has its $name(C)$ which identifies $C$ in $M$ and briefly characterizes the semantics of $C$. The class $C$ also has a $description(C)$ that describes the semantics of $C$.
+
+A Property $P \in \mathcal{P}$ has also $name(P)$ and $description(P)$ used for the same purposes. It has a $cardinality(P)$ that refers to the specification of the number of instances of one class that can or must be associated with each instance of another class. It also has a source class, such that $source(P) \in \mathcal{C}$ and it can have a target class such that $target(P) \in \mathcal{C}$. $P$ is a binary association if $target(P)$ is defined otherwise, $P$ is an attribute.
+
+These basic modeling constructs are prevalent in real conceptual models \cite{Keet2015}, so their automation could have a significant impact. We distinguish the following steps.
 
 
 \section{Steps}
@@ -16,13 +22,43 @@ for a class $C$ and a concept in $T$ that characterizes $C$, create an attribute
 \textbf{Design an association for a class}:
 for a class $C$ and a concept in $T$ that describes a relationship of $C$ with another concept, create an association $P$ such that $C = source(P)$ or $C = target(P)$, and define its $name(P)$. If not yet represented, create a class $D$ for the other concept and specify its $name(D)$.
 
+\textbf{Design a description for a class}:
+for a class $C$ and a concept in $T$ that describes $C$, define $description(C)$
 
-\section{Approach}
+\textbf{Design a description for an attribute}:
+for an attribute $P$ and a concept in $T$ that describes $P$, define $description(P)$
 
-We propose solving the automation of these steps as text generation problems similarly to \citet{Chen2023}, where the authors consider a domain description $T$ with an underlying ground truth model $M$, and approach the problem of model generation as the problem of defining a text generator $f$ with $M' = f(T)$, where $M'$ is the generated model similar to $M$. The generator $f$ is an LLM-based operator defined by a predesigned prompt that instructs an LLM to return a structured textual representation of $M'$ for the input $T$. We consider more fine-grained text generation problems solved by the following generators:
+\textbf{Design a description for an association}:
+for an association $P$ and a concept in $T$ that describes $P$, define $description(P)$
 
-\textbf{Class generator}: $gen_c$ that for $T$ suggests classes $\{C_1, \ldots, C_n\}$ each with a suggested $name(Ci)$.
+\textbf{Design a data type for an attribute}:
+for an attribute $P$ and a concept in $T$ that describes $P$, define $dataType(P)$
 
-\textbf{Attribute generator}: $gen_a$ that for $T$ and a class $C$ suggests attributes $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$, suggested $name(P_i)$, and original text $orig(Pi)$ that is part of $T$ on which base $gen_a$ suggested $P_i$.
+\textbf{Design a cardinality for an attribute}:
+for an attribute $P$ and a concept in $T$ that describes $P$, define $cardinality(P)$
 
-\textbf{Association generator}: $gen_r$ that for $T$ and a class $C$ suggests associations $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$ (or $target(Pi) = C$), suggested $name(Pi)$, and with the original text $orig(P_i)$ that is part of $T$ on which base $gen_r$ suggested $P_i$. It also suggests the other class $D$, with $target(Pi)= D$ (or $source(Pi) = D$), and suggested $name(D)$.
+\textbf{Design a cardinality for an association}:
+for an association $P$ and a concept in $T$ that describes $P$, define $cardinality(P)$
+
+
+\section{Example}
+
+Consider the domain model in figure \ref{fig:modeling-steps}. It contains a class ``employee'' with attribute ``name'' and with association ``works in'' with the class ``Department''.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=1.00]{img/domain-modeling-steps-example.pdf}
+    \caption{\centering Simple domain model example}
+    \label{fig:modeling-steps}
+\end{figure}
+
+To create this domain model when starting from an empty domain model we can for example execute the following steps:
+
+\begin{enumerate}
+\item design a class ``employee''
+\item design a class ``department''
+\item design an attribute ``name'' for a class ``employee''
+\item design an association ``works in'' for a class ``employee'' and ``department''
+\end{enumerate}
+
+For providing more information for this domain model we can use the mentioned steps for defining description of the modeled elements, for defining data type of the modeled attributes and for defining cardinalities of the modeled attributes and associations.
