@@ -1,6 +1,6 @@
-from utils.llm_assistant import LLMAssistant
+from definitions.utility import Field, FieldUI, TextFilteringVariation, UserChoice
 from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS
-from definitions.utility import Field, FieldUI, UserChoice
+from utils.llm_assistant import LLMAssistant
 import time
 import json
 import os
@@ -137,8 +137,8 @@ def create_classes_actual_output(llm_assistant, test_cases, user_choice, domain_
     matched_classes = 0
     total_expected_classes = len(test_cases)
 
-    iterator = llm_assistant.suggest_items(
-        source_class="", target_class="", user_choice=user_choice, domain_description=domain_description)
+    iterator = llm_assistant.suggest_items(source_class="", target_class="", user_choice=user_choice,
+                                           domain_description=domain_description)
     result = []
 
     if is_csv_output:
@@ -173,13 +173,12 @@ def create_classes_actual_output(llm_assistant, test_cases, user_choice, domain_
     return result
 
 
-def create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output):
+def create_attributes_actual_output(llm_assistant, test_cases, user_choice, domain_description, text_filtering_variation, is_csv_output):
 
     result = []
 
     if is_csv_output:
-        result.append(
-            f"Generated attribute{CSV_SEPARATOR}Source class{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}{CSV_HEADER}")
+        result.append(f"Generated attribute{CSV_SEPARATOR}Source class{CSV_SEPARATOR}Generated original text{CSV_SEPARATOR}{CSV_HEADER}")
 
     for test_case in test_cases:
         source_class = test_case["class"]
@@ -190,7 +189,7 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
             result.append(f"Class: {source_class}")
 
         iterator = llm_assistant.suggest_items(
-            source_class=source_class, target_class="", user_choice=user_choice, domain_description=domain_description)
+            source_class=source_class, target_class="", user_choice=user_choice, domain_description=domain_description, text_filtering_variation=text_filtering_variation)
 
         for index, suggested_item in enumerate(iterator):
             suggested_item = json.loads(suggested_item)
@@ -209,7 +208,7 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
     return result
 
 
-def create_associations1_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output):
+def create_associations1_actual_output(llm_assistant, test_cases, user_choice, domain_description, text_filtering_variation, is_csv_output):
 
     result = []
 
@@ -225,8 +224,8 @@ def create_associations1_actual_output(llm_assistant, test_cases, user_choice, d
         if not is_csv_output:
             result.append(f"Class: {source_class}")
 
-        iterator = llm_assistant.suggest_items(
-            source_class=inputed_class, target_class="", user_choice=user_choice, domain_description=domain_description)
+        iterator = llm_assistant.suggest_items(source_class=inputed_class, target_class="", user_choice=user_choice,
+                                               domain_description=domain_description, text_filtering_variation=text_filtering_variation)
 
         for index, suggested_item in enumerate(iterator):
             suggested_item = json.loads(suggested_item)
@@ -252,7 +251,7 @@ def create_associations1_actual_output(llm_assistant, test_cases, user_choice, d
     return result
 
 
-def create_associations2_actual_output(llm_assistant, test_cases, user_choice, domain_description):
+def create_associations2_actual_output(llm_assistant, test_cases, user_choice, domain_description, text_filtering_variation):
 
     result = []
     for test_case in test_cases:
@@ -261,8 +260,8 @@ def create_associations2_actual_output(llm_assistant, test_cases, user_choice, d
 
         result.append(
             f"Source class: {source_class}, Target class: {target_class}")
-        iterator = llm_assistant.suggest_items(
-            source_class=source_class, target_class=target_class, user_choice=user_choice, domain_description=domain_description)
+        iterator = llm_assistant.suggest_items(source_class=source_class, target_class=target_class, user_choice=user_choice,
+                                               domain_description=domain_description, text_filtering_variation=text_filtering_variation)
 
         for index, suggested_item in enumerate(iterator):
             suggested_item = json.loads(suggested_item)
@@ -276,7 +275,7 @@ def create_associations2_actual_output(llm_assistant, test_cases, user_choice, d
     return result
 
 
-def generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path, user_choice, is_csv_output):
+def generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path, user_choice, text_filtering_variation, is_csv_output):
 
     with open(test_file_path, encoding="utf-8") as file:
         test_data = json.load(file)
@@ -284,20 +283,18 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
     test_cases = test_data[user_choice]
 
     if user_choice == UserChoice.CLASSES.value:
-        results = create_classes_actual_output(
-            llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
+        results = create_classes_actual_output(llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
 
     elif user_choice == UserChoice.ATTRIBUTES.value:
-        results = create_attributes_actual_output(
-            llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
+        results = create_attributes_actual_output(llm_assistant, test_cases, user_choice,
+                                                  domain_description, text_filtering_variation, is_csv_output)
 
     elif user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
-        results = create_associations1_actual_output(
-            llm_assistant, test_cases, user_choice, domain_description, is_csv_output)
+        results = create_associations1_actual_output(llm_assistant, test_cases, user_choice,
+                                                     domain_description, text_filtering_variation, is_csv_output)
 
     elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
-        results = create_associations2_actual_output(
-            llm_assistant, test_cases, user_choice, domain_description)
+        results = create_associations2_actual_output(llm_assistant, test_cases, user_choice, text_filtering_variation, domain_description)
 
     else:
         raise ValueError(f"Unexpected user choice: \"{user_choice}\".")
@@ -311,15 +308,17 @@ def main():
 
     parser = argparse.ArgumentParser(description="Suggestions generator")
     parser.add_argument("--user_choice", choices=[UserChoice.CLASSES.value, UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value,
-                        UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value], type=str, default=UserChoice.CLASSES.value, help="Choose elements to generate")
-    parser.add_argument("--output_format", choices=[
-                        "txt", "csv"], type=str, default="csv", help="Choose output file format")
-    parser.add_argument("--generate_expected_output_only",
-                        action="store_true", default=False, help="")
+                        UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value], type=str, default=UserChoice.CLASSES.value, help="Elements to generate")
+    parser.add_argument("--output_format", choices=["txt", "csv"], type=str, default="csv", help="Output file format")
+    parser.add_argument("--filtering", choices=[TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value,
+                        TextFilteringVariation.SEMANTIC.value], type=str, default=TextFilteringVariation.SYNTACTIC.value, help="Text filtering variation")
+    parser.add_argument("--generate_expected_output_only", action="store_true", default=False, help="Generate only expected output")
+
     args = parser.parse_args()
 
     user_choice = args.user_choice
     is_generate_expected_output = args.generate_expected_output_only
+    text_filtering_variation = args.filtering
     is_csv_output = args.output_format == "csv"
 
     if not is_generate_expected_output:
@@ -329,8 +328,7 @@ def main():
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
             test_file_name = f"{user_choice}-expected-suggestions-0{i + 1}.json"
-            test_file_path = os.path.join(
-                DOMAIN_MODELING_DIRECTORY_PATH, domain_model, test_file_name)
+            test_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, test_file_name)
             expected_output_file_path = os.path.join(
                 OUTPUT_EXPECTED_DIRECTORY, f"{domain_model}-{user_choice}-{EXPECTED_OUTPUT}-0{i + 1}.txt")
 
@@ -342,8 +340,7 @@ def main():
                 if not os.path.exists(OUTPUT_EXPECTED_DIRECTORY):
                     os.makedirs(OUTPUT_EXPECTED_DIRECTORY)
 
-                generate_expected_output(
-                    test_file_path, expected_output_file_path, user_choice)
+                generate_expected_output(test_file_path, expected_output_file_path, user_choice)
                 continue
 
             if not os.path.exists(OUTPUT_ACTUAL_DIRECTORY):
@@ -351,20 +348,19 @@ def main():
 
             output_file_extension = ".csv" if is_csv_output else ".txt"
             actual_output_file_path = os.path.join(
-                OUTPUT_ACTUAL_DIRECTORY, f"{domain_model}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}{output_file_extension}")
+                OUTPUT_ACTUAL_DIRECTORY, f"{domain_model}-{user_choice}-{text_filtering_variation}-{ACTUAL_OUTPUT}-0{i + 1}{output_file_extension}")
             domain_description_file_name = f"domain-description-0{i + 1}.txt"
             domain_description_path = os.path.join(
                 DOMAIN_MODELING_DIRECTORY_PATH, domain_model, domain_description_file_name)
 
             if not os.path.isfile(domain_description_path):
-                raise ValueError(
-                    f"Domain description not found: {domain_description_path}")
+                raise ValueError(f"Domain description not found: {domain_description_path}")
 
             with open(domain_description_path, "r", encoding="utf-8") as file:
                 domain_description = file.read()
 
-            generate_actual_output(llm_assistant, domain_description, test_file_path,
-                                   actual_output_file_path, user_choice, is_csv_output)
+            generate_actual_output(llm_assistant, domain_description, test_file_path, actual_output_file_path,
+                                   user_choice, text_filtering_variation, is_csv_output)
 
 
 if __name__ == "__main__":
