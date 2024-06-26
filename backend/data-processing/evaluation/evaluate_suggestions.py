@@ -1,12 +1,11 @@
+from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_TEXTS_COUNT
+from definitions.utility import UserChoice
 import csv
 import json
 import os
 import sys
 
 sys.path.append(".")
-
-from definitions.utility import UserChoice
-from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
 
 
 MANUAL_EVALUATION_DIRECTORY_PATH = os.path.join("out", "evaluated", "actual")
@@ -669,15 +668,15 @@ class SuggestionsEvaluator:
                 f"{header_text_name}{SEPARATOR}{header_recall}{SEPARATOR}{header_precision}")
 
         text_index = 0
-        for index, _ in enumerate(DOMAIN_MODELS):
+        for index, domain_model in enumerate(DOMAIN_MODELS):
             for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
                 if not is_csv:
                     print(
-                        f"---- Results for {DOMAIN_MODELS_NAME[index]}-0{i + 1} ---- ")
+                        f"---- Results for {domain_model}-0{i + 1} ---- ")
                 else:
                     print(
-                        f"{DOMAIN_MODELS_NAME[index]}-0{i + 1}{SEPARATOR}", end="")
+                        f"{domain_model}-0{i + 1}{SEPARATOR}", end="")
 
                 self.print_recall(text_index, is_csv)
                 self.print_precision(text_index, is_csv)
@@ -708,11 +707,11 @@ def main():
                 DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{i + 1}.json")
 
             classes_evaluated_path = os.path.join(
-                MANUAL_EVALUATION_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
+                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
             attributes_evaluated_path = os.path.join(
-                MANUAL_EVALUATION_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
+                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
             associations_evaluated_path = os.path.join(
-                MANUAL_EVALUATION_DIRECTORY_PATH, f"{DOMAIN_MODELS_NAME[index]}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
+                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
 
             is_file = evaluator.check_file(
                 classes_evaluated_path, UserChoice.CLASSES.value)

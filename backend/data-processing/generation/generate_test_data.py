@@ -1,3 +1,6 @@
+from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS
+from definitions.utility import Field, UserChoice
+from utils.text_splitter import TextSplitter
 import json
 import re
 import os
@@ -5,10 +8,6 @@ import requests
 import sys
 
 sys.path.append(".")
-
-from utils.text_splitter import TextSplitter
-from definitions.utility import Field, UserChoice
-from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
 
 
 BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="
@@ -253,7 +252,7 @@ def print_conceptual_model_total_elements_csv():
     print(header)
 
     for i in range(DOMAIN_DESCRIPTIONS_TEXTS):
-        row = f"{DOMAIN_MODELS_NAME[i]},{classes_count[i]},{attributes_count[i]},{associations_count[i]}"
+        row = f"{DOMAIN_MODELS[i]},{classes_count[i]},{attributes_count[i]},{associations_count[i]}"
         print(row)
 
 
@@ -319,29 +318,19 @@ def main():
             relevant_text_test_cases_1 = {"test_cases": relevant_texts1}
             relevant_text_test_cases_2 = {"test_cases": relevant_texts2}
 
-            classes_expected_suggestions = {
-                UserChoice.CLASSES.value: classes_suggestions}
-            attributes_expected_suggestions = {
-                UserChoice.ATTRIBUTES.value: attributes_suggestions}
-            associations1_expected_suggestions = {
-                UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value: associations_suggestions}
-            associations2_expected_suggestions = {
-                UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value: associations2_suggestions}
+            classes_expected_suggestions = {UserChoice.CLASSES.value: classes_suggestions}
+            attributes_expected_suggestions = {UserChoice.ATTRIBUTES.value: attributes_suggestions}
+            associations1_expected_suggestions = {UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value: associations_suggestions}
+            associations2_expected_suggestions = {UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value: associations2_suggestions}
 
-            write_json_to_file(one_known_class_output_file_path,
-                               relevant_text_test_cases_1)
-            write_json_to_file(
-                two_known_classes_output_file_path, relevant_text_test_cases_2)
-            write_json_to_file(
-                classes_suggestions_output_file_path, classes_expected_suggestions)
-            write_json_to_file(
-                attributes_suggestions_output_file_path, attributes_expected_suggestions)
-            write_json_to_file(
-                associations1_suggestions_output_file_path, associations1_expected_suggestions)
-            write_json_to_file(
-                associations2_suggestions_output_file_path, associations2_expected_suggestions)
+            write_json_to_file(one_known_class_output_file_path, relevant_text_test_cases_1)
+            write_json_to_file(two_known_classes_output_file_path, relevant_text_test_cases_2)
+            write_json_to_file(classes_suggestions_output_file_path, classes_expected_suggestions)
+            write_json_to_file(attributes_suggestions_output_file_path, attributes_expected_suggestions)
+            write_json_to_file(associations1_suggestions_output_file_path, associations1_expected_suggestions)
+            write_json_to_file(associations2_suggestions_output_file_path, associations2_expected_suggestions)
 
-    if (IS_PRINT_TOTAL_ELEMENTS_COUNT):
+    if IS_PRINT_TOTAL_ELEMENTS_COUNT:
         print_conceptual_model_total_elements_csv()
 
 

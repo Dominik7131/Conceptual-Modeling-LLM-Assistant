@@ -1,34 +1,32 @@
+from definitions.domain_modelling import DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL
+from definitions.utility import Field, FieldUI, UserChoice
 import os
 import json
 import sys
 
 sys.path.append(".")
 
-from definitions.utility import Field, FieldUI, UserChoice
-from definitions.domain_modelling import DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL_NAME
-
 
 FILE_NAME = "domain-description-01-annotated.txt"
 IN_FILE_PATH_END = "expected-suggestions-01.json"
 
-CLASSES_IN_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH,
-                                    PROMPTING_MODEL_NAME, f"{UserChoice.CLASSES.value}-{IN_FILE_PATH_END}")
-ATTRIBUTES_IN_FILE_PATH = os.path.join(
-    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL_NAME, f"{UserChoice.ATTRIBUTES.value}-{IN_FILE_PATH_END}")
-ASSOCIATIONS1_IN_FILE_PATH = os.path.join(
-    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL_NAME, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-{IN_FILE_PATH_END}")
-ASSOCIATIONS2_IN_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL_NAME,
+CLASSES_IN_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL, f"{UserChoice.CLASSES.value}-{IN_FILE_PATH_END}")
+ATTRIBUTES_IN_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL,
+                                       f"{UserChoice.ATTRIBUTES.value}-{IN_FILE_PATH_END}")
+ASSOCIATIONS1_IN_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL,
+                                          f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-{IN_FILE_PATH_END}")
+ASSOCIATIONS2_IN_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL,
                                           f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-{IN_FILE_PATH_END}")
 
 OUTPUT_FILE_END = "prompt-example.txt"
 CLASSES_OUTPUT_FILE_PATH = os.path.join(
-    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL_NAME, f"{UserChoice.CLASSES.value}-{OUTPUT_FILE_END}")
+    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL, f"{UserChoice.CLASSES.value}-{OUTPUT_FILE_END}")
 ATTRIBUTES_OUTPUT_FILE_PATH = os.path.join(
-    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL_NAME, f"{UserChoice.ATTRIBUTES.value}-{OUTPUT_FILE_END}")
+    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL, f"{UserChoice.ATTRIBUTES.value}-{OUTPUT_FILE_END}")
 ASSOCIATIONS1_OUTPUT_FILE_PATH = os.path.join(
-    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL_NAME, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-{OUTPUT_FILE_END}")
+    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-{OUTPUT_FILE_END}")
 ASSOCIATIONS2_OUTPUT_FILE_PATH = os.path.join(
-    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL_NAME, f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-{OUTPUT_FILE_END}")
+    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL, f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-{OUTPUT_FILE_END}")
 
 
 def get_classes_examples(expected_suggestions):
@@ -121,8 +119,8 @@ def get_associations2_examples(expected_suggestions):
         result.append(f"{FieldUI.SOURCE_CLASS.value}: {source_class}")
         result.append(f"{FieldUI.TARGET_CLASS.value}: {target_class}")
 
-        JSON_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\", \"{Field.SOURCE_CLASS.value}\": \"{source_class}\", \"{Field.TARGET_CLASS.value}\": \"{target_class}\""
-        result.append("JSON object: {" + JSON_object + "}\n")
+        json_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\", \"{Field.SOURCE_CLASS.value}\": \"{source_class}\", \"{Field.TARGET_CLASS.value}\": \"{target_class}\""
+        result.append("JSON object: {" + json_object + "}\n")
 
     return result
 
@@ -144,14 +142,10 @@ def write_examples_to_file(output_file_path, examples):
 
 def main():
 
-    classes_expected = load_expected_suggestions_from_file(
-        CLASSES_IN_FILE_PATH)
-    attributes_expected = load_expected_suggestions_from_file(
-        ATTRIBUTES_IN_FILE_PATH)
-    associations1_expected = load_expected_suggestions_from_file(
-        ASSOCIATIONS1_IN_FILE_PATH)
-    associations2_expected = load_expected_suggestions_from_file(
-        ASSOCIATIONS2_IN_FILE_PATH)
+    classes_expected = load_expected_suggestions_from_file(CLASSES_IN_FILE_PATH)
+    attributes_expected = load_expected_suggestions_from_file(ATTRIBUTES_IN_FILE_PATH)
+    associations1_expected = load_expected_suggestions_from_file(ASSOCIATIONS1_IN_FILE_PATH)
+    associations2_expected = load_expected_suggestions_from_file(ASSOCIATIONS2_IN_FILE_PATH)
 
     classes_examples = get_classes_examples(classes_expected)
     attributes_examples = get_attributes_examples(attributes_expected)
@@ -160,10 +154,8 @@ def main():
 
     write_examples_to_file(CLASSES_OUTPUT_FILE_PATH, classes_examples)
     write_examples_to_file(ATTRIBUTES_OUTPUT_FILE_PATH, attributes_examples)
-    write_examples_to_file(
-        ASSOCIATIONS1_OUTPUT_FILE_PATH, associations1_examples)
-    write_examples_to_file(
-        ASSOCIATIONS2_OUTPUT_FILE_PATH, associations2_examples)
+    write_examples_to_file(ASSOCIATIONS1_OUTPUT_FILE_PATH, associations1_examples)
+    write_examples_to_file(ASSOCIATIONS2_OUTPUT_FILE_PATH, associations2_examples)
 
 
 if __name__ == "__main__":

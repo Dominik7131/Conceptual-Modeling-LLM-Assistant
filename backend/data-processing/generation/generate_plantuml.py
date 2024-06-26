@@ -1,11 +1,10 @@
+from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS
+from definitions.utility import UserChoice
 import os
 import csv
 import sys
 
 sys.path.append(".")
-
-from definitions.utility import UserChoice
-from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS_NAME
 
 
 DIRECTORY_PATH = os.path.join("out", "actual")
@@ -66,7 +65,7 @@ def process_associations(path):
 
 def generate_plantuml():
 
-    for index, model_name in enumerate(DOMAIN_MODELS_NAME):
+    for index, model_name in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
             classes_path = os.path.join(

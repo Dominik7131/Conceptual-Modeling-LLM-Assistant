@@ -1,3 +1,7 @@
+from syntactic_text_filterer import SyntacticTextFilterer
+from definitions.domain_modelling import DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS, DOMAIN_TEXTS_COUNT
+from definitions.utility import TextFilteringVariation, UserChoice
+from utils.text_splitter import TextSplitter
 import os
 import sys
 import argparse
@@ -8,12 +12,6 @@ TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 sys.path.append(".")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
-
-
-from utils.text_splitter import TextSplitter
-from definitions.utility import TextFilteringVariation, UserChoice
-from definitions.domain_modelling import DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS, DOMAIN_MODELS_NAME, DOMAIN_TEXTS_COUNT
-from syntactic_text_filterer import SyntacticTextFilterer
 
 
 # Indexes correspond to texts in domain models and last index corresponds to all texts together
@@ -258,10 +256,10 @@ def print_precision(index):
 def print_evaluation():
 
     text_index = 0
-    for index, _ in enumerate(DOMAIN_MODELS):
+    for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            print(f"---- {DOMAIN_MODELS_NAME[index]}-0{i + 1} ---- ")
+            print(f"---- {domain_model}-0{i + 1} ---- ")
             print_recall(text_index)
             print_precision(text_index)
             text_index += 1

@@ -1,3 +1,6 @@
+from utils.llm_assistant import LLMAssistant
+from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS
+from definitions.utility import Field, FieldUI, UserChoice
 import time
 import json
 import os
@@ -9,10 +12,6 @@ TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 sys.path.append(".")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
-
-from definitions.utility import Field, FieldUI, UserChoice
-from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_MODELS_NAME
-from utils.llm_assistant import LLMAssistant
 
 
 ACTUAL_OUTPUT = "actual"
@@ -333,7 +332,7 @@ def main():
             test_file_path = os.path.join(
                 DOMAIN_MODELING_DIRECTORY_PATH, domain_model, test_file_name)
             expected_output_file_path = os.path.join(
-                OUTPUT_EXPECTED_DIRECTORY, f"{DOMAIN_MODELS_NAME[index]}-{user_choice}-{EXPECTED_OUTPUT}-0{i + 1}.txt")
+                OUTPUT_EXPECTED_DIRECTORY, f"{domain_model}-{user_choice}-{EXPECTED_OUTPUT}-0{i + 1}.txt")
 
             if not os.path.isfile(test_file_path):
                 raise ValueError(f"Test file not found: {test_file_path}")
@@ -352,7 +351,7 @@ def main():
 
             output_file_extension = ".csv" if is_csv_output else ".txt"
             actual_output_file_path = os.path.join(
-                OUTPUT_ACTUAL_DIRECTORY, f"{DOMAIN_MODELS_NAME[index]}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}{output_file_extension}")
+                OUTPUT_ACTUAL_DIRECTORY, f"{domain_model}-{user_choice}-{ACTUAL_OUTPUT}-0{i + 1}{output_file_extension}")
             domain_description_file_name = f"domain-description-0{i + 1}.txt"
             domain_description_path = os.path.join(
                 DOMAIN_MODELING_DIRECTORY_PATH, domain_model, domain_description_file_name)
