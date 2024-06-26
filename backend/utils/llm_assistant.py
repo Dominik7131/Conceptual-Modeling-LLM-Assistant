@@ -1,3 +1,5 @@
+from semantic_text_filterer import SemanticTextFilterer
+from syntactic_text_filterer import SyntacticTextFilterer
 import os
 import logging
 import json
@@ -14,9 +16,6 @@ TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
-
-from syntactic_text_filterer import SyntacticTextFilterer
-from semantic_text_filterer import SemanticTextFilterer
 
 
 ITEMS_COUNT = 5
@@ -188,7 +187,7 @@ class LLMAssistant:
         source_class = source_class.strip()
         target_class = target_class.strip()
 
-        if conceptual_model == None:
+        if conceptual_model is None:
             conceptual_model = {}
 
         is_domain_description = domain_description != ""
