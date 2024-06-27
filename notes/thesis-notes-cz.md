@@ -125,6 +125,8 @@
     - nechceme uživateli dát možnost napsat si vlastní prompt, protože na formátu a obsahu promptu hodně záleží
     - hlavní důvody, proč si prompty předpřipravit jako šablony:
         - potřebujeme co nejvíce konzistentních podmínek pro otestování, jestli LLM dává rozumné výstupy pro různou množinu vstupů
+        - s prompty lze jednodušeji experimentovat díky tomu, že vyplňování symbolů je flexibilní
+            - například přidat do promptu uživatelův konceptuální model pouze znamená do promptu přidat příslušný symbol
         - na konkrétních slovech v promptu hodně záleží
             - v nejhorším případě se může stát, že LLM vůbec promptu nebude rozumět a uživatel bude zbytečně čekat na nesmyslný výstup, který pak nevyužije
             - existuje celá řada tipů, jak psát prompty viz například [zde](https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions)
