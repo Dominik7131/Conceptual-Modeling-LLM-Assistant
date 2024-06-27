@@ -1,0 +1,57 @@
+\chapter{LLM-based Modeling Assistant Framework}
+
+We propose solving the automation of these domain modeling steps as text generation problems similarly to \citet{Chen2023}, where the authors consider a domain description $T$ with an underlying ground truth model $M$, and approach the problem of model generation as the problem of defining a text generator $f$ with $M' = f(T)$, where $M'$ is the generated model similar to $M$. The generator $f$ is an LLM-based operator defined by a predesigned prompt that instructs an LLM to return a structured textual representation of $M'$ for the input $T$. \\
+
+TODO: Brief chapter description
+
+
+\section{Generators}
+
+We consider more fine-grained text generation problems solved by the following generators:
+
+\textbf{Class generator}: $gen_c$ that for $T$ suggests classes $\{C_1, \ldots, C_n\}$ each with a suggested $name(Ci)$.
+
+\textbf{Attribute generator}: $gen_a$ that for $T$ and a class $C$ suggests attributes $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$, suggested $name(P_i)$, and original text $orig(Pi)$ that is part of $T$ on which base $gen_a$ suggested $P_i$.
+
+\textbf{Association generator 1}: $gen_r$ that for $T$ and a class $C$ suggests associations $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$ (or $target(Pi) = C$), suggested $name(Pi)$, and with the original text $orig(P_i)$ that is part of $T$ on which base $gen_r$ suggested $P_i$. It also suggests the other class $D$, with $target(Pi)= D$ (or $source(Pi) = D$), and suggested $name(D)$. \\
+
+TODO: Association generator 2 \\
+
+TODO: Description generator \\
+
+TODO: Data type generator \\
+
+TODO: Description generator \\
+
+
+\subsection{Requirements}
+
+An operator is defined with a prompt template. The template should instruct
+the LLM to work within the domain description context, to provide the required
+task-specific suggestions, and to output them in a predefined format for easy
+parsing. It should support techniques that provably improve LLM outputs, such
+as N-shot prompting \cite{Brown2020} or Chain-of-Thoughts \cite{Wei2022}.
+
+
+\subsection{Structure}
+
+Based on these generic requirements, we propose a prompt meta-template shown in figure \ref{fig:meta-templates}.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=1.00]{img/meta-templates.pdf}
+    \caption{\centering Prompt meta-template for concept generators}
+    \label{fig:meta-templates}
+\end{figure}
+
+A generator template is constructed by replacing the placeholders in the meta-template with generator-specific instructions. The meta-template has the following structure.
+
+The main control instruction (line 01) summarizes the given task, which is for example to suggest classes or attributes or associations for a given class $C$, based solely on the given context. We place this instruction at the start of the prompt and then in some cases we repeat it at the end of the prompt as the LLM usually puts the most emphasis on the information at the start of the prompt and at the end of the prompt which we discussed in the section \ref{prompt_general_tips}.
+
+The modeling procedure (line 02) instructs the LLM on how to proceed before generating the final suggestions. Here, various prompt design strategies, such as CoT, can be implemented.
+
+The output specification (line 03) defines the required output format so the output can be automatically parsed.
+
+Lines 04-08 represent optional examples. Here, an N-shot prompt design strategy can be implemented, where the prompts contain one or more expected output samples based on concrete sample contexts. Each example starts with the example main control instruction (line 05) which is the same as the main control instruction but with a concrete class $C$ (and in some cases class $D$) if the task is class-specific. The example context specification (line 06) is the concrete context specification for the example and example output (line 07) is the expected output for the given context. The example output must correspond to the structure of the output specification for making the prompt coherent.
+
+The context is specified at the end of the meta-template in the context specification (line 10). This context is in most cases the domain description $T$ but in some cases it can also be the current user's domain model. To improve the LLM performance, various text processing and filtering techniques such as RAG can be implemented here.

@@ -1,10 +1,10 @@
-\chapter{Application}
+\section{Application}
 
 To empirically validate the feasibility of our proposed methodology, we developed a prototype application. This application contains it's frontend and backend. Users can use our frontend via web application that communicates with our backend that provides the assistant services. \\
 
 TODO: Brief chapter description \\
 
-\section{Assistant services}
+\subsection{Assistant services}
 
 Our LLM based assistant provides the following main services: (1) elements suggestion, (2) highlighting already modeled elements and (3) domain model summary.
 
@@ -61,7 +61,7 @@ The plain text summary generates a paragraph describing the user's selected doma
 The summary in form of bullet points for each element generates a description. In the future by adding options to accept, reject or regenerated each description this could be used to help the user to create a description for each of his modeled element for a better domain model documentation.
 
 
-\section{LLM parameters}
+\subsection{LLM parameters}
 
 TODO: možná by se tato sekce více hodila jinam \\
 
@@ -70,12 +70,12 @@ TODO: co je to temperature a proč ji nastavujeme na 0 \\
 TODO: možná zmínit problém se snahou vygenerovat pokaždé jiný výstup \\
 
 
-\section{LLM output parsing}
+\subsection{LLM output parsing}
 
 TODO: zmínit hlavní věci, které se dějí při parsování výstupu + odkázat se na to, že odstraňování duplicitních elementů jsme již pokryli v předchozí subsekci \\
 
 
-\section{Saving user data}
+\subsection{Saving user data}
 
 For each generated suggestion the user can optionally click on the like button or the dislike dislike button. The corresponding evaluated suggestion is sent to the backend and saved there with all the parameters that were used to generate this suggestion. To remember these parameters, the frontend remembers for each suggestion the parameters that were used for generation.
 
@@ -84,7 +84,7 @@ We use these user's reactions for two main reasons. First reason is that we can 
 The downside of our approach is that it does not collect many user data. One possible solution is to save each user action such as saving each suggestion that the user added into his domain model. However, this approach has a lot of disadvantages due to it's complexity. For example, if the user adds some suggestion and then later on removes it we need to save this removal action too as it can mean that the original suggestion turned out to be unwanted. This means that the saved data would need to be post-processed to remove these pairs of data. Similar issue arise when user adds some suggestion but then later on edits it. Because of this complexity we decided to use the explicit reactions buttons.
 
 
-\section{Work-flow}
+\subsection{Work-flow}
 
 Figure \ref{fig:work-flow} shows the basic flow of generating suggestions on the backend. The modeling process typically starts by providing the domain description. Then the domain model is step by step created by using suggestions from the assistant. Suggestions of attributes and associations are filtered by some retrieval-augmentation method. Then the prompt engineering techniques are applied and the final prompt is constructed and sent to LLM. Finally, the output from the LLM is parsed and the suggested model elements are sent back to the frontend. \\
 
@@ -93,6 +93,6 @@ TODO: Asi popsat, že v nastavení si uživatel může vybrat variantu filtrová
 \begin{figure}[!h]
     \centering
     \includegraphics[scale=0.23]{img/work-flow.jpg}
-    \caption{\centering Application work-flow}
+    \caption{\centering Schema of the flow of processing the textual domain description}
     \label{fig:work-flow}
 \end{figure}

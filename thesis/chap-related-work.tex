@@ -20,7 +20,7 @@ In the section \ref{section:ref_recent_approaches_using_llms} we dive deeper int
 
 \citet{Chen2023} evaluate generating classes, attributes and associations with 0-shot prompting, N-shot prompting and chain of thoughts with ChatGPT-3.5 and ChatGPT-4. They conclude that the combination of N-shot prompting with ChatGPT-4 achieved the best results however, they also add that fully domain modeling still remains impractical.
 
-\citet{Saeedizade2024} try many different step by step prompting methods to iteratively generate complete domain model. Their experiments reveal that using their prompting technique `` Competency Question by Competency Question'' with GPT-4 outperforms the average quality of the initial submission of novice ontology engineering students. 
+\citet{Saeedizade2024} try many different step by step prompting methods to iteratively generate complete domain model. Their experiments reveal that using their iterative step by step prompting technique ``Competency Question by Competency Question'' with ChatGPT-4 outperforms the average quality of the initial submission of novice ontology engineering students. 
 
 
 \section{Using LLM as an assistant}
@@ -35,6 +35,8 @@ Second, the suggestions are usually in a form such that the user can quickly dec
 
 \chapter{Related work discussion}
 
-As mentioned in the previous section, automatic generation of complete domain models with a LLM is yet not reliable thus we use the LLM as an assistant that co-operates with a human modeling expert based on a given domain description. This assistant always generates output in form of suggestions as the LLM can any time make some mistake. We divided the domain modeling tasks into problem of generating classes, attributes and associations, therefore the assistant is able to suggest classes, their attributes and their associations either based on one provided class or based on two provided classes.
+As we mentioned in the section \ref{section:ref_recent_approaches_using_llms}, fully automatic domain modeling works only for domain descriptions with small amount of domain elements even when the LLM is generating the output iteratively step by step \cite{Saeedizade2024}. This issue can be mitigated by including the user into the domain modeling process \cite{Camara2023} and using the LLM as an assistant. For example, \citet{Camara2023} tried using LLM as an assistant where the LLM generates some preliminary domain model and the user inputs following instructions to edit his domain model. However, the LLM executed directly each user's instruction that lead frequently to back-and-forth communication with the LLM to repair the mistakes it made. Additionally, the user did not have an option to manually model the parts of domain model that for example the LLM struggled with.
 
-To help the user decide if he wants to apply generated suggestions of attributes and associations we highlight each generated class, attribute and association in the given domain description. This is done by letting the LLM generate exact citation from the domain description which is then automatically highlighted in the given domain description.
+To address the mentioned issues in our thesis we let the user to manually create his domain model with the help of the LLM as an assistant. To improve the performance of the LLM we divide the domain modeling process into a set of simpler steps and we employ the RAG technique for filtering domain description.
+
+This assistant always generates output in form of suggestions as the LLM can make some mistake any time. To help the user decide if he wants to apply generated suggestions we highlight each generated element in the given domain description. This is done by letting the LLM generate exact citation from the domain description which is then automatically found in the given domain description.
