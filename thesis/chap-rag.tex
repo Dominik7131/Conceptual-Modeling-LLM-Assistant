@@ -23,7 +23,7 @@ TODO: Nepoužívat zájmeno "my", když zmiňuji nějaký obecnější problém.
 
 
 \subsubsection{Texts comparison}
-
+\label{texts_comparison}
 We use semantic and syntactic approach. We do not use some LLM for the text comparison as it usually takes many seconds to generate the output especially when in the worst case scenario the output can be very long when a large portion of the domain description has to be copied to the output.
 
 The semantic approach uses the ``\textit{all-MiniLM-L6-v2}'' model\footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}} that executes the described comparison in the vector space. It's intended use is a sentence and short paragraph encoder. As a comparison function we use cosine-similarity (TODO: Mám tady dát nějaký odkaz na cosine-similarity?).

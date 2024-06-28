@@ -50,22 +50,6 @@ The annotated domain description can contain multiple tags with the same name. T
 
 \section{Domain description filtering evaluation}
 
-\subsection{Limitations}
-
-\begin{itemize}
-\item asi že není jasně definováno, odkud příslušný domain element vyplývá + uvést příklad
-\end{itemize}
-
-
-\subsection{Model selection}
-
-\begin{itemize}
-\item all-MiniLM-L6-v2
-\item all-mpnet-base-v2
-\item TODO: popis modelů
-\end{itemize}
-
-
 \subsection{Evaluation methodology}
 
 
@@ -93,19 +77,55 @@ Now when given a domain description $T$ with it's reference domain model contain
 \[ P = \sum_{c \in C}\dfrac{|Y_c|}{|Z_c|}. \]
 
 
-\subsubsection{$F_1$ score}
+%\subsubsection{$F_1$ score}
 
-For given recall $R$ and precision $P$ we use the classic $F_1$ score definition:
+%For given recall $R$ and precision $P$ we use the classic $F_1$ score definition:
 
-\[ F_1 = \dfrac{2 \cdot P \cdot R}{P + R}.\]
+%\[ F_1 = \dfrac{2 \cdot P \cdot R}{P + R}.\]
+
+
+\subsection{Limitations}
+
+There is no strict definition on what the original text should contain for a corresponding domain element and a domain description. Therefore even when the recall is not $1.00$ it does not mean that the LLM will not be able to infer the corresponding domain element. \\
+
+TODO: Example \\
+
 
 \subsection{Results}
 
-\begin{itemize}
-\item obecně tu budou nějaké grafy a k nim popis, co ukazují
-\item tady je otázka, jestli třeba ukazovat, jaký je rozdíl mezi tím, kdy řešíme zájmena aspoň naivním přístupem vs. když to vůbec neřešíme
-\item TODO: co by tu mohlo být za grafy, nebo tabulky
-\end{itemize}
+In the section \ref{texts_comparison} we introduced the syntactic and semantic approach for domain description filtering. For comparing these approaches now we also introduce the no-filtering approach where the domain description is not filtered at all. Here are the measured results:
+
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{lcccc}
+
+    \toprule
+         & Recall classes & Recall attributes & Recall associations & Precision \\
+    \toprule
+    
+    \addlinespace
+         no-filtering      & 1.00  & 1.00  & 1.00 & 0.06 \\
+    	 syntactic-pronouns-ignore & 0.87 & 0.79 & 0.84 & 0.55 \\
+         syntactic-pronouns-naive & 0.93  & 0.91  & 0.90 & 0.49 \\
+         semantic-pronouns-ignore & 1.00 & 0.98 & 0.98 & 0.10 \\
+         semantic-pronouns-naive & 0.99 & 0.96 & 0.97 & 0.10 \\
+    \addlinespace
+    \bottomrule
+    \addlinespace
+    \end{tabular}
+    \caption{The size of the reference domain models}
+    \label{tab:filtering-results}
+\end{table}
+
+As expected, the no-filtering approach gets the highest possible score in terms of recall however, in terms of precision it gets the lowest score from all the other approaches.
+
+In the syntactic approach we see that naive pronouns detection improves the recall significantly but slightly decreases the precision.
+
+The semantic approach almost matches the no-filtering in terms of recall. However, it improves the precision. (TODO: Improve wording)
+
+Overall, when recall is important then the no-filtering approach or the semantic approach can be used. On the other hand, if we do not care about LLM not showing all possible domain elements suggestions, the syntactic approach works the best.
 
 
 \section{Selected LLMs}
