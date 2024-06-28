@@ -1,6 +1,3 @@
-from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS
-from definitions.utility import Field, UserChoice
-from utils.text_splitter import TextSplitter
 import json
 import re
 import os
@@ -8,6 +5,10 @@ import requests
 import sys
 
 sys.path.append(".")
+
+from utils.text_splitter import TextSplitter
+from definitions.utility import Field, UserChoice
+from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS
 
 
 BASE_URL = "https://backend.dataspecer.com/simplified-semantic-model?iri="

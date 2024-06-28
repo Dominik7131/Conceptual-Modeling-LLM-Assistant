@@ -1,11 +1,12 @@
-from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_TEXTS_COUNT
-from definitions.utility import UserChoice
 import csv
 import json
 import os
 import sys
 
 sys.path.append(".")
+
+from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_TEXTS_COUNT
+from definitions.utility import UserChoice
 
 
 MANUAL_EVALUATION_DIRECTORY_PATH = os.path.join("out", "evaluated", "actual")

@@ -1,7 +1,3 @@
-from syntactic_text_filterer import SyntacticTextFilterer
-from definitions.domain_modelling import DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS, DOMAIN_TEXTS_COUNT
-from definitions.utility import TextFilteringVariation, UserChoice
-from utils.text_splitter import TextSplitter
 import os
 import sys
 import argparse
@@ -12,6 +8,11 @@ TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 sys.path.append(".")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
+
+from syntactic_text_filterer import SyntacticTextFilterer
+from definitions.domain_modelling import DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS, DOMAIN_TEXTS_COUNT
+from definitions.utility import TextFilteringVariation, UserChoice
+from utils.text_splitter import TextSplitter
 
 
 # Indexes correspond to texts in domain models and last index corresponds to all texts together

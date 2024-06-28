@@ -1,6 +1,3 @@
-from definitions.utility import Field, FieldUI, TextFilteringVariation, UserChoice
-from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS
-from utils.llm_assistant import LLMAssistant
 import time
 import json
 import os
@@ -12,6 +9,10 @@ TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
 sys.path.append(".")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
+
+from definitions.utility import Field, FieldUI, TextFilteringVariation, UserChoice
+from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS
+from utils.llm_assistant import LLMAssistant
 
 
 ACTUAL_OUTPUT = "actual"
