@@ -59,7 +59,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- when editting an attribute it can be changed into an association and vice versa:
+- when editing an attribute it can be changed into an association and vice versa:
 
     <img src="images/frontend/change-to-association.png" alt="drawing" width="1000"/>
 
@@ -86,18 +86,18 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- note that the edge can be dragged only between the handles (the "black dots") of the nodes
+- note that an edge can be dragged only between the handles (the "black dots") of the nodes
 
 - when the mouse is hovered over any node, the handles display either "s" or "t":
 
     <img src="images/frontend/handles.png" alt="drawing" width="400"/>
 
     - "s" stands for the source class and "t" stands for the target class of the association
-    - the edge can be dragged either from "s" to "t" or from "t" to "s"
+    - an edge can be dragged either from "s" to "t" or from "t" to "s"
 
 <br/>
 
-- when editting any element the "magic wand" button can be used on the right side to let the assistant suggest the corresponding field:
+- when editing any element the "magic wand" button can be used on the right side to let the assistant suggest the corresponding field:
 
     <img src="images/frontend/suggest-single-field.png" alt="drawing" width="1000"/>
 
@@ -107,13 +107,14 @@ First, we present the main features of our LLM assistant and then we provide dem
 
     <img src="images/frontend/suggested-single-field.png" alt="drawing" width="1000"/>
 
-    - the suggestion can be accepted or rejected with the icons on the right side
+    - the suggestion can be accepted or rejected with the buttons on the right side
 
 <br/>
 
-### 2) summarization of the conceptual model
+### 2) summary of the conceptual model
 
-- when some part of the conceptual model is selected, the assistant can summarize it
+- the assistant can summarize any selected part of the conceptual model
+- the selected domain elements are visually represented by the blue color
 - the easiest way to select some part of the conceptual model is by creating a selection area with the mouse by holding shift and left mouse button
 
     <img src="images/frontend/selection.png" alt="drawing" width="900"/>
@@ -153,8 +154,6 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 ### 3) highlighting in the domain description which parts are represented by the conceptual model
 
-- for example, this feature can be used to check whether the conceptual model is completely representing the given domain description
-
 - when creating conceptual model with the help of the assistant each suggested element contains also the already mentioned original text
 - when some part of the conceptual model is selected all these original texts can be highlighted in the domain description using the "Highlight original text" button on the topbar:
 
@@ -174,11 +173,12 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- note that the assistant can make mistakes and that some part of the domain description is highlighted does not necessarily mean that it is represented by the conceptual model
+- for example, this feature can be used to check whether the conceptual model is completely representing the given domain description
+- however, note that the assistant can make mistakes and that some part of the domain description is highlighted does not necessarily mean that it is represented by the conceptual model
     - also the opposite thing applies: some non-highlighted parts of the domain description can already be represented by the conceptual model
 
 - for simplicity, whenever the domain description changes the computed original text indexes are discarded so nothing will be highlighted
-    - this means that for using this feature it is necessary to work with only one domain description without editting it in the process
+    - this means that for using this feature it is necessary to work with only one domain description without editing it in the process
 
 
 ### Settings
