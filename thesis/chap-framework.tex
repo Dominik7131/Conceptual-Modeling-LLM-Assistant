@@ -23,6 +23,8 @@ TODO: Data type generator \\
 
 TODO: Description generator \\
 
+TODO: Name generator (input: description and original text) \\
+
 
 \subsection{Requirements}
 
@@ -39,7 +41,22 @@ Based on these generic requirements, we propose a prompt meta-template shown in 
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[scale=1.00]{img/meta-templates.pdf}
+\begin{lstlisting}[
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true
+]
+01 Solely based on the given context {main control instruction}
+02 {modeling procedure}
+03 {output specification}
+04 EXAMPLE START
+05 Solely based on the given context {example main control instruction}
+06 This is the given context: {example context specification}
+07 Output: {example output}
+08 EXAMPLE END
+09 Solely based on the given context {main control instruction}
+10 This is the given context: {context specification}
+11 Output:
+\end{lstlisting}
     \caption{\centering Prompt meta-template for concept generators}
     \label{fig:meta-templates}
 \end{figure}
