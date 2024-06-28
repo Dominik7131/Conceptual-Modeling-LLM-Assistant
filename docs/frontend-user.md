@@ -13,7 +13,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 ### 1) suggestions of classes, attributes and associations
 - if a domain description is provided then the assistant's suggestions are solely based on the given domain description
     - we support only English
-- you can insert the domain description in the text box on the topbar:
+- the domain description can be inserted in the text box on the topbar:
 
     <img src="images/frontend/insert-domain-description.png" alt="drawing" width="900"/>
 
