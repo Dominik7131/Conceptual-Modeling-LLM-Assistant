@@ -19,46 +19,47 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- for trying out the application you can choose one of the following domain descriptions:
+- for trying out the application, one of the following domain descriptions can be chosen:
 
     - [data catalog](https://github.com/dataspecer/domain-modeling-benchmark/blob/main/front-end%20evaluation%20domains/data%20catalog/domain-description-01.txt)
     - [gaming](https://github.com/dataspecer/domain-modeling-benchmark/blob/main/front-end%20evaluation%20domains/gaming/domain-description-01.txt)
 
 <br/>
 
-- when the domain description is not provided the assistant suggests anything it considers reasonable
-    - in this case it's better to start modelling by adding a class manually with the "Add new class" button:
+- when the domain description is not provided, the assistant suggests anything it considers reasonable
+    - in this case it is better to start modelling by adding a class manually with the "Add new class" button:
 
         <img src="images/frontend/add-new-class-manually.png" alt="drawing" width="900"/>
 
 <br/>
 
-- for suggesting classes by the assistant use the "Suggest classes" button:
+- for suggesting classes by the assistant, the "Suggest classes" button can be used:
 
     <img src="images/frontend/suggest-classes.png" alt="drawing" width="900"/>
 
 <br/>
 
-- for suggesting attributes and associations by the assistant first create some class and then hover your mouse over this class, click on the three dots on the right side and select the "Suggest attributes" or "Suggest associations" button respectively
+- to have attributes and associations suggested by the assistant, first create a class
+- then, hover the mouse over this class, click on the three dots on the right side, and select either the "Suggest attributes" or "Suggest associations" button accordingly
 
     <img src="images/frontend/suggest-attributes.png" alt="drawing" width="400"/>
 
 <br/>
 
 - the generated suggestions are shown on the sidebar on the right side of the application
-- this is an example of 5 generated suggestions with the "Suggest classes" button without a domain description:
+- here is an example of 5 generated suggestions by using the "Suggest classes" button without a domain description:
 
     <img src="images/frontend/suggested-classes.png" alt="drawing" width="300"/>
 
     <br/>
 
-    - the "plus" button can be used to add the corresponding suggestion to your conceptual model
-    - the "edit" button can be used to first edit the corresponding suggestion and then add it to your conceptual model
+    - the "plus" button can be used to add the corresponding suggestion to the conceptual model
+    - the "edit" button can be used to first edit the corresponding suggestion and then add it to the conceptual model
     - the "like" or "dislike" button can be used to rate the corresponding suggestion
 
 <br/>
 
-- when editting an attribute you can change it into an association and vice versa:
+- when editting an attribute it can be changed into an association and vice versa:
 
     <img src="images/frontend/change-to-association.png" alt="drawing" width="1000"/>
 
@@ -72,54 +73,54 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- for suggesting associations in between two classes you can drag an edge between two nodes:
+- for suggesting associations in between two classes an edge can be dragged between two nodes:
 
     <img src="images/frontend/edge-drag.png" alt="drawing" width="600"/>
 
 <br/>
 
 
-- and then click on the "Suggest associations" button
+- and then proceed by clicking on the "Suggest associations" button
 
     <img src="images/frontend/suggest-associations-2.png" alt="drawing" width="600"/>
 
 <br/>
 
-- note that you can drag the edge only between the handles (the "black dots") of the nodes
+- note that the edge can be dragged only between the handles (the "black dots") of the nodes
 
-- when you hover your mouse over any node the handles show "s" or "t":
+- when the mouse is hovered over any node, the handles display either "s" or "t":
 
     <img src="images/frontend/handles.png" alt="drawing" width="400"/>
 
     - "s" stands for the source class and "t" stands for the target class of the association
-    - you can drag an edge either from "s" to "t" or from "t" to "s"
+    - the edge can be dragged either from "s" to "t" or from "t" to "s"
 
 <br/>
 
-- when editting any element you can use the "magic wand" button on the right side to let the assistant suggest the corresponding field:
+- when editting any element the "magic wand" button can be used on the right side to let the assistant suggest the corresponding field:
 
     <img src="images/frontend/suggest-single-field.png" alt="drawing" width="1000"/>
 
 <br/>
 
-- for example the suggested description for the attribute "homepage" of the class "catalog" looks like this:
+- for example, the suggested description for the attribute "homepage" of the class "catalog" looks like this:
 
     <img src="images/frontend/suggested-single-field.png" alt="drawing" width="1000"/>
 
-    - you can accept or reject the suggestion with the icons on the right side
+    - the suggestion can be accepted or rejected with the icons on the right side
 
 <br/>
 
 ### 2) summarization of the conceptual model
 
-- when you select some part of your conceptual model you can let the assistant to summarize it
-- the easiest way to select some part of your conceptual model is by creating a selection area with your mouse by holding shift and left mouse button
+- when some part of the conceptual model is selected, the assistant can summarize it
+- the easiest way to select some part of the conceptual model is by creating a selection area with the mouse by holding shift and left mouse button
 
     <img src="images/frontend/selection.png" alt="drawing" width="900"/>
 
 <br/>
 
-- then you can let the assistant to summarize the selected part:
+- then the assistant can summarize the selected part:
     - either in an unstructured plain text by clicking on the topbar on the button "Summary: plain text"
     - or in structured descriptions by clicking on the topbar on the button "Summary: descriptions"
 
@@ -127,7 +128,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- for example when this part of the conceptual model is selected (the light blue color denotes the selected classes, attributes and associations):
+- for example, when this part of the conceptual model is selected (the light blue color denotes the selected classes, attributes and associations):
 
     <img src="images/frontend/selection-aircraft.png" alt="drawing" width="1000"/>
 
@@ -173,11 +174,11 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- note that the assistant can make mistakes and that some part of the domain description is highlighted doesn't necessarily mean that it is represented by the conceptual model
+- note that the assistant can make mistakes and that some part of the domain description is highlighted does not necessarily mean that it is represented by the conceptual model
     - also the opposite thing applies: some non-highlighted parts of the domain description can already be represented by the conceptual model
 
 - for simplicity, whenever the domain description changes the computed original text indexes are discarded so nothing will be highlighted
-    - this means that if you want to use this feature then work with one domain description and don't edit it in the process
+    - this means that for using this feature it is necessary to work with only one domain description without editting it in the process
 
 
 ### Settings
@@ -188,10 +189,10 @@ This is how the settings tab looks like:
 
 <br/>
 
-As shown by the picture you can:
+As shown by the picture it is possible to:
 1) ignore domain description to temporarily work without the domain description
-2) change the strategy of how the domain description is filtered
-    - according to our experiments the syntactic variation works the best however, you can change the filtering variation to force the assistant to generate different suggestions for attributes and associations
+2) change the strategy of how the domain description is filtered:
+    - according to our experiments, the syntactic variation works the best however, it can be changed to force the assistant to generate different suggestions for attributes and associations
 
 
 
