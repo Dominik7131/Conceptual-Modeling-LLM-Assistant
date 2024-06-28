@@ -3,7 +3,7 @@
 ## Project structure
 The code is divided into these main directories:
 - [definitions](../backend/definitions/) contain definitions of constant variables and enums
-- [text-filtering](../backend/text-filtering/) contains semantic and syntactic algorithm for domain description filtering
+- [text-filtering](../backend/text-filtering/) contain semantic and syntactic algorithm for domain description filtering
 - [utils](../backend/utils/) contain scripts used by the LLM assistant server
     - all these scripts are briefly described:
         - [here separately](../backend/utils/README.md)
@@ -12,7 +12,7 @@ The code is divided into these main directories:
     - all these scripts are briefly described:
         - [here separately](../backend/tests/README.md)
         - later on in [the control flow of the architecture](architecture.md#llm-assistant-workflow)
-- [data-processing](../backend/data-processing/) contains scripts for experimenting with different configurations such as different prompts, text filtering strategies, LLMs, etc.
+- [data-processing](../backend/data-processing/) contain scripts for experimenting with different configurations such as different prompts, text filtering strategies, LLMs, etc.
     - scripts in the [generation](../backend/data-processing/generation/) directory are used for generating test data
         - [here is a brief description of each script](../backend/data-processing/generation/README.md)
     - scripts in the [evaluation](../backend/data-processing/evaluation/) directory are used for evaluating manually filled in data based on the generated test data

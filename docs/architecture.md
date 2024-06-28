@@ -21,7 +21,7 @@
 
 <br/>
 
-- when the user is creating his conceptual model on the frontend he can call our [LLM assistant server](backend-dev.md#llm-assistant-server) throught the UI for some help
+- when the user is creating his conceptual model on the frontend he can call our [LLM assistant server](backend-dev.md#llm-assistant-server) through the UI for some help
 - when the LLM assistant server is called a corresponding method is called on the instance of the `LLMAssistant` class from the `utils/llm_assistant.py` script
 
 - now the following needs to be done:
@@ -38,7 +38,7 @@
     - [here is the directory with all our prompt templates](../prompts/)
 - then the class `Replacer` from `utils/replacer.py` replaces the prompt symbols defined inside `definitions/prompt_symbols.py` with the corresponding parameters sent from the frontend
 - when the domain description is being filled in it can be firstly filtered by either our semantic or syntactic algorithm
-    - first the domain description is splited into chunks by the class `TextSplitter` from `utils/text_splitter.py`
+    - first the domain description is split into chunks by the class `TextSplitter` from `utils/text_splitter.py`
 
     - the semantic algorithm uses instance of the class `SemanticTextFilterer` from `text-filterer/semantic_text_filterer.py`
         - it uses a language model from [SentenceTransformers](https://sbert.net/) library
@@ -51,7 +51,7 @@
 
 ### LLM output processing
 - the `LLMAssistant` uses the instance of the class `LLMManager` from `utils/llm_manager.py` to send the prompt to the LLM server and to parse the output
-- if the outputed object contains original text then an instance of the class `OriginalTextFinder` from `utils/original_text_finder.py` is used to find it's original text indexes to highlight to the user this object in the domain description
+- if the outputted object contains original text then an instance of the class `OriginalTextFinder` from `utils/original_text_finder.py` is used to find it's original text indexes to highlight to the user this object in the domain description
     - the class `OriginalTextFinder` is able to recover from some minor mistakes which is tested inside the script `tests/find_original_text_indexes.py`
 - also for consistency we are automatically converting any generated name from any convention into the standard convention inside the script `utils/convention_convertor.py`
     - correctness of this conversion is tested inside the `tests/convention_convertor.py` script
