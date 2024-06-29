@@ -7,7 +7,7 @@ LLMs have made a significant breakthrough in the field of natural language proce
 
 \subsection{Architecture}
 
-The foundation of LLMs is the Transformer architecture, introduced by \citet{Vaswani2017}. This architecture relies on self-attention mechanism that allow the model to weigh the importance of different words in a sentence when making predictions. Unlike previous recurrent networks (RNNs) or long short-term memory networks (LSTMs), Transformers can process input data in parallel, significantly improving training efficiency and performance.
+The foundation of LLMs is the Transformer architecture, introduced by \citet{Vaswani2017}. This architecture relies on self-attention mechanism that allows the model to weigh the importance of different words in a sentence when making predictions. Unlike previous recurrent networks (RNNs) or long short-term memory networks (LSTMs), Transformers can process input data in parallel, significantly improving training efficiency and performance.
 
 
 \subsection{Parameters}
@@ -27,9 +27,9 @@ The temperature is a hyperparameter that controls the randomness of the model's 
 
 \subsection{Using LLMs}
 
-Despite advanced capabilities of LLMs, the generic nature of LLMs presents challenges when it comes to specific tasks. To improve LLM's output quality for these tasks there are mainly three options. (1) Training own LLMs, (2) fine-tuning an existing LLM and (3) using prompt engineering.
+Despite advanced capabilities of LLMs, their performance is limited when it comes to specific tasks. To improve LLMs' performance for these tasks there are mainly three options: (1) training own LLM from scratch, (2) fine-tuning an existing LLM and (3) using prompt engineering.
 
-Training own LLMs requires a tons of resources thus it is more viable to fine-tune an existing LLM. Fine-tuning of a LLM means updating it's weights by training on many labelled examples specific to the desired task \cite{Brown2020}. The main advantage of this approach is a strong performance on many benchmarks \cite{Brown2020}. However, the disadvantages are that fine-tuning requires a lot of labelled training data and can still be computationally expensive \cite{Brown2020}. Therefore, the prompt engineering is usually used by providing a prompt to the LLM.
+Training own LLM from scratch requires a tons of resources thus it is more viable to fine-tune an existing LLM. Fine-tuning of a LLM means updating it's weights by training on many labelled examples specific to the desired task \cite{Brown2020}. The main advantage of this approach is a strong performance on many benchmarks \cite{Brown2020}. However, the disadvantages are that fine-tuning requires a lot of labelled training data and can still be computationally expensive \cite{Brown2020}. Therefore, the prompt engineering is usually used by providing a prompt to the LLM.
 
 
 \section{Prompts}
@@ -42,9 +42,7 @@ A prompting technique is a strategy used to structure or format the prompt to in
 \subsection{General tips}
 \label{prompt_general_tips}
 
-There exists a lot of useful general tips for writing prompts independent on the chosen prompting technique. In our experience these tips helped mostly when working with less quality LLMs as the more quality LLMs are less sensitive to a slight differences in the prompt. The following tips are compilation of what we found useful from the ``Microsoft's prompt engineering guide\footnote{\url{https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions}}'' and ``OpenAI's prompt engineering guide\footnote{\url{https://platform.openai.com/docs/guides/prompt-engineering}}''. \\
-
-TODO: Toto by se možná hodilo až do vysvětlení našeho přístupu pro zdůvodnění některých prompt design rozhodnutí. \\
+There exist a lot of useful general tips for writing prompts independent of the chosen prompting technique. In our experience, these tips helped mostly when working with LLMs that have less parameters as the LLMs with more parameters are less sensitive to a slight differences in the prompt. The following tips are compilation of what we found useful from the ``Microsoft's prompt engineering guide\footnote{\url{https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions}}'' and ``OpenAI's prompt engineering guide\footnote{\url{https://platform.openai.com/docs/guides/prompt-engineering}}''.
 
 
 \subsubsection{Starting or ending with the most important instructions}
@@ -74,18 +72,18 @@ The output quality of LLMs largely depends on how they are prompted. The most fr
 
 \subsubsection{N-shot prompting}
 
-$N$-shot or few-shot prompting is a prompting technique where $N$ labelled examples are additionally inserted into the prompt to let the LLM learn from the specific examples but no weights are updated \cite{Brown2020}. For instance, one labelled example could contain an English sentence and the corresponding translated Czech sentence.
+$N$-shot or few-shot prompting is a prompting technique where $N$ labelled examples are additionally inserted into the prompt to let the LLM learn from the specific examples but no weights are updated \cite{Brown2020}. For instance, for a translation task, one labelled example could contain a sentence from one language and the corresponding translated sentence in another language.
 
 One of the challenges is to choose suitable value for the $N$. In some cases, not providing enough labelled examples can lead to a worse output quality as the LLM does not have enough context to learn. On the other hand, providing too many labelled examples can over-train the LLM and lead to generating specifically tailored responses to those labelled examples rather than generalizing to a new scenario. Also, when working with a small context window size too many labelled examples can take all the available space.
 
-For example, \citet{Brown2020} compares performance of fine-tuned LLMs and GPT-3 with zero-shot, one-shot and N-shot prompting on many different tasks. In some cases, the N-shot settings almost matches the performance of state-of-the-art fine-tuned LLMs.
+\citet{Brown2020} compare the performance of fine-tuned LLMs and GPT-3 with zero-shot, one-shot and N-shot prompting on many different tasks. In some cases, the N-shot settings almost match the performance of state-of-art fine-tuned LLMs.
 
 
 \subsubsection{Chain of thoughts}
 
 Chain of thoughts (CoT) prompting technique instructs the LLM to generate a sequence of coherent steps that lead to the final answer of a given task \cite{Wei2022}.
 
-For example, \citet{Wei2022} shows that on many tasks CoT prompting technique improves performance of a LLM compared with N-shot prompting. \\
+For example, \citet{Wei2022} shows that on many tasks CoT prompting technique improves performance of a LLM compared to N-shot prompting. \\
 
 TODO: Rozšířit info podle paperu "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models". Například uvést, že aby LLM generoval step-by-step řešení, tak lze udělat více způsoby, jako například přidat do promptu "Think step by step", ale to i zkombinovat s N-shot promptingem a přímo vložit konkrétní examply se step-by-step řešením. \\
 
@@ -121,4 +119,4 @@ NOTE: Tady můžu nakreslit nějaký obrázek, obsahově by se sem hodilo něco 
 
 Typically, in the first RAG step the chunks are embedded into a vector database by usually some small-scale language model typically based on Bidirectional Encoder Representations from Transformers (BERT). And in the next step the user's instruction is embedded into the vector space with the same language model. Then the language model computes the distance between the embedded instruction and each of the chunks and the closest $k$ chunks are retrieved.
 
-There are many language models that can be used for text embedding into a vector space. They mainly differ in their input format such as length of the input and whether the given query should be in form of a question or not. Also other methods can be used such as using the LLM to output the $k$ closest chunks.
+There are many language models that can be used for text embedding into a vector space. They mainly differ in their input format such as length of the input and whether the given query should be in form of a question or not. Also other methods can be used such as using the LLM to output the $k$ most similar chunks.
