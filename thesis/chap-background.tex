@@ -1,18 +1,23 @@
 \chapter{Background}
 
+This chapter provides an overview of the Large Language Models. We focus on the usage of the LLMs and we focus on the key techniques that can improve the LLMs performance.
+
+
 \section{Large Language Models}
 
-LLMs have made a significant breakthrough in the field of natural language processing. These models demonstrated an unprecedented ability to understand and generate human-like text, enabling a wide range of applications across various domains.
+The Large Language Models have made a significant breakthrough in the field of natural language processing (TODO: Add citations from CoT elicits reasoning (first sentence in the introduction section)). These models demonstrate an unprecedented ability to understand and generate human-like text, enabling a wide range of applications across various domains.
 
 
 \subsection{Architecture}
 
-The foundation of LLMs is the Transformer architecture, introduced by \citet{Vaswani2017}. This architecture relies on self-attention mechanism that allows the model to weigh the importance of different words in a sentence when making predictions. Unlike previous recurrent networks (RNNs) or long short-term memory networks (LSTMs), Transformers can process input data in parallel, significantly improving training efficiency and performance.
+The foundation of LLMs is the Transformer architecture, introduced by \citet{Vaswani2017}. This architecture relies on self-attention mechanism that allows the model to weigh the importance of different words in a sentence when making predictions. Unlike previous recurrent networks (RNNs) or long short-term memory networks (LSTMs), Transformers can process input data in parallel which significantly improves their training efficiency and performance.
 
 
 \subsection{Parameters}
 
-LLMs are characterized by their large number of parameters, often ranging from hundreds of millions to hundreds of billions. This scaling helps them to learn nuanced patterns and relationships in the data.
+LLMs are characterized by their large number of parameters, often ranging from hundreds of millions to hundreds of billions. The more parameters the LLMs have the typically better performance they offer \cite{Zhao2023} as this scaling helps them to learn nuanced patterns and relationships in the data. \\
+
+TODO: Místo citování toho zdroje [1] lze citovat starší zdroje viz CoT elicts reasoning v sekci "introduction"
 
 
 \subsection{Context window size}
@@ -22,14 +27,14 @@ Context window size of a LLM refers to the maximum amount of input tokens that t
 
 \subsection{Temperature}
 \label{temperature}
-The temperature is a hyperparameter that controls the randomness of the model's output. A higher temperature results in the model picking tokens with a lower probabilities which leads to a more diverse and creative output. On the other hand, a low temperature produces more deterministic and focused responses as the model picks the tokens with a higher probabilities.
+The temperature is a hyperparameter that controls the randomness of the model's output. The temperature value can be typically set to a value between 0 and 2. A higher temperature results in the model picking tokens with a lower probabilities which leads to a more diverse and creative output. On the other hand, a low temperature produces more deterministic and focused responses as the model picks the tokens with a higher probabilities.
 
 
 \subsection{Using LLMs}
 
-Despite advanced capabilities of LLMs, their performance is limited when it comes to specific tasks. To improve LLMs' performance for these tasks there are mainly three options: (1) training own LLM from scratch, (2) fine-tuning an existing LLM and (3) using prompt engineering.
+Despite advanced capabilities of LLMs, their performance is limited when it comes to specific tasks. To improve LLMs' performance for the specific tasks there are mainly three options: (1) training own LLM from scratch, (2) fine-tuning an existing LLM and (3) using prompt engineering.
 
-Training own LLM from scratch requires a tons of resources thus it is more viable to fine-tune an existing LLM. Fine-tuning of a LLM means updating it's weights by training on many labelled examples specific to the desired task \cite{Brown2020}. The main advantage of this approach is a strong performance on many benchmarks \cite{Brown2020}. However, the disadvantages are that fine-tuning requires a lot of labelled training data and can still be computationally expensive \cite{Brown2020}. Therefore, the prompt engineering is usually used by providing a prompt to the LLM.
+Training own LLM from scratch requires a tons of resources \cite{Zhao2023} thus it is more viable to fine-tune an existing LLM. Fine-tuning of a LLM means updating it's parameters by training on many labelled examples specific to the desired task \cite{Brown2020}. The main advantage of this approach is a strong performance on many benchmarks \cite{Brown2020}. However, the disadvantages are that fine-tuning requires a lot of labelled training data and can still be computationally expensive \cite{Brown2020}. Therefore, the prompt engineering is usually used by providing a prompt to the LLM.
 
 
 \section{Prompts}
@@ -42,81 +47,95 @@ A prompting technique is a strategy used to structure or format the prompt to in
 \subsection{General tips}
 \label{prompt_general_tips}
 
-There exist a lot of useful general tips for writing prompts independent of the chosen prompting technique. In our experience, these tips helped mostly when working with LLMs that have less parameters as the LLMs with more parameters are less sensitive to a slight differences in the prompt. The following tips are compilation of what we found useful from the ``Microsoft's prompt engineering guide\footnote{\url{https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions}}'' and ``OpenAI's prompt engineering guide\footnote{\url{https://platform.openai.com/docs/guides/prompt-engineering}}''.
-
+For creating a prompt there exist a lot of general guidelines that usually improve the LLMs' performance independent of the chosen prompting technique. In our experience, these guidelines\footnote{\url{https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions}}\footnote{\url{https://platform.openai.com/docs/guides/prompt-engineering}} improve the performance mostly for LLMs with less parameters as the LLMs with more parameters are usually less sensitive to a slight differences in the prompt. Now follow a few examples of these guidelines.
 
 \subsubsection{Starting or ending with the most important instructions}
-LLMs place the greatest emphasis on the information at the start and at the end of the prompt. Therefore, defining the main task at the start of the prompt and then repeating it at the end can increase the output quality.
+Usually LLMs place the greatest emphasis on the information at the start and at the end of the prompt as these parts typically contain the most important instructions. Therefore, defining the main task at the start of the prompt and then repeating it at the end can increase the LLM performance.
 
 
 \subsubsection{Adding clear consistent syntax}
-Adding clear and consistent syntax makes the prompt more human readable and also can improve the output quality.
+Adding clear and consistent syntax makes the prompt both more human readable and easier to comprehend for the LLM which in result can improve the LLM performance.
 
-
-\subsubsection{Breaking the task down}
-LLMs usually perform better when they are given order in which to generate the output. Also the order of the steps matter as the LLM generates the next token both based on the prompt and based on it's previous output.
-
-
-%\subsubsection{Priming the output}
-%In our experience the LLMs are usually trained in a way to start their response by some preliminary description of the output. This can be reduced by for example putting ``Output:'' at the end of the prompt.
-
-TODO: Možná něco o tom, že LLM typicky kladou velký důraz na system message, proto je dobré sem také uvést hlavní instrukci \\
-
-TODO: Projít si ty odkazy ve footnotech, jestli tam ještě nenajdu něco důležitého \\
+%NOTE: Additionally, we could provide some info about the importance of using a system message but so far I did not find any source that would mention that using the system message can improve a LLM performance than using only the user message
 
 
 \subsection{Prompting techniques}
 
-The output quality of LLMs largely depends on how they are prompted. The most frequently used prompting techniques are the following.
+The output quality of LLMs largely depends on how they are prompted \cite{Brown2020,Wei2022}. The most frequently used prompting techniques are the following.
 
 
 \subsubsection{N-shot prompting}
 
-$N$-shot or few-shot prompting is a prompting technique where $N$ labelled examples are additionally inserted into the prompt to let the LLM learn from the specific examples but no weights are updated \cite{Brown2020}. For instance, for a translation task, one labelled example could contain a sentence from one language and the corresponding translated sentence in another language.
+$N$-shot or few-shot prompting is a prompting technique where $N$ labelled examples are additionally inserted into the prompt to let the LLM learn from the specific examples but no parameters are updated \cite{Brown2020}. For instance, for a translation task, one labelled example could contain a sentence from one language and the corresponding translated sentence in another language.
 
-One of the challenges is to choose suitable value for the $N$. In some cases, not providing enough labelled examples can lead to a worse output quality as the LLM does not have enough context to learn. On the other hand, providing too many labelled examples can over-train the LLM and lead to generating specifically tailored responses to those labelled examples rather than generalizing to a new scenario. Also, when working with a small context window size too many labelled examples can take all the available space.
+One of the challenges is to choose suitable value for the $N$. In some cases, not providing enough labelled examples could lead to not using LLM's capabilities fully as the LLM does not have enough examples to learn from. On the other hand, providing too many labelled examples can over-train the LLM and lead to generating specifically tailored responses to those labelled examples rather than generalizing to a new scenario. Also, when working with a small context window size too many labelled examples can take all the available space.
 
-\citet{Brown2020} compare the performance of fine-tuned LLMs and GPT-3 with zero-shot, one-shot and N-shot prompting on many different tasks. In some cases, the N-shot settings almost match the performance of state-of-art fine-tuned LLMs.
+\citet{Brown2020} compare the performance of fine-tuned LLMs and GPT-3 with N-shot prompting on many different tasks. In some cases, the N-shot prompting technique almost matches the performance of state-of-the-art fine-tuned LLMs.
+
+The big advantage of this prompting technique is that it can be easily combined with other prompting techniques such as chain of thoughts.
 
 
 \subsubsection{Chain of thoughts}
 
 Chain of thoughts (CoT) prompting technique instructs the LLM to generate a sequence of coherent steps that lead to the final answer of a given task \cite{Wei2022}.
 
-For example, \citet{Wei2022} shows that on many tasks CoT prompting technique improves performance of a LLM compared to N-shot prompting. \\
+\citet{Wei2022} shows that on many tasks that require reasoning, CoT prompting technique improves performance of the LLMs. Furthermore, on a GSM8K benchmark of math word problems this prompting technique surpasses even fine-tunned GPT-3 \cite{Wei2022}.
 
-TODO: Rozšířit info podle paperu "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models". Například uvést, že aby LLM generoval step-by-step řešení, tak lze udělat více způsoby, jako například přidat do promptu "Think step by step", ale to i zkombinovat s N-shot promptingem a přímo vložit konkrétní examply se step-by-step řešením. \\
+The CoT prompting can be divided into two main paradigms (TODO: Cite Automatic CoT in LLMs). The first paradigm adds a phrase such as ``Let's think step by step'' into the prompt (TODO: Cite source from Automatic CoT in LLMs - Kojima et al). And the second paradigm inputs manual reasoning demonstrations in the prompt in form of the N-shot prompting technique \cite{Wei2022}. 
+The second paradigm is more performant \cite{Wei2022} (TODO: and cite Kojima)) however, it requires manual creation of the reasoning demonstrations.
 
-TODO: Možná vyjmenovat nějaké další možné přístupy, jako například automatic CoT, self-consistency CoT atd. \\
+Other CoT prompting techniques try to improve this basic approach such as automatic CoT, self-consistency CoT and Tree of thoughts. (TODO: přidat citace + asi ve zkratce vysvětlit, co je auto CoT a self-consistency CoT).
 
 
 \subsubsection{Tree of thoughts}
 
-The extension of the CoT technique is the tree of thoughts (ToT) prompting technique \cite{Long2023}. \\
+To improve LLMs' performance on complex tasks that require exploration or strategic lookahead the tree of thoughts (ToT) prompting technique can be used (TODO: Cite Yao et al. (2023) + \cite{Long2023} viz zdroj v mobilu). The main idea of the ToT prompting technique is to solve a given task by generating multiple thoughts that the LLM self-evaluates.
 
-TODO: trochu více popsat ToT, podobně jako u CoT rozebrat jednotlivé přístupy, jak lze dosáhnout toho, aby LLM generovat více větví myšlenek atd., hlavní zdroj: paper "LLM guided ToT" \\
+Similar to CoT, this prompting technique has two main paradigms. The first paradigm inserts into the prompt a phrase such as ``Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they are wrong at any point they leave. The question is $\ldots$'' (TODO: Citovat asi Hulbert 2023 viz krátký ToT zdroj co mám v mobilu). And the second paradigm inputs manual reasoning demonstrations in the prompt which can be done either in a single prompt fashion or throughout multiple prompts similarly to the self-consistency CoT.
+
+
+\subsection{Iterative prompting}
+
+We observed two main approaches when it comes to iterative prompting. In the first approach, the output generated by some LLM is then sent to an another LLM to evaluate the output. If the generated output receives a bad score it can be removed and optionally a follow-up prompt can be sent to generate a new output. For example, (TODO: Cite - asi ontology learning for LLMs a potom asi i Navigating ontology paper) used this technique. And in the second approach, to improve the LLM's output quality for a tasks consisting of multiple steps, the tasks are separated into multiple prompts so that in each step the LLM has to solve only one simpler problem. For example, (TODO: Cite - asi CQ by CQ u navigating ontology development) in their CQ by CQ prompting technique they instructed the LLM to each time generate a single reasoning step (TODO: Nebo odpověď pouze na jednu otázku, nebo něco takového). Additionally, both of these approaches can be combined.
+
+While these approaches can significantly improve the LLM output quality, their big disadvantage is that the final output response time increases as in each step the LLM has to process a new prompt and generate a new response which usually needs to be done sequentially.
 
 
 \section{Retrieval-augmented generation}
 
-To further improve performance of the LLMs when using prompting techniques, methods such as retrieval-augmented generation can be used.
+In some cases the LLM performance can be improved by methods such as retrieval-augmented generation.
 
 \subsection{Motivation}
 
 When a LLM generates output, it relies on its trained parameters, which may contain outdated information. This occurs because, after the training phase, these parameters are no longer updated. Consequently, the output produced by the LLM can be outdated or irrelevant. To address this issue, retrieval-augmented generation (RAG) can be employed to incorporate external knowledge into the LLM's output generation process.
 
 
-\subsection{RAG work-flow}
+\subsection{Work-flow}
 
-The RAG process typically involves three main steps \cite{Gao2023}: First, the creation of an external knowledge base. Second, the identification of relevant information within this knowledge base based on the user's input. And third, the generation of a prompt that combines the user's input with the retrieved relevant information from the external knowledge base. \\
+The RAG process typically involves three main steps \cite{Gao2023}: (1) indexing, (2) retrieval and (3) generation.
 
-NOTE: Ty jednotlivé body můžu klidně více rozepsat podle kroků: "Indexing", "Retrieval", "Generation" v \cite{Gao2023} \\
+\subsubsection{Indexing}
 
-NOTE: Tady můžu nakreslit nějaký obrázek, obsahově by se sem hodilo něco jako tento\footnote{\url{https://pvml.com/wp-content/uploads/2024/04/rag.png}}
+In the indexing step, the external knowledge base is created. This is typically done by gathering the external documents, converting them into a plain text, optionally pre-processing them and then segmenting them into smaller, more manageable chunks. Subsequently, these chunks are converted into vector representation through an embedding model. These chunks in the vector representation are then saved into a database for quick searching.
 
 
-\subsection{Models}
+\subsubsection{Retrieval}
 
-Typically, in the first RAG step the chunks are embedded into a vector database by usually some small-scale language model typically based on Bidirectional Encoder Representations from Transformers (BERT). And in the next step the user's instruction is embedded into the vector space with the same language model. Then the language model computes the distance between the embedded instruction and each of the chunks and the closest $k$ chunks are retrieved.
+When the user query is received, it is converted into the vector representation with typically the same model as in the indexing phase. Then the top $k$ most similar chunks to the user query are retrieved from the external knowledge base.
 
-There are many language models that can be used for text embedding into a vector space. They mainly differ in their input format such as length of the input and whether the given query should be in form of a question or not. Also other methods can be used such as using the LLM to output the $k$ most similar chunks.
+
+\subsubsection{Generation}
+
+Finally, the user query is combined with the retrieved chunks from the external knowledge base into a prompt and sent to the LLM. \\
+
+TODO: Nakreslit obsahově tento obrázek: \url{https://pvml.com/wp-content/uploads/2024/04/rag.png}
+
+
+\subsection{Embedding models}
+
+The embedding models are typically some small-scale language models based on Bidirectional Encoder Representations from Transformers (BERT). There are a lot of BERT based models. The dataset that each model was trained on typically determines the specific task that the model should be used for. Usually, these models take two inputs: a \textit{query} and a \textit{passage}. The \textit{query} is usually the instruction provided by the user while the \textit{passage} is usually a chunk of some document from the external knowledge base. The so called \textit{symmetric} models expect the length of the \textit{query} to be of the same length as the \textit{passage}. Conversely, the \textit{asymmetrical} models expect the \textit{query} and the \textit{passage} to be of a different length.
+
+
+\subsection{Pre-processing}
+
+Before the documents are segmented into the chunks they can be pre-processed to improve the RAG performance. For example, the unnecessary information can be removed. This can be done for example by instructing a LLM to remove the unnecessary information or in some specific cases by hand-crafting rules for simplifying sentences structure in combination with tools such as UDPipe (TODO: cite) for sentence analyses.

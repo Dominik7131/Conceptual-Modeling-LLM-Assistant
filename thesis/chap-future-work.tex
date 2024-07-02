@@ -1,17 +1,38 @@
 \chapter{Future work}
 
-\begin{itemize}
-\item removing already existing domain elements which we discussed a little bit in the section \ref{duplicate_domain_elements}
-\item summary generation task: experiment with temperature $> 0$
-\item problém se snahou vygenerovat pokaždé jiný výstup: nepodařilo se nám přijít na způsob, jak donutit LLM, aby generoval jiný výstup bez toho aniž bychom měnili prompt, future work je asi v tom zkusit nějak nastavit parametry, nebo najít způsob jak to udělat s minimální ztrátou kvality výstupu \\
-\item dynamic domain description
-\item translator of user's plain text instructions into changes inside a conceptual model (TODO: To možná souvisí s tím dynamickým popisem domény, tedy že budeme umět reagovat na změny)
-\item in domain description option to highlight the part that the assistant should solely focus on
-\item conceptual model updating: assistant that based on some instruction and given conceptual model creates an updated conceptual model (more info: consultation 23)
-\item suggestions generation based on chosen ontology design patterns (more info: consultation 23)
-\item dání do promptů buď celého uživatelova konceptuálního modelu, nebo pouze nějakých relevantních částí primárně s tím cílem, aby LLM nenavrhoval sémanticky ekvivalentní návrhy a sekundárně ten LLM třeba může použít ten uživatelův konceptuální model k tomu, aby okoukal styl, kterým uživatel modeluje
-\end{itemize}
+
+\section{Selecting ontology design patterns}
+
+There exist many ontology design patterns (TODO: footnote link to page from the end of consultation 23) for domain modeling that the users could select before they start with the domain modeling process. However, further research is needed to evaluate the capability of the LLMs to adhere to the selected ontology design patterns. Additionally, it is needed to measure the impact of the use of ontology design patterns on the output quality of the LLMs. 
 
 
-\section{RAG}
-As a future work the syntactic and semantic approach could be combined together. For example, first the semantic approach could filter the domain description and then the syntactic approach could filter the rest or vice versa. Another possibility is to let each approach to assign score to each sentence then combine the scores together and finally, remove the sentences based on some threshold.
+\section{Starting from a smaller domain model}
+
+Currently, the domain modeling process in our application starts from an empty domain model where the user starts by inserting classes, their attributes and their associations. To make this initial process faster, a smaller domain model could be automatically suggested by the LLM as a starting point.
+
+
+\section{Commands for domain modeling}
+
+To make the domain modeling process faster, the user could input commands in a natural language. These commands could be for example translated by the LLM into the domain modeling steps that we defined in the section \ref{modeling_steps}.
+
+
+\section{Modeling highlighted part of the domain description}
+
+Currently, the whole inserted user's domain description is always processed by our application. To process only some part of the domain description the user has to insert only some part of his domain description. To make this process more user friendly, only the selected part of the domain description could be processed. This could improve the LLM performance as our application would process only subset of the original domain description.
+
+
+\section{Removing already modeled suggestions}
+
+The goal is to remove the assistant suggestions of domain elements that the user has already present in his domain model. In the section \ref{duplicate_domain_elements} we discussed the main challenge of this problem and we presented our naive approach that removes the domain elements that have exactly the same name as the domain elements in the user's domain model.
+
+Another possible solution is to insert the user's domain model into the prompt and instruct the LLM to not suggest already modeled domain elements. However, this is a challenging task since inserting extra information into the prompt can decrease the LLM's output quality. To improve the performance of the LLM some filtering technique such as RAG can be used to insert into the prompt only the relevant parts of the user's domain model.
+
+
+\section{Updating old domain models}
+
+Currently, our application focuses only on creating a domain model from a given domain description. However, the domain description usually changes over time because of a new requirements. To help the user quickly update his old domain model a new set of features could be introduced. For example, the old and the new domain description could be inserted to let the assistant suggest changes for updating the old domain model.
+
+
+\section{RAG models combination}
+
+To improve the performance of our RAG approaches, the syntactic and semantic RAG approach could be combined together. For example, first the semantic approach could filter the domain description and then the syntactic approach could filter the rest of the text or vice versa. Possible improvement is to let each RAG approach assign some similarity score to each pair: source class and a domain description chunk. Finally, these scores would be combined together and used to determine which domain description chunks are relevant for the given source class.

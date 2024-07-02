@@ -8,16 +8,16 @@ TODO: Brief chapter description \\
 
 Our LLM based assistant provides the following services:
 \begin{enumerate}
-\item domain elements suggestion
+\item suggesting domain elements
 \item highlighting already modeled elements
-\item domain model summary
+\item summarising domain model
 \end{enumerate}
 
-\subsection{Domain elements suggestion}
+\subsection{Suggesting domain elements}
 
-When a domain description is provided the assistant generates suggestions solely based on the provided text. Otherwise, the assistant generates most relevant suggestions solely based on it's trained parameters.
+When a domain description is provided the assistant generates suggestions solely based on the provided text. Otherwise, the assistant generates most relevant suggestions however, he does not stick to any provided text. (TODO: Zkusit to lépe formulovat)
 
-Our assistant is able to suggest classes. For a selected class the assistant provides functionality to suggest it's attributes and associations. And for a selected source class and a selected target class the assistant is able to suggest their associations. Figure \ref{fig:assistant-features} demonstrates these features.
+Our assistant is able to suggest classes. For a selected class the assistant provides functionality to suggest it's attributes and associations. And for a selected source class and a selected target class the assistant is able to suggest their associations. Figure \ref{fig:assistant-features} demonstrates these features (TODO: asociace 2 nedemonstruje).
 
 \begin{figure}[!h]
     \centering
@@ -26,7 +26,7 @@ Our assistant is able to suggest classes. For a selected class the assistant pro
     \label{fig:assistant-features}
 \end{figure}
 
-Screenshot 1 shows the text area for the domain description and action buttons. The highlighted button \textit{Suggest classes} calls the $gen_c$ operator with the inserted domain description. Screenshot 2 shows the list of suggested classes. The user can use the highlighted ``+'' buttons to insert suggested classes into the modeling canvas. The other buttons are used for \textit{liking} and \textit{disliking} the corresponding suggestion, is editing before inserting t he suggested class into the canvas, and highlighting the suggestion in the original domain description. For the selected class, the user can ask for attribute and association suggestions, i.e. $gen_a$ and $gen_r$ operators for the class and the domain description. Screenshot 3 shows the attribute suggestions. Screenshot 4 shows the association suggestions. For the suggested attributes and association, the tool also shows the original text returned by the operators $gen_a$ and $gen_r$.
+Screenshot 1 shows the text area for the domain description and action buttons. The highlighted button \textit{Suggest classes} calls the $gen_c$ operator with the inserted domain description. Screenshot 2 shows the list of suggested classes. The user can use the highlighted ``+'' buttons to insert suggested classes into the modeling canvas. The other buttons are used for \textit{liking} and \textit{disliking} the corresponding suggestion, for editing before inserting the suggested class into the canvas, and highlighting the suggestion in the original domain description. For the selected class, the user can ask for attribute and association suggestions, i.e. $gen_a$ and $gen_{r1}$ operators for the class and the domain description. Screenshot 3 shows the attribute suggestions. Screenshot 4 shows the association suggestions. For the suggested attributes and association, the tool also shows the original text returned by the operators $gen_a$ and $gen_{r1}$.
 
 
 \subsubsection{Context highlighting}
@@ -43,7 +43,7 @@ This requires being able to match the LLM generated text with the domain descrip
 
 However, we encountered some common issues with this approach. For example, sometimes the LLM changes some letter when generating the text. For instance, when domain description contains the word ``motorized'' with the ``z'' letter the LLM can generate the word ``motorised'' with the ``s'' letter instead.
 
-To mitigate this issue we implemented a simple recovery strategy. When the generated text and the domain description cannot be directly matched we find their longest common substring and we split the generated text into the longest common substring and the remaining parts. Subsequently, we try to match these parts without the letter that was in the middle of these parts.
+To mitigate this issue we implemented a simple recovery strategy. When the generated text and the domain description cannot be directly matched we find their longest common substring and we split the generated text into the longest common substring and the remaining parts. Subsequently, we try to match these parts without the letter that was in between these parts.
 
 
 \subsubsection{Single field suggestion}
@@ -57,7 +57,7 @@ TODO: zmínit nastavení formátu pro jména až to budu mít naimplementované 
 
 \subsubsection{Attributes and associations conversion}
 
-Attributes can be usually modeled as an associations and vice versa. For example, ``address'' can be an attribute of a class ``person'' but it also can be an association in between the classes ``person'' and ``address''. Therefore, for each attribute suggestion we provide functionality to convert them to an association and vice versa. We convert an attribute into an association by putting the attribute name into the association target class and we put the attribute name into the association name. As the copied name does not have to fit the LLM assistant can be used to generate a new name. The opposite conversion works the same but in reverse.
+Attributes can be usually modeled as an associations and vice versa. For example, ``address'' can be an attribute of a class ``person'' but it also can be an association in between the classes ``person'' and ``address''. Therefore, for each attribute suggestion we provide functionality to convert them to an association and vice versa. We convert an attribute into an association by putting the attribute name into the association target class and we put the attribute name into the association name. As the copied name does not have to fit, the LLM assistant can be used to generate a new name. The opposite conversion works the same but in reverse.
 
 
 \subsubsection{Duplicate domain elements}
@@ -73,12 +73,12 @@ Second limitation is that semantically same domain elements with a different nam
 
 \subsection{Highlighting already modeled elements}
 
-We extend the mentioned highlighting of elements in the domain description by highlighting all the user's modeled elements in the domain description. \\
+We extend the mentioned highlighting of elements in the domain description by highlighting all the selected user's modeled elements in the domain description. \\
 
 TODO: na jaké hlavní problémy jsem narazil a proč některé zvýrazněné prvky v popisu domény ve skutečnosti nemusí být namodelovány a naopak viz poznámky \\
 
 
-\subsection{Summary of domain model}
+\subsection{Summarising domain model}
 
 For a selected part of the user's conceptual model the assistant is able to generate a summary for each class, attribute and association. We implemented two summary variations: in a plain text and in form of bullet points.
 
@@ -105,7 +105,7 @@ TODO: zmínit hlavní věci, které se dějí při parsování výstupu + odkáz
 
 \subsection{Saving user data}
 
-For each generated suggestion the user can optionally click on the like button or the dislike dislike button. The corresponding evaluated suggestion is sent to the backend and saved there with all the parameters that were used to generate this suggestion. To remember these parameters, the frontend remembers for each suggestion the parameters that were used for generation.
+For each generated suggestion the user can optionally click on the ``like'' button or the ``dislike'' button. The corresponding evaluated suggestion is sent to the backend and saved there with all the parameters that were used to generate this suggestion. To remember these parameters, the frontend remembers for each suggestion the parameters that were used for generation.
 
 We use these user's reactions for two main reasons. First reason is that we can use these data as a feedback. For example, we can automatically detect if some set of parameters repeatedly ended up with too many negative reactions. After that we can analyse the issue and fix it. Second reason is that we can use these data to fine-tuning some LLM to further improve the quality for our specific tasks.
 
@@ -123,4 +123,4 @@ Figure \ref{fig:work-flow} shows the basic flow of generating suggestions on the
     \label{fig:work-flow}
 \end{figure}
 
-The modeling process typically starts by providing the domain description. Then the domain model is step by step created by using suggestions from the assistant. Suggestions of attributes and associations are filtered by the selected retrieval-augmentation generation method. Then the prompt engineering techniques are applied and the final prompt is constructed and sent to LLM. Finally, the output from the LLM is parsed and the suggested model elements are sent back to the frontend.
+The modeling process typically starts by providing the domain description. Then the domain model is step by step created mainly by using suggestions of classes, attributes and associations from the assistant. Suggestions of attributes and associations are filtered by the selected retrieval-augmentation generation method. Then the prompt engineering techniques are applied and the final prompt is constructed and sent to LLM. Finally, the output from the LLM is parsed and the suggested model elements are sent back to the frontend.

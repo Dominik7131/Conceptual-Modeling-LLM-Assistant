@@ -12,13 +12,13 @@ In the section \ref{section:ref_recent_approaches_using_llms} we dive deeper int
 \section{Recent approaches using LLMs}
 \label{section:ref_recent_approaches_using_llms}
 
-\citet{Camara2023} experiment with ChatGPT-3.5 to generate domain models in PlantUML format. Their experiments demonstrate that generating complete domain models comprising more than 8 to 10 classes results into unusable domain models. However, they show that it works better to start from a smaller domain model and then iteratively enhance it based on user's instructions.
+\citet{Camara2023} experiment with ChatGPT-3.5 to generate domain models in PlantUML format. Their experiments demonstrate that generating complete domain models containing more than 8 to 10 classes results into unusable domain models. However, they show that it works better to start from a smaller domain model and then iteratively enhance it based on user's instructions.
 
 \citet{Fill2023} and \citet{Haerer2023} additionally explore abilities of ChatGPT-4 in generating domain models and they experiment with different output formats. \citet{Fill2023} conclude that the LLMs show enormous potential for modeling tasks and the \citet{Haerer2023} concludes that their results show that iterative modeling in a conversational dialogue could be practical, however, further systematic evaluations need to be conducted.
 
 \citet{BabaeiGiglou2023} experiment with different types of LLMs and concludes that ChatGPT-4 usually provides the best output quality for domain modeling tasks.
 
-\citet{Chen2023} evaluate generating classes, attributes and associations with 0-shot prompting, N-shot prompting and chain of thoughts with ChatGPT-3.5 and ChatGPT-4. They conclude that the combination of N-shot prompting with ChatGPT-4 achieved the best results however, they also add that fully domain modeling still remains impractical.
+\citet{Chen2023} evaluate generating classes, attributes and associations with 0-shot prompting, N-shot prompting and chain of thoughts with ChatGPT-3.5 and ChatGPT-4. They conclude that the combination of N-shot prompting with ChatGPT-4 achieved the best results however, they also add that fully automated domain modeling still remains impractical.
 
 \citet{Saeedizade2024} try many different step by step prompting methods to iteratively generate complete domain model. Their experiments reveal that using their iterative step by step prompting technique ``Competency Question by Competency Question'' with ChatGPT-4 outperforms the average quality of the initial submission of novice ontology engineering students. 
 
@@ -26,17 +26,34 @@ In the section \ref{section:ref_recent_approaches_using_llms} we dive deeper int
 \section{Using LLM as an assistant}
 \label{section:llm_as_an_assistant}
 
-Applications that use LLM as an assistant such as GitHub Copilot\footnote{\url{https://github.com/features/copilot}}, Microsoft Office Copilot\footnote{\url{https://www.microsoft.com/en-us/microsoft-copilot}}, Grammarly\footnote{\url{https://app.grammarly.com/}} and Notion AI\footnote{\url{https://www.notion.so/product/ai}}, have the following features in common.
+Here is a list of some applications with their brief description that use the LLM as an assistant:
 
-First, the LLM provides only suggestions that the user can accept, reject, or in some cases regenerate a new suggestion. The reason is that the LLMs still make a lot of mistakes so direct application of their output is not wanted. Furthermore, these mistakes can accumulate over time and create even worse output.
+\begin{itemize}
+\item \textit{GitHub Copilot}\footnote{\url{https://github.com/features/copilot}} for faster programming
+\item \textit{Microsoft Office Copilot}\footnote{\url{https://www.microsoft.com/en-us/microsoft-copilot}} for office work automation
+\item \textit{Grammarly}\footnote{\url{https://app.grammarly.com/}} primarily for spell checking
+\item \textit{Notion AI}\footnote{\url{https://www.notion.so/product/ai}} primarily for saving notes and ideas \\
+\end{itemize}
 
-Second, the suggestions are usually in a form such that the user can quickly decide if he wants to use them. For example, in Grammarly each mistake is underlined and a reason is provided. In GitHub Copilot it is usually a simple task to decide if suggested comment or code is relevant and so on.
+TODO: Upravit ty popisky podle toho, co najdu na internetu (asi hlavně podle reklam) \\
+
+These applications have the following features in common. First, the LLM provides only suggestions that the user can either accept or reject and in some cases a new suggestion can be regenerated. The reason for this behaviour is that the LLMs still make a lot of mistakes so direct application of their output is not wanted. Usually, these applications explicitly warn their user's that the output can provide false information. Furthermore, if these mistakes are not removed by the user they can accumulate over time and lead to even bigger mistakes.
+
+Second, the suggestions are usually in a form such that the user can quickly decide if he wants to use them. For example, in \textit{Grammarly} each suggestion is represented by an underlined text. Each underlined text contains the reason why it was underlined and the suggested correction. In \textit{GitHub Copilot} especially in hands of an experienced developer it is usually easy to decide if a suggested piece of code or a suggested code documentation is appropriate.
 
 
 \chapter{Related work discussion}
 
-As we mentioned in the section \ref{section:ref_recent_approaches_using_llms}, fully automatic domain modeling works only for domain descriptions with small amount of domain elements even when the LLM is generating the output iteratively step by step \cite{Saeedizade2024}. This issue can be mitigated by including the user into the domain modeling process \cite{Camara2023} and using the LLM as an assistant. For example, \citet{Camara2023} tried using LLM as an assistant where the LLM generates some preliminary domain model and the user inputs following instructions to edit his domain model. However, the LLM executed directly each user's instruction that lead frequently to back-and-forth communication with the LLM to repair the mistakes it made. Additionally, the user did not have an option to manually model the parts of domain model that for example the LLM struggled with.
+As mentioned in the section \ref{section:ref_recent_approaches_using_llms}, fully automated domain modeling works only for simple domain descriptions with a small amount of domain elements. This is true even when advanced prompting techniques are applied \cite{Saeedizade2024}. This issue can be mitigated by introducing the user into the domain modeling process \cite{Camara2023} and by using the LLM as an assistant. For example, \citet{Camara2023} experimented with domain modeling in a conversation dialogue fashion with rhe ChatGPT. First, the LLM generated some preliminary domain model and then the user created follow up instructions to edit his domain model. However, as the LLM executed directly each user's instruction this frequently lead to back-and-forth communication as the user tried correcting the mistakes made by the LLM in the previous steps. Additionally, the user did not have an option to manually model the parts of domain model that for example the LLM struggled with.
 
-To address the mentioned issues in our thesis we let the user to manually create his domain model with the help of the LLM as an assistant. To improve the performance of the LLM we divide the domain modeling process into a set of simpler steps and we employ the RAG technique for filtering domain description.
 
-This assistant always generates output in form of suggestions as the LLM can make some mistake any time. To help the user decide if he wants to apply generated suggestions we highlight each generated element in the given domain description. This is done by letting the LLM generate exact citation from the domain description which is then automatically found in the given domain description.
+\section{Areas with lack of research}
+Based on our exploration, the following areas have a lack of research and can have a significant impact on making the domain modeling process faster and more accessible:
+
+\begin{itemize}
+\item manual domain modeling extended with the LLM as an assistant that only provides suggestions
+\item using retrieval-augmented generation for domain modeling with LLMs
+\item using real-life domain descriptions for evaluating domain modeling with LLMs
+\end{itemize}
+
+To address these areas, our approach is to let the users manually create their domain models with the help of the LLM as an assistant. To improve the performance of the LLM, we divide the domain modeling process into a set of simpler steps and we employ the RAG technique for filtering domain descriptions. This assistant always generates output in form of a suggestions as the LLMs still frequently make mistakes. To help the users decide if they want to apply the generated suggestions, we highlight each suggested domain element in the given domain description. Finally, we evaluate our approach with a real-life domain descriptions.

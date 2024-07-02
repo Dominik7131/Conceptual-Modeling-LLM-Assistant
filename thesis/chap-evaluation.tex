@@ -37,7 +37,7 @@ For each domain, we manually created three semantically equivalent domain descri
 \emph{Eclectic} are written as a collection of less structured knowledge from different stakeholders, each describing the domain from a different point of view.
 \emph{Educational} emphasize the most important concepts at the beginning, where only essential aspects are described, followed by adding more details about the concepts later in the description.
 
-Additionally, to assess the quality of our domain description filtering approaches, for each domain description we also manually created corresponding annotated domain description. In each annotated domain descriptions are tags that for each domain element from corresponding reference domain model determine the text that the corresponding domain element can be inferred from. Here is an example of the original domain description and the corresponding annotated domain description from the \emph{farming} domain: \\
+Additionally, to assess the quality of our domain description filtering approaches, for each domain description we also manually created corresponding annotated domain description. In each annotated domain description are tags that for each domain element from corresponding reference domain model determine the text that the corresponding domain element can be inferred from. Here is an example of the original domain description and the corresponding annotated domain description from the \emph{farming} domain: \\
 
 \noindent{}Domain description: \textit{A farmer is an individual engaged in agriculture, growing and harvesting crops, and is identified uniquely by a name that is used to refer to the farmer from various documentation, statistical reporting, etc.} \\
 
@@ -63,25 +63,20 @@ For a domain element $e$ let $Y_e$ be the set of expected relevant sentences tha
 
 Now when given a domain description with it's reference domain model containing set of domain elements denoted by $E$. The recall $R$ is computed as:
 
-\[ R = \sum_{e \in E} \dfrac{|Y_e|}{|X_e|}. \]
+\[ R = \dfrac{\sum_{e \in E}|Y_e|}{\sum_{e \in E}|X_e|}. \]
 
 
 \subsubsection{Precision}
 
-For a class $c$ and domain description $T$ let $Y_c$ be the set of expected relevant sentences for the class $c$, for all it's attributes and for all it's associations. Now let $Z_c$ be the set of remaining sentences from the given domain description after the filtering based on the class $c$. Then the precision $P_c$ is for the class $c$ and the domain description $T$ is computed as:
+For a class $c$ and domain description $T$ let $Y_{c}$ be the set of expected relevant sentences for the class $c$, for all it's attributes and for all it's associations. Now let $Z_{c}$ be the set of remaining sentences from the given domain description after the filtering based on the class $c$. Then the precision $P_{c}$ for the class $c$ and the domain description $T$ is computed as:
 
-\[ P_c = \dfrac{|Y_c|}{|Z_c|}. \]
+\[ P_c = \dfrac{|Y_{c}|}{|Z_c|}. \]
 
 Now when given a domain description $T$ with it's reference domain model containing set of classes denoted by $C$. The precision $P$ is computed as:
 
-\[ P = \sum_{c \in C}\dfrac{|Y_c|}{|Z_c|}. \]
+\[ P_{c} = \dfrac{\sum_{c \in C}|Y_c|}{\sum_{c \in C}|Z_c|}. \]
 
-
-%\subsubsection{$F_1$ score}
-
-%For given recall $R$ and precision $P$ we use the classic $F_1$ score definition:
-
-%\[ F_1 = \dfrac{2 \cdot P \cdot R}{P + R}.\]
+We do not compute the precision separately for classes, attributes and associations as the goal of our RAG approach is to find relevant information for a given source class but not to find the information about classes, attributes and associations separately.
 
 
 \subsection{Limitations}
@@ -89,6 +84,13 @@ Now when given a domain description $T$ with it's reference domain model contain
 There is no strict definition on what the original text should contain for a corresponding domain element and a domain description. Therefore even when the recall is not $1.00$ it does not mean that the LLM will not be able to infer the corresponding domain element. \\
 
 TODO: Example \\
+
+
+\subsection{Selected models}
+
+TODO: Semantic approach model: ``\textit{all-MiniLM-L6-v2}'' model\footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}. It's intended use is a sentence and short paragraph encoder. As a comparison function we use cosine-similarity. (TODO: Zkusit stručně vysvětlit co je cosine-similarity) \\
+
+TODO: Syntactic approach: We use the \textit{MorphoDiTa} tool \cite{Strakova2014} with the ``\textit{english-morphium-wsj-140407}'' model \cite{Straka2014}. \\
 
 
 \subsection{Results}
@@ -130,37 +132,35 @@ Overall, when recall is important then the no-filtering approach or the semantic
 
 \section{Selected LLMs}
 
-As running a LLM requires a lot of resources, using LLM through some API typically costs some money. To have more freedom with our experiments we run open-source LLMs locally with LLaMA.cpp server\footnote{\url{https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md}} on a single NVIDIA A100 40GB GPU.
+Running a LLM requires a lot of resources, therefore frequently using a LLM through some API can cost a lot of money. Therefore, we run open-source LLMs locally with LLaMA.cpp server\footnote{\url{https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md}}. Our hardware is limited to a single NVIDIA A100 40GB GPU.
 
-We decided to use a pre-trained open-source LLM because training own model requires a ton of resources and fine-tuning some existing LLM requires a lot of data.
-
+\subsection{Limitations}
 Because of our hardware limitation we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter.
 
-Mixtral-8x7B has a context window size of 32k tokens and it outperforms or matches ChatGPT-3.5 across all evaluated benchmarks. This LLM has in total 47B parameters, which are distributed among 8 experts. To achieve faster output generation, for each generated token 2 of the 8 experts are selected. The selection of the experts can be different for each token \cite{Jiang2024}.
 
-Llama-3-70B has 8k tokens context window size and is allegedly  the first open-source LLM to match the ChatGPT-4's performance. However, as of writing this thesis, Meta's research paper about Llama 3 is not released yet.
-
-For LLM's output comparison, we also frequently used ChatGPT-3.5 through the web UI. \\
-
-NOTE: Potom až otestujeme i ChatGPT-4o, tak sem o tom LLM něco napíšu. \\
+\subsection{Mixtral-8x7B}
+Mixtral-8x7B has a context window size of 32k tokens and it outperforms or matches ChatGPT-3.5 across many benchmarks. This LLM has in total 47B parameters, which are distributed among 8 experts. To achieve faster output generation, for each generated token 2 of the 8 experts are selected. The selection of the experts can be different for each token \cite{Jiang2024}.
 
 
-\section{Challenges}
+\subsection{Llama-3-70B}
+Llama-3-70B has 8k tokens context window size and is allegedly  the first open-source LLM to match the ChatGPT-4's performance. However, as of writing this thesis, Meta's research paper about Llama 3 is not released yet. \\
+
+NOTE: Potom až otestujeme i ChatGPT-4o, tak sem o tom LLM něco napíšu.
+
+\section{Limitations}
+\begin{itemize}
+\item we used one domain modeling expert for evaluating attributes and associations, we used one student for evaluating classes, and domain elements descriptions
+\item we did preliminary experiments on most of the configurations with one middle sized domain description and then used more domain descriptions for the most promising configurations
+\end{itemize}
+
+
+\section{Evaluation of generated domain elements}
+
+\subsection{Challenges}
 \begin{itemize}
 \item one element can be modeled in a various ways
 \item for our purposes no existing tool for automated evaluating
 \end{itemize}
-
-
-\section{Limitations}
-\begin{itemize}
-\item we used one domain modeling expert for evaluation
-\item we did preliminary experiments on most of the configurations with one shorter and one longer domain description and then used more domain descriptions for the most promising configurations
-\end{itemize}
-
-
-\section{Generated domain elements evaluation}
-(= generated classes, attributes, associations evaluation)
 
 TODO: subsekce se všemi těmi různými pravidly, podle kterých jsme vyhodnocovali recall a precision \\
 

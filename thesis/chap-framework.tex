@@ -9,21 +9,33 @@ TODO: Brief chapter description
 
 We consider more fine-grained text generation problems solved by the following generators:
 
-\textbf{Class generator}: $gen_c$ that for $T$ suggests classes $\{C_1, \ldots, C_n\}$ each with a suggested $name(Ci)$.
+\begin{description}
+\item [Class generator] $gen_c$ that for $T$ suggests classes $\{C_1, \ldots, C_n\}$ each with a suggested $name(Ci)$.
 
-\textbf{Attribute generator}: $gen_a$ that for $T$ and a class $C$ suggests attributes $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$, suggested $name(P_i)$, and original text $orig(Pi)$ that is part of $T$ on which base $gen_a$ suggested $P_i$.
+\item [Attribute generator] $gen_a$ that for $T$ and some class $C$ suggests attributes $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$, suggested $name(P_i)$, and original text $orig(Pi)$ that is part of $T$ on which base $gen_a$ suggested $P_i$.
 
-\textbf{Association generator 1}: $gen_r$ that for $T$ and a class $C$ suggests associations $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$ (or $target(Pi) = C$), suggested $name(Pi)$, and with the original text $orig(P_i)$ that is part of $T$ on which base $gen_r$ suggested $P_i$. It also suggests the other class $D$, with $target(Pi)= D$ (or $source(Pi) = D$), and suggested $name(D)$. \\
+\item [Association generator 1] $gen_{r1}$ that for $T$ and a class $C$ suggests associations $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$ (or $target(Pi) = C$), suggested $name(Pi)$, and with the original text $orig(P_i)$ that is part of $T$ on which base $gen_{r1}$ suggested $P_i$. It also suggests the other class $D$, with $target(Pi)= D$ (or $source(Pi) = D$), and suggested $name(D)$.
 
-TODO: Association generator 2 \\
+\item [Association generator 2] $gen_{r2}$ that for $T$ and a source class $C$ and target class $D$ suggests associations $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$ and with $target(P_i) = D$, suggested $name(Pi)$, and with the original text $orig(P_i)$ that is part of $T$ on which base $gen_{r2}$ suggested $P_i$.
 
-TODO: Description generator \\
+\item [Class description generator] $gen_{cd}$ that for $T$ and the $name(C)$ of a class $C$ suggests $description(C)$.
 
-TODO: Data type generator \\
+\item [Attribute description generator] $gen_{ad}$ that for $T$ and the $name(P)$ of an attribute $P$ suggests $description(P)$.
 
-TODO: Description generator \\
+\item [Association description generator] $gen_{rd}$ that for $T$ and the $name(P)$ of an association $P$ suggests $description(P)$.
 
-TODO: Name generator (input: description and original text) \\
+\item [Attribute data type generator] $gen_{at}$ that for $T$ and the $name(P)$ of an attribute $P$ suggests $dataType(P)$.
+
+\item [Attribute cardinality generator] $gen_{ac}$ that for $T$ and the $name(P)$ of an attribute $P$ suggests $cardinality(P)$.
+
+\item [Association cardinality generator] $gen_{rc}$ that for $T$ and the $name(P)$ of an association $P$ suggests $cardinality(P)$.
+
+\item [Class name generator] $gen_{cn}$ that for $T$, the $description(C)$ and the $orig(C)$ of a class $C$ suggests  $name(C)$.
+
+\item [Attribute name generator] $gen_{an}$ that for $T$,  a $description(P)$ and an $orig(P)$ of an attribute $P$ suggests $name(P)$.
+
+\item [Association name generator] $gen_{rn}$ that for $T$, the $description(P)$ and the $orig(P)$ of an association $P$ suggests $name(P)$.
+\end{description}
 
 
 \subsection{Requirements}
@@ -32,7 +44,7 @@ An operator is defined with a prompt template. The template should instruct
 the LLM to work within the domain description context, to provide the required
 task-specific suggestions, and to output them in a predefined format for easy
 parsing. It should support techniques that provably improve LLM outputs, such
-as N-shot prompting \cite{Brown2020} or Chain-of-Thoughts \cite{Wei2022}.
+as N-shot prompting \cite{Brown2020} or chain of thoughts \cite{Wei2022}.
 
 
 \subsection{Structure}
@@ -65,7 +77,7 @@ A generator template is constructed by replacing the placeholders in the meta-te
 
 The main control instruction (line 01) summarizes the given task, which is for example to suggest classes or attributes or associations for a given class $C$, based solely on the given context. We place this instruction at the start of the prompt and then in some cases we repeat it at the end of the prompt as the LLM usually puts the most emphasis on the information at the start of the prompt and at the end of the prompt which we discussed in the section \ref{prompt_general_tips}.
 
-The modeling procedure (line 02) instructs the LLM on how to proceed before generating the final suggestions. Here, various prompt design strategies, such as CoT, can be implemented.
+The modeling procedure (line 02) instructs the LLM on how to proceed before generating the final suggestions. Here, various prompt design strategies, such as chain of thoughts, can be implemented.
 
 The output specification (line 03) defines the required output format so the output can be automatically parsed.
 
