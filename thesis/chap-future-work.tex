@@ -33,6 +33,11 @@ Another possible solution is to insert the user's domain model into the prompt a
 Currently, our application focuses only on creating a domain model from a given domain description. However, the domain description usually changes over time because of a new requirements. To help the user quickly update his old domain model a new set of features could be introduced. For example, the old and the new domain description could be inserted to let the assistant suggest changes for updating the old domain model.
 
 
+\section{Summary as a form of documentation}
+
+Currently, the ``summary descriptions'' feature generates a description for each selected domain element as discussed in the section \ref{summarising_domain_model}. This feature could be extended to help the users to document their domain model by adding the ``accept'', ``reject'' and ``regenerate'' suggestion button to each domain element description so the user could quickly create a description for each selected domain element.
+
+
 \section{RAG models combination}
 
 To improve the performance of our RAG approaches, the syntactic and semantic RAG approach could be combined together. For example, first the semantic approach could filter the domain description and then the syntactic approach could filter the rest of the text or vice versa. Possible improvement is to let each RAG approach assign some similarity score to each pair: source class and a domain description chunk. Finally, these scores would be combined together and used to determine which domain description chunks are relevant for the given source class.

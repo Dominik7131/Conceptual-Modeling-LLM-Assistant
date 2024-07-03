@@ -2,16 +2,15 @@
 
 To empirically validate the feasibility of our proposed methodology, we developed a prototype application. This application contains it's frontend and backend. The backend  implements the generators and other services and provides them via an API. Users can use our frontend via web application that communicates with the backend. The web application contains a text area for inserting a domain description and a modeling canvas where the user creates the domain model using classical manual modeling features and the suggestion features highlighted by the \textit{magic wand} icon. \\
 
-TODO: Brief chapter description \\
-
-\subsection{Assistant services}
-
 Our LLM based assistant provides the following services:
 \begin{enumerate}
 \item suggesting domain elements
 \item highlighting already modeled elements
-\item summarising domain model
+\item summarising domain model \\
 \end{enumerate}
+
+TODO: Brief chapter description \\
+
 
 \subsection{Suggesting domain elements}
 
@@ -33,7 +32,7 @@ Screenshot 1 shows the text area for the domain description and action buttons. 
 
 As mentioned in the section (TODO: add section reference), for each suggested attribute and association we highlight it's context in the domain description. Additionally, for each class we highlight it's name.
 
-This requires being able to match the LLM generated text with the domain description. The matching is easy as long as the generated text syntactically exactly matches some part of the domain description. %However, in some cases it makes sense to generate text that is not continuous in the domain description. For example: \\
+This requires to match the LLM generated text with the domain description. The matching is easy as long as the generated text syntactically exactly matches some part of the domain description. %However, in some cases it makes sense to generate text that is not continuous in the domain description. For example: \\
 
 %\noindent{\textit{Students have a name and address.}} \\
 
@@ -79,14 +78,11 @@ TODO: na jaké hlavní problémy jsem narazil a proč některé zvýrazněné pr
 
 
 \subsection{Summarising domain model}
+\label{summarising_domain_model}
 
-For a selected part of the user's conceptual model the assistant is able to generate a summary for each class, attribute and association. We implemented two summary variations: in a plain text and in form of bullet points.
+For a selected part of the user's conceptual model the assistant is able to generate a summary for each class, attribute and association. We implemented two summary variations: in a plain text and in a form of a bullet points.
 
-In both variations the corresponding prompt does not contain the user's domain description because we found out that our used LLM does not stick to the selected conceptual model when it gets both the user's conceptual model and the domain description as the input.
-
-The plain text summary generates a paragraph describing the user's selected domain model. We let the user to set the style of this summary. The available styles are ``analytical'', ``educational'' and ``funny story''. When a style is selected the prompt for plain text summary is edited so it instructs the LLM to generate the output in the selected style.
-
-The summary in form of bullet points for each element generates a description. In the future by adding options to accept, reject or regenerated each description this could be used to help the user to create a description for each of his modeled element for a better domain model documentation.
+The plain text summary generates a paragraph describing the user's selected domain model. The summary style can be changed in the settings. The available styles are ``analytical'', ``educational'' and ``funny story''. When a style is selected the prompt for plain text summary is edited so it instructs the LLM to generate the output in the selected style. The summary in form of bullet points for each element generates a description.
 
 In both cases the LLM does not receive the user's domain description as this led to a many situations where the LLM did not stick to the selected domain elements.
 

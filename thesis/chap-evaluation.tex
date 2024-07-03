@@ -55,7 +55,7 @@ The annotated domain description can contain multiple tags with the same name. T
 
 \subsubsection{Recall}
 
-For a domain element $e$ let $Y_e$ be the set of expected relevant sentences that are marked by the tag with the name equal to $name(e)$. Let $X_e \subseteq Y_e$ be the set of sentences from $Y_e$ that our RAG algorithm marked as relevant. Then the recall $R_e$ for the domain element $e$ is computed as:
+For a domain element $e$ let $Y_e$ be the set of expected relevant sentences that are marked by the tags with the name equal to $name(e)$. Let $X_e \subseteq Y_e$ be the set of sentences from $Y_e$ that our RAG algorithm marked as relevant. Then the recall $R_e$ for the domain element $e$ is computed as:
 
 \[ R_e = \dfrac{|Y_e|}{|X_e|}, \]
 
@@ -74,7 +74,7 @@ For a class $c$ and domain description $T$ let $Y_{c}$ be the set of expected re
 
 Now when given a domain description $T$ with it's reference domain model containing set of classes denoted by $C$. The precision $P$ is computed as:
 
-\[ P_{c} = \dfrac{\sum_{c \in C}|Y_c|}{\sum_{c \in C}|Z_c|}. \]
+\[ P = \dfrac{\sum_{c \in C}|Y_c|}{\sum_{c \in C}|Z_c|}. \]
 
 We do not compute the precision separately for classes, attributes and associations as the goal of our RAG approach is to find relevant information for a given source class but not to find the information about classes, attributes and associations separately.
 
@@ -132,7 +132,7 @@ Overall, when recall is important then the no-filtering approach or the semantic
 
 \section{Selected LLMs}
 
-Running a LLM requires a lot of resources, therefore frequently using a LLM through some API can cost a lot of money. Therefore, we run open-source LLMs locally with LLaMA.cpp server\footnote{\url{https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md}}. Our hardware is limited to a single NVIDIA A100 40GB GPU.
+Running a LLM requires a lot of resources, therefore frequently using a LLM through some API can cost a lot of money. Thus, we run open-source LLMs locally with LLaMA.cpp server\footnote{\url{https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md}}. Our hardware is limited to a single NVIDIA A100 40GB GPU.
 
 \subsection{Limitations}
 Because of our hardware limitation we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter.
@@ -162,7 +162,62 @@ NOTE: Potom až otestujeme i ChatGPT-4o, tak sem o tom LLM něco napíšu.
 \item for our purposes no existing tool for automated evaluating
 \end{itemize}
 
-TODO: subsekce se všemi těmi různými pravidly, podle kterých jsme vyhodnocovali recall a precision \\
+
+\subsection{Manual assessment of generated suggestions}
+
+Each generated suggestion was manually assessed by a human evaluator who recorded the assessment in the evaluation tables in columns \emph{Matches class}, \emph{Matches attribute}, and \emph{Matches association}.
+\emph{Semantic correspondence} between a suggested $X'$ and a reference $X$ $\in$ $M$ is essential for the evaluation.
+%The evaluator decides based on the metadata provided about $X'$ and $X$.
+If the question \emph{Can we model $X$ also as $X'$?} can be answered positively, $X'$ \emph{semantically corresponds to} $X$.
+
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{lccc}
+                     & \emph{Matches class}        & \emph{Matches attribute} & \emph{Matches association} \\
+\toprule
+\addlinespace
+        $gen_c(T)$   & $name(X)$ $\vert$ * $\vert$ & \emph{N/A}  & \emph{N/A} \\
+                     & $name(X_1)$;$\ldots$        & \emph{N/A}  & \emph{N/A} \\
+\addlinespace
+\midrule
+\addlinespace
+        $gen_a(T,C)$ & $name(D)$ $\vert$ *         & $name(X)$ $\vert$ * $\vert$ & $name(X)$ $\vert$ * $\vert$ \\
+        $gen_r(T,C)$ &                             & :$name(X)$ $\vert$ :* $\vert$ & :$name(X)$ $\vert$ :* $\vert$ \\
+                     &                             & $name(X_1)$;$\ldots$        & $name(X_1)$;$\ldots$ \\
+\addlinespace
+\bottomrule
+    \end{tabular}
+    \caption{Summary of manual evaluation rules}
+    \label{tab:manual-assessment-of-suggestions}
+\end{table}
+
+To limit subjectivity, we requested that the manual evaluation be carried out according to the rules summarized in Table \ref{tab:manual-assessment-of-suggestions}.
+If the class $X'$ suggested by $gen_c(T)$ corresponds to a single class $X$, we record $name(X)$ in \emph{Matches class}.
+%The correspondence is determined by whether $name(X')$ refers to the same conceptual entity as $name(X)$.
+The assessment considers both the occurrences of $name(X')$ within $T$ and how $X$ is structured within $M$.
+If $X'$ does not correspond to any class in $M$, but the evaluator considers it valid from the semantic point of view based on $T$, we record an asterisk (*) in \emph{Matches class}.
+%This indicates that according to the judgment of the evaluator, $X'$ represents a concept that could be modeled in $M$ based on its relevance and presence in $T$.
+This scenario can arise especially in more complex domains where not all concepts in the domain description are modeled, or a concept can be modeled with an attribute instead of an association and a class.
+If $X'$ does not correspond to any single class in $M'$, but its $name(X')$ corresponds to a list of classes $X_1$, $\ldots$, $X_n$ $\in$ $M$, their names are concatenated to $name(X_1)$;$\ldots$;$name(X_n)$ which we record in \emph{Matches classes}.
+This corresponds to scenarios where domain models are more coarse-grained.
+
+For a property $X'$ suggested by $gen_a(T,C)$ and $gen_r(T,C)$, we consider similar rules with some differences.
+If $X'$ is a suggested attribute, it can also correspond to an association $X$ and vice versa.
+This scenario arises in practice, where properties can be modeled as attributes or associations interchangably based on the desired level of semantic and structural detail of the resulting domain model.
+Therefore, $name(X)$ is recorded in \emph{Matches attribute} if $X$ is a reference attribute or \emph{Matches association} if $X$ is a reference association.
+Moreover, $X'$ must correspond to $X$ also in its source class and, if $X'$ is an association, in its target classes.
+$X'$ can be suggested in the reverse direction of $X$.
+The asterisk (*) and the lists are used in the same way as for the classes.
+In addition, when $X'$ corresponds to an association $X$ then $name(D)$ of the class at the other end of $X$ than the end with $C$ is recorded in \emph{Matches class}.
+This corresponds to a scenario where a domain modeler models $D$ not in the step of identifying classes in $T$, but when modeling $X$ starting in $C$.
+%In this step, the designer creates $D$ which we record by $name(D)$ in \emph{Matches class}.
+When $X'$ corresponds to an association that is not in $M$, the class at the other end of this association is a class $D$ in $M$, which we record again with $name(D)$ in \emph{Matches class}.
+Last but not least, it might happen that $X'$ corresponds to $X$ only when the correspondence requirement in the source/target class is relaxed so that the classes at the ends of $X'$ can be subclasses or superclasses of the corresponding classes at the ends of $X$.
+In that case, we write a colon(:) followed by $name(X)$ to \emph{Matches attribute} or \emph{Matches class}.
+We write a colon followed by an asterisk (:*) if $X'$ makes sense, but should be modeled for a subclass of superclass of $C$.
+
 
 
 \section{Descriptions evaluation}

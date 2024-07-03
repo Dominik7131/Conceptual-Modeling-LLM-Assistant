@@ -20,29 +20,27 @@ These basic modeling constructs are prevalent in real conceptual models \cite{Ke
 
 \item[Design an association for a class] For a class $C$ and a concept in $T$ that describes a relationship of $C$ with another concept, create an association $P$ such that $C = source(P)$ or $C = target(P)$, and define its $name(P)$. If not yet represented, create a class $D$ for the other concept and specify its $name(D)$.
 
-\item [Design a description for a class] For a class $C$ and a concept in $T$ that describes $C$, define $description(C)$.
+\item [Design a description for a class] For a class $C$ and a concept in $T$ that characterizes $C$, define $description(C)$.
 
-\item [Design a description for an attribute] For an attribute $P$ and a concept in $T$ that describes $P$, define $description(P)$.
+\item [Design a description for an attribute] For an attribute $P$ and a concept in $T$ that characterizes $P$, define $description(P)$.
 
-\item [Design a description for an association] For an association $P$ and a concept in $T$ that describes $P$, define $description(P)$.
+\item [Design a description for an association] For an association $P$ and a concept in $T$ that characterizes $P$, define $description(P)$.
 
-\item [Design a data type for an attribute] For an attribute $P$ and a concept in $T$ that describes $P$, define $dataType(P)$.
+\item [Design a data type for an attribute] For an attribute $P$ and a concept in $T$ that characterizes $P$, define $dataType(P)$.
 
-\item [Design a cardinality for an attribute] For an attribute $P$ and a concept in $T$ that describes $P$, define $cardinality(P)$.
+\item [Design a cardinality for an attribute] For an attribute $P$ and a concept in $T$ that characterizes $P$, define $cardinality(P)$.
 
-\item [Design a cardinality for an association] For an association $P$ and a concept in $T$ that describes $P$, define $cardinality(P)$.
+\item [Design a cardinality for an association] For an association $P$ and a concept in $T$ that characterizes $P$, define $cardinality(P)$.
 \end{description}
 
 
 \section{Example}
 
-Consider the following domain description $T$: ``In this company, every employee works in some department. Each employee is uniquely identified by his ID.'' Figure \ref{fig:simple-employee-domain-model} shows how a corresponding domain model can look like. It contains a class \textit{employee} with the attribute \textit{ID} and the association \textit{works in} between the classes \textit{employee} and \textit{department}. \\
-
-TODO: Na obrázku "name" změnit na ID a obrátit šipku u asociace \\
+Consider the following domain description $T$: ``In this company, every employee works in some department. Each employee is uniquely identified by his ID.'' Figure \ref{fig:simple-employee-domain-model} shows how a corresponding domain model can look like. It contains a class \textit{employee} with the attribute \textit{ID} and the association \textit{works in} between the classes \textit{employee} and \textit{department}.
 
 \begin{figure}[!h]
     \centering
-    \includegraphics[scale=1.00]{img/domain-modeling-steps-example.pdf}
+    \includegraphics[scale=0.65]{img/domain-modeling-steps-example.png}
     \caption{\centering Simple domain model example}
     \label{fig:simple-employee-domain-model}
 \end{figure}
@@ -56,4 +54,4 @@ To create the described domain model when starting from an empty domain model th
 \item design an association: for a class \textit{employee} and the concept ``every employee works in some department'' create the association $P$ such that \textit{works in} = $name(P)$, \textit{employee} = $source(P)$ and \textit{department} = $target(P)$
 \end{enumerate}
 
-For providing more information for this domain model, we can use the other mentioned steps for defining descriptions of the modeled elements, for defining data types of the modeled attributes and for defining cardinalities of the modeled attributes and associations.
+For providing more information for this domain model, the other mentioned steps can be used for defining descriptions of the modeled elements, for defining data types of the modeled attributes and for defining cardinalities of the modeled attributes and associations.

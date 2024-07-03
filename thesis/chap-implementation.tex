@@ -7,16 +7,6 @@ TODO: Brief chapter description.
 
 TODO: Provide reference for our GitHub prompts directory reference\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/prompts}}
 
-
-\subsection{General rules}
-
-We aim to design the prompts to resemble the LLMs training data to achieve best possible output quality. Given that usually the majority of these training data is scraped from the internet, we adhere to the following rules:
-\begin{itemize}
-\item our prompts are only in English
-\item unstructured data are inserted in the plain text format
-\item structured data are inserted in the JSON format \\
-\end{itemize}
-
 TODO: V nějaké sekci pak říct, že jsme iterativní techniky nedělali
 
 
@@ -29,7 +19,7 @@ To mimic this approach, we instruct the LLM in the output specification part to 
 
 
 \subsection{Output specification}
-To improve the response time of our application we instruct the LLM to output one isolated JSON object for each outputted domain element. This way as soon as the LLM generates some proper domain element it can be displayed to the user.
+We insert each structured data in the JSON format as each LLM should be greatly familiar with this format. To improve the response time of our application we instruct the LLM to output one isolated JSON object for each outputted domain element. This way as soon as the LLM generates some proper domain element it can be displayed to the user.
 
 
 \subsection{Modeling procedure}

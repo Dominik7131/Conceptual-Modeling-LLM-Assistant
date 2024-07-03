@@ -5,7 +5,7 @@ This chapter provides an overview of the Large Language Models. We focus on the 
 
 \section{Large Language Models}
 
-The Large Language Models have made a significant breakthrough in the field of natural language processing (TODO: Add citations from CoT elicits reasoning (first sentence in the introduction section)). These models demonstrate an unprecedented ability to understand and generate human-like text, enabling a wide range of applications across various domains.
+The Large Language Models have made a significant breakthrough in the field of natural language processing \cite{Peters2018,Devlin2019,Brown2020}. These models demonstrate an unprecedented ability to understand and generate human-like text, enabling a wide range of applications across various domains.
 
 
 \subsection{Architecture}
@@ -15,9 +15,7 @@ The foundation of LLMs is the Transformer architecture, introduced by \citet{Vas
 
 \subsection{Parameters}
 
-LLMs are characterized by their large number of parameters, often ranging from hundreds of millions to hundreds of billions. The more parameters the LLMs have the typically better performance they offer \cite{Zhao2023} as this scaling helps them to learn nuanced patterns and relationships in the data. \\
-
-TODO: Místo citování toho zdroje [1] lze citovat starší zdroje viz CoT elicts reasoning v sekci "introduction"
+LLMs are characterized by their large number of parameters, often ranging from hundreds of millions to hundreds of billions. The more parameters the LLMs have the typically better performance they offer \cite{Kaplan2020} as this scaling helps them to learn nuanced patterns and relationships in the data.
 
 
 \subsection{Context window size}
@@ -47,7 +45,7 @@ A prompting technique is a strategy used to structure or format the prompt to in
 \subsection{General tips}
 \label{prompt_general_tips}
 
-For creating a prompt there exist a lot of general guidelines that usually improve the LLMs' performance independent of the chosen prompting technique. In our experience, these guidelines\footnote{\url{https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions}}\footnote{\url{https://platform.openai.com/docs/guides/prompt-engineering}} improve the performance mostly for LLMs with less parameters as the LLMs with more parameters are usually less sensitive to a slight differences in the prompt. Now follow a few examples of these guidelines.
+For creating a prompt there exist a lot of general guidelines\footnote{\url{https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/advanced-prompt-engineering?pivots=programming-language-chat-completions}}\footnote{\url{https://platform.openai.com/docs/guides/prompt-engineering}} that usually improve the LLMs' performance independent of the chosen prompting technique. In our experience, these guidelines improve the performance mostly for LLMs with less parameters as the LLMs with more parameters are usually less sensitive to a slight differences in the prompt. Now follow a few examples of these guidelines.
 
 \subsubsection{Starting or ending with the most important instructions}
 Usually LLMs place the greatest emphasis on the information at the start and at the end of the prompt as these parts typically contain the most important instructions. Therefore, defining the main task at the start of the prompt and then repeating it at the end can increase the LLM performance.
@@ -61,14 +59,14 @@ Adding clear and consistent syntax makes the prompt both more human readable and
 
 \subsection{Prompting techniques}
 
-The output quality of LLMs largely depends on how they are prompted \cite{Brown2020,Wei2022}. The most frequently used prompting techniques are the following.
+The output quality of the LLMs largely depends on how they are prompted \cite{Brown2020,Wei2022}. The most frequently used prompting techniques are the following.
 
 
 \subsubsection{N-shot prompting}
 
-$N$-shot or few-shot prompting is a prompting technique where $N$ labelled examples are additionally inserted into the prompt to let the LLM learn from the specific examples but no parameters are updated \cite{Brown2020}. For instance, for a translation task, one labelled example could contain a sentence from one language and the corresponding translated sentence in another language.
+N-shot or few-shot prompting is a prompting technique where $N$ labelled examples are additionally inserted into the prompt to let the LLM learn from the specific examples but no parameters are updated \cite{Brown2020}. For instance, for a translation task, one labelled example could contain a sentence from one language and the corresponding translated sentence in another language.
 
-One of the challenges is to choose suitable value for the $N$. In some cases, not providing enough labelled examples could lead to not using LLM's capabilities fully as the LLM does not have enough examples to learn from. On the other hand, providing too many labelled examples can over-train the LLM and lead to generating specifically tailored responses to those labelled examples rather than generalizing to a new scenario. Also, when working with a small context window size too many labelled examples can take all the available space.
+One of the challenges is to choose suitable value for the $N$. In some cases, not providing enough labelled examples could lead to not using LLM's capabilities fully as the LLM does not have enough examples to learn from. On the other hand, providing too many labelled examples can over-train the LLM and lead to generating specifically tailored responses to those labelled examples rather than generalizing to a new scenario. Also, when working with a small context window size too many labelled examples can fill all the available space.
 
 \citet{Brown2020} compare the performance of fine-tuned LLMs and GPT-3 with N-shot prompting on many different tasks. In some cases, the N-shot prompting technique almost matches the performance of state-of-the-art fine-tuned LLMs.
 
@@ -81,24 +79,22 @@ Chain of thoughts (CoT) prompting technique instructs the LLM to generate a sequ
 
 \citet{Wei2022} shows that on many tasks that require reasoning, CoT prompting technique improves performance of the LLMs. Furthermore, on a GSM8K benchmark of math word problems this prompting technique surpasses even fine-tunned GPT-3 \cite{Wei2022}.
 
-The CoT prompting can be divided into two main paradigms (TODO: Cite Automatic CoT in LLMs). The first paradigm adds a phrase such as ``Let's think step by step'' into the prompt (TODO: Cite source from Automatic CoT in LLMs - Kojima et al). And the second paradigm inputs manual reasoning demonstrations in the prompt in form of the N-shot prompting technique \cite{Wei2022}. 
-The second paradigm is more performant \cite{Wei2022} (TODO: and cite Kojima)) however, it requires manual creation of the reasoning demonstrations.
+The CoT prompting technique can be divided into two main paradigms \cite{Zhang2022}. The first paradigm adds a phrase such as ``\textit{Let's think step by step}'' into the prompt \cite{Kojima2022}. And the second paradigm inputs manual reasoning demonstrations in the prompt in form of the N-shot prompting technique \cite{Wei2022}. 
+The second paradigm achieves better results \cite{Wei2022} however, it requires manual creation of the reasoning demonstrations.
 
-Other CoT prompting techniques try to improve this basic approach such as automatic CoT, self-consistency CoT and Tree of thoughts. (TODO: přidat citace + asi ve zkratce vysvětlit, co je auto CoT a self-consistency CoT).
+Many other prompting techniques try to improve this basic CoT prompting technique. For example, automatic CoT inserts automatically generated reasoning demonstrations in the prompt \cite{Zhang2022}. And Tree of thoughts that generates a multiple thoughts and then explores them.
 
 
 \subsubsection{Tree of thoughts}
 
-To improve LLMs' performance on complex tasks that require exploration or strategic lookahead the tree of thoughts (ToT) prompting technique can be used (TODO: Cite Yao et al. (2023) + \cite{Long2023} viz zdroj v mobilu). The main idea of the ToT prompting technique is to solve a given task by generating multiple thoughts that the LLM self-evaluates.
-
-Similar to CoT, this prompting technique has two main paradigms. The first paradigm inserts into the prompt a phrase such as ``Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they are wrong at any point they leave. The question is $\ldots$'' (TODO: Citovat asi Hulbert 2023 viz krátký ToT zdroj co mám v mobilu). And the second paradigm inputs manual reasoning demonstrations in the prompt which can be done either in a single prompt fashion or throughout multiple prompts similarly to the self-consistency CoT.
+To improve LLMs' performance on complex tasks that require exploration or strategic lookahead, the tree of thoughts (ToT) prompting technique can be used \cite{Long2023, Yao2024}. The main idea of the ToT prompting technique is to solve a given task by generating multiple thoughts that the LLM self-evaluates. This can be done even by using only a single prompt by inserting into the prompt instruction such as: ``\textit{Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they are wrong at any point they leave. The question is \ldots}'' \cite{Hulbert2023}.
 
 
-\subsection{Iterative prompting}
+\subsubsection{Iterative prompting}
 
-We observed two main approaches when it comes to iterative prompting. In the first approach, the output generated by some LLM is then sent to an another LLM to evaluate the output. If the generated output receives a bad score it can be removed and optionally a follow-up prompt can be sent to generate a new output. For example, (TODO: Cite - asi ontology learning for LLMs a potom asi i Navigating ontology paper) used this technique. And in the second approach, to improve the LLM's output quality for a tasks consisting of multiple steps, the tasks are separated into multiple prompts so that in each step the LLM has to solve only one simpler problem. For example, (TODO: Cite - asi CQ by CQ u navigating ontology development) in their CQ by CQ prompting technique they instructed the LLM to each time generate a single reasoning step (TODO: Nebo odpověď pouze na jednu otázku, nebo něco takového). Additionally, both of these approaches can be combined.
+For improving the performance of LLMs on more complex task, these tasks can be broken down into a multiple subtasks by diving a prompt into a multiple prompts. This approach is known as the prompt chaining. Furthermore, LLM output can be self-evaluated by the LLM in each step and when an inappropriate output is detected, the prompt used in the previous step can be enhanced with a textual feedback generated by the LLM \cite{Shinn2024}.
 
-While these approaches can significantly improve the LLM output quality, their big disadvantage is that the final output response time increases as in each step the LLM has to process a new prompt and generate a new response which usually needs to be done sequentially.
+The big disadvantage of these iterative prompting techniques is that in each step the LLM has to process a new prompt and generate a new response which in total can take many seconds especially when each subtask needs to be executed sequentially.
 
 
 \section{Retrieval-augmented generation}
@@ -110,13 +106,13 @@ In some cases the LLM performance can be improved by methods such as retrieval-a
 When a LLM generates output, it relies on its trained parameters, which may contain outdated information. This occurs because, after the training phase, these parameters are no longer updated. Consequently, the output produced by the LLM can be outdated or irrelevant. To address this issue, retrieval-augmented generation (RAG) can be employed to incorporate external knowledge into the LLM's output generation process.
 
 
-\subsection{Work-flow}
+\subsection{Basic work-flow}
 
 The RAG process typically involves three main steps \cite{Gao2023}: (1) indexing, (2) retrieval and (3) generation.
 
 \subsubsection{Indexing}
 
-In the indexing step, the external knowledge base is created. This is typically done by gathering the external documents, converting them into a plain text, optionally pre-processing them and then segmenting them into smaller, more manageable chunks. Subsequently, these chunks are converted into vector representation through an embedding model. These chunks in the vector representation are then saved into a database for quick searching.
+In the indexing step, the external knowledge base is created. This is typically done by gathering the external documents, converting them into a plain text, optionally pre-processing them and then segmenting them into smaller, more manageable chunks. Subsequently, these chunks are typically converted into vector representation through an embedding model. These chunks in the vector representation are then saved into a database for quick searching.
 
 
 \subsubsection{Retrieval}
@@ -126,16 +122,14 @@ When the user query is received, it is converted into the vector representation 
 
 \subsubsection{Generation}
 
-Finally, the user query is combined with the retrieved chunks from the external knowledge base into a prompt and sent to the LLM. \\
-
-TODO: Nakreslit obsahově tento obrázek: \url{https://pvml.com/wp-content/uploads/2024/04/rag.png}
+Finally, the user query is combined with the retrieved chunks from the external knowledge base into a prompt and sent to the LLM.
 
 
 \subsection{Embedding models}
 
-The embedding models are typically some small-scale language models based on Bidirectional Encoder Representations from Transformers (BERT). There are a lot of BERT based models. The dataset that each model was trained on typically determines the specific task that the model should be used for. Usually, these models take two inputs: a \textit{query} and a \textit{passage}. The \textit{query} is usually the instruction provided by the user while the \textit{passage} is usually a chunk of some document from the external knowledge base. The so called \textit{symmetric} models expect the length of the \textit{query} to be of the same length as the \textit{passage}. Conversely, the \textit{asymmetrical} models expect the \textit{query} and the \textit{passage} to be of a different length.
+The embedding models are typically some small-scale language models based on Bidirectional Encoder Representations from Transformers (BERT). There are a lot of BERT based models. The dataset that each model was trained on typically determines the specific task that the model should be used for to achieve the best possible performance. Usually, these models take two inputs: a \textit{query} and a \textit{passage}. The \textit{query} is usually the instruction provided by the user while the \textit{passage} is usually a chunk of some document from the external knowledge base. The so called \textit{symmetric} models expect the length of the \textit{query} to be of the same length as the \textit{passage}. Conversely, the \textit{asymmetrical} models expect the \textit{query} and the \textit{passage} to be of a different length.
 
 
 \subsection{Pre-processing}
 
-Before the documents are segmented into the chunks they can be pre-processed to improve the RAG performance. For example, the unnecessary information can be removed. This can be done for example by instructing a LLM to remove the unnecessary information or in some specific cases by hand-crafting rules for simplifying sentences structure in combination with tools such as UDPipe (TODO: cite) for sentence analyses.
+Before the documents are segmented into the chunks they can be pre-processed to improve the RAG performance. For example, from each document the unnecessary information can be removed by using a LLM or in some specific cases by hand-crafting rules for simplifying sentences structure in combination with tools for sentence analyses such as UDPipe\footnote{\url{https://ufal.mff.cuni.cz/udpipe}}.
