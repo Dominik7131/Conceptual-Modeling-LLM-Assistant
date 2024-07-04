@@ -2,35 +2,49 @@
 \label{chap:related_work}
 
 The difficulty of domain modeling has long been a well-known problem that has been the focus of many authors \cite{Bossung2007}.
-We can observe two research directions, one exploring the methodological possibilities of allowing domain experts to create domain models without requiring modeling expertise \cite{Bossung2007,Denaux2011,Ionita2015}, the other focusing on domain modeling automation \cite{Arora2016,Saeedizade2024,Lucassen2017,Burgueno2021}.
+We can observe two research directions, one exploring the methodological possibilities of allowing domain experts to create domain models without requiring modeling expertise \cite{Bossung2007,Denaux2011,Ionita2015}, the other focusing on domain modeling automation \cite{Arora2016,Saeedizade2024,Lucassen2017,Burgueno2021}. In previous research on domain modeling automation, we can identify rule-based and machine learning methods.
 
-In previous research on domain modeling automation, we can identify rule-based and machine learning methods.
+
+\section{Rule-based methods}
+
 In the rule-based field, \citet{Arora2016} studied rule-based methods for the extraction of models from the specification of requirements in the natural language (NL) and provided a comprehensive overview of the existing rule-based methods up to date.
 %They distinguished rules for concept extraction, associations and generalization extraction, cardinalities extraction, and attributes extraction.
 %The rules were based on the linguistic syntactical analysis of the NL sentences, e.g. nouns in subject/object positions, verbs, genitives, and adjectives, etc.
 The paper also introduced novel extraction rules that better exploit linguistic dependency information from NLP parsers with link paths, a series of syntactic dependencies in a sentence that connect two concepts indirectly through one or more intermediate concepts.
 The focus on complex NLP rules was later criticized in \cite{Lucassen2017} where the authors proposed a simpler approach to extract domain models from user requirements expressed as user stories (requirements in the form of \emph{As a <who>, I want <what>, so that <why>.})
 %Even less expressive than unrestricted domain descriptions, user stories are a popular way to express user requirements in practice.
-Later works elaborated further on this approach, e.g. \citet{Nasiri2021}, with more recent \citet{Gupta2023} that considers so-called Behavior-Driven Development scenarios that extend user stories but they are still simpler than NL.
+Later works elaborated further on this approach, e.g. \citet{Nasiri2021} and with more recent \citet{Gupta2023} that consider so-called Behavior-Driven Development scenarios that extend user stories but they are still simpler than NL.
 Recently, \citet{Burgueno2021} focused on assisting modeling experts by generating potential new model elements to be added to an existing one instead of generating full models.
 Recent field surveys are available for further details by \citet{Raharjana2021} and \citet{Sonbol2022}.
 
 \citet{Burgueno2021} complement the rule-based approach by identifying relevant parts of NL descriptions using word embeddings.
 This leads us to another family of domain model extraction techniques that are based on machine learning (ML).
+
+
+\section{Machine learning methods}
+
 \citet{Saini2020,Saini2020a,Saini2020b} introduced a technique that extends the NLP rule-based techniques with ML classifiers such as Linear Discriminant Analysis and Logistic Regression to predict concept categories and types, and Bidirectional Long Short-Term Memory (BiLSTM) neural network model to determine relationships, cardinalities, and patterns among domain concepts in clusters of sentences describing semantic concepts in domain descriptions.
 The authors then extended this approach with a bot-assisted approach that provides interactive support to domain modelers by generating multiple possible solutions for the given descriptions and incrementally adapting to the domain modeler's decisions \cite{Saini2022}.
 \citet{Yang2022} describe another approach that combines NLP, rule-based concept extraction, and ML. It describes a classifier that labels sentences as describing a class or a relationship. Handwritten rules are then applied to parse English sentences to extract fragments of UML class diagrams, which are then merged.
 
-Recent advances in the field of LLMs have directed the attention of researchers towards exploring the possibilities of using them to automate domain modeling. \citet{Fill2023} conducted early experiments using ChatGPT based on GPT-4 models \cite{Achiam2023} to show how to generate domain models. They show basic prompt templates and demonstrate on simple domain description examples that the model is able to generate ER and UML class diagrams in a structured JSON format.
-They also experiment with process models.
+Recent advances in the field of LLMs have directed the attention of researchers towards exploring the possibilities of using them to automate domain modeling.
+
+
+\subsection{Employing LLMs}
+
+\citet{Fill2023} conducted early experiments using ChatGPT based on GPT-4 models \cite{Achiam2023} to show how to generate domain models. They show basic prompt templates and demonstrate on simple domain description examples that the model is able to generate ER and UML class diagrams in a structured JSON format.
 \citet{Camara2023} also analyze the possible use of ChatGPT as a domain modeling assistant. The analysis is based on two experiments.
 The first was based on individual interaction of the authors with ChatGPT who wrote prompts asking ChatGPT to create models of different size (10 to 40 classes+associations) based on short domain descriptions.
 The second was based on comparing the domain models generated by ChatGPT with predesigned domain models. The authors showed that the performance of the ChatGPT (in Feb 2023 version) was not as good as it was observed in the field of programming code generation. The experiments demonstrated the ability of ChatGPT to correctly generate only models with fewer than 8-10 classes. However, they also demonstrated that the interaction with the ChatGPT to build the model incrementally improves the results.
 %The authors also described the qualitative differences between different domains, probably caused by the fact that these domains were represented at different levels of detail in the training data.
-\citet{Chen2023} provided the first systematic analysis of the capabilities of LLMs to generate domain models from textual descriptions using different prompting strategies. The authors focused on the task of generating a domain model from the given domain description without interaction with the user. They describe a versatile architecture that supports different prompt engineering techniques (CoT, N-shot prompting), different LLMs (GPT-3.5, GPT-4 in the paper, but the architecture is not limited to this), and different domain modeling constructs on the output.
+\citet{Chen2023} provided the first systematic analysis of the capabilities of LLMs to generate domain models from textual descriptions using different prompting strategies. The authors focused on the task of generating a domain model from the given domain description without interaction with the user. They describe a versatile architecture that supports different prompt engineering techniques (CoT, N-shot prompting), different LLMs (GPT-3.5 and GPT-4 in the paper, but the architecture is not limited to these), and different domain modeling constructs on the output.
 The paper also presents an experimental evaluation of the proposed architecture. Using eight domain descriptions from the authors' university courses, corresponding manually created reference domain models (7-23 classes, 11-43 attributes, 9-27 associations) and LLM outputs manually compared to the reference models, they demonstrated the F1 scores 0.76 for classes, 0.61 for attributes, and 0.34 for relationships, concluding that LLMs are still impractical for fully automated modeling.
 
 The field of domain modeling automation is related to the field of \emph{ontology learning} (OL)\cite{Konys2019,Khadir2021}, which includes not only the automated extraction of domain models from unstructured text, but also from other sources, such as structured data \cite{Lakzaei2021}.
+
+
+\subsubsection{Ontology learning}
+
 \citet{Neuhaus2023} concludes that LLMs can be helpful to ontology engineers when designing their domain models as ontologies. However, we should not expect the output of an LLM to reflect a logically consistent and sound view of any given domain, because the training data of any LLM likely contain a variety of divergent views on any given subject matter.
 Recently, \citet{BabaeiGiglou2023} explored the potential of LLMs for OL through three partial OL tasks -- suggesting conceptual types for a given term, identifying ISA hierarchies between two types, and identifying non-ISA associations between two types. The tasks do not consider the domain description, but extract the domain model directly from the trained parameters of the LLM.
 \citet{Saeedizade2024} investigated the potential of LLMs to help ontology engineers by generating OWL ontologies from ontological requirements.

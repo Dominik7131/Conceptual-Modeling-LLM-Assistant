@@ -99,9 +99,9 @@ Other parameters are set to their default values which are defined in the OpenAI
 TODO: zmínit hlavní věci, které se dějí při parsování výstupu + odkázat se na to, že odstraňování duplicitních elementů jsme již pokryli v předchozí subsekci \\
 
 
-\subsection{Saving user data}
+\subsection{Saving users data}
 
-For each generated suggestion the user can optionally click on the ``like'' button or the ``dislike'' button. The corresponding evaluated suggestion is sent to the backend and saved there with all the parameters that were used to generate this suggestion. To remember these parameters, the frontend remembers for each suggestion the parameters that were used for generation.
+For each generated suggestion users can optionally click on the ``like'' button or the ``dislike'' button. The corresponding evaluated suggestion is sent to the backend and saved there with all the parameters that were used to generate this suggestion. To remember these parameters, the frontend remembers for each suggestion the parameters that were used for generation.
 
 We use these user's reactions for two main reasons. First reason is that we can use these data as a feedback. For example, we can automatically detect if some set of parameters repeatedly ended up with too many negative reactions. After that we can analyse the issue and fix it. Second reason is that we can use these data to fine-tuning some LLM to further improve the quality for our specific tasks.
 

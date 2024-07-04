@@ -1,11 +1,9 @@
 \chapter{LLM-based Modeling Assistant Framework}
 
-We propose solving the automation of these domain modeling steps as text generation problems similarly to \citet{Chen2023}, where the authors consider a domain description $T$ with an underlying ground truth model $M$, and approach the problem of model generation as the problem of defining a text generator $f$ with $M' = f(T)$, where $M'$ is the generated model similar to $M$. The generator $f$ is an LLM-based operator defined by a predesigned prompt that instructs an LLM to return a structured textual representation of $M'$ for the input $T$. \\
-
-TODO: Brief chapter description
+We propose solving the automation of these domain modeling steps as text generation problems similarly to \citet{Chen2023}, where the authors consider a domain description $T$ with an underlying ground truth model $M$, and approach the problem of model generation as the problem of defining a text generator $f$ with $M' = f(T)$, where $M'$ is the generated model similar to $M$. The generator $f$ is an LLM-based operator defined by a predesigned prompt that instructs an LLM to return a structured textual representation of $M'$ for the input $T$.
 
 
-\section{Generators}
+\section{Definitions}
 
 We consider more fine-grained text generation problems solved by the following generators:
 
@@ -38,7 +36,7 @@ We consider more fine-grained text generation problems solved by the following g
 \end{description}
 
 
-\subsection{Requirements}
+\section{Requirements}
 
 An operator is defined with a prompt template. The template should instruct
 the LLM to work within the domain description context, to provide the required
@@ -47,7 +45,7 @@ parsing. It should support techniques that provably improve LLM outputs, such
 as N-shot prompting \cite{Brown2020} or chain of thoughts \cite{Wei2022}.
 
 
-\subsection{Structure}
+\section{Structure}
 
 Based on these generic requirements, we propose a prompt meta-template shown in figure \ref{fig:meta-templates}.
 
