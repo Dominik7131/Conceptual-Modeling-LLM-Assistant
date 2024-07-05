@@ -1,22 +1,18 @@
 \section{Application}
 
-To empirically validate the feasibility of our proposed methodology, we developed a prototype application. This application contains it's frontend and backend. The backend  implements the generators and other services and provides them via an API. Users can use our frontend via web application that communicates with the backend. The web application contains a text area for inserting a domain description and a modeling canvas where the user creates the domain model using classical manual modeling features and the suggestion features highlighted by the \textit{magic wand} icon. \\
-
-Our LLM based assistant provides the following services:
+To empirically validate the feasibility of our proposed methodology, we developed a prototype application. This application contains it's frontend and backend. The backend  implements the generators and other services and provides them via an API. Users can use our frontend via web application that communicates with the backend. The web application contains a text area for inserting a domain description and a modeling canvas where the users create the domain models using classical manual modeling features and the suggestion features highlighted by the \textit{magic wand} icon. Our LLM based assistant provides the following services:
 \begin{enumerate}
 \item suggesting domain elements
 \item highlighting already modeled elements
 \item summarising domain model \\
 \end{enumerate}
 
-TODO: Brief chapter description \\
+\noindent{}TODO: Brief chapter description \\
 
 
 \subsection{Suggesting domain elements}
 
-When a domain description is provided the assistant generates suggestions solely based on the provided text. Otherwise, the assistant generates most relevant suggestions however, he does not stick to any provided text. (TODO: Zkusit to lépe formulovat)
-
-Our assistant is able to suggest classes. For a selected class the assistant provides functionality to suggest it's attributes and associations. And for a selected source class and a selected target class the assistant is able to suggest their associations. Figure \ref{fig:assistant-features} demonstrates these features (TODO: asociace 2 nedemonstruje).
+When a domain description is provided, the assistant generates suggestions solely based on the provided text. Otherwise, the assistant generates anything it considers relevant. Our assistant is able to suggest classes and for a selected class the assistant provides functionality to suggest it's attributes and associations. And for a selected source class and a selected target class the assistant is able to suggest their associations. Figure \ref{fig:assistant-features} demonstrates some of these features.
 
 \begin{figure}[!h]
     \centering
@@ -25,56 +21,45 @@ Our assistant is able to suggest classes. For a selected class the assistant pro
     \label{fig:assistant-features}
 \end{figure}
 
-Screenshot 1 shows the text area for the domain description and action buttons. The highlighted button \textit{Suggest classes} calls the $gen_c$ operator with the inserted domain description. Screenshot 2 shows the list of suggested classes. The user can use the highlighted ``+'' buttons to insert suggested classes into the modeling canvas. The other buttons are used for \textit{liking} and \textit{disliking} the corresponding suggestion, for editing before inserting the suggested class into the canvas, and highlighting the suggestion in the original domain description. For the selected class, the user can ask for attribute and association suggestions, i.e. $gen_a$ and $gen_{r1}$ operators for the class and the domain description. Screenshot 3 shows the attribute suggestions. Screenshot 4 shows the association suggestions. For the suggested attributes and association, the tool also shows the original text returned by the operators $gen_a$ and $gen_{r1}$.
+Screenshot 1 shows the text area for the domain description and action buttons. The highlighted button \textit{Suggest classes} calls the $gen_c$ operator with the inserted domain description. Screenshot 2 shows the list of suggested classes. The user can use the highlighted ``\textit{+}'' buttons to insert suggested classes into the modeling canvas. The other buttons are used for \textit{liking} and \textit{disliking} the corresponding suggestion, for editing before inserting the suggested class into the canvas, and highlighting the suggestion in the original domain description. For the selected class, the user can ask for attribute and association suggestions, i.e. $gen_a$ and $gen_{r1}$ operators for the class and the domain description. Screenshot 3 shows the attribute suggestions. Screenshot 4 shows the association suggestions. For the suggested attributes and association, the tool also shows the original text returned by the operators $gen_a$, $gen_{r1}$ and $gen_{r2}$.
 
 
 \subsubsection{Context highlighting}
 
-As mentioned in the section (TODO: add section reference), for each suggested attribute and association we highlight it's context in the domain description. Additionally, for each class we highlight it's name.
+As mentioned, for each suggested attribute and association we highlight it's original text in the domain description. Additionally, for each class we highlight it's name. This requires to match the LLM generated text with the domain description. The matching is easy as long as the generated text syntactically exactly matches some part of the domain description.
 
-This requires to match the LLM generated text with the domain description. The matching is easy as long as the generated text syntactically exactly matches some part of the domain description. %However, in some cases it makes sense to generate text that is not continuous in the domain description. For example: \\
+However, we encountered some common issues with this approach. For example, sometimes the LLM changes some letters when generating the text. For instance, when domain description contains the word ``\textit{motorized}'' with the ``\textit{z}'' letter the LLM can generate the word ``\textit{motorised}'' with the ``\textit{s}'' letter instead.
 
-%\noindent{\textit{Students have a name and address.}} \\
-
-%\noindent{In this case the original text for the attribute ``address'' can look like this:} \\
-
-%\noindent{\textit{Students have $\ldots$ address.}} \\
-
-However, we encountered some common issues with this approach. For example, sometimes the LLM changes some letter when generating the text. For instance, when domain description contains the word ``motorized'' with the ``z'' letter the LLM can generate the word ``motorised'' with the ``s'' letter instead.
-
-To mitigate this issue we implemented a simple recovery strategy. When the generated text and the domain description cannot be directly matched we find their longest common substring and we split the generated text into the longest common substring and the remaining parts. Subsequently, we try to match these parts without the letter that was in between these parts.
+To mitigate this issue we implemented the following recovery strategy. When the generated text and the domain description cannot be directly matched we find their longest common substring and we split the original text into the longest common substring and the remaining parts. Subsequently, we try to match these parts without the letter that was in between these parts. For example, the longest common substring of the words ``\textit{motorized}'' and ``\textit{motorised}'' is the word ``\textit{motori}'' and the remaining part is the ``{\textit{ed}}''. Subsequently, we try to find all occurrences of the word ``\textit{motori}'' in the domain description and for each occurrence we highlight the words that end with the remaining part ``\textit{ed}''. In more complex scenarios this recovery strategy can fail however, this issue can be greatly mitigated by using a LLM with a high output quality.
 
 
 \subsubsection{Single field suggestion}
 
-For the best possible LLM output quality and response time when generating suggestions we try to simplify the prompts as much as possible. This for example means that the generated attributes suggestions does not contain their description or data type. For generating these additional fields our assistant can be used. \\
+For the best possible LLM output quality and response time when generating suggestions we try to simplify the prompts as much as possible. This for example means that the generated suggestions of attributes do not contain the attribute description or the attribute data type. For generating these additional fields our assistant can be used as it implements the generators for suggesting descriptions, data types and cardinalities. Furthermore, if the generated domain element name is not suitable it can be re-generated by the generator for names suggestions. \\
 
-TODO: Vyjmenovat ty generátory, které tady používáme. \\
-
-TODO: zmínit nastavení formátu pro jména až to budu mít naimplementované \\
+\noindent{}TODO: zmínit nastavení formátu pro jména až to budu mít naimplementované \\
 
 
 \subsubsection{Attributes and associations conversion}
 
-Attributes can be usually modeled as an associations and vice versa. For example, ``address'' can be an attribute of a class ``person'' but it also can be an association in between the classes ``person'' and ``address''. Therefore, for each attribute suggestion we provide functionality to convert them to an association and vice versa. We convert an attribute into an association by putting the attribute name into the association target class and we put the attribute name into the association name. As the copied name does not have to fit, the LLM assistant can be used to generate a new name. The opposite conversion works the same but in reverse.
+Attributes can be usually modeled as an associations and vice versa. For example, \textit{address} can be an attribute of a class \textit{person} but it also can be an association in between the classes \textit{person} and \textit{address}. Therefore, for each attribute suggestion we provide functionality to convert them to an association and vice versa. We convert an attribute into an association by putting the attribute name into the association target class and we put the attribute name into the association name. As the copied name does not have to fit, the LLM assistant can be used to generate a new name. The opposite conversion works the same but in reverse.
 
 
 \subsubsection{Duplicate domain elements}
 \label{duplicate_domain_elements}
-The generated domain element suggestion is not shown to the user if he already modeled the corresponding element. We remove these suggestions on the backend after the LLM generates the output so we do not have to provide the user's domain model in the prompts for generating classes, attributes and associations.
+
+The generated domain element suggestion is not shown to the users if they already modeled the corresponding element. We remove these suggestions on the backend after the LLM generates the output so we do not have to provide the user's domain model in the prompts for generating classes, attributes and associations.
 
 The domain element suggestion is removed if it's name syntactically matches the name of the user's corresponding modeled element. This approach has the following limitations.
 
 First limitation is that if two domain elements have the same name but a different semantics then a relevant domain element is removed. For example, the class ``car'' can have attribute ``year'' referring to the year of the car manufacturing and the same attribute referring to the year of technical inspection. In our experience, this issue is very rare as the LLM usually generates suggestions with explicit names so in this case the first mentioned attribute would probably be name ``year of manufacturing'' and the second attribute would probably be named ``year of technical inspection''. However, if more of these issues occur, removal of duplicate domain elements can be disabled.
 
-Second limitation is that semantically same domain elements with a different name are not removed. Possible solutions are to either use a LLM or some BERT based model as in retrieval-augmented generation for semantic comparison. However, both have significant disadvantages. Solving the mentioned problem with a LLM in a single prompt approach complicates the prompt wording and can reduce the output quality. Using LLM in an iterative prompt approach can significantly increase the delay between the user's request and the suggestions displaying as the LLM has to process more than one prompt which can take many seconds. When using some BERT based model as mentioned in the section (TODO: section reference), one of the challenging tasks is to set the decision boundary between accepting and rejecting the corresponding element. For example attributes ``first name'' and ``last name'' are very close in terms of vector space distance however, they represent a two semantically distinct different attributes. This fact would force us to set very strict decision boundary that would reject almost any two syntactically different words which is in result almost identical to our naive approach.
+Second limitation is that semantically same domain elements with a different name are not removed. Possible solutions are to either use a LLM or some embedding model as in our RAG semantic approach. However, both have significant disadvantages. Solving the mentioned problem with a LLM in a single prompt approach complicates the prompt wording and can reduce the output quality. Using LLM in an iterative prompt approach can significantly increase the delay between the user's request and the suggestions displaying as the LLM has to process more than one prompt. When using some embedding model as mentioned in the section \ref{sec:top_k_search}, one of the challenging tasks is setting the threshold of the decision boundary  between accepting and rejecting the corresponding element. For example, attributes \textit{first name} and \textit{last name} are very close in terms of vector space distance however, they represent a two semantically distinct different attributes. This fact would force us to set very strict threshold that would reject almost any two syntactically different words which is in result almost identical to our naive approach.
 
 
 \subsection{Highlighting already modeled elements}
 
-We extend the mentioned highlighting of elements in the domain description by highlighting all the selected user's modeled elements in the domain description. \\
-
-TODO: na jaké hlavní problémy jsem narazil a proč některé zvýrazněné prvky v popisu domény ve skutečnosti nemusí být namodelovány a naopak viz poznámky \\
+We extend the mentioned highlighting of suggested domain elements in the domain description by highlighting all the selected user's modeled elements in the domain description. However, these highlighted parts does not have to always correspond with the parts that user has already modeled as we only instruct the LLM to generate the context for each attribute and association. This means that this context can contain other classes, attributes or associations. On the other hand, not highlighted part of the domain description can also be already covered by the user's domain model for example, if these parts were modeled manually by the user.
 
 
 \subsection{Summarising domain model}
@@ -89,14 +74,14 @@ In both cases the LLM does not receive the user's domain description as this led
 
 \subsection{LLM parameters}
 
-For each task we set the temperature to $0$ as we usually want the LLM to only generate the most probable output as discussed in the section \ref{temperature}.
+For each task we set the temperature to the lowest value so the LLM generates only the most probable output as discussed in the section \ref{temperature}. The only exception is the summary generation where the temperature could be set higher to provide more creative outputs.
 
-Other parameters are set to their default values which are defined in the OpenAI API\footnote{\url{https://platform.openai.com/docs/api-reference/introduction}}.
+The other parameters are implicitly set to their default values which are defined in the OpenAI API\footnote{\url{https://platform.openai.com/docs/api-reference/introduction}}.
 
 
-\subsection{LLM output parsing}
+\subsection{LLM output checking}
 
-TODO: zmínit hlavní věci, které se dějí při parsování výstupu + odkázat se na to, že odstraňování duplicitních elementů jsme již pokryli v předchozí subsekci \\
+When LLM generates any JSON object we always automatically remove those that does not contain all mandatory fields such as the name when generating classes, attributes and associations. When the generated domain element is an association then we also remove the associations that have a source class or a target class that does not match with the user input. Additionally, as mentioned in the section \ref{duplicate_domain_elements} the generated domain element is removed if it is already present in the user's domain model.
 
 
 \subsection{Saving users data}

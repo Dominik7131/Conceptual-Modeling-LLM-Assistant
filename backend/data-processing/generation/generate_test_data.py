@@ -262,20 +262,19 @@ def main():
     for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            file_name = f"domain-description-0{i + 1}-annotated.txt"
+            file_index = i
+            file_name = f"domain-description-0{file_index}-annotated.txt"
             model_file_name = "domain-model.json"
-            one_known_class_output_file_name = f"relevant-texts-one-known_class-0{i + 1}.json"
-            two_known_classes_output_file_name = f"relevant-texts-two-known-classes-0{i + 1}.json"
+            one_known_class_output_file_name = f"relevant-texts-one-known_class-0{file_index}.json"
+            two_known_classes_output_file_name = f"relevant-texts-two-known-classes-0{file_index}.json"
 
-            classes_suggestions_output_file_name = f"classes-expected-suggestions-0{i + 1}.json"
-            attributes_suggestions_output_file_name = f"attributes-expected-suggestions-0{i + 1}.json"
-            associations1_suggestions_output_file_name = f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{i + 1}.json"
-            associations2_suggestions_output_file_name = f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-expected-suggestions-0{i + 1}.json"
+            classes_suggestions_output_file_name = f"classes-expected-suggestions-0{file_index}.json"
+            attributes_suggestions_output_file_name = f"attributes-expected-suggestions-0{file_index}.json"
+            associations1_suggestions_output_file_name = f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{file_index}.json"
+            associations2_suggestions_output_file_name = f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-expected-suggestions-0{file_index}.json"
 
-            file_path = os.path.join(
-                DOMAIN_MODELING_DIRECTORY_PATH, domain_model, file_name)
-            model_file_path = os.path.join(
-                DOMAIN_MODELING_DIRECTORY_PATH, domain_model, model_file_name)
+            file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, file_name)
+            model_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, model_file_name)
             one_known_class_output_file_path = os.path.join(
                 DOMAIN_MODELING_DIRECTORY_PATH, domain_model, one_known_class_output_file_name)
             two_known_classes_output_file_path = os.path.join(

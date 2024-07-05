@@ -24,9 +24,9 @@ To the prompt we insert each structured data in the JSON format as each LLM shou
 
 \subsection{Modeling procedure}
 
-The table \ref{tab:main-control-instructions} shows examples of our main control instructions. These instructions are independent of the used prompting technique. \\
+For generating classes, attributes and associations we implemented the following approaches: baseline, CoT, N-shot, CoT + N-shot. Additionally, for generating classes we implemented the ToT approach.
 
-TODO: Možná říct, že jsme naimplementovali: baseline, CoT, N-shot, CoT + N-shot a říct pro jaké generátory jsme ty věci udělali \\
+The table \ref{tab:main-control-instructions} shows examples of our main control instructions. These instructions are independent of the used prompting technique.
 
 \begin{table}[!h]
     \scriptsize
@@ -148,46 +148,50 @@ We did not experiment with any iterative prompting technique as this would signi
 
 \subsection{Retrieval-augmented generation}
 
-We consider the domain description $T$ as the external knowledge base and our goal is to insert only the relevant parts of the $T$ in the context specification part of the prompt. We use this technique for the generators of: attributes, associations, descriptions, data types and cardinalities as in these cases only the information about the source class $C$ is needed for generating correct output.
+We consider the domain description $T$ as the external knowledge base and our goal is to insert only the relevant parts of the $T$ in the context specification part of the prompt. We use this technique for the generators of: attributes, associations, descriptions, data types and cardinalities as in these cases only the information about the source class $C$ is needed for generating correct output. For example, consider the following domain description: \\
 
-For example, consider the following domain description: ``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' When we want to extract attributes or associations for the class \textit{department} we are only interested in the first sentence since this is the only sentence that contains information about this class. Thus in this case for the context specification part of the prompt only the first sentence can be provided.
+\noindent{}``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}''\\
 
-Main goal of this approach is to reduce the hallucination of the LLM such as reducing irrelevant domain elements suggestions by forcing the LLM to focus on the important parts of the domain description. Furthermore, this approach usually reduces the prompt length which can help when working with a domain description that does not fit in the context window size of the LLM.
+\noindent{}When we want to extract attributes or associations of the class \textit{department} we are only interested in the first sentence since this is the only sentence that contains information about this class. Therefore in this case we can provide only the first sentence of the domain description into the context specification part of the prompt.
 
-Now we describe the most significant challenges we encountered and the corresponding solutions we implemented to address them.
+Main goal of the mentioned approach is to reduce the hallucination of the LLM such as reducing irrelevant domain elements suggestions by forcing the LLM to focus on the important parts of the domain description. Furthermore, this approach usually reduces the prompt length which can help when working with a domain description that does not fit in the context window size of the LLM.
+
+Now we describe the most significant challenges we encountered when implementing the mentioned RAG approach and the corresponding solutions we implemented to address them.
 
 
-\subsubsection{Domain description pre-processing}
+\subsubsection{Domain description simplification}
 
-We considered using a LLM to simplify the domain description. However, there are a few disadvantages to this approach. First, the LLM sometimes changes some names of the original domain elements. For example, when we instructed the ChatGPT-4o with a domain description about aircraft manufacturing and with the following prompt: \\
+We considered using a LLM to simplify the domain description so the LLM assistant would work only with this simplified version. However, there are a few disadvantages to this approach.
+
+First, the LLM sometimes changes some names of the original domain elements. For example, when we instructed the ChatGPT-4o with a domain description about aircraft manufacturing and with the following prompt: \\
 
 \noindent{}``\textit{Simplify each sentence structure in the following text. Make sure to not change any nouns and verbs as we want to keep names of all domain elements unchanged. This is the following text: \ldots}'' \\
 
-\noindent{}The sentence: ``\textit{Customers represent the clients who purchase the finished aircraft.}'' was simplified into: ``\textit{Customers are clients who buy finished aircraft.}'' This means that the original association ``\textit{client purchases aircraft}'' was changed into ``\textit{client buys aircraft}'' which is semantically the same but it can be a problem if the user wants the suggestions to have the same name as described in the text. And the second disadvantage is that the domain description pre-processing removes the ability to highlight original text for each suggested domain element in the original description as the LLM works only with the pre-processed version of the domain description. Therefore, we do not pre-process the domain description.
+\noindent{}The sentence: ``\textit{Customers represent the clients who purchase the finished aircraft.}'' was simplified into: ``\textit{Customers are clients who buy finished aircraft.}'' This means that the original association ``\textit{client purchases aircraft}'' was changed into ``\textit{client buys aircraft}'' which is semantically the same but it can be a problem if the user wants the suggestions to have the same name as described in the text.
+
+The second disadvantage is that the domain description simplification removes the ability to highlight original text for each suggested domain element in the original description as the LLM works only with the simplified version of the domain description. Therefore, we do not simplify the domain description.
 
 
 \subsubsection{Domain description segmentation}
 
-The domain description needs to be split into chunks so that each chunk can be evaluated if it is relevant for the given source class. Determining the chunk size is a challenging task since with too big chunks we are risking having irrelevant parts of domain description in the prompt and thus decreasing the LLM performance. On the other hand, with too small chunks we are risking that the chunks will be miss-classified as they will not contain enough information about their context for deciding if they are relevant.
+In the RAG indexing phase, the domain description needs to be split into chunks so that each chunk can be evaluated if it is relevant for the given source class. Determining the chunk size is a challenging task since with too big chunks we are risking having irrelevant parts of domain description in the prompt and thus decreasing the LLM performance. On the other hand, with too small chunks we are risking that the chunks will be miss-classified as they will not contain enough information about their context for deciding if they are relevant.
 
-In result, we consider each sentence of the domain description as a one chunk since one sentence usually contains information about one concept or a few related concepts. The advantage of this approach is that after the chunks evaluation is done it is easy to concatenate the relevant chunks together simply by putting them next to each other in the original order from the domain description. On the other hand, the disadvantage is that if some sentences refer to each other for example with pronouns then without any additional pre-processing this context is lost during the chunks evaluation.
+In the result, we consider each sentence of the domain description as a one chunk since one sentence usually contains information about one concept or a few related concepts. The advantage of this approach is that after the chunks evaluation is done it is easy to concatenate the relevant chunks together simply by putting them next to each other in the original order from the domain description. On the other hand, the disadvantage is that for example, if some sentence refers to an another sentence with a pronoun then without any additional domain description pre-processing this context is lost during the chunks evaluation.
 
 
 \subsubsection{Lack of context}
 
-Chunks in form of a isolated sentences can be miss-classified if not enough context is provided. This mostly happens when a sentence contains pronouns that refer to some other sentence. For example, consider the class named \textit{book} and this domain description: \\
+As mentioned, chunks in the form of isolated sentences can be miss-classified if not enough context is provided. This mostly happens when a sentence contains pronouns that refer to some other sentence. For example, consider the class named \textit{book} and the following domain description: \\
 
 \noindent{}``\textit{The book contains a lot of pages. It is very heavy.}'' \\
 
-\noindent{}Now when classifying the chunk in form of the second sentence it most likely will be classified as irrelevant chunk as in isolation it does not contain any information about the class \textit{book} even thought the attribute \textit{weight} of the class \textit{book} could be inferred from it.
+\noindent{}Now when classifying the chunk ``\textit{It is very heavy.}'' it most likely will be classified as irrelevant chunk as in isolation it does not contain any information about the class \textit{book} even thought the attribute \textit{weight} of the \textit{book} could be inferred from it.
 
-One possible solution is to use some language model that can accurately solve the co-reference resolution task where each pronoun is replace with the corresponding words that are referenced. This way the problem would be solved as the previous example would look like this: \\
+To solve similar issues, we implemented a simple naive algorithm where each chunk has it's own metadata and if a chunk starts with a pronoun we insert in it's metadata the previous chunk. Now when chunk is being evaluated, it's metadata are also considered. This means that when classifying the second sentence from the example also the first sentence is present therefore the context is not lost. The disadvantages of this approach are that pronouns that are not at the start of a chunk are not considered. Additionally, adding a whole previous chunk to a current chunk can in some cases lead to a current chunk miss-classification if the current chunk is not referencing the whole context of the previous chunk.
 
-\noindent{}``\textit{The book contains a lot of pages. The book is very heavy.}'' \\
+A possible better solution is to use some language model that can accurately solve the co-reference resolution task where each pronoun is replaced with the corresponding words that it references. This way when the second chunk from the example is being classified, the classification algorithm works with this text: ``\textit{The Book is very heavy}'' so all relevant context is provided. \\
 
-\noindent{}However, we did not find any working model with a high accuracy for a various domain descriptions so instead, we implemented a simple naive solution where each sentence has it's own metadata. If a sentence starts with a pronoun we insert in this metadata a reference into the previous sentence. This means that when some algorithm is testing relevancy of the chunk ``\textit{It is very heavy}''. In reality it is testing relevancy of this chunk and also the previous chunk: ``\textit{The book contains a lot of pages.}''
-
-Similar issue can arise when a text contains some bullet point, such as: \\
+Another issue with a lack of context can arise when a text contains some bullet points, such as: \\
 
 \noindent{}``\textit{The book contains:}
 \begin{itemize}
@@ -195,28 +199,38 @@ Similar issue can arise when a text contains some bullet point, such as: \\
 \item \textit{date of publication}'' \\
 \end{itemize}
 
-\noindent{}In this case each of the bullet points will have in it's metadata reference to the sentence before the first bullet points which in this case is ``The book contains:'' and the problem is solved.
+\noindent{}To solve this issue, each of the bullet points has in it's metadata a reference to the chunk before the first bullet points which in this case is ``\textit{The book contains:}''.
 
-However, other issues can appear such as unexpressed subject. If the main goal of the assistant is to always suggest every possible domain elements then either the RAG can be temporarily disabled or each domain description can be manually pre-processed to remove the problematic constructs. Otherwise, the problematic domain elements can be manually modeled by the users.
+In cases of some other possible chunks miss-classifications when the main goal of the assistant is to always suggest every possible domain elements then either the RAG can be temporarily disabled or the domain description can be manually edited to remove the problematic constructs.
 
 
 \subsubsection{Texts comparison}
 \label{texts_comparison}
   
-We considered using LLM to directly output the relevant texts from the domain description based on the given source class. However, this process can take many seconds as in the worst case scenario the LLM has to copy the whole domain description to the output.
+We considered using LLM to directly output the relevant texts from the domain description based on the given source class. However, this process can take a long time as in the worst case scenario the LLM has to copy the whole domain description to the output.
 
 Instead, we implemented a semantic and a syntactic approach that for a given source class and some part of a domain description compares their similarity.
  
 The semantic approach uses an embedding model that converts input texts into a vector space and then compares their similarity.
 
-The syntactic approach compares lemmas of the mentioned texts. As one word in a different contexts can have a different lemmas, we lemmatize each word by word in isolation. \\
+The syntactic approach uses a language model the converts the given source class and each chunk into lemmas. Subsequently, if the chunk contains the lemmas of the given source class than it is classified as relevant. For example, consider the source class \textit{department} and the following domain description: \\
 
-TODO: Více rozepsat, jakým způsobem to syntaktické filtrování funguje + na jaké problémy jsem narazil + příklady
+``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' \\
+
+First, each word in the source class \textit{department} is converted into a lemma which is again the word \textit{department}. Then, each word in the domain description is converted into the lemmas: \\
+
+``\textit{In this company, every employee \textbf{work} in some department. Each employee \textbf{be} uniquely \textbf{identify} by his ID.}'' \\
+
+The bold words emphasise the differences between the original domain description and the domain description after each word is converted into a lemma. Subsequently, in this case a chunk is relevant if it contains the word \textit{department}. Which in this case is only the first sentence. We do not enforce the chunk to contain the lemmas in the same order as the given source class. For example, consider the source class \textit{registration application} and the following chunk: \\
+
+\noindent{}``\textit{Application of registration needs to be provided}'' \\
+
+\noindent{}If the strict lemmas order would be enforced than this chunk would be classified as irrelevant for the source class \textit{registration application} which is unwanted behaviour.
+
+Both of our RAG approaches are evaluated in the section.
 
 
 \subsubsection{Top k search}
+\label{sec:top_k_search}
 
-In traditional RAG systems, a fixed number $k$ of the most relevant results are retrieved after applying the embedding model. However, in our specific application, $k$ is not a fixed number because the domain description may contain a variable number of relevant sentences. To address this variability, we need to set the computed score threshold. The challenge lies in the fact that the computed score is always relative to the given input. Consequently, in one scenario, sentences with a score higher than a certain threshold $x$ may be considered relevant, while in another scenario, sentences with a score higher than $x$ may be considered irrelevant.
-
-We found out that our semantic RAG approach works a little bit better when setting the threshold based on the score of the most relevant sentence. For more information see the RAG evaluation section (TODO: section reference).
-
+In traditional RAG systems in the retrieval phase, a fixed number $k$ of the most relevant results are retrieved after applying the embedding model. However, in our specific application, $k$ is not a fixed number because the domain description may contain a variable number of relevant sentences. To address this variability, for our semantic RAG approach we need to set the computed score threshold. The challenge lies in the fact that the computed score is always relative to the given input. Consequently, in one scenario, sentences with a score higher than a certain threshold $x$ may be considered relevant, while in another scenario, sentences with a score higher than $x$ may be considered irrelevant. To mitigate this issue, we set the threshold based on the score of the most relevant sentence.

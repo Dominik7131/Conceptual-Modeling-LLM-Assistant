@@ -6,14 +6,17 @@ import sys
 sys.path.append(".")
 
 from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_TEXTS_COUNT
-from definitions.utility import UserChoice
+from definitions.utility import TextFilteringVariation, UserChoice
 
-
-MANUAL_EVALUATION_DIRECTORY_PATH = os.path.join("out", "evaluated", "actual")
+# LLM = "mixtral-8x7B"
+LLM = "llama-3-70B"
+MANUAL_EVALUATION_DIRECTORY_PATH = os.path.join("out", "preliminary-evaluation", "N-shot-Cot", LLM)
 
 IS_CSV = True
 SEPARATOR = ","
 SCORE_LENGTH = DOMAIN_TEXTS_COUNT + 1
+SKIP_CLASS_FILES = True
+FILTERING_VARIATION = TextFilteringVariation.SYNTACTIC.value
 
 
 class SuggestionsEvaluator:
@@ -314,12 +317,9 @@ class SuggestionsEvaluator:
         precision_elements_list[-1] += 1
         precision_elements_list[text_index] += 1
 
-        is_class_list = matched_class.startswith(
-            "+") or matched_class.startswith("-")
-        is_attribute_list = matched_attribute.startswith(
-            "+") or matched_attribute.startswith("-")
-        is_association_list = matched_association.startswith(
-            "+") or matched_association.startswith("-")
+        is_class_list = matched_class.startswith("+") or matched_class.startswith("-")
+        is_attribute_list = matched_attribute.startswith("+") or matched_attribute.startswith("-")
+        is_association_list = matched_association.startswith("+") or matched_association.startswith("-")
 
         is_class_isa = matched_class.startswith(":")
         is_attribute_isa = matched_attribute.startswith(":")
@@ -460,9 +460,11 @@ class SuggestionsEvaluator:
 
     def check_file(self, path, user_choice):
 
+        if SKIP_CLASS_FILES and user_choice == UserChoice.CLASSES.value:
+            return True
+
         if not os.path.isfile(path):
-            print(
-                f"Stopping: {user_choice.capitalize()} evaluated file not found: {path}\n")
+            print(f"Stopping: {user_choice.capitalize()} evaluated file not found: {path}\n")
             return False
         return True
 
@@ -588,40 +590,46 @@ class SuggestionsEvaluator:
 
     def print_precision(self, index, is_csv):
 
-        precision_classes_strict_percentage = (
-            self.precision_classes_strict[index] / self.precision_classes_max[index])
-        precision_classes_construct_percentage = (
-            self.precision_classes_construct[index] / self.precision_classes_max[index])
-        precision_classes_isa_percentage = (
-            self.precision_classes_isa[index] / self.precision_classes_max[index])
-        precision_classes_list_percentage = (
-            self.precision_classes_list[index] / self.precision_classes_max[index])
+        if self.precision_classes_max[index] != 0:
+            precision_classes_strict_percentage = self.precision_classes_strict[index] / self.precision_classes_max[index]
+            precision_classes_construct_percentage = self.precision_classes_construct[index] / self.precision_classes_max[index]
+            precision_classes_isa_percentage = self.precision_classes_isa[index] / self.precision_classes_max[index]
+            precision_classes_list_percentage = self.precision_classes_list[index] / self.precision_classes_max[index]
+        else:
+            precision_classes_strict_percentage = 0
+            precision_classes_construct_percentage = 0
+            precision_classes_isa_percentage = 0
+            precision_classes_list_percentage = 0
 
-        precision_attributes_strict_percentage = (
-            self.precision_attributes_strict[index] / self.precision_attributes_max[index])
-        precision_attributes_construct_percentage = (
-            self.precision_attributes_construct[index] / self.precision_attributes_max[index])
-        precision_attributes_isa_percentage = (
-            self.precision_attributes_isa[index] / self.precision_attributes_max[index])
-        precision_attributes_list_percentage = (
-            self.precision_attributes_list[index] / self.precision_attributes_max[index])
+        if self.precision_attributes_max[index] != 0:
+            precision_attributes_strict_percentage = self.precision_attributes_strict[index] / self.precision_attributes_max[index]
+            precision_attributes_construct_percentage = self.precision_attributes_construct[index] / self.precision_attributes_max[index]
+            precision_attributes_isa_percentage = self.precision_attributes_isa[index] / self.precision_attributes_max[index]
+            precision_attributes_list_percentage = self.precision_attributes_list[index] / self.precision_attributes_max[index]
+        else:
+            precision_attributes_strict_percentage = 0
+            precision_attributes_construct_percentage = 0
+            precision_attributes_isa_percentage = 0
+            precision_attributes_list_percentage = 0
 
-        precision_associations_strict_percentage = (
-            self.precision_associations_strict[index] / self.precision_associations_max[index])
-        precision_associations_construct_percentage = (
-            self.precision_associations_construct[index] / self.precision_associations_max[index])
-        precision_associations_isa_percentage = (
-            self.precision_associations_isa[index] / self.precision_associations_max[index])
-        precision_associations_list_percentage = (
-            self.precision_associations_list[index] / self.precision_associations_max[index])
+        if self.precision_associations_max[index] != 0:
+            precision_associations_strict_percentage = self.precision_associations_strict[index] / self.precision_associations_max[index]
+            precision_associations_construct_percentage = self.precision_associations_construct[index] / \
+                self.precision_associations_max[index]
+            precision_associations_isa_percentage = self.precision_associations_isa[index] / self.precision_associations_max[index]
+            precision_associations_list_percentage = self.precision_associations_list[index] / self.precision_associations_max[index]
+        else:
+            precision_associations_strict_percentage = 0
+            precision_associations_construct_percentage = 0
+            precision_associations_isa_percentage = 0
+            precision_associations_list_percentage = 0
 
         if is_csv:
             row_classes = f"{precision_classes_strict_percentage:0.2f}{SEPARATOR}{precision_classes_construct_percentage:0.2f}{SEPARATOR}{precision_classes_isa_percentage:0.2f}{SEPARATOR}{precision_classes_list_percentage:0.2f}"
             row_attributes = f"{precision_attributes_strict_percentage:0.2f}{SEPARATOR}{precision_attributes_construct_percentage:0.2f}{SEPARATOR}{precision_attributes_isa_percentage:0.2f}{SEPARATOR}{precision_attributes_list_percentage:0.2f}"
             row_associations = f"{precision_associations_strict_percentage:0.2f}{SEPARATOR}{precision_associations_construct_percentage:0.2f}{SEPARATOR}{precision_associations_isa_percentage:0.2f}{SEPARATOR}{precision_associations_list_percentage:0.2f}"
 
-            print(
-                f"{SEPARATOR}{row_classes}{SEPARATOR}{row_attributes}{SEPARATOR}{row_associations}")
+            print(f"{SEPARATOR}{row_classes}{SEPARATOR}{row_attributes}{SEPARATOR}{row_associations}")
             return
 
         print("Precision: strict")
@@ -700,26 +708,24 @@ def main():
     for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
+            file_index = i
             classes_expected_suggestions_path = os.path.join(
-                DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.CLASSES.value}-expected-suggestions-0{i + 1}.json")
+                DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.CLASSES.value}-expected-suggestions-0{file_index}.json")
             attributes_expected_suggestions_path = os.path.join(
-                DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.ATTRIBUTES.value}-expected-suggestions-0{i + 1}.json")
+                DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.ATTRIBUTES.value}-expected-suggestions-0{file_index}.json")
             associations_expected_suggestions_path = os.path.join(
-                DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{i + 1}.json")
+                DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{file_index}.json")
 
             classes_evaluated_path = os.path.join(
-                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
+                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.CLASSES.value}-{FILTERING_VARIATION}-actual-0{file_index}.csv")
             attributes_evaluated_path = os.path.join(
-                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
+                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.ATTRIBUTES.value}-{FILTERING_VARIATION}-actual-0{file_index}.csv")
             associations_evaluated_path = os.path.join(
-                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
+                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value[:-1]}-{FILTERING_VARIATION}-actual-0{file_index}.csv")
 
-            is_file = evaluator.check_file(
-                classes_evaluated_path, UserChoice.CLASSES.value)
-            is_file = is_file and evaluator.check_file(
-                attributes_evaluated_path, UserChoice.ATTRIBUTES.value)
-            is_file = is_file and evaluator.check_file(
-                associations_evaluated_path, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value)
+            is_file = evaluator.check_file(classes_evaluated_path, UserChoice.CLASSES.value)
+            is_file = is_file and evaluator.check_file(attributes_evaluated_path, UserChoice.ATTRIBUTES.value)
+            is_file = is_file and evaluator.check_file(associations_evaluated_path, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value)
 
             if not is_file:
                 if text_index > 0:
@@ -729,11 +735,13 @@ def main():
             evaluator.construct_expected_elements(
                 classes_expected_suggestions_path, attributes_expected_suggestions_path, associations_expected_suggestions_path)
 
-            evaluator.evaluate_classes(classes_evaluated_path, text_index)
-            evaluator.evaluate_attributes(
-                attributes_evaluated_path, text_index)
-            evaluator.evaluate_associations(
-                associations_evaluated_path, text_index)
+            if not SKIP_CLASS_FILES:
+                evaluator.evaluate_classes(classes_evaluated_path, text_index)
+            else:
+                print("Warning: skipping class files")
+
+            evaluator.evaluate_attributes(attributes_evaluated_path, text_index)
+            evaluator.evaluate_associations(associations_evaluated_path, text_index)
 
             evaluator.compute_recall_wrapper(text_index)
 

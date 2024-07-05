@@ -328,10 +328,11 @@ def main():
     for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            test_file_name = f"{user_choice}-expected-suggestions-0{i + 1}.json"
+            file_index = i
+            test_file_name = f"{user_choice}-expected-suggestions-0{file_index}.json"
             test_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, test_file_name)
             expected_output_file_path = os.path.join(
-                OUTPUT_EXPECTED_DIRECTORY, f"{domain_model}-{user_choice}-{EXPECTED_OUTPUT}-0{i + 1}.txt")
+                OUTPUT_EXPECTED_DIRECTORY, f"{domain_model}-{user_choice}-{EXPECTED_OUTPUT}-0{file_index}.txt")
 
             if not os.path.isfile(test_file_path):
                 raise ValueError(f"Test file not found: {test_file_path}")
