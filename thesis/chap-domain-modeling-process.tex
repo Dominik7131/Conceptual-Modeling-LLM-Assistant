@@ -1,6 +1,6 @@
 \chapter{Domain modeling process}
 
-In our thesis, we consider a domain modeling process stating with a domain description $T$ acquired from stakeholders and knowledge sources such as internal documentation, manuals, or state law. $T$ can be a well-curated text, but may also encompass varied interpretations articulated by different stakeholders at various levels of detail. A modeling expert translates $T$ into a domain model $M$ in a sequence of steps.
+In our thesis, we consider a domain modeling process starting with a domain description $T$ acquired from stakeholders and knowledge sources such as internal documentation, manuals, or state law. $T$ can be a well-curated text, but may also encompass varied interpretations articulated by different stakeholders at various levels of detail. A modeling expert translates $T$ into a domain model $M$ in a sequence of steps.
 
 A domain model $M = (\mathcal{C}, \mathcal{P})$ consists of a set of classes $\mathcal{C}$ and properties $\mathcal{P}$.
 
@@ -37,7 +37,7 @@ These basic modeling constructs are prevalent in real conceptual models \cite{Ke
 \section{Example}
 \label{sec:simple_domain_description_example}
 
-Consider the following domain description $T$: ``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' Figure \ref{fig:simple-employee-domain-model} shows how a corresponding domain model can look like. It contains a class \textit{employee} with the attribute \textit{ID} and the association \textit{works in} between the classes \textit{employee} and \textit{department}.
+Consider the following domain description: ``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' Figure \ref{fig:simple-employee-domain-model} shows how a corresponding domain model can look like. It contains the class \textit{employee} with the attribute \textit{ID} and the association \textit{works in} between the classes \textit{employee} and \textit{department}.
 
 \begin{figure}[!h]
     \centering
@@ -49,10 +49,10 @@ Consider the following domain description $T$: ``\textit{In this company, every 
 To create the described domain model when starting from an empty domain model the following steps can be executed:
 
 \begin{enumerate}
-\item design a class: for the concept ``\textit{In this company, every employee works in some department}'' create a class $C$ such that \textit{employee} = $name(C)$
-\item design a class: for the concept ``\textit{every employee works in some department}'' create a class $C$ such that \textit{department} = $name(C)$
+\item design a class: for the concept ``\textit{In this company, every employee works in some department}'' create the class $C$ such that \textit{employee} = $name(C)$
+\item design a class: for the concept ``\textit{every employee works in some department}'' create the class $C$ such that \textit{department} = $name(C)$
 \item design an attribute: for the class \textit{employee} and the concept ``\textit{Each employee is uniquely identified by his ID}'' create the attribute $P$ such that \textit{ID} = $name(P)$ and \textit{employee} = $source(P)$
 \item design an association: for a class \textit{employee} and the concept ``\textit{every employee works in some department}'' create the association $P$ such that \textit{works in} = $name(P)$, \textit{employee} = $source(P)$ and \textit{department} = $target(P)$
 \end{enumerate}
 
-For providing more information for this domain model, the other mentioned steps can be used for defining descriptions of the modeled elements, for defining data types of the modeled attributes and for defining cardinalities of the modeled attributes and associations.
+For providing more information for this domain model, the other mentioned steps can be used for defining descriptions of the modeled elements, for defining data types of the modeled attributes, and for defining cardinalities of the modeled attributes and associations.

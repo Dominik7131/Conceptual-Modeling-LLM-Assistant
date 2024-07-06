@@ -1,6 +1,6 @@
 \chapter{Experimental evaluation}
 
-TODO: Chapter description probably with our data repository link\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark}}
+\noindent{}TODO: Chapter description and probably add reference to our data repository\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark}}
 
 
 \section{Evaluation domains}
@@ -37,66 +37,51 @@ For each domain, we manually created three semantically equivalent domain descri
 \emph{Eclectic} are written as a collection of less structured knowledge from different stakeholders, each describing the domain from a different point of view.
 \emph{Educational} emphasize the most important concepts at the beginning, where only essential aspects are described, followed by adding more details about the concepts later in the description.
 
-Additionally, to assess the quality of our domain description filtering approaches, for each domain description we also manually created corresponding annotated domain description. In each annotated domain description are tags that for each domain element from corresponding reference domain model determine the text that the corresponding domain element can be inferred from. Here is an example of the original domain description and the corresponding annotated domain description from the \emph{farming} domain: \\
+Additionally, to assess the quality of our RAG approaches, for each domain description we also manually created corresponding annotated domain description. Each annotated domain description contains tags that for each domain element from the corresponding reference domain model determine the parts that contain information about this domain element. Here is an example of the original domain description and the corresponding annotated domain description from the \emph{farming} domain: \\
 
 \noindent{}Domain description: \textit{A farmer is an individual engaged in agriculture, growing and harvesting crops, and is identified uniquely by a name that is used to refer to the farmer from various documentation, statistical reporting, etc.} \\
 
 \noindent{}Annotated domain description: \textit{\textbf{<farmer>}A farmer is an individual engaged in agriculture, growing and harvesting crops\textbf{</farmer>}, and \textbf{<name>}is identified uniquely by a name that is used to refer to the farmer from various documentation, statistical reporting, etc.\textbf{</name>}}
 
-The corresponding reference model contains class ``farmer'' with the attribute ``name''. The annotated text captures that the class ``farmer'' can be inferred from the text in between the opening tag ``\textbf{<farmer>}'' and the closing tag ``\textbf{</farmer>}'': ``A farmer is an individual engaged in agriculture, growing and harvesting crops''. Similarly, the attribute ``name'' can be inferred from the text in between the opening tag ``\textbf{<name>}'' and the closing tag ``\textbf{</name>}'': ``is identified uniquely by a name that is used to refer to the farmer from various documentation, statistical reporting, etc.''.
+The corresponding reference model contains the class \textit{farmer} with the attribute \textit{name}. In the annotated text the parts between the opening tag ``\textbf{<farmer>}'' and the closing tag ``\textbf{</farmer>}'' capture the information about the class \textit{farmer}. Similarly, the opening tag ``\textbf{<name>}'' and the closing tag ``\textbf{</name>}'' captures the information about the attribute \textit{name} of the class \textit{farmer}.
 
-The annotated domain description can contain multiple tags with the same name. Tags with different names can cross each other but always in a way that after a opening tag follows the corresponding closing tag with the same name.
+The annotated domain description can contain multiple tags with the same name. After an opening tag can follow another opening tag if it has a different name but each tag must be first opened and then closed.
 
 
-\section{Domain description filtering evaluation}
+\section{RAG evaluation}
 \label{sec:filtering_evaluation}
+
 
 \subsection{Evaluation methodology}
 
-
 \subsubsection{Recall}
 
-For a domain element $e$ let $Y_e$ be the set of expected relevant sentences that are marked by the tags with the name equal to $name(e)$. Let $X_e \subseteq Y_e$ be the set of sentences from $Y_e$ that our RAG algorithm marked as relevant. Then the recall $R_e$ for the domain element $e$ is computed as:
-
-\[ R_e = \dfrac{|Y_e|}{|X_e|}, \]
-
-\noindent{}where $|Y_e|$ denotes the size of the set $Y_e$ and $|X_e|$ denotes the size of the set $X_e$.
-
-Now when given a domain description with it's reference domain model containing set of domain elements denoted by $E$. The recall $R$ is computed as:
+For a domain element $e$ let $Y_e$ be the set of expected relevant parts that are marked by the tags with the name equal to the $name(e)$. Let $X_e \subseteq Y_e$ be the set of parts from $Y_e$ that the selected RAG approach marked as relevant based on the $name(e)$ if $e$ is a class, otherwise based on the $name(source(e))$. Now when given a domain description with its reference domain model containing a set of domain elements denoted by $E$ where the $E$ can be a set of classes, attributes, or associations. The recall $R$ is computed as:
 
 \[ R = \dfrac{\sum_{e \in E}|Y_e|}{\sum_{e \in E}|X_e|}. \]
+
+\noindent{}where $|Y_e|$ denotes the size of the set $Y_e$ and $|X_e|$ denotes the size of the set $X_e$.
 
 
 \subsubsection{Precision}
 
-For a class $c$ and domain description $T$ let $Y_{c}$ be the set of expected relevant sentences for the class $c$, for all it's attributes and for all it's associations. Now let $Z_{c}$ be the set of remaining sentences from the given domain description after the filtering based on the class $c$. Then the precision $P_{c}$ for the class $c$ and the domain description $T$ is computed as:
-
-\[ P_c = \dfrac{|Y_{c}|}{|Z_c|}. \]
-
-Now when given a domain description $T$ with it's reference domain model containing set of classes denoted by $C$. The precision $P$ is computed as:
+For a class $c$ and domain description $T$ let $Y_{c}$ be the set of expected relevant parts of the class $c$ and of the attributes and associations with the source class equal to $c$. Now let $Z_{c}$ be the set of chunks from the given domain description that the selected RAG approach marked as relevant based on the class $c$. Then the precision $P_{c}$ for the class $c$ and the domain description $T$ is computed as:
 
 \[ P = \dfrac{\sum_{c \in C}|Y_c|}{\sum_{c \in C}|Z_c|}. \]
 
-We do not compute the precision separately for classes, attributes and associations as the goal of our RAG approach is to find relevant information for a given source class but not to find the information about classes, attributes and associations separately.
-
-
-\subsection{Limitations}
-
-There is no strict definition on what the original text should contain for a corresponding domain element and a domain description. Therefore even when the recall is not $1.00$ it does not mean that the LLM will not be able to infer the corresponding domain element. \\
-
-TODO: Example \\
+We do not compute the precision separately for classes, attributes, and associations as the goal of our RAG approach is to find relevant information for a given source class but not to find the information about classes, attributes, and associations separately.
 
 
 \subsection{Selected models}
 
-For our semantic approach we use the model \textit{all-MiniLM-L6-v2}\footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}. It's intended use is to encode sentences and short paragraphs. As a comparison function we use cosine-similarity.
+For our semantic approach, we use the model \textit{all-MiniLM-L6-v2}\footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}. It is a symmetric embedding model intended for encoding sentences and short paragraphs. As a comparison function, we use cosine-similarity.
 
-Our syntactic approach uses the \textit{MorphoDiTa} tool \cite{Strakova2014} with the \textit{english-morphium-wsj-140407} model for converting words into lemmas \cite{Straka2014}.
+Our syntactic approach uses the \textit{MorphoDiTa} tool \cite{Strakova2014} with the \textit{english-morphium-wsj-140407} model for converting English words into lemmas \cite{Straka2014}.
 
 
 \subsection{Results}
 
-In the section \ref{texts_comparison} we introduced the syntactic and semantic approach for domain description filtering. For comparing these approaches now we also introduce the no-filtering approach where the domain description is not filtered at all. Here are the measured results:
+In the section \ref{texts_comparison}, we introduced our semantic and syntactic RAG approach. To comparing these approaches now we also introduce the no-filtering approach where the domain description is not filtered at all. The table \ref{tab:filtering-results} contains the measured results:
 
 \begin{table}[!h]
     \scriptsize
@@ -122,13 +107,13 @@ In the section \ref{texts_comparison} we introduced the syntactic and semantic a
     \label{tab:filtering-results}
 \end{table}
 
-As expected, the no-filtering approach gets the highest possible score in terms of recall however, in terms of precision it gets the lowest score from all the other approaches.
+As expected, the no-filtering approach gets the highest possible recall but also gets the lowest precision.
 
-In the syntactic approach we see that naive pronouns detection improves the recall significantly but slightly decreases the precision.
+In the syntactic approach, the naive pronouns detection improves the recall significantly but slightly decreases the precision. This approach can probably offer the best performance as it has the highest precision of all the measured approaches. To improve its relatively low recall, the domain description can be manually pre-processed to remove some problematic constructs such as unexpressed subjects.
 
-The semantic approach almost matches the no-filtering in terms of recall. However, it improves the precision. (TODO: Improve wording)
+The semantic approach almost matches the recall of the no-filtering approach but it has a higher precision. Unexpectedly, the naive pronouns approach slightly decreases the recall while maintaining similar precision.
 
-Overall, when recall is important then the no-filtering approach or the semantic approach can be used. On the other hand, if we do not care about LLM not showing all possible domain elements suggestions, the syntactic approach works the best.
+Overall, when recall is the most important then the no-filtering approach or the semantic approach can be used. On the other hand, when precision is the most important and we do not care about losing some domain element suggestions then the syntactic approach is the most suitable.
 
 
 \section{Selected LLMs}
@@ -136,27 +121,31 @@ Overall, when recall is important then the no-filtering approach or the semantic
 Running a LLM requires a lot of resources, therefore frequently using a LLM through some API can cost a lot of money. Thus, we run open-source LLMs locally with LLaMA.cpp server\footnote{\url{https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md}}. Our hardware is limited to a single NVIDIA A100 40GB GPU.
 
 \subsection{Limitations}
-Because of our hardware limitation we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter.
+
+Because of our hardware limitation we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium-sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter.
 
 
 \subsection{Mixtral-8x7B}
-Mixtral-8x7B has a context window size of 32k tokens and it outperforms or matches ChatGPT-3.5 across many benchmarks. This LLM has in total 47B parameters, which are distributed among 8 experts. To achieve faster output generation, for each generated token 2 of the 8 experts are selected. The selection of the experts can be different for each token \cite{Jiang2024}.
+
+Mixtral-8x7B has the context window size of 32k tokens and it outperforms or matches ChatGPT-3.5 across many benchmarks \cite{Jiang2024}. This LLM has in total 47B parameters, which are distributed among 8 experts. To achieve faster output generation, for each generated token 2 of the 8 experts are selected. The selection of the experts can be different for each token \cite{Jiang2024}.
 
 
 \subsection{Llama-3-70B}
-Llama-3-70B has 8k tokens context window size and is allegedly  the first open-source LLM to match the ChatGPT-4's performance. However, as of writing this thesis, Meta's research paper about Llama 3 is not released yet. \\
 
-NOTE: Jestli i někde zkusíme ChatGPT-4o, tak o tom pak tady něco napíšu.
+Llama-3-70B has an 8k tokens context window size and as of writing this thesis, it is the state-of-the-art LLM at the 70B parameters scale\footnote{\url{https://ai.meta.com/blog/meta-llama-3/}}.
 
 
-\section{Limitations}
-\begin{itemize}
-\item we used one domain modeling expert for evaluating attributes and associations, we used one student for evaluating classes, and domain elements descriptions
-\item we did preliminary experiments on most of the configurations with one middle sized domain description and then used more domain descriptions for the most promising configurations
-\end{itemize}
+%\section{Limitations}
+%
+%\begin{itemize}
+%\item we used one domain modeling expert for evaluating attributes and associations, we used one student for evaluating classes, and domain elements descriptions
+%\item we did preliminary experiments on most of the configurations with one middle sized domain description and then used more domain descriptions for the most promising configurations
+%\end{itemize}
 
 
 \section{Evaluation of generated domain elements}
+
+First, we did a preliminary evaluation where we evaluated many different combinations of prompting techniques, RAG approaches, and LLMs with the domain description \textit{zoological gardens-00}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/main/manual\%20evaluation\%20domains/zoological\%20gardens/domain-description-00.txt}}. Then, we took the combinations with the best results and evaluated them on all our other domain descriptions.
 
 
 \subsection{Manual assessment of generated suggestions}
@@ -215,7 +204,7 @@ In that case, we write a colon(:) followed by $name(X)$ to \emph{Matches attribu
 We write a colon followed by an asterisk (:*) if $X'$ makes sense, but should be modeled for a subclass of superclass of $C$.
 
 
-\subsection{Preliminary results}
+\subsection{Preliminary evaluation results}
 
 The table \ref{tab:preliminary-mixtral} shows preliminary results for Mixtral-8x7B and the table \ref{tab:preliminary-llama} shows preliminary results for Llama-3-70B.
 
@@ -247,7 +236,7 @@ The table \ref{tab:preliminary-mixtral} shows preliminary results for Mixtral-8x
     \bottomrule
     \addlinespace
     \end{tabular}
-    \caption{Preliminary evaluation with Mixtral-8x7B strict variation with domain description \textit{zoological-gardens-00}}
+    \caption{Preliminary evaluation with Mixtral-8x7B strict variation only}
     \label{tab:preliminary-mixtral}
 \end{table}
 
@@ -280,13 +269,19 @@ The table \ref{tab:preliminary-mixtral} shows preliminary results for Mixtral-8x
     \bottomrule
     \addlinespace
     \end{tabular}
-    \caption{Preliminary evaluation with Llama-3-70B strict variation with domain description \textit{zoological-gardens-00}}
+    \caption{Preliminary evaluation with Llama-3-70B strict variation only}
     \label{tab:preliminary-llama}
 \end{table}
 
-We can see that with Mixtral-8x7B the RAG improves the $F_1$ score for attributes and associations mostly by improving the precision. However, in the case with Llama-3-70B the RAG does not have any noticeable effect probably because the Llama-3-70B is able to find attributes and associations without the domain description filtering for the middle sized domain descriptions.
+We can see that with Mixtral-8x7B the RAG improves the $F_1$ score for attributes and associations mostly by improving the precision. However, in the case of Llama-3-70B the RAG does not seem to have any noticeable effect probably because the Llama-3-70B is able to find attributes and associations without the domain description filtering when working with the \textit{zoological gardens} domain description which has almost 1000 words.
 
-Usually, the baseline prompting technique has the worst $F_1$ score both for attributes and associations except for the case with Llama-3-70B for attributes when it achieves the best $F_1$ score. There is no prompting technique that clearly has the best performance.
+The baseline prompting technique is the most inconsistent as it has one of the worst $F_1$ scores every time except for the case with Llama-3-70B for attributes where it achieves the best $F_1$ score.
+
+As the CoT-N-shot prompting technique consistently shows good results for generating attributes and associations, we evaluated this technique for all other domain descriptions. \\
+
+\noindent{}TODO: Do preliminary evaluace přidat třídy \\
+
+\noindent{}TODO: Přidat evaluaci pro CoT-N-shot pro všechny popisy domén a odprezentovat to podobně, jako to je v článku
 
 
 \section{Descriptions evaluation}
@@ -299,21 +294,23 @@ For each generated description we evaluated the following tasks:
 \item does the description not miss any useful information \\
 \end{itemize}
 
-\noindent{}TODO: Jaký popis domény jsme použili
+\noindent{}TODO: Přesněji zadefinovat ten třetí a čtvrtý bod \\
 
-\begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.10]{img/evaluation-complex-p-r-f1.png}
-    \caption{\centering Average Precision, recall and $F_1$ scores for the complex domain descriptions at the four levels of matching strictness}
-    \label{fig:evaluation-complex-p-r-f1}
-\end{figure}
+\noindent{}TODO: Napsat, že jako popis domény jsme použili zoological gardens-00
 
-\begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.10]{img/evaluation-simple-f1.png}
-    \caption{\centering Average $F_1$ score for the analytical, eclectic, and educational domain descriptions at the four levels of matching strictness}
-    \label{fig:evaluation-simple-f1}
-\end{figure}
+%\begin{figure}[!h]
+%    \centering
+%    \includegraphics[scale=0.10]{img/evaluation-complex-p-r-f1.png}
+%    \caption{\centering Average Precision, recall and $F_1$ scores for the complex domain descriptions at the four levels of matching strictness}
+%    \label{fig:evaluation-complex-p-r-f1}
+%\end{figure}
+%
+%\begin{figure}[!h]
+%    \centering
+%    \includegraphics[scale=0.10]{img/evaluation-simple-f1.png}
+%    \caption{\centering Average $F_1$ score for the analytical, eclectic, and educational domain descriptions at the four levels of matching strictness}
+%    \label{fig:evaluation-simple-f1}
+%\end{figure}
 
 
 \section{User-based evaluation of the application}

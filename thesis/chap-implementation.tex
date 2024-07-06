@@ -1,32 +1,29 @@
 \chapter{Implementation of domain modeling assistant}
 
-Let us now use the delineated framework to implement a concrete modeling assistant. We define the generators with prompt templates based on the meta
-template. This includes defining (1) main control instructions, modeling procedure specifications and output specifications, (2) zero or more examples for N-shot prompting, and (3) a technique for context specification.
+Let us now use the delineated framework to implement a concrete modeling assistant. We define the generators with prompt templates based on the meta-template. This includes defining (1) main control instructions, modeling procedure specifications, and output specifications, (2) zero or more examples for N-shot prompting, and (3) a technique for context specification. All our prompt templates can be found in our GitHub repository\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/prompts}}.
 
 
 \section{Generators configuration}
-
-All our prompt templates can be found in our GitHub repository\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/prompts}}.
 
 
 \subsection{Output order}
 \label{sec:output_order}
 
-When the task of modeling domain elements solely based on a given domain description is done by the modeling experts, they typically proceed in the following two steps: (1) they find the context for the given element and (2) from the found context they extract the specific information such as name of the element.
+When the task of modeling domain elements solely based on a given domain description is done by the modeling experts, they typically proceed in the following two steps: (1) they find the context for the given domain element and (2) from the found context they extract the specific information such as the name of the domain element.
 
-To mimic this approach, we instruct the LLM in the output specification part to first generate the context for the given element and then to generate the specific information of this element.
+To mimic this approach, when generating classes, attributes, and associations we instruct the LLM in the output specification part to first generate the context for the given domain element and then to generate the specific information of this domain element.
 
 
 \subsection{Output specification}
 
-To the prompt we insert each structured data in the JSON format as each LLM should be greatly familiar with this format. To improve the response time of our application we instruct the LLM to output one isolated JSON object for each outputted domain element. This way as soon as the LLM generates some proper domain element it can be displayed to the user.
+In the prompt template, we insert each structured data in the JSON format as each LLM should be greatly familiar with this format. To improve the response time of our application we instruct the LLM to output one isolated JSON object for each outputted domain element. This way as soon as the LLM generates some proper domain element it can be displayed to the user.
 
 
 \subsection{Modeling procedure}
 
-For generating classes, attributes and associations we implemented the following approaches: baseline, CoT, N-shot, CoT + N-shot. Additionally, for generating classes we implemented the ToT approach.
+For generating classes, attributes, and associations we implemented the following approaches: baseline, CoT, N-shot, CoT + N-shot. Additionally, for generating classes we implemented the ToT approach.
 
-The table \ref{tab:main-control-instructions} shows examples of our main control instructions. These instructions are independent of the used prompting technique.
+The table \ref{tab:main-control-instructions} shows examples of our main control instructions. These instructions are independent of the prompting techniques.
 
 \begin{table}[!h]
     \scriptsize
@@ -65,7 +62,7 @@ $gen_{ad}$ & Solely based on the given context provide description for the attri
 
 \subsubsection{Chain of thoughts}
 
-We experiment with the CoT prompting technique for generating classes, attributes and associations. First, we need to come up with a reasoning steps that the LLM can generate before it outputs each individual domain element. Some possible reasoning steps can be suggested by the LLM by adding the ``\textit{Let's think step by step}'' phrase into the prompts for generating classes, attributes and associations as discussed in the section \ref{sec:chain_of_thoughts}. Figure \ref{fig:cot-think-step-by-step} shows one of the possible reasoning steps when using ChatGPT-4o with the simple domain description from the section \ref{sec:simple_domain_description_example} for generating attributes.
+We experiment with the CoT prompting technique for generating classes, attributes, and associations. First, we need to come up with reasoning steps that the LLM can generate before it outputs each domain element. Some possible reasoning steps can be generated by the LLM by adding the ``\textit{Let's think step by step}'' phrase into the prompts for generating classes, attributes, and associations as discussed in the section \ref{sec:chain_of_thoughts}. Figure \ref{fig:cot-think-step-by-step} shows one of the possible reasoning steps when using ChatGPT-4o with the simple domain description from the section \ref{sec:simple_domain_description_example} for generating attributes.
 
 \begin{figure}[!h]
     \centering
@@ -74,8 +71,7 @@ We experiment with the CoT prompting technique for generating classes, attribute
     \label{fig:cot-think-step-by-step}
 \end{figure}
 
-As we can see, ChatGPT-4o for each attribute first rephrased some parts of the domain description and then based on these parts it identified the possible attributes. Note that this approach is consistent with the output order that we specified in the section \ref{sec:output_order}.
-Inspired by this result, we implemented a simple CoT strategy that instructs the LLM to for each domain element first generate it's original text, then generate all other fields such as the name and at the end generate all these previous items in a single JSON object. The table \ref{tab:cot-prompt-templates} shows the modeling procedures and the output specifications for $gen_c$, $gen_a$ and $gen_{r1}$.
+As we can see, ChatGPT-4o for each attribute first rephrased some parts of the domain description, and then based on these parts it identified the possible attributes. Note that this approach is coherent with the output order that we specified in the section \ref{sec:output_order}. Inspired by this result, we implemented a simple CoT strategy that instructs the LLM to for each domain element first generate its original text, then generate all other fields such as the name and at the end generate all these previous items in a single JSON object. The table \ref{tab:cot-prompt-templates} shows the modeling procedures and the output specifications for $gen_c$, $gen_a$ and $gen_{r1}$. The modeling procedure and the output specification for $gen_{r2}$ is very similar to $gen_{r1}$.
 
 % Other more sophisticated CoT strategies can be used. For example, when the LLM generates attributes to instruct the LLM to add for each generated domain element a reason why it thinks it is an attribute.
 
@@ -129,43 +125,55 @@ We use examples based on the domain description and its domain model that is sho
 
 For $gen_c$, we use the three classes as examples. For $gen_a$, we use the colored attributes, each with the colored part of the text as examples of the corresponding original texts. For $gen_{r1}$ and ${gen_{r2}}$, we proceed similarly, but for ${gen_{r1}}$ we provide each sample association twice – for the source class and for the target class.
 
-The concrete examples can be used to further specify the output format. For example, when the LLM is not provided with a specific name format for the corresponding domain elements, the outputted names can sometimes be in a snake case convention and some other time in a camel case convention. But when the provided examples contain a consistent naming format, the LLM usually outputs the provided format consistently. Similarly, N-shot prompting lets us specify the naming style. For example, when no naming style is provided for attributes, they can contain some unwanted words such as starting with the word ``has''.
+The concrete examples can be used to further specify the output format. For example, when the LLM is not provided with a specific name format for the corresponding domain elements, the outputted names can sometimes be in a snake case convention and some other time in a camel case convention. But when the provided examples contain a consistent naming format, the LLM usually outputs the provided format consistently. Similarly, N-shot prompting technique lets us specify the naming style. For example, when no naming style is provided for attributes, they can contain some unwanted words such as starting with the word ``has'' which is more common for association names.
 
 
 \subsubsection{CoT + N-shot prompting}
 
-Our combination of the CoT and the N-shot prompting technique contains the same modeling procedure as shown in the table for only CoT approach. However, the output specification part contains only the the expected JSON object and the intermediate steps are demonstrated in the part where the $N$ examples are provided.
+Our combination of the CoT and the N-shot prompting technique contains the same modeling procedure as shown in the table for only CoT approach. However, the output specification part contains only the expected JSON object, and the intermediate steps are demonstrated in the part where the $N$ examples are provided. For example, the labeled example for the attribute \textit{role} of the class \textit{employee} looks like this: \\
+
+\noindent{}\textit{context: has a specific role} \\
+\textit{name: role} \\
+\textit{JSON object: \{``originalText'': ``has a specific role'', ``name'': ``role''\}} \\
+
+\noindent{}And the labeled example for the association \textit{manages} with the source class \textit{manager} and the target class \textit{department} looks like this: \\
+
+\noindent{}\textit{context: make sure the departments they manage are productive} \\
+\textit{name: manages} \\
+\textit{source class: manager} \\
+\textit{target class: department} \\
+\textit{JSON object: \{``originalText'': ``make sure the departments they manage are productive'', ``name'': ``manages'', ``source'': ``manager'', ``target'': ``department''\}}
 
 
 \subsubsection{Tree of thoughts}
 
-Even though our defined domain modeling steps are not the typical tasks that the ToT is usually used for, we tried using this technique for generating classes in the single prompt fashion as discussed in the section \ref{sec:tree_of_thoughts}.
+Even though our defined generators do not solve the typical complex tasks that the ToT is usually used for, we use this prompting technique for generating classes in the single prompt fashion as discussed in the section \ref{sec:tree_of_thoughts}.
 
-We did not experiment with any iterative prompting technique as this would significantly increase the response time of our application as discussed in the section \ref{sec:iterative_prompting}.
+We do not experiment with any iterative prompting technique as this would significantly increase the response time of our application as discussed in the section \ref{sec:iterative_prompting}.
 
 % Possible iterative technique for generating classes: we could generate multiple lists of class suggestions with multiple prompts. Then we could apply some operation to these lists such as intersection or unification. Or for example, we could remove only those classes that appeared in only one list.
 
 
 \subsection{Retrieval-augmented generation}
 
-We consider the domain description $T$ as the external knowledge base and our goal is to insert only the relevant parts of the $T$ in the context specification part of the prompt. We use this technique for the generators of: attributes, associations, descriptions, data types and cardinalities as in these cases only the information about the source class $C$ is needed for generating correct output. For example, consider the following domain description: \\
+We consider the domain description $T$ as the external knowledge base and our goal is to insert only the relevant parts of the $T$ in the context specification part of the prompt. We use this technique for the generators of attributes, associations, descriptions, data types, and cardinalities as in these cases only the information about the source class $C$ is needed to generate the correct output. For example, consider the following domain description: \\
 
 \noindent{}``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}''\\
 
 \noindent{}When we want to extract attributes or associations of the class \textit{department} we are only interested in the first sentence since this is the only sentence that contains information about this class. Therefore in this case we can provide only the first sentence of the domain description into the context specification part of the prompt.
 
-Main goal of the mentioned approach is to reduce the hallucination of the LLM such as reducing irrelevant domain elements suggestions by forcing the LLM to focus on the important parts of the domain description. Furthermore, this approach usually reduces the prompt length which can help when working with a domain description that does not fit in the context window size of the LLM.
+The main goal of the mentioned approach is to reduce the hallucination of the LLM such as reducing irrelevant domain element suggestions by forcing the LLM to focus on the important parts of the domain description. Furthermore, this approach usually reduces the prompt length which can help when working with a domain description that does not fit in the context window size of the LLM.
 
 Now we describe the most significant challenges we encountered when implementing the mentioned RAG approach and the corresponding solutions we implemented to address them.
 
 
 \subsubsection{Domain description simplification}
 
-We considered using a LLM to simplify the domain description so the LLM assistant would work only with this simplified version. However, there are a few disadvantages to this approach.
+We considered using an LLM to simplify the domain description so the LLM assistant would work only with this simplified version. However, there are a few disadvantages to this approach.
 
-First, the LLM sometimes changes some names of the original domain elements. For example, when we instructed the ChatGPT-4o with a domain description about aircraft manufacturing and with the following prompt: \\
+First, the LLM sometimes changes some names of the original domain elements. For example, when we instructed the ChatGPT-4o with a domain description about \textit{aircraft manufacturing} and with the following prompt: \\
 
-\noindent{}``\textit{Simplify each sentence structure in the following text. Make sure to not change any nouns and verbs as we want to keep names of all domain elements unchanged. This is the following text: \ldots}'' \\
+\noindent{}``\textit{Simplify each sentence structure in the following text. Make sure to not change any nouns and verbs as we want to keep the names of all domain elements unchanged. This is the following text: \ldots}'' \\
 
 \noindent{}The sentence: ``\textit{Customers represent the clients who purchase the finished aircraft.}'' was simplified into: ``\textit{Customers are clients who buy finished aircraft.}'' This means that the original association ``\textit{client purchases aircraft}'' was changed into ``\textit{client buys aircraft}'' which is semantically the same but it can be a problem if the user wants the suggestions to have the same name as described in the text.
 
@@ -174,22 +182,22 @@ The second disadvantage is that the domain description simplification removes th
 
 \subsubsection{Domain description segmentation}
 
-In the RAG indexing phase, the domain description needs to be split into chunks so that each chunk can be evaluated if it is relevant for the given source class. Determining the chunk size is a challenging task since with too big chunks we are risking having irrelevant parts of domain description in the prompt and thus decreasing the LLM performance. On the other hand, with too small chunks we are risking that the chunks will be miss-classified as they will not contain enough information about their context for deciding if they are relevant.
+In the RAG indexing phase, the domain description needs to be split into chunks so that each chunk can be evaluated if it is relevant for the given source class. Determining the chunk size is a challenging task since with too big chunks we are risking having irrelevant parts of domain description in the prompt and thus decreasing the LLM performance. On the other hand, with too small chunks we are risking that the chunks will be misclassified as they will not contain enough information about their context to decide if they are relevant.
 
-In the result, we consider each sentence of the domain description as a one chunk since one sentence usually contains information about one concept or a few related concepts. The advantage of this approach is that after the chunks evaluation is done it is easy to concatenate the relevant chunks together simply by putting them next to each other in the original order from the domain description. On the other hand, the disadvantage is that for example, if some sentence refers to an another sentence with a pronoun then without any additional domain description pre-processing this context is lost during the chunks evaluation.
+In the result, we consider each sentence of the domain description as one chunk since one sentence usually contains information about one concept or a few related concepts. The advantage of this approach is that after the chunks evaluation is done it is easy to concatenate the relevant chunks together simply by putting them next to each other in the original order from the domain description. On the other hand, the disadvantage is that for example, if some sentence refers to another sentence with a pronoun then without any additional domain description pre-processing this context is lost after the domain description segmentation.
 
 
 \subsubsection{Lack of context}
 
-As mentioned, chunks in the form of isolated sentences can be miss-classified if not enough context is provided. This mostly happens when a sentence contains pronouns that refer to some other sentence. For example, consider the class named \textit{book} and the following domain description: \\
+As mentioned, chunks in the form of isolated sentences can be miss-classified if not enough context is provided. This mostly happens when some sentences contains pronouns that refer to some other sentences. For example, consider the class named \textit{book} and the following domain description: \\
 
 \noindent{}``\textit{The book contains a lot of pages. It is very heavy.}'' \\
 
-\noindent{}Now when classifying the chunk ``\textit{It is very heavy.}'' it most likely will be classified as irrelevant chunk as in isolation it does not contain any information about the class \textit{book} even thought the attribute \textit{weight} of the \textit{book} could be inferred from it.
+\noindent{}Now when classifying the chunk ``\textit{It is very heavy.}'' it most likely will be classified as an irrelevant chunk as in isolation it does not contain any information about the class \textit{book} even though the attribute \textit{weight} of the \textit{book} could be inferred from it.
 
-To solve similar issues, we implemented a simple naive algorithm where each chunk has it's own metadata and if a chunk starts with a pronoun we insert in it's metadata the previous chunk. Now when chunk is being evaluated, it's metadata are also considered. This means that when classifying the second sentence from the example also the first sentence is present therefore the context is not lost. The disadvantages of this approach are that pronouns that are not at the start of a chunk are not considered. Additionally, adding a whole previous chunk to a current chunk can in some cases lead to a current chunk miss-classification if the current chunk is not referencing the whole context of the previous chunk.
+To solve similar issues, we implemented a simple naive algorithm where each chunk has its metadata, and if a chunk starts with a pronoun we insert in its metadata the previous chunk. Now when a chunk is being evaluated, its metadata are also considered. This means that when classifying the second chunk from the example also the first chunk is present therefore the context is not lost. The disadvantages of this approach are that pronouns that are not at the start of a chunk are not considered. Also, adding a whole previous chunk to a current chunk can in some cases lead to miss-classification if the current chunk is not referencing the whole context of the previous chunk.
 
-A possible better solution is to use some language model that can accurately solve the co-reference resolution task where each pronoun is replaced with the corresponding words that it references. This way when the second chunk from the example is being classified, the classification algorithm works with this text: ``\textit{The Book is very heavy}'' so all relevant context is provided. \\
+A possibly better solution is to use some language model that can accurately solve the co-reference resolution task where each pronoun is replaced with the corresponding words that it references. This way when the second chunk from the example is being classified, the classification algorithm works with this text: ``\textit{The Book is very heavy}'' so all relevant context is provided. \\
 
 Another issue with a lack of context can arise when a text contains some bullet points, such as: \\
 
@@ -199,38 +207,147 @@ Another issue with a lack of context can arise when a text contains some bullet 
 \item \textit{date of publication}'' \\
 \end{itemize}
 
-\noindent{}To solve this issue, each of the bullet points has in it's metadata a reference to the chunk before the first bullet points which in this case is ``\textit{The book contains:}''.
+\noindent{}To solve this issue, for each bullet point we put in it's metadata the chunk before the first bullet point which in this case is the chunk: ``\textit{The book contains:}''.
 
-In cases of some other possible chunks miss-classifications when the main goal of the assistant is to always suggest every possible domain elements then either the RAG can be temporarily disabled or the domain description can be manually edited to remove the problematic constructs.
+%If the requirement is to correctly classify each chunk then either the RAG can be temporarily disabled or the domain description can be manually edited to remove all problematic constructs.
 
 
 \subsubsection{Texts comparison}
 \label{texts_comparison}
   
-We considered using LLM to directly output the relevant texts from the domain description based on the given source class. However, this process can take a long time as in the worst case scenario the LLM has to copy the whole domain description to the output.
+We considered using LLM to directly output the relevant texts from the domain description based on the given source class. However, this process can take a long time as in the worst-case scenario the LLM has to copy the whole domain description to the output.
 
 Instead, we implemented a semantic and a syntactic approach that for a given source class and some part of a domain description compares their similarity.
  
 The semantic approach uses an embedding model that converts input texts into a vector space and then compares their similarity.
 
-The syntactic approach uses a language model the converts the given source class and each chunk into lemmas. Subsequently, if the chunk contains the lemmas of the given source class than it is classified as relevant. For example, consider the source class \textit{department} and the following domain description: \\
+The syntactic approach uses a language model that converts the given source class and each chunk into lemmas. Subsequently, if the chunk contains the lemmas of the given source class then it is classified as relevant. For example, consider the source class \textit{department} and the following domain description: \\
 
 ``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' \\
 
-First, each word in the source class \textit{department} is converted into a lemma which is again the word \textit{department}. Then, each word in the domain description is converted into the lemmas: \\
+First, each word in the given source class \textit{department} is converted into a lemma which in this case is the same word \textit{department}. Then, each word in the domain description is converted into the lemmas: \\
 
 ``\textit{In this company, every employee \textbf{work} in some department. Each employee \textbf{be} uniquely \textbf{identify} by his ID.}'' \\
 
-The bold words emphasise the differences between the original domain description and the domain description after each word is converted into a lemma. Subsequently, in this case a chunk is relevant if it contains the word \textit{department}. Which in this case is only the first sentence. We do not enforce the chunk to contain the lemmas in the same order as the given source class. For example, consider the source class \textit{registration application} and the following chunk: \\
+The bold words emphasize the differences between the original domain description and the domain description after each word is converted into a lemma. Subsequently, in this case, a chunk is relevant if it contains the word \textit{department}. Which in this case is only the first sentence. We do not enforce the chunk to contain the lemmas in the same order as the given source class. For example, consider the source class \textit{registration application} and the following chunk: \\
 
-\noindent{}``\textit{Application of registration needs to be provided}'' \\
+\noindent{}``\textit{Application of registration needs to be provided.}'' \\
 
-\noindent{}If the strict lemmas order would be enforced than this chunk would be classified as irrelevant for the source class \textit{registration application} which is unwanted behaviour.
-
-Both of our RAG approaches are evaluated in the section.
+\noindent{}If the strict lemmas order was enforced then this chunk would be classified as irrelevant for the source class \textit{registration application} which is unwanted behavior.
 
 
 \subsubsection{Top k search}
 \label{sec:top_k_search}
 
-In traditional RAG systems in the retrieval phase, a fixed number $k$ of the most relevant results are retrieved after applying the embedding model. However, in our specific application, $k$ is not a fixed number because the domain description may contain a variable number of relevant sentences. To address this variability, for our semantic RAG approach we need to set the computed score threshold. The challenge lies in the fact that the computed score is always relative to the given input. Consequently, in one scenario, sentences with a score higher than a certain threshold $x$ may be considered relevant, while in another scenario, sentences with a score higher than $x$ may be considered irrelevant. To mitigate this issue, we set the threshold based on the score of the most relevant sentence.
+In traditional RAG systems in the retrieval phase, a fixed number $k$ of the most similar results are retrieved after computing the similarity with the embedding model. However, in our specific application, $k$ is not a fixed number because the domain description may contain a variable number of relevant chunks. To address this variability, for our semantic RAG approach we need to set the similarity score threshold. The challenging part is that the similarity score is always relative to the given input. For example, in one scenario, chunks with a similarity score higher than a certain threshold $x$ may be considered similar, while in another scenario, chunks with a similarity score higher than $x$ may not be considered similar. To mitigate this issue, we set the threshold based on the similarity score of the most similar chunk.
+
+
+\section{Prototype software application}
+
+To empirically validate the feasibility of our proposed methodology, we developed a prototype application. This application contains its frontend and backend. The backend implements the generators and other services and provides them via an API. Users can use our frontend via a web application that communicates with the backend. The web application contains a text area for inserting a domain description and a modeling canvas where the users create the domain models using classical manual modeling features and the suggestion features highlighted by the \textit{magic wand} icon. Our LLM-based assistant provides the following services:
+
+\begin{enumerate}
+\item suggesting domain elements
+\item highlighting already modeled elements
+\item summarizing domain model
+\end{enumerate}
+
+
+\subsection{Suggesting domain elements}
+
+When a domain description is provided, the assistant generates suggestions solely based on the provided text. Otherwise, the assistant does not adhere to any text. Our assistant can suggest classes. For a selected class the assistant provides functionality to suggest its attributes and associations. Also, for a selected source class and a selected target class, the assistant can suggest their associations. Figure \ref{fig:assistant-features} demonstrates some of these features.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.22]{img/assistant-features.png}
+    \caption{\centering Screenshots of the main functionalities of the prototype application}
+    \label{fig:assistant-features}
+\end{figure}
+
+Screenshot 1 shows the text area for the domain description and the action buttons. The highlighted button \textit{Suggest classes} calls the $gen_c$ operator with the inserted domain description. Screenshot 2 shows the list of suggested classes. The user can use the highlighted ``\textit{+}'' buttons to insert suggested classes into the modeling canvas. The other buttons are used for \textit{liking} and \textit{disliking} the corresponding suggestion, for editing before inserting the suggested class into the canvas, and highlighting the suggestion in the original domain description. For the selected class, the user can ask for attribute and association suggestions, i.e. $gen_a$ and $gen_{r1}$ operators for the class and the domain description. Screenshot 3 shows the attribute suggestions. Screenshot 4 shows the association suggestions. For the suggested attributes and association, the tool also shows the original text returned by the operators $gen_a$, $gen_{r1}$ and $gen_{r2}$.
+
+
+\subsubsection{Context highlighting}
+\label{sec:context_highlighting}
+
+As mentioned, for each suggested attribute and association we highlight its original text in the domain description. Additionally, for each class, we highlight its name. This requires matching the LLM-generated original text with the domain description. The matching is easy as long as the original text syntactically exactly matches some part of the domain description.
+
+However, we encountered some common issues with this approach. For example, sometimes the LLM changes some letters when generating the original text. For instance, when the domain description contains the word ``\textit{motorized}'' with the ``\textit{z}'' letter the LLM can generate the word ``\textit{motorised}'' with the ``\textit{s}'' letter instead.
+
+To mitigate this issue we implemented the following recovery strategy. When the original text and the domain description cannot be directly matched we find their longest common substring and we split the original text into the longest common substring and the remaining parts. Subsequently, we try to match these parts without the letter that was in between these parts. For example, consider the original text that contains the word ``\textit{motorized}'' and the domain description that contains the word ``\textit{motorised}''. Let's assume that their longest common substring is the word ``\textit{motori}'' and the remaining common part is the ``{\textit{ed}}''. Subsequently, we find all occurrences of the word ``\textit{motori}'' in the domain description, and for each occurrence we then try to match the remaining part ``\textit{ed}''. In more complex scenarios this recovery strategy can fail however, this issue can be greatly mitigated by using a LLM with a high performance.
+
+
+\subsubsection{Single field suggestion}
+
+For the best possible LLM output quality and response time when generating suggestions, we try to simplify the prompts as much as possible. This for example means that the generated suggestions of attributes do not contain the attribute description or the attribute data type. For generating these additional fields our assistant can be used as it implements the generators for suggesting descriptions, data types, and cardinalities. Furthermore, if the generated domain element name is not suitable it can be re-generated by the generator for name suggestions.
+
+
+\subsubsection{Attributes and associations conversion}
+\label{sec:attributes_and_associations_conversion}
+Attributes can be usually modeled as associations and vice versa. For example, \textit{address} can be an attribute of a class \textit{person} but it also can be an association between the classes \textit{person} and \textit{address}. Therefore, for each attribute suggestion, we provide functionality to convert them to an association and vice versa. We convert an attribute into an association by putting the attribute name into the association target class and we put the attribute name into the association name. As the copied name does not have to fit, the LLM assistant can be used to generate a new name. The opposite conversion from an association to an attribute works the same but in reverse.
+
+
+\subsubsection{Duplicate domain elements}
+\label{duplicate_domain_elements}
+
+The generated domain element suggestion is not shown to the users if they already modeled the corresponding element. We remove these suggestions on the backend after the LLM generates the output so we do not have to provide the user's domain model in the prompts for generating classes, attributes, and associations.
+
+The domain element suggestion is removed if its name syntactically matches the name of the user's corresponding modeled element. This approach has the following limitations.
+
+The first limitation is that if two domain elements have the same name but different semantics then a relevant domain element is removed. For example, the class \textit{car} can have an attribute \textit{year} referring to the year of the car manufacturing and the same attribute referring to the year of the last technical inspection. In our experience, this issue is very rare as the LLM usually generates suggestions with explicit names so in this case the first mentioned attribute would probably be named \textit{year of manufacturing} and the second attribute would probably be named \textit{year of technical inspection}.
+
+The second limitation is that the semantically same domain elements with a different name are not removed. Possible solutions are to either use an LLM or some embedding model as in our RAG semantic approach. However, both have significant disadvantages. Solving the mentioned problem with an LLM in a single prompt approach complicates the prompt wording and can reduce the output quality. Using LLM in an iterative prompt approach can significantly increase the delay between the user's request and showing the corresponding suggestion as the LLM has to process more than one prompt. When using some embedding model as mentioned in the section \ref{sec:top_k_search}, one of the challenging tasks is setting the threshold of the decision boundary between accepting and rejecting the corresponding element. For example, attributes \textit{first name} and \textit{last name} are very close in terms of vector space distance however, they represent two semantically distinct different attributes. This fact would force us to set a very strict threshold that would reject almost any two syntactically different words which is as a result almost identical to our naive approach.
+
+
+\subsection{Highlighting already modeled elements}
+
+We extend the mentioned highlighting of suggested domain elements in the domain description by highlighting all the selected user's modeled elements in the domain description. However, these highlighted parts do not have to always correspond with the parts that the user has already modeled as we only instruct the LLM to generate the context for each attribute and association. This means that this context can contain other classes, attributes, or associations. Consider the following example: \\
+
+\noindent{} ``\textit{A person is identified by an ID card or by a driving license.}'' \\
+
+\noindent{} When the LLM suggests the attribute \textit{ID card} its original text can contain also the \textit{driving license} that can be also modeled as an attribute.
+
+Also, the not highlighted parts of the domain description can also be already covered by the user's domain model for example, if these parts were modeled manually by the user. This case can be solved by using the original text generator.
+
+
+\subsection{Summarising domain model}
+\label{summarising_domain_model}
+
+For a selected part of the user's domain model, the assistant is able to generate a summary for each class, attribute, and association. We implemented two summary variations: in plain text and in the form of bullet points.
+
+The plain text summary generates a paragraph describing the selected part of a domain model. The summary style can be changed in the settings. The available styles are ``analytical'', ``educational'' and ``funny story''. When a summary is generated, the selected style is inserted into the corresponding prompt template. The summary in the form of bullet points generates a description for each selected domain element.
+
+In both cases, the LLM does not receive the user's domain description as this led to many situations where the LLM did not stick to the selected domain elements.
+
+
+\subsection{LLM parameters}
+
+For each task, we set the temperature to the lowest value so the LLM generates only the most probable output as discussed in the section \ref{temperature}. For generating the summary, the temperature could be set higher to provide more creative output.
+
+The other parameters are implicitly set to their default values which are defined in the OpenAI API\footnote{\url{https://platform.openai.com/docs/api-reference/introduction}}.
+
+
+\subsection{LLM output checking}
+
+When LLM generates any JSON object we always automatically remove those objects that do not contain all mandatory fields such as the name when generating classes, attributes, and associations. When the generated domain element is an association then we also remove the associations with a source class or a target class that does not match the user input. Additionally, as mentioned in the section \ref{duplicate_domain_elements}, the generated domain element is removed if it is already present in the user's domain model.
+
+
+\subsection{Saving users data}
+
+For each generated suggestion users can optionally click on the \textit{like} button or the \textit{dislike} button. The corresponding evaluated suggestion is sent to the backend and saved there with all the parameters that were used to generate this suggestion. To remember these parameters, the frontend remembers for each suggestion the parameters that were used for generating this suggestion.
+
+We use these user's reactions for two main reasons. The first reason is that we can use these data as feedback. For example, we could automatically detect if some set of parameters repeatedly ended up with too many negative reactions. After that, we can analyze the issue and fix it. The second reason is that we can use these data for fine-tuning some LLM to further improve the quality of our specific tasks.
+
+The downside of our approach is that it does not collect much user data. One possible solution is to save each user action such as saving each suggestion that the user added into his domain model. However, this approach has a lot of disadvantages. For example, if the user adds some suggestion and then later on removes it we need to save this removal action too as it can mean that the original suggestion turned out to be unwanted. This means that the saved data would need to be post-processed to remove these pairs of data. A similar issue arises when a user adds some suggestion but then later on edits it. Because of this complexity, we decided to use the explicit reactions buttons.
+
+
+\subsection{Work-flow}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.23]{img/work-flow.jpg}
+    \caption{\centering Schema of the flow of processing the textual domain description}
+    \label{fig:work-flow}
+\end{figure}
+
+Figure \ref{fig:work-flow} shows the basic flow of generating suggestions on the backend. The modeling process typically starts by providing the domain description. Then the domain model is step by step created mainly by using suggestions of classes, attributes, and associations from the assistant. Suggestions of attributes and associations are filtered by the selected retrieval-augmentation generation method. Then the prompt engineering techniques are applied and the final prompt is constructed and sent to LLM. Finally, the output from the LLM is parsed and the suggested model elements are sent back to the frontend.

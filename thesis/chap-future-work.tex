@@ -8,7 +8,7 @@ There exist many ontology design patterns\footnote{\url{http://ontologydesignpat
 
 \section{Starting from a smaller domain model}
 
-Currently, the domain modeling process in our application starts from an empty domain model where the user starts by inserting classes, their attributes and their associations. To make this initial process faster, a smaller domain model could be automatically suggested by the LLM as a starting point.
+Currently, the domain modeling process in our application starts from an empty domain model where the user starts by inserting classes, their attributes, and their associations. To make this initial process faster, a smaller domain model could be automatically suggested by the LLM as a starting point.
 
 
 \section{Commands for domain modeling}
@@ -18,46 +18,46 @@ To make the domain modeling process faster, the user could input commands in a n
 
 \section{Modeling highlighted part of the domain description}
 
-Currently, the whole inserted user's domain description is always processed by our application. To process only some part of the domain description the user has to insert only some part of his domain description. To make this process more user friendly, only the selected part of the domain description could be processed. This could improve the LLM performance as our application would process only subset of the original domain description.
+Currently, the whole inserted user's domain description is always processed by our application. To process only some part of the domain description the user has to insert only some part of his domain description. To make this process more user-friendly, only the selected part of the domain description could be processed. This could improve the LLM performance as our application would process only a subset of the original domain description.
 
 
 \section{Removing already modeled suggestions}
 
-The goal is to remove the assistant suggestions of domain elements that the user has already present in his domain model. In the section \ref{duplicate_domain_elements} we discussed the main challenge of this problem and we presented our naive approach that removes the domain elements that have exactly the same name as the domain elements in the user's domain model.
+The goal is to remove the assistant suggestions of domain elements that the user already has in his domain model. In the section \ref{duplicate_domain_elements} we discussed the main challenge of this problem and we presented our naive approach that removes the domain elements that have the same name as the domain elements in the user's domain model.
 
-Another possible solution is to insert the user's domain model into the prompt and instruct the LLM to not suggest already modeled domain elements. However, this is a challenging task since inserting extra information into the prompt can decrease the LLM's output quality. To improve the performance of the LLM some filtering technique such as RAG can be used to insert into the prompt only the relevant parts of the user's domain model.
-
-
-\section{Improving highlighting of already modeled domain elements}
-
-TODO: Nějak rozumně formulovat, jak by se to dalo udělat, možná toto dám do kapitoly o aplikaci, hlavním future workem je vytvořit zcela nový prompt, aby LLM vykonal tuto úlohu
-
-TODO: How to solve highlighting of not modeled elements: One possible simpler solution is to highlight only the domain elements in the domain description such as we do in the case of generating classes.
-
-For example, consider the following sentence:
-
-\noindent{} ``A person is identified by an ID card or by a driving licence.''
-
-To fully capture the semantics of the attribute \textit{ID card} the LLM would probably generate the original text as the 
-
-of the class \textit{person} it's original text could contain the whole sentence but that means that highlighting this attribute would also highlight the \textit{driving license} which could be an another attribute of the class \textit{person}. However, highlighting only part such as ``\textit{A person is identified by an ID card.}'' does not capture it's semantics \\
-
-\noindent{}TODO: Přeformulovat tak, že začneme nejdřív tím co tu mám napsáno ke konci a potom možným řešením udělat z toho samotný task, kde LLM dostane popis domény a uživatelův konceptuální model a z toho vygeneruje části popisu domény, které nejsou namodelovány v uživatelově konceptuálním modelu plus případně k tomu nějaká úroveň jistoty od 1 do 10, jak moc si LLM myslí, že ten text není namodelován v uživatelově konceptuálním modelu \\
+Another possible solution is to insert the user's domain model into the prompt and instruct the LLM to not suggest already modeled domain elements. However, this is a challenging task since inserting extra information into the prompt can decrease the LLM's output quality. To improve the performance of the LLM some filtering techniques such as RAG can be used to insert into the prompt only the relevant parts of the user's domain model.
 
 
-\noindent{}TODO: na jaké hlavní problémy jsem narazil a proč některé zvýrazněné prvky v popisu domény ve skutečnosti nemusí být namodelovány a naopak viz poznámky
+%\section{Improving highlighting of already modeled domain elements}
+%
+%TODO: Nějak rozumně formulovat, jak by se to dalo udělat, možná toto dám do kapitoly o aplikaci, hlavním future workem je vytvořit zcela nový prompt, aby LLM vykonal tuto úlohu
+%
+%TODO: How to solve highlighting of not modeled elements: One possible simpler solution is to highlight only the domain elements in the domain description such as we do in the case of generating classes.
+%
+%For example, consider the following sentence:
+%
+%\noindent{} ``A person is identified by an ID card or by a driving licence.''
+%
+%To fully capture the semantics of the attribute \textit{ID card} the LLM would probably generate the original text as the 
+%
+%of the class \textit{person} it's original text could contain the whole sentence but that means that highlighting this attribute would also highlight the \textit{driving license} which could be an another attribute of the class \textit{person}. However, highlighting only part such as ``\textit{A person is identified by an ID card.}'' does not capture it's semantics \\
+%
+%\noindent{}TODO: Přeformulovat tak, že začneme nejdřív tím co tu mám napsáno ke konci a potom možným řešením udělat z toho samotný task, kde LLM dostane popis domény a uživatelův konceptuální model a z toho vygeneruje části popisu domény, které nejsou namodelovány v uživatelově konceptuálním modelu plus případně k tomu nějaká úroveň jistoty od 1 do 10, jak moc si LLM myslí, že ten text není namodelován v uživatelově konceptuálním modelu \\
+%
+%
+%\noindent{}TODO: na jaké hlavní problémy jsem narazil a proč některé zvýrazněné prvky v popisu domény ve skutečnosti nemusí být namodelovány a naopak viz poznámky
 
 
 \section{Updating old domain models}
 
-Currently, our application focuses only on creating a domain model from a given domain description. However, the domain description usually changes over time because of a new requirements. To help the user quickly update his old domain model a new set of features could be introduced. For example, the old and the new domain description could be inserted to let the assistant suggest changes for updating the old domain model.
+Currently, our application focuses only on creating a domain model from a given domain description. However, the domain description usually changes over time because of new requirements. To help the user quickly update his old domain model a new set of features could be introduced. For example, the old and the new domain description could be inserted to let the assistant suggest changes for updating the old domain model.
 
 
 \section{Summary as a form of documentation}
 
-Currently, the ``summary descriptions'' feature generates a description for each selected domain element as discussed in the section \ref{summarising_domain_model}. This feature could be extended to help the users to document their domain model by adding the ``accept'', ``reject'' and ``regenerate'' suggestion button to each domain element description so the user could quickly create a description for each selected domain element.
+Currently, the ``summary descriptions'' feature generates a description for each selected domain element as discussed in the section \ref{summarising_domain_model}. This feature could be extended to help the users document their domain model by adding the \textit{accept}, \textit{reject}, and \textit{re-generate} suggestion button to each domain element description so the users could quickly create a description for each selected domain element.
 
 
 \section{RAG models combination}
 
-To improve the performance of our RAG approaches, the syntactic and semantic RAG approach could be combined together. For example, first the semantic approach could filter the domain description and then the syntactic approach could filter the rest of the text or vice versa. Possible improvement is to let each RAG approach assign some similarity score to each pair: source class and a domain description chunk. Finally, these scores would be combined together and used to determine which domain description chunks are relevant for the given source class.
+To improve the performance of our RAG approaches, the syntactic and semantic RAG approaches could be combined. For example, first, the semantic approach could filter the domain description and then the syntactic approach could filter the rest of the text or vice versa. A possible improvement is to let each RAG approach assign some similarity score to each pair: source class and a domain description chunk. Finally, these scores could be combined and used to determine which domain description chunks are relevant for the given source class.

@@ -4,12 +4,12 @@
 
 \section*{Motivation}
 
-Domain modeling is fundamental both in data and software engineering. Domain modeling techniques, such as conceptual modeling techniques, where a domain model is expressed as an ER or UML class diagram, or ontology engineering techniques, which define a domain model as a domain ontology, are well established both in academia and industry \cite{Verdonck2018}. However, creating these domain models manually takes a non-trivial amount of time and requires trained experts. Therefore, various modeling automation techniques have been proposed \cite{Sonbol2022}. Recently, researchers began to evaluate different approaches to using Large Language Models (LLMs) as possible automation solution \cite{Chen2023,Saeedizade2024}.
+Domain modeling is fundamental both in data and software engineering. Domain modeling techniques, such as conceptual modeling techniques, where a domain model is expressed as an ER or UML class diagram, or ontology engineering techniques, which define a domain model as a domain ontology, are well established both in academia and industry \cite{Verdonck2018}. However, creating these domain models manually takes a non-trivial amount of time and requires trained experts. Therefore, various modeling automation techniques have been proposed \cite{Sonbol2022}. Recently, researchers began to evaluate different approaches to using Large Language Models (LLMs) as possible automation solutions \cite{Chen2023,Saeedizade2024}.
 
 
 \section*{Solution approach discussion}
 
-Currently, fully automated domain modeling with LLMs works only for simple domain descriptions with a small amount of domain elements \cite{Camara2023}. This is true even when advanced prompting techniques are applied \cite{Chen2023,Saeedizade2024}. To mitigate this issue, the user can be introduced into the domain modeling process \cite{Camara2023} and the LLM can be used as an assistant. For example, \citet{Camara2023} experimented with domain modeling in a conversation dialogue fashion with the ChatGPT-3.5. First, the LLM generated some preliminary domain model and then the users created follow up instructions to edit their domain models. However, as the LLM executed directly each users' instruction, this frequently lead to back-and-forth communication as the users tried correcting the mistakes made by the LLM in the previous steps. Additionally, the users did not have an option to manually model any parts of the domain model to help the LLM model the problematic parts. For more detailed description of related work see chapter \ref{chap:related_work}.
+Currently, fully automated domain modeling with LLMs works only for simple domain descriptions with a small number of domain elements \cite{Camara2023}. This is true even when advanced prompting techniques are applied \cite{Chen2023,Saeedizade2024}. To mitigate this issue, the user can be introduced into the domain modeling process \cite{Camara2023} and the LLM can be used as an assistant. For example, \citet{Camara2023} experimented with domain modeling in a conversation dialogue fashion with the ChatGPT-3.5. First, the LLM generated some preliminary domain model and then the authors created follow-up instructions to edit their domain models. However, as the LLM executed directly each author's instruction, this frequently led to back-and-forth communication as the authors tried correcting the mistakes made by the LLM in the previous steps. Additionally, there was no option to manually model any parts of the domain model to help the LLM model the parts it struggled with. For a detailed description of related work see chapter \ref{chap:related_work}.
 
 
 \section*{Using LLM as an assistant}
@@ -23,7 +23,7 @@ Recently, a lot of applications started using the LLM as an assistant. Here is a
 \item \textit{Notion AI}\footnote{\url{https://www.notion.so/help/guides/category/ai}}: assistant for taking notes
 \end{itemize}
 
-These applications have the following features in common. First, the LLM usually provides only suggestions to the users. Basically, these suggestions can be accepted or rejected or in some cases, a new suggestion can be regenerated. The reason for this behaviour is that the LLMs still make a lot of mistakes so direct application of their output is usually not wanted. Typically, these applications explicitly warn their users that the generated output can provide false, biased and outdated information. Furthermore, if these mistakes are not removed by the users these mistakes can accumulate over time and can lead to even worse output performance. And second, the suggestions are usually in a form such that the users can quickly decide if they want to use them. For example, in \textit{Grammarly} the spell checking feature represents each suggestion as an underlined text that contains a reason why it was underlined and a suggested correction. In \textit{GitHub Copilot} especially in the hands of an experienced developer it is usually easy to decide if a suggested piece of code or a suggested code documentation is appropriate based on the surrounding context. And finally, in \textit{Notion AI} suggested notes are usually easy to evaluate as they are typically clearly structured.
+These applications have the following features in common. First, the LLM usually provides only suggestions to the users. These suggestions usually can be accepted or rejected or in some cases, a new suggestion can be re-generated. The reason for this behaviour is that the LLMs still make a lot of mistakes so direct application of their output is usually not wanted. Typically, these applications explicitly warn their users that the generated output can provide false, biased and outdated information. Furthermore, if these mistakes are not removed by the users these mistakes can accumulate over time and can lead to even worse output performance. Second, the suggestions are usually in a form such that the users can quickly decide if they want to use them. For example, in \textit{Grammarly} the spell-checking feature represents each suggestion as an underlined text that contains a reason why it was underlined and a suggested correction. In \textit{GitHub Copilot} especially in the hands of an experienced developer, it is usually easy to decide if a suggested piece of code or a suggested code documentation is appropriate based on the surrounding context. And finally, in \textit{Notion AI} suggested notes are usually easy to evaluate as they are typically clearly structured.
 
 
 \section*{Areas with lack of research}
@@ -46,8 +46,8 @@ This LLM assistant is mainly intended to help the users create their domain mode
 
 \begin{enumerate}
 \item intuitive to use
-\item suggesting mostly appropriate classes, attributes and associations
-\item suggesting mostly appropriate descriptions of classes, attributes and associations
+\item suggesting mostly appropriate classes, attributes, and associations
+\item suggesting mostly appropriate descriptions of classes, attributes, and associations
 \item able to summarize a selected part of a domain model
 \item able to highlight in the given domain description the parts that the user already modeled
 \item able to generate corresponding suggestions in a few seconds
@@ -56,4 +56,4 @@ This LLM assistant is mainly intended to help the users create their domain mode
 
 \section*{Outline}
 
-TODO: Brief description of thesis chapters
+\noindent{}TODO: Brief description of the thesis chapters
