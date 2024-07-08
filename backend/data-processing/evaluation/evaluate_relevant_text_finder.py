@@ -14,6 +14,8 @@ from definitions.domain_modelling import DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_
 from definitions.utility import TextFilteringVariation, UserChoice
 from utils.text_splitter import TextSplitter
 
+CSV_SEPARATOR = ","
+CSV_HEADER = f"Domain description{CSV_SEPARATOR}Recall classes{CSV_SEPARATOR}Recall attributes{CSV_SEPARATOR}Recall associations{CSV_SEPARATOR}Precision"
 
 # Indexes correspond to texts in domain models and last index corresponds to all texts together
 recall_classes = [0] * (DOMAIN_TEXTS_COUNT + 1)
@@ -233,39 +235,33 @@ def run_test(filtering_variation, is_print_failed_tests):
 
 def print_recall(index):
 
-    recall_classes_percentage = (
-        recall_classes[index] / recall_classes_max[index]) * 100
-    recall_attributes_percentage = (
-        recall_attributes[index] / recall_attributes_max[index]) * 100
-    recall_associations_percentage = (
-        recall_associations[index] / recall_associations_max[index]) * 100
+    recall_classes_total = recall_classes[index] / recall_classes_max[index]
+    recall_attributes_total = recall_attributes[index] / recall_attributes_max[index]
+    recall_associations_total = recall_associations[index] / recall_associations_max[index]
 
-    print("Recall")
-    print(f"- classes: {recall_classes[index]}/{recall_classes_max[index]} - {recall_classes_percentage:0.2f}%")
-    print(f"- attributes: {recall_attributes[index]}/{recall_attributes_max[index]} - {recall_attributes_percentage:0.2f}%")
-    print(f"- associations: {recall_associations[index]}/{recall_associations_max[index]} - {recall_associations_percentage:0.2f}%\n")
+    print(f"{recall_classes_total:0.2f}{CSV_SEPARATOR}{recall_attributes_total:0.2f}{CSV_SEPARATOR}{recall_associations_total:0.2f}{CSV_SEPARATOR}", end="")
 
 
 def print_precision(index):
 
-    precision_percentage = (precision[index] / precision_max[index]) * 100
-
-    print("Precision")
-    print(f"- {precision[index]}/{precision_max[index]} - {precision_percentage:0.2f}%\n\n")
+    precision_total = precision[index] / precision_max[index]
+    print(f"{precision_total:0.2f}")
 
 
 def print_evaluation():
+
+    print(CSV_HEADER)
 
     text_index = 0
     for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            print(f"---- {domain_model}-0{i + 1} ---- ")
+            print(f"{domain_model}-0{i + 1}{CSV_SEPARATOR}", end="")
             print_recall(text_index)
             print_precision(text_index)
             text_index += 1
 
-    print("---- Results for all texts ---- ")
+    print(f"all{CSV_SEPARATOR}", end="")
     print_recall(text_index)
     print_precision(text_index)
 
@@ -275,8 +271,7 @@ def main():
     parser = argparse.ArgumentParser(description="Relevant texts tester")
     parser.add_argument("--filtering", choices=[TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value, TextFilteringVariation.SEMANTIC.value],
                         type=str, default=TextFilteringVariation.SYNTACTIC.value, help="Choose variation for domain description filtering")
-    parser.add_argument("--print_failed_tests",
-                        action="store_true", default=False, help="")
+    parser.add_argument("--print_failed_tests", action="store_true", default=False, help="")
 
     args = parser.parse_args()
     is_print_failed_tests = args.print_failed_tests
