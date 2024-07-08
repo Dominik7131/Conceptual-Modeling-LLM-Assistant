@@ -5,12 +5,15 @@ We propose solving the automation of these domain modeling steps as text generat
 
 \section{Generators definitions}
 
-We consider more fine-grained text generation problems solved by the following generators:
+We consider more fine-grained text generation problems solved by the following generators.
+
 
 \subsection{Domain elements}
 
+The domain element generators are for generating classes, attributes for a given class, associations for a given source class, and associations for a given source class and a target class solely based on the given domain description.
+
 \begin{description}
-\item [Class generator] $gen_c$ that for $T$ suggests classes $\{C_1, \ldots, C_n\}$ each with a suggested $name(Ci)$.
+\item [Class generator] $gen_c$ that for $T$ suggests classes $\{C_1, \ldots, C_n\}$ each with a suggested $name(C_i)$.
 
 \item [Attribute generator] $gen_a$ that for $T$ and some class $C$ suggests attributes $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$, suggested $name(P_i)$, and original text $orig(Pi)$ that is part of $T$ on which base $gen_a$ suggested $P_i$.
 
@@ -21,6 +24,8 @@ We consider more fine-grained text generation problems solved by the following g
 
 
 \subsection{Descriptions}
+
+The description generators aim to generate description for a given class, attribute, and association solely based on the given domain description.
 
 \begin{description}
 \item [Class description generator] $gen_{cd}$ that for $T$ and the $name(C)$ of a class $C$ suggests $description(C)$.
@@ -33,12 +38,16 @@ We consider more fine-grained text generation problems solved by the following g
 
 \subsection{Data types}
 
+The data type generator is for generating data types of a given attribute solely based on the given domain description.
+
 \begin{description}
 \item [Attribute data type generator] $gen_{at}$ that for $T$ and the $name(P)$ of an attribute $P$ suggests $dataType(P)$.
 \end{description}
 
 
 \subsection{Cardinalities}
+
+The cardinality generators aim to generate cardinalities for a given attribute, and association solely based on the given domain description.
 
 \begin{description}
 \item [Attribute cardinality generator] $gen_{ac}$ that for $T$ and the $name(P)$ of an attribute $P$ suggests $cardinality(P)$.
@@ -48,6 +57,8 @@ We consider more fine-grained text generation problems solved by the following g
 
 
 \subsection{Original texts}
+
+The original text generators are for finding the original context in the given domain description for a given class, attribute, and association.
 
 \begin{description}
 \item [Class original text generator] $gen_{co}$ that for $T$ and the $name(C)$ of a class $C$ suggests $orig(C)$.
@@ -60,6 +71,8 @@ We consider more fine-grained text generation problems solved by the following g
 
 \subsection{Names}
 
+The name generators based on a given description and a original text aim to generate a new name for a given class, attribute, and association.
+
 \begin{description}
 \item [Class name generator] $gen_{cn}$ that for $T$, the $description(C)$ and the $orig(C)$ of a class $C$ suggests  $name(C)$.
 
@@ -69,12 +82,14 @@ We consider more fine-grained text generation problems solved by the following g
 \end{description}
 
 
-\section{Requirements}
+\section{Prompt templates requirements}
 
-An operator is defined with a prompt template. The template should instruct the LLM to work within the domain description context, provide the required task-specific suggestions, and output them in a predefined format for easy parsing. It should support techniques that provably improve LLM outputs, such as N-shot prompting \cite{Brown2020} or chain of thoughts \cite{Wei2022}.
+A generator can be executed by an LLM call which requires to define a prompt for each generator. For example, the \emph{class generator} can instruct the LLM with a prompt to generate classes. For inserting the user's input into the prompt it is required to create a prompt template with placeholders that are later on replaced with the user's input. For example, for the \emph{class generator}, the placeholder for the domain description needs to be introduced to insert the user's domain description.
+
+As the LLM output quality greatly depends on the prompt content and the content's order it is required to create a well-structured prompt and consider suitable prompting techniques. Additionally, the template should instruct the LLM to work within the domain description context, provide the required task-specific suggestions, and output them in a predefined format for easy parsing.
 
 
-\section{Structure}
+\section{Meta-template structure}
 
 Based on these generic requirements, we propose a prompt meta-template shown in figure \ref{fig:meta-templates}.
 

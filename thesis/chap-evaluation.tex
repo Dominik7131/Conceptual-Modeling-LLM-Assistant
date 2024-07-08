@@ -284,6 +284,57 @@ As the CoT-N-shot prompting technique consistently shows good results for genera
 \noindent{}TODO: Přidat evaluaci pro CoT-N-shot pro všechny popisy domén a odprezentovat to podobně, jako to je v článku
 
 
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{lccc}
+    \toprule
+         & & Classes & \\
+     \toprule
+         & Recall & Precision & $F_1$ \\
+    \toprule
+    
+    \addlinespace
+         baseline    & 0.49 & 0.99 & 0.66 \\
+    	 CoT         & 0.38 & 0.99 & 0.55 \\
+         N-shot      & 0.55 & 0.88 & \textbf{0.68} \\
+         N-shot-CoT  & 0.45 & 0.96 & 0.61 \\
+         ToT         & 0.46 & 0.98 & 0.63 \\
+    \addlinespace
+    \bottomrule
+    \addlinespace
+    \end{tabular}
+    \caption{Generated classes evaluation with Mixtral-8x7B strict variation only}
+    \label{tab:preliminary-mixtral-classes}
+\end{table}
+
+
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{lccc}
+    \toprule
+    & & Classes & \\
+    \toprule
+         & Recall & Precision & $F_1$ \\
+    \toprule
+    
+    \addlinespace
+         baseline    & 0.63 & 0.97 & \textbf{0.76} \\
+    	 CoT         & 0.46 & 0.99 & 0.63 \\
+         N-shot      & 0.51 & 0.98 & 0.67 \\
+         N-shot-CoT  & 0.48 & 0.93 & 0.63 \\
+         ToT         & 0.28 & 0.99 & 0.44 \\
+    \addlinespace
+    \bottomrule
+    \addlinespace
+    \end{tabular}
+    \caption{Generated classes evaluation with Llama-3-70B strict variation only}
+    \label{tab:preliminary-llama-classes}
+\end{table}
+
 \section{Descriptions evaluation}
 
 For each generated description we evaluated the following tasks:

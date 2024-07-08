@@ -40,7 +40,11 @@ Based on our exploration, the following areas have a lack of research and can ha
 
 \section*{Goals}
 
-To address these areas with a lack of research, this thesis aims to create a tool for domain modeling where the LLM assistant cooperates with a human modeling expert. The expert provides an unstructured domain description as input into the domain modeling process and the assistant generates suggestions solely based on this domain description. To improve the performance of the LLM, we divide the domain modeling process into a set of simpler steps and we employ the retrieval-augmented generation technique for filtering domain descriptions. This assistant always generates output in the form of suggestions as the LLMs still frequently make mistakes. To help the users decide if they want to apply the generated suggestions, we highlight each suggested domain element in the given domain description. Finally, we evaluate our approach with a real-life domain descriptions.
+The domain modeling process typically follows a systematic approach. First, the domain experts create an unstructured domain description, and second, the modeling experts solely based on this domain description create an exact, structured, and formalized domain model.
+
+This thesis aims to help with the second step and address the mentioned areas with lack of research by creating a tool for domain modeling where the LLM assistant cooperates with a human modeling expert. The modeling expert provides an unstructured domain description as input into the domain modeling process and the assistant generates suggestions solely based on this domain description.
+
+To improve the performance of the LLM, we divide the domain modeling process into a set of simpler steps and we employ the retrieval-augmented generation technique for providing only the relevant parts of the domain description to the LLM based on the given task. This assistant always generates output in the form of suggestions as the LLMs still frequently make mistakes. To help the users decide if they want to apply the generated suggestions, we highlight each suggested domain element in the given domain description. Finally, we evaluate our approach with a real-life domain descriptions.
 
 This LLM assistant is mainly intended to help the users create their domain models faster and to help them better document their domain models. This assistant should be:
 
