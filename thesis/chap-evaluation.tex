@@ -1,4 +1,5 @@
 \chapter{Experimental evaluation}
+\label{chap:evaluation}
 
 \noindent{}TODO: Chapter description and probably add reference to our data repository\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark}}
 
@@ -37,7 +38,10 @@ For each domain, we manually created three semantically equivalent domain descri
 \emph{Eclectic} are written as a collection of less structured knowledge from different stakeholders, each describing the domain from a different point of view.
 \emph{Educational} emphasize the most important concepts at the beginning, where only essential aspects are described, followed by adding more details about the concepts later in the description.
 
-Additionally, to assess the quality of our RAG approaches, for each domain description we also manually created corresponding annotated domain description. Each annotated domain description contains tags that for each domain element from the corresponding reference domain model determine the parts that contain information about this domain element. Here is an example of the original domain description and the corresponding annotated domain description from the \emph{farming} domain: \\
+
+\subsubsection{Annotated domain descriptions}
+
+To assess the quality of our RAG approaches, for each domain description we also manually created corresponding annotated domain description. Each annotated domain description contains tags that for each domain element from the corresponding reference domain model determine the parts that contain information about this domain element. Here is an example of the original domain description and the corresponding annotated domain description from the \emph{farming} domain: \\
 
 \noindent{}Domain description: \textit{A farmer is an individual engaged in agriculture, growing and harvesting crops, and is identified uniquely by a name that is used to refer to the farmer from various documentation, statistical reporting, etc.} \\
 
@@ -51,6 +55,7 @@ The annotated domain description can contain multiple tags with the same name. A
 \section{RAG evaluation}
 \label{sec:filtering_evaluation}
 
+As already mentioned, for the RAG evaluation we use the annotated domain descriptions.
 
 \subsection{Evaluation methodology}
 
@@ -97,8 +102,8 @@ In the section \ref{texts_comparison}, we introduced our semantic and syntactic 
          no-filtering      & 1.00  & 1.00  & 1.00 & 0.06 \\
     	 syntactic-baseline & 0.87 & 0.79 & 0.84 & 0.55 \\
          syntactic-pronouns-naive & 0.93  & 0.91  & 0.90 & 0.49 \\
-         semantic-baseline & 1.00 & 0.98 & 0.98 & 0.10 \\
-         semantic-pronouns-naive & 0.99 & 0.96 & 0.97 & 0.10 \\
+         semantic-baseline & 0.99 & 0.96 & 0.97 & 0.10 \\
+         semantic-pronouns-naive & 1.00 & 0.98 & 0.98 & 0.10 \\
     \addlinespace
     \bottomrule
     \addlinespace
@@ -111,7 +116,7 @@ As expected, the no-filtering approach gets the highest possible recall but also
 
 In the syntactic approach, the naive pronouns detection improves the recall significantly but slightly decreases the precision. This approach can probably offer the best performance as it has the highest precision of all the measured approaches. To improve its relatively low recall, the domain description can be manually pre-processed to remove some problematic constructs such as unexpressed subjects.
 
-The semantic approach almost matches the recall of the no-filtering approach but it has a higher precision. Unexpectedly, the naive pronouns approach slightly decreases the recall while maintaining similar precision.
+The semantic approach almost matches the recall of the no-filtering approach but it has a higher precision. The naive pronouns approach slightly increases the recall while maintaining the same precision.
 
 Overall, when recall is the most important then the no-filtering approach or the semantic approach can be used. On the other hand, when precision is the most important and we do not care about losing some domain element suggestions then the syntactic approach is the most suitable.
 
@@ -145,7 +150,7 @@ Llama-3-70B has an 8k tokens context window size and as of writing this thesis, 
 
 \section{Evaluation of generated domain elements}
 
-First, we did a preliminary evaluation where we evaluated many different combinations of prompting techniques, RAG approaches, and LLMs with the domain description \textit{zoological gardens-00}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/main/manual\%20evaluation\%20domains/zoological\%20gardens/domain-description-00.txt}}. Then, we took the combinations with the best results and evaluated them on all our other domain descriptions.
+First, we did a preliminary evaluation where we evaluated generated attributes and associations with many different combinations of prompting techniques, RAG approaches, and LLMs with the domain description \textit{zoological gardens-00}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/main/manual\%20evaluation\%20domains/zoological\%20gardens/domain-description-00.txt}}. Then, we took the combinations with the best results and evaluated them on all our other domain descriptions.
 
 
 \subsection{Manual assessment of generated suggestions}
@@ -169,7 +174,7 @@ If the question \emph{Can we model $X$ also as $X'$?} can be answered positively
 \midrule
 \addlinespace
         $gen_a(T,C)$ & $name(D)$ $\vert$ *         & $name(X)$ $\vert$ * $\vert$ & $name(X)$ $\vert$ * $\vert$ \\
-        $gen_r(T,C)$ &                             & :$name(X)$ $\vert$ :* $\vert$ & :$name(X)$ $\vert$ :* $\vert$ \\
+        $gen_{r1}(T,C)$ &                             & :$name(X)$ $\vert$ :* $\vert$ & :$name(X)$ $\vert$ :* $\vert$ \\
                      &                             & $name(X_1)$;$\ldots$        & $name(X_1)$;$\ldots$ \\
 \addlinespace
 \bottomrule

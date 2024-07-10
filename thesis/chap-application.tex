@@ -1,14 +1,37 @@
 \chapter{Prototype software application}
+\label{chap:protype_software_application}
 
-To empirically validate the feasibility of our proposed methodology, we developed a prototype application. This application contains its frontend and backend. The backend implements the generators and other services and provides them via an API. Users can use our frontend via a web application that communicates with the backend. The web application contains a text area for inserting a domain description and a modeling canvas where the users create the domain models using classical manual modeling features and the suggestion features highlighted by the \textit{magic wand} icon.
+To empirically validate the feasibility of our proposed methodology, we developed a prototype application that implements the proposed configurations from the previous chapter.
 
 
 \section{Architecture}
 
-\noindent{}TODO: Hodilo by se i popsat v návaznosti na modeling proces, jak se nakonfigurované generátory tedy využívají v tom modeling procesu a k postavení modelovací aplikace, jako je např. ten prototyp. Tj. když tedy chci udělat asitenta, tak jakou by měl mít cca high-level architekturu? Mám frontend a za ním by to mělo být jak? Features asistenta jsou nějak z frontendu dostupné, ale abych daný suggestion mohl na frontend dostat, co vše se musí stát? Práce s doménovým popisem, RAG, komunikace s LLM, zpracování vstupu, atd. To je nějaká high-level referenční architektura, kterou bych udělal v samostatné podkapitole po té 4.1. Asi by tam šlo přesunout stávající 4.2.7 s tím work-flow
+This application contains its frontend and backend. The backend implements the generators and other services and provides them via an API. Users can use our frontend via a web application that communicates with the backend. The assistant contains the following components:
+\begin{itemize}
+\item component for fetching the prompt template based on the user input
+\item component for RAG that processes the user's domain description
+\item component that replaces all placeholders in the prompt template with the input from the user
+\end{itemize}
+
+%\noindent{}TODO: Hodilo by se i popsat v návaznosti na modeling proces, jak se nakonfigurované generátory tedy využívají v tom modeling procesu a k postavení modelovací aplikace, jako je např. ten prototyp. Tj. když tedy chci udělat asitenta, tak jakou by měl mít cca high-level architekturu? Mám frontend a za ním by to mělo být jak? Features asistenta jsou nějak z frontendu dostupné, ale abych daný suggestion mohl na frontend dostat, co vše se musí stát? Práce s doménovým popisem, RAG, komunikace s LLM, zpracování vstupu, atd. To je nějaká high-level referenční architektura, kterou bych udělal v samostatné podkapitole po té 4.1.
+
+
+\subsection{Work-flow}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.23]{img/work-flow.jpg}
+    \caption{\centering Schema of the flow of processing the textual domain description}
+    \label{fig:work-flow}
+\end{figure}
+
+Figure \ref{fig:work-flow} shows the basic flow of generating suggestions on the backend. The modeling process typically starts by providing the domain description. Then the domain model is step by step created mainly by using suggestions of classes, attributes, and associations from the assistant. Suggestions of attributes and associations are filtered by the selected retrieval-augmentation generation method. Then the prompt engineering techniques are applied and the final prompt is constructed and sent to LLM. Finally, the output from the LLM is parsed and the suggested model elements are sent back to the frontend.
 
 
 \section{Assistant features}
+
+Users can use our frontend via a web application that communicates with the backend.
+The frontend web application contains a text area for inserting a domain description and a modeling canvas where the users create the domain models using classical manual modeling features and the suggestion features highlighted by the \textit{magic wand} icon.
 
 Our LLM-based assistant provides the following services:
 
@@ -107,13 +130,68 @@ We use these user's reactions for two main reasons. The first reason is that we 
 The downside of our approach is that it does not collect much user data. One possible solution is to save each user action such as saving each suggestion that the user added into his domain model. However, this approach has a lot of disadvantages. For example, if the user adds some suggestion and then later on removes it we need to save this removal action too as it can mean that the original suggestion turned out to be unwanted. This means that the saved data would need to be post-processed to remove these pairs of data. A similar issue arises when a user adds some suggestion but then later on edits it. Because of this complexity, we decided to use the explicit reactions buttons.
 
 
-\section{Work-flow}
+\section{Retrieval-augmented generation}
 
-\begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.23]{img/work-flow.jpg}
-    \caption{\centering Schema of the flow of processing the textual domain description}
-    \label{fig:work-flow}
-\end{figure}
+%Now we describe our approach and the most significant challenges we encountered when implementing the RAG.
 
-Figure \ref{fig:work-flow} shows the basic flow of generating suggestions on the backend. The modeling process typically starts by providing the domain description. Then the domain model is step by step created mainly by using suggestions of classes, attributes, and associations from the assistant. Suggestions of attributes and associations are filtered by the selected retrieval-augmentation generation method. Then the prompt engineering techniques are applied and the final prompt is constructed and sent to LLM. Finally, the output from the LLM is parsed and the suggested model elements are sent back to the frontend.
+
+\subsubsection{Domain description segmentation}
+
+Determining the chunk size is a challenging task since with too big chunks we risk having irrelevant parts of domain description in the prompt and thus decreasing the LLM performance. On the other hand, with too small chunks we risk that the chunks will be misclassified as they will not contain enough information about their context to decide if they are relevant.
+
+As a result, we consider each sentence of the domain description as one chunk since one sentence usually contains information about one concept or a few related concepts. The advantage of this approach is that after the chunks evaluation is done it is easy to concatenate the relevant chunks together simply by putting them next to each other in the original order from the domain description. On the other hand, the disadvantage is that for example, if some sentence refers to another sentence with a pronoun then without any additional domain description pre-processing this context is lost after the domain description segmentation.
+
+
+\subsubsection{Lack of context}
+
+As mentioned, chunks in the form of isolated sentences can be miss-classified if not enough context is provided. This mostly happens when some sentences contains pronouns that refer to some other sentences. For example, consider the class named \textit{book} and the following domain description: \\
+
+\noindent{}``\textit{The book contains a lot of pages. It is very heavy.}'' \\
+
+\noindent{}Now when classifying the chunk ``\textit{It is very heavy.}'' it most likely will be classified as an irrelevant chunk as in isolation it does not contain any information about the class \textit{book} even though the attribute \textit{weight} of the \textit{book} could be inferred from it.
+
+To solve similar issues, we implemented a simple naive algorithm where each chunk has its metadata, and if a chunk starts with a pronoun we insert in its metadata the previous chunk. Now when a chunk is being evaluated, its metadata are also considered. This means that when classifying the second chunk from the example also the first chunk is present therefore the context is not lost. The disadvantages of this approach are that pronouns that are not at the start of a chunk are not considered. Also, adding a whole previous chunk to a current chunk can in some cases lead to miss-classification if the current chunk is not referencing the whole context of the previous chunk.
+
+A possibly better solution is to use some language model that can accurately solve the co-reference resolution task where each pronoun is replaced with the corresponding words that it references. This way when the second chunk from the example is being classified, the classification algorithm works with this text: ``\textit{The Book is very heavy}'' so all relevant context is provided. \\
+
+Another issue with a lack of context can arise when a text contains some bullet points, such as: \\
+
+\noindent{}``\textit{The book contains:}
+\begin{itemize}
+\item \textit{info about it's author}
+\item \textit{date of publication}'' \\
+\end{itemize}
+
+\noindent{}To solve this issue, for each bullet point we put in it's metadata the chunk before the first bullet point which in this case is the chunk: ``\textit{The book contains:}''.
+
+%If the requirement is to correctly classify each chunk then either the RAG can be temporarily disabled or the domain description can be manually edited to remove all problematic constructs.
+
+
+\subsubsection{Texts comparison}
+\label{texts_comparison}
+  
+We considered using LLM to directly output the relevant texts from the domain description based on the given source class. However, this process can take a long time as in the worst-case scenario the LLM has to copy the whole domain description to the output.
+
+Instead, we implemented a semantic and a syntactic approach that for a given source class and some part of a domain description compares their similarity.
+ 
+The semantic approach uses an embedding model that converts input texts into a vector space and then compares their similarity.
+
+The syntactic approach uses a language model that converts the given source class and each chunk into lemmas. Subsequently, if the chunk contains the lemmas of the given source class then it is classified as relevant. For example, consider the source class \textit{department} and the following domain description: \\
+
+``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' \\
+
+First, each word in the given source class \textit{department} is converted into a lemma which in this case is the same word \textit{department}. Then, each word in the domain description is converted into the lemmas: \\
+
+``\textit{In this company, every employee \textbf{work} in some department. Each employee \textbf{be} uniquely \textbf{identify} by his ID.}'' \\
+
+The bold words emphasize the differences between the original domain description and the domain description after each word is converted into a lemma. Subsequently, in this case, a chunk is relevant if it contains the word \textit{department}. Which in this case is only the first sentence. We do not enforce the chunk to contain the lemmas in the same order as the given source class. For example, consider the source class \textit{registration application} and the following chunk: \\
+
+\noindent{}``\textit{Application of registration needs to be provided.}'' \\
+
+\noindent{}If the strict lemmas order was enforced then this chunk would be classified as irrelevant for the source class \textit{registration application} which is unwanted behavior.
+
+
+\subsubsection{Top k search}
+\label{sec:top_k_search}
+
+In traditional RAG systems in the retrieval phase, a fixed number $k$ of the most similar results are retrieved after computing the similarity with the embedding model. However, in our specific application, $k$ is not a fixed number because the domain description may contain a variable number of relevant chunks. To address this variability, for our semantic RAG approach we need to set the similarity score threshold. The challenging part is that the similarity score is always relative to the given input. For example, in one scenario, chunks with a similarity score higher than a certain threshold $x$ may be considered similar, while in another scenario, chunks with a similarity score higher than $x$ may not be considered similar. To mitigate this issue, we set the threshold based on the similarity score of the most similar chunk.

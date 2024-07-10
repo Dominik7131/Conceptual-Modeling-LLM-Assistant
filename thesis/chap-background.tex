@@ -1,4 +1,5 @@
 \chapter{Background}
+\label{chap:background}
 
 This chapter provides an overview of the Large Language Models. We focus on the usage of the LLMs and on the key techniques that can improve the LLMs performance.
 
@@ -41,7 +42,7 @@ Training own LLM from scratch requires a ton of resources \cite{Zhao2023} thus i
 
 A prompt in the context of LLMs refers to the textual input provided to the LLM. This textual input can range from a simple question to a detailed task specification. The prompt sets the context for the LLM, guiding it to produce a relevant and coherent output based on the given information.
 
-A prompting technique is a strategy used to structure or format the prompt to increase the quality of the output by aligning the prompt with the LLM's training and capabilities.
+A prompting technique is a strategy used to structure and format the prompt to increase the quality of the LLM output by aligning the prompt with the LLM's training and capabilities.
 
 
 \subsection{General tips}
@@ -69,9 +70,9 @@ The output quality of the LLMs largely depends on how they are prompted \cite{Br
 
 \subsubsection{N-shot prompting}
 
-N-shot or few-shot prompting is a prompting technique where $N$ labeled examples are additionally inserted into the prompt to let the LLM learn from the specific examples but no parameters are updated \cite{Brown2020}. For instance, for a translation task, one labeled example could contain a sentence from one language and the corresponding translated sentence in another language.
+N-shot or few-shot prompting is a prompting technique where $N$ labeled examples are additionally inserted into the prompt to let the LLM learn from the specific examples but no LLM parameters are updated \cite{Brown2020}. For instance, for a translation task, one labeled example could contain a sentence from one language and the corresponding translated sentence into another language.
 
-One of the challenges is to choose a suitable value for the $N$. In some cases, not providing enough labeled examples could lead to not using LLM's capabilities fully as the LLM does not have enough examples to learn from. On the other hand, providing too many labeled examples can over-train the LLM and lead to generating specifically tailored responses to those labeled examples rather than generalizing to a new scenario. Also, when working with a small context window size too many labeled examples can fill all the available space.
+One of the challenges is to choose a suitable value for the $N$. For some tasks, not providing enough labeled examples could lead to not using LLM's capabilities fully as the LLM does not have enough examples to learn from. On the other hand, providing too many labeled examples can over-train the LLM and lead to generating specifically tailored responses to those labeled examples rather than generalizing to a new scenario. Also, when working with a small context window size too many labeled examples can fill all the available space.
 
 \citet{Brown2020} compare the performance of fine-tuned LLMs and GPT-3 with N-shot prompting on many different tasks. In some cases, the N-shot prompting technique almost matches the performance of state-of-the-art fine-tuned LLMs.
 
@@ -81,20 +82,18 @@ The big advantage of this prompting technique is that it can be easily combined 
 \subsubsection{Chain of thoughts}
 \label{sec:chain_of_thoughts}
 
-The Chain of thoughts (CoT) prompting technique instructs the LLM to generate a sequence of coherent steps that lead to the final answer of a given task \cite{Wei2022}.
+The \emph{chain of thoughts} (CoT) prompting technique instructs the LLM to generate a sequence of coherent steps that lead to the final answer of a given task \cite{Wei2022}. The CoT prompting technique can be divided into two main paradigms \cite{Zhang2022}. The first paradigm adds a phrase such as ``\textit{Let's think step by step}'' into the prompt \cite{Kojima2022}. The second paradigm inputs manual reasoning demonstrations in the prompt in the form of the N-shot prompting technique \cite{Wei2022}. 
+The second paradigm achieves better results \cite{Wei2022} however, it requires manual creation of the reasoning demonstrations.
 
 \citet{Wei2022} shows that on many tasks that require reasoning, the CoT prompting technique improves the performance of the LLMs. Furthermore, on a GSM8K benchmark of math word problems, this prompting technique surpasses even fine-tuned GPT-3 \cite{Wei2022}.
 
-The CoT prompting technique can be divided into two main paradigms \cite{Zhang2022}. The first paradigm adds a phrase such as ``\textit{Let's think step by step}'' into the prompt \cite{Kojima2022}. The second paradigm inputs manual reasoning demonstrations in the prompt in the form of the N-shot prompting technique \cite{Wei2022}. 
-The second paradigm achieves better results \cite{Wei2022} however, it requires manual creation of the reasoning demonstrations.
-
-Many other prompting techniques such as the Tree of thoughts try to improve the CoT prompting technique.
+Many other prompting techniques such as the tree of thoughts try to further improve the CoT prompting technique.
 
 
 \subsubsection{Tree of thoughts}
 \label{sec:tree_of_thoughts}
 
-To improve LLMs' performance on complex tasks that require exploration or strategic look-ahead, the tree of thoughts (ToT) prompting technique can be used \cite{Long2023, Yao2024}. The main idea of the ToT prompting technique is to solve a given task by generating multiple thoughts that the LLM self-evaluates. This can be done even by using only a single prompt by inserting into the prompt instruction such as: ``\textit{Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they are wrong at any point they leave. The question is \ldots}'' \cite{Hulbert2023}.
+To improve LLMs' performance on complex tasks that require exploration or strategic look-ahead, the \emph{tree of thoughts} (ToT) prompting technique can be used \cite{Long2023, Yao2024}. The main idea of the ToT prompting technique is to solve a given task by generating multiple thoughts that the LLM self-evaluates. This can be done even by using only a single prompt by inserting into the prompt instruction such as: ``\textit{Imagine three different experts are answering this question. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they are wrong at any point they leave. The question is \ldots}'' \cite{Hulbert2023}.
 
 
 \subsubsection{Iterative prompting}
@@ -107,20 +106,24 @@ The big disadvantage of these iterative prompting techniques is that in each ste
 
 \section{Retrieval-augmented generation}
 
-In some cases, the LLM performance can be improved by methods such as retrieval-augmented generation.
+For some tasks, the LLM performance can be improved by methods such as retrieval-augmented generation.
+
 
 \subsection{Motivation}
 
 When a LLM generates output, it relies on its trained parameters, which may contain outdated information. This occurs because, after the training phase, these parameters are no longer updated. Consequently, the output produced by the LLM can be outdated or irrelevant. To address this issue, retrieval-augmented generation (RAG) can be employed to incorporate external knowledge into the LLM's output generation process \cite{Gao2023}.
 
+% At first, this looks unconnected with how we use RAG for filtering domain descriptions however, if we consider that the external knowledge = domain description from the user then it starts to connect
+
 
 \subsection{Basic work-flow}
 
-The RAG process typically involves three main steps \cite{Gao2023}: (1) indexing, (2) retrieval, and (3) generation.
+The RAG process typically involves three main steps: (1) indexing, (2) retrieval, and (3) generation \cite{Gao2023}.
+
 
 \subsubsection{Indexing}
 
-In the indexing step, the external knowledge base is created. This is typically done by gathering the external documents, converting them into plain text, optionally pre-processing them, and then segmenting them into smaller, more manageable chunks. Subsequently, these chunks are typically converted into vector representation through an embedding model. These chunks in the vector representation are then saved into a database for quick searching.
+In the indexing step, the external knowledge base is created. This is typically done by gathering the external documents, converting them into plain text, optionally pre-processing them, and then segmenting them into smaller, more manageable chunks. Subsequently, these chunks are typically converted into vector representation through an embedding model. These chunks in the vector representation can be saved into a database for quick searching.
 
 
 \subsubsection{Retrieval}
@@ -135,7 +138,7 @@ Finally, the user query is combined with the retrieved chunks from the external 
 
 \subsection{Pre-processing}
 
-Before the documents are segmented into the chunks they can be pre-processed to improve the RAG performance. For example, from each document, the unnecessary information can be removed by using an LLM or in some specific cases by hand-crafting rules for simplifying sentence structure in combination with tools for sentence analyses such as UDPipe\footnote{\url{https://ufal.mff.cuni.cz/udpipe}}.
+Before the documents are segmented into the chunks they can be pre-processed to improve the RAG performance. For example, from each document, the unnecessary information can be removed by using an LLM or in some specific cases by using hand-crafted rules for simplifying sentence structure in combination with tools for sentence analyses such as the UDPipe\footnote{\url{https://ufal.mff.cuni.cz/udpipe}}.
 
 
 \subsection{Embedding models}

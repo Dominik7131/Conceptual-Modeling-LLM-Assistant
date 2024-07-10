@@ -1,18 +1,17 @@
-\chapter{Generators configuration}
+\chapter{Framework configurations}
+\label{chap:framework_configuration}
 
-%Let us now use the delineated framework to implement a concrete modeling assistant. We define the generators with prompt templates based on the meta-template. This includes defining (1) main control instructions, modeling procedure specifications, and output specifications, (2) zero or more examples for N-shot prompting, and (3) a technique for context specification. All our prompt templates can be found in our GitHub repository\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/prompts}}.
-
-\noindent{}TODO: Brief chapter description
+Now we propose some configurations of the generic framework from the previous chapter. This includes configuring the meta-template for the generators, defining the prompting techniques, and defining the techniques for domain description pre-processing that the generators will use.
 
 
 \section{Structured data format}
 
-In the prompt template for structured data we use the JSON format as it is one of the most popular formats for data interchange on the internet that each LLM should be greatly familiar with since most of the training data for LLMs usually come from the internet \cite{Zhao2023}.
+The structured data can be inserted into the prompt in many different formats such as JSON, XML and YAML. We use only the JSON format as it is one of the most popular formats for data interchange on the internet that each LLM should be greatly familiar with since most of the training data for LLMs usually come from the internet \cite{Zhao2023}.
 
 
 \section{Output specification}
 
-For automatic result parsing, the \emph{output specification} part instructs the LLM to output the result in a JSON format. To get JSON output from the LLM either a concrete JSON instance can be used or a JSON schema can be used to formally define the JSON format. For example, when the goal is to get output from the LLM of a class \textit{description} in JSON format, the \emph{output specification} instruction containing an instance of JSON format can look like this: \\
+For automatic output parsing, the \emph{output specification} part instructs the LLM to output the result in a JSON format. To get JSON output from the LLM either a concrete JSON instance can be provided as an example or a JSON schema can be used to define the desired JSON format. For example, when the goal is to get a class description in JSON format from the LLM, the \emph{output specification} instruction containing an instance of JSON format can look like this: \\
 
 \noindent{}\textit{Output the description in JSON format like this:} \\
 \texttt{\frenchspacing\{ \\
@@ -36,40 +35,47 @@ For automatic result parsing, the \emph{output specification} part instructs the
 \}} \\
 
 
-The application response time can be improved by instructing the LLM to output one isolated JSON object for each outputted domain element. This way as soon as the LLM generates some proper domain element it can be displayed to the user. To achieve this, we use in the \emph{output specification} instruction an instance of the corresponding JSON output. For example, when generating classes, the \emph{output specification} instruction can look like this: \\
+Since it usually takes a few seconds for the LLM to generate the output, the application response time can be improved by parsing the outputted JSON objects one by one instead of waiting for the whole output and then parse the complete JSON object. This can be done by instructing the LLM to output one isolated JSON object for each outputted domain element and as soon as the LLM generates some proper domain element in a JSON format it can be parsed and displayed to the user. To achieve this, we use in the \emph{output specification} instruction an instance of the corresponding JSON output. For example, when generating classes, the \emph{output specification} instruction can look like this: \\
 
-\noindent{}\textit{Output each class in JSON object like this: \texttt{\frenchspacing\{``class'': ``class name''\}}} \\
+\noindent{}\textit{Output each class in JSON object like this: \texttt{\frenchspacing\{``class'': ``class name''\}}.} \\
 
 \noindent{}As a result, when the suggested classes are \textit{employee} and \textit{department} instead of getting the output in the following single object: \\
 
-\noindent{}\texttt{\frenchspacing\{``classes'': [\{``name'': ``employee''\}, \{``name'': ``department''\}]}\} \\
+\noindent{}\textit{\texttt{\frenchspacing\{``classes'': [\{``name'': ``employee''\}, \{``name'': ``department''\}]}\}} \\
 
 \noindent{each class is outputted in a separate object:} \\
 
-\noindent{}\texttt{\frenchspacing\{``class'': ``employee''\} \\
-\{``class'': ``department''\}}
+\noindent{}\textit{\texttt{\frenchspacing\{``class'': ``employee''\} \\
+\{``class'': ``department''\}}}
 
 
 \section{Output order}
 \label{sec:output_order}
 
-When the task of modeling domain elements solely based on a given domain description is done by the modeling experts, they typically proceed in the following two steps: (1) they find the context for the given domain element and (2) from the found context they extract the specific information such as the name of the domain element. For example, consider the following simple domain description: \\
+When the modeling experts model the domain elements solely based on a given domain description, they typically proceed in the following two steps: (1) they find the context for the given domain element and (2) from the found context they extract the specific information such as the name of the domain element. For example, consider the following simple domain description: \\
 
 \noindent{}\textit{``In this company, every employee works in some department. Each employee is uniquely identified by his ID.''} \\
 
-\noindent{}When the task is to find associations for the class \textit{department} usually first step is to identify the context for this class. This context can be for example the first sentence of the domain description: \textit{``In this company, every employee works in some department''}. Subsequently, this context is identified and the association ``\textit{works in}'' between the classes \textit{employee} and \textit{department} can be found.
+\noindent{}When the task is to find associations for the class \textit{department} usually first step is to identify the context for this class. This context can be the first sentence of the domain description: \textit{``In this company, every employee works in some department''}. Subsequently, this context is identified and the association ``\textit{works in}'' between the classes \textit{employee} and \textit{department} can be found.
 
-To mimic this approach, when generating classes, attributes, and associations with the LLM in the \emph{output specification} instruction we first specify to generate the original text for the domain element and then its other fields such as the name. For example, the \emph{output specification} instruction for generating attributes can look like this: \\
+To mimic this approach, we configure the \emph{output specification} the following way. For generators of classes, attributes, and associations for each domain element that the LLM finds we first let the LLM to generate its original text and then its other fields such as the name. For example, the \emph{output specification} instruction for generating attributes can look like this: \\
 
 \noindent{}\textit{Output each attribute in JSON object like this:} \\
-\texttt{\frenchspacing\{``originalText'': ``copy the part of the given context containing \\ this attribute'', ``name'': ``attribute name''\}.}
+\texttt{\frenchspacing\{``originalText'': ``copy the part of the given context containing \\ this attribute'', ``name'': ``attribute name''\}}.
 
 
-\section{Main instruction}
+\section{Main control instruction}
 
-The table \ref{tab:main-control-instructions} shows examples of our main control instructions. These instructions are independent of the prompting techniques. \\
+The \emph{main control instructions} aim to define the general task for each generator such as ``\textit{extract all class names}'' for the class generator. Additionally, they can contain placeholders such as ``\textit{\{source\_class\}}'' when the task is class specific so the user's selected class can be inserted into the prompt. It should not matter if this instruction is in a form of a question or in form of an imperative since they both semantically are the same and the LLMs are trained on data both of the mentioned forms. For example, the following \emph{main control instructions} should lead to the same LLM output:
 
-\noindent{}TODO: Zkusit okomentovat ty main control instructions z tabulky
+\begin{itemize}
+\item ``\textit{generate all attributes for the class \{source\_class\}.}''
+\item ``\textit{which all attributes does the class \{source\_class\} have?}''
+\end{itemize}
+
+The table \ref{tab:main-control-instructions} shows examples of our \emph{main control instructions}. The \emph{main control instruction} for $gen_a$ and $gen_{r1}$ contains the \textit{\{source\_class\}} placeholder for generating attributes and associations for a given class. The \emph{main control instruction} for the generator $gen_{r2}$ additionally contains the \textit{\{target\_class\}} placeholder for generating associations between the given source class and the given target class. Also, the generators for generating additional information such as the attributes description generator for classes, attributes, and associations contain these placeholders for getting information about the given domain elements. The \emph{main control instruction} for the summary generators contains the general task but also requires the LLM to cover each domain element in the provided domain model.
+Our main control instructions are always the same no matter the prompting technique as the prompting techniques do not change the general task of the prompt.
+
 
 \begin{table}[!h]
     \scriptsize
@@ -80,7 +86,7 @@ The table \ref{tab:main-control-instructions} shows examples of our main control
     \toprule
     \addlinespace
     
-$gen_c$ & extract all class names for a UML diagram. \\
+$gen_c$ & extract all class names. \\
 \addlinespace
 
 $gen_a$ & generate all attributes for the class: ``\{source\_class\}''. \\
@@ -92,26 +98,41 @@ $gen_{r1}$ & which associations does the class: ``\{source\_class\}'' have? \\
 $gen_{r2}$ & which associations are explicitly between the source class ``\{source\_class\}'' and the target class ``\{target\_class\}''? \\
 \addlinespace
 
-$gen_{ad}$ & provide description for the attribute: ``\{attribute\_name\}'' of the class: ``\{source\_class\}'' and output it in this JSON object: \{``description'': ``''\}. \\
+$gen_{ad}$ & provide description for the attribute: ``\{attribute\_name\}'' of the class: ``\{source\_class\}''. \\
+\addlinespace
+
+$gen_{sp}$ & summarize each given class, attribute and association \\
+\addlinespace
+
+$gen_{sd}$ & generate descriptions only for the given classes, attributes and associations \\
 \addlinespace
 
 	\bottomrule
 	\addlinespace
 	\end{tabular}
-	\caption{Examples of main control instructions}
+	\caption{Examples of \emph{main control instructions}}
 	\label{tab:main-control-instructions}
 \end{table}
 
 
 \section{Modeling procedure}
 
-For generating classes, attributes, and associations we implemented the following approaches: baseline, CoT, N-shot, CoT + N-shot. Additionally, for generating classes we implemented the ToT approach.
+For generators of classes, attributes, and associations we implemented the following approaches:
+
+\begin{itemize}
+\item baseline
+\item CoT
+\item N-shot
+\item CoT + N-shot
+\end{itemize}
+
+\noindent{}Additionally, for the generator of classes we implemented the ToT approach. All our prompt templates can be found in our GitHub repository\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/prompts}}. Now follows a more detailed description of these approaches.
 
 
 
 \subsection{Chain of thoughts}
 
-We experiment with the CoT prompting technique for generating classes, attributes, and associations. First, we need to come up with reasoning steps that the LLM can generate before it outputs each domain element. Some possible reasoning steps can be generated by the LLM by adding the ``\textit{Let's think step by step}'' phrase into the prompts for generating classes, attributes, and associations as discussed in the section \ref{sec:chain_of_thoughts}. Figure \ref{fig:cot-think-step-by-step} shows one of the possible reasoning steps when using ChatGPT-4o with the simple domain description from the section \ref{sec:simple_domain_description_example} for generating attributes.
+We experiment with the CoT prompting technique for generating classes, attributes, and associations. First, we need to come up with reasoning steps that the LLM can generate before it outputs each domain element. Some possible reasoning steps can be generated by the LLM by adding the ``\textit{Let's think step by step}'' phrase into the prompts for generating classes, attributes, and associations as discussed in the section \ref{sec:chain_of_thoughts}. Figure \ref{fig:cot-think-step-by-step} shows one of the possible reasoning steps when using ChatGPT-4o for generating attributes with the simple domain description from the section \ref{sec:simple_domain_description_example}.
 
 \begin{figure}[!h]
     \centering
@@ -120,7 +141,11 @@ We experiment with the CoT prompting technique for generating classes, attribute
     \label{fig:cot-think-step-by-step}
 \end{figure}
 
-As we can see, ChatGPT-4o for each attribute first rephrased some parts of the domain description, and then based on these parts it identified the possible attributes. Note that this approach is coherent with the output order that we specified in the section \ref{sec:output_order}. Inspired by this result, we implemented a simple CoT strategy that instructs the LLM to for each domain element first generate its original text, then generate all other fields such as the name and at the end generate all these previous items in a single JSON object. The table \ref{tab:cot-prompt-templates} shows the modeling procedures and the output specifications for $gen_c$, $gen_a$, $gen_{r1}$, and $gen_{r2}$.
+As we can see, ChatGPT-4o for each attribute first rephrased some parts of the domain description, and then based on these parts it identified the possible attributes. Note that this approach is coherent with the output order that we specified in the section \ref{sec:output_order}.
+
+Inspired by this result, we implemented a simple CoT strategy that instructs the LLM to for each domain element first generate its original text, then generate all other fields such as the name and at the end generate all these previous items in a single JSON object. Our goal is to force the LLM to generate the original text and then mainly based on this original text to generate the other fields of the corresponding domain element.
+The table \ref{tab:cot-prompt-templates} shows our \emph{modeling procedures} and the \emph{output specifications} for $gen_c$, $gen_a$, $gen_{r1}$, and $gen_{r2}$.
+The LLM is instructed to for each domain element first output its context which is the original text then to output its name and for the associations to also output its source class and its target class. After that, the LLM is instructed to generate the final JSON object with all these mentioned fields so that the output can be automatically parsed.
 
 % Other more sophisticated CoT strategies can be used. For example, when the LLM generates attributes to instruct the LLM to add for each generated domain element a reason why it thinks it is an attribute.
 
@@ -144,22 +169,22 @@ name: attribute name \newline
 JSON object: \{``originalText'': ``copy the part of the given context containing this attribute'', ``name'': ``attribute name''\}. \\
 \addlinespace
 
-$gen_{r1}$ & For each association output its name and source class and target class and copy the part of the given context containing this association in JSON object. &
+$gen_{r1}$ & For each association copy the part of the given context containing this association and output its name, source class, target class and then output this association in JSON object. &
 The output should look like this: \newline
 context: copy the part of the given context containing this association \newline
 name: association name \newline
 source class: source class name \newline
 target class: target class name \newline
-\{``originalText'': ``copy the part of the given context containing this association'', ``name'': ``association name'', ``source'': ``source class name'', ``target'': ``target class name''\} \\
+JSON object: \{``originalText'': ``copy the part of the given context containing this association'', ``name'': ``association name'', ``source'': ``source class name'', ``target'': ``target class name''\} \\
 \addlinespace
 
-$gen_{r2}$ & For each association output its name and source class and target class and copy the part of the given context containing this association in JSON object. &
+$gen_{r2}$ & For each association copy the part of the given context containing this association and output its name, source class, target class and then output this association in this JSON object. &
 The output should look like this: \newline
 context: copy the part of the given context containing this association \newline
 name: association name \newline
 source class: \{source\_class\} \newline
 target class: \{target\_class\} \newline
-\{``originalText'': ``copy the part of the given context containing this association'', ``name'': ``association name'', ``source'': ``\{source\_class\}'', ``target'': ``\{target\_class\}''\} \\
+JSON object: \{``originalText'': ``copy the part of the given context containing this association'', ``name'': ``association name'', ``source'': ``\{source\_class\}'', ``target'': ``\{target\_class\}''\} \\
 
 	\addlinespace
 	\bottomrule
@@ -181,15 +206,40 @@ We use examples based on the domain description and its domain model that is sho
     \label{fig:prompting-domain}
 \end{figure}
 
+For $gen_c$, we use the three classes as examples. The \emph{example main control instruction} is ``\textit{extract all class names}'', the \emph{example context specification} contains the complete domain description from the figure \ref{fig:prompting-domain} and the \emph{context specification} is the following: \\
 
-For $gen_c$, we use the three classes as examples. For $gen_a$, we use the colored attributes, each with the colored part of the text as examples of the corresponding original texts. For $gen_{r1}$ and ${gen_{r2}}$, we proceed similarly, but for ${gen_{r1}}$ we provide each sample association twice – for the source class and for the target class.
+\noindent{}\textit{\frenchspacing\{``name'': ``employee''\} \\
+\{``name'': ``department''\} \\
+\{``name'': ``manager''\}} \\
 
-The concrete examples can be used to further specify the output format. For example, when the LLM is not provided with a specific name format for the corresponding domain elements, the outputted names can sometimes be in a snake case convention and some other time in a camel case convention. But when the provided examples contain a consistent naming format, the LLM usually outputs the provided format consistently. Similarly, N-shot prompting technique lets us specify the naming style. For example, when no naming style is provided for attributes, they can contain some unwanted words such as starting with the word ``has'' which is more common for association names.
+For $gen_a$, we use the colored attributes, each with the colored part of the text as examples of the corresponding original texts. For example, for the class \textit{employee} the \emph{example main control instruction} is ``\textit{generate all attributes for the class: ``employee''}'', the \emph{example context specification} contains only the parts of domain description that provide information about the class \textit{employee} and its attributes like this: \\
+
+\noindent{}\textit{``In this company, every employee, whether works in accounting, marketing, or any other department with some other title, has a specific role. An employee has a personal number, that uniquely identifies the employee and name the other employees in the company use to address the employee. For a remote contact, a contact email is essential.''} \\
+
+\noindent{}And the \emph{context specification} is the following: \\
+
+\noindent{}\textit{\frenchspacing\{``originalText": ``has a specific role'', ``name'': ``role''\} \\
+\{``originalText'': ``personal number, that uniquely identifies the employee'', ``name'': ``personal number''\} \\
+\{``originalText'': ``name the other employees in the company use to \\ address the employee'', ``name'': ``name''\} \\
+\{``originalText'': ``For a remote contact, a contact email'', ``name'': ``contact email''\}} \\
+
+
+For $gen_{r1}$ and ${gen_{r2}}$, we proceed similarly, but for ${gen_{r1}}$ we provide each sample association twice, first for the source class and then for the target class. For example, the association \textit{works in} between the source class \textit{employee} and the target class \textit{department} is used as one example with the following \emph{example main control instruction}: \\
+
+\noindent{}``\textit{Solely based on the given context which associations does the class: ``\textbf{employee}'' have?}'' \\
+
+\noindent{}and the second time with the following \emph{example main control instruction}: \\
+
+\noindent{}``\textit{Solely based on the given context which associations does the class: ``\textbf{department}'' have?}'' \\
+
+\noindent{}In both cases, the \emph{example context specification} and the \emph{context specification} is the same.
+
+Furthermore, the concrete examples can be used to specify the output text format. For example, when the LLM is not provided with a specific name format for the corresponding domain elements, the outputted names can sometimes be in a snake case convention and some other time in a camel case convention. But when the provided examples contain a consistent naming format, the LLM usually outputs the provided format consistently. Similarly, the N-shot prompting technique lets us specify the naming style. For example, when no naming style is provided for attributes, they can contain some unwanted words such as starting with the word ``\textit{has}'' which is more common for association names.
 
 
 \subsection{CoT + N-shot prompting}
 
-Our combination of the CoT and the N-shot prompting technique contains the same modeling procedure as shown in the table for only CoT approach. However, the output specification part contains only the expected JSON object, and the intermediate steps are demonstrated in the part where the $N$ examples are provided. For example, the labeled example for the attribute \textit{role} of the class \textit{employee} looks like this: \\
+Our combination of the CoT and the N-shot prompting technique contains the same \emph{modeling procedure} as shown in the table \ref{tab:cot-prompt-templates} for the CoT only approach. However, the \emph{output specification} contains only the instance of the expected JSON object, and the intermediate steps are demonstrated in the \emph{example context specification} where the $N$ examples are provided. For example, the labeled example for the attribute \textit{role} of the class \textit{employee} looks like this: \\
 
 \noindent{}\textit{context: has a specific role} \\
 \textit{name: role} \\
@@ -206,96 +256,78 @@ Our combination of the CoT and the N-shot prompting technique contains the same 
 
 \subsection{Tree of thoughts}
 
-Even though our defined generators do not solve the typical complex tasks that the ToT is usually used for, we use this prompting technique for generating classes in the single prompt fashion as discussed in the section \ref{sec:tree_of_thoughts}.
+Even though our defined generators do not solve the typical complex tasks that the ToT is usually used for, we experiment with this prompting technique for generating classes in the single prompt fashion as discussed in the section \ref{sec:tree_of_thoughts}. We use the mentioned single-prompt phrase in the \emph{modeling procedure} but we slightly edited it to fit our meta-template structure: \\
+
+\noindent{}``\textit{Imagine three different experts are \textbf{solving the given task}. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they are wrong at any point they leave.}'' \\
+
+\noindent{}The bold text shows the change we made to the original ToT prompting technique phrase. Also, we removed the last sentence from the original phrase which is the following: ``\textit{The question is}''.
 
 We do not experiment with any iterative prompting technique as this would significantly increase the response time of our application as discussed in the section \ref{sec:iterative_prompting}.
 
 % Possible iterative technique for generating classes: we could generate multiple lists of class suggestions with multiple prompts. Then we could apply some operation to these lists such as intersection or unification. Or for example, we could remove only those classes that appeared in only one list.
 
 
-\section{Retrieval-augmented generation}
+\section{Domain description pre-processing}
 
-We consider the domain description $T$ as the external knowledge base and our goal is to insert only the relevant parts of the $T$ in the context specification part of the prompt. We use this technique for the generators of attributes, associations, descriptions, data types, and cardinalities as in these cases only the information about the source class $C$ is needed to generate the correct output. For example, consider the following domain description: \\
+\subsection{Motivation}
 
-\noindent{}``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}''\\
+From our experience, when an LLM works with a longer domain descriptions it can mainly make the following two mistakes:
 
-\noindent{}When we want to extract attributes or associations of the class \textit{department} we are only interested in the first sentence since this is the only sentence that contains information about this class. Therefore in this case we can provide only the first sentence of the domain description into the context specification part of the prompt.
+\begin{enumerate}
+\item extract irrelevant domain elements from irrelevant parts of the domain description
+\item skip some important parts that contain some important domain elements
+\end{enumerate}
 
-The main goal of the mentioned approach is to reduce the hallucination of the LLM such as reducing irrelevant domain element suggestions by forcing the LLM to focus on the important parts of the domain description. Furthermore, this approach usually reduces the prompt length which can help when working with a domain description that does not fit in the context window size of the LLM.
 
-Now we describe the most significant challenges we encountered when implementing the mentioned RAG approach and the corresponding solutions we implemented to address them.
+\noindent{}To mitigate these issues, the domain description can be simplified and the unimportant parts of the domain description can be removed based on the given task with technique such as retrieval-augmented generation. Ideally, this would solve both of the issues since the LLM could not work with irrelevant parts of the domain description as they would not be present in the prompt thus the LLM would focus only on the important parts of the domain description.
+Furthermore, these approaches can reduce the prompt length which can help when working with a domain description that does not fit in the context window size of the LLM.
+
+%Our goal is to improve the LLM performance by pre-processing the domain description. The pre-processing can be done either only once after the user inputs his domain description or it can be done before using each generator for providing only the relevant information that are needed for solving the given task.
 
 
 \subsection{Domain description simplification}
 
-We considered using an LLM to simplify the domain description so the LLM assistant would work only with this simplified version. However, there are a few disadvantages to this approach.
+After the user inputs his domain description, it can be simplified by the LLM and subsequently, all \emph{text to model} generators can work only with this simplified version. However, there are a few disadvantages to this approach.
 
-First, the LLM sometimes changes some names of the original domain elements. For example, when we instructed the ChatGPT-4o with a domain description about \textit{aircraft manufacturing} and with the following prompt: \\
+First, the LLM sometimes changes some names of the original domain elements. For example, when we instructed the ChatGPT-4o with a domain description about \emph{aircraft manufacturing} and with the following prompt: \\
 
 \noindent{}``\textit{Simplify each sentence structure in the following text. Make sure to not change any nouns and verbs as we want to keep the names of all domain elements unchanged. This is the following text: \ldots}'' \\
 
-\noindent{}The sentence: ``\textit{Customers represent the clients who purchase the finished aircraft.}'' was simplified into: ``\textit{Customers are clients who buy finished aircraft.}'' This means that the original association ``\textit{client purchases aircraft}'' was changed into ``\textit{client buys aircraft}'' which is semantically the same but it can be a problem if the user wants the suggestions to have the same name as described in the text.
+\noindent{}The sentence: ``\textit{Customers represent the clients who purchase the finished aircraft.}'' was simplified into: ``\textit{Customers are clients who buy finished aircraft.}'' This means that the original association ``\textit{client purchases aircraft}'' was changed into ``\textit{client buys aircraft}'' which is semantically the same but it can be a problem if the user wants the suggestions to have the same name as described by his domain description.
 
 The second disadvantage is that the domain description simplification removes the ability to highlight original text for each suggested domain element in the original description as the LLM works only with the simplified version of the domain description. Therefore, we do not simplify the domain description.
 
 
-\subsection{Domain description segmentation}
+\subsection{Retrieval-augmented generation}
 
-In the RAG indexing phase, the domain description needs to be split into chunks so that each chunk can be evaluated if it is relevant for the given source class. Determining the chunk size is a challenging task since with too big chunks we are risking having irrelevant parts of domain description in the prompt and thus decreasing the LLM performance. On the other hand, with too small chunks we are risking that the chunks will be misclassified as they will not contain enough information about their context to decide if they are relevant.
+When the domain description is segmented into chunks and when each chunk is considered as one of the documents of the external knowledge, the RAG technique can be used for filtering domain description, i.e. removing unnecessary parts of the domain description based on the given task. For example, consider the following domain description: \\
 
-In the result, we consider each sentence of the domain description as one chunk since one sentence usually contains information about one concept or a few related concepts. The advantage of this approach is that after the chunks evaluation is done it is easy to concatenate the relevant chunks together simply by putting them next to each other in the original order from the domain description. On the other hand, the disadvantage is that for example, if some sentence refers to another sentence with a pronoun then without any additional domain description pre-processing this context is lost after the domain description segmentation.
+\noindent{}``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}''\\
 
-
-\subsection{Lack of context}
-
-As mentioned, chunks in the form of isolated sentences can be miss-classified if not enough context is provided. This mostly happens when some sentences contains pronouns that refer to some other sentences. For example, consider the class named \textit{book} and the following domain description: \\
-
-\noindent{}``\textit{The book contains a lot of pages. It is very heavy.}'' \\
-
-\noindent{}Now when classifying the chunk ``\textit{It is very heavy.}'' it most likely will be classified as an irrelevant chunk as in isolation it does not contain any information about the class \textit{book} even though the attribute \textit{weight} of the \textit{book} could be inferred from it.
-
-To solve similar issues, we implemented a simple naive algorithm where each chunk has its metadata, and if a chunk starts with a pronoun we insert in its metadata the previous chunk. Now when a chunk is being evaluated, its metadata are also considered. This means that when classifying the second chunk from the example also the first chunk is present therefore the context is not lost. The disadvantages of this approach are that pronouns that are not at the start of a chunk are not considered. Also, adding a whole previous chunk to a current chunk can in some cases lead to miss-classification if the current chunk is not referencing the whole context of the previous chunk.
-
-A possibly better solution is to use some language model that can accurately solve the co-reference resolution task where each pronoun is replaced with the corresponding words that it references. This way when the second chunk from the example is being classified, the classification algorithm works with this text: ``\textit{The Book is very heavy}'' so all relevant context is provided. \\
-
-Another issue with a lack of context can arise when a text contains some bullet points, such as: \\
-
-\noindent{}``\textit{The book contains:}
-\begin{itemize}
-\item \textit{info about it's author}
-\item \textit{date of publication}'' \\
-\end{itemize}
-
-\noindent{}To solve this issue, for each bullet point we put in it's metadata the chunk before the first bullet point which in this case is the chunk: ``\textit{The book contains:}''.
-
-%If the requirement is to correctly classify each chunk then either the RAG can be temporarily disabled or the domain description can be manually edited to remove all problematic constructs.
+\noindent{}When the goal is to extract attributes or associations of the class \textit{department} we are only interested in the first sentence since this is the only sentence that contains information about this class. Therefore, in this case we can provide only the first sentence of the domain description into the \emph{context specification} of the prompt template. In other words, the first sentence can be the first chunk, and the second sentence can be the second chunk subsequently, the second chunk is removed as it does not contain information about the given class.
 
 
-\subsection{Texts comparison}
-\label{texts_comparison}
-  
-We considered using LLM to directly output the relevant texts from the domain description based on the given source class. However, this process can take a long time as in the worst-case scenario the LLM has to copy the whole domain description to the output.
+\subsubsection{Work-flow}
 
-Instead, we implemented a semantic and a syntactic approach that for a given source class and some part of a domain description compares their similarity.
- 
-The semantic approach uses an embedding model that converts input texts into a vector space and then compares their similarity.
+In the indexing phase, the domain description is segmented into chunks that can be converted by an embedding model and cached into a vector database. In the retrieval phase, some technique is applied for chunks classification to determine which chunks are relevant based on the given task. And finally, in the generation phase the relevant chunks are assembled together to create a new domain description.
 
-The syntactic approach uses a language model that converts the given source class and each chunk into lemmas. Subsequently, if the chunk contains the lemmas of the given source class then it is classified as relevant. For example, consider the source class \textit{department} and the following domain description: \\
 
-``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' \\
+\subsubsection{Configurations}
 
-First, each word in the given source class \textit{department} is converted into a lemma which in this case is the same word \textit{department}. Then, each word in the domain description is converted into the lemmas: \\
+We use this RAG technique for the generators of attributes, associations, descriptions, data types, and cardinalities as in these cases only the information about the source class $C$ is needed to generate the correct output. We implemented a semantic and a syntactic approach.
 
-``\textit{In this company, every employee \textbf{work} in some department. Each employee \textbf{be} uniquely \textbf{identify} by his ID.}'' \\
+The semantic approach uses an embedding model that converts each domain description chunk into a vector space to create the external knowledge base. Subsequently, the given source class is embedded by the same model and the similar chunks from the external knowledge base are retrieved and then used to build a new domain description.
 
-The bold words emphasize the differences between the original domain description and the domain description after each word is converted into a lemma. Subsequently, in this case, a chunk is relevant if it contains the word \textit{department}. Which in this case is only the first sentence. We do not enforce the chunk to contain the lemmas in the same order as the given source class. For example, consider the source class \textit{registration application} and the following chunk: \\
+The syntactic approach uses a language model that converts each domain description chunk into lemmas. Subsequently, the given source class is converted into lemmas by the same model and the chunks that contain the exact lemmas as the given source class are retrieved from the external knowledge base and then used to build a new domain description. For example, consider the source class \textit{department} and the following domain description: \\
+
+\noindent{}``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' \\
+
+\noindent{}First, each word in the given source class \textit{department} is converted into a lemma which in this case is the same word \textit{department}. Then, each word in the domain description is converted into the lemmas: \\
+
+\noindent{}``\textit{In this company, every employee \textbf{work} in some department. Each employee \textbf{be} uniquely \textbf{identify} by his ID.}'' \\
+
+\noindent{}The bold words emphasize the differences between the original domain description and the domain description where each word is converted into a lemma. Subsequently, in this case, a chunk is relevant if it contains the word \textit{department}. Which in this case is only the first sentence. We do not enforce the chunk to contain the lemmas in the same order as the given source class. For example, consider the source class \textit{registration application} and the following chunk: \\
 
 \noindent{}``\textit{Application of registration needs to be provided.}'' \\
 
-\noindent{}If the strict lemmas order was enforced then this chunk would be classified as irrelevant for the source class \textit{registration application} which is unwanted behavior.
-
-
-\subsection{Top k search}
-\label{sec:top_k_search}
-
-In traditional RAG systems in the retrieval phase, a fixed number $k$ of the most similar results are retrieved after computing the similarity with the embedding model. However, in our specific application, $k$ is not a fixed number because the domain description may contain a variable number of relevant chunks. To address this variability, for our semantic RAG approach we need to set the similarity score threshold. The challenging part is that the similarity score is always relative to the given input. For example, in one scenario, chunks with a similarity score higher than a certain threshold $x$ may be considered similar, while in another scenario, chunks with a similarity score higher than $x$ may not be considered similar. To mitigate this issue, we set the threshold based on the similarity score of the most similar chunk.
+\noindent{}If the strict lemmas order was enforced, then this chunk would be classified as irrelevant for the source class \textit{registration application} which is unwanted behavior.

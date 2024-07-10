@@ -1,4 +1,5 @@
 \chapter{Conclusion}
+\label{chap:conclusion}
 
 In this thesis, we presented an approach to designing conceptual modeling assistants based on Large Language Models (LLMs) that help human modeling experts mainly discover classes, their attributes, and binary associations in the given textual domain description.
 Compared with recent pioneering work that utilizes LLMs for domain modeling automation, we proposed a generic framework that mainly contains class, attribute, and association generators that focuses on assisting human modelers during the modeling process instead of suggesting the whole domain model.
@@ -74,4 +75,8 @@ Currently, the ``summary descriptions'' feature generates a description for each
 
 \subsection{RAG models combination}
 
-To improve the performance of our RAG approaches, the syntactic and semantic RAG approaches could be combined. For example, first, the semantic approach could filter the domain description and then the syntactic approach could filter the rest of the text or vice versa. A possible improvement is to let each RAG approach assign some similarity score to each pair: source class and a domain description chunk. Finally, these scores could be combined and used to determine which domain description chunks are relevant for the given source class.
+To improve the performance of our RAG approaches, the syntactic and semantic RAG approaches could be combined. For example, first, the semantic approach could filter the domain description and then the syntactic approach could filter the rest of the text or vice versa. A possible improvement is to let each RAG approach assign some similarity score to each pair: source class and a domain description chunk. Finally, these scores could be combined and used to determine which domain description chunks are relevant for the given source class. \\
+
+\noindent{}TODO: Možnost experimentovat s dalšími jazykovými modely pro sémantický a syntaktický RAG, lze použít coref model pro řešení problému se zájmeny, atd. + možná začít tím, že jsme udělali framework, který lze na několika místech vylepšovat
+
+\noindent{}TODO: is-a asociace a možná jestli mě napadne ještě nějaké další dělení (to mi připomnělo, že bych na začátku mohl ukázat, proč není dobré si nechávat vygenerovat atributy a asociace dohromady jako "property", neboli ukážu screenshoty, kde ChatGPT-4o nebude schopen najít triviální asociace)

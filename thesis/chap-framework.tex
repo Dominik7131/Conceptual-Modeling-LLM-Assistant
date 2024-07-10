@@ -1,16 +1,26 @@
-\chapter{LLM-based Modeling Assistant Framework}
+\chapter{LLM-based modeling assistant framework}
+\label{chap:framework}
 
-We propose solving the automation of these domain modeling steps as text generation problems similarly to \citet{Chen2023}, where the authors consider a domain description $T$ with an underlying ground truth model $M$, and approach the problem of model generation as the problem of defining a text generator $f$ with $M' = f(T)$, where $M'$ is the generated model similar to $M$. The generator $f$ is an LLM-based operator defined by a predesigned prompt that instructs an LLM to return a structured textual representation of $M'$ for the input $T$.
+Let us now define a formal LLM-based modeling assistant framework consisting of different types of generators that can be implemented with a different prompting techniques and domain description pre-processing techniques. Furthermore, we define the requirements for these generators and we define their basic meta-structure.
 
 
-\section{Generators definitions}
+\section{Approach}
 
-We consider more fine-grained text generation problems solved by the following generators.
+We propose solving the automation of the domain modeling steps from the chapter \ref{chap:domain_modeling_process_analysis} as the text generation problems similarly to \citet{Chen2023}, where the authors consider a domain description $T$ with an underlying ground truth model $M$, and approach the problem of model generation as the problem of defining a text generator $f$ with $M' = f(T)$, where $M'$ is the generated model similar to $M$. The generator $f$ is an LLM-based operator defined by a predesigned prompt that instructs an LLM to return a structured textual representation of $M'$ for the input $T$.
+
+Similarly to $f$, we define a text generator $g$ that from a given domain model generates a domain description, i.e. $T' = g(M)$, where $M$ is the given domain model and $T'$ is the generated domain description.
+
+Based on the generators $f$ and $g$, we define more fine-grained text generation problems solved by the \emph{text to model} generators and \emph{model to text} generators respectively.
+
+
+\section{Definitions of text to model generators}
+
+The following generators based on the given domain description generate some part of the domain model.
 
 
 \subsection{Domain elements}
 
-The domain element generators are for generating classes, attributes for a given class, associations for a given source class, and associations for a given source class and a target class solely based on the given domain description.
+The domain element generators are for generating classes and attributes for a given class, for generating associations for a given source class, and for generating associations for a given source class and a target class solely based on the given domain description.
 
 \begin{description}
 \item [Class generator] $gen_c$ that for $T$ suggests classes $\{C_1, \ldots, C_n\}$ each with a suggested $name(C_i)$.
@@ -82,11 +92,26 @@ The name generators based on a given description and a original text aim to gene
 \end{description}
 
 
+\section{Definitions of model to text generators}
+
+The following generators based on the given domain model generate a domain description.
+
+\subsection{Summary generators}
+
+The summary generators are for generating a domain description solely based on the given classes, attributes, and associations.
+
+\begin{description}
+\item [Summary plain text generator] $gen_{sp}$ that for a given domain model $M$ generates an unstructured domain description $T$.
+
+\item [Summary descriptions generator] $gen_{sd}$ that for a given domain model $M = (\mathcal{C}, \mathcal{P})$ generates a domain description $T$ in form of a list that contains an item for every class $C \in \mathcal{C}$ and for every attribute or association $P \in\mathcal{P}$.
+\end{description}
+
+
 \section{Prompt templates requirements}
 
 A generator can be executed by an LLM call which requires to define a prompt for each generator. For example, the \emph{class generator} can instruct the LLM with a prompt to generate classes. For inserting the user's input into the prompt it is required to create a prompt template with placeholders that are later on replaced with the user's input. For example, for the \emph{class generator}, the placeholder for the domain description needs to be introduced to insert the user's domain description.
 
-As the LLM output quality greatly depends on the prompt content and the content's order it is required to create a well-structured prompt and consider suitable prompting techniques. Additionally, the template should instruct the LLM to work within the domain description context, provide the required task-specific suggestions, and output them in a predefined format for easy parsing.
+As the LLM output quality greatly depends on the prompt content and the content's order it is required to create a well-structured prompt and consider suitable prompting techniques. Additionally, the template should instruct the LLM to work within the given context, provide the required task-specific suggestions, and output them in a predefined format for easy parsing.
 
 
 \section{Meta-template structure}
@@ -111,18 +136,19 @@ Based on these generic requirements, we propose a prompt meta-template shown in 
 10 This is the given context: {context specification}
 11 Output:
 \end{lstlisting}
-    \caption{\centering Prompt meta-template for concept generators}
+    \caption{\centering Prompt meta-template for generators}
     \label{fig:meta-templates}
 \end{figure}
 
+
 A generator template is constructed by replacing the placeholders in the meta-template with generator-specific instructions. The meta-template has the following structure.
 
-The \textit{main control instruction} (line 01) summarizes the given task, which is for example to suggest classes or attributes or associations for a given class $C$, based solely on the given context. We place this instruction at the start of the prompt and then in some cases we repeat it at the end of the prompt as the LLM usually puts the most emphasis on the information at the start of the prompt and at the end of the prompt which we discussed in the section \ref{prompt_general_tips}.
+The \emph{main control instruction} (line 01) summarizes the given task, which is for example to suggest classes or attributes or associations for a given class $C$ solely based on the given domain description. We place this instruction at the start of the prompt and then in some cases we repeat it at the end of the prompt as the LLM usually puts the most emphasis on the information at the start of the prompt and at the end of the prompt which we discussed in the section \ref{prompt_general_tips}.
 
 The \textit{modeling procedure} (line 02) instructs the LLM on how to proceed before generating the final suggestions. Here, various prompt design strategies, such as chain of thoughts, can be implemented.
 
 The \textit{output specification} (line 03) defines the required output format so the output can be automatically parsed.
 
-Lines 04-08 represent optional examples. Here, an N-shot prompt design strategy can be implemented, where the prompts contain one or more expected output samples based on concrete sample contexts. Each example starts with the \textit{example main control instruction} (line 05) which is the same as the \textit{main control instruction} but with a concrete class $C$ (and in some cases also with a class $D$) if the task is class-specific. The \textit{example context specification} (line 06) is the concrete context specification for the example and the \textit{example output} (line 07) is the expected output for the given context. The \textit{example output} must correspond to the structure of the output specification to make the prompt coherent.
+Lines 04-08 represent optional examples. They are all separated from the other instructions with the \texttt{EXAMPLE START} and the \texttt{EXAMPLE END} delimiters. Here, an N-shot prompt design strategy can be implemented, where the prompts contain one or more expected output samples based on concrete sample contexts. Each example starts with the \emph{example main control instruction} (line 05) which is the same as the \emph{main control instruction} but with a concrete class $C$ (and in some cases also with a class $D$) if the task is class-specific. The \emph{example context specification} (line 06) is the concrete context specification for the example and the \emph{example output} (line 07) is the expected output for the given context. The \emph{example output} must correspond to the structure of the \emph{output specification} to make the prompt coherent.
 
-The context is specified at the end of the meta-template in the context specification (line 10). This context is in most cases the domain description $T$ but in some cases, it can also be the current user's domain model. To improve the LLM performance, various text processing and filtering techniques such as RAG can be implemented here.
+The context is specified at the end of the meta-template in the \emph{context specification} (line 10). This context is in most cases the domain description $T$ except for the \emph{summary generators} where the context is some part of the user's domain model. To improve the LLM performance, various text processing and filtering techniques such as RAG can be implemented here.
