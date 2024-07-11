@@ -4,19 +4,22 @@
 To empirically validate the feasibility of our proposed methodology, we developed a prototype application that implements the proposed configurations from the previous chapter.
 
 
-\section{Architecture}
+\section{High-level architecture}
 
-This application contains its frontend and backend. The backend implements the generators and other services and provides them via an API. Users can use our frontend via a web application that communicates with the backend. The assistant contains the following components:
+This application contains its frontend and its backend. The backend implements the generators and other services and provides them via an API. Users can use our frontend via a web application that communicates with the backend. On the backend, the LLM-assistant contains the following components:
+
 \begin{itemize}
-\item component for fetching the prompt template based on the user input
-\item component for RAG that processes the user's domain description
-\item component that replaces all placeholders in the prompt template with the input from the user
+\item \emph{prompt manager} for fetching the prompt template based on the user input
+\item \emph{RAG processor} for filtering a domain description based on the given class name
+\item \emph{placeholder replacer} for replacing all placeholders in the prompt template with the input from the user
+\item \emph{LLM manager} for sending the prompt to the LLM and parsing the output
 \end{itemize}
-
-%\noindent{}TODO: Hodilo by se i popsat v návaznosti na modeling proces, jak se nakonfigurované generátory tedy využívají v tom modeling procesu a k postavení modelovací aplikace, jako je např. ten prototyp. Tj. když tedy chci udělat asitenta, tak jakou by měl mít cca high-level architekturu? Mám frontend a za ním by to mělo být jak? Features asistenta jsou nějak z frontendu dostupné, ale abych daný suggestion mohl na frontend dostat, co vše se musí stát? Práce s doménovým popisem, RAG, komunikace s LLM, zpracování vstupu, atd. To je nějaká high-level referenční architektura, kterou bych udělal v samostatné podkapitole po té 4.1.
 
 
 \subsection{Work-flow}
+
+On the frontend, through the user interface users can insert their input and then they can call some service provided by the backend. When the backend is called typically some generator is executed. First, the corresponding prompt template is retrieved by the \emph{prompt manager}. Then, all the prompt placeholders are replaced in the prompt template by the \emph{placeholder replacer}. For \emph{text to model generators} before the domain description is inserted, it can be filtered with some of the RAG technique by the \emph{RAG processor}. Subsequently, the assembled prompt is sent by the \emph{LLM manager} to the LLM and the output is parsed and optionally checked for mistakes. The approved output is then sent to the frontend and displayed to the user.
+
 
 \begin{figure}[!h]
     \centering
@@ -25,12 +28,13 @@ This application contains its frontend and backend. The backend implements the g
     \label{fig:work-flow}
 \end{figure}
 
-Figure \ref{fig:work-flow} shows the basic flow of generating suggestions on the backend. The modeling process typically starts by providing the domain description. Then the domain model is step by step created mainly by using suggestions of classes, attributes, and associations from the assistant. Suggestions of attributes and associations are filtered by the selected retrieval-augmentation generation method. Then the prompt engineering techniques are applied and the final prompt is constructed and sent to LLM. Finally, the output from the LLM is parsed and the suggested model elements are sent back to the frontend.
+Figure \ref{fig:work-flow} shows the basic flow of generating suggestions on the backend. The modeling process typically starts by providing the domain description. Then the domain model is step by step created mainly by using suggestions of classes, attributes, and associations from the assistant. Suggestions of attributes and associations are filtered by the selected retrieval-augmentation generation method. Then the prompt engineering techniques are applied and the final prompt is constructed and sent to LLM. Finally, the output from the LLM is parsed and the suggested model elements are sent back to the frontend. \\
+
+\noindent{}TODO: Tady před obrázkem a po obrázku říkám skoro to samé, takže by se to hodilo nějak spojit.
 
 
 \section{Assistant features}
 
-Users can use our frontend via a web application that communicates with the backend.
 The frontend web application contains a text area for inserting a domain description and a modeling canvas where the users create the domain models using classical manual modeling features and the suggestion features highlighted by the \textit{magic wand} icon.
 
 Our LLM-based assistant provides the following services:
@@ -99,14 +103,12 @@ We extend the mentioned highlighting of suggested domain elements in the domain 
 Also, the not highlighted parts of the domain description can also be already covered by the user's domain model for example, if these parts were modeled manually by the user. This case can be solved by using the original text generator.
 
 
-\subsection{Summarising domain model}
+\subsection{Summarizing domain model}
 \label{summarising_domain_model}
 
-For a selected part of the user's domain model, the assistant is able to generate a summary for each class, attribute, and association. We implemented two summary variations: in plain text and in the form of bullet points.
+For a selected part of the user's domain model, the assistant is able to generate a summary for each class, attribute, and association using the \emph{summary generators}.
 
-The plain text summary generates a paragraph describing the selected part of a domain model. The summary style can be changed in the settings. The available styles are ``analytical'', ``educational'' and ``funny story''. When a summary is generated, the selected style is inserted into the corresponding prompt template. The summary in the form of bullet points generates a description for each selected domain element.
-
-In both cases, the LLM does not receive the user's domain description as this led to many situations where the LLM did not stick to the selected domain elements.
+The summary plain text generator outputs a paragraph describing the selected part of the domain model in a given style. The summary style can be changed in the settings. The available styles are \textit{analytical}, \textit{educational} and \textit{funny story}. Before the summary is generated, the selected style is inserted into the corresponding prompt template in the \emph{modeling procedure}. The summary descriptions generator outputs a list where each selected domain element corresponds to one described item in the list. In both cases, the LLM does not receive the user's domain description as this led to many situations where the LLM did not stick to the selected domain elements.
 
 
 \section{LLM parameters}
@@ -131,13 +133,14 @@ The downside of our approach is that it does not collect much user data. One pos
 
 
 \section{Retrieval-augmented generation}
+\label{sec:rag_implementation}
 
-%Now we describe our approach and the most significant challenges we encountered when implementing the RAG.
+Now we describe the implementation of our semantic and syntactic RAG approaches and we present the most significant challenges we encountered when implementing them.
 
 
 \subsubsection{Domain description segmentation}
 
-Determining the chunk size is a challenging task since with too big chunks we risk having irrelevant parts of domain description in the prompt and thus decreasing the LLM performance. On the other hand, with too small chunks we risk that the chunks will be misclassified as they will not contain enough information about their context to decide if they are relevant.
+Determining the chunk size is a challenging task since with too big chunks we risk having irrelevant parts of domain description in the prompt and thus decreasing the LLM performance. On the other hand, with too small chunks we risk that the chunks will be miss-classified as they will not contain enough information about their context to decide if they are relevant.
 
 As a result, we consider each sentence of the domain description as one chunk since one sentence usually contains information about one concept or a few related concepts. The advantage of this approach is that after the chunks evaluation is done it is easy to concatenate the relevant chunks together simply by putting them next to each other in the original order from the domain description. On the other hand, the disadvantage is that for example, if some sentence refers to another sentence with a pronoun then without any additional domain description pre-processing this context is lost after the domain description segmentation.
 
@@ -150,7 +153,7 @@ As mentioned, chunks in the form of isolated sentences can be miss-classified if
 
 \noindent{}Now when classifying the chunk ``\textit{It is very heavy.}'' it most likely will be classified as an irrelevant chunk as in isolation it does not contain any information about the class \textit{book} even though the attribute \textit{weight} of the \textit{book} could be inferred from it.
 
-To solve similar issues, we implemented a simple naive algorithm where each chunk has its metadata, and if a chunk starts with a pronoun we insert in its metadata the previous chunk. Now when a chunk is being evaluated, its metadata are also considered. This means that when classifying the second chunk from the example also the first chunk is present therefore the context is not lost. The disadvantages of this approach are that pronouns that are not at the start of a chunk are not considered. Also, adding a whole previous chunk to a current chunk can in some cases lead to miss-classification if the current chunk is not referencing the whole context of the previous chunk.
+To solve this issue and similar issues, we implemented a simple naive algorithm where each chunk has its metadata, and if a chunk starts with a pronoun we insert in its metadata the previous chunk. Now when a chunk is being evaluated, its metadata are also considered. This means that when classifying the second chunk from the example also the first chunk is present therefore the context is not lost. The disadvantages of this approach are that pronouns that are not at the start of a chunk are not considered. Also, adding a whole previous chunk to a current chunk can in some cases lead to miss-classification if the current chunk is not referencing the whole context of the previous chunk.
 
 A possibly better solution is to use some language model that can accurately solve the co-reference resolution task where each pronoun is replaced with the corresponding words that it references. This way when the second chunk from the example is being classified, the classification algorithm works with this text: ``\textit{The Book is very heavy}'' so all relevant context is provided. \\
 
@@ -158,7 +161,7 @@ Another issue with a lack of context can arise when a text contains some bullet 
 
 \noindent{}``\textit{The book contains:}
 \begin{itemize}
-\item \textit{info about it's author}
+\item \textit{info about its author}
 \item \textit{date of publication}'' \\
 \end{itemize}
 
@@ -167,28 +170,9 @@ Another issue with a lack of context can arise when a text contains some bullet 
 %If the requirement is to correctly classify each chunk then either the RAG can be temporarily disabled or the domain description can be manually edited to remove all problematic constructs.
 
 
-\subsubsection{Texts comparison}
-\label{texts_comparison}
-  
-We considered using LLM to directly output the relevant texts from the domain description based on the given source class. However, this process can take a long time as in the worst-case scenario the LLM has to copy the whole domain description to the output.
-
-Instead, we implemented a semantic and a syntactic approach that for a given source class and some part of a domain description compares their similarity.
+%\subsubsection{Texts comparison}
+%\label{texts_comparison}
  
-The semantic approach uses an embedding model that converts input texts into a vector space and then compares their similarity.
-
-The syntactic approach uses a language model that converts the given source class and each chunk into lemmas. Subsequently, if the chunk contains the lemmas of the given source class then it is classified as relevant. For example, consider the source class \textit{department} and the following domain description: \\
-
-``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' \\
-
-First, each word in the given source class \textit{department} is converted into a lemma which in this case is the same word \textit{department}. Then, each word in the domain description is converted into the lemmas: \\
-
-``\textit{In this company, every employee \textbf{work} in some department. Each employee \textbf{be} uniquely \textbf{identify} by his ID.}'' \\
-
-The bold words emphasize the differences between the original domain description and the domain description after each word is converted into a lemma. Subsequently, in this case, a chunk is relevant if it contains the word \textit{department}. Which in this case is only the first sentence. We do not enforce the chunk to contain the lemmas in the same order as the given source class. For example, consider the source class \textit{registration application} and the following chunk: \\
-
-\noindent{}``\textit{Application of registration needs to be provided.}'' \\
-
-\noindent{}If the strict lemmas order was enforced then this chunk would be classified as irrelevant for the source class \textit{registration application} which is unwanted behavior.
 
 
 \subsubsection{Top k search}

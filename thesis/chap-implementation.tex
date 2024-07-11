@@ -6,22 +6,22 @@ Now we propose some configurations of the generic framework from the previous ch
 
 \section{Structured data format}
 
-The structured data can be inserted into the prompt in many different formats such as JSON, XML and YAML. We use only the JSON format as it is one of the most popular formats for data interchange on the internet that each LLM should be greatly familiar with since most of the training data for LLMs usually come from the internet \cite{Zhao2023}.
+The structured data can be inserted into the prompt in many different formats such as JSON, XML, and YAML. We use only the JSON format, as it is one of the most popular formats for data interchange on the internet that each LLM should be greatly familiar with, since most of the training data for LLMs usually come from the internet \cite{Zhao2023}.
 
 
 \section{Output specification}
 
-For automatic output parsing, the \emph{output specification} part instructs the LLM to output the result in a JSON format. To get JSON output from the LLM either a concrete JSON instance can be provided as an example or a JSON schema can be used to define the desired JSON format. For example, when the goal is to get a class description in JSON format from the LLM, the \emph{output specification} instruction containing an instance of JSON format can look like this: \\
+For automatic output parsing, the \emph{output specification} part instructs the LLM to output the result in JSON format. To get JSON output from the LLM either a concrete JSON instance can be provided as an example or a JSON schema can be used to define the desired JSON format. For example, when the goal is to get a class description in JSON format from the LLM, the \emph{output specification} instruction containing an instance of JSON format can look the following way: \\
 
-\noindent{}\textit{Output the description in JSON format like this:} \\
-\texttt{\frenchspacing\{ \\
+\noindent{}\textit{Output the description in JSON format like this: \\
+\{ \\
 \null \quad ``description'': ``description of the class'' \\
 \}} \\
 
 \noindent{}or the \emph{output specification} instruction containing an JSON schema can look like this: \\
 
-\noindent{}\textit{Output the description in JSON format based on this JSON schema:} \\
-\texttt{\frenchspacing\{ \\
+\noindent{}\textit{Output the description in JSON format based on this JSON schema: \\
+\{ \\
 \null \quad ``\$schema'': ``http://json-schema.org/draft-04/schema\#'', \\
 \null \quad  ``type'':``object'', \\
 \null \quad  ``properties'': \{ \\
@@ -35,18 +35,18 @@ For automatic output parsing, the \emph{output specification} part instructs the
 \}} \\
 
 
-Since it usually takes a few seconds for the LLM to generate the output, the application response time can be improved by parsing the outputted JSON objects one by one instead of waiting for the whole output and then parse the complete JSON object. This can be done by instructing the LLM to output one isolated JSON object for each outputted domain element and as soon as the LLM generates some proper domain element in a JSON format it can be parsed and displayed to the user. To achieve this, we use in the \emph{output specification} instruction an instance of the corresponding JSON output. For example, when generating classes, the \emph{output specification} instruction can look like this: \\
+Since it usually takes a few seconds for the LLM to generate the output, the application response time can be improved by parsing the outputted JSON objects one by one instead of waiting for the whole output and then parsing the complete JSON object. This can be done by instructing the LLM to output one isolated JSON object for each outputted domain element and as soon as the LLM generates some proper domain element in a JSON format it can be parsed and displayed to the user. To achieve this, we use in the \emph{output specification} instruction an instance of the corresponding JSON output. For example, when generating classes, the \emph{output specification} instruction can look like this: \\
 
-\noindent{}\textit{Output each class in JSON object like this: \texttt{\frenchspacing\{``class'': ``class name''\}}.} \\
+\noindent{}\textit{Output each class in JSON object like this: \{``class'': ``class name''\}.} \\
 
 \noindent{}As a result, when the suggested classes are \textit{employee} and \textit{department} instead of getting the output in the following single object: \\
 
-\noindent{}\textit{\texttt{\frenchspacing\{``classes'': [\{``name'': ``employee''\}, \{``name'': ``department''\}]}\}} \\
+\noindent{}\textit{\{``classes'': [\{``name'': ``employee''\}, \{``name'': ``department''\}]\}} \\
 
 \noindent{each class is outputted in a separate object:} \\
 
-\noindent{}\textit{\texttt{\frenchspacing\{``class'': ``employee''\} \\
-\{``class'': ``department''\}}}
+\noindent{}\textit{\{``class'': ``employee''\} \\
+\{``class'': ``department''\}}
 
 
 \section{Output order}
@@ -60,8 +60,8 @@ When the modeling experts model the domain elements solely based on a given doma
 
 To mimic this approach, we configure the \emph{output specification} the following way. For generators of classes, attributes, and associations for each domain element that the LLM finds we first let the LLM to generate its original text and then its other fields such as the name. For example, the \emph{output specification} instruction for generating attributes can look like this: \\
 
-\noindent{}\textit{Output each attribute in JSON object like this:} \\
-\texttt{\frenchspacing\{``originalText'': ``copy the part of the given context containing \\ this attribute'', ``name'': ``attribute name''\}}.
+\noindent{}\textit{Output each attribute in JSON object like this: \\
+\{``originalText'': ``copy the part of the given context containing \\ this attribute'', ``name'': ``attribute name''\}.}
 
 
 \section{Main control instruction}
@@ -110,7 +110,7 @@ $gen_{sd}$ & generate descriptions only for the given classes, attributes and as
 	\bottomrule
 	\addlinespace
 	\end{tabular}
-	\caption{Examples of \emph{main control instructions}}
+	\caption{Examples of the \emph{main control instructions}}
 	\label{tab:main-control-instructions}
 \end{table}
 
@@ -271,15 +271,15 @@ We do not experiment with any iterative prompting technique as this would signif
 
 \subsection{Motivation}
 
-From our experience, when an LLM works with a longer domain descriptions it can mainly make the following two mistakes:
+From our observation, when an LLM works with a longer domain descriptions it can mainly make the following two mistakes:
 
 \begin{enumerate}
 \item extract irrelevant domain elements from irrelevant parts of the domain description
-\item skip some important parts that contain some important domain elements
+\item skip some important parts of the domain description that contain some important domain elements
 \end{enumerate}
 
 
-\noindent{}To mitigate these issues, the domain description can be simplified and the unimportant parts of the domain description can be removed based on the given task with technique such as retrieval-augmented generation. Ideally, this would solve both of the issues since the LLM could not work with irrelevant parts of the domain description as they would not be present in the prompt thus the LLM would focus only on the important parts of the domain description.
+\noindent{}To mitigate these issues, the domain description can be simplified and the unimportant parts of the domain description can be removed based on the given task with technique such as retrieval-augmented generation. Ideally, this would solve both of these issues since the LLM could not work with irrelevant parts of the domain description as they would not be present in the prompt thus the LLM would focus only on the important parts of the domain description.
 Furthermore, these approaches can reduce the prompt length which can help when working with a domain description that does not fit in the context window size of the LLM.
 
 %Our goal is to improve the LLM performance by pre-processing the domain description. The pre-processing can be done either only once after the user inputs his domain description or it can be done before using each generator for providing only the relevant information that are needed for solving the given task.
@@ -313,21 +313,26 @@ In the indexing phase, the domain description is segmented into chunks that can 
 
 
 \subsubsection{Configurations}
+\label{sec:rag_configurations}
 
-We use this RAG technique for the generators of attributes, associations, descriptions, data types, and cardinalities as in these cases only the information about the source class $C$ is needed to generate the correct output. We implemented a semantic and a syntactic approach.
+We use the described RAG technique for the generators of attributes, associations, descriptions, data types, and cardinalities as in these cases only the information about the source class $C$ is needed to generate the correct output.
 
-The semantic approach uses an embedding model that converts each domain description chunk into a vector space to create the external knowledge base. Subsequently, the given source class is embedded by the same model and the similar chunks from the external knowledge base are retrieved and then used to build a new domain description.
+At first, we considered using LLM to directly output the relevant texts from the domain description based on the given source class. However, this process can take a long time as in the worst-case scenario the LLM has to copy the whole domain description to the output. Instead, we implemented a semantic and a syntactic approach.
 
-The syntactic approach uses a language model that converts each domain description chunk into lemmas. Subsequently, the given source class is converted into lemmas by the same model and the chunks that contain the exact lemmas as the given source class are retrieved from the external knowledge base and then used to build a new domain description. For example, consider the source class \textit{department} and the following domain description: \\
+%The semantic approach uses an embedding model that converts each domain description chunk into a vector space to create the external knowledge base. Subsequently, the sentence ``\emph{Info about \{source\_class\}}'' where the \textit{\{source\_class\}} placeholder is replaced by the given class name is embedded by the same model and the similar chunks from the external knowledge base are retrieved and then used to build a new domain description.
+
+The semantic approach uses an embedding model that converts each domain description chunk into a vector space to create the external knowledge base. Subsequently, the given source class name is embedded by the same model and the similar chunks from the external knowledge base are retrieved and then used to build a new domain description.
+
+The syntactic approach uses a language model that converts each domain description chunk into lemmas. Subsequently, the given source class is converted into lemmas by the same model and the chunks that contain the exact lemmas as the given source class are retrieved from the external knowledge base and then used to build a new domain description. For example, consider the source class \textit{department} and the following domain description where the first sentence is the first chunk and the second sentence is the second chunk: \\
 
 \noindent{}``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' \\
 
-\noindent{}First, each word in the given source class \textit{department} is converted into a lemma which in this case is the same word \textit{department}. Then, each word in the domain description is converted into the lemmas: \\
+\noindent{}First, each word in the domain description is converted into the lemmas: \\
 
 \noindent{}``\textit{In this company, every employee \textbf{work} in some department. Each employee \textbf{be} uniquely \textbf{identify} by his ID.}'' \\
 
-\noindent{}The bold words emphasize the differences between the original domain description and the domain description where each word is converted into a lemma. Subsequently, in this case, a chunk is relevant if it contains the word \textit{department}. Which in this case is only the first sentence. We do not enforce the chunk to contain the lemmas in the same order as the given source class. For example, consider the source class \textit{registration application} and the following chunk: \\
+\noindent{}The bold words emphasize the differences between the original domain description and the domain description where each word is converted into a lemma. Then, each word in the given source class \textit{department} is converted into a lemma which in this case is the same word \textit{department}.  In this case, only the first chunk is relevant since it contains the word \textit{department}. We do not enforce the chunk to contain the lemmas in the same order as the given source class. For example, consider the source class \textit{registration application} and the following chunk: \\
 
 \noindent{}``\textit{Application of registration needs to be provided.}'' \\
 
-\noindent{}If the strict lemmas order was enforced, then this chunk would be classified as irrelevant for the source class \textit{registration application} which is unwanted behavior.
+\noindent{}If the strict lemmas order was enforced then this chunk would be classified as irrelevant for the source class \textit{registration application} which is undesired behavior. For more implementation details for both of these approaches see the section \ref{sec:rag_implementation}.

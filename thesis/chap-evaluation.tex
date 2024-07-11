@@ -1,14 +1,12 @@
 \chapter{Experimental evaluation}
 \label{chap:evaluation}
 
-\noindent{}TODO: Chapter description and probably add reference to our data repository\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark}}
+Now we evaluate the proposed configurations from the chapter \ref{chap:framework_configuration} that we implemented in the chapter \ref{chap:protype_software_application}. First, we describe the data that we used for evaluation. Then, we evaluate our RAG approaches, the generated suggestions of domain elements, and the generated descriptions. Finally, we present results of our user-based evaluation of our prototype application.
 
 
 \section{Evaluation domains}
 
-To assess the quality of the generators, we used six domains with their domain description and manually created reference domain models.
-We used the reference models to evaluate the suggestions generated based on the domain descriptions.
-Table \ref{tab:reference-model-size} summarizes the size of these reference models.
+To assess the quality of our generators, we used six domains with their domain description and manually created reference domain models. These domains can be found in our data repository\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark}}. Table \ref{tab:reference-model-size} summarizes the size of these reference models.
 
 \begin{table}[!h]
     \scriptsize
@@ -55,9 +53,9 @@ The annotated domain description can contain multiple tags with the same name. A
 \section{RAG evaluation}
 \label{sec:filtering_evaluation}
 
-As already mentioned, for the RAG evaluation we use the annotated domain descriptions.
-
 \subsection{Evaluation methodology}
+
+As already mentioned, for the RAG evaluation we use the annotated domain descriptions.
 
 \subsubsection{Recall}
 
@@ -70,7 +68,7 @@ For a domain element $e$ let $Y_e$ be the set of expected relevant parts that ar
 
 \subsubsection{Precision}
 
-For a class $c$ and domain description $T$ let $Y_{c}$ be the set of expected relevant parts of the class $c$ and of the attributes and associations with the source class equal to $c$. Now let $Z_{c}$ be the set of chunks from the given domain description that the selected RAG approach marked as relevant based on the class $c$. Then the precision $P_{c}$ for the class $c$ and the domain description $T$ is computed as:
+For a class $c$ and domain description $T$ let $Y_{c}$ be the set of expected relevant parts from the annotated domain descriptions of the class $c$ and of the attributes and associations with the name of their source class equal to the $name(c)$. Now let $Z_{c}$ be the set of chunks from the given domain description that the selected RAG approach marked as relevant based on the class $c$. Then the precision $P_{c}$ for the class $c$ and the domain description $T$ is computed as:
 
 \[ P = \dfrac{\sum_{c \in C}|Y_c|}{\sum_{c \in C}|Z_c|}. \]
 
@@ -79,14 +77,14 @@ We do not compute the precision separately for classes, attributes, and associat
 
 \subsection{Selected models}
 
-For our semantic approach, we use the model \textit{all-MiniLM-L6-v2}\footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}. It is a symmetric embedding model intended for encoding sentences and short paragraphs. As a comparison function, we use cosine-similarity.
+For our semantic approach, we use the \textit{SentenceTransformers}\footnote{\url{https://sbert.net/}} library with the model \textit{all-MiniLM-L6-v2}\footnote{\url{https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2}}. It is a symmetric embedding model intended for encoding sentences and short paragraphs. As a comparison function, we use \textit{cosine-similarity}.
 
 Our syntactic approach uses the \textit{MorphoDiTa} tool \cite{Strakova2014} with the \textit{english-morphium-wsj-140407} model for converting English words into lemmas \cite{Straka2014}.
 
 
 \subsection{Results}
 
-In the section \ref{texts_comparison}, we introduced our semantic and syntactic RAG approach. To comparing these approaches now we also introduce the no-filtering approach where the domain description is not filtered at all. The table \ref{tab:filtering-results} contains the measured results:
+In the section \ref{sec:rag_configurations}, we introduced our semantic and syntactic RAG approach. For comparing these approaches now we also introduce the no-filtering approach where the domain description is not filtered at all. The table \ref{tab:filtering-results} contains the measured results:
 
 \begin{table}[!h]
     \scriptsize
@@ -114,7 +112,7 @@ In the section \ref{texts_comparison}, we introduced our semantic and syntactic 
 
 As expected, the no-filtering approach gets the highest possible recall but also gets the lowest precision.
 
-In the syntactic approach, the naive pronouns detection improves the recall significantly but slightly decreases the precision. This approach can probably offer the best performance as it has the highest precision of all the measured approaches. To improve its relatively low recall, the domain description can be manually pre-processed to remove some problematic constructs such as unexpressed subjects.
+In the syntactic approach, the naive pronouns detection improves the recall significantly but slightly decreases the precision as chunks starting with a pronoun also contain the previous chunk. This approach can probably offer the best performance as it has the highest precision of all the measured approaches. To improve its recall, the domain description can be manually pre-processed to remove some problematic constructs such as unexpressed subjects.
 
 The semantic approach almost matches the recall of the no-filtering approach but it has a higher precision. The naive pronouns approach slightly increases the recall while maintaining the same precision.
 
@@ -150,7 +148,7 @@ Llama-3-70B has an 8k tokens context window size and as of writing this thesis, 
 
 \section{Evaluation of generated domain elements}
 
-First, we did a preliminary evaluation where we evaluated generated attributes and associations with many different combinations of prompting techniques, RAG approaches, and LLMs with the domain description \textit{zoological gardens-00}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/main/manual\%20evaluation\%20domains/zoological\%20gardens/domain-description-00.txt}}. Then, we took the combinations with the best results and evaluated them on all our other domain descriptions.
+First, we describe the rules for evaluating the domain elements then we present a preliminary evaluation where we evaluate generated attributes and associations with many different configurations of prompting techniques, RAG approaches, and LLMs with the domain description \textit{zoological gardens-00}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/main/manual\%20evaluation\%20domains/zoological\%20gardens/domain-description-00.txt}}. Then, we select the most promising configurations and evaluate them on all our other domain descriptions.
 
 
 \subsection{Manual assessment of generated suggestions}
@@ -183,7 +181,7 @@ If the question \emph{Can we model $X$ also as $X'$?} can be answered positively
     \label{tab:manual-assessment-of-suggestions}
 \end{table}
 
-To limit subjectivity, we requested that the manual evaluation be carried out according to the rules summarized in Table \ref{tab:manual-assessment-of-suggestions}.
+To limit subjectivity, we requested that the manual evaluation is carried out according to the rules summarized in Table \ref{tab:manual-assessment-of-suggestions}.
 If the class $X'$ suggested by $gen_c(T)$ corresponds to a single class $X$, we record $name(X)$ in \emph{Matches class}.
 %The correspondence is determined by whether $name(X')$ refers to the same conceptual entity as $name(X)$.
 The assessment considers both the occurrences of $name(X')$ within $T$ and how $X$ is structured within $M$.
@@ -206,12 +204,15 @@ This corresponds to a scenario where a domain modeler models $D$ not in the step
 When $X'$ corresponds to an association that is not in $M$, the class at the other end of this association is a class $D$ in $M$, which we record again with $name(D)$ in \emph{Matches class}.
 Last but not least, it might happen that $X'$ corresponds to $X$ only when the correspondence requirement in the source/target class is relaxed so that the classes at the ends of $X'$ can be subclasses or superclasses of the corresponding classes at the ends of $X$.
 In that case, we write a colon(:) followed by $name(X)$ to \emph{Matches attribute} or \emph{Matches class}.
-We write a colon followed by an asterisk (:*) if $X'$ makes sense, but should be modeled for a subclass of superclass of $C$.
+We write a colon followed by an asterisk (:*) if $X'$ makes sense, but should be modeled for a subclass or superclass of $C$. \\
+
+\noindent{}TODO: Provide examples for the more complicated rules
 
 
-\subsection{Preliminary evaluation results}
+\subsection{Preliminary evaluation results for attributes and associations}
+\label{sec:preliminary_attributes_associations}
 
-The table \ref{tab:preliminary-mixtral} shows preliminary results for Mixtral-8x7B and the table \ref{tab:preliminary-llama} shows preliminary results for Llama-3-70B.
+The table \ref{tab:preliminary-mixtral} shows preliminary results for generating attributes and associations with \emph{Mixtral-8x7B} and the table \ref{tab:preliminary-llama} shows preliminary results for generating attributes and associations with \emph{Llama-3-70B}.
 
 \begin{table}[!h]
     \scriptsize
@@ -234,9 +235,9 @@ The table \ref{tab:preliminary-mixtral} shows preliminary results for Mixtral-8x
          N-shot-none          & 0.85 & 0.23 & 0.36 & 0.71 & 0.35 & 0.47 \\
          N-shot-semantic      & 0.85 & 0.32 & 0.46 & 0.83 & 0.47 & 0.60 \\
          N-shot-syntactic     & 0.88 & 0.38 & 0.53 & 0.83 & 0.59 & \textbf{0.69} \\
-         CoT-N-shot-none      & 0.92 & 0.28 & 0.43 & 0.46 & 0.40 & 0.43 \\
-         CoT-N-shot-semantic  & 0.88 & 0.35 & 0.50 & 0.79 & 0.49 & 0.60 \\
-         CoT-N-shot-syntactic & 0.92 & 0.37 & 0.53 & 0.79 & 0.53 & 0.63 \\
+         CoT+N-shot-none      & 0.92 & 0.28 & 0.43 & 0.46 & 0.40 & 0.43 \\
+         CoT+N-shot-semantic  & 0.88 & 0.35 & 0.50 & 0.79 & 0.49 & 0.60 \\
+         CoT+N-shot-syntactic & 0.92 & 0.37 & 0.53 & 0.79 & 0.53 & 0.63 \\
     \addlinespace
     \bottomrule
     \addlinespace
@@ -267,9 +268,9 @@ The table \ref{tab:preliminary-mixtral} shows preliminary results for Mixtral-8x
          N-shot-none          & 0.92 & 0.66 & 0.77 & 0.79 & 0.60 & 0.68 \\
          N-shot-semantic      & 0.88 & 0.57 & 0.69 & 0.88 & 0.56 & 0.68 \\
          N-shot-syntactic     & 0.92 & 0.66 & 0.77 & 0.83 & 0.60 & 0.70 \\
-         CoT-N-shot-none      & 0.92 & 0.77 & 0.84 & 0.71 & 0.57 & 0.63 \\
-         CoT-N-shot-semantic  & 0.85 & 0.64 & 0.73 & 0.79 & 0.60 & 0.68 \\
-         CoT-N-shot-syntactic & 0.92 & 0.66 & 0.77 & 0.83 & 0.67 & \textbf{0.74} \\
+         CoT+N-shot-none      & 0.92 & 0.77 & 0.84 & 0.71 & 0.57 & 0.63 \\
+         CoT+N-shot-semantic  & 0.85 & 0.64 & 0.73 & 0.79 & 0.60 & 0.68 \\
+         CoT+N-shot-syntactic & 0.92 & 0.66 & 0.77 & 0.83 & 0.67 & \textbf{0.74} \\
     \addlinespace
     \bottomrule
     \addlinespace
@@ -278,16 +279,45 @@ The table \ref{tab:preliminary-mixtral} shows preliminary results for Mixtral-8x
     \label{tab:preliminary-llama}
 \end{table}
 
-We can see that with Mixtral-8x7B the RAG improves the $F_1$ score for attributes and associations mostly by improving the precision. However, in the case of Llama-3-70B the RAG does not seem to have any noticeable effect probably because the Llama-3-70B is able to find attributes and associations without the domain description filtering when working with the \textit{zoological gardens} domain description which has almost 1000 words.
+We can see that with \emph{Mixtral-8x7B} the RAG improves the $F_1$ score for attributes and associations mostly by improving the precision. However, in the case of \emph{Llama-3-70B} the RAG does not seem to have any noticeable effect probably because the \emph{Llama-3-70B} is able to find attributes and associations without the domain description filtering when working with the \textit{zoological gardens} domain description which has almost 1000 words since the baseline approach without domain description filtering already achieves a high recall and precision. %The baseline prompting technique is the most inconsistent as it has one of the worst $F_1$ scores every time except for the case with \emph{Llama-3-70B} for attributes where it achieves the best $F_1$ score.
 
-The baseline prompting technique is the most inconsistent as it has one of the worst $F_1$ scores every time except for the case with Llama-3-70B for attributes where it achieves the best $F_1$ score.
+At first, our proposed techniques do not show any significant improvement but when we look at their average $F_1$ scores in the table \ref{tab:F1_attributes_associations_average}, we see that the CoT+N-shot configuration gives consistently good results therefore, in the section \ref{sec:overall_evaluation} we focus on this prompting technique and evaluate it with all our domain descriptions.
 
-As the CoT-N-shot prompting technique consistently shows good results for generating attributes and associations, we evaluated this technique for all other domain descriptions. \\
 
-\noindent{}TODO: Do preliminary evaluace přidat třídy \\
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{lc}
+     \toprule
+         & $F_1$ average \\
+    \toprule
+    
+    \addlinespace
+    baseline-none  & 0.52  \\
+    baseline-semantic  & 0.55  \\
+    baseline-syntactic  & 0.59  \\
+    CoT-none	& 0.61  \\
+    CoT-semantic & 0.63  \\
+    CoT-syntactic & 0.63  \\
+    N-shot-none & 0.57 \\
+    N-shot-semantic & 0.61 \\
+    N-shot-syntactic & \textbf{0.67} \\
+    CoT+N-shot-none & 0.58 \\
+    CoT+N-shot-semantic & 0.63 \\
+    CoT+N-shot-syntactic & \textbf{0.67} \\
+    \addlinespace
+    \bottomrule
+    \addlinespace
+    \end{tabular}
+    \caption{Average $F_1$ score for generated attributes and associations with Mixtral-8x7B and Llama-3-70B with strict variation only}
+    \label{tab:F1_attributes_associations_average}
+\end{table}
 
-\noindent{}TODO: Přidat evaluaci pro CoT-N-shot pro všechny popisy domén a odprezentovat to podobně, jako to je v článku
 
+\subsection{Classes evaluation results}
+
+For generating class suggestions by the generator $gen_c$ the table \ref{tab:mixtral-classes} shows results for the \emph{Mixtral-8x7B} and the table \ref{tab:llama-classes} shows results for the \emph{Llama-3-70B}.
 
 \begin{table}[!h]
     \scriptsize
@@ -304,14 +334,14 @@ As the CoT-N-shot prompting technique consistently shows good results for genera
          baseline    & 0.49 & 0.99 & 0.66 \\
     	 CoT         & 0.38 & 0.99 & 0.55 \\
          N-shot      & 0.55 & 0.88 & \textbf{0.68} \\
-         N-shot-CoT  & 0.45 & 0.96 & 0.61 \\
+         CoT+N-shot  & 0.45 & 0.96 & 0.61 \\
          ToT         & 0.46 & 0.98 & 0.63 \\
     \addlinespace
     \bottomrule
     \addlinespace
     \end{tabular}
     \caption{Generated classes evaluation with Mixtral-8x7B strict variation only}
-    \label{tab:preliminary-mixtral-classes}
+    \label{tab:mixtral-classes}
 \end{table}
 
 
@@ -330,43 +360,98 @@ As the CoT-N-shot prompting technique consistently shows good results for genera
          baseline    & 0.63 & 0.97 & \textbf{0.76} \\
     	 CoT         & 0.46 & 0.99 & 0.63 \\
          N-shot      & 0.51 & 0.98 & 0.67 \\
-         N-shot-CoT  & 0.48 & 0.93 & 0.63 \\
+         CoT+N-shot  & 0.48 & 0.93 & 0.63 \\
          ToT         & 0.28 & 0.99 & 0.44 \\
     \addlinespace
     \bottomrule
     \addlinespace
     \end{tabular}
     \caption{Generated classes evaluation with Llama-3-70B strict variation only}
-    \label{tab:preliminary-llama-classes}
+    \label{tab:llama-classes}
 \end{table}
+
+\noindent{}TODO: Describe results \\
+
+\noindent{}TODO: Try to show some results for ChatGPT-3.5 and ChatGPT-4o \\
+
+%The common thing is that approaches with CoT achieve high recall but low recall which is than translated into low $F_1$ score.
+
+
+\subsection{Overall evaluation}
+\label{sec:overall_evaluation}
+
+Now we evaluate the classes, attributes, and associations together on all our domain descriptions. As discussed in the section \ref{sec:preliminary_attributes_associations}, for attributes and associations we focus only on the CoT+N-shot prompting technique (TODO: for classes we chose the N-shot prompting technique).
+
+Figures \ref{fig:evaluation-complex-p-r-f1} and \ref{fig:evaluation-simple-f1} summarize the evaluation results with the average $F_1$ score for the analytical, eclectic, and educational domain descriptions and the average precision, recall, and $F_1$ score for the complex domain descriptions separately for classes, attributes, and associations at the four levels of strictness of the matching.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.10]{img/evaluation-complex-p-r-f1.png}
+    \caption{\centering Average Precision, recall and $F_1$ scores for the complex domain descriptions at the four levels of matching strictness}
+    \label{fig:evaluation-complex-p-r-f1}
+\end{figure}
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.10]{img/evaluation-simple-f1.png}
+    \caption{\centering Average $F_1$ score for the analytical, eclectic, and educational domain descriptions at the four levels of matching strictness}
+    \label{fig:evaluation-simple-f1}
+\end{figure}
+
+
+\subsubsection{Overall performance}
+
+The results indicate that Llama generally performs better than Mixtral.
+This difference is clearly visible for the simpler evaluation domains in all description styles.
+In contrast, for complex domains with intricate descriptions, the performance gap narrows.
+Notably, Mixtral with RAG surpasses Llama without RAG in suggesting attributes and associations within complex domains.
+Both models show the highest performance in suggesting classes.
+They are comparable in suggesting attributes and associations, which is given by the duality in their manual evaluation.
+The average precision for classes on complex domains is the same with and without RAG, as RAG is not used for classes.
+
+
+\subsubsection{Impact of Introducing RAG}
+
+Introducing RAG improves the performance of both models.
+For Mixtral, RAG significantly improves the $F_1$ scores for attributes and associations across all domains, making its performance almost comparable to Llama without RAG and even slightly better for complex domains.
+This suggests that RAG can compensate for the smaller size of the Mixtral model when identifying properties modeled as attributes or associations.
+This finding is crucial for implementing the generators, since using a large LLM like Llama in the generators is very resource-consuming.
+Even a simple RAG technique makes less demaning LLM comparable to the larger one for the implementation of the generators.
+For Llama, the improvement with RAG is less pronounced but still noticeable, particularly for complex domains.
+For classes, the impact of RAG is minimal, because the class generator always works with the entire domain description.
+We can see some improvements in recall for the less strict levels of matching that also consider classes suggested as part of attribute and association suggestions, where RAG brings improvements.
+
+
+\subsubsection{Domain and Style Specific Performance}
+
+Both LLMs perform better in analytical and educational descriptions, probably due to the shorter, more structured, and consistent nature of these descriptions.
+The eclectic and complex domain descriptions show more variability in performance.
+Both benefit from introducing RAG which shows that diverse and less structured domain descriptions benefit from RAG even for large Llama.
+
 
 \section{Descriptions evaluation}
 
-For each generated description we evaluated the following tasks:
-\begin{itemize}
-\item is the description strictly based on the given domain description
-\item is the description semantically corresponding to the given domain
-\item does the description not contain any useless additional information
-\item does the description not miss any useful information \\
-\end{itemize}
+We evaluated generated class descriptions based on the following questions:
 
-\noindent{}TODO: Přesněji zadefinovat ten třetí a čtvrtý bod \\
+\begin{enumerate}
+\item [Q1:] Is the generated description solely based on the given domain description?
+\item [Q2:] Is the generated description semantically corresponding to the given domain element?
+\item [Q3:] Does the description not miss any useful information?
+\end{enumerate}
 
-\noindent{}TODO: Napsat, že jako popis domény jsme použili zoological gardens-00
+To limit subjectivity of the evaluation, in the Q2 we consider the sets $S_1$ and $S_2$ that contain for the given class definitions of its attributes and its associations contained by the domain description and contained by the generated description. If the sets $S_1$ and $S_2$ have only a small intersection then we answer \textit{yes} to Q2, otherwise \textit{no}. For Q3 we consider the sets $T_1$ and $T_2$ of properties of the given class provided by the domain description and by the generated description. If the sets $T_1$ and $T_2$ have almost full intersection then we answer \textit{yes} to Q3, otherwise \textit{no}. For example, consider the following domain description: \\
 
-%\begin{figure}[!h]
-%    \centering
-%    \includegraphics[scale=0.10]{img/evaluation-complex-p-r-f1.png}
-%    \caption{\centering Average Precision, recall and $F_1$ scores for the complex domain descriptions at the four levels of matching strictness}
-%    \label{fig:evaluation-complex-p-r-f1}
-%\end{figure}
-%
-%\begin{figure}[!h]
-%    \centering
-%    \includegraphics[scale=0.10]{img/evaluation-simple-f1.png}
-%    \caption{\centering Average $F_1$ score for the analytical, eclectic, and educational domain descriptions at the four levels of matching strictness}
-%    \label{fig:evaluation-simple-f1}
-%\end{figure}
+\noindent{}\textit{A farmer is an individual engaged in agriculture identified uniquely by a name that is used to refer to the farmer from various documentation.} \\
+
+\noindent{}and consider the following description for the class \textit{farmer}: \\
+
+\noindent{}\textit{Farmer is an individual.} \\
+
+\noindent{}Then in Q2, the set $S_1$ contains the definition of the name of the \textit{farmer} and the set $S_2$ is empty therefore, these sets have no intersection and the answer to Q2 is \textit{yes}. For the Q3 the set $T_1$ contains the information that the class \textit{farmer} is an individual, engaged in agriculture, and identified by a name. The set $T_2$ contains only that the \textit{farmer} is an individual therefore, the sets have only a small intersection and the answer to the Q3 is \textit{no}.
+
+%\noindent{}TODO: Napsat, že jako popis domény jsme použili \emph{zoological gardens-00} \\
+
+%\noindent{}TODO: Přidat výsledky měření a okomentovat je
 
 
 \section{User-based evaluation of the application}

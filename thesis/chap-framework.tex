@@ -10,7 +10,7 @@ We propose solving the automation of the domain modeling steps from the chapter 
 
 Similarly to $f$, we define a text generator $g$ that from a given domain model generates a domain description, i.e. $T' = g(M)$, where $M$ is the given domain model and $T'$ is the generated domain description.
 
-Based on the generators $f$ and $g$, we define more fine-grained text generation problems solved by the \emph{text to model} generators and \emph{model to text} generators respectively.
+Based on the generators $f$ and $g$, we define more fine-grained text generation problems solved by the \emph{text to model generators} and \emph{model to text generators} respectively.
 
 
 \section{Definitions of text to model generators}
@@ -101,7 +101,7 @@ The following generators based on the given domain model generate a domain descr
 The summary generators are for generating a domain description solely based on the given classes, attributes, and associations.
 
 \begin{description}
-\item [Summary plain text generator] $gen_{sp}$ that for a given domain model $M$ generates an unstructured domain description $T$.
+\item [Summary plain text generator] $gen_{sp}$ that for a given domain model $M$, and a given style format generates an unstructured domain description $T$ in the given style format.
 
 \item [Summary descriptions generator] $gen_{sd}$ that for a given domain model $M = (\mathcal{C}, \mathcal{P})$ generates a domain description $T$ in form of a list that contains an item for every class $C \in \mathcal{C}$ and for every attribute or association $P \in\mathcal{P}$.
 \end{description}
