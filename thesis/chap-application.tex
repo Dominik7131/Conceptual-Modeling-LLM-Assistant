@@ -104,7 +104,7 @@ Also, the not highlighted parts of the domain description can also be already co
 
 
 \subsection{Summarizing domain model}
-\label{summarising_domain_model}
+\label{sec:summarising_domain_model}
 
 For a selected part of the user's domain model, the assistant is able to generate a summary for each class, attribute, and association using the \emph{summary generators}.
 
@@ -159,20 +159,19 @@ A possibly better solution is to use some language model that can accurately sol
 
 Another issue with a lack of context can arise when a text contains some bullet points, such as: \\
 
-\noindent{}``\textit{The book contains:}
+\noindent{}\textit{The book contains:}
 \begin{itemize}
 \item \textit{info about its author}
-\item \textit{date of publication}'' \\
+\item \textit{date of publication} \\
 \end{itemize}
 
-\noindent{}To solve this issue, for each bullet point we put in it's metadata the chunk before the first bullet point which in this case is the chunk: ``\textit{The book contains:}''.
+\noindent{}To solve this issue, for each bullet point we put in it's metadata the chunk before the first bullet point which in this case is the chunk: \textit{The book contains:}.
 
-%If the requirement is to correctly classify each chunk then either the RAG can be temporarily disabled or the domain description can be manually edited to remove all problematic constructs.
+However, other issues can arise, such as when the subject is not expressed it can be challenging to evaluate the chunk separately. For example, consider the following simple domain description: \\
 
+\noindent{}\textit{Researchers presented their findings. Highlighting significant advancements in the field.} \\
 
-%\subsubsection{Texts comparison}
-%\label{texts_comparison}
- 
+\noindent{}The second sentence has unexpressed subject therefore, the previous sentence is needed to understand its meaning. In these cases either in the web application the RAG can be disabled or the domain descriptions can be first manually pre-processed to remove the problematic constructs. For example, the second sentence from the example can be edited into: \textit{The Researchers highlighted significant advancements in the field}. 
 
 
 \subsubsection{Top k search}

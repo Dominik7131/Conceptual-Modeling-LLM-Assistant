@@ -148,7 +148,7 @@ Llama-3-70B has an 8k tokens context window size and as of writing this thesis, 
 
 \section{Evaluation of generated domain elements}
 
-First, we describe the rules for evaluating the domain elements then we present a preliminary evaluation where we evaluate generated attributes and associations with many different configurations of prompting techniques, RAG approaches, and LLMs with the domain description \textit{zoological gardens-00}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/main/manual\%20evaluation\%20domains/zoological\%20gardens/domain-description-00.txt}}. Then, we select the most promising configurations and evaluate them on all our other domain descriptions.
+First, we describe the rules for evaluating the domain elements then we present a preliminary evaluation where we evaluate generated attributes and associations with many different configurations of prompting techniques, RAG approaches, and LLMs with the domain description \textit{zoological gardens}. Then, we select the most promising configurations and evaluate them on all our other domain descriptions.
 
 
 \subsection{Manual assessment of generated suggestions}
@@ -173,7 +173,7 @@ If the question \emph{Can we model $X$ also as $X'$?} can be answered positively
 \addlinespace
         $gen_a(T,C)$ & $name(D)$ $\vert$ *         & $name(X)$ $\vert$ * $\vert$ & $name(X)$ $\vert$ * $\vert$ \\
         $gen_{r1}(T,C)$ &                             & :$name(X)$ $\vert$ :* $\vert$ & :$name(X)$ $\vert$ :* $\vert$ \\
-                     &                             & $name(X_1)$;$\ldots$        & $name(X_1)$;$\ldots$ \\
+                     &                             & +$name(X_1)$;$\ldots$        & +$name(X_1)$;$\ldots$ \\
 \addlinespace
 \bottomrule
     \end{tabular}
@@ -181,17 +181,56 @@ If the question \emph{Can we model $X$ also as $X'$?} can be answered positively
     \label{tab:manual-assessment-of-suggestions}
 \end{table}
 
-To limit subjectivity, we requested that the manual evaluation is carried out according to the rules summarized in Table \ref{tab:manual-assessment-of-suggestions}.
+To limit subjectivity, we carried out the manual evaluation according to the rules summarized in Table \ref{tab:manual-assessment-of-suggestions}.
+
+
+\subsubsection{Rules for classes}
 If the class $X'$ suggested by $gen_c(T)$ corresponds to a single class $X$, we record $name(X)$ in \emph{Matches class}.
 %The correspondence is determined by whether $name(X')$ refers to the same conceptual entity as $name(X)$.
 The assessment considers both the occurrences of $name(X')$ within $T$ and how $X$ is structured within $M$.
 If $X'$ does not correspond to any class in $M$, but the evaluator considers it valid from the semantic point of view based on $T$, we record an asterisk (*) in \emph{Matches class}.
 %This indicates that according to the judgment of the evaluator, $X'$ represents a concept that could be modeled in $M$ based on its relevance and presence in $T$.
 This scenario can arise especially in more complex domains where not all concepts in the domain description are modeled, or a concept can be modeled with an attribute instead of an association and a class.
-If $X'$ does not correspond to any single class in $M'$, but its $name(X')$ corresponds to a list of classes $X_1$, $\ldots$, $X_n$ $\in$ $M$, their names are concatenated to $name(X_1)$;$\ldots$;$name(X_n)$ which we record in \emph{Matches classes}.
-This corresponds to scenarios where domain models are more coarse-grained.
+If $X'$ does not correspond to any single class in $M'$, but its $name(X')$ corresponds to a list of classes $X_1$, $\ldots$, $X_n$ $\in$ $M$, their names are concatenated to $+name(X_1)$;$\ldots$;$name(X_n)$ which we record in \emph{Matches classes}. This corresponds to scenarios where domain models are more coarse-grained.
 
-For a property $X'$ suggested by $gen_a(T,C)$ and $gen_r(T,C)$, we consider similar rules with some differences.
+The table \ref{tab:class-rules} shows examples of usage of these class rules with the \textit{registry of road vehicles} domain. For simplicity, let the reference domain model contain only the following classes:
+
+\begin{itemize}
+\item \textit{road vehicle}
+\item \textit{agricultural tractor}
+\item \textit{forestry tractor}
+\end{itemize}
+
+\noindent{}In the first row of the table \ref{tab:class-rules}, the generated class \textit{road vehicle} is recorded in the \textit{Matches class} column as it semantically corresponds to the \textit{road vehicle} class from the reference model. In the second column, the asterisk means that the class \textit{owner} based on the given domain description can be modeled as a class however, in the reference domain model it is not present as a class. And in the third row, as the generated class semantically corresponds to the classes \textit{agricultural tractor} and \textit{forestry tractor}, both of these classes are recorded in the \textit{Matches class} column but with a \textit{+} prefix and separated with a semicolon.
+
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{lccc}
+     \toprule
+         Generated class & Matches class \\
+    \toprule
+    
+\addlinespace
+road vehicle   & road vehicle \\
+\addlinespace
+owner         & * \\
+\addlinespace
+agricultural or forestry tractor & +agricultural tractor;forestry tractor \\
+    \addlinespace
+    \bottomrule
+    \addlinespace
+    \end{tabular}
+    \caption{Class rules examples}
+    \label{tab:class-rules}
+\end{table}
+
+
+
+\subsubsection{Rules for attributes and associations}
+
+For a property $X'$ suggested by $gen_a(T,C)$ and $gen_{r1}(T,C)$, we consider similar rules with some differences.
 If $X'$ is a suggested attribute, it can also correspond to an association $X$ and vice versa.
 This scenario arises in practice, where properties can be modeled as attributes or associations interchangably based on the desired level of semantic and structural detail of the resulting domain model.
 Therefore, $name(X)$ is recorded in \emph{Matches attribute} if $X$ is a reference attribute or \emph{Matches association} if $X$ is a reference association.
@@ -204,15 +243,39 @@ This corresponds to a scenario where a domain modeler models $D$ not in the step
 When $X'$ corresponds to an association that is not in $M$, the class at the other end of this association is a class $D$ in $M$, which we record again with $name(D)$ in \emph{Matches class}.
 Last but not least, it might happen that $X'$ corresponds to $X$ only when the correspondence requirement in the source/target class is relaxed so that the classes at the ends of $X'$ can be subclasses or superclasses of the corresponding classes at the ends of $X$.
 In that case, we write a colon(:) followed by $name(X)$ to \emph{Matches attribute} or \emph{Matches class}.
-We write a colon followed by an asterisk (:*) if $X'$ makes sense, but should be modeled for a subclass or superclass of $C$. \\
+We write a colon followed by an asterisk (:*) if $X'$ makes sense, but should be modeled for a subclass or superclass of $C$.
 
-\noindent{}TODO: Provide examples for the more complicated rules
+The table \ref{tab:attribute-rules} shows examples of attribute rules. In the first row, the attribute \textit{type} is in the reference domain model however, instead of the source class \textit{vehicle} it has in the reference model the source class \textit{road vehicle}. The class \textit{vehicle} is a subclass of the class \textit{road vehicle} therefore, in the \textit{Matches attribute} column is the \textit{:} prefix. In the second row, the generated attribute \textit{minor defect} is modeled in the reference model as the association \textit{has road vehicle defect} and the class \textit{minor defect} therefore, the \textit{Matches class} and \textit{Matches association} columns contain these records.
+
+
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{0.1\textwidth}>{\raggedright\arraybackslash}p{0.3\textwidth}>{\raggedright\arraybackslash}p{0.1\textwidth}>{\raggedright\arraybackslash}p{0.1\textwidth}>{\raggedright\arraybackslash}p{0.1\textwidth}>{\raggedright\arraybackslash}p{0.1\textwidth}@{}}
+         Generated attribute & Source class & Generated original text & Matches class & Matches attribute & Matches association \\
+    \toprule
+    \addlinespace
+
+type & vehicle & A vehicle is a machine, usually with wheels, used for transporting people, animals or goods, on land. & & :type & \\
+
+\addlinespace
+
+minor defect & road vehicle &  a minor defect which does not significantly affect the operational characteristics of the vehicle & minor defect & & has road vehicle defect \\
+
+	\addlinespace
+	\bottomrule
+	\addlinespace
+	\end{tabular}
+	\caption{Attribute rules examples}
+	\label{tab:attribute-rules}
+\end{table}
 
 
 \subsection{Preliminary evaluation results for attributes and associations}
 \label{sec:preliminary_attributes_associations}
 
-The table \ref{tab:preliminary-mixtral} shows preliminary results for generating attributes and associations with \emph{Mixtral-8x7B} and the table \ref{tab:preliminary-llama} shows preliminary results for generating attributes and associations with \emph{Llama-3-70B}.
+The table \ref{tab:preliminary-mixtral} shows preliminary results for generating attributes and associations with \emph{Mixtral-8x7B} and the table \ref{tab:preliminary-llama} shows preliminary results for generating attributes and associations with \emph{Llama-3-70B}. For the associations, we only evaluated the scenarios where either the source class or the target class is provided but not both.
 
 \begin{table}[!h]
     \scriptsize
@@ -333,7 +396,7 @@ For generating class suggestions by the generator $gen_c$ the table \ref{tab:mix
     \addlinespace
          baseline    & 0.49 & 0.99 & 0.66 \\
     	 CoT         & 0.38 & 0.99 & 0.55 \\
-         N-shot      & 0.55 & 0.88 & \textbf{0.68} \\
+         N-shot      & 0.55 & 0.89 & \textbf{0.68} \\
          CoT+N-shot  & 0.45 & 0.96 & 0.61 \\
          ToT         & 0.46 & 0.98 & 0.63 \\
     \addlinespace
@@ -357,16 +420,39 @@ For generating class suggestions by the generator $gen_c$ the table \ref{tab:mix
     \toprule
     
     \addlinespace
-         baseline    & 0.63 & 0.97 & \textbf{0.76} \\
+         baseline    & 0.63 & 0.98 & \textbf{0.77} \\
     	 CoT         & 0.46 & 0.99 & 0.63 \\
          N-shot      & 0.51 & 0.98 & 0.67 \\
-         CoT+N-shot  & 0.48 & 0.93 & 0.63 \\
+         CoT+N-shot  & 0.48 & 0.94 & 0.64 \\
          ToT         & 0.28 & 0.99 & 0.44 \\
     \addlinespace
     \bottomrule
     \addlinespace
     \end{tabular}
     \caption{Generated classes evaluation with Llama-3-70B strict variation only}
+    \label{tab:llama-classes}
+\end{table}
+
+
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{lccc}
+    \toprule
+    & & Classes & \\
+    \toprule
+         & Recall & Precision & $F_1$ \\
+    \toprule
+    
+    \addlinespace
+         baseline    & 0. & 0. & 0. \\
+         N-shot      & 0. & 0. & 0. \\
+    \addlinespace
+    \bottomrule
+    \addlinespace
+    \end{tabular}
+    \caption{Generated classes evaluation with ChatGPT-4o strict variation only}
     \label{tab:llama-classes}
 \end{table}
 
@@ -431,7 +517,7 @@ Both benefit from introducing RAG which shows that diverse and less structured d
 
 \section{Descriptions evaluation}
 
-We evaluated generated class descriptions based on the following questions:
+We evaluated only generated class descriptions based on the following questions:
 
 \begin{enumerate}
 \item [Q1:] Is the generated description solely based on the given domain description?
@@ -439,19 +525,71 @@ We evaluated generated class descriptions based on the following questions:
 \item [Q3:] Does the description not miss any useful information?
 \end{enumerate}
 
-To limit subjectivity of the evaluation, in the Q2 we consider the sets $S_1$ and $S_2$ that contain for the given class definitions of its attributes and its associations contained by the domain description and contained by the generated description. If the sets $S_1$ and $S_2$ have only a small intersection then we answer \textit{yes} to Q2, otherwise \textit{no}. For Q3 we consider the sets $T_1$ and $T_2$ of properties of the given class provided by the domain description and by the generated description. If the sets $T_1$ and $T_2$ have almost full intersection then we answer \textit{yes} to Q3, otherwise \textit{no}. For example, consider the following domain description: \\
+\noindent{}To limit subjectivity of the evaluation, we define the following sets:
+
+\begin{itemize}
+\item $T_1$ containing information about the given class solely based on the given domain description
+\item $T_2$ containing information about the given class but not detailed information about its attributes and associations
+\item $T_3 = T_1 \cap T_2$
+\item $D_1$ containing information from the generated class description based on the given class and the given domain description
+\item $D_2 = D_1 \cap T_1 \cap T_2$
+\end{itemize}
+
+\noindent{}and we define the following rules:
+\begin{itemize}
+\item for Q1 if $T_1$ and $D_1$ have at least almost full intersection, we assign 1 point, if they have almost no intersection, we assign 0 points, otherwise we assign 0.5 points
+\item for Q2 if $T_2$ and $D_1$ have at least almost full intersection, we assign 1 point, if they almost no intersection, we assign 0 points, otherwise we assign 0.5 points
+\item for Q3, if the size of the sets $D_2$ and $T_3$ is almost the same then we assign 1 point, if the size of $T_3$ is much less than the size of $D_2$, we assign 0 points, otherwise we assign 0.5 points
+\end{itemize}
+
+
+\noindent{}For example, consider the following domain description: \\
 
 \noindent{}\textit{A farmer is an individual engaged in agriculture identified uniquely by a name that is used to refer to the farmer from various documentation.} \\
 
 \noindent{}and consider the following description for the class \textit{farmer}: \\
 
-\noindent{}\textit{Farmer is an individual.} \\
+\noindent{}\textit{Farmer is an individual.}
 
-\noindent{}Then in Q2, the set $S_1$ contains the definition of the name of the \textit{farmer} and the set $S_2$ is empty therefore, these sets have no intersection and the answer to Q2 is \textit{yes}. For the Q3 the set $T_1$ contains the information that the class \textit{farmer} is an individual, engaged in agriculture, and identified by a name. The set $T_2$ contains only that the \textit{farmer} is an individual therefore, the sets have only a small intersection and the answer to the Q3 is \textit{no}.
+\begin{itemize}
+\item $T_1$ contains the whole domain description
+\item $T_3$ contains the following information: farmer is an individual, farmer is engaged in agriculture, farmer is identified uniquely by a name
+\item $T_2$ contains information from $T_3$ and also any general information about the class \textit{farmer}
+\item $D_1$ and $D_2$ contains the whole generated class description
+\end{itemize}
 
-%\noindent{}TODO: Napsat, že jako popis domény jsme použili \emph{zoological gardens-00} \\
+as a result we would assign:
 
-%\noindent{}TODO: Přidat výsledky měření a okomentovat je
+\begin{itemize}
+\item 1 point for Q1 since $D_1$ and $T_1$ almost fully intersects in other words, $D_1$ is solely based on the given domain description
+\item 1 point for Q2 since $|T_2 \cap D_1| = |D_1|$ in other words, $D_1$ contains information only about the given class and it does not describe its attributes and associations or does not contain any other undesired information
+\item 0 points for Q3 since the size of $D_2$ is much smaller than $T_3$ in other words, $D_1$ does not contain information such as \textit{farmer} is engaged in agriculture and has a name
+\end{itemize}
+
+For each question we divided the result by the number of classes based on the reference model of the given domain description. For evaluation, we used only a straightforward prompt without any prompting technique, we used none, semantic and syntactic RAG and we used only the domain description \emph{zoological gardens-00}.
+
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{lccc}
+     \toprule
+        & Q1 & Q2 & Q3 \\
+    \toprule
+    
+    \addlinespace
+         none       & 0.87 & 0.97 & 0.90 \\
+    	 semantic   & 0.83 & 0.90 & 0.90 \\
+         syntactic  & 0.93 & 0.93 & 0.93 \\
+    \addlinespace
+    \bottomrule
+    \addlinespace
+    \end{tabular}
+    \caption{Class description evaluation with \emph{Mixtral-8x7B}}
+    \label{tab:mixtral-classes-descriptions}
+\end{table}
+
+Table \ref{tab:mixtral-classes-descriptions} shows the results. As we can see, almost all generated class descriptions contained information solely based on the given domain description, provided only the relevant information based on the given class and did not miss any important information.
 
 
 \section{User-based evaluation of the application}

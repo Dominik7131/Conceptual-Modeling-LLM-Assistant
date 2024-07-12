@@ -1,7 +1,7 @@
 \chapter{User documentation}
 \label{chap:user_documentation}
 
-\noindent{}TODO: Chapter description
+In this chapter we show the user interface of our web application and describe how all our main LLM assistant features are used through the user interface.
 
 
 \section{Suggestions of classes, attributes and associations}
@@ -11,7 +11,7 @@ The domain modeling process usually starts by providing a domain description. We
 The domain description can be inserted in the text box on the topbar as shown in the picture \ref{fig:domain-description-text-box}:
 
 \begin{figure}[!h]
-    \includegraphics[scale=0.35]{../docs/images/frontend/insert-domain-description.png}
+    \includegraphics[scale=0.36]{../docs/images/frontend/insert-domain-description.png}
     \caption{\centering Text box for inserting the domain description}
     \label{fig:domain-description-text-box}
 \end{figure}
@@ -170,7 +170,7 @@ When a domain description is provided and when creating a domain model with the 
 For example, for a domain description about conference papers and the class \textit{conference} with the attributes \textit{year}, \textit{location}, \textit{name} as shown in the picture \ref{fig:class_example}.
 
 \begin{figure}[!h]
-    \includegraphics[scale=0.29]{../docs/images/frontend/class-example.png}
+    \includegraphics[scale=0.3]{../docs/images/frontend/class-example.png}
     \caption{\centering Example of class \textit{conference} with the attributes \textit{year}, \textit{location} and \textit{name}}
     \label{fig:class_example}
 \end{figure}
@@ -178,7 +178,7 @@ For example, for a domain description about conference papers and the class \tex
 The picture \ref{fig:highlight_all_example} shows one of the possible outputs of the \textit{Highlight original text} button.
 
 \begin{figure}[!h]
-    \includegraphics[scale=0.4]{../docs/images/frontend/highlight-all-example.png}
+    \includegraphics[scale=0.56]{../docs/images/frontend/highlight-all-example.png}
     \caption{\centering Example of highlighted original text in the domain description for the selected domain elements}
     \label{fig:highlight_all_example}
 \end{figure}
@@ -191,14 +191,20 @@ For simplicity, whenever the domain description changes the computed original te
 
 \section{Settings}
 
-\noindent{}TODO: Describe the settings tab
+\begin{figure}[!h]
+    \includegraphics[scale=0.46]{../docs/images/frontend/settings.png}
+    \caption{\centering Example of highlighted original text in the domain description for the selected domain elements}
+    \label{fig:settings_tab}
+\end{figure}
+
+Figure \ref{fig:settings_tab} shows the settings tab. It contains an option to let the assistant ignore the domain description. Underneath the style of the summary plain text can be changed as discussed in the section \ref{sec:summarising_domain_model} and last but not least, the RAG strategy can be changed.
+
 
 \section{Import and export}
 
 In our repository\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/docs/frontend-import-export.md}} there is also user documentation for importing and exporting a domain model both locally and with the Dataspecer tool\footnote{\url{https://dataspecer.com/}}.
 
+
 \section{Demos}
 
-Finally, in our repository\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/docs/frontend-user.md\#demos}} are also links for videos demonstrating the work with our application. \\
-
-\noindent{}TODO: Add references to the corresponding sections to connect it with the previous chapters.
+Finally, in our repository\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/docs/frontend-user.md\#demos}} are also links for videos demonstrating the work with our application.

@@ -1,13 +1,19 @@
 \chapter{Development documentation}
 \label{chap:development_documentation}
 
-Figure \ref{fig:complete_overview} shows the architecture of the whole software application. It consists of its own frontend and its own backend. The frontend is integrated with the Dataspecer tool\footnote{\url{https://dataspecer.com/}}. The backend is divided into the ``LLM assistant server'' component and the ``LLM server'' component.
+In this chapter first, we present the overall architecture of our software application. Then, for the frontend and the backend we describe the main libraries that we used and we describe our code structure. Finally, we show our LLM assistant server architecture and its work-flow.
+
+
+\section{Overall architecture}
+
+Figure \ref{fig:complete_overview} shows the architecture of the whole software application. It consists of its own frontend and its own backend. The frontend is integrated with the Dataspecer tool\footnote{\url{https://dataspecer.com/}}. The backend is divided into the \emph{LLM assistant server} component and the \emph{LLM server} component.
 
 \begin{figure}[!h]
     \includegraphics[scale=0.20]{../docs/images/architecture/complete-overview.png}
     \caption{\centering Complete architecture overview}
     \label{fig:complete_overview}
 \end{figure}
+
 
 \section{Frontend}
 
@@ -37,7 +43,7 @@ Figure \ref{fig:complete_overview} shows the architecture of the whole software 
 \item \textit{components} contain all the building blocks of the application, the main components are:
 \begin{itemize}
 \item \textit{ConceptualModel} for working with the domain model
-\item \textit{Topbar} and \textit{Sidebar} mainly for showing the user the suggestions from the LLM assistant
+\item \textit{Topbar} and \textit{Sidebar} mainly for displaying to the user the suggestions from the LLM assistant
 \end{itemize}
 \item \textit{definitions} contain definitions of the constant variables, interfaces, enums, and custom types, the most important scripts are:
 \begin{itemize}
@@ -49,9 +55,7 @@ Figure \ref{fig:complete_overview} shows the architecture of the whole software 
 \end{itemize}
 
 
-\noindent{}For additional information, see our frontend development documentation\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/docs/frontend-dev.md}}.
-
-For information about frontend installation see our fronted installation documentation\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/frontend/conceptual-model-editor-assistant/README.md\#how-to-run}}.
+\noindent{}For additional information, see our frontend development documentation\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/docs/frontend-dev.md}}. For information about frontend installation see our fronted installation documentation\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/frontend/conceptual-model-editor-assistant/README.md\#how-to-run}}.
 
 
 \section{Backend}
@@ -62,7 +66,7 @@ For information about frontend installation see our fronted installation documen
 \item Python\footnote{\url{https://www.python.org/}} version 3.10
 \end{itemize}
 
-\noindent{}The LLM server uses llama.cpp server\footnote{\url{https://github.com/ggerganov/llama.cpp/tree/master/examples/server}}. The LLM assistant server communicates with this server via OpenAI API\footnote{\url{https://github.com/openai/openai-openapi}}.
+\noindent{}The \emph{LLM server} uses llama.cpp server\footnote{\url{https://github.com/ggerganov/llama.cpp/tree/master/examples/server}}. The \emph{LLM assistant server} communicates with this server via OpenAI API\footnote{\url{https://github.com/openai/openai-openapi}}.
 
 
 \subsection{Code structure}
@@ -70,19 +74,17 @@ For information about frontend installation see our fronted installation documen
 \noindent{}The code is divided into these main directories:
 \begin{itemize}
 \item \textit{definitions} contain definitions of constant variables and enums
-\item \textit{text-filtering} contain the implementation of the semantic and syntactic RAG approach as described in the section \ref{texts_comparison}
+\item \textit{text-filtering} contain the implementation of the semantic and syntactic RAG approach
 \item \textit{utils} contain scripts used by the LLM assistant server
 \item \textit{tests} contain scripts for testing correctness of the implementation of some components
 \item \textit{data-processing} contain scripts for experimenting with different configurations such as different prompts, RAG approaches, LLMs, etc.
 \begin{itemize}
 \item scripts in the generation directory are used for generating test data
-\item scripts in the evaluation directory are used for evaluating the RAG approaches and for evaluating the generated domain elements
+\item scripts in the evaluation directory are used for evaluating the RAG approaches, the generated domain elements, and the generated descriptions
 \end{itemize}
 \end{itemize}
 
-\noindent{}For additional information and a more detailed description see our backend development documentation\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/docs/backend-dev.md}}.
-
-For backend installation see our backend installation documentation\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/backend/README.md}}.
+\noindent{}For additional information and a more detailed description see our backend development documentation\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/docs/backend-dev.md}}. For backend installation see our backend installation documentation\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/master/backend/README.md}}.
 
 
 \subsection{LLM assistant server architecture}
@@ -93,7 +95,7 @@ For backend installation see our backend installation documentation\footnote{\ur
     \label{fig:llm_assistant_server_containers}
 \end{figure}
 
-Figure \ref{fig:llm_assistant_server_containers} captures the architecture of the LLM assistant server. The work-flow of the LLM assistant server is the following. When the user is creating his domain model on the frontend he can call our LLM assistant server through the UI. When the LLM assistant server is called a corresponding method is called on the instance of the \textit{LLMAssistant} class from the \textit{utils/llm\_assistant.py} script. Now the following needs to be done:
+Now we describe the \emph{LLM assistant server} architecture shown on the picture \ref{fig:llm_assistant_server_containers} with the work-flow of the \emph{LLM assistant server}. When the user is creating his domain model on the frontend he can call our \emph{LLM assistant server} through the UI. When the \emph{LLM assistant server} is called a corresponding method is called on the instance of the \textit{LLMAssistant} class from the \textit{utils/llm\_assistant.py} script. Now the following tasks needs to be done:
 
 \begin{enumerate}
 \item get corresponding prompt template
@@ -103,6 +105,7 @@ Figure \ref{fig:llm_assistant_server_containers} captures the architecture of th
 \item show the output to the user
 \end{enumerate}
 
+
 \subsubsection{Prompt processing}
 
 The \textit{LLMAssistant} uses an instance of the \textit{PromptManager} class from \textit{utils/prompt\_manager.py} to find the corresponding prompt template.
@@ -111,9 +114,5 @@ Then the class \textit{Replacer} from \textit{utils/replacer.py} replaces the pr
 
 \subsubsection{LLM output processing}
 
-The \textit{LLMAssistant} uses the instance of the class \textit{LLMManager} from \textit{utils/llm\_manager.py} to send the prompt to the LLM server and to parse the output. If the outputted object contains original text then an instance of the class \textit{OriginalTextFinder} from \textit{utils/original\_text\_finder.py} is used to find its original text indexes to highlight to the user this object in the domain description. The class \textit{OriginalTextFinder} is able to recover from some minor mistakes which is tested inside the script \textit{tests/find\_original\_text\_indexes.py}
-also for consistency, we are automatically converting any generated name from any convention into the standard convention inside the script \textit{utils/convention\_convertor.py}. The correctness of this conversion is tested inside the \textit{tests/convention\_convertor.py} script. As soon as some object is generated by the LLM and approved by our scripts it is sent back to the user on the frontend for a faster response time. If the user wants to highlight the parts of his domain description that he already covered with his domain model then the instance of the class \textit{OriginalTextMerger} is used to merge all original text indexes. Correctness of the merging is tested in \textit{tests/merge\_original\_text\_indexes.py} \\
-
-\noindent{}TODO: Add references to the corresponding sections to connect it with the previous chapters. \\
-
-\noindent{}TODO: Try to connect it with the high-level architecture section
+The \textit{LLMAssistant} uses the instance of the class \textit{LLMManager} from \textit{utils/llm\_manager.py} to send the prompt to the \emph{LLM server} and to parse the output. If the outputted object contains original text then an instance of the class \textit{OriginalTextFinder} from \textit{utils/original\_text\_finder.py} is used to find its original text indexes to highlight to the user this object in the domain description. The class \textit{OriginalTextFinder} is able to recover from some minor mistakes which is tested inside the script \textit{tests/find\_original\_text\_indexes.py}
+also for consistency, we are automatically converting any generated name from any convention into the standard convention inside the script \textit{utils/convention\_convertor.py}. The correctness of this conversion is tested inside the \textit{tests/convention\_convertor.py} script. As soon as some object is generated by the LLM and approved by our scripts, it is sent back to the user on the frontend for a faster response time. If the user wants to highlight the parts of his domain description that he already covered with his domain model then the instance of the class \textit{OriginalTextMerger} is used to merge all original text indexes. Correctness of the merging is tested in \textit{tests/merge\_original\_text\_indexes.py}
