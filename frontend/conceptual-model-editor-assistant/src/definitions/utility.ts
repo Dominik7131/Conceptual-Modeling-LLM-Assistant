@@ -4,7 +4,7 @@ import { TextFilteringVariation } from "./textFilteringVariation"
 export const ORIGINAL_TEXT_ID = "highlightedOriginalText"
 export const NOTHING_SELECTED_MSG = "Please select some part of your conceptual model."
 
-export const TEXT_FILTERING_VARIATION_DEFAULT_VALUE = TextFilteringVariation.SYNTACTIC
+export const TEXT_FILTERING_VARIATION_DEFAULT_VALUE = TextFilteringVariation.SEMANTIC
 
 export const PRIMARY_COLOR = "#2196f3"
 export const BLACK_COLOR = "black"
