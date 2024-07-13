@@ -1,36 +1,7 @@
 \chapter{Prototype software application}
 \label{chap:protype_software_application}
 
-To empirically validate the feasibility of our proposed methodology, we developed a prototype application that implements the proposed configurations from the previous chapter.
-
-
-\section{High-level architecture}
-
-This application contains its frontend and its backend. The backend implements the generators and other services and provides them via an API. Users can use our frontend via a web application that communicates with the backend. On the backend, the LLM-assistant contains the following components:
-
-\begin{itemize}
-\item \emph{prompt manager} for fetching the prompt template based on the user input
-\item \emph{RAG processor} for filtering a domain description based on the given class name
-\item \emph{placeholder replacer} for replacing all placeholders in the prompt template with the input from the user
-\item \emph{LLM manager} for sending the prompt to the LLM and parsing the output
-\end{itemize}
-
-
-\subsection{Work-flow}
-
-On the frontend, through the user interface users can insert their input and then they can call some service provided by the backend. When the backend is called typically some generator is executed. First, the corresponding prompt template is retrieved by the \emph{prompt manager}. Then, all the prompt placeholders are replaced in the prompt template by the \emph{placeholder replacer}. For \emph{text to model generators} before the domain description is inserted, it can be filtered with some of the RAG technique by the \emph{RAG processor}. Subsequently, the assembled prompt is sent by the \emph{LLM manager} to the LLM and the output is parsed and optionally checked for mistakes. The approved output is then sent to the frontend and displayed to the user.
-
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.23]{img/work-flow.jpg}
-    \caption{\centering Schema of the flow of processing the textual domain description}
-    \label{fig:work-flow}
-\end{figure}
-
-Figure \ref{fig:work-flow} shows the basic flow of generating suggestions on the backend. The modeling process typically starts by providing the domain description. Then the domain model is step by step created mainly by using suggestions of classes, attributes, and associations from the assistant. Suggestions of attributes and associations are filtered by the selected retrieval-augmentation generation method. Then the prompt engineering techniques are applied and the final prompt is constructed and sent to LLM. Finally, the output from the LLM is parsed and the suggested model elements are sent back to the frontend. \\
-
-\noindent{}TODO: Tady před obrázkem a po obrázku říkám skoro to samé, takže by se to hodilo nějak spojit.
+To empirically validate the feasibility of our proposed methodology, we developed a prototype application that implements the framework with our proposed configurations from the previous chapter.
 
 
 \section{Assistant features}
@@ -93,6 +64,7 @@ The second limitation is that the semantically same domain elements with a diffe
 
 
 \subsection{Highlighting already modeled elements}
+\label{sec:highlighting_already_modeled_elements}
 
 We extend the mentioned highlighting of suggested domain elements in the domain description by highlighting all the selected user's modeled elements in the domain description. However, these highlighted parts do not have to always correspond with the parts that the user has already modeled as we only instruct the LLM to generate the context for each attribute and association. This means that this context can contain other classes, attributes, or associations. Consider the following example: \\
 

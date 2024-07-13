@@ -73,7 +73,7 @@ The \emph{main control instructions} aim to define the general task for each gen
 \item ``\textit{which all attributes does the class \{source\_class\} have?}''
 \end{itemize}
 
-The table \ref{tab:main-control-instructions} shows examples of our \emph{main control instructions}. The \emph{main control instruction} for $gen_a$ and $gen_{r1}$ contains the \textit{\{source\_class\}} placeholder for generating attributes and associations for a given class. The \emph{main control instruction} for the generator $gen_{r2}$ additionally contains the \textit{\{target\_class\}} placeholder for generating associations between the given source class and the given target class. Also, the generators for generating additional information such as the attributes description generator for classes, attributes, and associations contain these placeholders for getting information about the given domain elements. The \emph{main control instruction} for the summary generators contains the general task but also requires the LLM to cover each domain element in the provided domain model.
+The table \ref{tab:main_control_instructions} shows examples of our \emph{main control instructions}. The \emph{main control instruction} for $gen_a$ and $gen_{r1}$ contains the \textit{\{source\_class\}} placeholder for generating attributes and associations for a given class. The \emph{main control instruction} for the generator $gen_{r2}$ additionally contains the \textit{\{target\_class\}} placeholder for generating associations between the given source class and the given target class. Also, the generators for generating additional information such as the attributes description generator for classes, attributes, and associations contain these placeholders for getting information about the given domain elements. The \emph{main control instruction} for the summary generators contains the general task but also requires the LLM to cover each domain element in the provided domain model.
 Our main control instructions are always the same no matter the prompting technique as the prompting techniques do not change the general task of the prompt.
 
 
@@ -98,7 +98,7 @@ $gen_{r1}$ & which associations does the class: ``\{source\_class\}'' have? \\
 $gen_{r2}$ & which associations are explicitly between the source class ``\{source\_class\}'' and the target class ``\{target\_class\}''? \\
 \addlinespace
 
-$gen_{ad}$ & provide description for the attribute: ``\{attribute\_name\}'' of the class: ``\{source\_class\}''. \\
+$gen_{cd}$ & briefly in one sentence describe only the class: ``\{source\_class\}''. \\
 \addlinespace
 
 $gen_{sp}$ & summarize each given class, attribute and association \\
@@ -111,7 +111,7 @@ $gen_{sd}$ & generate descriptions only for the given classes, attributes and as
 	\addlinespace
 	\end{tabular}
 	\caption{Examples of the \emph{main control instructions}}
-	\label{tab:main-control-instructions}
+	\label{tab:main_control_instructions}
 \end{table}
 
 
@@ -260,11 +260,74 @@ Even though our defined generators do not solve the typical complex tasks that t
 
 \noindent{}``\textit{Imagine three different experts are \textbf{solving the given task}. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they are wrong at any point they leave.}'' \\
 
-\noindent{}The bold text shows the change we made to the original ToT prompting technique phrase. Also, we removed the last sentence from the original phrase which is the following: ``\textit{The question is}''.
+\noindent{}The bold text shows the change we made to the original ToT prompting technique phrase. Also, we removed the last sentence from the original phrase which is the following: ``\textit{The question is}''. For example, the following is an LLM generated output with \emph{Llama-3-70B} for \textit{aircraft manufacturing}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/d9e00b65a376dbefe5b605bd680621f9f63f9252/manual\%20evaluation\%20domains/aircraft\%20manufacturing/domain-description-02.txt}} domain description: \\
+
+\noindent{}\textit{Expert 1:
+My first step is to identify the main entities mentioned in the context. Based on the text, I think the following classes can be extracted:
+\{``name'': ``Party''\} \\
+\{``name'': ``Customer''\} \\
+\{``name'': ``Supplier''\} \\
+\{``name'': ``Aircraft''\} \\
+\{``name'': ``Part''\} \\
+\{``name'': ``AircraftModel''\} \\
+\{``name'': ``PartModel''\} \\
+\{``name'': ``Supply''\} \\~\\
+Expert 2:
+I agree with Expert 1, but I also think we can extract another class:
+\{``name'': ``Purchase''\} \\~\\
+Expert 3:
+I'm not sure about ``Purchase'' yet, but I think we can also extract:
+\{``name'': ``DesignModel''\} \\~\\
+(All experts proceed to the next step) \\~\\
+Expert 1: \\
+My next step is to analyze the relationships between the entities. Based on the text, I think we can confirm the following classes: \\
+\{``name'': ``Party''\} \\
+\{``name'': ``Customer''\} \\
+\{``name'': ``Supplier''\} \\
+\{``name'': ``Aircraft''\} \\
+\{``name'': ``Part''\} \\
+\{``name'': ``AircraftModel''\} \\
+\{``name'': ``PartModel''\} \\
+\{``name'': ``Supply''\} \\~\\
+Expert 2: \\
+I still think ``Purchase'' is a valid class, but I also agree with Expert 1's analysis. Additionally, I think we can extract: \\
+\{``name'': ``SerialNumber''\} \\~\\
+Expert 3: \\
+I'm starting to think that ``DesignModel'' might not be a separate class, but rather an attribute of ``PartModel''. However, I do agree with the other experts' analysis. \\~\\
+(All experts proceed to the next step) \\~\\
+Expert 1: \\
+My next step is to review the text again and see if we've missed any classes. I think we've got a good list so far: \\
+\{``name'': ``Party''\} \\
+\{``name'': ``Customer''\} \\
+\{``name'': ``Supplier''\} \\
+\{``name'': ``Aircraft''\} \\
+\{``name'': ``Part''\} \\
+\{``name'': ``AircraftModel''\} \\
+\{``name'': ``PartModel''\} \\
+\{``name'': ``Supply''\} \\
+\{``name'': ``SerialNumber''\} \\~\\
+Expert 2: \\
+I still think ``Purchase'' is a valid class, but I'm starting to doubt it. I agree with Expert 1's review. \\~\\
+Expert 3: \\
+I'm out. I was wrong about ``DesignModel'' being a separate class. \\
+(Expert 3 leaves the group) \\~\\
+Expert 1: \\
+My final step is to review the list one more time. I think we've got a good list of classes: \\
+\{``name'': ``Party''\} \\
+\{``name'': ``Customer''\} \\
+\{``name'': ``Supplier''\} \\
+\{``name'': ``Aircraft''\} \\
+\{``name'': ``Part''\} \\
+\{``name'': ``AircraftModel''\} \\
+\{``name'': ``PartModel''\} \\
+\{``name'': ``Supply''\} \\
+\{``name'': ``SerialNumber''\} \\~\\
+Expert 2: \\
+I agree with Expert 1's final list. I was wrong about ``Purchase'' being a separate class.} \\
+
+As we can see, first, the LLM created a preliminary list of classes and then it reasoned about the classes it was not certain about. In one of the steps, the class \textit{DesignModel} was removed as the LLM thought that it is rather an attribute of the class \textit{PartModel} which is a valid reasoning. \\
 
 We do not experiment with any iterative prompting technique as this would significantly increase the response time of our application as discussed in the section \ref{sec:iterative_prompting}.
-
-% Possible iterative technique for generating classes: we could generate multiple lists of class suggestions with multiple prompts. Then we could apply some operation to these lists such as intersection or unification. Or for example, we could remove only those classes that appeared in only one list.
 
 
 \section{Domain description pre-processing}
@@ -336,3 +399,27 @@ The syntactic approach uses a language model that converts each domain descripti
 \noindent{}``\textit{Application of registration needs to be provided.}'' \\
 
 \noindent{}If the strict lemmas order was enforced then this chunk would be classified as irrelevant for the source class \textit{registration application} which is undesired behavior. For more implementation details for both of these approaches see the section \ref{sec:rag_implementation}.
+
+
+\section{High-level architecture}
+
+Now we describe the reference high-level architecture of the framework. The framework should consist of the frontend and the backend. The frontend should communicate with the backend that should implement the LLM assistant services and should provide them via API. The backend should contain at least the following components:
+
+\begin{itemize}
+\item \emph{RAG processor} for filtering a domain description based on the given class name
+\item \emph{prompt manager} for fetching the corresponding prompt template based on the user input
+\item \emph{placeholder replacer} for replacing all placeholders in the prompt template with the input from the user
+\item \emph{LLM manager} for sending the prompt to the LLM and parsing the output
+\end{itemize}
+
+
+\subsection{Work-flow}
+
+The figure \ref{fig:work-flow} contains an overview of the architecture work-flow. On the frontend through the user interface the users should be able to insert their input and then call some service provided by the backend. When the backend is called typically some generator is executed. First, for the \emph{text to model generators} the domain description can be filtered using some RAG technique implemented by the \emph{RAG processor} component. Then, the corresponding prompt template should be retrieved by the \emph{prompt manager} component and some prompt engineering techniques can be used. Subsequently, all the prompt placeholders should be replaced in the prompt template by the \emph{placeholder replacer} component. Then, the assembled prompt should be sent by the \emph{LLM manager} to some LLM and the output should be parsed and can be checked for mistakes. The approved parsed output should be then sent to the frontend and displayed to the user.
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[scale=0.23]{img/work-flow.jpg}
+    \caption{\centering Schema of the flow of processing the textual domain description}
+    \label{fig:work-flow}
+\end{figure}

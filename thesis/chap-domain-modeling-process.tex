@@ -7,7 +7,7 @@ A domain model $M = (\mathcal{C}, \mathcal{P})$ consists of a set of classes $\m
 
 A class $C \in \mathcal{C}$ has its $name(C)$ which identifies $C$ in $M$ and briefly characterizes the semantics of $C$. The class $C$ also has a $description(C)$ that describes the semantics of $C$.
 
-A Property $P \in \mathcal{P}$ has also $name(P)$ and $description(P)$ used for the same purposes. It has a $cardinality(P)$ that refers to the specification of the number of instances of one domain element that can or must be associated with each instance of some class. It also has a source class, such that $source(P) \in \mathcal{C}$ and it can have a target class such that $target(P) \in \mathcal{C}$. $P$ is a binary association if $target(P)$ is defined otherwise, $P$ is an attribute. If $P$ is an attribute then it also has $dataType(P)$ which defines the data type of $P$.
+A property $P \in \mathcal{P}$ has also $name(P)$ and $description(P)$ used for the same purposes. It has a $cardinality(P)$ that refers to the specification of the number of instances of one domain element that can or must be associated with each instance of some class. It also has a source class, such that $source(P) \in \mathcal{C}$ and it can have a target class such that $target(P) \in \mathcal{C}$. $P$ is a binary association if $target(P)$ is defined otherwise, $P$ is an attribute. If $P$ is an attribute then it also has $dataType(P)$ which defines the data type of $P$.
 
 These basic modeling constructs are prevalent in real conceptual models \cite{Keet2015}, so their automation could have a significant impact. We distinguish the following steps.
 

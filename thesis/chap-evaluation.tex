@@ -1,7 +1,7 @@
 \chapter{Experimental evaluation}
 \label{chap:evaluation}
 
-Now we evaluate the proposed configurations from the chapter \ref{chap:framework_configuration} that we implemented in the chapter \ref{chap:protype_software_application}. First, we describe the data that we used for evaluation. Then, we evaluate our RAG approaches, the generated suggestions of domain elements, and the generated descriptions. Finally, we present results of our user-based evaluation of our prototype application.
+Now we evaluate the proposed configurations from the chapter \ref{chap:framework_configuration} that we implemented in the chapter \ref{chap:protype_software_application}. First, we describe the data that we used for evaluation. Then, we evaluate our RAG approaches, the generated suggestions of domain elements, and the generated descriptions. Finally, we present results of our user-based evaluation of our prototype application. All our evaluated data can be found in the \textit{evaluation} directory\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/evaluation}}.
 
 
 \section{Evaluation domains}
@@ -116,26 +116,32 @@ In the syntactic approach, the naive pronouns detection improves the recall sign
 
 The semantic approach almost matches the recall of the no-filtering approach but it has a higher precision. The naive pronouns approach slightly increases the recall while maintaining the same precision.
 
-Overall, when recall is the most important then the no-filtering approach or the semantic approach can be used. On the other hand, when precision is the most important and we do not care about losing some domain element suggestions then the syntactic approach is the most suitable.
+Overall, when recall is the most important then the no-filtering approach or the semantic approach can be used. Therefore, in our application the semantic approach is selected as the default setting. On the other hand, when precision is the most important and we do not care about losing some domain element suggestions then the syntactic approach is the most suitable.
 
 
 \section{Selected LLMs}
 
 Running a LLM requires a lot of resources, therefore frequently using a LLM through some API can cost a lot of money. Thus, we run open-source LLMs locally with LLaMA.cpp server\footnote{\url{https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md}}. Our hardware is limited to a single NVIDIA A100 40GB GPU.
 
+
 \subsection{Limitations}
 
-Because of our hardware limitation we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium-sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter.
+Because of our hardware limitation we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium-sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter. To compare these LLMs with currently one of the best LLM, we use \textit{ChatGPT-4o} through the OpenAI's web user interface. However, as there is a limit on how many times it can be used and as we cannot connect this LLM into our application directly, we used this LLM only for evaluation of generated classes. Also, we cannot set the LLM's temperature.
 
 
 \subsection{Mixtral-8x7B}
 
-Mixtral-8x7B has the context window size of 32k tokens and it outperforms or matches ChatGPT-3.5 across many benchmarks \cite{Jiang2024}. This LLM has in total 47B parameters, which are distributed among 8 experts. To achieve faster output generation, for each generated token 2 of the 8 experts are selected. The selection of the experts can be different for each token \cite{Jiang2024}.
+\emph{Mixtral-8x7B} has the context window size of 32k tokens and it outperforms or matches \emph{ChatGPT-3.5} across many benchmarks \cite{Jiang2024}. This LLM has in total 47B parameters, which are distributed among 8 experts. To achieve faster output generation, for each generated token 2 of the 8 experts are selected. The selection of the experts can be different for each token \cite{Jiang2024}.
 
 
 \subsection{Llama-3-70B}
 
-Llama-3-70B has an 8k tokens context window size and as of writing this thesis, it is the state-of-the-art LLM at the 70B parameters scale\footnote{\url{https://ai.meta.com/blog/meta-llama-3/}}.
+\emph{Llama-3-70B} has an 8k tokens context window size and as of writing this thesis, it is the state-of-the-art LLM at the 70B parameters scale according to its authors\footnote{\url{https://ai.meta.com/blog/meta-llama-3/}}.
+
+
+\subsection{ChatGPT-4o}
+
+\emph{ChatGPT-4o} is an OpenAI's LLM that has 128k context window size according to the OpenAI's documentation\footnote{\url{https://platform.openai.com/docs/models/gpt-4o}}. OpenAI states that it is their most advanced model however, the number of parameters is not officially published.
 
 
 %\section{Limitations}
@@ -380,7 +386,7 @@ At first, our proposed techniques do not show any significant improvement but wh
 
 \subsection{Classes evaluation results}
 
-For generating class suggestions by the generator $gen_c$ the table \ref{tab:mixtral-classes} shows results for the \emph{Mixtral-8x7B} and the table \ref{tab:llama-classes} shows results for the \emph{Llama-3-70B}.
+For generating class suggestions by the generator $gen_c$ the table \ref{tab:mixtral-classes} shows results for the \emph{Mixtral-8x7B}, the table \ref{tab:llama-classes} shows results for the \emph{Llama-3-70B}, and the table \ref{tab:chatgpt-classes} shows result for the \emph{ChatGPT-4o}.
 
 \begin{table}[!h]
     \scriptsize
@@ -396,9 +402,9 @@ For generating class suggestions by the generator $gen_c$ the table \ref{tab:mix
     \addlinespace
          baseline    & 0.49 & 0.99 & 0.66 \\
     	 CoT         & 0.38 & 0.99 & 0.55 \\
-         N-shot      & 0.55 & 0.89 & \textbf{0.68} \\
+         N-shot      & 0.65 & 0.84 & \textbf{0.73} \\
          CoT+N-shot  & 0.45 & 0.96 & 0.61 \\
-         ToT         & 0.46 & 0.98 & 0.63 \\
+         ToT         & 0.53 & 0.99 & 0.69 \\
     \addlinespace
     \bottomrule
     \addlinespace
@@ -422,9 +428,9 @@ For generating class suggestions by the generator $gen_c$ the table \ref{tab:mix
     \addlinespace
          baseline    & 0.63 & 0.98 & \textbf{0.77} \\
     	 CoT         & 0.46 & 0.99 & 0.63 \\
-         N-shot      & 0.51 & 0.98 & 0.67 \\
+         N-shot      & 0.54 & 0.99 & 0.70 \\
          CoT+N-shot  & 0.48 & 0.94 & 0.64 \\
-         ToT         & 0.28 & 0.99 & 0.44 \\
+         ToT         & 0.54 & 0.96 & 0.69 \\
     \addlinespace
     \bottomrule
     \addlinespace
@@ -448,19 +454,19 @@ For generating class suggestions by the generator $gen_c$ the table \ref{tab:mix
     \addlinespace
          baseline    & 0. & 0. & 0. \\
          N-shot      & 0. & 0. & 0. \\
+         ToT         & 0. & 0. & 0. \\
     \addlinespace
     \bottomrule
     \addlinespace
     \end{tabular}
     \caption{Generated classes evaluation with ChatGPT-4o strict variation only}
-    \label{tab:llama-classes}
+    \label{tab:chatgpt-classes}
 \end{table}
 
 \noindent{}TODO: Describe results \\
 
-\noindent{}TODO: Try to show some results for ChatGPT-3.5 and ChatGPT-4o \\
 
-%The common thing is that approaches with CoT achieve high recall but low recall which is than translated into low $F_1$ score.
+%The common thing is that approaches with CoT achieve high recall but low recall which is than translated into low $F_1$ score + vysvětlení, že jediný generuje jako první original text.
 
 
 \subsection{Overall evaluation}
@@ -515,31 +521,30 @@ The eclectic and complex domain descriptions show more variability in performanc
 Both benefit from introducing RAG which shows that diverse and less structured domain descriptions benefit from RAG even for large Llama.
 
 
-\section{Descriptions evaluation}
+\section{Class descriptions evaluation}
 
-We evaluated only generated class descriptions based on the following questions:
+We evaluated generated class descriptions based on the following questions:
 
 \begin{enumerate}
 \item [Q1:] Is the generated description solely based on the given domain description?
 \item [Q2:] Is the generated description semantically corresponding to the given domain element?
-\item [Q3:] Does the description not miss any useful information?
+\item [Q3:] Is the generated description not missing any useful information?
 \end{enumerate}
 
 \noindent{}To limit subjectivity of the evaluation, we define the following sets:
 
 \begin{itemize}
-\item $T_1$ containing information about the given class solely based on the given domain description
-\item $T_2$ containing information about the given class but not detailed information about its attributes and associations
-\item $T_3 = T_1 \cap T_2$
-\item $D_1$ containing information from the generated class description based on the given class and the given domain description
-\item $D_2 = D_1 \cap T_1 \cap T_2$
+\item $T_1 =$ set containing information about the given class solely based on the given domain description
+\item $T_2 =$ set containing the same information as $T_1$ except for detailed information about attributes and associations of the given class
+\item $D_1 =$ set containing information from the generated class description based on the given class and the given domain description
+\item $D_2 = D_1 \cap T_2 =$ set containing information from the generated class description but without the generated class information that were not solely based on the given class and that contained unrelated information to the given class
 \end{itemize}
 
 \noindent{}and we define the following rules:
 \begin{itemize}
-\item for Q1 if $T_1$ and $D_1$ have at least almost full intersection, we assign 1 point, if they have almost no intersection, we assign 0 points, otherwise we assign 0.5 points
-\item for Q2 if $T_2$ and $D_1$ have at least almost full intersection, we assign 1 point, if they almost no intersection, we assign 0 points, otherwise we assign 0.5 points
-\item for Q3, if the size of the sets $D_2$ and $T_3$ is almost the same then we assign 1 point, if the size of $T_3$ is much less than the size of $D_2$, we assign 0 points, otherwise we assign 0.5 points
+\item for Q1 if $T_1$ and $D_1$ at least almost fully overlap, we assign 1 point, if they have almost no overlap, we assign 0 points, otherwise we assign 0.5 points
+\item for Q2 if the $D_1$ mostly contains information that are related to the given class, we assign 1 point, if the $D_1$ mostly contains unrelated information to the given class, we assign 0 points, otherwise we assign 0.5 points; by related information we mean the information describing the given class but not describing its attributes and associations in detail
+\item for Q3, if $T_2$ and $D_2$ at least almost fully overlap, we assign 1 point, if they have almost no overlap, we assign 0 points, otherwise we assign 0.5 points
 \end{itemize}
 
 
@@ -553,43 +558,47 @@ We evaluated only generated class descriptions based on the following questions:
 
 \begin{itemize}
 \item $T_1$ contains the whole domain description
-\item $T_3$ contains the following information: farmer is an individual, farmer is engaged in agriculture, farmer is identified uniquely by a name
-\item $T_2$ contains information from $T_3$ and also any general information about the class \textit{farmer}
+\item $T_2$ contains the following information: farmer is an individual, farmer is engaged in agriculture, farmer is identified uniquely by a name
 \item $D_1$ and $D_2$ contains the whole generated class description
 \end{itemize}
 
-as a result we would assign:
+\noindent{}As a result we would assign:
 
 \begin{itemize}
-\item 1 point for Q1 since $D_1$ and $T_1$ almost fully intersects in other words, $D_1$ is solely based on the given domain description
-\item 1 point for Q2 since $|T_2 \cap D_1| = |D_1|$ in other words, $D_1$ contains information only about the given class and it does not describe its attributes and associations or does not contain any other undesired information
-\item 0 points for Q3 since the size of $D_2$ is much smaller than $T_3$ in other words, $D_1$ does not contain information such as \textit{farmer} is engaged in agriculture and has a name
+\item 1 point for Q1 since $D_1$ and $T_1$ almost fully overlaps in other words, $D_1$ is solely based on the given domain description
+\item 1 point for Q2 since $D_1$ contains information only about the given class and it does not describe its attributes and associations or does not contain any other undesired information
+\item 0 points for Q3 since the overlap of $T_2$ and $D_2$ is very small in other words, $D_1$ is missing a lot of useful information from the domain description such as the class \textit{farmer} is engaged in agriculture and has a name
 \end{itemize}
 
-For each question we divided the result by the number of classes based on the reference model of the given domain description. For evaluation, we used only a straightforward prompt without any prompting technique, we used none, semantic and syntactic RAG and we used only the domain description \emph{zoological gardens-00}.
+For each question we summed up all assigned points and divided the result by the total number of classes in the reference model of the given domain description. For evaluation, we used on a simple prompt instructing the LLM to briefly describe the given class in one sentence. For the RAG we used no-filtering, semantic, and syntactic approach and we used only the \emph{zoological gardens}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/d9e00b65a376dbefe5b605bd680621f9f63f9252/manual\%20evaluation\%20domains/zoological\%20gardens/domain-description-00.txt}} domain description.
 
 \begin{table}[!h]
     \scriptsize
     \centering
     \setlength{\tabcolsep}{0.5em}
-    \begin{tabular}{lccc}
+    \begin{tabular}{lcccc}
      \toprule
-        & Q1 & Q2 & Q3 \\
+        RAG approach & Q1 & Q2 & Q3 & Average \\
     \toprule
     
     \addlinespace
-         none       & 0.87 & 0.97 & 0.90 \\
-    	 semantic   & 0.83 & 0.90 & 0.90 \\
-         syntactic  & 0.93 & 0.93 & 0.93 \\
+         none       & 0.87 & 0.97 & 0.90 & 0.91 \\
+    	 semantic   & 0.83 & 0.90 & 0.90 & 0.88 \\
+         syntactic  & 0.93 & 0.93 & 0.93 & \textbf{0.93} \\
     \addlinespace
     \bottomrule
     \addlinespace
     \end{tabular}
-    \caption{Class description evaluation with \emph{Mixtral-8x7B}}
+    \caption{Class descriptions evaluation with \emph{Mixtral-8x7B}}
     \label{tab:mixtral-classes-descriptions}
 \end{table}
 
-Table \ref{tab:mixtral-classes-descriptions} shows the results. As we can see, almost all generated class descriptions contained information solely based on the given domain description, provided only the relevant information based on the given class and did not miss any important information.
+Table \ref{tab:mixtral-classes-descriptions} shows the results. As we can see, almost all evaluated class descriptions contained information solely based on the given domain description, provided only the relevant information based on the given class and did not miss any important information. As the baseline approach without RAG achieves already a high score, the RAG does not seem to provide any significant improvement for generating class descriptions. Therefore, we did not use any other LLM to evaluate the same task.
+
+
+\subsection{Limitations}
+
+The limitations of the class descriptions evaluation are that for each RAG approach we evaluated only 15 class descriptions as the this task needs to be done manually. Also, we used only one simpler domain description that contains a little bit bellow 1000 words.
 
 
 \section{User-based evaluation of the application}
