@@ -1,0 +1,10 @@
+Generated class,Matches class,Matches attribute,Matches association
+Conference,conference,,
+Research Paper,research paper,,
+Submission,submission,,
+Author,author,,
+Reviewer,reviewer,,
+Person,person,,
+Review,review,,
+Affiliation,*,,
+Corresponding Author,*,,

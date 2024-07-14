@@ -1,0 +1,5 @@
+Solely based on the given context briefly in one sentence describe only the class: "{source_class}".  Output the description in this JSON object: {"description": "brief description of the class"}.
+
+		
+This is the given context:
+"{domain_description}"

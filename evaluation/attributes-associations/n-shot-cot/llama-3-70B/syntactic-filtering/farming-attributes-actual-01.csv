@@ -1,0 +1,49 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+name,farmer,is identified uniquely by a name,,name,
+machinery,farmer,own machinery,machinery,,*
+age,farmer,The age of a farmer in years,,age,
+fields,farmer,farm on fields,field,,farms on
+harvest,farmer,evaluates the harvest's quality and quantity of the harvested crop,harvest,,harvested by
+harvest date,farmer,The specific date or period when the harvest is collected,,,
+type,crop,"Crops are plants cultivated in large amounts for profit or subsistence, including cereals, oil seeds, vegetables, and fruits.",,*,
+variety,crop,The cultivated variety of a crop is a critical classification.,,cultivated variety,
+botanical taxon,crop,"It is a plant grouping, within a single botanical taxon of the lowest known rank, defined by the reproducible expression of its distinguishing and other genetic characteristics.",,*,
+subcategory,crop,"Vegetables and fruits are subcategories of crops, with vegetables including plants cultivated for their parts consumable by humans or other animals as food.",,*,
+cultivation requirements,crop,"...particular crops, highlighting the variety of crops and their cultivation requirements during the planting process.",,*,
+quantity,crop,"...the total quantity of the harvest, measured in kilograms, is crucial for determining the productivity and success of the crop.",,*,
+capacity,machinery,"machinery, which reflects their capacity for mechanized farming",,*,
+type,machinery,"Machinery encompasses mechanical tools and equipment crucial for tasks such as plowing, seeding, and harvesting",,*,
+year of manufacturing,machinery,The year of manufacturing and model of the machinery indicate its age and potential modernity in technology,,year of manufacturing,
+model,machinery,The year of manufacturing and model of the machinery indicate its age and potential modernity in technology,,model,
+usage,machinery,It is important to know that a specific piece of machinery is used for planting,planting,,used for planting
+usage,machinery,a piece of machinery can be used for harvesting,harvest,,used for harvesting
+usage,machinery,"a piece of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting",,,used for field preparation
+subtype,machinery,machinery like planters and some types of tractors that are specifically outfitted for or used during the planting of crops,,*,
+subtype,machinery,"machinery like combines, harvesters, and other equipment that is primarily utilized to collect and process crops at the end of their growing cycle",,*,
+origin,harvest,"a harvest, establishing a critical link for tracing agricultural output back to its origins",,,results in harvest
+farmer,harvest,The harvested crops are connected to the farmer responsible for the harvest,farmer,,harvested by
+quality,harvest,who evaluates the harvest's quality and quantity of the harvested crop,,quality,
+quantity,harvest,who evaluates the harvest's quality and quantity of the harvested crop,,quantity,
+date,harvest,The specific date or period when the harvest is collected,,harvest date,
+size,harvest,"the quality of the harvest, which may include factors like size, ripeness, nutritional value, and absence of pests or diseases",,*,
+ripeness,harvest,"the quality of the harvest, which may include factors like size, ripeness, nutritional value, and absence of pests or diseases",,*,
+nutritional value,harvest,"the quality of the harvest, which may include factors like size, ripeness, nutritional value, and absence of pests or diseases",,*,
+absence of pests or diseases,harvest,"the quality of the harvest, which may include factors like size, ripeness, nutritional value, and absence of pests or diseases",,*,
+total quantity,harvest,"the total quantity of the harvest, measured in kilograms",,quantity,
+description,field,Fields are areas of land used for growing crops that can but does not have to be surrounded by a fence and are described by several characteristics.,,*,
+irrigation system,field,"The availability of irrigation systems and the type of irrigation used (e.g., drip, sprinkler, or flood) is vital for planning water usage and can impact crop selection and planting schedules based on the water needs of the crops.",,irrigation availability,
+location,field,"The geographical location of the field, which can include specific GPS coordinates or a general description (e.g., near a certain landmark), helps in locating the field for logistical purposes and for understanding its geographical and climatic context.",,location,
+soil ph,field,The soil's pH and type affect crop health and dictate the types of amendments needed for optimal growth.,,soil ph,
+soil type,field,"The type of soil present in the field, such as loamy, sandy, clay, or silt affects water retention, nutrient availability, and the types of crops that can be successfully cultivated.",,soil type,
+size,field,"The size of the field, which measures the total area of the field, typically in hectares, is fundamental for crop distribution planning, while the physical layout affects water drainage and machinery suitability.",,size,
+topography,field,"The topography of the field describes the physical layout of the land, including its flatness, slope, and elevation.",,topography,
+field,planting,"Planting represents the agricultural activity of planting crops in a specific field during a specific year, capturing the details of the process.",field,,performed on
+year,planting,"Planting represents the agricultural activity of planting crops in a specific field during a specific year, capturing the details of the process.",,planting date,
+harvest,planting,"Each planting activity results in a harvest, establishing a critical link for tracing agricultural output back to its origins, which aids in analyzing planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.",harvest,,results in harvest
+crops,planting,"Planting activities are performed on specific fields where it occurs, indicating the location of agricultural operations and facilitating field-specific crop management, and involve particular crops, highlighting the variety of crops and their cultivation requirements during the planting process.",crop,,involves crop
+date,planting,"The exact date or period of planting is also documented, essential for managing the agricultural cycle.",,planting date,
+irrigation system,planting,"The availability of irrigation systems and the type of irrigation used (e.g., drip, sprinkler, or flood) is vital for planning water usage and can impact crop selection and planting schedules based on the water needs of the crops.",,*,
+location,planting,"The geographical location of the field, which can include specific GPS coordinates or a general description (e.g., near a certain landmark), helps in locating the field for logistical purposes and for understanding its geographical and climatic context.",,*,
+machinery,planting,It is important to know that a specific piece of machinery is used for planting.,machinery,,used for planting
+planter,planting,This links machinery like planters and some types of tractors that are specifically outfitted for or used during the planting of crops.,planter,,used for planting
+tractor,planting,"Finally, a piece of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting.",tractor,,used for field preparation

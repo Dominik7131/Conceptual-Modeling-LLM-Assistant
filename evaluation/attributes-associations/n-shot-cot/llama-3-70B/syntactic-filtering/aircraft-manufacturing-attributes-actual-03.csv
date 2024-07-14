@@ -1,0 +1,19 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+serial number,aircraft,Every aircraft is unique and can be identified by its serial number.,,aircraft serial number,
+manufacturing date,aircraft,The manufacturing date tells us when the aircraft was made.,,manufacturing date,
+aircraft model,aircraft,"every aircraft is designed as a specific aircraft model, indicating the design it follows.",aircraft model,,designed as
+parts,aircraft,"The aircraft is made up of multiple parts, each an individual component used in its construction.",part,,consists of
+serial number,part,every part has a serial number,,part serial number,
+description,part,and a brief description to understand what it is,,part description,
+part model,part,"These parts are designed as part models, linking each part to its specific design model",part model,,designed as part model
+client,customer,the clients who purchase the finished aircraft,,,
+customer name,customer,"Each customer has a unique aspect, their customer name",,customer name,
+user,customer,the ones who use the final product,,,*
+model,aircraft model,every aircraft is designed as a specific aircraft model,aircraft,,designed as
+model code,aircraft model,each with a unique model code,,aircraft model code,
+description,aircraft model,and a detailed description,,aircraft model description,
+incorporates,aircraft model,an aircraft model incorporates various part models in its design,part model,,incorporates
+model number,part model,with a unique model number,,part model number,
+description,part model,and a brief description to explain what it is,,part model description,
+description,party,"party, representing a generic subject involved in the aircraft manufacturing process",,,
+party code,party,party code,,party code,

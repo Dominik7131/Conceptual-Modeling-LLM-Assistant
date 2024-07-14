@@ -1,0 +1,252 @@
+Class: college
+- original text: Colleges, as the highest element in the education system, are the ultimate centres of learning, independent knowledge and creative activity and play a key role in the scientific, cultural, social and economic development of society.
+
+
+Class: legal person
+- original text: legal person
+
+
+Class: study programme
+- original text: study programmes
+
+
+Class: lifelong learning programme
+- original text: lifelong learning programmes
+
+
+Class: bachelor study programme
+- original text: bachelor The Bachelor's degree study programme is aimed at preparing students for the profession and for study in a Master's degree programme. The standard period of study, including work experience, is a minimum of three and a maximum of four years. Graduates of bachelor's degree programmes are awarded the academic degree of 'Bachelor' (abbreviated as 'B.Sc.' before their name) and, in the field of arts, the academic degree of 'Bachelor of Arts' (abbreviated as 'B.A.' before their name).
+
+
+Class: master study programme
+- original text: master The Master's degree study programme is aimed at acquiring theoretical and practical knowledge based on the current state of scientific knowledge, research and development, at mastering their application and at developing skills for creative activity; in the field of art, it is focused on demanding artistic training and the development of talent. The Master's degree programme is a follow-up to the Bachelor's degree programme; the standard duration of this programme is at least one and not more than three years. The following academic degrees are awarded to graduates of master's degree programmes: (a) in the fields of economics, technical sciences and technology, agriculture, forestry and military science, 'engineer' (abbreviated 'Ing.' before the name), (b) in the field of architecture, 'engineer architect' (abbreviated 'Ing. arch. ' before the name), (c) in general medicine, 'Doctor of Medicine' (abbreviated 'M.D.' before the name), (d) in the field of dentistry, 'Doctor of Dental Medicine' (abbreviated MDDr. before the name), (e) in the field of veterinary medicine and veterinary hygiene, 'Doctor of Veterinary Medicine' (abbreviated 'MVDr.' before the name), (f) in the arts, 'Master of Arts' (abbreviated 'MgA.' before the name), (g) in other fields, 'Master' (abbreviated 'Mgr.' before the name).
+
+
+Class: doctoral study programme
+- original text: doctoral The doctoral study programme focuses on scientific research and independent creative activity in the field of research or development or on independent theoretical and creative activity in the field of art. The standard period of study shall be at least three and not more than four years. Graduates of doctoral programmes shall be awarded the academic degree of 'doctor' (abbreviated 'Ph.D.' after their name).
+
+
+Class: university
+- original text: A university college (or shortly a university) may carry out all types of study programmes and related scientific and research, development and innovation, artistic or other creative activities (hereinafter referred to as 'creative activities').
+
+
+Class: non university college
+- original text: A non-university college may carry out bachelor's degree programmes and may also carry out master's degree programmes and related creative activities. A non-university college shall not be divided into faculties.
+
+
+Class: public college
+- original text: public
+
+
+Class: private college
+- original text: private
+
+
+Class: state owned college
+- original text: state-owned
+
+
+Class: military college
+- original text: military or police college
+
+
+Class: police college
+- original text: police college
+
+
+Class: academic staff
+- original text: Academic staff is a natural person who is a full professors, associate professors, extraordinary professors, assistant professors, assistant lecturers, lecturers and scientific, research and development staff who are employees of the college carrying out both teaching and creative activities in an employment relationship according to the agreed type of work. Academic staff are obliged to uphold the reputation of the college.
+
+
+Class: employee
+- original text: employees of the college carrying out both teaching and creative activities in an employment relationship according to the agreed type of work
+
+
+Class: other professional
+- original text: Other professionals may also participate in teaching at the college on the basis of agreements on work performed outside the employment relationship.
+
+
+Class: body
+- original text: bodies
+
+
+Class: public college body
+- original text: The self-governing academic bodies of a public college shall be
+
+
+Class: self governing academic body
+- original text: The self-governing academic bodies of a public college shall be
+
+
+Class: academic senate
+- original text: The academic senate of a public college is its self-governing representative academic body. It shall have at least eleven members, of whom at least one third and no more than one half shall be student members, and the rest shall be staff members. The members of the academic senate of a public college shall be elected from among the members of the academic community of the public college.
+
+
+Class: academic community
+- original text: academic community made up of its academic staff and students enrolled in its study programmes
+
+
+Class: student
+- original text: A student is a natural person who is enrolled in a study program.
+
+
+Class: natural person
+- original text: a natural person a natural person
+
+
+Class: academic senate elections
+- original text: Elections to the academic senate shall be direct, with a secret ballot.
+
+
+Class: academic community member
+- original text: members of the academic community
+
+
+Class: rector
+- original text: The rector is the head of the public college. It is a member of the academic community of the public college elected in rector's elections. The rector acts and decides on the affairs of the college, unless otherwise provided by law. In cases where a special regulation provides for the competence of the statutory body, the rector shall exercise it. The term of office of the rector shall be four years. The office of rector may be held by the same person at the same public college for a maximum of two consecutive terms.
+
+
+Class: scientific council
+- original text: The scientific council of a public college
+
+
+Class: internal evaluation board
+- original text: the internal evaluation board
+
+
+Class: disciplinary board
+- original text: the disciplinary board of a public college
+
+
+Class: board of trustees
+- original text: The board of trustees of a public college
+
+
+Class: bursar
+- original text: The bursar manages the management and internal administration of the public higher education institution and represents it to the extent determined by a measure of the rector.
+
+
+Class: faculty
+- original text: A faculty implements at least one accredited study programme and carries out creative activities.
+
+
+Class: subject
+- original text: Subject of study The subject
+
+
+Class: curriculum
+- original text: Their sequence in time within the study programme is determined by the curriculum of the study programme.
+
+
+Class: form of study
+- original text: The forms of study
+
+
+Class: full time form of study
+- original text: For the full-time form of study, the curriculum is created within the framework of a programme of study in such a way that the largest part of instruction takes the form of lectures, tutorials, seminars, courses, practical training, laboratory classes, consultation, and other similar forms of instruction, which are held according to a regular schedule, which will be usually a weekly schedule; they enable students to acquire knowledge directly.
+
+
+Class: combined form of study
+- original text: For the combined form of study, the curriculum is created within the programme of study based on the assumption that study takes a form which employs the principles of both full-time and distance learning study.
+
+
+Class: distance learning form of study
+- original text: For the distance learning form of study, the curriculum is created within the framework of the programme of study based on the assumption that study is offered in the distance form of instruction, and that teachers usually perform the role of consultant.
+
+
+Class: single field study programme
+- original text: A study programme belongs to only one field of education if the state examinations or the dissertation defence verify profiling knowledge or skills in the basic subject areas belonging to one field of education.
+
+
+Class: combined study programme
+- original text: A study programme is a combined programme of study that belongs to more fields of education if the state examinations or, where appropriate, the dissertation defence test profiling knowledge or skills in the core subject areas belonging to more than one field of education.
+
+
+Class: education field
+- original text: A field of education is a defined section of higher education within which study programmes of close or related content are prepared, approved and implemented, reflecting a common theoretical and methodological basis of the given field of education. There are the following areas of education: Architecture and Urban Planning, Security, Biology, Ecology and Environment, Transport, Economics, Electrical Engineering, Energy, Pharmacy, Philosophy, Religious Studies and Theology, Physics, Historical Sciences, Chemistry, Computer Science, Cybernetics, Forestry and Wood Science, Mathematics, Media and Communication Studies, Non-teaching Pedagogy, Political Science, Food Science, Law, Psychology, Social Work, Sociology, Civil Engineering, Engineering, Technology and Materials, Physical Education and Sport; Kinanthropology, Mining and Mineral Processing, Teaching, Arts, Arts and Cultural Sciences, Earth Sciences, Veterinary Medicine, Veterinary Hygiene, General Medicine and Dentistry.
+
+
+Class: bachelor state final examination
+- original text: state final examination, which usually includes the defense of the bachelor's thesis
+
+
+Class: bachelor studies
+- original text: The studies of a student in the Bachelor's degree study programme
+
+
+Class: bachelor thesis defense
+- original text: the defense of the bachelor's thesis
+
+
+Class: master studies
+- original text: The studies of a student in the Master's degree study programme
+
+
+Class: master state final examination
+- original text: state final examination, which includes the defence of the diploma thesis
+
+
+Class: diploma thesis defense
+- original text: the defence of the diploma thesis
+
+
+Class: individual study plan
+- original text: an individual study plan
+
+
+Class: supervisor
+- original text: A supervisor is an academic staff who is a scientific expert in the field.
+
+
+Class: doctoral studies
+- original text: The studies of a student in the doctoral programme
+
+
+Class: state doctoral examination
+- original text: a state doctoral examination
+
+
+Class: dissertation defense
+- original text: public defense of the dissertation
+
+
+Class: dissertation
+- original text: The dissertation must contain original and published results or results accepted for publication and it shall demonstrate the ability and readiness for independent research or development activities or independent theoretical and creative artistic activity.
+
+
+Class: subject board
+- original text: a subject board
+
+
+Class: elective subjects group
+- original text: groups of elective subjects in the curricula
+
+
+Class: subject completion assessment
+- original text: Assessment of completion of the study of a subject means the verification of completion of the subject by the student.
+
+
+Class: colloquium
+- original text: colloquium
+
+
+Class: course credit
+- original text: course credit
+
+
+Class: graded course credit
+- original text: graded course credit In contrast to course credit, a graded course credit denotes, in the same way as an examination, how well the student fulfilled the requirements for being granted the credit.
+
+
+Class: course test
+- original text: course test
+
+
+Class: examination
+- original text: examination An examination tests the student’s knowledge or his ability; the basic requirements for the examination are in accordance with the curriculum provided in the description of the subject and published in electronic form.
+
+
+Class: remote subject completion assessment
+- original text: If justified or purposeful, it is possible to perform the assessment of study of a subject remotely, either in part or in full, using information and communication technologies, providing that it is possible to verify the identity of the student and to ensure compliance with the rules set for the given assessment of study of the subject.
+
+

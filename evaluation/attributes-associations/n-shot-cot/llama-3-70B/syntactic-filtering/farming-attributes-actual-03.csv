@@ -1,0 +1,43 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+occupation,farmer,"an individual who engages in the activity of agriculture, growing and harvesting crops",,*,
+name,farmer,"Each farmer can be identified by a name, which uniquely identifies the farmer",,name,
+age,farmer,A farmer's age is also recorded,,age,
+machinery,farmer,Farmers own and use various pieces of machinery,,,*
+planting activities,farmer,they are responsible for specific planting activities,planting,,conducts planting
+fields,farmer,a farmer farms on one or more fields to grow crops,field,,farms on
+harvests,farmer,Each harvest is connected to the farmer who performed the harvest,harvest,,harvested by
+crop evaluations,farmer,who is also responsible for evaluating the quality and quantity of the harvested crop,harvest,,*
+type,crop,"crops are plants grown in large amounts and cultivated by farmers for profit or subsistence, such as cereals, oil seeds, vegetables, and fruits.",,*,
+category,crop,"Each crop can be a fruit, vegetable, seed plant, or cereal, with each category having specific characteristics and uses.",-cereal;fruit;vegetable;seed plant,,*
+botanical taxon,crop,"A plant grouping within a single botanical taxon of the lowest known rank, defined by the reproducible expression of its distinguishing and other genetic characteristics is a key characterization of the crop.",,*,
+variety,crop,the crop involved in planting is key to understanding the crop variety and its cultivation requirements during the planting process.,,cultivated variety,
+quantity,crop,"The quantity of the harvest is measured in kilograms, and the quality may include factors like size, ripeness, nutritional value, and absence of pests or diseases.",,*,
+quality,crop,"The quality of the harvest may include factors like size, ripeness, nutritional value, and absence of pests or diseases.",,*,
+type,machinery,various types of machinery,,*,
+equipment,machinery,mechanical tools and equipment used in farming,,,
+model,machinery,"Specific types of machinery include tractors, planters, harvestors, and sprayers",,model,
+model,machinery,"We also need to identify the model of the machinery, which affects its functionality and suitability for specific tasks",,model,
+year manufactured,machinery,"The year the machinery was manufactured, indicating its age and potential modernity in technology",,year of manufacturing,
+purpose,machinery,machinery used for field preparation,,,used for field preparation
+purpose,machinery,machinery used for planting,,,used for planting
+purpose,machinery,machinery used for harvesting,,,used for harvesting
+production,harvest,"Harvest is the production obtained from crops, quantified and evaluated in terms of quantity and quality, representing the final output of the agricultural cycle.",,,results in harvest
+quantity,harvest,"The quantity of the harvest is measured in kilograms, and the quality may include factors like size, ripeness, nutritional value, and absence of pests or diseases.",,quantity,
+quality,harvest,"The quantity of the harvest is measured in kilograms, and the quality may include factors like size, ripeness, nutritional value, and absence of pests or diseases.",,quality,
+date,harvest,The specific date or time period when the harvest was collected is crucial for maximizing yield and ensuring the best quality of the harvested product.,,harvest date,
+farmer,harvest,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",farmer,,harvested by
+size,field,"Fields are areas of land used for growing crops,  and can vary in size, typically measured in hectares.",,size,
+topography,field,"The soil type, soil pH, and the field's topography are critical for understanding how to manage each field.",,topography,
+soil type,field,"The soil type affects water retention and nutrient availability, while soil pH influences crop health and productivity.",,soil type,
+soil ph,field,"The soil type affects water retention and nutrient availability, while soil pH influences crop health and productivity.",,soil ph,
+irrigation availability,field,"Fields also have specific features like irrigation availability and a defined location, which can include specific GPS coordinates.",,irrigation availability,
+location,field,"Fields also have specific features like irrigation availability and a defined location, which can include specific GPS coordinates.",,location,
+fenced,field,Fields can be but does not have to be surrounded by a fence.,,*,
+crop management,field,The knowledge of the field where the planting is performed on is important as an indication of the location of agricultural operations and facilitating field-specific crop management.,,*,
+activity,planting,planting represents the agricultural activity of planting crops in a specific field during a specific year,,,
+crop,planting,"specific crops, with each planting activity associated with a particular crop",crop,,involves crop
+field,planting,occurring on a specific field where the planting is performed,field,,performed on
+date,planting,the exact date or period when the crop was planted,,planting date,
+location,planting,the knowledge of the field where the planting is performed on is important as an indication of the location of agricultural operations,field,,performed on
+harvest,planting,A specific planting activity can result into the subsequent harvest it produces,harvest,,results in harvest
+machinery,planting,Machinery used for planting refers to the employment of specific pieces of machinery in the planting process,machinery,,used for planting

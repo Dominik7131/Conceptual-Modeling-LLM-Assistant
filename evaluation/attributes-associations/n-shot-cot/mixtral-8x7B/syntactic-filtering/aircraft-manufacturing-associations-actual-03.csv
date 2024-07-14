@@ -1,0 +1,13 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+provides,part,supplier,part,entities that provide parts for aircraft manufacturing,supplier,,*
+supplies,part,supply,part,"a supplier provides a supply, a range of different parts essential for building aircraft",supply,,includes
+part of,part,party,part,"Both customers and suppliers are part of a larger group called party, representing a generic subject involved in the aircraft manufacturing process. This means that anyone, whether they are buying the finished aircraft or supplying parts, falls under this broad category.",,,
+designed as,part,part,part model,"These parts are designed as part models, linking each part to its specific design model.",part model,,designed as part model
+includes,part,supply,part,"The includes relationship indicates that the supply includes specific parts, showing what components are provided for the aircraft's construction.",supply,,includes
+provides,supplier,supplier,parts,"Suppliers play a crucial role in providing the necessary components needed to build an aircraft. In contrast, supplies represents a relationship where a supplier provides a supply, a range of different parts essential for building aircraft.",part,,*
+part of,supplier,supplier,party,"Both customers and suppliers are part of a larger group called party, representing a generic subject involved in the aircraft manufacturing process.",party,,*
+provides,supply,supplier,supply,"supplies represents a relationship where a supplier provides a supply, a range of different parts essential for building aircraft.",supplier,,supplies
+designed as,aircraft model,aircraft,aircraft model,"every aircraft is designed as a specific aircraft model, indicating the design it follows",aircraft,,designed as
+incorporates,aircraft model,aircraft model,part model,an aircraft model incorporates various part models in its design,part model,,incorporates
+designed as,part model,part,part model,"These parts are designed as part models, linking each part to its specific design model.",part,,designed as part model
+incorporates,part model,aircraft model,part model,"Furthermore, there's a crucial concept called incorporates, indicating that an aircraft model incorporates various part models in its design.",aircraft model,,incorporates

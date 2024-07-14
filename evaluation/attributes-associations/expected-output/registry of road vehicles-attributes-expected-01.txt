@@ -1,0 +1,300 @@
+Class: road vehicle
+1) vehicle identification number
+- original text: A road vehicle is uniquely identified by its vehicle identification number
+
+
+2) purpose
+- original text: the purpose for which the road vehicle is intended, which is a taxi service vehicle, a vehicle with right of way, a car rental vehicle for hire, a vehicle for general use, or a vehicle for the operation of road transport for hire by its operator
+
+
+3) factory mark
+- original text: the manufacturer's factory mark as specified by the road vehicle manufacturer
+
+
+4) trade name
+- original text: the trade name if specified by the road vehicle manufacturer
+
+
+5) type
+- original text: the type as specified by the road vehicle manufacturer and the variant and version if specified by the road vehicle manufacturer.
+
+
+6) dimensions
+- original text: the overall dimensions of the road vehicle
+
+
+7) coupling device type
+- original text: the type of coupling device built into the motorised road vehicle
+
+
+Class: vehicle
+1) vehicle category
+- original text: A vehicle category is a group of vehicles which have the same technical conditions laid down in an implementing regulation. Road vehicles and special vehicles are divided into categories L, M, N, O, T, C, R, S and Z. the category of road vehicle
+
+
+Class: motorised road vehicle
+1) max technically permissible weight
+- original text: the maximum technically permissible weight
+
+
+2) max permissible weight
+- original text: the maximum permissible weight and the maximum permissible operating weight of the motorised road vehicle
+
+
+3) max permissible operating weight
+- original text: the maximum permissible operating weight of the motorised road vehicle
+
+
+4) max technically permissible weight per axle
+- original text: maximum technically permissible weight per axle
+
+
+5) max permissible weight per axle
+- original text: the maximum permissible weight per axle
+
+
+6) max technically permissible trailer mass
+- original text: the maximum technically permissible mass of the trailer
+
+
+7) max permissible trailer mass
+- original text: the maximum permissible mass of the trailer
+
+
+8) max technically permissible combination mass
+- original text: the maximum technically permissible mass of the combination
+
+
+9) max permissible combination mass
+- original text: the maximum permissible mass of the combination
+
+
+Class: natural person
+1) name
+- original text: name name
+
+
+2) first name
+- original text: first and last names first and last names
+
+
+3) last name
+- original text: last names last names
+
+
+4) permanent residence address
+- original text: the address of his permanent residence the address of permanent residence
+
+
+5) long term residence address
+- original text: long-term residence long-term residence
+
+
+6) temporary residence address
+- original text: temporary residence of at least 6 months or other authorised residence temporary residence of at least 6 months or other authorised residence
+
+
+7) birth number
+- original text: birth number
+
+
+8) birth date
+- original text: date of birth
+
+
+9) asylum granted
+- original text: has been granted asylum
+
+
+Class: business natural person
+1) business name
+- original text: business name the business name
+
+
+2) distinguishing supplement
+- original text: distinguishing supplement
+
+
+3) office address
+- original text: the address of the registered office the registered office
+
+
+4) personal identification number
+- original text: the personal identification number personal identification number
+
+
+Class: legal person
+1) business name
+- original text: business name the business name
+
+
+2) office address
+- original text: the address of the registered office the registered office
+
+
+3) personal identification number
+- original text: the personal identification number personal identification number
+
+
+Class: legal person branch
+1) branch location
+- original text: the location of the branch
+
+
+Class: registration plate
+1) registration identifier
+- original text: the numberic or alphanumeric registration identifier on the registration plate that uniquely identifies the road vehicle within the registration country
+
+
+2) registration plate assignment date
+- original text: the date on which the registration plate was assigned.
+
+
+Class: registration certificate
+1) certificate number
+- original text: the number of the certificate which identifies the certificate
+
+
+2) first registration date
+- original text: the date of the first registration of the road vehicle which can be a registration in the same or another country
+
+
+3) last registration state
+- original text: the state of the last registration of the road vehicle
+
+
+4) last registration certificate number
+- original text: the number of the registration certificate of the road vehicle or similar document issued in the state of last registration
+
+
+5) last registration plate identifier
+- original text: the identifier on the registration plate assigned to the road vehicle on the last registration, if the state of last registration is different
+
+
+6) registration date
+- original text: the date of registration of the road vehicle
+
+
+Class: third party insurance
+1) notification date
+- original text: the date of notification of data by the Insurers' Bureau
+
+
+2) commencement date
+- original text: the date of commencement of insurance
+
+
+3) interruption period
+- original text: the period of interruption of insurance
+
+
+4) change date
+- original text: the date of change of insurance
+
+
+5) termination date
+- original text: the date of termination of insurance
+
+
+Class: engine
+1) engine type
+- original text: the type of engine specified by the manufacturer of the road vehicle
+
+
+2) engine power
+- original text: the engine power specified by the road vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines
+
+
+3) engine displacement
+- original text: the displacement of the internal combustion engine as specified by the manufacturer of the road vehicle in cm3
+
+
+4) fuel type
+- original text: the fuel type of the road vehicle
+
+
+Class: bodywork
+1) bodywork type
+- original text: type
+
+
+2) bodywork serial number
+- original text: serial number
+
+
+3) bodywork color
+- original text: colour
+
+
+4) number of seats
+- original text: number of seats and standing places or beds
+
+
+5) loading dimensions
+- original text: dimensions of the loading area
+
+
+6) volume
+- original text: volume of the box or tank
+
+
+Class: technical inspection
+1) technical inspection type
+- original text: the type of technical inspection carried out
+
+
+2) technical inspection date
+- original text: the date on which the technical inspection was carried out
+
+
+3) technical inspection validity
+- original text: the date of validity of the technical inspection
+
+
+4) other operations date
+- original text: the date on which the road vehicle was brought in for the other checking operations
+
+
+5) recorded travelled distance
+- original text: the distance travelled on the odometer recorded during the technical inspection
+
+
+Class: insurance contract
+1) insurance duration
+- original text: the duration of the insurance
+
+
+2) benefit limit
+- original text: the limit of the insurance benefit
+
+
+3) premium amount
+- original text: the amount of the premium
+
+
+4) maturity
+- original text: maturity
+
+
+5) payment method
+- original text: method of payment
+
+
+6) notification
+- original text: the form and place of notification of the claim
+
+
+Class: emission measurement
+1) date of emission measurement
+- original text: the date on which the emission measurement was carried out
+
+
+Class: inspection sticker
+1) next inspection month
+- original text: month and year of the next periodic technical inspection of the road vehicle
+
+
+2) next inspection year
+- original text: year of the next periodic technical inspection of the road vehicle
+
+

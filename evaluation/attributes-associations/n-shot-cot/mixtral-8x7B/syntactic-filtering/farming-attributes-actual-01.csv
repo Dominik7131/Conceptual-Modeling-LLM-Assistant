@@ -1,0 +1,89 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+activities,farmer,"engaged in agriculture, growing and harvesting crops",,,
+identifier,farmer,identified uniquely by a name,,name,
+machinery,farmer,machinery,machinery,,*
+occupation,crop,"engaged in agriculture, growing and harvesting crops, and is identified uniquely by a name",,,
+fields,crop,"fields, indicating the location of agricultural operations and facilitating field-specific crop management",,,
+age,crop,age of a farmer in years,,,
+planting,crop,planting represents the agricultural activity of planting crops in a specific field during a specific year,planting,,involves crop
+harvest,crop,"harvest is the production obtained from crops, quantified and evaluated in terms of quantity and quality",harvest,,*
+total quantity,crop,"total quantity of the harvest, measured in kilograms",,,
+area of land,crop,fields are areas of land used for growing crops that can but does not have to be surrounded by a fence,,,
+irrigation,crop,availability of irrigation systems and the type of irrigation used,,,
+geographical location,crop,geographical location of the field,,,
+soil,crop,soil's pH and type,,*,
+size,crop,size of the field,,*,
+topography,crop,topography of the field,,,
+tractors,crop,"tractors, as a subclass of machinery",,,*
+planters,crop,planters are specifically designed to plant seeds efficiently,,,*
+sprayers,crop,sprayers are used for the precise application of liquids like pesticides,,,*
+year and model,crop,year of manufacturing and model of the machinery,,,
+planting machinery,crop,machinery like planters and some types of tractors that are specifically outfitted for or used during the planting of crops,,,*
+harvesting machinery,crop,"machinery like combines, harvesters, and other equipment that is primarily utilized to collect and process crops at the end of their growing cycle",,,*
+cultivated variety,crop,cultivated variety of a crop,,cultivated variety,
+vegetables and fruits,crop,vegetables and fruits are subcategories of crops,+:vegetable;:fruit,,*
+vegetables,crop,vegetables including plants cultivated for their parts consumable by humans or other animals as food,vegetable,,*
+farming capacity,machinery,"machinery, which reflects their capacity for mechanized farming, and conduct planting activities, crucial for management and accountability.",,*,
+field size,machinery,"size of the field, which measures the total area of the field, typically in hectares, is fundamental for crop distribution planning",,,
+topography,machinery,"topography of the field describes the physical layout of the land, including its flatness, slope, and elevation",,*,
+tasks,machinery,"machinery encompasses mechanical tools and equipment crucial for tasks such as plowing, seeding, and harvesting",,*,
+tractor type,machinery,"Tractors, as a subclass of machinery, are versatile and essential for multiple farming tasks, from soil preparation to crop maintenance",tractor,,*
+harvester type,machinery,Harvesters is a specialized machinery that is used for harvesting,harvester,,*
+manufacturing year and model,machinery,"The year of manufacturing and model of the machinery indicate its age and potential modernity in technology, and influencing its functionality and suitability for specific tasks",,+year of manufacturing;model,
+used for planting,machinery,It is important to know that a specific piece of machinery is used for planting,planting,,used for planting
+used for harvesting,machinery,"Similarly, a piece of machinery can be used for harvesting",harvest,,used for harvesting
+used for field preparation,machinery,"a piece of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting",field,,used for field preparation
+activity,harvest,"engaged in agriculture, growing and harvesting crops, and is identified uniquely by a name",,,
+link,harvest,"a harvest, establishing a critical link for tracing agricultural output back to its origins",,,
+production,harvest,"the production obtained from crops, quantified and evaluated in terms of quantity and quality",,-quality;quantity,
+connection,harvest,harvested crops are connected to the farmer responsible for the harvest,farmer,,harvested by
+date,harvest,specific date or period when the harvest is collected,,harvest date,
+quality,harvest,high-quality harvests are crucial for market acceptance and consumer satisfaction,,quality,
+quantity,harvest,"total quantity of the harvest, measured in kilograms",,quantity,
+machinery,harvest,"machinery encompasses mechanical tools and equipment crucial for tasks such as plowing, seeding, and harvesting",machinery,,used for harvesting
+harvester,harvest,harvesters is a specialized machinery that is used for harvesting,harvester,,:used for harvesting
+combined tasks,harvest,"machinery that combines tasks such as reaping, threshing, and winnowing, into a single operation",,,
+harvesting machinery,harvest,piece of machinery can be used for harvesting,machinery,,used for harvesting
+end-use,harvest,primarily utilized to collect and process crops at the end of their growing cycle,,,
+location,field,"fields, where it occurs, indicating the location of agricultural operations and facilitating field-specific crop management",,location,
+process details,field,capturing the details of the process,,,
+year,field,specific field during a specific year,,,
+crops,field,particular crops,crop,,*
+planting date,field,exact date or period of planting,,,
+land for crops,field,areas of land used for growing crops,,,
+fence,field,surrounded by a fence,,*,
+characteristics,field,several characteristics,,*,
+irrigation systems,field,availability of irrigation systems,,irrigation availability,
+irrigation type,field,type of irrigation used,,*,
+geographical location,field,geographical location,,location,
+gps coordinates,field,specific GPS coordinates,,location,
+description,field,a general description,,location,
+landmark,field,near a certain landmark,,*,
+soil ph and type,field,pH and type of the soil,,+soil ph;soil type,
+amendments,field,types of amendments needed,,*,
+soil types,field,"loamy, sandy, clay, or silt",,soil type,
+field area,field,total area of the field,,size,
+layout,field,physical layout,,topography,
+water drainage,field,water drainage,,*,
+machinery suitability,field,machinery suitability,,*,
+topography,field,"flatness, slope, and elevation",,topography,
+machinery types,field,types of agricultural machinery,,*,
+field preparation,field,"plowing, tilling, and conditioning",,,
+machinery,planting,"machinery, which reflects their capacity for mechanized farming",machinery,,-used for planting;used for field preparation
+planting activities,planting,"planting activities, crucial for management and accountability",,,
+fields,planting,"fields, undertaking not only crop cultivation but also soil preparation",field,,performed on
+specific field,planting,specific field during a specific year,field,,performed on
+harvest,planting,"harvest, establishing a critical link for tracing agricultural output back to its origins",harvest,,results in harvest
+location,planting,location of agricultural operations,field,,performed on
+particular crops,planting,"particular crops, highlighting the variety of crops and their cultivation requirements",crop,,involves crop
+exact date,planting,exact date or period of planting,,planting date,
+irrigation systems,planting,availability of irrigation systems and the type of irrigation used,,*,
+geographical location,planting,geographical location of the field,,*,
+planters,planting,planters are specifically designed to plant seeds efficiently,planter,,*
+machinery used for planting,planting,piece of machinery used for planting,machinery,,used for planting
+machinery with attachments,planting,"machinery, such as tractors equipped with specific attachments",,,
+crops,planting,crops are plants cultivated in large amounts for profit or subsistence,crop,,involves crop
+cultivated variety,planting,cultivated variety of a crop,,*,
+vegetables,planting,vegetables including plants cultivated for their parts consumable by humans or other animals as food,vegetable,,*
+seed plants,planting,"seed plants, grown for oil production from seeds",seed plant,,*
+cereal,planting,cereal as a plant cultivated for its edible grain,cereal,,*

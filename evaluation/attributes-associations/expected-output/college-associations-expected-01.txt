@@ -1,0 +1,808 @@
+Class: college
+1) participates in activities of
+- original text: Other legal persons engaged in the educational and creative activities may also participate in such activities of a college.
+- source class: legal person
+- target class: college
+
+
+2) employed at
+- original text: employees of the college carrying out both teaching and creative activities in an employment relationship according to the agreed type of work
+- source class: employee
+- target class: college
+
+
+3) participates in teaching
+- original text: Other professionals may also participate in teaching at the college
+- source class: other professional
+- target class: college
+
+
+4) structured into
+- original text: A college is structured into its bodies.
+- source class: college
+- target class: body
+
+
+5) has academic community
+- original text: A college has its own academic community
+- source class: college
+- target class: academic community
+
+
+6) is head of
+- original text: The rector is the head of the public college.
+- source class: rector
+- target class: college
+
+
+7) divided into
+- original text: A public college is divided into faculties.
+- source class: college
+- target class: faculty
+
+
+Class: legal person
+1) participates in activities of
+- original text: Other legal persons engaged in the educational and creative activities may also participate in such activities of a college.
+- source class: legal person
+- target class: college
+
+
+Class: study programme
+1) implements study programme
+- original text: A faculty implements accredited study programmes
+- source class: faculty
+- target class: study programme
+
+
+2) enrolled in
+- original text: A student is a natural person who is enrolled in a study program.
+- source class: student
+- target class: study programme
+
+
+3) taught within
+- original text: Subject of study shall be taught within the study programme.
+- source class: subject
+- target class: study programme
+
+
+4) has curriculum
+- original text: the curriculum of the study programme
+- source class: study programme
+- target class: curriculum
+
+
+5) has study programme guarantor
+- original text: For study programmes carried out by a faculty, the faculty appoints and dismisses a study programme guarantor from among its academic staff according to the rules laid down in the internal regulations of the college. The guarantor may only be an academic staff who meets the conditions laid down in the standards for accreditation of the study programme for the proper performance of activities. Only an associate professor, a full professor or an extraordinary professor who is an academic staff member of the college concerned may be the guarantor of a master's degree programme and a doctoral degree programme. The degree programme guarantor shall, in particular, coordinate the content of the degree programme, supervise the quality of its implementation, evaluate the degree programme and develop it.
+- source class: study programme
+- target class: academic staff
+
+
+6) belongs to field
+- original text: A study programme belongs to only one field of education study programme is a combined programme of study that belongs to more fields of education
+- source class: study programme
+- target class: education field
+
+
+Class: lifelong learning programme
+1) implements lifelong learning programme
+- original text: A faculty implements accredited study programmes and lifelong learning programmes
+- source class: faculty
+- target class: lifelong learning programme
+
+
+Class: bachelor study programme
+1) studies in bachelor study programme
+- original text: The studies of a student in the Bachelor's degree study programme
+- source class: bachelor studies
+- target class: bachelor study programme
+
+
+Class: master study programme
+1) studies in master study programme
+- original text: The studies of a student in the Master's degree study programme
+- source class: master studies
+- target class: master study programme
+
+
+Class: doctoral study programme
+1) studies in doctoral study programme
+- original text: The studies of a student in the doctoral programme
+- source class: doctoral studies
+- target class: doctoral study programme
+
+
+Class: academic staff
+1) is staff member of academic community
+- original text: The academic staff and students are members of the academic community.
+- source class: academic staff
+- target class: academic community
+
+
+2) has staff member
+- original text: It shall have at least eleven members, of whom at least one third and no more than one half shall be student members, and the rest shall be staff members. The members of the academic senate of a public college shall be elected from among the members of the academic community of the public college. Membership of the academic senate of a public college is incompatible with the office of rector, vice-rector, bursar, dean, vice-dean, faculty secretary and director of the college. The term of office of individual members of the academic senate of a public college shall be for a maximum of three years.
+- source class: academic senate
+- target class: academic staff
+
+
+3) elected as staff senate member in
+- original text: The members of the academic senate of a public college shall be elected from among the members of the academic community of the public college
+- source class: academic staff
+- target class: academic senate elections
+
+
+4) has internal evaluation board vice chairperson
+- original text: The vice-chairperson of the board shall be appointed by the rector from among the academic staff of the public college who are professors or associate professors of the college.
+- source class: internal evaluation board
+- target class: academic staff
+
+
+5) has study programme guarantor
+- original text: For study programmes carried out by a faculty, the faculty appoints and dismisses a study programme guarantor from among its academic staff according to the rules laid down in the internal regulations of the college. The guarantor may only be an academic staff who meets the conditions laid down in the standards for accreditation of the study programme for the proper performance of activities. Only an associate professor, a full professor or an extraordinary professor who is an academic staff member of the college concerned may be the guarantor of a master's degree programme and a doctoral degree programme. The degree programme guarantor shall, in particular, coordinate the content of the degree programme, supervise the quality of its implementation, evaluate the degree programme and develop it.
+- source class: study programme
+- target class: academic staff
+
+
+6) carried out by examiner
+- original text: The assessment of the study is carried out by an examiner, who is always an academic member of staff.
+- source class: subject completion assessment
+- target class: academic staff
+
+
+Class: employee
+1) employed at
+- original text: employees of the college carrying out both teaching and creative activities in an employment relationship according to the agreed type of work
+- source class: employee
+- target class: college
+
+
+Class: other professional
+1) participates in teaching
+- original text: Other professionals may also participate in teaching at the college
+- source class: other professional
+- target class: college
+
+
+Class: body
+1) structured into
+- original text: A college is structured into its bodies.
+- source class: college
+- target class: body
+
+
+Class: academic senate
+1) has staff member
+- original text: It shall have at least eleven members, of whom at least one third and no more than one half shall be student members, and the rest shall be staff members. The members of the academic senate of a public college shall be elected from among the members of the academic community of the public college. Membership of the academic senate of a public college is incompatible with the office of rector, vice-rector, bursar, dean, vice-dean, faculty secretary and director of the college. The term of office of individual members of the academic senate of a public college shall be for a maximum of three years.
+- source class: academic senate
+- target class: academic staff
+
+
+2) has student member
+- original text: It shall have at least eleven members, of whom at least one third and no more than one half shall be student members, and the rest shall be staff members. The members of the academic senate of a public college shall be elected from among the members of the academic community of the public college. Membership of the academic senate of a public college is incompatible with the office of rector, vice-rector, bursar, dean, vice-dean, faculty secretary and director of the college. The term of office of individual members of the academic senate of a public college shall be for a maximum of three years.
+- source class: academic senate
+- target class: student
+
+
+3) elections to
+- original text: Elections to the academic senate
+- source class: academic senate elections
+- target class: academic senate
+
+
+4) has chairperson
+- original text: The academic senate shall have a chairperson, who shall be one of its academic staff members.
+- source class: academic senate
+- target class: academic community member
+
+
+Class: academic community
+1) has academic community
+- original text: A college has its own academic community
+- source class: college
+- target class: academic community
+
+
+2) is staff member of academic community
+- original text: The academic staff and students are members of the academic community.
+- source class: academic staff
+- target class: academic community
+
+
+3) is student member of academic community
+- original text: The academic staff and students are members of the academic community.
+- source class: student
+- target class: academic community
+
+
+4) is member of academic community
+- original text: members of the academic community
+- source class: academic community member
+- target class: academic community
+
+
+Class: student
+1) is student member of academic community
+- original text: The academic staff and students are members of the academic community.
+- source class: student
+- target class: academic community
+
+
+2) enrolled in
+- original text: A student is a natural person who is enrolled in a study program.
+- source class: student
+- target class: study programme
+
+
+3) has student member
+- original text: It shall have at least eleven members, of whom at least one third and no more than one half shall be student members, and the rest shall be staff members. The members of the academic senate of a public college shall be elected from among the members of the academic community of the public college. Membership of the academic senate of a public college is incompatible with the office of rector, vice-rector, bursar, dean, vice-dean, faculty secretary and director of the college. The term of office of individual members of the academic senate of a public college shall be for a maximum of three years.
+- source class: academic senate
+- target class: student
+
+
+4) elected as student senate member in
+- original text: The members of the academic senate of a public college shall be elected from among the members of the academic community of the public college
+- source class: student
+- target class: academic senate elections
+
+
+5) bachelor studies of a student
+- original text: The studies of a student in the Bachelor's degree study programme
+- source class: bachelor studies
+- target class: student
+
+
+6) master studies of a student
+- original text: The studies of a student in the Master's degree study programme
+- source class: master studies
+- target class: student
+
+
+7) doctoral studies of a student
+- original text: The studies of a student in the doctoral programme
+- source class: doctoral studies
+- target class: student
+
+
+8) registers to subject
+- original text: A student registers to the subjects
+- source class: student
+- target class: subject
+
+
+9) assesses completion by
+- original text: Assessment of completion of the study of a subject means the verification of completion of the subject by the student
+- source class: subject completion assessment
+- target class: student
+
+
+Class: natural person
+1) has scientific council member
+- original text: The other members of the scientific council of the public college are prominent representatives of the fields in which the college carries out educational and creative activities.
+- source class: scientific council
+- target class: natural person
+
+
+2) has internal evaluation board member
+- original text: The chairperson of the academic senate of a public college shall be a member of the internal evaluation board. The other members of the board shall be appointed by the rector, one third of whom shall be appointed on the proposal of the academic board and one third on the proposal of the academic senate, of whom one member shall always be appointed from among the students of the public college concerned.
+- source class: internal evaluation board
+- target class: natural person
+
+
+3) has board of trustees member
+- original text: The board of trustees of a public college shall have at least nine members, the number of which must always be divisible by three. The members of the board of trustees of a public college shall be appointed by the minister in consultation with the rector, so that it includes adequate representation, in particular, of representatives of public life, professional chambers, employers' organisations or other persons or bodies carrying out, supporting or benefiting from the educational or creative activities of public colleges or their results, representatives of local and state government and alumni of the institution. Members of the board may not be employees of the college.
+- source class: board of trustees
+- target class: natural person
+
+
+Class: academic senate elections
+1) elections to
+- original text: Elections to the academic senate
+- source class: academic senate elections
+- target class: academic senate
+
+
+2) elected as staff senate member in
+- original text: The members of the academic senate of a public college shall be elected from among the members of the academic community of the public college
+- source class: academic staff
+- target class: academic senate elections
+
+
+3) elected as student senate member in
+- original text: The members of the academic senate of a public college shall be elected from among the members of the academic community of the public college
+- source class: student
+- target class: academic senate elections
+
+
+Class: academic community member
+1) has chairperson
+- original text: The academic senate shall have a chairperson, who shall be one of its academic staff members.
+- source class: academic senate
+- target class: academic community member
+
+
+2) is member of academic community
+- original text: members of the academic community
+- source class: academic community member
+- target class: academic community
+
+
+3) has disciplinary board member
+- original text: The members of the disciplinary board of a public college are appointed by the rector from among the members of the academic community of the college. Half of the members of the disciplinary board of a public college shall be students. The term of office of the members of the disciplinary board of a public college shall not exceed two years.
+- source class: disciplinary board
+- target class: academic community member
+
+
+4) has disciplinary board chairperson
+- original text: The disciplinary board of a public college shall elect its chairperson from among its members.
+- source class: disciplinary board
+- target class: academic community member
+
+
+Class: rector
+1) is head of
+- original text: The rector is the head of the public college.
+- source class: rector
+- target class: college
+
+
+2) has scientific council chairperson
+- original text: rector, who is also the chairperson of the scientific council
+- source class: scientific council
+- target class: rector
+
+
+3) has internal evaluation board chairperson
+- original text: The rector is the chairperson of the internal evaluation board
+- source class: internal evaluation board
+- target class: rector
+
+
+Class: scientific council
+1) has scientific council chairperson
+- original text: rector, who is also the chairperson of the scientific council
+- source class: scientific council
+- target class: rector
+
+
+2) has scientific council member
+- original text: The other members of the scientific council of the public college are prominent representatives of the fields in which the college carries out educational and creative activities.
+- source class: scientific council
+- target class: natural person
+
+
+Class: internal evaluation board
+1) has internal evaluation board chairperson
+- original text: The rector is the chairperson of the internal evaluation board
+- source class: internal evaluation board
+- target class: rector
+
+
+2) has internal evaluation board vice chairperson
+- original text: The vice-chairperson of the board shall be appointed by the rector from among the academic staff of the public college who are professors or associate professors of the college.
+- source class: internal evaluation board
+- target class: academic staff
+
+
+3) has internal evaluation board member
+- original text: The chairperson of the academic senate of a public college shall be a member of the internal evaluation board. The other members of the board shall be appointed by the rector, one third of whom shall be appointed on the proposal of the academic board and one third on the proposal of the academic senate, of whom one member shall always be appointed from among the students of the public college concerned.
+- source class: internal evaluation board
+- target class: natural person
+
+
+Class: disciplinary board
+1) has disciplinary board member
+- original text: The members of the disciplinary board of a public college are appointed by the rector from among the members of the academic community of the college. Half of the members of the disciplinary board of a public college shall be students. The term of office of the members of the disciplinary board of a public college shall not exceed two years.
+- source class: disciplinary board
+- target class: academic community member
+
+
+2) has disciplinary board chairperson
+- original text: The disciplinary board of a public college shall elect its chairperson from among its members.
+- source class: disciplinary board
+- target class: academic community member
+
+
+Class: board of trustees
+1) has board of trustees member
+- original text: The board of trustees of a public college shall have at least nine members, the number of which must always be divisible by three. The members of the board of trustees of a public college shall be appointed by the minister in consultation with the rector, so that it includes adequate representation, in particular, of representatives of public life, professional chambers, employers' organisations or other persons or bodies carrying out, supporting or benefiting from the educational or creative activities of public colleges or their results, representatives of local and state government and alumni of the institution. Members of the board may not be employees of the college.
+- source class: board of trustees
+- target class: natural person
+
+
+Class: faculty
+1) implements study programme
+- original text: A faculty implements accredited study programmes
+- source class: faculty
+- target class: study programme
+
+
+2) implements lifelong learning programme
+- original text: A faculty implements accredited study programmes and lifelong learning programmes
+- source class: faculty
+- target class: lifelong learning programme
+
+
+3) divided into
+- original text: A public college is divided into faculties.
+- source class: college
+- target class: faculty
+
+
+Class: subject
+1) taught within
+- original text: Subject of study shall be taught within the study programme.
+- source class: subject
+- target class: study programme
+
+
+2) determines temporal sequence
+- original text: Their sequence in time within the study programme is determined by the curriculum of the study programme
+- source class: curriculum
+- target class: subject
+
+
+3) is part of curriculum
+- original text: A subject can be a part of the curricula of one or more programmes of study.
+- source class: subject
+- target class: curriculum
+
+
+4) stipulates compulsory subject
+- original text: Curricula, with the exception of doctoral study, stipulate which subjects are compulsory
+- source class: subject
+- target class: curriculum
+
+
+5) stipulates elective subjects
+- original text: Curricula, with the exception of doctoral study, stipulate which subjects are compulsory or elective
+- source class: subject
+- target class: elective subjects group
+
+
+6) registration has completion prerequisite
+- original text: the registration for a given subject has as a prerequisite the completion of another subject or subjects
+- source class: subject
+- target class: subject
+
+
+7) registration has simultaneous registration prerequisite
+- original text: the registration for a given subject has as a prerequisite the completion of another subject or subjects, or simultaneous registration for another subject or subjects
+- source class: subject
+- target class: subject
+
+
+8) completion has completion prerequisite
+- original text: the completion of a given subject has as a prerequisite the completion of another subject or subjects
+- source class: subject
+- target class: subject
+
+
+9) registration excluded by simultaneous registration
+- original text: the registration for a given subject is excluded by the simultaneous registration for another subject
+- source class: subject
+- target class: subject
+
+
+10) completion is excluded by previous completion
+- original text: the completion of a given subject is excluded by the previous completion of another subject
+- source class: subject
+- target class: subject
+
+
+11) registration is excluded by previous completion
+- original text: the registration for a given subject is excluded by the previous completion of another subject
+- source class: subject
+- target class: subject
+
+
+12) completion is considered as completion
+- original text: the completion of a subject is considered as the completion of another subject
+- source class: subject
+- target class: subject
+
+
+13) assesses completion of
+- original text: Assessment of completion of the study of a subject a combination of the forms under letters (a) to (e).
+- source class: subject completion assessment
+- target class: subject
+
+
+14) registers to subject
+- original text: A student registers to the subjects
+- source class: student
+- target class: subject
+
+
+Class: curriculum
+1) has curriculum
+- original text: the curriculum of the study programme
+- source class: study programme
+- target class: curriculum
+
+
+2) determines temporal sequence
+- original text: Their sequence in time within the study programme is determined by the curriculum of the study programme
+- source class: curriculum
+- target class: subject
+
+
+3) determines form of study
+- original text: The curriculum also determines the form of study
+- source class: curriculum
+- target class: form of study
+
+
+4) is part of curriculum
+- original text: A subject can be a part of the curricula of one or more programmes of study.
+- source class: subject
+- target class: curriculum
+
+
+5) stipulates compulsory subject
+- original text: Curricula, with the exception of doctoral study, stipulate which subjects are compulsory
+- source class: subject
+- target class: curriculum
+
+
+6) contains elective group
+- original text: Elective subjects are classified into one or more groups of elective subjects in the curricula.
+- source class: curriculum
+- target class: elective subjects group
+
+
+Class: form of study
+1) determines form of study
+- original text: The curriculum also determines the form of study
+- source class: curriculum
+- target class: form of study
+
+
+Class: education field
+1) belongs to field
+- original text: A study programme belongs to only one field of education study programme is a combined programme of study that belongs to more fields of education
+- source class: study programme
+- target class: education field
+
+
+Class: bachelor state final examination
+1) completed by bachelor state final examination
+- original text: The studies of a student in the Bachelor's degree study programme is duly completed by a state final examination
+- source class: bachelor studies
+- target class: bachelor state final examination
+
+
+2) includes bachelor thesis defense
+- original text: includes the defense of the bachelor's thesis
+- source class: bachelor state final examination
+- target class: bachelor thesis defense
+
+
+Class: bachelor studies
+1) studies in bachelor study programme
+- original text: The studies of a student in the Bachelor's degree study programme
+- source class: bachelor studies
+- target class: bachelor study programme
+
+
+2) bachelor studies of a student
+- original text: The studies of a student in the Bachelor's degree study programme
+- source class: bachelor studies
+- target class: student
+
+
+3) completed by bachelor state final examination
+- original text: The studies of a student in the Bachelor's degree study programme is duly completed by a state final examination
+- source class: bachelor studies
+- target class: bachelor state final examination
+
+
+Class: bachelor thesis defense
+1) includes bachelor thesis defense
+- original text: includes the defense of the bachelor's thesis
+- source class: bachelor state final examination
+- target class: bachelor thesis defense
+
+
+Class: master studies
+1) master studies of a student
+- original text: The studies of a student in the Master's degree study programme
+- source class: master studies
+- target class: student
+
+
+2) studies in master study programme
+- original text: The studies of a student in the Master's degree study programme
+- source class: master studies
+- target class: master study programme
+
+
+3) completed by master state final examination
+- original text: The studies of a student in the Master's degree study programme are duly completed by a state final examination
+- source class: master studies
+- target class: master state final examination
+
+
+Class: master state final examination
+1) completed by master state final examination
+- original text: The studies of a student in the Master's degree study programme are duly completed by a state final examination
+- source class: master studies
+- target class: master state final examination
+
+
+2) includes diploma thesis defense
+- original text: includes the defence of the diploma thesis
+- source class: master state final examination
+- target class: diploma thesis defense
+
+
+Class: diploma thesis defense
+1) includes diploma thesis defense
+- original text: includes the defence of the diploma thesis
+- source class: master state final examination
+- target class: diploma thesis defense
+
+
+Class: individual study plan
+1) carried out according to
+- original text: The studies of a student in the doctoral programme is carried out according to an individual study plan
+- source class: doctoral studies
+- target class: individual study plan
+
+
+Class: supervisor
+1) guided by
+- original text: The studies of a student in the doctoral programme is carried out according to an individual study plan under the guidance of a supervisor.
+- source class: doctoral studies
+- target class: supervisor
+
+
+Class: doctoral studies
+1) studies in doctoral study programme
+- original text: The studies of a student in the doctoral programme
+- source class: doctoral studies
+- target class: doctoral study programme
+
+
+2) doctoral studies of a student
+- original text: The studies of a student in the doctoral programme
+- source class: doctoral studies
+- target class: student
+
+
+3) carried out according to
+- original text: The studies of a student in the doctoral programme is carried out according to an individual study plan
+- source class: doctoral studies
+- target class: individual study plan
+
+
+4) guided by
+- original text: The studies of a student in the doctoral programme is carried out according to an individual study plan under the guidance of a supervisor.
+- source class: doctoral studies
+- target class: supervisor
+
+
+5) completed by state doctoral examination
+- original text: The studies shall be duly completed by a state doctoral examination
+- source class: doctoral studies
+- target class: state doctoral examination
+
+
+6) completed by dissertation defense
+- original text: The studies shall be duly completed by a state doctoral examination and a public defense of the dissertation.
+- source class: doctoral studies
+- target class: dissertation defense
+
+
+7) monitored by
+- original text: Studies in a doctoral programme shall be monitored and evaluated by a subject board established in accordance with the internal regulations of the public college thereof which has accredited the relevant study programme.
+- source class: doctoral studies
+- target class: subject board
+
+
+Class: state doctoral examination
+1) completed by state doctoral examination
+- original text: The studies shall be duly completed by a state doctoral examination
+- source class: doctoral studies
+- target class: state doctoral examination
+
+
+Class: dissertation defense
+1) completed by dissertation defense
+- original text: The studies shall be duly completed by a state doctoral examination and a public defense of the dissertation.
+- source class: doctoral studies
+- target class: dissertation defense
+
+
+2) is defense of dissertation
+- original text: public defense of the dissertation
+- source class: dissertation defense
+- target class: dissertation
+
+
+Class: dissertation
+1) is defense of dissertation
+- original text: public defense of the dissertation
+- source class: dissertation defense
+- target class: dissertation
+
+
+Class: subject board
+1) monitored by
+- original text: Studies in a doctoral programme shall be monitored and evaluated by a subject board established in accordance with the internal regulations of the public college thereof which has accredited the relevant study programme.
+- source class: doctoral studies
+- target class: subject board
+
+
+Class: elective subjects group
+1) stipulates elective subjects
+- original text: Curricula, with the exception of doctoral study, stipulate which subjects are compulsory or elective
+- source class: subject
+- target class: elective subjects group
+
+
+2) contains elective group
+- original text: Elective subjects are classified into one or more groups of elective subjects in the curricula.
+- source class: curriculum
+- target class: elective subjects group
+
+
+Class: subject completion assessment
+1) assesses completion of
+- original text: Assessment of completion of the study of a subject a combination of the forms under letters (a) to (e).
+- source class: subject completion assessment
+- target class: subject
+
+
+2) assesses completion by
+- original text: Assessment of completion of the study of a subject means the verification of completion of the subject by the student
+- source class: subject completion assessment
+- target class: student
+
+
+3) carried out by examiner
+- original text: The assessment of the study is carried out by an examiner, who is always an academic member of staff.
+- source class: subject completion assessment
+- target class: academic staff
+
+
+Class: colloquium
+1) has colloquium prerequisite
+- original text: The colloquium, course credit, or course test may represent an independent assessment of the subject, or may represent a prerequisite for taking an examination in the given subject.
+- source class: examination
+- target class: colloquium
+
+
+Class: course credit
+1) has course credit prerequisite
+- original text: course credit, or course test may represent an independent assessment of the subject, or may represent a prerequisite for taking an examination in the given subject.
+- source class: examination
+- target class: course credit
+
+
+Class: course test
+1) has course test prerequisite
+- original text: course test may represent an independent assessment of the subject, or may represent a prerequisite for taking an examination in the given subject.
+- source class: examination
+- target class: course test
+
+
+Class: examination
+1) has colloquium prerequisite
+- original text: The colloquium, course credit, or course test may represent an independent assessment of the subject, or may represent a prerequisite for taking an examination in the given subject.
+- source class: examination
+- target class: colloquium
+
+
+2) has course credit prerequisite
+- original text: course credit, or course test may represent an independent assessment of the subject, or may represent a prerequisite for taking an examination in the given subject.
+- source class: examination
+- target class: course credit
+
+
+3) has course test prerequisite
+- original text: course test may represent an independent assessment of the subject, or may represent a prerequisite for taking an examination in the given subject.
+- source class: examination
+- target class: course test
+
+

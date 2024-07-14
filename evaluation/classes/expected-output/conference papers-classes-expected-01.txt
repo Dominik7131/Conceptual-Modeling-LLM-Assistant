@@ -1,0 +1,28 @@
+Class: research paper
+- original text: research papers, these are documents presenting original research findings
+
+
+Class: person
+- original text: The individuals involved in the conference reviewing process are categorized under the person classification.
+
+
+Class: author
+- original text: Authors, who significantly contribute to the creation of research papers
+
+
+Class: conference
+- original text: a conference represents an event where research papers are presented and discussed.
+
+
+Class: submission
+- original text: a submission, which represents the act of submitting the paper for consideration at a conference the submission itself is a critical element. Representing the act of submitting a research paper for consideration at a conference
+
+
+Class: reviewer
+- original text: Within the persons category, a reviewer stands out as a specific role. A reviewer, responsible for evaluating the quality and relevance of research paper submissions
+
+
+Class: review
+- original text: A review, an evaluation or critique of a research paper by a reviewer, plays a pivotal role.
+
+

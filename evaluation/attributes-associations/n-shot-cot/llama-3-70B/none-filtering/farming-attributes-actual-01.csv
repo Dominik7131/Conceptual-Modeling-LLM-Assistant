@@ -1,0 +1,42 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+name,farmer,"an individual engaged in agriculture, growing and harvesting crops, and is identified uniquely by a name",,name,
+age,farmer,The age of a farmer in years,,age,
+machinery,farmer,Farmers own machinery,machinery,,*
+fields,farmer,They also farm on fields,field,,farms on
+quantity,crop,"crops, quantified and evaluated in terms of quantity and quality",,*,
+quality,crop,"crops, quantified and evaluated in terms of quantity and quality",,*,
+variety,crop,the cultivated variety of a crop,,cultivated variety,
+type,crop,"Crops are plants cultivated in large amounts for profit or subsistence, including cereals, oil seeds, vegetables, and fruits",-cereal;seed plant;vegetable;fruit,,*
+capacity,machinery,"machinery, which reflects their capacity for mechanized farming",,*,
+type,machinery,"Tractors, as a subclass of machinery, are versatile and essential for multiple farming tasks",tractor,,*
+function,machinery,Planters are specifically designed to plant seeds efficiently,planter,,*
+function,machinery,Harvesters is a specialized machinery that is used for harvesting,harvester,,*
+function,machinery,Sprayers are used for the precise application of liquids like pesticides,sprayer,,*
+year of manufacturing,machinery,the year of manufacturing and model of the machinery,,year of manufacturing,
+model,machinery,the year of manufacturing and model of the machinery,,model,
+usage,machinery,a specific piece of machinery is used for planting,planting,,used for planting
+usage,machinery,a piece of machinery can be used for harvesting,harvest,,used for harvesting
+usage,machinery,"a piece of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting",planting,,used for field preparation
+harvest,harvest,"a harvest, establishing a critical link for tracing agricultural output back to its origins",,,
+farmer,harvest,The harvested crops are connected to the farmer responsible for the harvest,farmer,,harvested by
+quality,harvest,who evaluates the harvest's quality and quantity of the harvested crop,,quality,
+quantity,harvest,who evaluates the harvest's quality and quantity of the harvested crop,,quantity,
+date,harvest,The specific date or period when the harvest is collected,,harvest date,
+size,harvest,"the quality of the harvest, which may include factors like size, ripeness, nutritional value, and absence of pests or diseases",,*,
+ripeness,harvest,"the quality of the harvest, which may include factors like size, ripeness, nutritional value, and absence of pests or diseases",,*,
+nutritional value,harvest,"the quality of the harvest, which may include factors like size, ripeness, nutritional value, and absence of pests or diseases",,*,
+absence of pests or diseases,harvest,"the quality of the harvest, which may include factors like size, ripeness, nutritional value, and absence of pests or diseases",,*,
+total quantity,harvest,"the total quantity of the harvest, measured in kilograms",,quantity,
+area,field,Fields are areas of land used for growing crops,,size,
+irrigation system,field,The availability of irrigation systems and the type of irrigation used,,irrigation availability,
+location,field,"The geographical location of the field, which can include specific GPS coordinates or a general description",,location,
+soil ph,field,The soil's pH and type affect crop health and dictate the types of amendments needed for optimal growth,,soil ph,
+soil type,field,"The type of soil present in the field, such as loamy, sandy, clay, or silt",,soil type,
+size,field,"The size of the field, which measures the total area of the field, typically in hectares",,size,
+physical layout,field,The physical layout affects water drainage and machinery suitability,,topography,
+topography,field,"The topography of the field describes the physical layout of the land, including its flatness, slope, and elevation",,topography,
+year,planting,"Planting represents the agricultural activity of planting crops in a specific field during a specific year, capturing the details of the process.",,*,
+harvest,planting,"Each planting activity results in a harvest, establishing a critical link for tracing agricultural output back to its origins, which aids in analyzing planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.",harvest,,results in harvest
+field,planting,"Planting activities are performed on specific fields where it occurs, indicating the location of agricultural operations and facilitating field-specific crop management, and involve particular crops, highlighting the variety of crops and their cultivation requirements during the planting process.",field,,performed on
+date,planting,"The exact date or period of planting is also documented, essential for managing the agricultural cycle.",,planting date,
+crop,planting,"Planting activities are performed on specific fields where it occurs, indicating the location of agricultural operations and facilitating field-specific crop management, and involve particular crops, highlighting the variety of crops and their cultivation requirements during the planting process.",crop,,involves crop

@@ -1,0 +1,585 @@
+Class: road vehicle
+1) has owner
+- original text: A road vehicle has an owner
+- source class: road vehicle
+- target class: person
+
+
+2) has operator
+- original text: A road vehicle has an owner and operator
+- source class: road vehicle
+- target class: person
+
+
+3) assigned to
+- original text: a road vehicle is assigned a registration plate
+- source class: registration plate
+- target class: road vehicle
+
+
+4) issued for
+- original text: After the registration into the register, a road vehicle is assigned a registration plate and a registration certificate is issued for the road vehicle
+- source class: registration certificate
+- target class: road vehicle
+
+
+5) covered by insurance
+- original text: the road vehicle has been covered by a third party insurance
+- source class: third party insurance
+- target class: road vehicle
+
+
+6) has engine
+- original text: the engine data for the road vehicle
+- source class: road vehicle
+- target class: engine
+
+
+7) has bodywork
+- original text: bodywork of the road vehicle
+- source class: road vehicle
+- target class: bodywork
+
+
+8) inspected by
+- original text: technical inspections of the road vehicle
+- source class: road vehicle
+- target class: technical inspection
+
+
+9) registers
+- original text: The municipal authority of a municipality with extended competence registers a road vehicle in the register of road vehicles on the basis of a written application by the owner of the road vehicle.
+- source class: municipal authority
+- target class: road vehicle
+
+
+10) is proof for vehicle
+- original text: Green card means an international certificate proving that the road vehicle has been covered by a third party insurance against liability for damage
+- source class: green card
+- target class: road vehicle
+
+
+11) has vehicle system
+- original text: structural system of a vehicle
+- source class: road vehicle
+- target class: vehicle system
+
+
+12) has structural component
+- original text: structural component of a vehicle
+- source class: road vehicle
+- target class: structural component
+
+
+13) has separate technical unit
+- original text: separate technical unit of a vehicle
+- source class: road vehicle
+- target class: separate technical unit
+
+
+14) has road vehicle defect
+- original text: the technical condition and operation of the road vehicle, its systems, structural components and separate technical units are free from defects or have defects
+- source class: road vehicle
+- target class: defect
+
+
+15) has odometer
+- original text: the odometer of the road vehicle
+- source class: road vehicle
+- target class: odometer
+
+
+16) value added tax paid
+- original text: value added tax has been paid on the acquisition of the road vehicle from another member state, if a special legal provision so provides,
+- source class: road vehicle
+- target class: valued added tax payment
+
+
+17) is listed as missing or stolen in
+- original text: the road vehicle is not listed as missing or stolen in the Schengen Information System or in the information system of the state police or this information is not established by another procedure
+- source class: road vehicle
+- target class: missing or stolen road vehicle listing
+
+
+Class: vehicle
+1) manufactures vehicle
+- original text: manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
+- source class: manufacturer
+- target class: vehicle
+
+
+Class: vehicle system
+1) has vehicle system
+- original text: structural system of a vehicle
+- source class: road vehicle
+- target class: vehicle system
+
+
+2) has vehicle system defect
+- original text: its systems, structural components and separate technical units are free from defects or have defects
+- source class: vehicle system
+- target class: defect
+
+
+3) manufactures vehicle system
+- original text: manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
+- source class: manufacturer
+- target class: vehicle system
+
+
+Class: structural component
+1) has structural component
+- original text: structural component of a vehicle
+- source class: road vehicle
+- target class: structural component
+
+
+2) has structural component defect
+- original text: structural components and separate technical units are free from defects or have defects
+- source class: structural component
+- target class: defect
+
+
+3) manufactures structural component
+- original text: manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
+- source class: manufacturer
+- target class: structural component
+
+
+Class: manufacturer
+1) manufactures separate technical unit
+- original text: manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
+- source class: manufacturer
+- target class: separate technical unit
+
+
+2) manufactures vehicle
+- original text: manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
+- source class: manufacturer
+- target class: vehicle
+
+
+3) manufactures structural component
+- original text: manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
+- source class: manufacturer
+- target class: structural component
+
+
+4) manufactures vehicle system
+- original text: manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
+- source class: manufacturer
+- target class: vehicle system
+
+
+Class: person
+1) has owner
+- original text: A road vehicle has an owner
+- source class: road vehicle
+- target class: person
+
+
+2) has operator
+- original text: A road vehicle has an owner and operator
+- source class: road vehicle
+- target class: person
+
+
+3) operated by
+- original text: A technical inspection station may be operated by a legal or natural person who has a licence to operate it and a certificate issued by the regional authority.
+- source class: technical inspection station
+- target class: person
+
+
+Class: legal person
+1) is branch of
+- original text: a branch thereof
+- source class: legal person branch
+- target class: legal person
+
+
+Class: legal person branch
+1) is branch of
+- original text: a branch thereof
+- source class: legal person branch
+- target class: legal person
+
+
+Class: registration plate
+1) assigned to
+- original text: a road vehicle is assigned a registration plate
+- source class: registration plate
+- target class: road vehicle
+
+
+2) assigns plate
+- original text: The municipal authority of the municipality with extended competence, when registering a road vehicle in the register of road vehicles, shall further assign a registration plate to the road vehicle.
+- source class: municipal authority
+- target class: registration plate
+
+
+Class: registration certificate
+1) issued for
+- original text: After the registration into the register, a road vehicle is assigned a registration plate and a registration certificate is issued for the road vehicle
+- source class: registration certificate
+- target class: road vehicle
+
+
+2) issues certificate
+- original text: When registering a road vehicle in the register of road vehicles, the municipal authority of the municipality with extended competence shall issue a registration certificate of the road vehicle to the applicant.
+- source class: municipal authority
+- target class: registration certificate
+
+
+Class: third party insurance
+1) covered by insurance
+- original text: the road vehicle has been covered by a third party insurance
+- source class: third party insurance
+- target class: road vehicle
+
+
+2) is proof of insurance
+- original text: Green card means an international certificate proving that the road vehicle has been covered by a third party insurance
+- source class: green card
+- target class: third party insurance
+
+
+3) based on contract
+- original text: A third party insurance is based on an insurance contract concluded between the policyholder and the insurer
+- source class: third party insurance
+- target class: insurance contract
+
+
+4) is authorised to operate
+- original text: The insurer is an insurance company authorised to operate the third party insurance in the contract.
+- source class: insurer
+- target class: third party insurance
+
+
+5) concluded contract
+- original text: The policyholder is the person who has concluded the insurance contract with the insurer.
+- source class: policyholder
+- target class: third party insurance
+
+
+Class: engine
+1) has engine
+- original text: the engine data for the road vehicle
+- source class: road vehicle
+- target class: engine
+
+
+Class: bodywork
+1) has bodywork
+- original text: bodywork of the road vehicle
+- source class: road vehicle
+- target class: bodywork
+
+
+Class: technical inspection
+1) inspected by
+- original text: technical inspections of the road vehicle
+- source class: road vehicle
+- target class: technical inspection
+
+
+2) carried out by
+- original text: the designation of the technical inspection station that carried out the technical inspection
+- source class: technical inspection
+- target class: technical inspection station
+
+
+3) is part of technical inspection
+- original text: Emissions measurement as part of the technical inspection
+- source class: emission measurement
+- target class: technical inspection
+
+
+4) detects
+- original text: The technical inspection of a road vehicle can detect 3 levels of defects
+- source class: technical inspection
+- target class: defect
+
+
+5) technical inspection report handed over to
+- original text: a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the vehicle for the technical inspection.
+- source class: technical inspection
+- target class: vehicle deliverer
+
+
+6) repeatedly inspected for serious defects by
+- original text: Within this period, the operator of the road vehicle shall be obliged to bring the road vehicle with the rectified serious defect to the technical inspection station for a repeat technical inspection.
+- source class: limited technically fit vehicle
+- target class: technical inspection
+
+
+7) repeatedly inspected for dangerous defects by
+- original text: the road vehicle is brought in for a repeat technical inspection
+- source class: technically unfit road vehicle
+- target class: technical inspection
+
+
+Class: technical inspection station
+1) carried out by
+- original text: the designation of the technical inspection station that carried out the technical inspection
+- source class: technical inspection
+- target class: technical inspection station
+
+
+2) operated by
+- original text: A technical inspection station may be operated by a legal or natural person who has a licence to operate it and a certificate issued by the regional authority.
+- source class: technical inspection station
+- target class: person
+
+
+3) is technician of
+- original text: The inspection technician of the technical inspection station
+- source class: inspection technician
+- target class: technical inspection station
+
+
+4) affixed by
+- original text: The technical inspection station shall affix an inspection sticker
+- source class: inspection sticker
+- target class: technical inspection station
+
+
+5) removed by
+- original text: Upon detection of a dangerous defect, the technical inspection station shall remove the technical inspection sticker from the rear plate of the registration plate.
+- source class: inspection sticker
+- target class: technical inspection station
+
+
+Class: municipal authority
+1) registers
+- original text: The municipal authority of a municipality with extended competence registers a road vehicle in the register of road vehicles on the basis of a written application by the owner of the road vehicle.
+- source class: municipal authority
+- target class: road vehicle
+
+
+2) issues certificate
+- original text: When registering a road vehicle in the register of road vehicles, the municipal authority of the municipality with extended competence shall issue a registration certificate of the road vehicle to the applicant.
+- source class: municipal authority
+- target class: registration certificate
+
+
+3) assigns plate
+- original text: The municipal authority of the municipality with extended competence, when registering a road vehicle in the register of road vehicles, shall further assign a registration plate to the road vehicle.
+- source class: municipal authority
+- target class: registration plate
+
+
+Class: green card
+1) is proof for vehicle
+- original text: Green card means an international certificate proving that the road vehicle has been covered by a third party insurance against liability for damage
+- source class: green card
+- target class: road vehicle
+
+
+2) is proof of insurance
+- original text: Green card means an international certificate proving that the road vehicle has been covered by a third party insurance
+- source class: green card
+- target class: third party insurance
+
+
+Class: insurance contract
+1) based on contract
+- original text: A third party insurance is based on an insurance contract concluded between the policyholder and the insurer
+- source class: third party insurance
+- target class: insurance contract
+
+
+2) has insurer
+- original text: The insurer is an insurance company authorised to operate the third party insurance in the contract.
+- source class: insurance contract
+- target class: insurer
+
+
+Class: insurer
+1) is authorised to operate
+- original text: The insurer is an insurance company authorised to operate the third party insurance in the contract.
+- source class: insurer
+- target class: third party insurance
+
+
+2) has insurer
+- original text: The insurer is an insurance company authorised to operate the third party insurance in the contract.
+- source class: insurance contract
+- target class: insurer
+
+
+Class: policyholder
+1) concluded contract
+- original text: The policyholder is the person who has concluded the insurance contract with the insurer.
+- source class: policyholder
+- target class: third party insurance
+
+
+Class: emission measurement
+1) is part of technical inspection
+- original text: Emissions measurement as part of the technical inspection
+- source class: emission measurement
+- target class: technical inspection
+
+
+2) has result of measurement
+- original text: the results of the emission measurement
+- source class: emission measurement
+- target class: emission measurement result
+
+
+3) emission measurement report handed over to
+- original text: a report on the emission measurement which shall be handed over to the natural person who brought the vehicle to the emission measurement station.
+- source class: emission measurement
+- target class: vehicle deliverer
+
+
+Class: emission measurement result
+1) has result of measurement
+- original text: the results of the emission measurement
+- source class: emission measurement
+- target class: emission measurement result
+
+
+2) included by
+- original text: The inspection technician of the technical inspection station shall include the results of the emission measurement
+- source class: emission measurement result
+- target class: inspection technician
+
+
+Class: inspection technician
+1) is technician of
+- original text: The inspection technician of the technical inspection station
+- source class: inspection technician
+- target class: technical inspection station
+
+
+2) included by
+- original text: The inspection technician of the technical inspection station shall include the results of the emission measurement
+- source class: emission measurement result
+- target class: inspection technician
+
+
+Class: separate technical unit
+1) has separate technical unit
+- original text: separate technical unit of a vehicle
+- source class: road vehicle
+- target class: separate technical unit
+
+
+2) has technical unit defect
+- original text: separate technical units are free from defects or have defects
+- source class: separate technical unit
+- target class: defect
+
+
+3) manufactures separate technical unit
+- original text: manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
+- source class: manufacturer
+- target class: separate technical unit
+
+
+Class: defect
+1) detects
+- original text: The technical inspection of a road vehicle can detect 3 levels of defects
+- source class: technical inspection
+- target class: defect
+
+
+2) has road vehicle defect
+- original text: the technical condition and operation of the road vehicle, its systems, structural components and separate technical units are free from defects or have defects
+- source class: road vehicle
+- target class: defect
+
+
+3) has vehicle system defect
+- original text: its systems, structural components and separate technical units are free from defects or have defects
+- source class: vehicle system
+- target class: defect
+
+
+4) has structural component defect
+- original text: structural components and separate technical units are free from defects or have defects
+- source class: structural component
+- target class: defect
+
+
+5) has technical unit defect
+- original text: separate technical units are free from defects or have defects
+- source class: separate technical unit
+- target class: defect
+
+
+Class: vehicle deliverer
+1) technical inspection report handed over to
+- original text: a technical inspection report on the technical inspection of the road vehicle and hand it over to the natural person who delivered the vehicle for the technical inspection.
+- source class: technical inspection
+- target class: vehicle deliverer
+
+
+2) emission measurement report handed over to
+- original text: a report on the emission measurement which shall be handed over to the natural person who brought the vehicle to the emission measurement station.
+- source class: emission measurement
+- target class: vehicle deliverer
+
+
+Class: odometer
+1) has odometer
+- original text: the odometer of the road vehicle
+- source class: road vehicle
+- target class: odometer
+
+
+Class: valued added tax payment
+1) value added tax paid
+- original text: value added tax has been paid on the acquisition of the road vehicle from another member state, if a special legal provision so provides,
+- source class: road vehicle
+- target class: valued added tax payment
+
+
+Class: missing or stolen road vehicle listing
+1) is listed as missing or stolen in
+- original text: the road vehicle is not listed as missing or stolen in the Schengen Information System or in the information system of the state police or this information is not established by another procedure
+- source class: road vehicle
+- target class: missing or stolen road vehicle listing
+
+
+Class: technically fit road vehicle
+1) affixed on
+- original text: an inspection sticker on the rear plate of the registration plate of the road vehicle
+- source class: inspection sticker
+- target class: technically fit road vehicle
+
+
+Class: inspection sticker
+1) affixed by
+- original text: The technical inspection station shall affix an inspection sticker
+- source class: inspection sticker
+- target class: technical inspection station
+
+
+2) affixed on
+- original text: an inspection sticker on the rear plate of the registration plate of the road vehicle
+- source class: inspection sticker
+- target class: technically fit road vehicle
+
+
+3) removed by
+- original text: Upon detection of a dangerous defect, the technical inspection station shall remove the technical inspection sticker from the rear plate of the registration plate.
+- source class: inspection sticker
+- target class: technical inspection station
+
+
+Class: limited technically fit vehicle
+1) repeatedly inspected for serious defects by
+- original text: Within this period, the operator of the road vehicle shall be obliged to bring the road vehicle with the rectified serious defect to the technical inspection station for a repeat technical inspection.
+- source class: limited technically fit vehicle
+- target class: technical inspection
+
+
+Class: technically unfit road vehicle
+1) repeatedly inspected for dangerous defects by
+- original text: the road vehicle is brought in for a repeat technical inspection
+- source class: technically unfit road vehicle
+- target class: technical inspection
+
+

@@ -1,0 +1,28 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+content,research paper,documents presenting original research findings,,*,
+submission,research paper,Each research paper is linked to a submission,submission,,has submission
+publication year,research paper,"It has a publication year, marking when the findings were officially made public",,publication year,
+abstract,research paper,An abstract provides a brief summary of the paper's content,,abstract,
+presentation,research paper,The paper's presentation at a conference is also an important aspect that we need to know about the paper,conference,,presented at
+title,research paper,the title of the paper gives it a distinct identity,,title,
+authors,research paper,"An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors",author,,written by
+name,person,"Each person has a name, giving them individual identity",,name,
+email address,person,"and an email address, facilitating communication within the academic community",,email,
+institutional affiliation,author,An author's institutional affiliation,,affiliation,
+corresponding author,author,one of the authors may be designated as the corresponding author,research paper,,has corresponding author
+authors,author,"written by attribute, which links it to its authors",,,
+description,conference,a conference represents an event where research papers are presented and discussed,,,
+year,conference,a specific year when it takes place,,year,
+location,conference,a location where it is held,,location,
+name,conference,a its name,,conference name,
+description,submission,"Representing the act of submitting a research paper for consideration at a conference, it encompasses various aspects.",,,
+conference,submission,A submission is linked to the conference it is submitted to,conference,,submitted to
+submission date,submission,"and carries a submission date, marking when it entered the review process.",,submission date,
+status,submission,"The current status of the submission, such as under review, accepted, or rejected, is a dynamic attribute reflecting its ongoing journey.",,status,
+prior submission,submission,"Submissions can be resubmissions, linked to prior submissions they replace, showing the iterative nature of academic work.",,,is resubmission of
+reviewer,submission,"Furthermore, a submission is reviewed by a reviewer, a connection that is fundamental to the peer-review process and maintaining the academic integrity of the conference proceedings.",reviewer,,reviewed by
+role,reviewer,a reviewer stands out as a specific role,,*,
+area of expertise,reviewer,"a reviewer, responsible for evaluating the quality and relevance of research paper submissions, brings to the table their area of expertise",,expertise,
+reviews,reviewer,A reviewer is involved in review process by the act of writing reviews,review,,writes
+name,reviewer,"Each person has a name, giving them individual identity, and an email address, facilitating communication within the academic community",,:name,
+email address,reviewer,"Each person has a name, giving them individual identity, and an email address, facilitating communication within the academic community",,:email,

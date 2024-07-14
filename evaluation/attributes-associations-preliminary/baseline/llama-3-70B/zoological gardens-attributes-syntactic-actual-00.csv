@@ -1,0 +1,69 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+biological characteristics,animal,each possessing unique biological and ecological characteristics,,,
+diet,animal,its specified diet,diet,,has specified diet
+name,animal,Each animal also has a name,,animal name,
+species name,animal,the species name,,*,
+common name,animal,the common name,,*,
+diet type,animal,"whether an animal is herbivorous, carnivorous, omnivorous, piscivorous, etc.",diet,,has specified diet
+feeding schedule,animal,the frequency and timing of feeding,,,
+feeding technique,animal,a special feeding technique,,,
+reproductive health,animal,reproductive health and management information,,*,
+breeding season,animal,the specific time of year when the animals of that species naturally breed,,*,
+enclosure,animal,the enclosures where its animals live,enclosure,,*
+climate conditions,animal,the climate conditions of enclosures,,,
+temperature range,animal,a range of temperatures within their enclosure,,,
+light cycles,animal,light cycles (day and night) in the climate conditions of enclosures,,,
+conservation program,animal,part of reintroduction conservation programs,reintroduction conservation program,,is part of program
+biological characteristics,species,each possessing unique biological and ecological characteristics,,*,
+name,species,species name,,species name,
+common name,species,species common name,,species common name,
+iucn status,species,IUCN status,,iucn status,
+diet,species,diet,,,
+reproductive details,species,reproductive details,,+gestation period;natural breeding time;reproductive age,
+reproductive age,species,age at which the species is capable of reproducing,,reproductive age,
+breeding season,species,specific time of year when the animals of that species naturally breed,,natural breeding time,
+gestation period,species,gestation period,,gestation period,
+egg count,species,number of eggs typically laid at one time,,:number of laid eggs,
+thermal preference,species,thermal preference,,,
+humidity levels,species,humidity levels,,,
+uv light requirement,species,requirement for ultraviolet light,,,
+caretakers,species,caretakers,,,
+veterinarians,species,veterinarians,veterinarian,,responsible for
+type,diet,specified diet,,diet type,
+classification,diet,"herbivorous, carnivorous, omnivorous, piscivorous, etc.",,diet type,
+nutrients,diet,specific nutrients required to maintain health and vitality,,nutrients,
+schedule,diet,feeding schedule,,feeding schedule,
+frequency,diet,frequency and timing of feeding,,feeding schedule,
+technique,diet,special feeding technique,,feeding technique,
+clutch size,oviparous species,the number of eggs typically laid at one time,,number of laid eggs,
+incubation practices,oviparous species,incubation practices,,*,
+size,enclosure,Each enclosure is characterized by its size in square meters,,enclosure size,
+type,enclosure,"Each enclosure is characterized by its type (e.g., aviary, aquarium, terrarium)",,enclosure type,
+climate conditions,enclosure,Each enclosure is characterized by its climate conditions,climate conditions,,has climate conditions
+vegetation,enclosure,Each enclosure is characterized by its vegetation,,vegetation,
+space,enclosure,"The design and maintenance of enclosures are vital for health, providing adequate space",,,
+enrichment,enclosure,"The design and maintenance of enclosures are vital for health, providing enrichment",,*,
+security,enclosure,"The design and maintenance of enclosures are vital for health, providing security from potential stressors",,,
+temperature,enclosure,Temperature is perhaps the most critical element in an enclosure's climate conditions,,*,
+light cycles,enclosure,Ensuring that light cycles (day and night) in the climate conditions of enclosures are consistent with the natural light patterns of an animal's native habitat,,*,
+ventilation,enclosure,Proper ventilation is essential for maintaining air quality and appropriate climate conditions within an enclosure,,*,
+caretakers,enclosure,Caretakers and zoologists are assigned to particular enclosures they are responsible for,caretaker,,assigned as caretaker
+number of caretakers,enclosure,An enclosure must have more caretakers so that they cover non-stop care which is necessary for most species,caretaker,,assigned as caretaker
+resident species,enclosure,Each enclosure is characterized by its resident species,species,,resident of
+temperature,climate conditions,temperature,,temperature,
+humidity,climate conditions,humidity,,humidity level,
+lighting,climate conditions,lighting,,light cycles,
+ventilation,climate conditions,ventilation,,ventilation,
+light cycles,climate conditions,light cycles (day and night),,light cycles,
+ultraviolet light,climate conditions,ultraviolet light,,ultraviolet light,
+air quality,climate conditions,air quality,,ventilation,
+name,staff member,Each staff member has a name,,name,
+expertise,staff member,Each staff member has a ... and expertise,,expertise,
+birth date,staff member,we need to keep staff member's birth date,,birth date,
+permanent address,staff member,we need to keep staff member's ... and permanent address,,permanent address,
+participation,conservation program,conservation programs a zoological garden participates in are initiatives,,,*
+goal,conservation program,aimed at preserving biodiversity through in-situ and ex-situ strategies,,*,
+supported species,conservation program,A conservation program focuses on particular species it supports,species,,supports
+collaborating entities,conservation program,collaborate with global conservation entities,,,*
+areas of involvement,conservation program,"pivotal in research, breeding programs, and reintroduction efforts",,*,
+reintroduction programs,conservation program,Specific animals may be part of reintroduction conservation programs,reintroduction conservation program,,*

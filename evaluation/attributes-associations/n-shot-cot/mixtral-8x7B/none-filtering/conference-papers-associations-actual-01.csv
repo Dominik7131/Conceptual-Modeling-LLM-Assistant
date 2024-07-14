@@ -1,0 +1,17 @@
+Generated association,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches association
+linked to,research paper,research paper,submission,"Each research paper is linked to a submission, which represents the act of submitting the paper for consideration at a conference.",submission,,has submission
+has,research paper,research paper,publication year,"A research paper also has several intrinsic qualities. It has a publication year, marking when the findings were officially made public.",,publication year,
+has,research paper,research paper,abstract,An abstract provides a brief summary of the paper's content.,,abstract,
+has,research paper,research paper,presentation,The paper's presentation at a conference is also an important aspect that we need to know about the paper.,conference,,presented at
+has,research paper,research paper,title,"Moreover, the title of the paper gives it a distinct identity.",,title,
+has,research paper,research paper,authorship,"An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors.",author,,written by
+has institutional affiliation,author,author,institution,An author's institutional affiliation provides a professional identity and context.,,affiliation,
+written by,author,research paper,author,"An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors.",research paper,,written by
+represents,conference,conference,event,"A conference represents an event where research papers are presented and discussed. This gathering is characterized by a specific year when it takes place, a location where it is held, and a its name.",,,*
+linked to,submission,research paper,submission,"Each research paper is linked to a submission, which represents the act of submitting the paper for consideration at a conference.",research paper,,has submission
+linked to,submission,submission,conference,"A submission is linked to the conference it is submitted to and carries a submission date, marking when it entered the review process.",conference,,submitted to
+linked to,submission,resubmissions,submission,"Submissions can be resubmissions, linked to prior submissions they replace, showing the iterative nature of academic work.",,,is resubmission of
+reviewed by,submission,submission,reviewer,"A submission is reviewed by a reviewer, a connection that is fundamental to the peer-review process and maintaining the academic integrity of the conference proceedings.",reviewer,,reviewed by
+involved in,reviewer,reviewer,review process,A reviewer is involved in the review process by the act of writing reviews.,,,*
+reviews,review,review,submission,"A review, an evaluation or critique of a research paper by a reviewer, plays a pivotal role. A review reviews the submission it evaluates.",submission,,reviews
+writes,review,reviewer,review,A reviewer is involved in the review process by the act of writing reviews.,reviewer,,writes

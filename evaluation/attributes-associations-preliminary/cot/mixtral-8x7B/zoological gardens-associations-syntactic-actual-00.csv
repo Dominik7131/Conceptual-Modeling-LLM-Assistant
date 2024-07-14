@@ -1,0 +1,59 @@
+Generated association,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches association
+animals,zoological garden,zoological garden,animal,Animals are the central entities in a zoological garden.,animal,,*
+enclosures,zoological garden,zoological garden,enclosure,A zoological garden provides various enclosures where its animals live and are ethically displayed and conserved.,enclosure,,provides
+staff members,zoological garden,zoological garden,staff member,Staff members of zoological gardens are integral to their operation.,staff member,,has member
+conservation programs,zoological garden,zoological garden,conservation program,Conservation programs a zoological garden participates in are initiatives aimed at preserving biodiversity through in-situ and ex-situ strategies.,conservation program,,participates in
+has location,animal,animal,zoological garden,Animals are the central entities in a zoological garden.,zoological garden,,*
+has classification,animal,animal,species,"They are classified by species, each possessing unique biological and ecological characteristics.",species,,classified by
+has diet,animal,animal,diet,"For a particular animal, we are also interested in its specified diet which is crucial for managing their welfare and conservation status of the animal.",diet,,has specified diet
+has name,animal,animal,name,Each animal also has a name which is not unique but our staff uses it to refer to them and we also present animal names to our visitors.,,animal name,
+has enclosure,animal,animal,enclosure,A zoological garden provides various enclosures where its animals live and are ethically displayed and conserved.,enclosure,,*
+may be part of,animal,animal,reintroduction conservation programs,Specific animals may be part of reintroduction conservation programs.,reintroduction conservation program,,is part of program
+characterized by,species,properties,species,"Properties such as species name and species common name, and IUCN status characterize the species.",,+species name;species common name;iucn status,
+referred to by,species,species,visitors,"The species name adheres to international taxonomic standards, ensuring uniformity across scientific and conservation discourse, while the common name is how visitors usually refer to the species.",,,
+require,species,species,vitamins or minerals,"For example, some species may require particular vitamins or minerals in higher quantities than others.",,*,
+need,species,species,feedings,"Some species may need multiple small feedings throughout the day, while others might suffice with less frequent larger meals.",,*,
+characterized by,species,enclosure,species,"Each enclosure is characterized by its size in square meters, type (e.g., aviary, aquarium, terrarium), climate conditions, and vegetation, tailored to the needs of specific species in the enclosure.",,,
+tailored to,species,climate conditions,species,The climate conditions of enclosures in zoological gardens are complex and need to be tailored specifically to the needs of each species.,climate conditions,,*
+has,species,species,thermal preference,"Each species has a specific thermal preference based on its natural habitat, which needs to be mimicked in captivity for optimal health.",climate conditions,,*
+require,species,species,climate conditions,"Many species, particularly reptiles, require climate conditions ensuring an exposure to ultraviolet light to synthesize vitamin D3, essential for calcium metabolism.",climate conditions,,*
+necessary for,species,non-stop care,species,An enclosure must have more caretakers so that they cover non-stop care which is necessary for most species.,,,
+feeding strategy,diet,diet,-,This classification helps in formulating appropriate feeding strategies.,,*,
+nutrient requirement,diet,diet,-,The diet is also related to specific nutrients required to maintain health and vitality.,,nutrients,
+feeding schedule,diet,diet,-,"For the diet, the feeding schedule is essential.",,feeding schedule,
+feeding technique,diet,diet,-,"The diet can also be associated with a special feeding technique because some animals, especially those with unique physiological or behavioral adaptations, require special methods of feeding that mimic their natural foraging behaviors, enhancing their psychological well-being and physical health.",,feeding technique,
+has resident species,enclosure,enclosure,species,Enclosures are specialized habitats designed to mimic the natural environments of the resident species.,species,,resident of
+has size,enclosure,enclosure,size,Each enclosure is characterized by its size in square meters,,enclosure size,
+has type,enclosure,enclosure,type,"Each enclosure is characterized by its type (e.g., aviary, aquarium, terrarium)",,enclosure type,
+has climate conditions,enclosure,enclosure,climate conditions,Each enclosure is characterized by its climate conditions,climate conditions,,has climate conditions
+has vegetation,enclosure,enclosure,vegetation,Each enclosure is characterized by its vegetation,,vegetation,
+tailored to,enclosure,enclosure,species,tailored to the needs of specific species in the enclosure,species,,resident of
+provides adequate space,enclosure,enclosure,space,providing adequate space,,enclosure size,
+provides enrichment,enclosure,enclosure,enrichment,"providing adequate space, enrichment",,*,
+provides security,enclosure,enclosure,security,security from potential stressors,,,
+assigned caretakers,enclosure,enclosure,caretaker,Caretakers and zoologists are assigned to particular enclosures,caretaker,,assigned as caretaker
+requires multiple caretakers,enclosure,enclosure,caretaker,An enclosure must have more caretakers,caretaker,,assigned as caretaker
+essential for natural behaviors and physiological functions,climate conditions,climate conditions,animal habitat,"These climate conditions are essential for mimicking the natural habitat of animals as closely as possible, which not only ensures their physical health but also supports their psychological well-being by encouraging natural behaviors and physiological functions.",enclosure,,has climate conditions
+critical element,climate conditions,climate conditions,enclosure,Temperature is perhaps the most critical element in an enclosure's climate conditions.,enclosure,,has climate conditions
+vital and important aspect,climate conditions,climate conditions,species from tropical or aquatic environments,"Humidity levels are vital and important aspect of climate conditions, especially for species from tropical or aquatic environments, as it affects skin health, hydration, and overall comfort.",,humidity level,
+consistent with natural light patterns,climate conditions,climate conditions,animal's native habitat,"Ensuring that light cycles (day and night) in the climate conditions of enclosures are consistent with the natural light patterns of an animal's native habitat helps maintain normal circadian rhythms, which are crucial for feeding, sleeping, and reproductive behaviors.",,light cycles,
+exposure to ultraviolet light,climate conditions,climate conditions,reptiles,"Many species, particularly reptiles, require climate conditions ensuring an exposure to ultraviolet light to synthesize vitamin D3, essential for calcium metabolism.",,ultraviolet light,
+adequate uv lighting,climate conditions,climate conditions,health,The absence of adequate UV lighting in the climate conditions can lead to health problems like metabolic bone disease.,,ultraviolet light,
+appropriate climate conditions,climate conditions,climate conditions,enclosure,Proper ventilation is essential for maintaining air quality and appropriate climate conditions within an enclosure.,,ventilation,
+operation,staff member,zoological gardens,staff member,Staff members of zoological gardens are integral to their operation.,zoological garden,,has member
+include,staff member,staff member,"zoologist, veterinarian, caretaker, administrative personnel","They include zoologists, veterinarians, caretakers, and administrative personnel.",+zoologist;veterinarian;caretaker;administrative personnel,,*
+has,staff member,staff member,"name, expertise",Each staff member has a name and expertise.,,+name;expertise,
+assigned to,zoologist,zoologist,enclosure,Caretakers and zoologists are assigned to particular enclosures they are responsible for.,enclosure,,assigned to as zoologist
+medical treatment,veterinarian,veterinarian,species,"Veterinarians are responsible for medical treatment of particular species. Therefore, they are not assigned to enclosures or individual animals but species.",species,,responsible for
+not assigned,veterinarian,veterinarian,enclosures,"Veterinarians are responsible for medical treatment of particular species. Therefore, they are not assigned to enclosures or individual animals but species.",,,
+not assigned,veterinarian,veterinarian,individual animals,"Veterinarians are responsible for medical treatment of particular species. Therefore, they are not assigned to enclosures or individual animals but species.",,,
+assigned to,caretaker,caretaker,enclosure,Caretakers and zoologists are assigned to particular enclosures they are responsible for.,enclosure,,assigned as caretaker
+responsible for,caretaker,caretaker,enclosure,Caretakers can be assigned to more enclosures and they are responsible for daily care and behavioral training of the animals in the enclosure.,enclosure,,assigned as caretaker
+covered by,caretaker,enclosure,caretaker,An enclosure must have more caretakers so that they cover non-stop care which is necessary for most species.,enclosure,,assigned as caretaker
+participates in,conservation program,conservation program,zoological garden,Conservation programs a zoological garden participates in are initiatives aimed at preserving biodiversity through in-situ and ex-situ strategies.,zoological garden,,participates in
+focuses on,conservation program,conservation program,species,A conservation program focuses on particular species it supports.,species,,supports
+collaborates with,conservation program,conservation program,global conservation entity,"These conservation programs often collaborate with global conservation entities and are pivotal in research, breeding programs, and reintroduction efforts.",,,*
+is part of,conservation program,animal,conservation program,Specific animals may be part of reintroduction conservation programs.,animal,,:is part of program
+collaboration,reintroduction conservation program,reintroduction conservation program,global conservation entity,These conservation programs often collaborate with global conservation entities,,,*
+pivotal in,reintroduction conservation program,reintroduction conservation program,"research, breeding programs, and reintroduction efforts","and are pivotal in research, breeding programs, and reintroduction efforts.",,*,
+part of,reintroduction conservation program,specific animals,reintroduction conservation program,Specific animals may be part of reintroduction conservation programs.,animal,,is part of program

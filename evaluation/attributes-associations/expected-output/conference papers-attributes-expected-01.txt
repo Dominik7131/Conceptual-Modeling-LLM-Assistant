@@ -1,0 +1,54 @@
+Class: research paper
+1) abstract
+- original text: An abstract provides a brief summary of the paper's content
+
+
+2) publication year
+- original text: a publication year, marking when the findings were officially made public
+
+
+3) title
+- original text: the title of the paper gives it a distinct identity
+
+
+Class: person
+1) name
+- original text: a name, giving them individual identity
+
+
+2) email
+- original text: an email address, facilitating communication within the academic community.
+
+
+Class: author
+1) affiliation
+- original text: An author's institutional affiliation provides a professional identity and context.
+
+
+Class: conference
+1) conference name
+- original text: and a its name
+
+
+2) location
+- original text: a location where it is held
+
+
+3) year
+- original text: year when it takes place
+
+
+Class: submission
+1) submission date
+- original text: a submission date, marking when it entered the review process
+
+
+2) status
+- original text: The current status of the submission, such as under review, accepted, or rejected, is a dynamic attribute reflecting its ongoing journey
+
+
+Class: reviewer
+1) expertise
+- original text: their area of expertise. This expertise is essential in ensuring the academic rigor and relevance of the review process.
+
+

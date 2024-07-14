@@ -1,0 +1,4 @@
+RAG,Q1 points,Q2 points,Q3 points,Max points possible,Q1 score,Q2 score,Q3 score,Average score
+none,13,14.5,13.5,15,0.87,0.97,0.90,0.91
+semantic,12.5,13.5,13.5,15,0.83,0.90,0.90,0.88
+syntactic,14,14,14,15,0.93,0.93,0.93,0.93

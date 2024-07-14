@@ -1,0 +1,32 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+engages in,farmer,farmer,activity,"A farmer is an individual who engages in the activity of agriculture, growing and harvesting crops.",,,
+identified by,farmer,farmer,name,"Each farmer can be identified by a name, which uniquely identifies the farmer and is used to refer to them in various documentation and statistical reporting.",,name,
+age is recorded,farmer,farmer,age,"A farmer's age is also recorded, mainly for statistical and reporting purposes.",,age,
+owns and uses,farmer,farmer,machinery,"Farmers own and use various pieces of machinery, reflecting their capacity for mechanized farming, and they are responsible for specific planting activities which are crucial for management and accountability.",machinery,,*
+conducts,farmer,farmer,planting,"In other words, we also say that the farmers conduct planting to point to this responsibility.",planting,,conducts planting
+farms on,farmer,farmer,field,"Additionally, a farmer farms on one or more fields to grow crops, which includes not only growing the crops but also other farming activities such as soil preparation.",field,,farms on
+performed by,farmer,farmer,harvest,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",harvest,,harvested by
+determines,farmer,farmer,quantity of the harvest,The total quantity of the harvest is crucial for determining the productivity and success of the crop.,harvest,,*
+cultivated by,crop,farmer,crop,"Crops are plants grown in large amounts and cultivated by farmers for profit or subsistence, such as cereals, oil seeds, vegetables, and fruits.",crop,,*
+planting of,crop,planting,crop,"Planting represents the agricultural activity of planting crops in a specific field during a specific year, capturing the details of the planting process. This involves specific crops, with each planting activity associated with a particular crop and occurring on a specific field where the planting is performed.",planting,,involves crop
+harvest of,crop,harvest,crop,"Harvest is the production obtained from crops, quantified and evaluated in terms of quantity and quality, representing the final output of the agricultural cycle. Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",harvest,,*
+owns and uses,machinery,farmer,machinery,"Farmers own and use various pieces of machinery, reflecting their capacity for mechanized farming, and they are responsible for specific planting activities which are crucial for management and accountability.",farmer,,*
+used in,machinery,machinery,farming,"Machinery encompasses mechanical tools and equipment used in farming, crucial for tasks such as plowing, seeding, spraying, and harvesting.",,,
+includes,machinery,machinery,type of machinery,"Specific types of machinery include tractors, planters, harvestors, and sprayers.",+tractor;planter;harvestor;sprayer,,*
+includes,machinery,harvester,machinery,"A harvester includes machinery that combines harvesting tasks such as reaping, threshing, and winnowing into a single operation.",harvester,,*
+manufactured,machinery,machinery,year,"The year the machinery was manufactured, indicating its age and potential modernity in technology.",,year of manufacturing,
+plays a role in,machinery,machinery,farming,"In the agricultural domain, machinery plays a pivotal role in the efficiency and effectiveness of farming.",,,
+used for,machinery,machinery,field preparation,"Machinery used for field preparation indicates that certain types of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting.",,,used for field preparation
+used for,machinery,machinery,planting,Machinery used for planting refers to the employment of specific pieces of machinery in the planting process.,planting,,used for planting
+used for,machinery,machinery,harvesting,Machinery used for harvesting connects a piece of machinery to its use in the harvesting process.,harvest,,used for harvesting
+farms on,field,farmer,field,A farmer farms on one or more fields,farmer,,farms on
+used for,field,field,growing crops,Fields are areas of land used for growing crops,crop,,*
+managing,field,field,"critical factors (soil type, soil ph, topography)","The soil type, soil pH, and the field's topography are critical for understanding how to manage each field",,-soil type;soil ph;topography,
+have,field,field,"specific features (irrigation availability, defined location, gps coordinates)",Fields also have specific features like irrigation availability and a defined location,,-irrigation availability;location,
+surrounded by,field,field,fence,Fields can be but does not have to be surrounded by a fence,,*,
+has access to,field,field,irrigation systems,Irrigation availability informs whether the field has access to irrigation systems,,irrigation availability,
+vital for,field,"planning water usage, crop selection, planting schedules",field,This is vital for planning water usage and can impact crop selection and planting schedules based on the water needs of the crops,,,
+planting crops in,field,planting,field,Planting represents the agricultural activity of planting crops in a specific field,planting,,performed on
+planted,field,crop,field,The exact date or period when the crop was planted is critical for tracking crop growth stages and scheduling subsequent farming activities,crop,,*
+performed on,field,planting,field,The knowledge of the field where the planting is performed on is important as an indication of the location of agricultural operations,planting,,performed on
+responsible for,planting,farmer,planting,"Farmers own and use various pieces of machinery, reflecting their capacity for mechanized farming, and they are responsible for specific planting activities which are crucial for management and accountability. In other words, we also say that the farmers conduct planting to point to this responsibility.",farmer,,conducts planting

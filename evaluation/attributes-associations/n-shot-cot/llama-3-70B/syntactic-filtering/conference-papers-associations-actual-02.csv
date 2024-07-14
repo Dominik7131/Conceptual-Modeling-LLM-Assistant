@@ -1,0 +1,19 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+is presented at,research paper,research paper,conference,"Each research paper is closely tied to a conference where it is presented, creating a link between the event and the written work.",conference,,presented at
+is submitted to,research paper,research paper,conference,The submission acts as a bridge between the research paper and the conference.,conference,,*
+has,research paper,research paper,author,"From an academic's point of view, authors are individuals who have significantly contributed to the creation of a research paper.",author,,written by
+has,research paper,research paper,review,"The review is another crucial element, acting as an evaluation or critique of a research paper.",review,,*
+has,author,author,affiliation,"Each author has an affiliation, often an academic institution, and one of them is designated as the corresponding author.",,affiliation,
+wrote,author,author,research paper,"It forms the connection between a research paper and its authors, indicating who wrote the paper.",research paper,,written by
+is,author,author,corresponding author,"Each author has an affiliation, often an academic institution, and one of them is designated as the corresponding author.",,,has corresponding author
+has,conference,conference,research paper,"Each research paper is closely tied to a conference where it is presented, creating a link between the event and the written work.",research paper,,presented at
+has,conference,conference,submission,The submission acts as a bridge between the research paper and the conference.,submission,,submitted to
+has,conference,conference,submission,"Submissions of research papers have their own unique lifecycle, marked by a submission date, a status indicating where it stands in the review process (like under review, accepted, or rejected), and a connection to the conference it's submitted to.",submission,,submitted to
+involves,conference,conference,person,"...the events of academic conferences... Finally, the person is a general category encompassing all individuals involved in the conference reviewing process.",person,,*
+is a bridge between,submission,submission,research paper and conference,The submission acts as a bridge between the research paper and the conference.,-research paper;conference,,*
+is submitted to,submission,submission,conference,"Submissions of research papers have their own unique lifecycle, marked by a submission date, a status indicating where it stands in the review process (like under review, accepted, or rejected), and a connection to the conference it's submitted to.",conference,,submitted to
+has,submission,submission,review,Reviewers write reviews for submissions.,review,,reviews
+is a,submission,submission,resubmission,"Submissions can be resubmissions, indicating an ongoing process of refinement and re-evaluation.",submission,,is resubmission of
+writes,reviewer,reviewer,review,Reviewers write reviews for submissions.,review,,writes
+evaluates,reviewer,reviewer,research paper submission,"A reviewer, responsible for evaluating the quality and relevance of research paper submissions, brings their expertise to the table.",submission,,reviewed by
+of,review,review,research paper,"The review is another crucial element, acting as an evaluation or critique of a research paper.",research paper,,*

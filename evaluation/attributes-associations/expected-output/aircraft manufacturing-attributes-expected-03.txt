@@ -1,0 +1,46 @@
+Class: aircraft
+1) manufacturing date
+- original text: The manufacturing date tells us when the aircraft was made.
+
+
+2) aircraft serial number
+- original text: Every aircraft is unique and can be identified by its serial number.
+
+
+Class: part
+1) part description
+- original text: a brief description to understand what it is
+
+
+2) part serial number
+- original text: Every part has a serial number, making it unique
+
+
+Class: customer
+1) customer name
+- original text: Each customer has a unique aspect, their customer name. This is not just a label, but it tells us exactly who the customer is.
+
+
+Class: aircraft model
+1) aircraft model code
+- original text: each with a unique model code
+
+
+2) aircraft model description
+- original text: a detailed description
+
+
+Class: part model
+1) part model number
+- original text: a unique model number
+
+
+2) part model description
+- original text: a brief description to explain what it is
+
+
+Class: party
+1) party code
+- original text: To identify each party, we use the party code which we also use to refer to the party in the business communication and documentation.
+
+

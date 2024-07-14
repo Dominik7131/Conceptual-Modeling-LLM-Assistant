@@ -1,0 +1,10 @@
+Generated class,Matches class,Matches attribute,Matches association
+farmer,farmer,,
+planting,planting,,
+field,field,,
+crop,crop,,
+harvest,harvest,,
+machinery,machinery,,
+machinery used for preparation,*,,
+machinery used for planting,planter,,
+machinery used for harvesting,harvester,,

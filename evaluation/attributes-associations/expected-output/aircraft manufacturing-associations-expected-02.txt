@@ -1,0 +1,103 @@
+Class: aircraft
+1) designed as
+- original text: an aircraft and its design model, or a part and its part model, highlights the adherence to design specifications and standards. which themselves are embodiments of distinct aircraft models.
+- source class: aircraft
+- target class: aircraft model
+
+
+2) consists of
+- original text: an aircraft consisting of parts composed of individually identified parts
+- source class: aircraft
+- target class: part
+
+
+3) supplied for
+- original text: Each supply is dedicated to the production of specific aircraft, ensuring a tailored approach to manufacturing.
+- source class: supply
+- target class: aircraft
+
+
+4) purchases
+- original text: customer purchasing the final aircraft purchase the finished aircraft acquisition of aircraft the relationship between a customer and their purchases a customer purchasing aircraft
+- source class: customer
+- target class: aircraft
+
+
+Class: part
+1) includes
+- original text: consisting of various parts
+- source class: supply
+- target class: part
+
+
+2) designed as part model
+- original text: it's a manifestation of a precise design model, known as a part model, based on which it is designed a part and its part model, highlights the adherence to design specifications and standards. each following a specific part model
+- source class: part
+- target class: part model
+
+
+3) consists of
+- original text: an aircraft consisting of parts composed of individually identified parts
+- source class: aircraft
+- target class: part
+
+
+Class: supplier
+1) supplies
+- original text: supplier providing essential supplies it embodies a symbiotic relationship where the supplier delivers a supply a supplier and the supplies they provide a supplier supplying supplies The suppliers supply these parts in supplies, integral to the construction of aircraft
+- source class: supplier
+- target class: supply
+
+
+Class: supply
+1) supplies
+- original text: supplier providing essential supplies it embodies a symbiotic relationship where the supplier delivers a supply a supplier and the supplies they provide a supplier supplying supplies The suppliers supply these parts in supplies, integral to the construction of aircraft
+- source class: supplier
+- target class: supply
+
+
+2) includes
+- original text: consisting of various parts
+- source class: supply
+- target class: part
+
+
+3) supplied for
+- original text: Each supply is dedicated to the production of specific aircraft, ensuring a tailored approach to manufacturing.
+- source class: supply
+- target class: aircraft
+
+
+Class: customer
+1) purchases
+- original text: customer purchasing the final aircraft purchase the finished aircraft acquisition of aircraft the relationship between a customer and their purchases a customer purchasing aircraft
+- source class: customer
+- target class: aircraft
+
+
+Class: aircraft model
+1) designed as
+- original text: an aircraft and its design model, or a part and its part model, highlights the adherence to design specifications and standards. which themselves are embodiments of distinct aircraft models.
+- source class: aircraft
+- target class: aircraft model
+
+
+2) incorporates
+- original text: It incorporates various part models, integrating them into a cohesive design that eventually takes shape as a finished aircraft.
+- source class: aircraft model
+- target class: part model
+
+
+Class: part model
+1) designed as part model
+- original text: it's a manifestation of a precise design model, known as a part model, based on which it is designed a part and its part model, highlights the adherence to design specifications and standards. each following a specific part model
+- source class: part
+- target class: part model
+
+
+2) incorporates
+- original text: It incorporates various part models, integrating them into a cohesive design that eventually takes shape as a finished aircraft.
+- source class: aircraft model
+- target class: part model
+
+

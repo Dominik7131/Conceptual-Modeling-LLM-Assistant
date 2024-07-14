@@ -1,0 +1,29 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+grows,farmer,farmer,crop,"At the core is a farmer, an individual who engages in the activity of agriculture, growing and harvesting crops.",crop,,*
+performs,farmer,farmer,harvest,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",harvest,,harvested by
+farms on,farmer,farmer,field,A farmer farms on one or more fields to grow crop on it.,field,,farms on
+conducts,farmer,farmer,planting,"The farmer is primarily responsible for conducting planting, i.e. for a particular planting activity.",planting,,conducts planting
+owns,farmer,farmer,machinery,"To reduce manual work, the farmer owns machinery.",machinery,,*
+is involved in,crop,planting,crop,"This activity involves specific crops, and the association is key to understanding the crop variety and its cultivation requirements during the planting process.",planting,,involves crop
+is grown in,crop,crop,field,"Each planting activity is performed on a particular field, indicating the location of agricultural operations and facilitating field-specific crop management.",field,,*
+is grown in,crop,crop,field,Fields serve as the primary physical space where crops are grown.,field,,*
+produces,crop,crop,harvest,The harvest is the production that is obtained from crops.,harvest,,*
+is harvested by,crop,crop,farmer,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",farmer,,harvested by
+is harvested by,crop,crop,machinery,"Machinery used for harvesting includes combines, harvesters, and other equipment that is primarily utilized to collect and process crops at the end of their growing cycle.",machinery,,*
+is grown by,crop,crop,farmer,"Basically, a farmer farms on one or more fields to grow crop on it.",farmer,,*
+owns,machinery,farmer,machinery,"To reduce manual work, the farmer owns machinery.",farmer,,*
+owns,machinery,farmer,machinery,A farmer can own one or more pieces of machinery.,farmer,,*
+is connected to,harvest,harvest,farmer,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",farmer,,harvested by
+is produced by,harvest,harvest,planting,"Planting results to the subsequent harvest it produces which is essential for tracing the agricultural output back to its planting origins, enabling an analysis of the effectiveness of the planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.",planting,,results in harvest
+is location of,field,planting activity,field,"Each planting activity is performed on a particular field, indicating the location of agricultural operations and facilitating field-specific crop management.",planting,,performed on
+grows,field,field,crop,Fields serve as the primary physical space where crops are grown.,crop,,*
+has,field,field,soil type,"The soil type present in the field, such as loamy, sandy, clay, or silt, affects water retention, nutrient availability, and the types of crops that can be successfully cultivated.",,soil type,
+has,field,field,location,"The location of the field is also described, which can include specific GPS coordinates or a general description.",,location,
+has,field,field,topography,"The physical layout of the land, including its flatness, slope, and elevation, known as the topography, influences water drainage, erosion risk, and the suitability of various agricultural machinery.",,topography,
+has,field,field,irrigation system,"Additionally, fields may have irrigation systems, and the availability and type of irrigation used are vital for planning water usage and can impact crop selection and planting schedules based on the water needs of the crops.",,irrigation availability,
+is prepared by,field,field,machinery,"Various properties link machinery to specific uses, such as field preparation, planting, and harvesting.",machinery,,used for field preparation
+is farmed by,field,field,farmer,"A missing piece in the domain describtion is how a farmer is related to the field. Basically, a farmer farms on one or more fields to grow crop on it.",farmer,,farms on
+involves,planting,planting,crop,The planting process is described as the agricultural activity of planting crops in a specific field during a specific year.,crop,,involves crop
+performed on,planting,planting,field,"Each planting activity is performed on a particular field, indicating the location of agricultural operations and facilitating field-specific crop management.",field,,performed on
+results in,planting,planting,harvest,"Planting results to the subsequent harvest it produces which is essential for tracing the agricultural output back to its planting origins, enabling an analysis of the effectiveness of the planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.",harvest,,results in harvest
+conducted by,planting,planting,farmer,"The farmer is primarily responsible for conducting planting, i.e. for a particular planting activity.",farmer,,conducts planting

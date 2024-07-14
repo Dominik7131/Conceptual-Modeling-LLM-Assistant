@@ -1,0 +1,20 @@
+Generated association,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches association
+is presented at,research paper,research paper,conference,"...the research paper emerges as a key component. It's essentially a document presenting original research findings, carrying characteristics such as a publication year, an abstract, and a title. Each research paper is closely tied to a conference where it is presented, creating a link between the event and the written work.",conference,,presented at
+has,research paper,research paper,author,"From an academic's point of view, authors are individuals who have significantly contributed to the creation of a research paper.",author,,written by
+is submitted to,research paper,research paper,conference,The submission acts as a bridge between the research paper and the conference.,conference,,*
+is evaluated by,research paper,research paper,review,"Reviewers write reviews for submissions. The review is another crucial element, acting as an evaluation or critique of a research paper.",review,,*
+wrote,author,author,research paper,"From an academic's point of view, authors are individuals who have significantly contributed to the creation of a research paper. It forms the connection between a research paper and its authors, indicating who wrote the paper.",research paper,,written by
+has,author,author,affiliation,"Each author has an affiliation, often an academic institution...",,affiliation,
+is,author,author,corresponding author,...and one of them is designated as the corresponding author.,,,*
+holds,conference,conference,location,"...a conference is a pivotal element in academic discourse. It holds a specific year and location, signifying when and where these intellectual gatherings take place.",,location,
+has,conference,conference,research paper,"Each research paper is closely tied to a conference where it is presented, creating a link between the event and the written work.",research paper,,presented at
+has,conference,conference,submission,The submission acts as a bridge between the research paper and the conference. It represents the act of submitting a research paper for consideration at a conference.,submission,,submitted to
+is submitted to,submission,submission,conference,The submission acts as a bridge between the research paper and the conference. It represents the act of submitting a research paper for consideration at a conference.,conference,,submitted to
+of,submission,submission,research paper,"Submissions of research papers have their own unique lifecycle, marked by a submission date, a status indicating where it stands in the review process (like under review, accepted, or rejected), and a connection to the conference it's submitted to.",research paper,,has submission
+has,submission,submission,review,Reviewers write reviews for submissions.,review,,reviews
+is a,reviewer,reviewer,person,"Parallel to authors are reviewers, a subgroup of the broader category of persons involved in the conference reviewing process.",person,,*
+writes,reviewer,reviewer,review,Reviewers write reviews for submissions.,*,,writes
+evaluates,reviewer,reviewer,submission,"A reviewer, responsible for evaluating the quality and relevance of research paper submissions, brings their expertise to the table.",submission,,reviewed by
+writes,review,reviewer,review,"Reviewers write reviews for submissions. The review is another crucial element, acting as an evaluation or critique of a research paper.",reviewer,,writes
+is for,review,review,research paper,"The review is another crucial element, acting as an evaluation or critique of a research paper.",research paper,,*
+has,review,submission,review,"Submissions of research papers have their own unique lifecycle, marked by a submission date, a status indicating where it stands in the review process (like under review, accepted, or rejected), and a connection to the conference it's submitted to.",submission,,reviews

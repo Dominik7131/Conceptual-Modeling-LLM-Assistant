@@ -1,0 +1,45 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+submission,research paper,"linked to a submission, which represents the act of submitting the paper for consideration at a conference",submission,,has submission
+review process,research paper,The submission process is crucial as it brings the paper into the conference's review process.,,,*
+publication year,research paper,"It has a publication year, marking when the findings were officially made public",,publication year,
+authorship,research paper,"An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors",author,,written by
+review,research paper,"A review, an evaluation or critique of a research paper by a reviewer, plays a pivotal role",,,*
+name,person,"Each person has a name, giving them individual identity",,name,
+email address,person,"and an email address, facilitating communication within the academic community",,email,
+role,person,a reviewer stands out as a specific role,reviewer,,*
+written by,author,which links it to its authors,research paper,,written by
+contribution,author,who significantly contribute to the creation of research papers,author,,written by
+institutional affiliation,author,An author's institutional affiliation,,affiliation,
+corresponding author,author,"Additionally, one of the authors may be designated as the corresponding author",research paper,,has corresponding author
+event type,conference,represents an event where research papers are presented and discussed,,,*
+year,conference,specific year when it takes place,,year,
+location,conference,location where it is held,,location,
+name,conference,its name,,conference name,
+submissions,conference,linked to a submission,submission,,submitted to
+paper presentation,conference,paper's presentation at a conference,research paper,,presented at
+review process,conference,review process,,,*
+reviewers,conference,individuals involved in the conference reviewing process,reviewer,,*
+conference,conference,submitted to a conference,submission,,submitted to
+submission date,conference,submission date,,,
+submission status,conference,current status of the submission,,,
+reviewer,conference,reviewed by a reviewer,,,
+research paper,submission,"Each research paper is linked to a submission, which represents the act of submitting the paper for consideration at a conference.",research paper,,has submission
+act of submission,submission,represents the act of submitting the paper for consideration at a conference,,,
+process,submission,The submission process is crucial as it brings the paper into the conference's review process.,,,*
+review,submission,A review reviews the submission it evaluates.,review,,reviews
+last submission,submission,Only the last submission of a research paper can be evaluated.,research paper,,*
+individuals,submission,The individuals involved in the conference reviewing process are categorized under the person classification.,,,
+reviewer,submission,"A reviewer, responsible for evaluating the quality and relevance of research paper submissions, brings to the table their area of expertise.",reviewer,,reviewed by
+expertise,submission,This expertise is essential in ensuring the academic rigor and relevance of the review process.,,,*
+submission,submission,The submission itself is a critical element.,,,
+linked to conference,submission,"A submission is linked to the conference it is submitted to and carries a submission date, marking when it entered the review process.",conference,,submitted to
+current status,submission,"The current status of the submission, such as under review, accepted, or rejected, is a dynamic attribute reflecting its ongoing journey.",,status,
+resubmissions,submission,"Submissions can be resubmissions, linked to prior submissions they replace, showing the iterative nature of academic work.",,,is resubmission of
+reviewed by,submission,"Furthermore, a submission is reviewed by a reviewer, a connection that is fundamental to the peer-review process and maintaining the academic integrity of the conference proceedings.",reviewer,,reviewed by
+role,reviewer,A reviewer stands out as a specific role,,*,
+responsible for evaluating,reviewer,responsible for evaluating the quality and relevance of research paper submissions,,,*
+area of expertise,reviewer,brings to the table their area of expertise,,expertise,
+reviews,reviewer,act of writing reviews,review,,writes
+reviewing submission,reviewer,A submission is reviewed,submission,,reviewed by
+peer review process,reviewer,a connection that is fundamental to the peer-review process,,,*
+academic integrity,reviewer,maintaining the academic integrity of the conference proceedings,,,

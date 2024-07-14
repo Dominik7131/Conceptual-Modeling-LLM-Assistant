@@ -1,0 +1,51 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+name,animal,"For a particular animal, we are also interested in its specified diet which is crucial for managing their welfare and conservation status of the animal.",,animal name,
+species name,animal,Each animal also has a name which is not unique but our staff uses it to refer to them and we also present animal names to our visitors.,,*,
+species common name,animal,"Properties such as species name and species common name, and IUCN status characterize the species.",,*,
+i ucnstatus,animal,"Properties such as species name and species common name, and IUCN status characterize the species.",,*,
+diet,animal,"For a particular animal, we are also interested in its specified diet which is crucial for managing their welfare and conservation status of the animal.",diet,,has specified diet
+age at reproduction,animal,"Reproductive details of animal species include reproductive health and management information that is paramount in zoological settings, especially for conservation breeding programs.",,*,
+breeding season,animal,"Reproductive details of animal species include reproductive health and management information that is paramount in zoological settings, especially for conservation breeding programs.",,*,
+gestation period,animal,"Gestation period, which is the length of pregnancy in viviparous species, is important for monitoring and providing care during this critical period.",,*,
+eggs laid,animal,"For oviparous species, the number of eggs typically laid at one time, affects incubation practices.",,*,
+conservation program,animal,Specific animals may be part of reintroduction conservation programs.,reintroduction conservation program,,*
+species name,species,"They are classified by species, each possessing unique biological and ecological characteristics.",,species name,
+species common name,species,"Properties such as species name and species common name, and IUCN status characterize the species.",,species common name,
+iucn status,species,"IUCN status provides insight into the conservation priority of species, influencing habitat management and breeding programs.",,iucn status,
+diet,species,"For a particular animal, we are also interested in its specified diet which is crucial for managing their welfare and conservation status of the animal.",,,
+reproductive health,species,"Reproductive details of animal species include reproductive health and management information that is paramount in zoological settings, especially for conservation breeding programs.",,*,
+age at reproduction,species,"First, the age at which the species is capable of reproducing, which helps in planning breeding programs, is important.",,reproductive age,
+breeding season,species,"This takes us also to the specific time of year when the animals of that species naturally breed, which can influence how enclosures are managed and when animals are introduced for mating.",,natural breeding time,
+gestation period,species,"Gestation period, which is the length of pregnancy in viviparous species, is important for monitoring and providing care during this critical period.",,gestation period,
+number of eggs,species,"For oviparous species, the number of eggs typically laid at one time, affects incubation practices.",,:number of laid eggs,
+type,diet,we are also interested in its specified diet which is crucial for managing their welfare and conservation status of the animal.,,diet type,
+classification,diet,"We distinguish different types of diet whether an animal is herbivorous, carnivorous, omnivorous, piscivorous, etc.",,diet type,
+nutrients,diet,The diet is also related to specific nutrients required to maintain health and vitality.,,nutrients,
+required vitamins and minerals,diet,"For example, some species may require particular vitamins or minerals in higher quantities than others.",,nutrients,
+feeding schedule,diet,The feeding schedule is essential.,,feeding schedule,
+frequency and timing,diet,"It specifies the frequency and timing of feeding, which can affect the animal's metabolic rate and overall health.",,feeding schedule,
+feeding pattern,diet,"Some species may need multiple small feedings throughout the day, while others might suffice with less frequent larger meals.",,feeding schedule,
+feeding technique,diet,"The diet can also be associated with a special feeding technique because some animals, especially those with unique physiological or behavioral adaptations, require special methods of feeding that mimic their natural foraging behaviors, enhancing their psychological well-being and physical health.",,feeding technique,
+eggs laid at one time,oviparous species,"For oviparous species, the number of eggs typically laid at one time, affects incubation practices.",,number of laid eggs,
+size,enclosure,"Each enclosure is characterized by its size in square meters, type (e.g., aviary, aquarium, terrarium), climate conditions, and vegetation, tailored to the needs of specific species in the enclosure.",,enclosure size,
+type,enclosure,"Each enclosure is characterized by its size in square meters, type (e.g., aviary, aquarium, terrarium), climate conditions, and vegetation, tailored to the needs of specific species in the enclosure.",,enclosure type,
+climate conditions,enclosure,"Each enclosure is characterized by its size in square meters, type (e.g., aviary, aquarium, terrarium), climate conditions, and vegetation, tailored to the needs of specific species in the enclosure.",climate conditions,,has climate conditions
+vegetation,enclosure,"Each enclosure is characterized by its size in square meters, type (e.g., aviary, aquarium, terrarium), climate conditions, and vegetation, tailored to the needs of specific species in the enclosure.",,vegetation,
+assigned caretakers,enclosure,Caretakers and zoologists are assigned to particular enclosures they are responsible for.,caretaker,,assigned as caretaker
+assigned zoologists,enclosure,Caretakers and zoologists are assigned to particular enclosures they are responsible for.,zoologist,,assigned to as zoologist
+type,climate conditions,"climate conditions, and vegetation, tailored to the needs of specific species in the enclosure.",,,
+temperature,climate conditions,"They are a blend of various controlled environmental factors including temperature, humidity, lighting, and ventilation.",,temperature,
+humidity,climate conditions,"They are a blend of various controlled environmental factors including temperature, humidity, lighting, and ventilation.",,humidity level,
+lighting,climate conditions,"They are a blend of various controlled environmental factors including temperature, humidity, lighting, and ventilation.",,light cycles,
+ventilation,climate conditions,"They are a blend of various controlled environmental factors including temperature, humidity, lighting, and ventilation.",,ventilation,
+name,staff member,Each staff member has a name,,name,
+expertise,staff member,Each staff member has a name and expertise,,expertise,
+birth date,staff member,staff member's birth date,,birth date,
+permanent address,staff member,staff member's permanent address,,permanent address,
+assigned enclosures,staff member,Caretakers and zoologists are assigned to particular enclosures,+caretaker;zoologist,,+:assigned as caretaker;:assigned to as zoologist
+responsible species,staff member,Veterinarians are responsible for medical treatment of particular species,veterinarian,,responsible for
+description,conservation program,Conservation programs a zoological garden participates in are initiatives aimed at preserving biodiversity through in-situ and ex-situ strategies.,,*,
+species,conservation program,A conservation program focuses on particular species it supports.,species,,supports
+geographic region,conservation program,Conversation programs with ex-situ strategies also focus on specific countries or geographic regions.,,+geographic region;country,
+collaborating entities,conservation program,"These conservation programs often collaborate with global conservation entities and are pivotal in research, breeding programs, and reintroduction efforts.",,,*
+reintroduction program,conservation program,Specific animals may be part of reintroduction conservation programs.,reintroduction conservation program,,*

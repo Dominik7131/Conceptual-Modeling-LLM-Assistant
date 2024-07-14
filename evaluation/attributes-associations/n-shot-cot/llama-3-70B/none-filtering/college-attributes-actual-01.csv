@@ -1,0 +1,42 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+name,study programme,"A study programme is characterised by the name of the study programme and also by the type, and objectives of study in the study programme.",,programme name,
+profile of the graduate,study programme,"In the case of a Bachelor's or Master's degree programme, it is also characterised by a description of the profile of the graduate of the study programme.",,-:bachelor profile description;:master profile description,
+standard period of study,study programme,The study programme must have a standard period of study with an average study load expressed in academic years.,,standard period of study,
+degree,study programme,The degree awarded to graduates shall also be specified for the study programme.,,awarded degree,
+subject of study,study programme,Subject of study shall be taught within the study programme.,subject,,taught within
+curriculum,study programme,Their sequence in time within the study programme is determined by the curriculum of the study programme.,curriculum,,has curriculum
+form of study,study programme,The forms of study may be: a. full-time study; b. combined study; or c. distance learning study.,form of study,,*
+field of education,study programme,A study programme belongs to only one field of education if the state examinations or the dissertation defence verify profiling knowledge or skills in the basic subject areas belonging to one field of education.,education field,,belongs to field
+guarantor,study programme,"A study programme guarantor shall, in particular, coordinate the content of the degree programme, supervise the quality of its implementation, evaluate the degree programme and develop it.",,,has study programme guarantor
+objective,bachelor study programme,The Bachelor's degree study programme is aimed at preparing students for the profession and for study in a Master's degree programme.,,:programme objectives,
+duration,bachelor study programme,"The standard period of study, including work experience, is a minimum of three and a maximum of four years.",,:standard period of study,
+completion requirements,bachelor study programme,"The studies of a student in the Bachelor's degree study programme is duly completed by a state final examination, which usually includes the defense of the bachelor's thesis.",,*,
+awarded degree,bachelor study programme,"Graduates of bachelor's degree programmes are awarded the academic degree of 'Bachelor' (abbreviated as 'B.Sc.' before their name) and, in the field of arts, the academic degree of 'Bachelor of Arts' (abbreviated as 'B.A.' before their name).",,:awarded degree,
+objectives,master study programme,"The Master's degree study programme is aimed at acquiring theoretical and practical knowledge based on the current state of scientific knowledge, research and development, at mastering their application and at developing skills for creative activity;",,:programme objectives,
+duration,master study programme,The standard duration of this programme is at least one and not more than three years.,,:standard period of study,
+completion requirements,master study programme,"The studies of a student in the Master's degree study programme are duly completed by a state final examination, which includes the defence of the diploma thesis.",,*,
+academic degrees,master study programme,"The following academic degrees are awarded to graduates of master's degree programmes: ",,:awarded degree,
+name,master study programme,"A study programme is characterised by the name of the study programme and also by the type, and objectives of study in the study programme.",,:programme name,
+profile of graduate,master study programme,"In the case of a Master's degree programme, it is also characterised by a description of the profile of the graduate of the study programme.",,master profile description,
+form,subject,"a subject is taught in particular in the form of lecture, tutorial, seminar, proseminar, course, practical training, internship, special course, laboratory class, field trip, fieldwork, individual work, or consultation.",,form of teaching,
+duration,subject,A subject may take one or two semesters in the same academic year.,,number of semesters,
+identification code,subject,Each subject has an identification code which is unique within the college.,,*,
+credits,subject,the number of assigned credits,,number of assigned credits,
+teaching method,subject,the form of teaching,,form of teaching,
+assessment method,subject,the form of assessment of study,subject completion assessment,,assesses completion of
+registration,subject completion assessment,a student registers to the subjects that are compulsory and elective in the curriculum of the study program he or she is enrolled in,,,
+assessment,subject completion assessment,Assessment of completion of the study of a subject means the verification of completion of the subject by the student,subject,,assesses completion of
+assessment forms,subject completion assessment,The forms of this assessment are: colloquium; course credit; graded course credit; course test; examination; or a combination of the forms,-colloquium;course credit;course test;examination,,
+assessment deadline,subject completion assessment,The assessment of study of a subject registered in a given unit of study may not be carried out later than by the end of the examination period of the summer semester of the academic year in which the student studied in the given unit of study,,*,
+examiner,subject completion assessment,"The assessment of the study is carried out by an examiner, who is always an academic member of staff",,,carried out by examiner
+assessment results,subject completion assessment,"The results of colloquium, course credit, and course test are graded as 'pass'-'fail' or 'credited'-'not credited'",,results grade,
+examination,subject completion assessment,An examination tests the student’s knowledge or his ability; the basic requirements for the examination are in accordance with the curriculum provided in the description of the subject and published in electronic form,examination,,*
+type,examination,"state final examination, which usually includes the defense of the bachelor's thesis",,,
+type,examination,state doctoral examination and a public defense of the dissertation,,,
+form,examination,colloquium,,,
+form,examination,course credit,,,
+form,examination,graded course credit,,,
+form,examination,course test,,,
+form,examination,examination,,,
+format,examination,"oral, written, practical, or combined",,form of examination,
+grade,examination,"excellent, very good, good, and fail",,:results grade,

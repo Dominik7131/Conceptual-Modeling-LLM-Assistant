@@ -1,0 +1,28 @@
+Class: research paper
+- original text: the research paper emerges as a key component. It's essentially a document presenting original research findings
+
+
+Class: person
+- original text: the person is a general category encompassing all individuals involved in the conference reviewing process
+
+
+Class: author
+- original text: authors are individuals who have significantly contributed to the creation of a research paper
+
+
+Class: conference
+- original text: Viewed as an event where research papers are presented and discussed, a conference is a pivotal element in academic discourse.
+
+
+Class: submission
+- original text: The submission acts as a bridge between the research paper and the conference. It represents the act of submitting a research paper for consideration at a conference
+
+
+Class: reviewer
+- original text: reviewers, a subgroup of the broader category of persons involved in the conference reviewing process. A reviewer, responsible for evaluating the quality and relevance of research paper submissions
+
+
+Class: review
+- original text: The review is another crucial element, acting as an evaluation or critique of a research paper.
+
+

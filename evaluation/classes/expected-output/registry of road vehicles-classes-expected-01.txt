@@ -1,0 +1,264 @@
+Class: road vehicle
+- original text: For the purposes of regulating the conditions of operation of vehicles on roads, a road vehicle is a motorised or non-motorised vehicle which is constructed for use on roads for the carriage of persons, animals or goods.
+
+
+Class: special vehicle
+- original text: A special vehicle is a vehicle manufactured for purposes other than road traffic, which may be operated on roads if conditions are met.
+
+
+Class: vehicle
+- original text: A vehicle is a machine, usually with wheels, used for transporting people, animals or goods, on land.
+
+
+Class: motorcycle
+- original text: motorcycles
+
+
+Class: passenger car
+- original text: passenger cars
+
+
+Class: bus
+- original text: buses
+
+
+Class: lorry
+- original text: lorries
+
+
+Class: special purpose vehicle
+- original text: special purpose vehicles
+
+
+Class: trailer
+- original text: A trailer is a non-motorised road vehicle intended to be towed by another vehicle to which it is coupled in a combination.
+
+
+Class: powered wheelchair
+- original text: powered wheelchairs if their width or length exceeds 1.4 m, their design speed exceeds 15 km. h-1 or their maximum permissible weight exceeds 450 kg
+
+
+Class: motorised vehicle
+- original text: A motorised vehicle is a vehicle with an engine.
+
+
+Class: non motorised vehicle
+- original text: A non-motorised vehicle is a vehicle without an engine.
+
+
+Class: motorised road vehicle
+- original text: the motorised road vehicle the motorised road vehicle
+
+
+Class: non motorised road vehicle
+- original text: a non-motorised road vehicle
+
+
+Class: agricultural tractor
+- original text: agricultural or forestry tractors
+
+
+Class: forestry tractor
+- original text: forestry tractors
+
+
+Class: agricultural tractor trailer
+- original text: their trailers
+
+
+Class: forestry tractor trailer
+- original text: their trailers
+
+
+Class: self propelled work machine
+- original text: self-propelled work machines
+
+
+Class: work machine carried
+- original text: work machines carried
+
+
+Class: work machine attached
+- original text: work machines attached
+
+
+Class: interchangeable towed equipment
+- original text: interchangeable towed equipment
+
+
+Class: snow vehicle
+- original text: vehicles designed primarily for driving on snow
+
+
+Class: off road vehicle
+- original text: vehicles designed primarily for off-road driving
+
+
+Class: single axle tractor
+- original text: single-axle tractors
+
+
+Class: single axle tractor trailer
+- original text: their trailers
+
+
+Class: special tractor
+- original text: special tractors
+
+
+Class: special tractor trailer
+- original text: their trailers
+
+
+Class: carrier of working adaptors
+- original text: carriers of working adaptors
+
+
+Class: vehicle system
+- original text: Vehicle system means any structural system of a vehicle which is subject to the technical requirements laid down in an implementing regulation. An example of a vehicle system is brakes or emission reduction devices.
+
+
+Class: structural component
+- original text: A structural component of a vehicle is a component of the vehicle which must be type-approved independently of the vehicle if so provided for in the implementing legislation and which is subject to the technical requirements laid down in the implementing legislation. An example of a structural component of a vehicle is a lamp.
+
+
+Class: manufacturer
+- original text: A manufacturer is a person who manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.
+
+
+Class: person
+- original text: persons, i.e. human or non-human entities recognized as having privileges and obligations
+
+
+Class: natural person
+- original text: If the person is a natural person
+
+
+Class: business natural person
+- original text: If the person is a natural person engaged in business
+
+
+Class: legal person
+- original text: legal person
+
+
+Class: legal person branch
+- original text: a branch
+
+
+Class: registration plate
+- original text: A registration plate is a metal or plastic plate assigned to a road vehicle for official identification purposes.
+
+
+Class: registration certificate
+- original text: A registration certificate is an official document providing proof of registration of a vehicle in the register.
+
+
+Class: third party insurance
+- original text: the insurance against liability for damage caused by the operation of the vehicle (hereinafter referred to as 'third party insurance')
+
+
+Class: engine
+- original text: the engine data for the road vehicle
+
+
+Class: bodywork
+- original text: bodywork of the road vehicle
+
+
+Class: technical inspection
+- original text: A road vehicle technical inspection is an inspection of its roadworthiness which includes the technical condition and functioning of a road vehicle, its systems, components and separate technical units and their environmental impact or a registration test of a road vehicle. During a technical inspection, the technical inspection station shall determine whether the technical condition and operation of the road vehicle, its systems, structural components and separate technical units are free from defects or have defects by comparing the actual technical condition of the road vehicle with the conditions laid down for the technical condition of the vehicle.
+
+
+Class: technical inspection station
+- original text: A technical inspection station is a workplace specialised in carrying out technical inspections of road vehicles.
+
+
+Class: municipal authority
+- original text: The municipal authority of a municipality with extended competence
+
+
+Class: green card
+- original text: Green card means an international certificate proving that the road vehicle has been covered by a third party insurance against liability for damage caused by the operation of the road vehicle specified in the certificate as the insured vehicle.
+
+
+Class: insurance contract
+- original text: an insurance contract concluded between the policyholder and the insurer
+
+
+Class: insurer
+- original text: The insurer is an insurance company authorised to operate the third party insurance in the contract.
+
+
+Class: policyholder
+- original text: The policyholder is the person who has concluded the insurance contract with the insurer.
+
+
+Class: emission measurement
+- original text: Emissions measurement as part of the technical inspection can be carried out at the emission measurement station before other inspection tasks are carried out at the technical inspection station.
+
+
+Class: emission measurement result
+- original text: results of the emission measurement
+
+
+Class: inspection technician
+- original text: The inspection technician
+
+
+Class: separate technical unit
+- original text: A separate technical unit of a vehicle is a component, the type of which may be approved independently of the vehicle but only in relation to one or more vehicle types, if so provided for in the implementing legislation, and which is subject to the technical requirements laid down in the implementing legislation. An independent technical unit of a vehicle is, for example, the rear bumper of a vehicle, or a fixed or swap body of a vehicle.
+
+
+Class: defect
+- original text: defects
+
+
+Class: minor defect
+- original text: a minor defect which does not significantly affect the operational characteristics of the vehicle, road safety or the environment,
+
+
+Class: serious defect
+- original text: a serious defect which affects the operational characteristics of the vehicle, is liable to endanger road traffic, may adversely affect the environment or consists of a serious deficiency in the identification of the vehicle
+
+
+Class: dangerous defect
+- original text: a dangerous defect which poses an immediate threat to the safety of the road vehicle, to road traffic or to the environment.
+
+
+Class: vehicle deliverer
+- original text: the natural person who delivered the vehicle for the technical inspection
+
+
+Class: odometer
+- original text: the distance travelled on the odometer
+
+
+Class: valued added tax payment
+- original text: value added tax has been paid
+
+
+Class: missing or stolen road vehicle listing
+- original text: listed as missing or stolen in the Schengen Information System or in the information system of the state police or this information is not established by another procedure
+
+
+Class: incomplete vehicle
+- original text: An incomplete vehicle is any vehicle that must undergo at least one further stage of completion in order to meet the relevant technical requirements.
+
+
+Class: technically fit road vehicle
+- original text: A road vehicle is technically fit for use on the road if no defects or only minor defects have been found during the road vehicle technical inspection. If the technical inspection has revealed minor defects, the operator of the road vehicle shall remedy them.
+
+
+Class: inspection sticker
+- original text: an inspection sticker on the rear plate of the registration plate of the road vehicle indicating the month and year of the next periodic technical inspection of the road vehicle
+
+
+Class: limited technically fit vehicle
+- original text: If a technical inspection detects a serious defect, the vehicle is technically fit for use only for 30 days from the date of the technical inspection. Within this period, the operator of the road vehicle shall be obliged to bring the road vehicle with the rectified serious defect to the technical inspection station for a repeat technical inspection.
+
+
+Class: technically unfit road vehicle
+- original text: If the operator of the road vehicle does not proceed in this way, or if the repeated technical inspection reveals that the defect to be rectified has been recurrently rectified, the vehicle is technically unfit for use and may not be used in traffic. If the technical inspection of a road vehicle reveals a dangerous defect, the vehicle is technically unfit for use and must not be used in traffic.
+
+

@@ -1,0 +1,9 @@
+Generated association,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches association
+holds,conference,conference,year-location,"A conference holds a specific year and location, signifying when and where these intellectual gatherings take place.",,-year;location,
+is a,conference,conference,pivotal-element,A conference is a pivotal element in academic discourse.,,,
+acts as a bridge,submission,submission,relationship between research paper and conference,"The submission acts as a bridge between the research paper and the conference. It represents the act of submitting a research paper for consideration at a conference. Submissions of research papers have their own unique lifecycle, marked by a submission date, a status indicating where it stands in the review process (like under review, accepted, or rejected), and a connection to the conference it's submitted to. Importantly, submissions can be resubmissions, indicating an ongoing process of refinement and re-evaluation.",research paper,,has submission
+has,submission,submission,"lifecycle (submission date, status, review process)","Submissions of research papers have their own unique lifecycle, marked by a submission date, a status indicating where it stands in the review process (like under review, accepted, or rejected), and a connection to the conference it's submitted to.",,,*
+can be,submission,submission,resubmissions,"Importantly, submissions can be resubmissions, indicating an ongoing process of refinement and re-evaluation.",,,is resubmission of
+is a subgroup of,reviewer,reviewer,person,"A reviewer, responsible for evaluating the quality and relevance of research paper submissions, brings their expertise to the table.",person,,*
+writes,reviewer,reviewer,review,Reviewers write reviews for submissions.,review,,writes
+writes reviews,review,reviewer,review,Reviewers write reviews for submissions.,reviewer,,writes

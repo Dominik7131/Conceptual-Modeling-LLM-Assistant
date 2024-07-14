@@ -1,0 +1,19 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+purchase,aircraft,customer,aircraft,"Customers represent the clients who purchase the finished aircraft. They are linked to aircraft through the purchases, which signifies the acquisition of aircraft by these clients.",customer,,purchases
+identified by,aircraft,aircraft,serial number,"Each aircraft is uniquely identified by a serial number,",,aircraft serial number,
+linked to,aircraft,aircraft,model,"linked to a specific model,",aircraft model,,designed as
+represented by,aircraft,aircraft,model,"Aircraft models are critical in this domain, representing different configurations of aircraft.",aircraft model,,designed as
+consists of,aircraft,aircraft,part,"The aircraft is also defined by the parts it consists of,",part,,consists of
+linked,part,part,part model,"Every part is linked to its specific model, indicating the design it follows, and is identified by a serial number and a brief description.",part model,,designed as part model
+provides,supplier,supplier,part,"Supplies encompass the parts required for aircraft manufacturing, provided by a supplier.",part,,*
+provides,supplier,supplier,part,Suppliers are entities that provide parts for aircraft manufacturing.,part,,*
+dedicated to,supply,supply,aircraft,Each supply is dedicated to the manufacturing of a specific aircraft,aircraft,,supplied for
+includes,supply,supply,part,and includes specific parts necessary for this process,part,,includes
+supply,supply,supply,part,They maintain a relationship where they supply supplies consiting of various parts necessary for the construction of aircrafts,part,,includes
+purchases,customer,customer,aircraft,"Customers represent the clients who purchase the finished aircraft. They are linked to aircraft through the purchases, which signifies the acquisition of aircraft by these clients.",aircraft,,purchases
+identified by,customer,customer,name,"Every customer is identified by a name, which is a unique designation of each client in this context.",,customer name,
+represents,aircraft model,aircraft model,configuration,"Aircraft models are critical in this domain, representing different configurations of aircraft.",*,,*
+assigned,aircraft model,aircraft model,unique model code,Each aircraft model is described in detail and assigned a unique model code.,,aircraft model code,
+incorporates,aircraft model,aircraft model,part model,"Furthermore, aircraft models incorporate various part models in their design, indicating the integration of different components necessary for constructing a specific aircraft model.",part model,,incorporates
+incorporates,part model,aircraft model,part model,"aircraft models incorporate various part models in their design, indicating the integration of different components necessary for constructing a specific aircraft model.",aircraft model,,incorporates
+specific model,part model,part,part model,This linkage to the specific model ensures consistency and standardization in the manufacturing process.,part,,designed as part model

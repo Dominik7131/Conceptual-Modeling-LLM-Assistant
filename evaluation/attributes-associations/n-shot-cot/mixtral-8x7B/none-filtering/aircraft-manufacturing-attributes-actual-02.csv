@@ -1,0 +1,76 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+party,aircraft,"a party, which is a broad term encompassing any subject involved in this domain",party,,*
+party code,aircraft,uniquely identified by a party code,,,
+name,aircraft,"unique identity each customer holds, embodied in their name",,,
+unique serial number,aircraft,Each aircraft carries a unique serial number,,aircraft serial number,
+manufacturing date,aircraft,The manufacturing date of an aircraft is also a crucial piece of information,,manufacturing date,
+supplier,aircraft,A supplier is recognized as an entity providing parts through supplies essential for constructing an aircraft,supplier,,*
+supply,aircraft,Each supply is dedicated to the production of specific aircraft,supply,,supplied for
+part model,aircraft,"every part used in aircraft construction is not just a component; it's a manifestation of a precise design model, known as a part model",part model,,*
+unique serial number,aircraft,Each part carries a unique serial number,,,
+unique model code,aircraft,An aircraft model is distinguished not only by its unique model code,,*,
+part models,aircraft,"It incorporates various part models, integrating them into a cohesive design",part model,,*
+party code,part,a party code,,,
+name,part,"the essence of this role is not just in the acquisition of aircraft but also in the unique identity each customer holds, embodied in their name",,,
+unique serial number,part,Each aircraft carries a unique serial number,,,
+manufacturing date,part,The manufacturing date of an aircraft is also a crucial piece of information,,,
+supplier,part,A supplier is recognized as an entity providing parts through supplies essential for constructing an aircraft,supplier,,*
+parts,part,"each supply is dedicated to the production of specific aircraft, ensuring a tailored approach to manufacturing",supply,,*
+part model,part,"every part used in aircraft construction is not just a component; it's a manifestation of a precise design model, known as a part model",part model,,designed as part model
+model number,part,This model is defined not just by its design but also by its unique model number,,,
+description,part,"Each part carries a unique serial number, further emphasizing its individuality within the larger structure of an aircraft, and its brief description",,part description,
+aircraft model,part,An aircraft model is distinguished not only by its unique model code but also by a detailed description that encapsulates its design philosophy and specifications,,,
+part models,part,"It incorporates various part models, integrating them into a cohesive design that eventually takes shape as a finished aircraft",,,
+customer,part,"Customers are of paramount importance. They represent the clients who purchase the finished aircraft, thereby driving the entire industry",,,
+supply,part,"each supply is dedicated to the production of specific aircraft, ensuring a tailored approach to manufacturing",supply,,includes
+purchases,customer,customers who purchase the finished aircraft,aircraft,,purchases
+name,customer,"unique identity each customer holds, embodied in their name",,customer name,
+party,customer,"party, which is a broad term encompassing any subject involved in this domain",party,,*
+party code,customer,uniquely identified by a party code,,:party code,
+pivotal aspect,customer,pivotal aspect in business communication,,,
+distinctive identifier,customer,distinctive identifier in documentation and interactions within the industry,,,
+manufacturing date,customer,manufacturing date of an aircraft,,,
+supplier,customer,supplier is recognized as an entity providing parts through supplies,,,
+supply,customer,supply consisting of various parts,,,
+part model,customer,"part model, based on which it is designed",,,
+unique model number,customer,unique model number,,,
+brief description,customer,brief description that captures its essence,,,
+every part used in aircraft construction,customer,every part used in aircraft construction is not just a component,,,
+aircraft model,customer,aircraft model is distinguished not only by its unique model code,,,
+detailed description,customer,detailed description that encapsulates its design philosophy and specifications,,,
+part models,customer,various part models,,,
+specific links,customer,specific links such as a customer purchasing aircraft,,,
+relationship,customer,relationship between a customer and their purchases,,,purchases
+relationship,customer,relationship between a supplier and the supplies they provide,,,
+link,customer,link between an aircraft and its design model,,,
+link,customer,link between a part and its part model,,,
+serial number,aircraft model,aircraft carries a unique serial number,,,
+manufacturing date,aircraft model,manufacturing date of an aircraft,,,
+model code,aircraft model,aircraft model is distinguished by its unique model code,,aircraft model code,
+description,aircraft model,a detailed description that encapsulates its design philosophy and specifications,,aircraft model description,
+part models,aircraft model,incorporates various part models,part model,,incorporates
+part model,aircraft model,"every part used in aircraft construction is not just a component; it's a manifestation of a precise design model, known as a part model",part model,,incorporates
+part serial number,aircraft model,each part carries a unique serial number,,,
+part brief description,aircraft model,and a brief description that captures its essence,,,
+part model,part model,"a precise design model, known as a part model",,,
+model number,part model,unique model number,,,
+description,part model,a brief description that captures its essence,,,
+party,party,"party, which is a broad term encompassing any subject involved in this domain",,,
+party code,party,uniquely identified by a party code,,party code,
+role,party,"customers and suppliers, each playing distinct yet integral roles",-customer;supplier,,*
+purchases,party,customers who purchase the finished aircraft,aircraft,,:purchases
+name,party,"customers represent the clients who purchase the finished aircraft, thereby driving the entire industry. The essence of this role is not just in the acquisition of aircraft but also in the unique identity each customer holds, embodied in their name.",,:customer name,
+serial number,party,"Each aircraft carries a unique serial number, a testament to its distinct identity.",,,
+manufacturing date,party,The manufacturing date of an aircraft is also a crucial piece of information,,,
+supplies,party,A supplier is recognized as an entity providing parts through supplies essential for constructing an aircraft,,,:supplies
+dedicated to,party,Each supply is dedicated to the production of specific aircraft,,,
+part model,party,"every part used in aircraft construction is not just a component; it's a manifestation of a precise design model, known as a part model",,,
+serial number,party,Each part carries a unique serial number,,,
+model code,party,an aircraft model is distinguished not only by its unique model code but also by a detailed description,,,
+part models,party,It incorporates various part models,,,
+links,party,These interactions are not arbitrary; they are defined by specific links,,,
+consisting of,party,an aircraft consisting of parts,,,
+purchasing,party,a customer purchasing aircraft,aircraft,,:purchases
+supplying,party,a supplier supplying supplies,supply,,:supplies
+design model,party,an aircraft and its design model,,,
+part model,party,a part and its part model,,,

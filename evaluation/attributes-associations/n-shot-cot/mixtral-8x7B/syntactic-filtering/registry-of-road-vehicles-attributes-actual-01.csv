@@ -1,0 +1,198 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+vehicle identification number,road vehicle,A road vehicle is uniquely identified by its vehicle identification number,,vehicle identification number,
+registration plate,road vehicle,"after the registration into the register, a road vehicle is assigned a registration plate",registration plate,,assigned to
+registration certificate,road vehicle,a registration certificate is issued for the road vehicle,registration certificate,,issued for
+owner,road vehicle,The following information on the owner of a road vehicle shall be entered in the register of road vehicles,*,,has owner
+operator,road vehicle,The following information on the operator of a road vehicle shall be entered in the register of road vehicles,*,,has operator
+vehicle identification number,road vehicle,A road vehicle is uniquely identified by its vehicle identification number which is recorded in the register of road vehicles,,vehicle identification number,
+roadworthiness,road vehicle,The municipal authority checks that the road vehicle's roadworthiness has been approved,,*,
+technical inspection,road vehicle,The operator of a road vehicle which has not been registered in another state prior to its registration in the register of road vehicles shall bring the road vehicle in for a technical inspection,technical inspection,,inspected by
+insurer,road vehicle,The insurance contract shall always contain the designation of the insurer,insurer,,*
+policyholder,road vehicle,The insurance contract shall always contain the designation of the policyholder,policyholder,,*
+insured road vehicle,road vehicle,The insurance contract shall always contain the designation of the insured road vehicle,insurance contract,,*
+changes,road vehicle,The technical inspection for a road vehicle shall cease to be valid if changes have been made to the vehicle which are not in accordance with the information entered in the register of road vehicles,,*,
+technical condition,road vehicle,"During a technical inspection, the technical inspection station shall determine whether the technical condition and operation of the road vehicle",,*,
+minor defect,road vehicle,a minor defect which does not significantly affect the operational characteristics of the vehicle,minor defect,,has road vehicle defect
+serious defect,road vehicle,a serious defect which affects the operational characteristics of the vehicle,serious defect,,has road vehicle defect
+dangerous defect,road vehicle,a dangerous defect which poses an immediate threat to the safety of the road vehicle,dangerous defect,,has road vehicle defect
+type,vehicle,"A vehicle is a machine, usually with wheels, used for transporting people, animals or goods, on land.",,:type,
+personal number,vehicle,"An employee has a personal number, that uniquely identifies the employee",,,
+engine,vehicle,A motorised vehicle is a vehicle with an engine.,engine,,:has engine
+engine,vehicle,A non-motorised vehicle is a vehicle without an engine.,engine,,:has engine
+type,vehicle,"A road vehicle is a motorised or non-motorised vehicle which is constructed for use on roads for the carriage of persons, animals or goods.",,*,
+type,vehicle,"A special vehicle is a vehicle manufactured for purposes other than road traffic, which may be operated on roads if conditions are met.",,*,
+vehicle system,vehicle,Vehicle system means any structural system of a vehicle which is subject to the technical requirements laid down in an implementing regulation.,vehicle system,,:has vehicle system
+structural component,vehicle,A structural component of a vehicle is a component of the vehicle which must be type-approved independently of the vehicle if so provided for in the implementing legislation and which is subject to the technical requirements laid down in the implementing legislation.,structural component,,:has structural component
+separate technical unit,vehicle,"A separate technical unit of a vehicle is a component, the type of which may be approved independently of the vehicle but only in relation to one or more vehicle types, if so provided for in the implementing legislation, and which is subject to the technical requirements laid down in the implementing legislation.",separate technical unit,,:has separate technical unit
+manufacturer,vehicle,"A manufacturer is a person who manufactures a vehicle, its system, component or separate technical unit or has it designed or manufactured and markets it under his own name or trademark or uses it for his own account.",manufacturer,,manufactures vehicle
+incomplete,vehicle,An incomplete vehicle is any vehicle that must undergo at least one further stage of completion in order to meet the relevant technical requirements.,incomplete vehicle,,*
+owner,vehicle,"A road vehicle has an owner and operator, both being persons, i.e. human or non-human entities recognized as having privileges and obligations.",,,:has owner
+operator,vehicle,"The following information on the owner and operator, if different from the owner, of a road vehicle shall be entered in the register of road vehicles.",,,:has operator
+vehicle identification number,vehicle,A road vehicle is uniquely identified by its vehicle identification number which is recorded in the register of road vehicles.,,:vehicle identification number,
+registration plate,vehicle,"After the registration into the register, a road vehicle is assigned a registration plate and a registration certificate is issued for the road vehicle.",registration plate,,:assigned to
+registration certificate,vehicle,A registration certificate is an official document providing proof of registration of a vehicle in the register.,registration certificate,,:issued for
+registration identifier,vehicle,The register of road vehicles contains the numberic or alphanumeric registration identifier on the registration plate that uniquely identifies the road vehicle within the registration country.,,:*,
+registration date,vehicle,The register of road vehicles contains the date on which the registration plate was assigned.,,:*,
+third party insurance,vehicle,"Information on the insurance against liability for damage caused by the operation of the vehicle (hereinafter referred to as 'third party insurance') communicated by an insurance office, including the date of notification of data by the Insurers' Bureau, the date of commencement of insurance, the period of interruption of insurance, the date of change of insurance, and the date of termination of insurance",third party insurance,,:covered by insurance
+purpose,vehicle,"The purpose for which the road vehicle is intended, which is a taxi service vehicle, a vehicle with right of way, a car rental vehicle for hire, a vehicle for general use, or a vehicle for the operation of road transport for hire by its operator",,:purpose,
+category,vehicle,The category of road vehicle,,vehicle category,
+manufacturer's factory mark,vehicle,The manufacturer's factory mark as specified by the road vehicle manufacturer,,:factory mark,
+trade name,vehicle,The trade name if specified by the road vehicle manufacturer,,:trade name,
+type,vehicle,The type as specified by the road vehicle manufacturer and the variant and version if specified by the road vehicle manufacturer.,,:type,
+engine data,vehicle,"The engine data for the road vehicle that include the type of engine specified by the manufacturer of the road vehicle, the engine power specified by the road vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines, the displacement of the internal combustion engine as specified by the manufacturer of the road vehicle in cm3; and the fuel type of the road vehicle",engine,,:has engine
+bodywork,vehicle,"Type, serial number and colour of the bodywork of the road vehicle, number of seats and standing places or beds, dimensions of the loading area, volume of the box or tank,",,,:has bodywork
+overall dimensions,vehicle,"The overall dimensions of the road vehicle,",,:dimensions,
+weight,vehicle,"The maximum technically permissible weight, the maximum permissible weight and the maximum permissible operating weight of the motorised road vehicle and its maximum technically permissible weight per axle and the maximum permissible weight per axle,",,-:max permissible weight per axle;:max technically permissible weight per axle;:max permissible operating weight;:max permissible weight;:max technically permissible weight,
+coupling device,vehicle,"The type of coupling device built into the motorised road vehicle, the maximum technically permissible mass of the trailer, the maximum permissible mass of the trailer, the maximum technically permissible mass of the combination and the maximum permissible mass of the combination,",,:coupling device type,
+technical inspections,vehicle,"Data on technical inspections of the road vehicle which is the type of technical inspection carried out, the date on which the technical inspection was carried out, the date of validity of the technical inspection, the designation of the technical inspection station that carried out the technical inspection, and data on the condition of the road vehicle according to the result of the technical inspection,",technical inspection,,:inspected by
+roadworthiness,vehicle,The municipal authority checks that the roadworthiness has been approved,,*,
+third-party liability insurance,vehicle,The obligation to take out third-party liability insurance in respect of such a vehicle is fulfilled,third party insurance,,:covered by insurance
+value added tax,vehicle,"Value added tax has been paid on the acquisition of the road vehicle from another member state, if a special legal provision so provides",valued added tax payment,,:value added tax paid
+missing or stolen,vehicle,The road vehicle is not listed as missing or stolen in the Schengen Information System or in the information system of the state police or this information is not established by another procedure,missing or stolen road vehicle listing,,:is listed as missing or stolen in
+incomplete,vehicle,It is not an incomplete road vehicle,incomplete vehicle,,*
+type and category,vehicle,"The type and category of the road vehicle, the road vehicle's manufacturer's factory mark, its trade name, the type of road vehicle, and the purpose for which the road vehicle is intended",,+:type;vehicle category,
+owner details,vehicle,Details of the owner of the road vehicle,,,:has owner
+operator details,vehicle,Details of the operator of the road vehicle if the owner is not also the operator of the road vehicle,,,:has operator
+usage,motorised road vehicle,"a motorised or non-motorised vehicle which is constructed for use on roads for the carriage of persons, animals or goods",,,
+maximum technically permissible weight,motorised road vehicle,"maximum technically permissible weight, the maximum permissible weight and the maximum permissible operating weight of the motorised road vehicle and its maximum technically permissible weight per axle and the maximum permissible weight per axle,",,max technically permissible weight,
+maximum permissible weight,motorised road vehicle,"maximum technically permissible weight, the maximum permissible weight and the maximum permissible operating weight of the motorised road vehicle and its maximum technically permissible weight per axle and the maximum permissible weight per axle,",,max permissible weight,
+maximum permissible operating weight,motorised road vehicle,"maximum technically permissible weight, the maximum permissible weight and the maximum permissible operating weight of the motorised road vehicle and its maximum technically permissible weight per axle and the maximum permissible weight per axle,",,max permissible operating weight,
+maximum technically permissible weight per axle,motorised road vehicle,"maximum technically permissible weight, the maximum permissible weight and the maximum permissible operating weight of the motorised road vehicle and its maximum technically permissible weight per axle and the maximum permissible weight per axle,",,max technically permissible weight per axle,
+maximum permissible weight per axle,motorised road vehicle,"maximum technically permissible weight, the maximum permissible weight and the maximum permissible operating weight of the motorised road vehicle and its maximum technically permissible weight per axle and the maximum permissible weight per axle,",,max permissible weight per axle,
+type of coupling device,motorised road vehicle,"the type of coupling device built into the motorised road vehicle,",,:coupling device type,
+maximum technically permissible mass of the trailer,motorised road vehicle,"the maximum technically permissible mass of the trailer, the maximum permissible mass of the trailer, the maximum technically permissible mass of the combination and the maximum permissible mass of the combination",,max technically permissible weight,
+maximum permissible mass of the trailer,motorised road vehicle,"the maximum technically permissible mass of the trailer, the maximum permissible mass of the trailer, the maximum technically permissible mass of the combination and the maximum permissible mass of the combination",,max permissible trailer mass,
+maximum technically permissible mass of the combination,motorised road vehicle,"the maximum technically permissible mass of the trailer, the maximum permissible mass of the trailer, the maximum technically permissible mass of the combination and the maximum permissible mass of the combination",,max technically permissible combination mass,
+maximum permissible mass of the combination,motorised road vehicle,"the maximum technically permissible mass of the trailer, the maximum permissible mass of the trailer, the maximum technically permissible mass of the combination and the maximum permissible mass of the combination",,max permissible combination mass,
+name or first and last names,natural person,"his name, or, where applicable, first and last names",,+first name;last name;name,
+address of residence,natural person,"address of his permanent residence, long-term residence, temporary residence of at least 6 months or other authorised residence",,long-term residence address,
+birth number and date of birth,natural person,"birth number, if any, and, where applicable, his date of birth",,+birth date;birth number,
+business name or first and last names and distinguishing supplement,natural person,"business name or first and last names, if any, and, where appropriate, a distinguishing supplement",,,
+address of the registered office,natural person,address of the registered office,,,
+personal identification number,natural person,"personal identification number, if any",,,
+person who brought the vehicle,natural person,natural person who brought the vehicle to the emission measurement station,,,*
+results of the emission measurement,natural person,results of the emission measurement,emission measurement result,,:included by
+technical inspection report,natural person,technical inspection report on the technical inspection of the road vehicle,,,*
+person who delivered the vehicle,natural person,person who delivered the vehicle for the technical inspection,vehicle deliverer,,:technical inspection report handed over to
+business name or first and last names,business natural person,"business name or first and last names, if any,",,+business name;:first name;:last name,
+distinguishing supplement,business natural person,a distinguishing supplement,,distinguishing supplement,
+address of permanent residence,business natural person,address of permanent residence,,:permanent residence address,
+long-term residence,business natural person,long-term residence,,:long-term residence address,
+temporary residence,business natural person,temporary residence of at least 6 months,,:temporary residence address,
+other authorised residence,business natural person,other authorised residence,,*,
+address of the registered office,business natural person,address of the registered office,,office address,
+personal identification number,business natural person,"personal identification number, if any",,personal identification number,
+business name or name,legal person,the business name or name,,business name,
+address of the registered office or the location of the branch,legal person,the address of the registered office or the location of the branch,,office address,
+personal identification number,legal person,"the personal identification number, if any",,personal identification number,
+registered office,legal person,has its registered office,,office address,
+branch plant,legal person,has a branch plant,legal person branch,,is branch of
+licence to operate,legal person,who has a licence to operate it,technical inspection station,,:operated by
+certificate issued by the regional authority,legal person,and a certificate issued by the regional authority,technical inspection station,,:operated by
+authority to decide on the granting of the authorisation,legal person,The competent authority to decide on the granting of the authorisation,municipal authority,,*
+administrative district,legal person,in whose administrative district,,,*
+type,legal person branch,a legal person or a branch thereof,,*,
+name,legal person branch,business name or name,,*,
+address,legal person branch,address of the registered office or the location of the branch,,branch location,
+personal identification number,legal person branch,"personal identification number, if any",,*,
+branch plant,legal person branch,It has a branch plant in the country,,*,
+records,registration plate,"contains records of road vehicles, the owners and operators of these vehicles, lost, stolen, damaged and destroyed road vehicle registration certificates and registration plates.",,,
+registration plate,registration plate,"After the registration into the register, a road vehicle is assigned a registration plate and a registration certificate is issued for the road vehicle.",,,
+none,registration plate,A registration plate is a metal or plastic plate assigned to a road vehicle for official identification purposes.,,,
+numeric or alphanumeric registration identifier,registration plate,"- the numeric or alphanumeric registration identifier on the registration plate that uniquely identifies the road vehicle within the registration country,",,registration identifier,
+date assigned,registration plate,- the date on which the registration plate was assigned.,,registration plate assignment date,
+none,registration plate,"The municipal authority of the municipality with extended competence, when registering a road vehicle in the register of road vehicles, shall further assign a registration plate to the road vehicle.",,,
+registration identifier,registration plate,The registration plate contains a registration identifier.,,registration identifier,
+combination of capital letters of the latin alphabet and arabic numerals,registration plate,The registration identifier shall consist of a combination of capital letters of the Latin alphabet and Arabic numerals.,,registration identifier,
+date of the periodic technical inspection,registration plate,"When issuing a registration plate, the municipal authority of the municipality with extended jurisdiction shall affix a sticker to the plate issued, indicating the date of the periodic technical inspection.",inspection sticker,,*
+none,registration plate,"If the road vehicle has been found to be dangerously defective, the municipal authority of the municipality with extended jurisdiction shall not affix the sticker to the registration plate.",,,
+month and year of the next periodic technical inspection,registration plate,The technical inspection station shall affix an inspection sticker on the rear plate of the registration plate of the road vehicle indicating the month and year of the next periodic technical inspection of the road vehicle.,,*,
+none,registration plate,"Upon detection of a dangerous defect, the technical inspection station shall remove the technical inspection sticker from the rear plate of the registration plate.",,,
+records,registration certificate,"contains records of road vehicles, the owners and operators of these vehicles, lost, stolen, damaged and destroyed road vehicle registration certificates and registration plates.",,,
+registration plate,registration certificate,"After the registration into the register, a road vehicle is assigned a registration plate",registration plate,,*
+registration certificate,registration certificate,a registration certificate is issued for the road vehicle,road vehicle,,issued for
+official document,registration certificate,an official document providing proof of registration of a vehicle in the register,,,*
+date of registration,registration certificate,the date of registration of the road vehicle,,registration date,
+number of the certificate,registration certificate,"the number of the certificate which identifies the certificate,",,certificate number,
+date of the first registration,registration certificate,the date of the first registration of the road vehicle,,first registration date,
+state of the last registration,registration certificate,"the state of the last registration of the road vehicle,",,last registration state,
+number of the registration certificate,registration certificate,"the number of the registration certificate of the road vehicle or similar document issued in the state of last registration,",,last registration certificate number,
+identifier on the registration plate,registration certificate,"the identifier on the registration plate assigned to the road vehicle on the last registration, if the state of last registration is different,",,last registration plate identifier,
+information on the insurance,registration certificate,"information on the insurance against liability for damage caused by the operation of the vehicle (hereinafter referred to as 'third party insurance') communicated by an insurance office, including the date of notification of data by the Insurers' Bureau, the date of commencement of insurance, the period of interruption of insurance, the date of change of insurance, and the date of termination of insurance",third party insurance,,*
+purpose for which the road vehicle is intended,registration certificate,"the purpose for which the road vehicle is intended,",,*,
+category of road vehicle,registration certificate,"the category of road vehicle,",,*,
+manufacturer's factory mark,registration certificate,"the manufacturer's factory mark as specified by the road vehicle manufacturer,",,*,
+trade name,registration certificate,"the trade name if specified by the road vehicle manufacturer,",,*,
+type and variant and version,registration certificate,the type as specified by the road vehicle manufacturer and the variant and version if specified by the road vehicle manufacturer.,,*,
+engine data,registration certificate,"the engine data for the road vehicle that include the type of engine specified by the manufacturer of the road vehicle, the engine power specified by the road vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines, the displacement of the internal combustion engine as specified by the manufacturer of the road vehicle in cm3; and the fuel type of the road vehicle",engine,,*
+"type, serial number and colour of the bodywork",registration certificate,"type, serial number and colour of the bodywork of the road vehicle, number of seats and standing places or beds, dimensions of the loading area, volume of the box or tank,",bodywork,,*
+overall dimensions,registration certificate,"the overall dimensions of the road vehicle,",,*,
+maximum technically permissible weight,registration certificate,"the maximum technically permissible weight, the maximum permissible weight and the maximum permissible operating weight of the motorised road vehicle and its maximum technically permissible weight per axle and the maximum permissible weight per axle,",,*,
+type of coupling device,registration certificate,"the type of coupling device built into the motorised road vehicle, the maximum technically permissible mass of the trailer, the maximum permissible mass of the trailer, the maximum technically permissible mass of the combination and the maximum permissible mass of the combination,",,*,
+data on technical inspections,registration certificate,"data on technical inspections of the road vehicle which is the type of technical inspection carried out, the date on which the technical inspection was carried out, the date of validity of the technical inspection, the designation of the technical inspection station that carried out the technical inspection, and data on the condition of the road vehicle according to the result of the technical inspection,",,*,
+issue a registration certificate,registration certificate,"When registering a road vehicle in the register of road vehicles, the municipal authority of the municipality with extended competence shall issue a registration certificate of the road vehicle to the applicant.",municipal authority,,issues certificate
+assign a registration plate,registration certificate,"The municipal authority of the municipality with extended competence, when registering a road vehicle in the register of road vehicles, shall further assign a registration plate to the road vehicle.",,,
+technical inspection,registration certificate,"the technical inspection for a road vehicle shall cease to be valid if, after the technical inspection has been carried out,",,,
+information on third party insurance,third party insurance,"information on the insurance against liability for damage caused by the operation of the vehicle (hereinafter referred to as 'third party insurance') communicated by an insurance office, including",,*,
+date of notification of data,third party insurance,"date of notification of data by the Insurers' Bureau,",,notification date,
+date of commencement of insurance,third party insurance,"date of commencement of insurance,",,commencement date,
+period of interruption of insurance,third party insurance,"period of interruption of insurance,",,interruption period,
+date of change of insurance,third party insurance,"date of change of insurance,",,change date,
+date of termination of insurance,third party insurance,date of termination of insurance,,termination date,
+obligation to take out third-party liability insurance,third party insurance,"obligation to take out third-party liability insurance in respect of such a vehicle is fulfilled,",,*,
+green card,third party insurance,Green card means an international certificate proving that the road vehicle has been covered by a third party insurance against liability for damage caused by the operation of the road vehicle specified in the certificate as the insured vehicle.,green card,,is proof of insurance
+insurance contract,third party insurance,insurance contract concluded between the policyholder and the insurer.,insurance contract,,based on contract
+insurer,third party insurance,insurer is an insurance company authorized to operate the third party insurance in the contract.,insurer,,is authorised to operate
+policyholder,third party insurance,policyholder is the person who has concluded the insurance contract with the insurer.,policyholder,,concluded contract
+type,engine,type of engine specified by the manufacturer of the road vehicle,,engine type,
+power,engine,engine power specified by the road vehicle manufacturer in kW/rpm in the case of an internal combustion engine or in kW in the case of other engines,,engine power,
+displacement,engine,displacement of the internal combustion engine as specified by the manufacturer of the road vehicle in cm3,,engine displacement,
+fuel type,engine,fuel type of the road vehicle,,fuel type,
+"type, serial number, color",bodywork,"type, serial number and colour",,+bodywork serial number;bodywork type;bodywork color,
+"number of seats, standing places or beds",bodywork,number of seats and standing places or beds,,number of seats,
+dimensions of the loading area,bodywork,dimensions of the loading area,,loading dimensions,
+volume of the box or tank,bodywork,volume of the box or tank,,volume,
+technical inspection data,technical inspection,"data on technical inspections of the road vehicle which is the type of technical inspection carried out, the date on which the technical inspection was carried out, the date of validity of the technical inspection, the designation of the technical inspection station that carried out the technical inspection, and data on the condition of the road vehicle according to the result of the technical inspection,",,+technical inspection validity;technical inspection date;technical inspection type,
+periodic technical inspection date,technical inspection,the date of the periodic technical inspection,,technical inspection date,
+repeated technical inspection date,technical inspection,the last day of the month following the month of registration of the road vehicle in the register of road vehicles,,*,
+technical inspection period,technical inspection,4 years from the date of registration of the vehicle in the register of road vehicles and periodically thereafter within 2 years from the date of the previous technical inspection,,*,
+technical inspection type,technical inspection,"an inspection of its roadworthiness which includes the technical condition and functioning of a road vehicle, its systems, components and separate technical units and their environmental impact or a registration test of a road vehicle",,technical inspection type,
+technical inspection station,technical inspection,a workplace specialised in carrying out technical inspections of road vehicles,technical inspection station,,carried out by
+technical inspection station operator,technical inspection,a legal or natural person who has a licence to operate it and a certificate issued by the regional authority,inspection technician,,*
+regional authority,technical inspection,the regional authority in whose administrative district the operator of the technical inspection station will carry out its activities,,,
+technical inspection day,technical inspection,the day on which the other checking operations were carried out in the framework of the periodic technical inspection at the technical inspection station,,other operations date,
+technical condition,technical inspection,the actual technical condition of the road vehicle with the conditions laid down for the technical condition of the vehicle,,,*
+technical inspection report,technical inspection,a technical inspection report on the technical inspection of the road vehicle,,,*
+technical inspection invalidity reasons,technical inspection,"changes have been made to the vehicle which are not in accordance with the information entered in the register of road vehicles, in the registration certificate of the road vehicle or in a similar document issued by a member state other than the member state on the date of the check; or a reduction in the distance travelled on the odometer of the road vehicle compared to the distance travelled on the odometer recorded during the technical inspection",,*,
+minor defect,technical inspection,"a minor defect which does not significantly affect the operational characteristics of the vehicle, road safety or the environment",minor defect,,:detects
+serious defect,technical inspection,"a serious defect which affects the operational characteristics of the vehicle, is liable to endanger road traffic, may adversely affect the environment or consists of a serious deficiency in the identification of the vehicle",serious defect,,:detects
+dangerous defect,technical inspection,"a dangerous defect which poses an immediate threat to the safety of the road vehicle, to road traffic or to the environment",dangerous defect,,:detects
+technical fitness for use,technical inspection,no defects or only minor defects,technically fit road vehicle,,*
+next technical inspection date,technical inspection,the month and year of the next periodic technical inspection of the road vehicle,,*,
+insurance contract,insurance contract,concluded between the policyholder and the insurer,,,-has insurer;concluded contract
+insurer,insurance contract,The insurer is an insurance company authorised to operate the third party insurance in the contract,insurer,,has insurer
+policyholder,insurance contract,The policyholder is the person who has concluded the insurance contract with the insurer,policyholder,,concluded contract
+designation of the insurer,insurance contract,The insurance contract shall always contain the designation of the insurer,insurer,,has insurer
+designation of the policyholder,insurance contract,The insurance contract shall always contain the designation of the policyholder,policyholder,,concluded contract
+designation of the insured road vehicle,insurance contract,The insurance contract shall always contain the designation of the insured road vehicle,road vehicle,,*
+duration of the insurance,insurance contract,It shall also contain the duration of the insurance,,insurance duration,
+limit of the insurance benefit,insurance contract,the limit of the insurance benefit,,benefit limit,
+amount of the premium,insurance contract,the amount of the premium,,premium amount,
+maturity,insurance contract,its maturity,,maturity,
+method of payment,insurance contract,the method of payment,,payment method,
+form and place of notification of the claim,insurance contract,and the form and place of notification of the claim,,notification,
+station,emission measurement,Emission measurement station,,,*
+measurement,emission measurement,emission measurement,,*,
+report,emission measurement,report on the emission measurement,,,*
+draw up report,emission measurement,drawing up a report on the emission measurement,,,*
+results,emission measurement,results of the emission measurement,emission measurement result,,has result of measurement
+include results in register,emission measurement,include the results of the emission measurement in the register of road vehicles,inspection technician,,*
+date of emission measurement,emission measurement,elapsed between the date on which the emission measurement was carried out,,date of emission measurement,
+number of days,emission measurement,30 days,,date of emission measurement,
+checking operations,emission measurement,brought in for the other checking operations,,*,
+taken into account,emission measurement,not taken into account,,,
+date of periodic technical inspection,inspection sticker,indicating the date of the periodic technical inspection,,-next inspection year;next inspection month,
+date of repeated technical inspection,inspection sticker,"mark on the sticker the date of the repeated technical inspection, which shall be the last day of the month following the month of registration",,-next inspection year;next inspection month,
+location,inspection sticker,on the rear plate of the registration plate,,,affixed on
+month and year of next periodic technical inspection,inspection sticker,indicating the month and year of the next periodic technical inspection of the road vehicle,,+next inspection year;next inspection month,
+presence of sticker,inspection sticker,remove the technical inspection sticker from the rear plate of the registration plate,,,affixed on

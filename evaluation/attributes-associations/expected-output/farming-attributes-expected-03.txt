@@ -1,0 +1,66 @@
+Class: farmer
+1) name
+- original text: Each farmer can be identified by a name, which uniquely identifies the farmer and is used to refer to them in various documentation and statistical reporting
+
+
+2) age
+- original text: A farmer's age is also recorded, mainly for statistical and reporting purposes.
+
+
+Class: crop
+1) cultivated variety
+- original text: A plant grouping within a single botanical taxon of the lowest known rank, defined by the reproducible expression of its distinguishing and other genetic characteristics is a key characterization of the crop. We call it cultivated variety.
+
+
+Class: machinery
+1) model
+- original text: We also need to identify the model of the machinery, which affects its functionality and suitability for specific tasks.
+
+
+2) year of manufacturing
+- original text: The year the machinery was manufactured, indicating its age and potential modernity in technology.
+
+
+Class: harvest
+1) quantity
+- original text: The quantity of the harvest is measured in kilograms The total quantity of the harvest is crucial for determining the productivity and success of the crop.
+
+
+2) quality
+- original text: the quality may include factors like size, ripeness, nutritional value, and absence of pests or diseases. The quality of the harvest may include factors like size, ripeness, nutritional value, and absence of pests or diseases. High-quality harvests are crucial for market acceptance and consumer satisfaction.
+
+
+3) harvest date
+- original text: The specific date or time period when the harvest was collected is crucial for maximizing yield and ensuring the best quality of the harvested product.
+
+
+Class: field
+1) size
+- original text: in size, typically measured in hectares The field size is fundamental for planning the distribution of crops, determining the amount of seeds needed, and calculating the expected yield.
+
+
+2) location
+- original text: defined location, which can include specific GPS coordinates
+
+
+3) soil type
+- original text: The soil type, soil pH, and the field's topography are critical for understanding how to manage each field The soil type affects water retention and nutrient availability
+
+
+4) soil ph
+- original text: soil pH, and the field's topography are critical for understanding how to manage each field soil pH influences crop health and productivity The pH indicates the acidity or alkalinity of the soil, which is crucial for managing soil health and fertility. Soil pH can significantly influence crop health and productivity, dictating the types of amendments needed to optimize growing conditions.
+
+
+5) topography
+- original text: field's topography Topography describes the physical layout of the land and influences water drainage and erosion risk.
+
+
+6) irrigation availability
+- original text: irrigation availability Irrigation availability informs whether the field has access to irrigation systems and the type of irrigation used (e.g., drip, sprinkler, or flood). This is vital for planning water usage and can impact crop selection and planting schedules based on the water needs of the crops.
+
+
+Class: planting
+1) planting date
+- original text: The exact date or period when the crop was planted is critical for tracking crop growth stages and scheduling subsequent farming activities.
+
+

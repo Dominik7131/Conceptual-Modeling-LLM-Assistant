@@ -1,0 +1,90 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+central entities in a zoological garden,animal,Animals are the central entities in a zoological garden,zoological garden,,*
+species,animal,"classified by species, each possessing unique biological and ecological characteristics",species,,classified by
+specified diet,animal,specified diet which is crucial for managing their welfare and conservation status of the animal,diet,,has specified diet
+name,animal,name which is not unique but our staff uses to refer to them and we also present animal names to our visitors,,animal name,
+species name,animal,species name adheres to international taxonomic standards,,*,
+common name,animal,common name is how visitors usually refer to the species,,*,
+type of diet,animal,"We distinguish different types of diet whether an animal is herbivorous, carnivorous, omnivorous, piscivorous, etc.",,*,
+feeding frequency and timing,animal,frequency and timing of feeding,,*,
+special feeding technique,animal,special feeding technique because some animals require special methods of feeding,,*,
+reproductive details,animal,reproductive details of animal species,,*,
+breeding season,animal,specific time of year when the animals of that species naturally breeds,,*,
+gestation period,animal,"Gestation period, which is the length of pregnancy in viviparous animals",,*,
+enclosures,animal,various enclosures where its animals live and are ethicaly displayed and conserved,enclosure,,resident of
+design and maintenance of enclosures,animal,design and maintenance of enclosures are vital for health,enclosure,,resident of
+climate conditions,animal,climate conditions of enclosures in zoological gardens,,,
+range of temperatures,animal,"Many animal species, particularly reptiles, require a range of temperatures",,,
+light cycles,animal,ensuring that light cycles (day and night) are consistent with the natural light patterns,,,
+caretakers,animal,Caretakers can be assigned to more enclosures and they are responsible for daily care and behavioral training of the animals in the enclosure,caretaker,,*
+part of reintroduction conservation programs,animal,Specific animals may be part of reintroduction conservation programs,reintroduction conservation program,,is part of program
+biological and ecological characteristics,species,Each possessing unique biological and ecological characteristics,,*,
+properties,species,"Properties such as species name and species common name, and IUCN status",,-species name;species common name;IUCN status,
+species name,species,species name,,species name,
+species common name,species,species common name,,species common name,
+iucn status,species,IUCN status,,IUCN status,
+diet,species,diet of a particular animal in a zoological setting,diet,,has specified diet
+reproductive details,species,reproductive details of animal species,,*,
+age at reproduction,species,age at which the species is capable of reproducing,,reproductive age,
+breeding season,species,specific time of year when the animals of that species naturally breeds,,natural breeding time,
+number of eggs,species,number of eggs typically laid at one time,,:number of laid eggs,
+enclosures,species,Enclosures are specialized habitats designed to mimic the natural environments of the resident species,enclosure,,resident of
+size,species,size in square meters,,,
+type,species,"type (e.g., aviary, aquarium, terrarium)",,*,
+climate conditions,species,climate conditions,,*,
+vegetation,species,vegetation,,*,
+design and maintenance,species,design and maintenance of enclosures,,*,
+thermal preference,species,thermal preference,,*,
+range of temperatures,species,range of temperatures,,*,
+humidity levels,species,humidity levels,,*,
+exposure to ultraviolet light,species,exposure to ultraviolet light,,*,
+caretakers,species,caretakers,caretaker,,*
+veterinarians,species,veterinarians,veterinarian,,responsible for
+conservation program,species,conservation program,conservation program,,supports
+welfare and conservation status,diet,specified diet which is crucial for managing their welfare and conservation status of the animal,,,
+care impact,diet,"fundamental aspect of its care, impacting its health, behavior, and reproduction",,,
+type,diet,"different types of diet whether an animal is herbivorous, carnivorous, omnivorous, piscivorous, etc.",,*,
+feeding strategies,diet,classification helps in formulating appropriate feeding strategies,,feeding technique,
+nutrients,diet,related to specific nutrients required to maintain health and vitality,,nutrients,
+feeding schedule,diet,feeding schedule is essential,,feeding schedule,
+feeding frequency and timing,diet,specifies the frequency and timing of feeding,,feeding schedule,
+metabolic rate and health,diet,can affect the animal's metabolic rate and overall health,,*,
+feeding technique,diet,associated with a special feeding technique,,feeding technique,
+foraging behavior,diet,some animals require special methods of feeding that mimic their natural foraging behaviors,,*,
+well being and health,diet,enhancing their psychological well-being and physical health,,*,
+number of eggs laid at one time,oviparous species,the number of eggs typically laid at one time,,number of laid eggs,
+incubation practices,oviparous species,affects incubation practices,,*,
+size,enclosure,size in square meters,,enclosure size,
+type,enclosure,"type (e.g., aviary, aquarium, terrarium)",,enclosure type,
+climate conditions,enclosure,climate conditions,climate conditions,,has climate conditions
+vegetation,enclosure,"vegetation, tailored to the needs of specific species in the enclosure",,vegetation,
+design,enclosure,design and maintenance,,*,
+space,enclosure,adequate space,,*,
+enrichment,enclosure,enrichment,,*,
+security,enclosure,security from potential stressors,,*,
+temperature,enclosure,temperature,,*,
+humidity,enclosure,humidity,,*,
+lighting,enclosure,lighting,,*,
+ventilation,enclosure,ventilation,,*,
+caretakers,enclosure,caretakers and zoologists are assigned to particular enclosures,caretaker,,assigned as caretaker
+daily care,enclosure,daily care and behavioral training of the animals,,*,
+non stop care,enclosure,non-stop care which is necessary for most species,,*,
+assignment,enclosure,assigned to species,species,,resident of
+climate conditions,climate conditions,"climate conditions, tailored to the needs of specific species in the enclosure",,,
+temperature,climate conditions,a blend of various controlled environmental factors including temperature,,temperature,
+humidity,climate conditions,a blend of various controlled environmental factors including humidity,,humidity level,
+lighting,climate conditions,a blend of various controlled environmental factors including lighting,,-lighting cycles;ultraviolet light,
+ventilation,climate conditions,a blend of various controlled environmental factors including ventilation,,ventilation,
+temperature,climate conditions,Temperature is perhaps the most critical element in an enclosure's climate conditions.,,temperature,
+ventilation,climate conditions,Proper ventilation is essential for maintaining air quality and appropriate climate conditions within an enclosure.,,ventilation,
+position,staff member,"zoologists, veterinarians, caretakers, and administrative personnel",-zoologist;veterinarian;caretaker;administrative personnel,,*
+name,staff member,Each staff member has a name,,name,
+expertise,staff member,and expertise.,,expertise,
+iucn status,conservation program,IUCN status,,,
+diet,conservation program,"impacting its health, behavior, and reproduction.",,,
+reproductive details,conservation program,Reproductive details of animal species include reproductive health and management information,,,
+conservation programs,conservation program,Conservation programs a zoological garden participates in,zoological garden,,participates in
+supported species,conservation program,focused on particular species it supports.,species,,supports
+collaborations,conservation program,These programs often collaborate with global conservation entities,,,*
+activities,conservation program,"and are pivotal in research, breeding programs, and reintroduction efforts.",,,*
+reintroduction programs,conservation program,reintroduction conservation programs,reintroduction conservation program,,*

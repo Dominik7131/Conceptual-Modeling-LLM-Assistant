@@ -1,0 +1,95 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+species,animal,"classified by species, each possessing unique biological and ecological characteristics.",species,,classified by
+diet,animal,specified diet which is crucial for managing their welfare and conservation status of the animal.,diet,,has specified diet
+name,animal,Each animal also has a name which is not unique but our staff uses it to refer to them and we also present animal names to our visitors.,,animal name,
+common name,animal,"The species name adheres to international taxonomic standards, ensuring uniformity across scientific and conservation discourse, while the common name is how visitors usually refer to the species.",,*,
+type of diet,animal,"We distinguish different types of diet whether an animal is herbivorous, carnivorous, omnivorous, piscivorous, etc.",diet,,has specified diet
+feeding strategy,animal,This classification helps in formulating appropriate feeding strategies.,,,
+feeding frequency and timing,animal,"It specifies the frequency and timing of feeding, which can affect the animal's metabolic rate and overall health.",,,
+feeding technique,animal,"The diet can also be associated with a special feeding technique because some animals, especially those with unique physiological or behavioral adaptations, require special methods of feeding that mimic their natural foraging behaviors, enhancing their psychological well-being and physical health.",,,
+reproductive details,animal,"Reproductive details of animal species include reproductive health and management information that is paramount in zoological settings, especially for conservation breeding programs.",,*,
+breeding season,animal,"This takes us also to the specific time of year when the animals of that species naturally breed, which can influence how enclosures are managed and when animals are introduced for mating.",,*,
+conservation status,animal,They are critical for the ethical display and conservation of animals.,enclosure,,*
+enclosures,animal,A zoological garden provides various enclosures where its animals live and are ethically displayed and conserved.,enclosure,,*
+enclosure design and maintenance,animal,"The design and maintenance of enclosures are vital for health, providing adequate space, enrichment, and security from potential stressors for each animal housed in the enclosure.",,,
+climate conditions,animal,The climate conditions of enclosures in zoological gardens are complex and need to be tailored specifically to the needs of each species.,,,
+temperature range,animal,"Many animal species, particularly reptiles, require a range of temperatures within their enclosure to regulate their body temperature by moving between warmer and cooler areas.",,,
+light cycles,animal,"Ensuring that light cycles (day and night) in the climate conditions of enclosures are consistent with the natural light patterns of an animal's native habitat helps maintain normal circadian rhythms, which are crucial for feeding, sleeping, and reproductive behaviors.",,,
+expertise,animal,Their expertise directly affects animal welfare.,,,
+caretaker assignment,animal,Caretakers can be assigned to more enclosures and they are responsible for daily care and behavioral training of the animals in the enclosure.,caretaker,,*
+caretaker species assignment,animal,"Therefore, they are not assigned to enclosures or individual animals but species.",,,
+reintroduction conservation programs,animal,Specific animals may be part of reintroduction conservation programs.,reintroduction conservation program,,is part of program
+unique biological and ecological characteristics,species,each possessing unique biological and ecological characteristics,,,
+species name,species,Properties such as species name,,species name,
+species common name,species,and species common name,,species common name,
+iucn status,species,IUCN status,,iucn status,
+diet,species,The diet of a particular animal in a zoological setting,,,
+reproductive details,species,Reproductive details of animal species,,-gestation period;natural breeding time;reproductive age,
+age at which the species is capable of reproducing,species,age at which the species is capable of reproducing,,reproductive age,
+specific time of year when the animals of that species naturally breed,species,specific time of year when the animals of that species naturally breed,,natural breeding time,
+gestation period,species,Gestation period,,gestation period,
+number of eggs typically laid at one time,species,"For oviparous species, the number of eggs typically laid at one time",,:number of laid eggs,
+enclosures,species,Enclosures are specialized habitats designed to mimic the natural environments of the resident species,enclosure,,resident of
+size in square meters,species,size in square meters,,,
+type,species,"type (e.g., aviary, aquarium, terrarium)",,,
+climate conditions,species,climate conditions,,,
+vegetation,species,vegetation,,,
+design and maintenance of enclosures,species,design and maintenance of enclosures,,,
+temperature,species,temperature,,,
+humidity,species,humidity,,,
+lighting,species,lighting,,,
+ventilation,species,ventilation,,,
+thermal preference,species,thermal preference,,,
+ultraviolet light,species,ultraviolet light,,,
+caretakers,species,caretakers,,,
+veterinarians,species,Veterinarians are responsible for medical treatment of particular species,veterinarian,,responsible for
+conservation program,species,conservation program focuses on particular species it supports,conservation program,,supports
+welfare and conservation status diet,diet,specified diet which is crucial for managing their welfare and conservation status of the animal,animal,,has specified diet
+care diet,diet,"a fundamental aspect of its care, impacting its health, behavior, and reproduction",,,
+diet type,diet,"different types of diet whether an animal is herbivorous, carnivorous, omnivorous, piscivorous, etc.",,diet type,
+feeding strategies,diet,classification helps in formulating appropriate feeding strategies,,*,
+nutrients required,diet,related to specific nutrients required to maintain health and vitality,,nutrients,
+feeding schedule,diet,feeding schedule is essential,,feeding schedule,
+feeding frequency and timing,diet,"specifies the frequency and timing of feeding, which can affect the animal's metabolic rate and overall health",,feeding schedule,
+feeding technique,diet,associated with a special feeding technique,,feeding technique,
+feeding mimic natural foraging,diet,"some animals, especially those with unique physiological or behavioral adaptations, require special methods of feeding that mimic their natural foraging behaviors, enhancing their psychological well-being and physical health",,feeding technique,
+number of eggs laid at one time,oviparous species,the number of eggs typically laid at one time,,number of laid eggs,
+incubation practices,oviparous species,affects incubation practices,,*,
+size in square meters,enclosure,its size in square meters,,enclosure size,
+type,enclosure,"type (e.g., aviary, aquarium, terrarium)",,enclosure type,
+climate conditions,enclosure,climate conditions,climate conditions,,has climate conditions
+vegetation,enclosure,and vegetation,,vegetation,
+temperature,enclosure,Temperature is perhaps the most critical element in an enclosure's climate conditions.,,*,
+lighting,enclosure,Ensuring that light cycles (day and night) in the climate conditions of enclosures are consistent with the natural light patterns of an animal's native habitat,,*,
+ventilation,enclosure,Proper ventilation is essential for maintaining air quality and appropriate climate conditions within an enclosure.,,*,
+caretakers,enclosure,Caretakers and zoologists are assigned to particular enclosures they are responsible for.,caretaker,,assigned as caretaker
+species,enclosure,An enclosure must have more caretakers so that they cover non-stop care which is necessary for most species.,species,,resident of
+zoological garden,enclosure,A zoological garden provides various enclosures where its animals live and are ethically displayed and conserved.,zoological garden,,provides
+resident species,enclosure,Enclosures are specialized habitats designed to mimic the natural environments of the resident species.,species,,resident of
+management and mating,enclosure,"This takes us also to the specific time of year when the animals of that species naturally breed, which can influence how enclosures are managed and when animals are introduced for mating.",,,
+enrichment,enclosure,"The design and maintenance of enclosures are vital for health, providing adequate space, enrichment, and security from potential stressors for each animal housed in the enclosure.",,*,
+security,enclosure,"The design and maintenance of enclosures are vital for health, providing adequate space, enrichment, and security from potential stressors for each animal housed in the enclosure.",,,
+size,climate conditions,size in square meters,,,
+type,climate conditions,"type (e.g., aviary, aquarium, terrarium)",,,
+climate conditions,climate conditions,climate conditions,,,
+vegetation,climate conditions,"vegetation, tailored to the needs of specific species in the enclosure",,,
+temperature,climate conditions,temperature,,temperature,
+humidity,climate conditions,humidity,,humidity level,
+lighting,climate conditions,lighting,,light cycles,
+ventilation,climate conditions,ventilation,,ventilation,
+ultraviolet light,climate conditions,ultraviolet light,,ultraviolet light,
+metabolic bone disease,climate conditions,metabolic bone disease,,,
+type,staff member,Staff members of zoological gardens are integral to their operation,-zoologists;veterinarians;caretakers;administrative personnel,,*
+position,staff member,"They include zoologists, veterinarians, caretakers, and administrative personnel",+zoologists;veterinarians;caretakers;administrative personnel,,*
+name,staff member,Each staff member has a name,,name,
+expertise,staff member,and expertise,,expertise,
+birth date,staff member,"For the administrative purposes, we need to keep staff member's birth date",,birth date,
+permanent address,staff member,and permanent address,,permanent address,
+affects,staff member,Their expertise directly affects animal welfare,,,
+iucn status,conservation program,"IUCN status provides insight into the conservation priority of species, influencing habitat management and breeding programs.",,,
+diet,conservation program,diet of a particular animal in a zoological setting,,,
+reproductive details,conservation program,reproductive details of animal species,,,
+conservation programs,conservation program,conservation programs a zoological garden participates in,zoological garden,,participates in
+supported species,conservation program,conservation program focuses on particular species it supports,species,,supports
+collaboration,conservation program,"These conservation programs often collaborate with global conservation entities and are pivotal in research, breeding programs, and reintroduction efforts.",,,*
+reintroduction animals,conservation program,Specific animals may be part of reintroduction conservation programs.,animal,,:is part of program

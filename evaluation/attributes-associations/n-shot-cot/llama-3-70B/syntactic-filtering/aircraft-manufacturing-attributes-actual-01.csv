@@ -1,0 +1,23 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+serial number,aircraft,Each aircraft is uniquely identified by a serial number,,aircraft serial number,
+model,aircraft,"linked to a specific model, indicating the design it follows",aircraft model,,designed as
+manufacturing date,aircraft,and marked with the manufacturing date,,manufacturing date,
+parts,aircraft,The aircraft is also defined by the parts it consists of,part,,consists of
+description,part,Parts represent individual components used in constructing an aircraft.,,part description,
+serial number,part,"Every part is linked to its specific model, indicating the design it follows, and is identified by a serial number",,part serial number,
+model,part,"Every part is linked to its specific model, indicating the design it follows",part model,,designed as part model
+type,customer,"customers, aircraft models, parts, and suppliers",,,
+type,customer,Customers represent the clients who purchase the finished aircraft,,,
+name,customer,every customer is identified by a name,,customer name,
+description,aircraft model,each aircraft model is described in detail,,aircraft model description,
+model code,aircraft model,assigned a unique model code,,aircraft model code,
+part models,aircraft model,incorporate various part models in their design,part model,,incorporates
+design,aircraft model,"linked to a specific model, indicating the design it follows",aircraft model,,designed as
+design models,part model,part models denote the design models for individual parts used in aircraft,part,,designed as part model
+model number,part model,These models are uniquely identified by a model number,,part model number,
+description,part model,and accompanied by a brief description,,part model description,
+design,part model,The part model's design and specifications,,*,
+specifications,part model,The part model's design and specifications,,*,
+party code,party,is uniquely identified by a party code,,party code,
+involvement,party,"They are a subclass of parties, indicating their involvement in the broader aircraft manufacturing process",,,*
+supplies,party,They maintain a relationship where they supply supplies consiting of various parts necessary for the construction of aircrafts,,*,

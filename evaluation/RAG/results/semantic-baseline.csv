@@ -1,0 +1,14 @@
+Domain description,Recall classes,Recall attributes,Recall associations,Precision
+aircraft manufacturing-01,1.00,1.00,1.00,0.26
+aircraft manufacturing-02,0.93,0.91,0.97,0.35
+aircraft manufacturing-03,0.92,1.00,1.00,0.28
+conference papers-01,1.00,1.00,1.00,0.29
+conference papers-02,1.00,0.83,1.00,0.33
+conference papers-03,1.00,1.00,1.00,0.41
+farming-01,1.00,1.00,1.00,0.14
+farming-02,1.00,0.89,1.00,0.10
+farming-03,1.00,1.00,1.00,0.15
+college-01,0.99,1.00,0.92,0.06
+zoological gardens-01,0.94,0.84,0.96,0.21
+registry of road vehicles-01,1.00,0.99,1.00,0.08
+all,0.99,0.96,0.97,0.10

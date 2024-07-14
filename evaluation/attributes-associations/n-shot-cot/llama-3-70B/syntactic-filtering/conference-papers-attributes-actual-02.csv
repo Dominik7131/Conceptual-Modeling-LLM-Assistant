@@ -1,0 +1,28 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+publication year,research paper,carrying characteristics such as a publication year,,publication year,
+title,research paper,carrying characteristics such as ... a title,,title,
+abstract,research paper,carrying characteristics such as ... an abstract,,abstract,
+conference,research paper,Each research paper is closely tied to a conference where it is presented,conference,,presented at
+submission,research paper,The submission acts as a bridge between the research paper and the conference,submission,,has submission
+authors,research paper,"It forms the connection between a research paper and its authors, indicating who wrote the paper",author,,written by
+primary point of contact,research paper,This designation is crucial in the academic world as it specifies the primary point of contact for the research paper,author,,has corresponding author
+review,research paper,"The review is another crucial element, acting as an evaluation or critique of a research paper",review,,*
+reviewer,research paper,"A reviewer, responsible for evaluating the quality and relevance of research paper submissions",reviewer,,*
+name,person,a name,,name,
+email address,person,an email address,,email,
+contribution,author,authors are individuals who have significantly contributed to the creation of a research paper,research paper,,written by
+affiliation,author,"Each author has an affiliation, often an academic institution",,affiliation,
+corresponding author,author,one of them is designated as the corresponding author,,,has corresponding author
+description,conference,a conference is a pivotal element in academic discourse,,,
+year,conference,It holds a specific year,,year,
+location,conference,"and location, signifying when and where these intellectual gatherings take place",,location,
+name,conference,The conference name is a unique identification of the conference in the scientific community,,conference name,
+submission date,submission,a submission date,,submission date,
+status,submission,"a status indicating where it stands in the review process (like under review, accepted, or rejected)",,status,
+conference,submission,a connection to the conference it's submitted to,conference,,submitted to
+is resubmission,submission,submissions can be resubmissions,submission,,is resubmission of
+reviews,submission,Reviewers write reviews for submissions,review,,reviewed by
+category,reviewer,a subgroup of the broader category of persons involved in the conference reviewing process,,*,
+responsibility,reviewer,responsible for evaluating the quality and relevance of research paper submissions,submission,,reviewed by
+expertise,reviewer,brings their expertise to the table,,expertise,
+review,reviewer,write reviews for submissions,review,,writes

@@ -1,0 +1,111 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+implemented study programmes,study programme,A faculty implements at least one accredited study programme,faculty,,implements study programme
+creative activities,study programme,A faculty carries out creative activities,,,
+type of higher education activity,study programme,The type of higher education activity is determined by the type of accredited study programmes implemented,,*,
+types of study programmes,study programme,"The types of study programmes are bachelor, master and doctoral",-bachelor study programme;master study programme;doctoral study programme,,*
+name of the study programme,study programme,A study programme is characterised by the name of the study programme,,programme name,
+type of study,study programme,and also by the type,,programme type,
+objectives of study,study programme,and objectives of study in the study programme,,programme objectives,
+description of the profile of the graduate,study programme,"In the case of a Bachelor's or Master's degree programme, it is also characterised by a description of the profile of the graduate of the study programme",,-master profile description;bachelor profile description,
+standard period of study,study programme,The study programme must have a standard period of study,,standard period of study,
+study load,study programme,with an average study load expressed in academic years,,*,
+degree awarded,study programme,The degree awarded to graduates shall also be specified for the study programme,,awarded degree,
+subjects of study,study programme,Subject of study shall be taught within the study programme,subject,,taught within
+curriculum,study programme,The curriculum also determines the form of study,curriculum,,has curriculum
+form of study,study programme,"For a full-time form of study, the curriculum is created within the framework of a programme of study in such a way that",form of study,,*
+largest part of instruction,study programme,"the largest part of instruction takes the form of lectures, tutorials, seminars, courses, practical training, laboratory classes, consultation, and other similar forms of instruction",,,
+regular schedule,study programme,"which are held according to a regular schedule, which will be usually a weekly schedule; they enable students to acquire knowledge directly",,,*
+combined form of study,study programme,"For the combined form of study, the curriculum is created within the programme of study based on the assumption that study takes a form which employs the principles of both full-time and distance learning study",combined form of study,,*
+distance form of study,study programme,"For the distance learning form of study, the curriculum is created within the framework of the programme of study based on the assumption that study is offered in the distance form of instruction, and that teachers usually perform the role of consultant",distance learning form of study,,*
+study programme guarantor,study programme,"For study programmes carried out by a faculty, the faculty appoints and dismisses a study programme guarantor from among its academic staff according to the rules laid down in the internal regulations of the college",academic staff,,has study programme guarantor
+field of education,study programme,A study programme belongs to only one field of education if the state examinations or the dissertation defence verify profiling knowledge or skills in the basic subject areas belonging to one field of education,education field,,belongs to field
+core subject areas,study programme,"A study programme is a combined programme of study that belongs to more fields of education if the state examinations or, where appropriate, the dissertation defence test profiling knowledge or skills in the core subject areas belonging to more than one field of education",,*,
+areas of education,study programme,"There are the following areas of education: Architecture and Urban Planning, Security, Biology, Ecology and Environment, Transport, Economics, Electrical Engineering, Energy, Pharmacy, Philosophy, Religious Studies and Theology, Physics, Historical Sciences, Chemistry, Computer Science, Cybernetics, Forestry and Wood Science, Mathematics, Media and Communication Studies, Non-teaching Pedagogy, Political Science, Food Science, Law, Psychology, Social Work, Sociology, Civil Engineering, Engineering, Technology and Materials, Physical Education and Sport; Kinanthropology, Mining and Mineral Processing, Teaching, Arts, Arts and Cultural Sciences, Earth Sciences, Veterinary Medicine, Veterinary Hygiene, General Medicine and Dentistry",,*,
+aimed at preparing students,study programme,The Bachelor's degree study programme is aimed at preparing students for the profession and for study in a Master's degree programme,,,
+standard period of study bachelor's degree,study programme,"The standard period of study, including work experience, is a minimum of three and a maximum of four years",,standard period of study,
+state final examination,study programme,"The studies of a student in the Bachelor's degree study programme is duly completed by a state final examination, which usually includes the defense of the bachelor's thesis",,,*
+aimed at acquiring theoretical and practical knowledge,study programme,"The Master's degree study programme is aimed at acquiring theoretical and practical knowledge based on the current state of scientific knowledge, research and development, at mastering their application and at developing skills for creative activity; in the field of art, it is focused on demanding artistic training and the development of talent",,,
+standard duration of this programme,study programme,The Master's degree programme is a follow-up to the Bachelor's degree programme; the standard duration of this programme is at least one and not more than three years,,standard period of study,
+state final examination master's degree,study programme,"The studies of a student in the Master's degree study programme are duly completed by a state final examination, which includes the defence of the diploma thesis",,,*
+awarded to graduates,study programme,The following academic degrees are awarded to graduates of master's degree programmes:,,awarded degree,
+doctoral study programme,study programme,The doctoral study programme focuses on scientific research and independent creative activity in the field of research or development or on independent theoretical and creative activity in the field of art,doctoral study programme,,*
+standard period of study doctoral study programme,study programme,The standard period of study shall be at least three and not more than four years,,standard period of study,
+studies of a student in the doctoral programme,study programme,The studies of a student in the doctoral programme is carried out according to an individual study plan under the guidance of a supervisor,doctoral studies,,:studies in doctoral study programme
+subject board,study programme,Studies in a doctoral programme shall be monitored and evaluated by a subject board established in accordance with the internal regulations of the public college thereof which has accredited the relevant study programme,subject board,,:monitored by
+form of lecture,study programme,The subject is taught in particular in the form of lecture,,,
+form of tutorial,study programme,tutorial,,,
+form of seminar,study programme,seminar,,,
+form of proseminar,study programme,proseminar,,,
+form of course,study programme,course,,,
+form of practical training,study programme,practical training,,,
+form of internship,study programme,internship,,,
+form of special course,study programme,special course,,,
+form of laboratory class,study programme,laboratory class,,,
+form of field trip,study programme,field trip,,,
+form of fieldwork,study programme,fieldwork,,,
+form of individual work,study programme,individual work,,,
+form of consultation,study programme,consultation,,,
+curriculum of one or more programmes of study,study programme,A subject can be a part of the curricula of one or more programmes of study,curriculum,,has curriculum
+type,bachelor study programme,"The types of study programmes are bachelor, master and doctoral.",,,*
+graduate profile description,bachelor study programme,"In the case of a Bachelor's or Master's degree programme, it is also characterised by a description of the profile of the graduate of the study programme.",,bachelor profile description,
+standard period of study,bachelor study programme,The study programme must have a standard period of study with an average study load expressed in academic years.,,:standard period of study,
+aim,bachelor study programme,The Bachelor's degree study programme is aimed at preparing students for the profession and for study in a Master's degree programme.,,:programme objectives,
+duration,bachelor study programme,"The standard period of study, including work experience, is a minimum of three and a maximum of four years.",,:standard period of study,
+final examination,bachelor study programme,"The studies of a student in the Bachelor's degree study programme is duly completed by a state final examination, which usually includes the defense of the bachelor's thesis.",bachelor state final examination,,*
+master's duration,bachelor study programme,The Master's degree programme is a follow-up to the Bachelor's degree programme; the standard duration of this programme is at least one and not more than three years.,,,
+master's final examination,bachelor study programme,"The studies of a student in the Master's degree study programme are duly completed by a state final examination, which includes the defence of the diploma thesis.",,,
+type,master study programme,"The types of study programmes are bachelor, master and doctoral",,,*
+graduate profile description,master study programme,"In the case of a Bachelor's or Master's degree programme, it is also characterised by a description of the profile of the graduate of the study programme",,master profile description,
+standard period of study,master study programme,The study programme must have a standard period of study with an average study load expressed in academic years,,:standard period of study,
+aim (bachelor),master study programme,The Bachelor's degree study programme is aimed at preparing students for the profession and for study in a Master's degree programme,,:programme objectives,
+standard duration (master),master study programme,The Master's degree programme is a follow-up to the Bachelor's degree programme; the standard duration of this programme is at least one and not more than three years,,standard period of study,
+final examination,master study programme,"The studies of a student in the Master's degree study programme are duly completed by a state final examination, which includes the defence of the diploma thesis",master state final examination,,*
+study programme,subject,Subject of study shall be taught within the study programme,study programme,,taught within
+curriculum,subject,Their sequence in time within the study programme is determined by the curriculum of the study programme,curriculum,,has curriculum
+field of education,subject,A study programme belongs to only one field of education if the state examinations or the dissertation defence verify profiling knowledge or skills in the basic subject areas belonging to one field of education,education field,,*
+field of education,subject,"A study programme is a combined programme of study that belongs to more fields of education if the state examinations or, where appropriate, the dissertation defence test profiling knowledge or skills in the core subject areas belonging to more than one field of education",education field,,*
+study programme,subject,Studies in a doctoral programme shall be monitored and evaluated by a subject board established in accordance with the internal regulations of the public college thereof which has accredited the relevant study programme,study programme,,taught within
+form of teaching,subject,"The subject is taught in particular in the form of lecture, tutorial, seminar, proseminar, course, practical training, internship, special course, laboratory class, field trip, fieldwork, individual work, or consultation",,form of teaching,
+form of implementation,subject,"Depending on its character, the subject may be implemented in a full-time, distance learning, or combined form",,form of implementation,
+duration,subject,A subject may take one or two semesters in the same academic year,,number of semesters,
+identification code,subject,Each subject has an identification code which is unique within the college,,*,
+number of semesters of instruction,subject,"A subject is determined by the identification code, the number of semesters of instruction under sentence one, the number of assigned credits, the form of teaching, and the form of assessment of study",,number of semesters,
+programmes of study,subject,A subject can be a part of the curricula of one or more programmes of study,study programme,,taught within
+compulsory or elective,subject,"Curricula, with the exception of doctoral study, stipulate which subjects are compulsory or elective for students",curriculum,,+stipulates compulsory subject;stipulates elective subjects
+groups of elective subjects,subject,Elective subjects are classified into one or more groups of elective subjects in the curricula,elective subjects group,,stipulates elective subjects
+prerequisites or exclusions,subject,"The faculty offers the subject may state that for a given subject stipulated as compulsory or elective: a) the registration for a given subject has as a prerequisite the completion of another subject or subjects, or simultaneous registration for another subject or subjects; b) the completion of a given subject has as a prerequisite the completion of another subject or subjects; c) the registration for a given subject is excluded by the simultaneous registration for another subject; d) the completion of a given subject is excluded by the previous completion of another subject; e) the registration for a given subject is excluded by the previous completion of another subject; or f) the completion of a subject is considered as the completion of another subject or subjects.",,,+registration has completion prerequisite;registration has simultaneous registration prerequisite;completion has completion prerequisite;registration excluded by simultaneous registration;completion is excluded by previous completion;registration is excluded by previous completion;completion is considered as completion
+curriculum,subject,A student registers to the subjects that are compulsory and elective in the curriculum of the study program he or she is enrolled in,curriculum,,+stipulates compulsory subject;stipulates elective subjects
+subject,subject,The student can also register any other subject,student,,registers to subject
+assessment of completion,subject,Assessment of completion of the study of a subject means the verification of completion of the subject by the student,subject completion assessment,,assesses completion of
+assessment period,subject,The assessment of study of a subject registered in a given unit of study may not be carried out later than by the end of the examination period of the summer semester of the academic year in which the student studied in the given unit of study,,,
+examiner,subject,"The assessment of the study is carried out by an examiner, who is always an academic member of staff",academic staff,,*
+written forms of assessment,subject,The faculty stores the written forms of assessment of study of the subject at least until the end of the following academic year,,,*
+assessment type,subject,"The colloquium, course credit, or course test may represent an independent assessment of the subject, or may represent a prerequisite for taking an examination in the given subject",,*,
+results grade,subject,"The results of colloquium, course credit, and course test are graded as 'pass'-'fail' or 'credited'-'not credited'",,*,
+successful completion grade,subject,Successful completion of these assessments of study of the subject means the classification 'pass' or 'credited',,*,
+examination grade,subject,"The results of examination and graded course credit are graded as 'excellent', 'very good', 'good', and 'fail'",,*,
+successful completion examination grade,subject,"Successful completion of these assessments of study of the subject means the classification 'excellent', 'very good', and 'good'",,*,
+examination requirements,subject,An examination tests the student’s knowledge or his ability; the basic requirements for the examination are in accordance with the curriculum provided in the description of the subject and published in electronic form,,*,
+examination form,subject,"The forms of examination are oral, written, practical, or combined",,*,
+assessment method,subject,"If justified or purposeful, it is possible to perform the assessment of study of a subject remotely, either in part or in full, using information and communication technologies, providing that it is possible to verify the identity of the student and to ensure compliance with the rules set for the given assessment of study of the subject",,*,
+verification of completion,subject completion assessment,verification of completion of the subject by the student,,*,
+classification,subject completion assessment,"classification ""pass"" or ""credited""",,results grade,
+results,subject completion assessment,results of examination and graded course credit are graded as,,results grade,
+successful completion,subject completion assessment,successful completion of these assessments of study of the subject means the classification,,results grade,
+field of education,examination,belongs to only one field of education if the state examinations or the dissertation defence verify profiling knowledge or skills in the basic subject areas belonging to one field of education,,,
+field of education,examination,"belongs to more fields of education if the state examinations or, where appropriate, the dissertation defence test profiling knowledge or skills in the core subject areas belonging to more than one field of education",,,
+state final examination,examination,"The studies of a student in the Bachelor's degree study programme is duly completed by a state final examination, which usually includes the defense of the bachelor's thesis.",,,*
+state final examination,examination,"The studies of a student in the Master's degree study programme are duly completed by a state final examination, which includes the defence of the diploma thesis.",,,*
+state doctoral examination,examination,The studies shall be duly completed by a state doctoral examination and a public defense of the dissertation.,,,*
+dissertation,examination,The dissertation must contain original and published results or results accepted for publication and it shall demonstrate the ability and readiness for independent research or development activities or independent theoretical and creative artistic activity.,,,*
+examination,examination,e) examination,,,
+assessment of study,examination,The assessment of study of a subject registered in a given unit of study may not be carried out later than by the end of the examination period of the summer semester of the academic year in which the student studied in the given unit of study.,subject completion assessment,,*
+examiner,examination,"The assessment is carried out by an examiner, who is always an academic member of staff.",,,*
+assessment,examination,"The colloquium, course credit, or course test may represent an independent assessment of the subject, or may represent a prerequisite for taking an examination in the given subject.",subject completion assessment,,*
+results,examination,"The results of colloquium, course credit, and course test are graded as ""pass""-""fail"" or ""credited""-""not credited"".",,:results grade,
+results,examination,"The results of examination and graded course credit are graded as ""excellent"", ""very good"", ""good"", and ""fail"".",,:results grade,
+examination,examination,An examination tests the student’s knowledge or his ability,,,:assesses completion by
+requirements,examination,The basic requirements for the examination are in accordance with the curriculum provided in the description of the subject and published in electronic form.,,*,
+forms of examination,examination,"The forms of examination are oral, written, practical, or combined.",,*,
+oral examinations,examination,"Oral examinations and the oral component of combined examinations are open to members of the academic community of the college; for reasons of capacity, the presence of the members of the academic community may be limited.",,,*
+graded course credit,examination,"In contrast to course credit, a graded course credit denotes, in the same way as an examination, how well the student fulfilled the requirements for being granted the credit.",course credit,,has course credit prerequisite

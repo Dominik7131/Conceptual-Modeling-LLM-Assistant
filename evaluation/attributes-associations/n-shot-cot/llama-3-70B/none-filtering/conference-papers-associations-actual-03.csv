@@ -1,0 +1,21 @@
+Generated association,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches association
+is presented at,research paper,research paper,conference,"Each research paper is also linked to a conference where it was presented, thus connecting it to the broader academic community.",conference,,presented at
+is written by,research paper,research paper,author,A research paper is written by one or more authors.,author,,written by
+is submitted,research paper,research paper,submission,"A submission of a research paper is a crucial stage in the research paper's life, as it represents the paper in the conference review process.",submission,,has submission
+is evaluated by,research paper,research paper,review,"They write reviews, which are evaluations or critiques of research papers.",review,,*
+writes,author,author,research paper,Authors are individuals who significantly contribute to creating research papers. ... A research paper is written by one or more authors.,research paper,,written by
+has,author,author,email address,An author is a person involved in the reviewing process with a name and an email address.,,:email,
+has,author,author,institutional affiliation,"Moreover, the author has an institutional affiliation, which tells us where they work or study.",,affiliation,
+is,author,author,corresponding author,"Among the authors, there's a special role known as the corresponding author, who acts as the main contact point for a research paper.",,,*
+has,conference,conference,location,"At the heart of this domain are conferences, which are events where research papers are presented and discussed. Every conference has a name, a location where it's held, and a specific year when it takes place.",,location,
+has,conference,conference,research paper,"Each research paper is also linked to a conference where it was presented, thus connecting it to the broader academic community.",research paper,,presented at
+has,conference,conference,submission,Submissions are acts of submitting a research paper for consideration at a conference.,submission,,submitted to
+is submitted to,submission,submission,conference,Submissions are acts of submitting a research paper for consideration at a conference. ... They are also connected to the conferences to which they are submitted.,conference,,submitted to
+represents,submission,submission,research paper,"A submission of a research paper is a crucial stage in the research paper's life, as it represents the paper in the conference review process.",research paper,,has submission
+is evaluated by,submission,submission,reviewer,Reviewers are responsible for evaluating the quality and relevance of submissions.,reviewer,,reviewed by
+is evaluated by,submission,submission,review,"A review is linked to the submission it evaluates, again emphasizing the focus on the most current submission of a research paper.",review,,reviews
+has,reviewer,reviewer,expertise area,"A reviewer is a person that has a name and email. Moreover, the reviewer has expertise area, highlighting their specialized knowledge in which they review submissions.",,expertise,
+writes,reviewer,reviewer,review,"They write reviews, which are evaluations or critiques of research papers.",review,,writes
+evaluates,reviewer,reviewer,submission,"A review is linked to the submission it evaluates, again emphasizing the focus on the most current submission of a research paper.",submission,,reviewed by
+evaluates,review,review,submission,"They write reviews, which are evaluations or critiques of research papers. A review is linked to the submission it evaluates, again emphasizing the focus on the most current submission of a research paper.",submission,,reviews
+writes,review,reviewer,review,Reviewers are responsible for evaluating the quality and relevance of submissions.,reviewer,,writes

@@ -1,0 +1,33 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+customer,aircraft,The customer represents the clients who purchase the finished aircraft.,customer,,purchases
+serial number,aircraft,Every aircraft is unique and can be identified by its serial number.,,aircraft serial number,
+manufacturing date,aircraft,The manufacturing date tells us when the aircraft was made.,,manufacturing date,
+aircraft model,aircraft,"Importantly, every aircraft is designed as a specific aircraft model, indicating the design it follows.",aircraft model,,designed as
+parts,aircraft,"The aircraft is made up of multiple parts, each an individual component used in its construction.",part,,consists of
+incorporates,aircraft,"Furthermore, there's a crucial concept called incorporates, indicating that an aircraft model incorporates various part models in its design.",part model,,*
+includes,aircraft,"The includes relationship indicates that the supply includes specific parts, showing what components are provided for the aircraft's construction.",part,,consists of
+supplied for,aircraft,"The supplied for relationship shows that each supply is dedicated to the manufacturing of a specific aircraft, linking the parts supplied to the final product they help create.",supply,,supplied for
+serial number,part,"Every part has a serial number, making it unique",,part serial number,
+brief description,part,and a brief description to understand what it is.,,part description,
+part models,part,"These parts are designed as part models, linking each part to its specific design model.",part model,,designed as part model
+unique model number of part models,part,"A part model represents the design model for individual parts, with a unique model number",,part model number,
+incorporates relationship,part,"Furthermore, there's a crucial concept called incorporates, indicating that an aircraft model incorporates various part models in its design.",,,
+includes relationship,part,"The includes relationship indicates that the supply includes specific parts, showing what components are provided for the aircraft's construction.",supply,,includes
+supplied for relationship,part,"The supplied for relationship shows that each supply is dedicated to the manufacturing of a specific aircraft, linking the parts supplied to the final product they help create.",,,consists of
+purchases,customer,who purchase the finished aircraft,aircraft,,purchases
+use,customer,for their use,aircraft,,*
+party,customer,a generic subject involved in the aircraft manufacturing process,party,,*
+customer name,customer,"Each customer has a unique aspect, their customer name",,customer name,
+design,aircraft model,indicating the design it follows,,*,
+model code,aircraft model,"different models of aircraft, each with a unique model code",,aircraft model code,
+description,aircraft model,a detailed description,,aircraft model description,
+parts,aircraft model,"made up of multiple parts, each an individual component used in its construction",,,
+part models,aircraft model,"incorporates, indicating that an aircraft model incorporates various part models in its design",part model,,incorporates
+component,part model,individual component used in its construction,,,
+design model,part model,"designed as part models, linking each part to its specific design model",part,,designed as part model
+model number,part model,unique model number,,part model number,
+description,part model,brief description to explain what it is,,part model description,
+incorporates,part model,aircraft model incorporates various part models in its design,aircraft model,,incorporates
+involvement,party,represents a generic subject involved in the aircraft manufacturing process,,,*
+is part of,party,Both customers and suppliers are part of a larger group called party,,,*
+reference code,party,to refer to the party in the business communication and documentation,,party code,

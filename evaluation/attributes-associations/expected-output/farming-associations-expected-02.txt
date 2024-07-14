@@ -1,0 +1,114 @@
+Class: farmer
+1) farms on
+- original text: a farmer farms on one or more fields to grow crop on it. Farming includes not only growing crops but also other farming activities such as soil preparation.
+- source class: farmer
+- target class: field
+
+
+2) conducts planting
+- original text: The farmer is primarily responsible for conducting planting, i.e. for a particular planting activity. This association helps attribute specific planting operations to individual farmers, crucial for management and accountability.
+- source class: farmer
+- target class: planting
+
+
+3) harvested by
+- original text: Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.
+- source class: harvest
+- target class: farmer
+
+
+Class: crop
+1) involves crop
+- original text: This activity involves specific crops, and the association is key to understanding the crop variety and its cultivation requirements during the planting process.
+- source class: planting
+- target class: crop
+
+
+Class: machinery
+1) used for planting
+- original text: Machinery used for planting plays a pivotal role in the agricultural planting process. This category includes machinery like planters and some types of tractors that are specifically outfitted for or used during the planting of crops.
+- source class: machinery
+- target class: planting
+
+
+2) used for harvesting
+- original text: Machinery used for harvesting includes combines, harvesters, and other equipment that is primarily utilized to collect and process crops at the end of their growing cycle. These machines are designed to efficiently harvest crops without causing damage, ensuring that the maximum quantity of produce is collected with the highest possible quality.
+- source class: machinery
+- target class: harvest
+
+
+3) used for field preparation
+- original text: Machinery used for preparation of the field for the planting includes those machines like tractors equipped with specific attachments, used to prepare the field for planting.
+- source class: machinery
+- target class: planting
+
+
+Class: harvest
+1) results in harvest
+- original text: Planting results to the subsequent harvest it produces which is essential for tracing the agricultural output back to its planting origins, enabling an analysis of the effectiveness of the planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.
+- source class: planting
+- target class: harvest
+
+
+2) harvested by
+- original text: Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.
+- source class: harvest
+- target class: farmer
+
+
+3) used for harvesting
+- original text: Machinery used for harvesting includes combines, harvesters, and other equipment that is primarily utilized to collect and process crops at the end of their growing cycle. These machines are designed to efficiently harvest crops without causing damage, ensuring that the maximum quantity of produce is collected with the highest possible quality.
+- source class: machinery
+- target class: harvest
+
+
+Class: field
+1) farms on
+- original text: a farmer farms on one or more fields to grow crop on it. Farming includes not only growing crops but also other farming activities such as soil preparation.
+- source class: farmer
+- target class: field
+
+
+2) performed on
+- original text: Each planting activity is performed on a particular field, indicating the location of agricultural operations and facilitating field-specific crop management.
+- source class: planting
+- target class: field
+
+
+Class: planting
+1) involves crop
+- original text: This activity involves specific crops, and the association is key to understanding the crop variety and its cultivation requirements during the planting process.
+- source class: planting
+- target class: crop
+
+
+2) performed on
+- original text: Each planting activity is performed on a particular field, indicating the location of agricultural operations and facilitating field-specific crop management.
+- source class: planting
+- target class: field
+
+
+3) conducts planting
+- original text: The farmer is primarily responsible for conducting planting, i.e. for a particular planting activity. This association helps attribute specific planting operations to individual farmers, crucial for management and accountability.
+- source class: farmer
+- target class: planting
+
+
+4) results in harvest
+- original text: Planting results to the subsequent harvest it produces which is essential for tracing the agricultural output back to its planting origins, enabling an analysis of the effectiveness of the planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.
+- source class: planting
+- target class: harvest
+
+
+5) used for planting
+- original text: Machinery used for planting plays a pivotal role in the agricultural planting process. This category includes machinery like planters and some types of tractors that are specifically outfitted for or used during the planting of crops.
+- source class: machinery
+- target class: planting
+
+
+6) used for field preparation
+- original text: Machinery used for preparation of the field for the planting includes those machines like tractors equipped with specific attachments, used to prepare the field for planting.
+- source class: machinery
+- target class: planting
+
+

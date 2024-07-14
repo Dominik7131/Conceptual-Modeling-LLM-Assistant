@@ -1,0 +1,108 @@
+Class: research paper
+1) written by
+- original text: A research paper is written by one or more authors.
+- source class: research paper
+- target class: author
+
+
+2) has corresponding author
+- original text: Among the authors, there's a special role known as the corresponding author, who acts as the main contact point for a research paper. This indicates who among the authors handles most of the correspondence related to the paper.
+- source class: author
+- target class: research paper
+
+
+3) has submission
+- original text: A submission of a research paper
+- source class: research paper
+- target class: submission
+
+
+4) presented at
+- original text: Each research paper is also linked to a conference where it was presented, thus connecting it to the broader academic community.
+- source class: research paper
+- target class: conference
+
+
+Class: author
+1) written by
+- original text: A research paper is written by one or more authors.
+- source class: research paper
+- target class: author
+
+
+2) has corresponding author
+- original text: Among the authors, there's a special role known as the corresponding author, who acts as the main contact point for a research paper. This indicates who among the authors handles most of the correspondence related to the paper.
+- source class: author
+- target class: research paper
+
+
+Class: conference
+1) submitted to
+- original text: They are also connected to the conferences to which they are submitted.
+- source class: submission
+- target class: conference
+
+
+2) presented at
+- original text: Each research paper is also linked to a conference where it was presented, thus connecting it to the broader academic community.
+- source class: research paper
+- target class: conference
+
+
+Class: submission
+1) submitted to
+- original text: They are also connected to the conferences to which they are submitted.
+- source class: submission
+- target class: conference
+
+
+2) reviewed by
+- original text: in which they review submissions
+- source class: submission
+- target class: reviewer
+
+
+3) has submission
+- original text: A submission of a research paper
+- source class: research paper
+- target class: submission
+
+
+4) reviews
+- original text: A review is linked to the submission it evaluates
+- source class: review
+- target class: submission
+
+
+5) is resubmission of
+- original text: Importantly, if a research paper is resubmitted, the latest submission is the one that's considered for evaluation.
+- source class: submission
+- target class: submission
+
+
+Class: reviewer
+1) reviewed by
+- original text: in which they review submissions
+- source class: submission
+- target class: reviewer
+
+
+2) writes
+- original text: They write reviews
+- source class: reviewer
+- target class: review
+
+
+Class: review
+1) writes
+- original text: They write reviews
+- source class: reviewer
+- target class: review
+
+
+2) reviews
+- original text: A review is linked to the submission it evaluates
+- source class: review
+- target class: submission
+
+

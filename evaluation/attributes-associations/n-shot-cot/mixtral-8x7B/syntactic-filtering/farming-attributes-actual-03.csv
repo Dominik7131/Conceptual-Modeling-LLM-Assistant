@@ -1,0 +1,88 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+machinery,farmer,"[...] individuals such as farmers and the various types of machinery they use, alongside ...",machinery,,*
+activity,farmer,"A farmer is an individual who engages in the activity of agriculture, growing and harvesting crops.",,,
+name,farmer,"Each farmer can be identified by a name, which uniquely identifies the farmer and is used to refer to them in various documentation and statistical reporting.",,name,
+age,farmer,"A farmer's age is also recorded, mainly for statistical and reporting purposes.",,age,
+capacity,farmer,"Farmers own and use various pieces of machinery, reflecting their capacity for mechanized farming, and ...",,*,
+responsibility,farmer,"In other words, we also say that the farmers conduct planting to point to this responsibility.",,*,
+fields,farmer,"Additionally, a farmer farms on one or more fields to grow crops, which includes ...",field,,farms on
+crops,farmer,"Crops are plants grown in large amounts and cultivated by farmers for profit or subsistence, such as cereals, oil seeds, vegetables, and fruits.",crop,,*
+harvest,farmer,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",harvest,,harvested by
+quantity,farmer,The total quantity of the harvest is crucial for determining the productivity and success of the crop.,,*,
+activities,crop,"activities and elements involved in agriculture, specifically focusing on the roles and tools that contribute to planting and harvesting crops",,,*
+users,crop,individuals such as farmers and the various types of machinery they use,,,
+agricultural processes,crop,agricultural processes from planting seeds to harvesting the produce,,,*
+grown,crop,grows and harvests crops,,,*
+field,crop,one or more fields to grow crops,field,,*
+soil preparation,crop,other farming activities such as soil preparation,,,
+planter,crop,machinery designed to plant seeds efficiently and accurately,planter,,*
+sprayer,crop,used for the precise application of liquids like pesticides and fertilizers,sprayer,,*
+field,crop,areas of land used for growing crops,field,,*
+soil type,crop,soil type,,,
+soil ph,crop,soil pH,,,
+topography,crop,field's topography,,,
+water retention,crop,water retention,,,
+nutrient availability,crop,nutrient availability,,,
+field size,crop,"field size, typically measured in hectares",,,
+water usage,crop,water usage,,,
+crops,crop,plants grown in large amounts and cultivated by farmers for profit or subsistence,,,
+crop categories,crop,"cereals, oil seeds, vegetables, and fruits",-cereal;seed plant;vegetable;fruit,,*
+botanical taxon,crop,a plant grouping within a single botanical taxon of the lowest known rank,,*,
+planting,crop,the agricultural activity of planting crops in a specific field during a specific year,planting,,involves crop
+planting date,crop,the exact date or period when the crop was planted,,*,
+planted crop,crop,the crop involved in planting,planting,,involves crop
+planting field,crop,the knowledge of the field where the planting is performed on,,,*
+harvest,crop,production obtained from crops,harvest,,*
+harvest weight,crop,measured in kilograms,,,
+harvest quality,crop,"factors like size, ripeness, nutritional value, and absence of pests or diseases",,,
+harvest farmer,crop,connected to the farmer who performed the harvest,,,
+harvest quantity,crop,total quantity of the harvest,,,
+planting machinery,crop,machinery like planters and some types of tractors,,,
+harvesting machinery,crop,"machinery like combines, harvesters, and other equipment",,,
+machinery interactions,crop,interactions between machinery and agricultural activities,,,
+field preparation machinery,machinery,"machinery used for field preparation, such as tractors equipped with specific attachments",,,used for field preparation
+field preparation,machinery,"field preparation process, including plowing, tilling, and conditioning the soil",,,used for field preparation
+type,machinery,"specific types of machinery include tractors, planters, harvestors, and sprayers",-tractor;planter;harvester;sprayer,,*
+model,machinery,"model of the machinery, which affects its functionality and suitability for specific tasks",,model,
+manufacture year,machinery,"year the machinery was manufactured, indicating its age and potential modernity in technology",,year of manufacturing,
+role,machinery,machinery plays a pivotal role in the efficiency and effectiveness of farming,,*,
+activities,machinery,"three specific types of activities involve the use of machinery: field preparation, planting, and harvesting",,,-used for field preparation;used for planting;used for harvesting
+planting machinery,machinery,"machinery used for planting, such as planters and some types of tractors",planting,,used for planting
+harvesting machinery,machinery,"machinery used for harvesting, such as combines, harvesters, and other equipment",harvest,,used for harvesting
+quantity,harvest,"quantity, quantified and evaluated in terms of quantity and quality",,quantity,
+specific planting activity,harvest,specific planting activity can result into the subsequent harvest it produces,,,
+farmer,harvest,connected to the farmer who performed the harvest,farmer,,harvested by
+total quantity,harvest,total quantity of the harvest,,quantity,
+quality,harvest,"quality may include factors like size, ripeness, nutritional value, and absence of pests or diseases",,quality,
+high-quality harvests,harvest,high-quality harvests are crucial for market acceptance and consumer satisfaction,,quality,
+activities involving machinery,harvest,"three specific types of activities involve the use of machinery: field preparation, planting, and harvesting",machinery,,used for harvesting
+harvesting machinery,harvest,machinery used for harvesting,machinery,,used for harvesting
+crops,field,"to grow crops, which includes not only growing the crops but also other farming activities such as soil preparation.",crop,,*
+size,field,"areas of land used for growing crops, and can vary in size, typically measured in hectares.",,size,
+soil type,field,"The soil type, soil pH, and the field's topography are critical for understanding how to manage each field.",,soil type,
+p h,field,soil pH,,soil ph,
+topography,field,the field's topography,,topography,
+irrigation availability,field,"Fields also have specific features like irrigation availability and a defined location, which can include specific GPS coordinates.",,irrigation availability,
+location,field,a defined location,,location,
+gps coordinates,field,GPS coordinates,,location,
+fence,field,Fields can be but does not have to be surrounded by a fence.,,*,
+size,field,"The field size is fundamental for planning the distribution of crops, determining the amount of seeds needed, and calculating the expected yield.",,size,
+p h,field,"The pH indicates the acidity or alkalinity of the soil, which is crucial for managing soil health and fertility.",,soil ph,
+irrigation availability,field,"Irrigation availability informs whether the field has access to irrigation systems and the type of irrigation used (e.g., drip, sprinkler, or flood).",,irrigation availability,
+water usage,field,This is vital for planning water usage and can impact crop selection and planting schedules based on the water needs of the crops.,,*,
+planting,field,"Planting represents the agricultural activity of planting crops in a specific field during a specific year, capturing the details of the planting process.",planting,,performed on
+crops,field,"This involves specific crops, with each planting activity associated with a particular crop and occurring on a specific field where the planting is performed.",crop,,*
+planting date,field,The exact date or period when the crop was planted is critical for tracking crop growth stages and scheduling subsequent farming activities.,,*,
+location,field,The knowledge of the field where the planting is performed on is important as an indication of the location of agricultural operations and facilitating field-specific crop management.,,location,
+activities,field,"Three specific types of activities involve the use of machinery: field preparation, planting, and harvesting.",,,*
+machinery,field,machinery used for field preparation,,,*
+process,field,"This process might include plowing, tilling, and conditioning the soil to create an optimal planting environment.",,,
+planting,planting,agricultural activity of planting crops in a specific field during a specific year,,,
+crop,planting,specific crops,crop,,involves crop
+field,planting,on a specific field where the planting is performed,field,,performed on
+date or period,planting,exact date or period when the crop was planted,,planting date,
+crop variety,planting,crop involved in planting,crop,,involves crop
+field location,planting,knowledge of the field where the planting is performed on,,*,
+machinery usage,planting,"specific types of activities involve the use of machinery: field preparation, planting, and harvesting",machinery,,-used for field preparation;used for planting
+field preparation machinery,planting,"certain types of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting",machinery,,used for field preparation
+planting machinery,planting,machinery like planters and some types of tractors that are specifically outfitted for or used during the planting of crops,machinery,,used for planting

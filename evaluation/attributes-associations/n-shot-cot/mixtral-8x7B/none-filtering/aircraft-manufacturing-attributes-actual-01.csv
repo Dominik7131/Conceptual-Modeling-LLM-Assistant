@@ -1,0 +1,26 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+serial number,aircraft,uniquely identified by a serial number,,aircraft serial number,
+model,aircraft,"each aircraft is linked to a specific model, indicating the design it follows",aircraft model,,designed as
+manufacturing date,aircraft,marked with the manufacturing date,,manufacturing date,
+parts,aircraft,consists of parts,part,,consists of
+purchases,aircraft,customers are linked to aircraft through the purchases,customer,,purchases
+unique model code,aircraft,assigned a unique model code,,*,
+part models,aircraft,incorporate various part models in their design,part model,,*
+specific model,part,"linked to its specific model, indicating the design it follows, and is identified by a serial number and a brief description",part model,,designed as part model
+model,part,every part is linked to its specific model,part model,,designed as part model
+serial number,part,identified by a serial number,,part serial number,
+description,part,and a brief description,,part description,
+purchases,customer,who purchase the finished aircraft. They are linked to aircraft through the purchases,aircraft,,purchases
+name,customer,"identified by a name, which is a unique designation of each client",,customer name,
+unique designation,customer,"Every customer is identified by a name, which is a unique designation of each client in this context",,,
+configuration,aircraft model,representing different configurations of aircraft. Each aircraft model is described in detail and assigned a unique model code,,*,
+detailed description,aircraft model,Each aircraft model is described in detail and assigned a unique model code,,aircraft model description,
+unique model code,aircraft model,Each aircraft model is described in detail and assigned a unique model code,,aircraft model code,
+part models,aircraft model,"aircraft models incorporate various part models in their design, indicating the integration of different components necessary for constructing a specific aircraft model",part model,,incorporates
+party code,aircraft model,"Each party is uniquely identified by a party code, used for business communication and documentation purposes",,,
+description,part model,described in detail and assigned a unique model code,,,
+model number,part model,uniquely identified by a model number,,,
+linked model,part model,"linked to a specific model, indicating the design it follows",aircraft model,,incorporates
+serial number,part model,uniquely identified by a serial number,,,
+party code,party,"uniquely identified by a party code, used for business communication and documentation purposes",,party code,
+type,party,Each party is,,,*

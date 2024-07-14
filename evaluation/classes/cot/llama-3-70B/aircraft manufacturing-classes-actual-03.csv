@@ -1,0 +1,10 @@
+Generated class,Matches class,Matches attribute,Matches association
+customer,customer,,
+supplier,supplier,,
+party,party,,
+aircraft,aircraft,,
+part,part,,
+aircraft model,aircraft model,,
+part model,part model,,
+purchase,*,,
+supply,supply,,

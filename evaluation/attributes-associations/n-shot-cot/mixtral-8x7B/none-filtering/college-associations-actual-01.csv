@@ -1,0 +1,6 @@
+Generated association,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches association
+is a natural person who is,academic staff,academic staff,natural person,Academic staff is a natural person who is ...,natural person,,*
+are obliged to uphold,academic staff,academic staff,obligation,academic staff are obliged to uphold ...,,,
+may only be,academic staff,guarantor,academic staff,The guarantor may only be an academic staff who meets the conditions laid down in the standards for accreditation of the study programme for the proper performance of activities ...,,,*
+is,natural person,academic staff,natural person,"Academic staff is a natural person who is a full professors, associate professors, extraordinary professors, assistant professors, assistant lecturers, lecturers and scientific, research and development staff who are employees of the college carrying out both teaching and creative activities in an employment relationship according to the agreed type of work.",academic staff,,*
+is,natural person,student,natural person,A student is a natural person who is enrolled in a study program.,student,,*

@@ -1,0 +1,66 @@
+Class: farmer
+1) name
+- original text: is identified uniquely by a name that is used to refer to the farmer from various documentation, statistical reporting, etc.
+
+
+2) age
+- original text: The age of a farmer in years is used mainly for statistical and reporting purposes.
+
+
+Class: crop
+1) cultivated variety
+- original text: The cultivated variety of a crop is a critical classification. It is a plant grouping, within a single botanical taxon of the lowest known rank, defined by the reproducible expression of its distinguishing and other genetic characteristics.
+
+
+Class: machinery
+1) model
+- original text: model of the machinery indicate its age and potential modernity in technology, and influencing its functionality and suitability for specific tasks.
+
+
+2) year of manufacturing
+- original text: The year of manufacturing and model of the machinery indicate its age and potential modernity in technology
+
+
+Class: harvest
+1) quantity
+- original text: Moreover, the total quantity of the harvest, measured in kilograms, is crucial for determining the productivity and success of the crop.
+
+
+2) quality
+- original text: High-quality harvests are crucial for market acceptance and consumer satisfaction. Therefore, the quality of the harvest, which may include factors like size, ripeness, nutritional value, and absence of pests or diseases.
+
+
+3) harvest date
+- original text: The specific date or period when the harvest is collected is crucial for maximizing yield and quality.
+
+
+Class: field
+1) size
+- original text: The size of the field, which measures the total area of the field, typically in hectares, is fundamental for crop distribution planning, while the physical layout affects water drainage and machinery suitability.
+
+
+2) location
+- original text: The geographical location of the field, which can include specific GPS coordinates or a general description (e.g., near a certain landmark), helps in locating the field for logistical purposes and for understanding its geographical and climatic context
+
+
+3) soil type
+- original text: The type of soil present in the field, such as loamy, sandy, clay, or silt affects water retention, nutrient availability, and the types of crops that can be successfully cultivated.
+
+
+4) soil ph
+- original text: pH indicates the acidity or alkalinity of the soil, which is crucial for managing soil health and fertility. Soil pH can significantly influence crop health and productivity, dictating the types of amendments needed to optimize growing conditions.
+
+
+5) topography
+- original text: The topography of the field describes the physical layout of the land, including its flatness, slope, and elevation. It influences water drainage, erosion risk, and the suitability of various agricultural machinery.
+
+
+6) irrigation availability
+- original text: The availability of irrigation systems and the type of irrigation used (e.g., drip, sprinkler, or flood) is vital for planning water usage and can impact crop selection and planting schedules based on the water needs of the crops.
+
+
+Class: planting
+1) planting date
+- original text: The exact date or period of planting is also documented, essential for managing the agricultural cycle
+
+

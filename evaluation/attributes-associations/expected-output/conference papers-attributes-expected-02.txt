@@ -1,0 +1,54 @@
+Class: research paper
+1) abstract
+- original text: an abstract
+
+
+2) publication year
+- original text: publication year
+
+
+3) title
+- original text: title
+
+
+Class: person
+1) name
+- original text: identified by a name
+
+
+2) email
+- original text: email address
+
+
+Class: author
+1) affiliation
+- original text: author has an affiliation, often an academic institution
+
+
+Class: conference
+1) conference name
+- original text: The conference name is a unique identification of the conference in the scientific community
+
+
+2) location
+- original text: location, signifying when and where these intellectual gatherings take place
+
+
+3) year
+- original text: a specific year and location, signifying when and where these intellectual gatherings take place
+
+
+Class: submission
+1) submission date
+- original text: a submission date
+
+
+2) status
+- original text: a status indicating where it stands in the review process (like under review, accepted, or rejected)
+
+
+Class: reviewer
+1) expertise
+- original text: brings their expertise to the table
+
+

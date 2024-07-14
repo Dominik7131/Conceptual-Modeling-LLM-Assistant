@@ -1,0 +1,32 @@
+Class: aircraft
+- original text: Aircraft signify the final manufactured product in this domain
+
+
+Class: part
+- original text: Parts represent individual components used in constructing an aircraft
+
+
+Class: supplier
+- original text: It is an umbrella term encompassing various entities like customers and suppliers. Suppliers are entities that provide parts for aircraft manufacturing. They are a subclass of parties, indicating their involvement in the broader aircraft manufacturing process.
+
+
+Class: supply
+- original text: Supplies encompass the parts required for aircraft manufacturing, provided by a supplier
+
+
+Class: customer
+- original text: Customers represent the clients who purchase the finished aircraft It is an umbrella term encompassing various entities like customers and suppliers.
+
+
+Class: aircraft model
+- original text: Aircraft models are critical in this domain, representing different configurations of aircraft
+
+
+Class: part model
+- original text: Part models denote the design models for individual parts used in aircraft The part model's design and specifications play a significant role in the overall makeup of the aircraft
+
+
+Class: party
+- original text: party is introduced to represent a generic subject involved in the aircraft manufacturing process
+
+

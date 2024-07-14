@@ -1,0 +1,18 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+is linked to,research paper,research paper,submission,"Each research paper is linked to a submission, which represents the act of submitting the paper for consideration at a conference.",submission,,has submission
+written by,research paper,research paper,author,"An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors.",author,,written by
+is evaluated by,research paper,research paper,review,"A review, an evaluation or critique of a research paper by a reviewer, plays a pivotal role.",review,,*
+has submission,research paper,research paper,submission,Only the last submission of a research paper can be evaluated.,submission,,has submission
+written by,author,research paper,author,"An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors.",research paper,,written by
+has,author,author,institutional affiliation,An author's institutional affiliation provides a professional identity and context.,,affiliation,
+is,author,author,corresponding author,"Additionally, one of the authors may be designated as the corresponding author, highlighting their primary responsibility in communication regarding the paper.",,,*
+has submission,conference,conference,submission,"Each research paper is linked to a submission, which represents the act of submitting the paper for consideration at a conference.",submission,,submitted to
+has,conference,submission,conference,A submission is linked to the conference it is submitted to...,submission,,submitted to
+is linked to,submission,research paper,submission,"Each research paper is linked to a submission, which represents the act of submitting the paper for consideration at a conference.",research paper,,has submission
+is submitted to,submission,submission,conference,"A submission is linked to the conference it is submitted to and carries a submission date, marking when it entered the review process.",conference,,submitted to
+replaces,submission,submission,submission,"Submissions can be resubmissions, linked to prior submissions they replace, showing the iterative nature of academic work.",submission,,is resubmission of
+is reviewed by,submission,submission,reviewer,"A submission is reviewed by a reviewer, a connection that is fundamental to the peer-review process and maintaining the academic integrity of the conference proceedings.",reviewer,,reviewed by
+has,reviewer,reviewer,expertise,"A reviewer, responsible for evaluating the quality and relevance of research paper submissions, brings to the table their area of expertise.",,expertise,
+involved in,reviewer,reviewer,review process,A reviewer is involved in review process by the act of writing reviews.,,,*
+reviews,reviewer,reviewer,submission,"Furthermore, a submission is reviewed by a reviewer, a connection that is fundamental to the peer-review process and maintaining the academic integrity of the conference proceedings.",submission,,reviewed by
+reviews,review,review,submission,A review reviews the submission it evaluates.,submission,,reviews

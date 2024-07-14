@@ -1,0 +1,103 @@
+Class: aircraft
+1) designed as
+- original text: every aircraft is designed as a specific aircraft model, indicating the design it follows.
+- source class: aircraft
+- target class: aircraft model
+
+
+2) consists of
+- original text: The aircraft is made up of multiple parts
+- source class: aircraft
+- target class: part
+
+
+3) supplied for
+- original text: supplied for The supplied for relationship shows that each supply is dedicated to the manufacturing of a specific aircraft, linking the parts supplied to the final product they help create.
+- source class: supply
+- target class: aircraft
+
+
+4) purchases
+- original text: purchase of aircraft by customers, referred to as purchases. Here, customers obtain the finished aircraft for their use.
+- source class: customer
+- target class: aircraft
+
+
+Class: part
+1) includes
+- original text: includes The includes relationship indicates that the supply includes specific parts, showing what components are provided for the aircraft's construction.
+- source class: supply
+- target class: part
+
+
+2) designed as part model
+- original text: These parts are designed as part models, linking each part to its specific design model
+- source class: part
+- target class: part model
+
+
+3) consists of
+- original text: The aircraft is made up of multiple parts
+- source class: aircraft
+- target class: part
+
+
+Class: supplier
+1) supplies
+- original text: supplies represents a relationship where a supplier provides a supply, a range of different parts essential for building aircraft.
+- source class: supplier
+- target class: supply
+
+
+Class: supply
+1) supplies
+- original text: supplies represents a relationship where a supplier provides a supply, a range of different parts essential for building aircraft.
+- source class: supplier
+- target class: supply
+
+
+2) includes
+- original text: includes The includes relationship indicates that the supply includes specific parts, showing what components are provided for the aircraft's construction.
+- source class: supply
+- target class: part
+
+
+3) supplied for
+- original text: supplied for The supplied for relationship shows that each supply is dedicated to the manufacturing of a specific aircraft, linking the parts supplied to the final product they help create.
+- source class: supply
+- target class: aircraft
+
+
+Class: customer
+1) purchases
+- original text: purchase of aircraft by customers, referred to as purchases. Here, customers obtain the finished aircraft for their use.
+- source class: customer
+- target class: aircraft
+
+
+Class: aircraft model
+1) designed as
+- original text: every aircraft is designed as a specific aircraft model, indicating the design it follows.
+- source class: aircraft
+- target class: aircraft model
+
+
+2) incorporates
+- original text: incorporates, indicating that an aircraft model incorporates various part models in its design. This shows how different parts come together in the creation of a specific aircraft model.
+- source class: aircraft model
+- target class: part model
+
+
+Class: part model
+1) designed as part model
+- original text: These parts are designed as part models, linking each part to its specific design model
+- source class: part
+- target class: part model
+
+
+2) incorporates
+- original text: incorporates, indicating that an aircraft model incorporates various part models in its design. This shows how different parts come together in the creation of a specific aircraft model.
+- source class: aircraft model
+- target class: part model
+
+

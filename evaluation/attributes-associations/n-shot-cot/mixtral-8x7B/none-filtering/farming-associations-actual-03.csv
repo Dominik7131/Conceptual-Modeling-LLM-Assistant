@@ -1,0 +1,44 @@
+Generated association,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches association
+engages in,farmer,farmer,agriculture,"A farmer is an individual who engages in the activity of agriculture,",,,
+identified by,farmer,farmer,name,"Each farmer can be identified by a name,",,name,
+owns and uses,farmer,farmer,machinery,"Farmers own and use various pieces of machinery,",machinery,,*
+responsible for,farmer,farmer,planting activities,and they are responsible for specific planting activities,planting,,conducts planting
+farms on,farmer,farmer,field,a farmer farms on one or more fields,field,,farms on
+owns and uses,farmer,farmer,machinery,"Farmers own and use various pieces of machinery,",machinery,,*
+responsible for,farmer,farmer,planting activities,and they are responsible for specific planting activities,planting,,conducts planting
+farms on,farmer,farmer,field,A farmer farms on one or more fields,field,,farms on
+owns and uses,farmer,farmer,machinery,"Farmers own and use various pieces of machinery,",machinery,,*
+used for,machinery,agricultural process,machinery,"Machinery encompasses mechanical tools and equipment used in farming, crucial for tasks such as plowing, seeding, spraying, and harvesting. Specific types of machinery include tractors, planters, harvestors, and sprayers.",,,*
+includes,machinery,domain,machinery,"Machinery encompasses mechanical tools and equipment used in farming, crucial for tasks such as plowing, seeding, spraying, and harvesting. Specific types of machinery include tractors, planters, harvestors, and sprayers.",,,
+owns and uses,machinery,farmer,machinery,"Farmers own and use various pieces of machinery, reflecting their capacity for mechanized farming, and they are responsible for specific planting activities which are crucial for management and accountability.",machinery,,*
+produces,harvest,planting,harvest,"A specific planting activity can result into the subsequent harvest it produces. This information is essential for tracing the agricultural output back to its planting origins, enabling an analysis of the effectiveness of the planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.",planting,,results in harvest
+obtained from,harvest,harvest,crops,"Harvest is the production obtained from crops, quantified and evaluated in terms of quantity and quality, representing the final output of the agricultural cycle.",crop,,*
+farms on,field,farmer,field,A farmer farms on one or more fields to grow crops,farmer,,farms on
+has,field,field,feature,Fields have specific features like irrigation availability and a defined location,,-irrigation availability;location,
+varies in,field,field,size,"Fields can vary in size, typically measured in hectares",,size,
+used for,field,field,growing,Fields are areas of land used for growing crops,crop,,*
+can be,field,field,surrounded,Fields can be but does not have to be surrounded by a fence,,,*
+have,field,field,feature,"Fields also have specific features like soil type, soil pH, and the field's topography",,-soil type;soil ph;topography,
+include,field,field,gps coordinates,Fields can include specific GPS coordinates,,location,
+associated with,field,field,planting activity,"A specific planting activity can result into the subsequent harvest it produces. This information is essential for tracing the agricultural output back to its planting origins, enabling an analysis of the effectiveness of the planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.",planting,,performed on
+associated with,field,field,harvest,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",harvest,,*
+associated with,field,field,crop,"This involves specific crops, with each planting activity associated with a particular crop and occurring on a specific field where the planting is performed.",crop,,*
+farmed by,field,field,farmer,A farmer farms on one or more fields to grow crops,farmer,,farms on
+occurs on,field,field,planting,A farmer farms on one or more fields to grow crops,planting,,conducts planting
+used for,field,field,machinery,"Machinery used for field preparation indicates that certain types of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting. This process might include plowing, tilling, and conditioning the soil to create an optimal planting environment.",machinery,,*
+has,field,field,soil type,"Fields also have specific features like soil type, soil pH, and the field's topography",,soil type,
+has,field,field,soil ph,"Fields also have specific features like soil type, soil pH, and the field's topography",,soil ph,
+has,field,field,topography,"Fields also have specific features like soil type, soil pH, and the field's topography",,topography,
+has,field,field,irrigation availability,Fields have specific features like irrigation availability and a defined location,,irrigation availability,
+has,field,field,location,Fields have specific features like irrigation availability and a defined location,,location,
+varies in,field,field,size,"Fields can vary in size, typically measured in hectares",,size,
+has,field,field,p h,"The soil pH indicates the acidity or alkalinity of the soil, which is crucial for managing soil health and fertility. Soil pH can significantly influence crop health and productivity, dictating the types of amendments needed to optimize growing conditions.",,soil ph,
+has,field,field,feature,Fields have specific features like irrigation availability and a defined location,,-irrigation availability;location,
+includes,field,field,gps coordinates,Fields can include specific GPS coordinates,,location,
+used for,field,field,machinery used for field preparation,"Machinery used for field preparation indicates that certain types of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting. This process might include plowing, tilling, and conditioning the soil to create an optimal planting environment.",machinery,,*
+used for,field,field,machinery used for planting,"Machinery used for planting refers to the employment of specific pieces of machinery in the planting process. This links machinery like planters and some types of tractors that are specifically outfitted for or used during the planting of crops. This highlights the machinery's importance in accurately and efficiently placing seeds in the ground, which is crucial for optimal crop distribution and growth.",machinery,,*
+used for,field,field,machinery used for harvesting,"Machinery used for harvesting connects a piece of machinery to its use in the harvesting process. This is specific to machinery like combines, harvesters, and other equipment that is primarily utilized to collect and process crops at the end of their growing cycle. It underscores the critical role of machinery in gathering crops, a vital step that influences the quantity and quality of the agricultural output.",machinery,,*
+conducts,planting,farmer,planting,"Farmers own and use various pieces of machinery, reflecting their capacity for mechanized farming, and they are responsible for specific planting activities which are crucial for management and accountability. In other words, we also say that the farmers conduct planting to point to this responsibility.",farmer,,conducts planting
+involves,planting,planting,crop,"This involves specific crops, with each planting activity associated with a particular crop and occurring on a specific field where the planting is performed.",crop,,involves crop
+occurs on,planting,planting,field,"This involves specific crops, with each planting activity associated with a particular crop and occurring on a specific field where the planting is performed.",field,,performed on
+results in,planting,planting,harvest,"A specific planting activity can result into the subsequent harvest it produces. This information is essential for tracing the agricultural output back to its planting origins, enabling an analysis of the effectiveness of the planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.",harvest,,results in harvest

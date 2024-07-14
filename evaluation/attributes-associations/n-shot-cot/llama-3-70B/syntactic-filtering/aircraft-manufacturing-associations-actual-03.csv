@@ -1,0 +1,24 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+has,aircraft,aircraft,serial number,"Then, we have aircraft, the final manufactured product. Every aircraft is unique and can be identified by its serial number.",,aircraft serial number,
+has,aircraft,aircraft,manufacturing date,The manufacturing date tells us when the aircraft was made.,,manufacturing date,
+is designed as,aircraft,aircraft,aircraft model,"Importantly, every aircraft is designed as a specific aircraft model, indicating the design it follows.",aircraft model,,designed as
+is made up of,aircraft,aircraft,part,"The aircraft is made up of multiple parts, each an individual component used in its construction.",part,,consists of
+is manufactured with,aircraft,aircraft,supply,"The supplied for relationship shows that each supply is dedicated to the manufacturing of a specific aircraft, linking the parts supplied to the final product they help create.",supply,,supplied for
+is part of,part,part,aircraft,"The aircraft is made up of multiple parts, each an individual component used in its construction.",aircraft,,includes
+is designed as,part,part,part model,"These parts are designed as part models, linking each part to its specific design model.",part model,,designed as part model
+is included in,part,part,supply,"The includes relationship indicates that the supply includes specific parts, showing what components are provided for the aircraft's construction.",supply,,includes
+is supplied for,part,part,aircraft,"The supplied for relationship shows that each supply is dedicated to the manufacturing of a specific aircraft, linking the parts supplied to the final product they help create.",aircraft,,consists of
+provides,supplier,supplier,part,"Then we have the supplier, entities that provide parts for aircraft manufacturing.",part,,*
+provides,supplier,supplier,supply,"In contrast, supplies represents a relationship where a supplier provides a supply, a range of different parts essential for building aircraft.",supply,,supplies
+is a,supplier,supplier,party,"Both customers and suppliers are part of a larger group called party, representing a generic subject involved in the aircraft manufacturing process.",party,,*
+includes,supply,supply,part,"The includes relationship indicates that the supply includes specific parts, showing what components are provided for the aircraft's construction.",part,,includes
+supplied for,supply,supply,aircraft,"The supplied for relationship shows that each supply is dedicated to the manufacturing of a specific aircraft, linking the parts supplied to the final product they help create.",aircraft,,supplied for
+provides,supply,supplier,supply,"a supplier provides a supply, a range of different parts essential for building aircraft.",supplier,,supplies
+has,customer,customer,customer name,"Each customer has a unique aspect, their customer name.",,customer name,
+makes,customer,customer,purchase,"A key activity in this field is the purchase of aircraft by customers, referred to as purchases.",,,*
+obtains,customer,customer,aircraft,"Here, customers obtain the finished aircraft for their use.",aircraft,,purchases
+is a,customer,customer,party,"Both customers and suppliers are part of a larger group called party, representing a generic subject involved in the aircraft manufacturing process.",party,,*
+is designed as,aircraft model,aircraft,aircraft model,"Importantly, every aircraft is designed as a specific aircraft model, indicating the design it follows.",aircraft,,designed as
+incorporates,aircraft model,aircraft model,part model,"Furthermore, there's a crucial concept called incorporates, indicating that an aircraft model incorporates various part models in its design.",part model,,incorporates
+links to,part model,part model,design model,"These parts are designed as part models, linking each part to its specific design model.",part,,designed as part model
+is incorporated in,part model,part model,aircraft model,"Furthermore, there's a crucial concept called incorporates, indicating that an aircraft model incorporates various part models in its design.",aircraft model,,incorporates

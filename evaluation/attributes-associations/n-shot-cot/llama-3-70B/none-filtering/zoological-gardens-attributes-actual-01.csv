@@ -1,0 +1,53 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+species name,animal,species name and species common name,,*,
+species common name,animal,species name and species common name,,*,
+iucn status,animal,IUCN status,,*,
+diet,animal,we are also interested in its specified diet,diet,,has specified diet
+name,animal,Each animal also has a name,,animal name,
+conservation status,animal,conservation status of the animal,,*,
+reproductive age,animal,age at which the species is capable of reproducing,,*,
+breeding season,animal,specific time of year when the animals of that species naturally breeds,,*,
+gestation period,animal,"gestation period, which is the length of pregnancy in viviparous animals",,*,
+clutch size,animal,number of eggs typically laid at one time,,,
+biological characteristics,species,"classified by species, each possessing unique biological and ecological characteristics",,,classified by
+ecological characteristics,species,"classified by species, each possessing unique biological and ecological characteristics",,,classified by
+species name,species,"Properties such as species name and species common name, and IUCN status characterize the species",,species name,
+species common name,species,"Properties such as species name and species common name, and IUCN status characterize the species",,species common name,
+iucn status,species,"Properties such as species name and species common name, and IUCN status characterize the species",,iucn status,
+diet type,species,"We distinguish different types of diet whether an animal is herbivorous, carnivorous, omnivorous, piscivorous, etc",,,
+nutrient requirements,species,"For example, some species may require particular vitamins or minerals in higher quantities than others",,,
+reproductive health,species,"Reproductive details of animal species include reproductive health and management information that is paramount in zoological settings, especially for conservation breeding programs",,*,
+reproductive age,species,"First, the age at which the species is capable of reproducing, which helps in planning breeding programs, is important",,reproductive age,
+breeding season,species,"This takes us also to the specific time of year when the animals of that species naturally breeds, which can influence how enclosures are managed and when animals are introduced for mating",,natural breeding time,
+gestation period,species,"Gestation period, which is the length of pregnancy in viviparous animals, is important for monitoring and providing care during this critical period",,gestation period,
+clutch size,species,"For oviparous species, the number of eggs typically laid at one time, affects incubation practices",,:number of laid eggs,
+specified diet,diet,we are also interested in its specified diet,animal,,has specified diet
+type,diet,"whether an animal is herbivorous, carnivorous, omnivorous, piscivorous, etc.",,diet type,
+nutrients,diet,the diet is also related to specific nutrients required to maintain health and vitality,,nutrients,
+vitamins and minerals,diet,"For example, some species may require particular vitamins or minerals in higher quantities than others",,*,
+feeding schedule,diet,the feeding schedule is essential,,feeding schedule,
+frequency and timing,diet,"It specifies the frequency and timing of feeding, which can affect the animal's metabolic rate and overall health",,feeding schedule,
+feeding pattern,diet,"Some species may need multiple small feedings throughout the day, while others might suffice with less frequent larger meals",,*,
+feeding technique,diet,The diet can also be associated with a special feeding technique,,feeding technique,
+number of eggs,oviparous species,"For oviparous species, the number of eggs typically laid at one time, affects incubation practices.",,number of laid eggs,
+size,enclosure,"Each enclosure is characterized by its size in square meters, type (e.g., aviary, aquarium, terrarium), climate conditions, and vegetation, tailored to the needs of specific species in the enclosure.",,enclosure size,
+type,enclosure,"Each enclosure is characterized by its size in square meters, type (e.g., aviary, aquarium, terrarium), climate conditions, and vegetation, tailored to the needs of specific species in the enclosure.",,enclosure type,
+climate conditions,enclosure,"Each enclosure is characterized by its size in square meters, type (e.g., aviary, aquarium, terrarium), climate conditions, and vegetation, tailored to the needs of specific species in the enclosure.",climate conditions,,has climate conditions
+vegetation,enclosure,"Each enclosure is characterized by its size in square meters, type (e.g., aviary, aquarium, terrarium), climate conditions, and vegetation, tailored to the needs of specific species in the enclosure.",,vegetation,
+caretakers,enclosure,Caretakers and zoologists are assigned to particular enclosures they are responsible for.,caretaker,,assigned as caretaker
+zoologists,enclosure,Caretakers and zoologists are assigned to particular enclosures they are responsible for.,zoologist,,assigned to as zoologist
+climate conditions,climate conditions,"climate conditions, and vegetation, tailored to the needs of specific species in the enclosure",enclosure,,has climate conditions
+temperature,climate conditions,"They are a blend of various controlled environmental factors including temperature, humidity, lighting, and ventilation",,temperature,
+humidity,climate conditions,"They are a blend of various controlled environmental factors including temperature, humidity, lighting, and ventilation",,humidity level,
+lighting,climate conditions,"They are a blend of various controlled environmental factors including temperature, humidity, lighting, and ventilation",,-ultraviolet light;light cycles,
+ventilation,climate conditions,"They are a blend of various controlled environmental factors including temperature, humidity, lighting, and ventilation",,ventilation,
+name,staff member,Each staff member has a name,,name,
+expertise,staff member,Each staff member has a expertise,,expertise,
+birth date,staff member,we need to keep their birth date,,birth date,
+permanent address,staff member,we need to keep their permanent address,,permanent address,
+assigned enclosure,staff member,Caretakers and zoologists are assigned to particular enclosures they are responsible for,enclosure,,-:assigned as caretaker;:assigned to as zoologist
+type,conservation program,Conservation programs a zoological garden participates in are initiatives aimed at preserving biodiversity through in-situ and ex-situ strategies.,,*,
+species,conservation program,A conservation program focuses on particular species it supports.,species,,supports
+geographic region,conservation program,Conversation with ex-situ strategies also focus on specific countries or geographic regions.,,geographic region,
+collaborating entities,conservation program,"These programs often collaborate with global conservation entities and are pivotal in research, breeding programs, and reintroduction efforts.",,,*
+reintroduction program,conservation program,Specific animals may be part of reintroduction conservation programs.,reintroduction conservation program,,*

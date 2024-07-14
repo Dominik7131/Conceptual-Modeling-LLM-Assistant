@@ -1,0 +1,44 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+activity,farmer,"an individual who engages in the activity of agriculture, growing and harvesting crops",,,
+name,farmer,"uniquely identified by a name, used to refer to the farmer from various documentation and statistical reporting",,name,
+age,farmer,the age of the farmer is captured in years and is utilized mainly for statistical and reporting purposes,,age,
+field,farmer,a farmer farms on one or more fields to grow crop on it,field,,farms on
+planting activity,farmer,"the farmer is primarily responsible for conducting planting, i.e. for a particular planting activity",planting,,conducts planting
+machinery,farmer,A farmer can own one or more pieces of machinery,machinery,,*
+type,crop,"Crop is plants grown in large amounts and cultivated by farmers for profit or subsistence, including cereals, oil seeds, vegetables, and fruits.",-cereal;fruit;vegetable;seed plant,,*
+classification,crop,"Crops are classified into various types, including fruits, vegetables, cereals, and seed plants.",,*,
+variety,crop,"Each crop type may have a cultivated variety, a plant grouping within a single botanical taxon of the lowest known rank, defined by the reproducible expression of its distinguishing and other genetic characteristics.",,cultivated variety,
+harvest,crop,The harvest is the production that is obtained from crops.,harvest,,*
+quantity,crop,"The total quantity of the harvest, measured in kilograms, is crucial for determining the productivity and success of the crop.",,*,
+quality,crop,"The quality of the harvest may include factors like size, ripeness, nutritional value, and absence of pests or diseases.",,*,
+type,machinery,"machinery includes mechanical tools and equipment used in farming, crucial for tasks such as plowing, seeding, spraying, and harvesting.",,,*
+type,machinery,"Types of machinery include tractors, planters, harvesters, and sprayers.",-tractor;planter;harvester;sprayer,,*
+manufacturing year,machinery,The year the machinery was manufactured indicates its age and potential modernity in technology,,year of manufacturing,
+model,machinery,the model of the machinery affects its functionality and suitability for specific tasks,,model,
+use,machinery,"Various properties link machinery to specific uses, such as field preparation, planting, and harvesting.",,,-used for field preparation;used for planting;used for harvesting
+preparation type,machinery,Machinery used for preparation of the field for the planting includes those machines like tractors equipped with specific attachments,,,used for field preparation
+planting type,machinery,Machinery used for planting plays a pivotal role in the agricultural planting process,,,used for planting
+harvesting type,machinery,"Machinery used for harvesting includes combines, harvesters, and other equipment that is primarily utilized to collect and process crops",,,used for harvesting
+owner,machinery,A farmer owns machinery,farmer,,*
+production,harvest,The harvest is the production that is obtained from crops.,crop,,*
+quantity,harvest,It represents the final output of the agricultural cycle and is quantified and evaluated in terms of quantity and quality.,,quantity,
+total quantity,harvest,"The total quantity of the harvest, measured in kilograms, is crucial for determining the productivity and success of the crop.",,quality,
+harvest date,harvest,The specific date or time period when the harvest was collected is crucial for maximizing yield and ensuring the best quality of the harvested product.,,harvest date,
+quality,harvest,"The quality of the harvest may include factors like size, ripeness, nutritional value, and absence of pests or diseases.",,quality,
+farmer,harvest,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",farmer,,harvested by
+physical space,field,Fields serve as the primary physical space where crops are grown.,,,
+area of land,field,They are described as areas of land used for growing crops that can be but do not have to be surrounded by a fence.,,,
+size,field,"Key characteristics of fields include their size, typically expressed in hectares, ",,size,
+hectares,field,"which is fundamental for planning the distribution of crops, determining the amount of seeds needed, and calculating the expected yield.",,size,
+soil type,field,"The soil type present in the field, such as loamy, sandy, clay, or silt, affects water retention, nutrient availability, and the types of crops that can be successfully cultivated.",,soil type,
+soil ph,field,"The soil pH, indicating the acidity or alkalinity of the soil, is crucial for managing soil health and fertility.",,soil ph,
+location,field,"The location of the field is also described, which can include specific GPS coordinates or a general description.",,location,
+gps coordinates,field,This helps in locating the field for logistical purposes and for understanding its geographical and climatic context.,,location,
+topography,field,"The physical layout of the land, including its flatness, slope, and elevation, known as the topography, influences water drainage, erosion risk, and the suitability of various agricultural machinery.",,topography,
+irrigation systems,field,"Additionally, fields may have irrigation systems, and the availability and type of irrigation used are vital for planning water usage and can impact crop selection and planting schedules based on the water needs of the crops.",,irrigation availability,
+year,planting,the agricultural activity of planting crops in a specific field during a specific year,,*,
+field,planting,the agricultural activity of planting crops in a specific field during a specific year,field,,performed on
+crop,planting,"This activity involves specific crops, and the association is key to understanding the crop variety and its cultivation requirements during the planting process",crop,,involves crop
+date,planting,the exact date or period when the crop was planted is recorded and is critical for tracking crop growth stages and scheduling subsequent farming activities,,planting date,
+harvest,planting,Planting results to the subsequent harvest it produces which is essential for tracing the agricultural output back to its planting origins,harvest,,results in harvest
+farmer,planting,"The farmer is primarily responsible for conducting planting, i.e. for a particular planting activity",farmer,,conducts planting

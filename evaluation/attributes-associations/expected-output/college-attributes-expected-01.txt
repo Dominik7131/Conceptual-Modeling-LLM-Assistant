@@ -1,0 +1,62 @@
+Class: study programme
+1) programme name
+- original text: the name of the study programme
+
+
+2) programme type
+- original text: the type
+
+
+3) programme objectives
+- original text: objectives of study in the study programme
+
+
+4) standard period of study
+- original text: The study programme must have a standard period of study with an average study load expressed in academic years.
+
+
+5) awarded degree
+- original text: The degree awarded to graduates shall also be specified for the study programme.
+
+
+Class: bachelor study programme
+1) bachelor profile description
+- original text: In the case of a Bachelor's or Master's degree programme, it is also characterised by a description of the profile of the graduate of the study programme.
+
+
+Class: master study programme
+1) master profile description
+- original text: In the case of a Bachelor's or Master's degree programme, it is also characterised by a description of the profile of the graduate of the study programme.
+
+
+Class: subject
+1) form of teaching
+- original text: The subject is taught in particular in the form of lecture, tutorial, seminar, proseminar, course, practical training, internship, special course, laboratory class, field trip, fieldwork, individual work, or consultation.
+
+
+2) form of implementation
+- original text: Depending on its character, the subject may be implemented in a full-time, distance learning, or combined form.
+
+
+3) number of semesters
+- original text: A subject may take one or two semesters in the same academic year.
+
+
+4) number of assigned credits
+- original text: the number of assigned credits
+
+
+Class: subject completion assessment
+1) assessment date
+- original text: The assessment of study of a subject registered in a given unit of study may not be carried out later than by the end of the examination period of the summer semester of the academic year in which the student studied in the given unit of study.
+
+
+2) results grade
+- original text: The results of colloquium, course credit, and course test are graded as "pass"-"fail" or "credited"-"not credited". Successful completion of these assessments of study of the subject means the classification "pass" or "credited". The results of examination and graded course credit are graded as "excellent", "very good", "good", and "fail". Successful completion of these assessments of study of the subject means the classification "excellent", "very good", and "good".
+
+
+Class: examination
+1) form of examination
+- original text: The forms of examination are oral, written, practical, or combined. Oral examinations and the oral component of combined examinations are open to members of the academic community of the college; for reasons of capacity, the presence of the members of the academic community may be limited.
+
+

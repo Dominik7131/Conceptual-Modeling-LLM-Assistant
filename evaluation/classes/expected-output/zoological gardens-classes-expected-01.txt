@@ -1,0 +1,56 @@
+Class: zoological garden
+- original text: A zoological garden is a complex entity where the interplay of biological diversity, human interaction, and environmental management coalesce into a singular institution aimed at conservation, education, and research.
+
+
+Class: animal
+- original text: Animals are the central entities in a zoological garden.
+
+
+Class: species
+- original text: species, each possessing unique biological and ecological characteristics.
+
+
+Class: diet
+- original text: The diet of a particular animal in a zoological setting is a fundamental aspect of its care, impacting its health, behavior, and reproduction.
+
+
+Class: oviparous species
+- original text: For oviparous species, the number of eggs typically laid at one time, affects incubation practices.
+
+
+Class: enclosure
+- original text: Enclosures are specialized habitats designed to mimic the natural environments of the resident species. They are critical for the ethical display and conservation of animals.
+
+
+Class: climate conditions
+- original text: They are a blend of various controlled environmental factors including temperature, humidity, lighting, and ventilation. These conditions are essential for mimicking the natural habitat of animals as closely as possible, which not only ensures their physical health but also supports their psychological well-being by encouraging natural behaviors and physiological functions.
+
+
+Class: staff member
+- original text: Staff members of zoological gardens are integral to their operation.
+
+
+Class: zoologist
+- original text: zoologists
+
+
+Class: veterinarian
+- original text: veterinarians
+
+
+Class: caretaker
+- original text: caretakers
+
+
+Class: administrative personnel
+- original text: administrative personnel
+
+
+Class: conservation program
+- original text: Conservation programs a zoological garden participates in are initiatives aimed at preserving biodiversity through in-situ and ex-situ strategies. These programs often collaborate with global conservation entities and are pivotal in research, breeding programs, and reintroduction efforts.
+
+
+Class: reintroduction conservation program
+- original text: reintroduction conservation programs.
+
+

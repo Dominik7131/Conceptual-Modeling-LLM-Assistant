@@ -1,0 +1,46 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+activity,farmer,an individual who engages in the activity of agriculture,,*,
+name,farmer,uniquely identified by a name,,name,
+age,farmer,the age of the farmer is captured in years,,age,
+activities,farmer,responsible for various activities on the farm,,*,
+harvest,farmer,who performed the harvest,harvest,,harvested by
+crop evaluation,farmer,responsible for evaluating the quality and quantity of the harvested crop,,,*
+fields,farmer,farms on one or more fields,field,,farms on
+planting,farmer,responsible for conducting planting,planting,,conducts planting
+machinery,farmer,owns machinery,,,*
+type,crop,"plants grown in large amounts and cultivated by farmers for profit or subsistence, including cereals, oil seeds, vegetables, and fruits.",,*,
+cultivated variety,crop,"Each crop type may have a cultivated variety, a plant grouping within a single botanical taxon of the lowest known rank, defined by the reproducible expression of its distinguishing and other genetic characteristics.",,cultivated variety,
+classification,crop,"Crops are classified into various types, including fruits, vegetables, cereals, and seed plants.",-fruit;vegetable;cereal;seed plant,,*
+quantity,crop,"The total quantity of the harvest, measured in kilograms, is crucial for determining the productivity and success of the crop.",,*,
+harvest date,crop,The specific date or time period when the harvest was collected is crucial for maximizing yield and ensuring the best quality of the harvested product.,,*,
+type,machinery,various agricultural machinery,,,*
+equipment,machinery,mechanical tools and equipment used in farming,,,
+model,machinery,"tractors, planters, harvesters, and sprayers",,model,
+manufacturing year,machinery,The year the machinery was manufactured,,year of manufacturing,
+functionality,machinery,the model of the machinery affects its functionality and suitability for specific tasks,,*,
+use,machinery,"Various properties link machinery to specific uses, such as field preparation, planting, and harvesting",-planting;harvest,,-used for planting;used for field preparation;used for harvesting
+preparation type,machinery,machinery used for preparation of the field for the planting,planting,,used for field preparation
+planting type,machinery,machinery like planters and some types of tractors that are specifically outfitted for or used during the planting of crops,,,*
+harvesting type,machinery,"machinery used for harvesting includes combines, harvesters, and other equipment",,,*
+owner,machinery,the farmer owns machinery,,,*
+production,harvest,The harvest is the production that is obtained from crops.,,,
+quantity,harvest,"The total quantity of the harvest, measured in kilograms, is crucial for determining the productivity and success of the crop.",,quantity,
+date,harvest,The specific date or time period when the harvest was collected is crucial for maximizing yield and ensuring the best quality of the harvested product.,,harvest date,
+quality,harvest,"The quality of the harvest may include factors like size, ripeness, nutritional value, and absence of pests or diseases.",,quality,
+farmer,harvest,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",farmer,,harvested by
+year,field,a specific field during a specific year,,,
+location,field,"Each planting activity is performed on a particular field, indicating the location of agricultural operations",,location,
+size,field,Fields serve as the primary physical space where crops are grown,,size,
+size,field,"Key characteristics of fields include their size, typically expressed in hectares",,size,
+soil type,field,"The soil type present in the field, such as loamy, sandy, clay, or silt",,soil type,
+soil ph,field,"The soil pH, indicating the acidity or alkalinity of the soil",,soil ph,
+location,field,"The location of the field is also described, which can include specific GPS coordinates or a general description",,location,
+topography,field,"The physical layout of the land, including its flatness, slope, and elevation, known as the topography",,topography,
+irrigation system,field,"fields may have irrigation systems, and the availability and type of irrigation used",,irrigation availability,
+machinery,field,"Various properties link machinery to specific uses, such as field preparation, planting, and harvesting",machinery,,*
+farmer,field,A farmer farms on one or more fields to grow crop on it,farmer,,farms on
+year,planting,the agricultural activity of planting crops in a specific field during a specific year,,planting date,
+field,planting,the agricultural activity of planting crops in a specific field during a specific year,field,,performed on
+crop,planting,specific crops,crop,,involves crop
+date,planting,the exact date or period when the crop was planted,,planting date,
+farmer,planting,the farmer is primarily responsible for conducting planting,farmer,,conducts planting

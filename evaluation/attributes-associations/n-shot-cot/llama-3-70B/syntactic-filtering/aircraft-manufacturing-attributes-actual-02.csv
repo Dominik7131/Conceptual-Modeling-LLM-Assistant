@@ -1,0 +1,29 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+serial number,aircraft,"Each aircraft carries a unique serial number, a testament to its distinct identity.",,aircraft serial number,
+design,aircraft,"An aircraft, the culmination of this manufacturing process, is not merely a product but an amalgamation of design, individuality, and functionality.",,*,
+individuality,aircraft,"An aircraft, the culmination of this manufacturing process, is not merely a product but an amalgamation of design, individuality, and functionality.",,*,
+functionality,aircraft,"An aircraft, the culmination of this manufacturing process, is not merely a product but an amalgamation of design, individuality, and functionality.",,*,
+manufacturing date,aircraft,"The manufacturing date of an aircraft is also a crucial piece of information, often highlighted in business communications for its relevance in maintenance and value assessment.",,manufacturing date,
+parts,aircraft,"Aircraft, as the central product, are composed of individually identified parts, each following a specific part model.",part,,consists of
+model code,aircraft,An aircraft model is distinguished not only by its unique model code but also by a detailed description that encapsulates its design philosophy and specifications.,,*,
+design philosophy,aircraft,An aircraft model is distinguished not only by its unique model code but also by a detailed description that encapsulates its design philosophy and specifications.,,*,
+specifications,aircraft,An aircraft model is distinguished not only by its unique model code but also by a detailed description that encapsulates its design philosophy and specifications.,,*,
+part model,part,"every part used in aircraft construction is not just a component; it's a manifestation of a precise design model, known as a part model, based on which it is designed.",part model,,designed as part model
+model number,part,defined not just by its design but also by its unique model number,,*,
+description,part,and a brief description that captures its essence.,,*,
+serial number,part,"Each part carries a unique serial number, further emphasizing its individuality within the larger structure of an aircraft, and its brief description.",,part serial number,
+role,customer,"customers and suppliers, each playing distinct yet integral roles",,*,
+purchases,customer,a customer purchasing the final aircraft,aircraft,,purchases
+party code,customer,"each party, whether it's a customer purchasing the final aircraft or a supplier providing essential supplies, is uniquely identified by a party code",,party code,
+name,customer,"the essence of this role is not just in the acquisition of aircraft but also in the unique identity each customer holds, embodied in their name",,customer name,
+relationships,customer,the relationship between a customer and their purchases,,,purchases
+model,aircraft model,"aircraft models, around which the entire manufacturing process revolves",aircraft,,designed as
+model code,aircraft model,an aircraft model is distinguished not only by its unique model code,,aircraft model code,
+description,aircraft model,but also by a detailed description that encapsulates its design philosophy and specifications,,aircraft model description,
+part models,aircraft model,"It incorporates various part models, integrating them into a cohesive design that eventually takes shape as a finished aircraft",part model,,incorporates
+design,part model,based on which it is designed,part,,designed as part model
+model number,part model,defined not just by its design but also by its unique model number,,part model number,
+description,part model,and a brief description that captures its essence,,part model description,
+type,party,which is a broad term encompassing any subject involved in this domain,,*,
+role,party,each playing distinct yet integral roles,,*,
+party code,party,is uniquely identified by a party code,,party code,

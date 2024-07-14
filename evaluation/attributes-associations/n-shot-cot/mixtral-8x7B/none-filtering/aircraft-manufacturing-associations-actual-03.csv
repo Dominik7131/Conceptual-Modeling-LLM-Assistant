@@ -1,0 +1,15 @@
+Generated association,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches association
+identified by,aircraft,aircraft,identifier,Every aircraft is unique and can be identified by its serial number.,,aircraft serial number,
+manufactured on,aircraft,aircraft,date,The manufacturing date tells us when the aircraft was made.,,manufacturing date,
+designed as,aircraft,aircraft,aircraft model,"Importantly, every aircraft is designed as a specific aircraft model",aircraft model,,designed as
+composed of,aircraft,aircraft,part,"The aircraft is made up of multiple parts, each an individual component used in its construction.",part,,consists of
+has unique,aircraft,aircraft,part,"Every part has a serial number, making it unique",,,
+designed as,aircraft,aircraft,part model,These parts are designed as part models,,,
+supplied for,aircraft,supply,aircraft,The supplied for relationship shows that each supply is dedicated to the manufacturing of a specific aircraft,aircraft,,supplied for
+provides,supplier,supplier,parts,"The supplier, entities that provide parts for aircraft manufacturing. Suppliers play a crucial role in providing the necessary components needed to build an aircraft.",part,,*
+provides,supplier,supplier,supply,"supplies represents a relationship where a supplier provides a supply, a range of different parts essential for building aircraft.",supply,,supplies
+includes,supply,supply,part,The supply includes specific parts,part,,includes
+supplied for,supply,supply,aircraft,each supply is dedicated to the manufacturing of a specific aircraft,aircraft,,supplied for
+provides,supply,supplier,supply,"a supplier provides a supply, a range of different parts essential for building aircraft",supplier,,supplies
+designed as,aircraft model,aircraft,aircraft model,"Every aircraft is designed as a specific aircraft model, indicating the design it follows. This model represents different models of aircraft, each with a unique model code and a detailed description.",aircraft,,designed as
+incorporates,aircraft model,aircraft model,part model,"incorporates, indicating that an aircraft model incorporates various part models in its design",part model,,incorporates

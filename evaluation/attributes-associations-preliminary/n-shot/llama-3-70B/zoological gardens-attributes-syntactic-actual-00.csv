@@ -1,0 +1,62 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+species,animal,species,species,,classified by
+diet,animal,specified diet,diet,,has specified diet
+name,animal,name which is not unique,,animal name,
+conservation status,animal,conservation status,,*,
+diet type,animal,"herbivorous, carnivorous, omnivorous, piscivorous, etc.",diet,,has specified diet
+feeding schedule,animal,frequency and timing of feeding,,,
+feeding technique,animal,special feeding technique,,,
+reproductive details,animal,reproductive health and management information,,*,
+breeding season,animal,specific time of year when the animals of that species naturally breed,,*,
+enclosure,animal,enclosures where its animals live,enclosure,,*
+climate conditions,animal,climate conditions of enclosures,,,
+temperature range,animal,range of temperatures within their enclosure,,,
+light cycles,animal,light cycles (day and night),,,
+native habitat,animal,native habitat,,,
+conservation program,animal,part of reintroduction conservation programs,reintroduction conservation program,,is part of program
+name,species,species name,,species name,
+common name,species,species common name,,species common name,
+iucn status,species,IUCN status,,iucn status,
+diet,species,diet,,,
+reproductive health,species,reproductive health and management information,,-gestation period;natural breeding time;reproductive age,
+reproductive age,species,age at which the species is capable of reproducing,,reproductive age,
+breeding season,species,specific time of year when the animals of that species naturally breed,,natural breeding time,
+gestation period,species,gestation period,,gestation period,
+clutch size,species,number of eggs typically laid at one time,,:number of laid eggs,
+thermal preference,species,thermal preference,,*,
+humidity levels,species,humidity levels,,*,
+uv light requirement,species,exposure to ultraviolet light,,*,
+type,diet,specified diet,,diet type,
+diet type,diet,"herbivorous, carnivorous, omnivorous, piscivorous, etc.",,diet type,
+nutrients,diet,specific nutrients required to maintain health and vitality,,nutrients,
+feeding schedule,diet,the feeding schedule,,feeding schedule,
+feeding frequency,diet,frequency and timing of feeding,,feeding schedule,
+feeding technique,diet,special feeding technique,,feeding technique,
+number of eggs,oviparous species,the number of eggs typically laid at one time,,number of laid eggs,
+size,enclosure,size in square meters,,enclosure size,
+type,enclosure,"type (e.g., aviary, aquarium, terrarium)",,enclosure type,
+climate conditions,enclosure,climate conditions,climate conditions,,has climate conditions
+vegetation,enclosure,vegetation,,vegetation,
+temperature,enclosure,temperature,,*,
+humidity,enclosure,humidity,,*,
+lighting,enclosure,lighting,,*,
+ventilation,enclosure,ventilation,,*,
+caretakers,enclosure,caretakers,caretaker,,assigned as caretaker
+animals,enclosure,animals,animal,,*
+species,enclosure,species,species,,resident of
+temperature,climate conditions,temperature,,temperature,
+humidity,climate conditions,humidity,,humidity level,
+lighting,climate conditions,lighting,,light cycles,
+ventilation,climate conditions,ventilation,,ventilation,
+light cycles,climate conditions,light cycles (day and night),,light cycles,
+ultraviolet light,climate conditions,ultraviolet light,,ultraviolet light,
+air quality,climate conditions,air quality,,ventilation,
+name,staff member,Each staff member has a name,,name,
+expertise,staff member,Each staff member has a name and expertise,,expertise,
+birth date,staff member,we need to keep staff member's birth date,,birth date,
+permanent address,staff member,we need to keep staff member's permanent address,,permanent address,
+strategies,conservation program,initiatives aimed at preserving biodiversity through in-situ and ex-situ strategies,,*,
+supported species,conservation program,a conservation program focuses on particular species it supports,species,,supports
+partner entities,conservation program,collaborate with global conservation entities,,,*
+areas of focus,conservation program,"pivotal in research, breeding programs, and reintroduction efforts",,*,
+reintroduction program,conservation program,Specific animals may be part of reintroduction conservation programs,reintroduction conservation program,,*

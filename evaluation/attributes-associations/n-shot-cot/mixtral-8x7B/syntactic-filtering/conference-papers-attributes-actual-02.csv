@@ -1,0 +1,41 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+research findings,research paper,document presenting original research findings,,*,
+publication year,research paper,publication year,,publication year,
+abstract,research paper,an abstract,,abstract,
+title,research paper,a title,,title,
+conference (tied to),research paper,closely tied to a conference where it is presented,conference,,presented at
+submission (acts as bridge),research paper,submission acts as a bridge between the research paper and the conference,submission,,has submission
+authors,research paper,authors are individuals who have significantly contributed to the creation of a research paper,author,,written by
+connection to authors,research paper,forms the connection between a research paper and its authors,author,,written by
+primary point of contact,research paper,designation is crucial in the academic world as it specifies the primary point of contact for the research paper,author,,has corresponding author
+reviewer (responsible for evaluation),research paper,"reviewer, responsible for evaluating the quality and relevance of research paper submissions",reviewer,,*
+review (acting as evaluation),research paper,"the review is another crucial element, acting as an evaluation or critique of a research paper",review,,*
+category,person,a subgroup of the broader category of persons involved in the conference reviewing process,,*,
+name,person,identified by a name,,name,
+email address,person,and an email address,,email,
+contribution,author,who have significantly contributed to the creation of a research paper,research paper,,written by
+written papers,author,indicates who wrote the paper,research paper,,written by
+affiliation,author,"Each author has an affiliation, often an academic institution",,affiliation,
+corresponding author,author,one of them is designated as the corresponding author,research paper,,has corresponding author
+point of contact,author,This designation is crucial in the academic world as it specifies the primary point of contact for the research paper,research paper,,has corresponding author
+parallel role,author,Parallel to authors are reviewers,,,
+name,conference,"Viewed as an event where research papers are presented and discussed, a conference",,conference name,
+role,conference,a pivotal element in academic discourse.,,*,
+year,conference,It holds a specific year,,year,
+location,conference,"and location, signifying when and where these intellectual gatherings take place.",,location,
+identification,conference,The conference name is a unique identification,,*,
+linked to,conference,"Each research paper is closely tied to a conference where it is presented, creating a link between the event and the written work.",research paper,,presented at
+submission date,conference,"Submissions of research papers have their own unique lifecycle, marked by a submission date",,,
+status,conference,"a status indicating where it stands in the review process (like under review, accepted, or rejected)",,,
+connection,conference,and a connection to the conference it's submitted to.,,,
+submission date,submission,submission date,,submission date,
+status,submission,"a status indicating where it stands in the review process (like under review, accepted, or rejected)",,status,
+conference connection,submission,and a connection to the conference it's submitted to,conference,,submitted to
+resubmissions,submission,Submissions can be resubmissions,,,is resubmission of
+review connection,submission,"review is another crucial element, acting as an evaluation or critique of a research paper",review,,reviews
+reviewer connection,submission,Reviewers write reviewsfor submissions,reviewer,,writes
+broader category,reviewer,a subgroup of the broader category of persons involved in the conference reviewing process,person,,*
+responsibility,reviewer,responsible for evaluating the quality and relevance of research paper submissions,submission,,reviewed by
+expertise,reviewer,brings their expertise to the table,,expertise,
+writes reviews,reviewer,write reviewsfor submissions,review,,writes
+review,reviewer,"The review is another crucial element, acting as an evaluation or critique of a research paper.",review,,writes

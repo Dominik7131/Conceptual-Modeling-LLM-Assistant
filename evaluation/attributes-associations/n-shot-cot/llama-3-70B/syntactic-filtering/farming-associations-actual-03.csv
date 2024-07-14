@@ -1,0 +1,29 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+farms on,farmer,farmer,field,"A farmer farms on one or more fields to grow crops, which includes not only growing the crops but also other farming activities such as soil preparation.",field,,farms on
+owns,farmer,farmer,machinery,"Farmers own and use various pieces of machinery, reflecting their capacity for mechanized farming...",machinery,,*
+conducts,farmer,farmer,planting,"...and they are responsible for specific planting activities which are crucial for management and accountability. In other words, we also say that the farmers conduct planting to point to this responsibility.",planting,,conducts planting
+performs,farmer,farmer,harvest,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",harvest,,harvested by
+is a,crop,crop,"fruit, vegetable, seed plant, cereal","Each crop can be a fruit, vegetable, seed plant, or cereal, with each category having specific characteristics and uses.",-fruit;vegetable;seed plant;cereal,,*
+is associated with,crop,planting,crop,"This involves specific crops, with each planting activity associated with a particular crop and occurring on a specific field where the planting is performed.",planting,,involves crop
+has growth stages,crop,crop,growth stages,The exact date or period when the crop was planted is critical for tracking crop growth stages and scheduling subsequent farming activities.,,*,
+produces,crop,crop,harvest,"Harvest is the production obtained from crops, quantified and evaluated in terms of quantity and quality, representing the final output of the agricultural cycle.",,*,
+has quantity,crop,crop,quantity,The total quantity of the harvest is crucial for determining the productivity and success of the crop.,,*,
+has quality,crop,crop,quality,"The quality of the harvest may include factors like size, ripeness, nutritional value, and absence of pests or diseases.",,*,
+owns,machinery,farmer,machinery,"Farmers own and use various pieces of machinery, reflecting their capacity for mechanized farming, and they are responsible for specific planting activities which are crucial for management and accountability.",farmer,,*
+used for,machinery,machinery,field preparation,"Machinery used for field preparation indicates that certain types of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting.",,,used for field preparation
+used for,machinery,machinery,planting,Machinery used for planting refers to the employment of specific pieces of machinery in the planting process.,planting,,used for planting
+used for,machinery,machinery,harvesting,Machinery used for harvesting connects a piece of machinery to its use in the harvesting process.,harvest,,used for harvesting
+has,machinery,machinery,model,"We also need to identify the model of the machinery, which affects its functionality and suitability for specific tasks.",,model,
+has,machinery,machinery,manufacturing year,"The year the machinery was manufactured, indicating its age and potential modernity in technology.",,year of manufacturing,
+performed by,harvest,harvest,farmer,"Each harvest is connected to the farmer who performed the harvest and who is also responsible for evaluating the quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",farmer,,harvested by
+produced by,harvest,harvest,planting activity,A specific planting activity can result into the subsequent harvest it produces.,planting,,results in harvest
+has size,field,field,size,"Fields are areas of land used for growing crops,  and can vary in size, typically measured in hectares.",,size,
+has,field,field,feature,"Fields also have specific features like irrigation availability and a defined location, which can include specific GPS coordinates.",,-irrigation availability;location,
+is location of,field,field,agricultural operation,The knowledge of the field where the planting is performed on is important as an indication of the location of agricultural operations and facilitating field-specific crop management.,,,:performed on
+is location of,field,field,planting,"This involves specific crops, with each planting activity associated with a particular crop and occurring on a specific field where the planting is performed.",planting,,performed on
+is prepared by,field,field,machinery,"Machinery used for field preparation indicates that certain types of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting.",machinery,,*
+involves,planting,planting,crop,"This involves specific crops, with each planting activity associated with a particular crop and occurring on a specific field where the planting is performed.",crop,,involves crop
+has,planting,planting,date,The exact date or period when the crop was planted is critical for tracking crop growth stages and scheduling subsequent farming activities.,,planting date,
+results in,planting,planting,harvest,A specific planting activity can result into the subsequent harvest it produces.,harvest,,results in harvest
+uses,planting,planting,machinery,Machinery used for planting refers to the employment of specific pieces of machinery in the planting process.,machinery,,used for planting
+occurs in,planting,planting,field,"Planting represents the agricultural activity of planting crops in a specific field during a specific year, capturing the details of the planting process.",field,,performed on

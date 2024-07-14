@@ -1,0 +1,43 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+class,research paper,"The domain we're looking at is all about the world of academic conferences, particularly focusing on research papers, their authors, reviewers, and the submission process.",,,
+name,research paper,Every conference has a name,,,
+location,research paper,a location where it's held,,,
+year,research paper,a specific year when it takes place,,,
+title,research paper,A research paper has several defining aspects: a title,,title,
+abstract,research paper,A research paper has several defining aspects: an abstract,,abstract,
+publication year,research paper,A research paper has several defining aspects: a publication year,,publication year,
+conference,research paper,Each research paper is also linked to a conference where it was presented,conference,,presented at
+name,research paper,An author is a person involved in the reviewing process with a name,,,
+email address,research paper,An author is a person involved in the reviewing process with an email address,,,
+institutional affiliation,research paper,An author is a person involved in the reviewing process with an institutional affiliation,,,
+corresponding author,research paper,"Among the authors, there's a special role known as the corresponding author",author,,has corresponding author
+submission date,research paper,Submissions have a submission date,,,
+status,research paper,Submissions have a status,,,
+name,research paper,A reviewer is a person that has a name,,,
+email,research paper,A reviewer is a person that has an email,,,
+expertise area,research paper,A reviewer has expertise area,,,
+name,person,An author is a person involved in the reviewing process with a name and an email address.,,name,
+email,person,An author is a person involved in the reviewing process with a name and an email address.,,email,
+institutional affiliation,person,"An author is a person involved in the reviewing process with a name and an email address. Moreover, the author has an institutional affiliation, which tells us where they work or study.",,:affiliation,
+corresponding author,person,"Among the authors, there's a special role known as the corresponding author, who acts as the main contact point for a research paper.",research paper,,:has corresponding author
+submission date,person,"Submissions have a submission date and a status, which tells us if it's under review, accepted, or rejected.",,,
+status,person,"Submissions have a submission date and a status, which tells us if it's under review, accepted, or rejected.",,,
+name,person,A reviewer is a person that has a name and email.,,name,
+email,person,A reviewer is a person that has a name and email.,,email,
+expertise area,person,"A reviewer is a person that has a name and email. Moreover, the reviewer has expertise area, highlighting their specialized knowledge in which they review submissions.",,:expertise,
+name,author,An author is a person involved in the reviewing process with a name and an email address.,,:name,
+email address,author,An author is a person involved in the reviewing process with a name and an email address.,,:email,
+institutional affiliation,author,"An author is a person involved in the reviewing process with a name and an email address. Moreover, the author has an institutional affiliation, which tells us where they work or study.",,affiliation,
+corresponding author,author,"Among the authors, there's a special role known as the corresponding author.",,,has corresponding author
+handles correspondence,author,who handles most of the correspondence related to the paper,,,has corresponding author
+name,conference,Every conference has a name,,conference name,
+location,conference,location where it's held,,location,
+year,conference,specific year when it takes place,,year,
+submission date,submission,Submissions have a submission date,,submission date,
+status,submission,"and a status, which tells us if it's under review, accepted, or rejected.",,status,
+conference,submission,They are also connected to the conferences to which they are submitted.,conference,,submitted to
+resubmission status,submission,"Importantly, if a research paper is resubmitted, the latest submission is the one that's considered for evaluation.",,*,
+name,reviewer,a name and email,,:name,
+email,reviewer,a name and email,,:email,
+expertise area,reviewer,"expertise area, highlighting their specialized knowledge in which they review submissions",,expertise,
+reviews,reviewer,"writes reviews, which are evaluations or critiques of research papers",review,,writes

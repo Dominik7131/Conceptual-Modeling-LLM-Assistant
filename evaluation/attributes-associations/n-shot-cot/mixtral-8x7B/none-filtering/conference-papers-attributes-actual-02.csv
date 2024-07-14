@@ -1,0 +1,60 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+research findings,research paper,a document presenting original research findings,,*,
+publication year,research paper,carrying characteristics such as a publication year,,publication year,
+abstract,research paper,carrying characteristics such as an abstract,,abstract,
+title,research paper,and a title,,title,
+conference (relation),research paper,Each research paper is closely tied to a conference where it is presented,conference,,presented at
+lifecycle,research paper,Submissions of research papers have their own unique lifecycle,,,
+submission date,research paper,marked by a submission date,,,
+status,research paper,"a status indicating where it stands in the review process (like under review, accepted, or rejected)",,,
+connection to the conference,research paper,and a connection to the conference it's submitted to,conference,,presented at
+resubmissions,research paper,Submissions can be resubmissions,,,
+connection between a research paper and its authors,research paper,It forms the connection between a research paper and its authors,author,,+written by;has corresponding author
+affiliation,research paper,"Each author has an affiliation, often an academic institution",,,
+corresponding author,research paper,and one of them is designated as the corresponding author,author,,has corresponding author
+primary point of contact for the research paper,research paper,This designation is crucial in the academic world as it specifies the primary point of contact for the research paper,author,,has corresponding author
+reviews,research paper,Reviewers write reviewsfor submissions,reviewer,,*
+evaluation or critique of a research paper,research paper,"The review is another crucial element, acting as an evaluation or critique of a research paper",review,,*
+name,research paper,Each person is identified by a name,,,
+email address,research paper,and an email address,,,
+name,person,named by a name,,name,
+email address,person,identified by a name and an email address,,email,
+affiliation,person,"Each author has an affiliation, often an academic institution",,:affiliation,
+contribution,author,individuals who have significantly contributed to the creation of a research paper,research paper,,written by
+connection to research paper,author,forming the connection between a research paper and its authors,research paper,,+written by;has corresponding author
+affiliation,author,"Each author has an affiliation, often an academic institution",,affiliation,
+corresponding author,author,one of them is designated as the corresponding author,research paper,,has corresponding author
+name,conference,"a conference is a pivotal element in academic discourse. It holds a specific year and location, signifying when and where these intellectual gatherings take place. The conference name is a unique identification of the conference in the scientific community.",,conference name,
+publication year,conference,"It carries characteristics such as a publication year, an abstract, and a title.",,,
+conference,conference,"Each research paper is closely tied to a conference where it is presented, creating a link between the event and the written work.",research paper,,presented at
+submission date,conference,"Submissions of research papers have their own unique lifecycle, marked by a submission date",,,
+status,conference,"a status indicating where it stands in the review process (like under review, accepted, or rejected)",,,
+connection to the conference,conference,and a connection to the conference it's submitted to.,submission,,submitted to
+resubmissions,conference,"Submissions can be resubmissions, indicating an ongoing process of refinement and re-evaluation.",,,
+authors,conference,"It forms the connection between a research paper and its authors, indicating who wrote the paper.",,,
+affiliation,conference,"Each author has an affiliation, often an academic institution,",,,
+corresponding author,conference,and one of them is designated as the corresponding author.,,,
+reviews,conference,Reviewers write reviews for submissions.,,,
+evaluation or critique,conference,"The review is another crucial element, acting as an evaluation or critique of a research paper.",,,
+identified by a name and an email address,conference,"Each person is identified by a name and an email address, ensuring clear and direct communication within the academic community.",,,
+submission date,submission,"Submissions of research papers have their own unique lifecycle, marked by a submission date",,submission date,
+status,submission,"a status indicating where it stands in the review process (like under review, accepted, or rejected)",,status,
+connection to the conference,submission,and a connection to the conference it's submitted to.,conference,,submitted to
+resubmissions,submission,"Importantly, submissions can be resubmissions, indicating an ongoing process of refinement and re-evaluation.",,,is resubmission of
+conference name,reviewer,a unique identification of the conference in the scientific community,,,
+year and location,reviewer,specific year and location,,,
+research paper,reviewer,document presenting original research findings,,,
+publication year,reviewer,publication year,,,
+abstract,reviewer,an abstract,,,
+title,reviewer,a title,,,
+submission date,reviewer,submission date,,,
+review status,reviewer,"status indicating where it stands in the review process (like under review, accepted, or rejected)",,,
+conference submission,reviewer,connection to the conference it's submitted to,,,
+resubmission,reviewer,resubmissions,,,
+authors,reviewer,individuals who have significantly contributed to the creation of a research paper,,,
+affiliation,reviewer,"affiliation, often an academic institution",,,
+corresponding author,reviewer,corresponding author,,,
+reviewers,reviewer,reviewers,,,
+review responsibility,reviewer,responsible for evaluating the quality and relevance of research paper submissions,,,*
+review,reviewer,reviews for submissions,submission,,reviewed by
+person identity,reviewer,name and an email address,,-:name;:email,

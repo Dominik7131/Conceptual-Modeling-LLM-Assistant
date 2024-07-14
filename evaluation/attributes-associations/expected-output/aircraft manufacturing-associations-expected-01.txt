@@ -1,0 +1,103 @@
+Class: aircraft
+1) designed as
+- original text: linked to a specific model, indicating the design it follows
+- source class: aircraft
+- target class: aircraft model
+
+
+2) consists of
+- original text: The aircraft is also defined by the parts it consists of, highlighting the composite nature of the final product.
+- source class: aircraft
+- target class: part
+
+
+3) supplied for
+- original text: Each supply is dedicated to the manufacturing of a specific aircraft
+- source class: supply
+- target class: aircraft
+
+
+4) purchases
+- original text: purchases, which signifies the acquisition of aircraft by these clients
+- source class: customer
+- target class: aircraft
+
+
+Class: part
+1) includes
+- original text: includes specific parts necessary for this process
+- source class: supply
+- target class: part
+
+
+2) designed as part model
+- original text: Every part is linked to its specific model, indicating the design it follows This linkage to the specific model ensures consistency and standardization in the manufacturing process.
+- source class: part
+- target class: part model
+
+
+3) consists of
+- original text: The aircraft is also defined by the parts it consists of, highlighting the composite nature of the final product.
+- source class: aircraft
+- target class: part
+
+
+Class: supplier
+1) supplies
+- original text: They maintain a relationship where they supply supplies consiting of various parts necessary for the construction of aircrafts.
+- source class: supplier
+- target class: supply
+
+
+Class: supply
+1) supplies
+- original text: They maintain a relationship where they supply supplies consiting of various parts necessary for the construction of aircrafts.
+- source class: supplier
+- target class: supply
+
+
+2) includes
+- original text: includes specific parts necessary for this process
+- source class: supply
+- target class: part
+
+
+3) supplied for
+- original text: Each supply is dedicated to the manufacturing of a specific aircraft
+- source class: supply
+- target class: aircraft
+
+
+Class: customer
+1) purchases
+- original text: purchases, which signifies the acquisition of aircraft by these clients
+- source class: customer
+- target class: aircraft
+
+
+Class: aircraft model
+1) designed as
+- original text: linked to a specific model, indicating the design it follows
+- source class: aircraft
+- target class: aircraft model
+
+
+2) incorporates
+- original text: aircraft models incorporate various part models in their design, indicating the integration of different components necessary for constructing a specific aircraft model
+- source class: aircraft model
+- target class: part model
+
+
+Class: part model
+1) designed as part model
+- original text: Every part is linked to its specific model, indicating the design it follows This linkage to the specific model ensures consistency and standardization in the manufacturing process.
+- source class: part
+- target class: part model
+
+
+2) incorporates
+- original text: aircraft models incorporate various part models in their design, indicating the integration of different components necessary for constructing a specific aircraft model
+- source class: aircraft model
+- target class: part model
+
+

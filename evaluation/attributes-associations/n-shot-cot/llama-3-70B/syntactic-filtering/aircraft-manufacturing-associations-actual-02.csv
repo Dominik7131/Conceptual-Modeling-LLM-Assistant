@@ -1,0 +1,25 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+has,aircraft,aircraft,serial number,"Each aircraft carries a unique serial number, a testament to its distinct identity.",,aircraft serial number,
+is an amalgamation of,aircraft,aircraft,design,"An aircraft, the culmination of this manufacturing process, is not merely a product but an amalgamation of design, individuality, and functionality.",,*,
+has,aircraft,aircraft,design model,...or an aircraft and its design model...,aircraft model,,designed as
+consists of,aircraft,aircraft,part,...an aircraft consisting of parts.,part,,incorporates
+is an instance of,aircraft,aircraft,aircraft model,"...an aircraft model, around which the entire manufacturing process revolves, are entities of significant interest. An aircraft model is distinguished not only by its unique model code but also by a detailed description that encapsulates its design philosophy and specifications. It incorporates various part models, integrating them into a cohesive design that eventually takes shape as a finished aircraft.",aircraft model,,designed as
+is produced by,aircraft,aircraft,supply,"Each supply is dedicated to the production of specific aircraft, ensuring a tailored approach to manufacturing.",supply,,supplied for
+is based on,part,part,part model,"every part used in aircraft construction is not just a component; it's a manifestation of a precise design model, known as a part model, based on which it is designed.",part model,,designed as part model
+consists of,part,aircraft,part,"Aircraft, as the central product, are composed of individually identified parts, each following a specific part model.",part,,consists of
+is supplied by,part,part,supplier,"The suppliers supply these parts in supplies, integral to the construction of aircraft...",supplier,,*
+provides,supplier,supplier,supply,A supplier is recognized as an entity providing parts through supplies essential for constructing an aircraft.,supply,,supplies
+provides,supplier,supplier,supply,"the relationship between a supplier and the supplies they provide, are foundational to this domain.",supply,,supplies
+supplies,supplier,supplier,aircraft,"The suppliers supply these parts in supplies, integral to the construction of aircraft, which themselves are embodiments of distinct aircraft models.",aircraft,,*
+consists of,supply,supply,part,The supplier delivers a supply consisting of various parts.,part,,includes
+supplies,supply,supplier,supply,a supplier supplying supplies,supplier,,supplies
+contains,supply,supply,part,The suppliers supply these parts in supplies,part,,includes
+dedicated to,supply,supply,aircraft,Each supply is dedicated to the production of specific aircraft,aircraft,,supplied for
+makes,customer,customer,purchase,"For instance, the relationship between a customer and their purchases, or a supplier and the supplies they provide, are foundational to this domain.",,,*
+purchases,customer,customer,aircraft,"These interactions are not arbitrary; they are defined by specific links such as a customer purchasing aircraft, a supplier supplying supplies, or an aircraft consisting of parts.",aircraft,,purchases
+incorporates,aircraft model,aircraft model,part model,"It incorporates various part models, integrating them into a cohesive design that eventually takes shape as a finished aircraft.",part model,,incorporates
+is embodied by,aircraft model,aircraft,aircraft model,"The suppliers supply these parts in supplies, integral to the construction of aircraft, which themselves are embodiments of distinct aircraft models.",aircraft,,designed as
+is based on,part model,part,part model,"Aircraft, as the central product, are composed of individually identified parts, each following a specific part model.",part,,designed as part model
+is a manifestation of,part model,part,part model,"every part used in aircraft construction is not just a component; it's a manifestation of a precise design model, known as a part model, based on which it is designed.",part,,designed as part model
+incorporates,part model,part model,part model,"It incorporates various part models, integrating them into a cohesive design that eventually takes shape as a finished aircraft.",,,
+has,part model,part,part model,"the link between an aircraft and its design model, or a part and its part model, highlights the adherence to design specifications and standards.",part model,,designed as part model

@@ -1,0 +1,52 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+research findings,research paper,research papers are documents presenting original research findings,,*,
+submission,research paper,Each research paper is linked to a submission,submission,,has submission
+submission process,research paper,The submission process is crucial,,*,
+publication year,research paper,It has a publication year,,publication year,
+abstract,research paper,An abstract provides a brief summary of the paper's content,,abstract,
+presentation,research paper,The paper's presentation at a conference,conference,,presented at
+authorship,research paper,An essential aspect of a research paper is its authorship,author,,written by
+written by,research paper,written by attribute,author,,written by
+institutional affiliation,research paper,An author's institutional affiliation,,,
+corresponding author,research paper,designated as the corresponding author,author,,has corresponding author
+review,research paper,"A review, an evaluation or critique of a research paper",review,,*
+reviewer,research paper,"A reviewer, responsible for evaluating the quality",reviewer,,*
+area of expertise,research paper,area of expertise,,,
+writing reviews,research paper,writing reviews,,,
+linked to the conference,research paper,A submission is linked to the conference it is submitted to,,,
+submission date,research paper,carries a submission date,,,
+current status,research paper,current status of the submission,,,
+resubmissions,research paper,Submissions can be resubmissions,,,
+connection,research paper,a connection that is fundamental to the peer-review process,,,
+year,conference,a conference represents an event where research papers are presented and discussed. This gathering is characterized by a specific year when it takes place,,year,
+location,conference,a conference represents an event where research papers are presented and discussed. This gathering is characterized by a location where it is held,,location,
+name,conference,a conference represents an event where research papers are presented and discussed. This gathering is characterized by a its name,,conference name,
+submission,conference,"Each research paper is linked to a submission, which represents the act of submitting the paper for consideration at a conference",submission,,submitted to
+review process,conference,The submission process is crucial as it brings the paper into the conference's review process,,,*
+publication year,conference,"A research paper also has several intrinsic qualities. It has a publication year, marking when the findings were officially made public",,,
+abstract,conference,An abstract provides a brief summary of the paper's content,,,
+presentation,conference,The paper's presentation at a conference is also an important aspect,research paper,,presented at
+authorship,conference,"An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors",,,
+distinct characteristics,conference,"Authors, who significantly contribute to the creation of research papers, have their own distinct characteristics",,,
+institutional affiliation,conference,An author's institutional affiliation provides a professional identity and context,,,
+corresponding author,conference,"Additionally, one of the authors may be designated as the corresponding author, highlighting their primary responsibility in communication regarding the paper",,,
+review,conference,"A review, an evaluation or critique of a research paper by a reviewer, plays a pivotal role",,,
+review process,conference,A reviewer is involved in review process by the act of writing reviews,reviewer,,*
+name,conference,"Each person has a name, giving them individual identity",,,
+email address,conference,"Each person has an email address, facilitating communication within the academic community",,,
+area of expertise,conference,"A reviewer, responsible for evaluating the quality and relevance of research paper submissions, brings to the table their area of expertise",,,
+conference,conference,A submission is linked to the conference it is submitted to,submission,,submitted to
+submission date,conference,"A submission carries a submission date, marking when it entered the review process",,,
+current status,conference,"The current status of the submission, such as under review, accepted, or rejected, is a dynamic attribute reflecting its ongoing journey",,,
+resubmissions,conference,"Submissions can be resubmissions, linked to prior submissions they replace",,,
+reviewed by,conference,a submission is reviewed by a reviewer,,,
+submission,submission,"linked to a submission, which represents the act of submitting the paper for consideration at a conference",conference,,submitted to
+review process,submission,The submission process is crucial as it brings the paper into the conference's review process,,,*
+conference,submission,A submission is linked to the conference it is submitted to,conference,,submitted to
+submission date,submission,"A submission carries a submission date, marking when it entered the review process",,submission date,
+current status,submission,"The current status of the submission, such as under review, accepted, or rejected",,status,
+resubmissions,submission,"Submissions can be resubmissions, linked to prior submissions they replace",,,is resubmission of
+reviewed by,submission,A submission is reviewed by a reviewer,reviewer,,reviewed by
+role,reviewer,a specific role,,*,
+area of expertise,reviewer,brings to the table their area of expertise,,expertise,
+involvement in review process,reviewer,involved in review process by the act of writing reviews,,,*

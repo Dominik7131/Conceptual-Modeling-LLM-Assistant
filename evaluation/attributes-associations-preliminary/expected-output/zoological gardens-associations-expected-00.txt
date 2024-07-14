@@ -1,0 +1,156 @@
+Class: zoological garden
+1) provides
+- original text: A zoological garden provides various enclosures where its animals live and are ethically displayed and conserved.
+- source class: zoological garden
+- target class: enclosure
+
+
+2) has member
+- original text: Staff members of zoological gardens
+- source class: zoological garden
+- target class: staff member
+
+
+3) participates in
+- original text: Conservation programs a zoological garden participates in
+- source class: zoological garden
+- target class: conservation program
+
+
+Class: animal
+1) classified by
+- original text: They are classified by species
+- source class: animal
+- target class: species
+
+
+2) has specified diet
+- original text: For a particular animal, we are also interested in its specified diet which is crucial for managing their welfare and conservation status of the animal.
+- source class: animal
+- target class: diet
+
+
+3) is part of program
+- original text: Specific animals may be part of reintroduction conservation programs.
+- source class: reintroduction conservation program
+- target class: animal
+
+
+Class: species
+1) classified by
+- original text: They are classified by species
+- source class: animal
+- target class: species
+
+
+2) resident of
+- original text: Enclosures are specialized habitats designed to mimic the natural environments of the resident species
+- source class: species
+- target class: enclosure
+
+
+3) responsible for
+- original text: Veterinarians are responsible for medical treatment of particular species. Therefore, they are not assigned to enclosures or individual animals but species.
+- source class: veterinarian
+- target class: species
+
+
+4) supports
+- original text: A conservation program focuses on particular species it supports.
+- source class: conservation program
+- target class: species
+
+
+Class: diet
+1) has specified diet
+- original text: For a particular animal, we are also interested in its specified diet which is crucial for managing their welfare and conservation status of the animal.
+- source class: animal
+- target class: diet
+
+
+Class: enclosure
+1) resident of
+- original text: Enclosures are specialized habitats designed to mimic the natural environments of the resident species
+- source class: species
+- target class: enclosure
+
+
+2) provides
+- original text: A zoological garden provides various enclosures where its animals live and are ethically displayed and conserved.
+- source class: zoological garden
+- target class: enclosure
+
+
+3) has climate conditions
+- original text: climate conditions The climate conditions of enclosures in zoological gardens are complex and need to be tailored specifically to the needs of each species.
+- source class: enclosure
+- target class: climate conditions
+
+
+4) assigned to as zoologist
+- original text: zoologists are assigned to particular enclosures they are responsible for
+- source class: zoologist
+- target class: enclosure
+
+
+5) assigned as caretaker
+- original text: Caretakers can be assigned to more enclosures and they are responsible for daily care and behavioral training of the animals in the enclosure.
+- source class: caretaker
+- target class: enclosure
+
+
+Class: climate conditions
+1) has climate conditions
+- original text: climate conditions The climate conditions of enclosures in zoological gardens are complex and need to be tailored specifically to the needs of each species.
+- source class: enclosure
+- target class: climate conditions
+
+
+Class: staff member
+1) has member
+- original text: Staff members of zoological gardens
+- source class: zoological garden
+- target class: staff member
+
+
+Class: zoologist
+1) assigned to as zoologist
+- original text: zoologists are assigned to particular enclosures they are responsible for
+- source class: zoologist
+- target class: enclosure
+
+
+Class: veterinarian
+1) responsible for
+- original text: Veterinarians are responsible for medical treatment of particular species. Therefore, they are not assigned to enclosures or individual animals but species.
+- source class: veterinarian
+- target class: species
+
+
+Class: caretaker
+1) assigned as caretaker
+- original text: Caretakers can be assigned to more enclosures and they are responsible for daily care and behavioral training of the animals in the enclosure.
+- source class: caretaker
+- target class: enclosure
+
+
+Class: conservation program
+1) participates in
+- original text: Conservation programs a zoological garden participates in
+- source class: zoological garden
+- target class: conservation program
+
+
+2) supports
+- original text: A conservation program focuses on particular species it supports.
+- source class: conservation program
+- target class: species
+
+
+Class: reintroduction conservation program
+1) is part of program
+- original text: Specific animals may be part of reintroduction conservation programs.
+- source class: reintroduction conservation program
+- target class: animal
+
+

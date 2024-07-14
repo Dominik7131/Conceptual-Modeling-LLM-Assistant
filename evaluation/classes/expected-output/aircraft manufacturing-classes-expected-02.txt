@@ -1,0 +1,32 @@
+Class: aircraft
+- original text: An aircraft, the culmination of this manufacturing process, is not merely a product but an amalgamation of design, individuality, and functionality. Aircraft, as the central product
+
+
+Class: part
+- original text: every part used in aircraft construction
+
+
+Class: supplier
+- original text: extends to customers and suppliers A supplier is recognized as an entity providing parts through supplies essential for constructing an aircraft.
+
+
+Class: supply
+- original text: supply consisting of various parts
+
+
+Class: customer
+- original text: extends to customers customers are of paramount importance. They represent the clients who purchase the finished aircraft, thereby driving the entire industry.
+
+
+Class: aircraft model
+- original text: aircraft models, around which the entire manufacturing process revolves, are entities of significant interest.
+
+
+Class: part model
+- original text: precise design model, known as a part model, based on which it is designed. This model is defined not just by its design
+
+
+Class: party
+- original text: party, which is a broad term encompassing any subject involved in this domain. This term is so inclusive that it even extends to customers and suppliers, each playing distinct yet integral roles. parties like customers and suppliers
+
+

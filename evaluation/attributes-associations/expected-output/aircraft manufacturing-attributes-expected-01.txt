@@ -1,0 +1,46 @@
+Class: aircraft
+1) manufacturing date
+- original text: and marked with the manufacturing date
+
+
+2) aircraft serial number
+- original text: Each aircraft is uniquely identified by a serial number
+
+
+Class: part
+1) part description
+- original text: a brief description
+
+
+2) part serial number
+- original text: is identified by a serial number
+
+
+Class: customer
+1) customer name
+- original text: customer is identified by a name, which is a unique designation of each client in this context
+
+
+Class: aircraft model
+1) aircraft model code
+- original text: assigned a unique model code
+
+
+2) aircraft model description
+- original text: aircraft model is described in detail
+
+
+Class: part model
+1) part model number
+- original text: models are uniquely identified by a model number
+
+
+2) part model description
+- original text: accompanied by a brief description
+
+
+Class: party
+1) party code
+- original text: party is uniquely identified by a party code, used for business communication and documentation purposes
+
+

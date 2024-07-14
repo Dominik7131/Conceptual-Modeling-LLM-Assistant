@@ -1,0 +1,20 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches association
+serial number,aircraft,Every aircraft is unique and can be identified by its serial number.,,aircraft serial number,
+manufacturing date,aircraft,The manufacturing date tells us when the aircraft was made.,,manufacturing date,
+aircraft model,aircraft,"every aircraft is designed as a specific aircraft model, indicating the design it follows.",aircraft model,,designed as
+serial number,part,"Every part has a serial number, making it unique, and a brief description to understand what it is.",,part serial number,
+description,part,"Every part has a serial number, making it unique, and a brief description to understand what it is.",,part description,
+part model,part,"These parts are designed as part models, linking each part to its specific design model.",part model,,designed as part model
+concept,customer,the concept of a customer,,,
+client,customer,The customer represents the clients who purchase the finished aircraft.,,,*
+customer name,customer,"Each customer has a unique aspect, their customer name.",,customer name,
+purchase,customer,"A key activity in this field is the purchase of aircraft by customers, referred to as purchases.",aircraft,,purchases
+party,customer,"Both customers and suppliers are part of a larger group called party, representing a generic subject involved in the aircraft manufacturing process.",party,,*
+party code,customer,"To identify each party, we use the party code which we also use to refer to the party in the business communication and documentation.",,:party code,
+model,aircraft model,"every aircraft is designed as a specific aircraft model, indicating the design it follows",aircraft,,designed as
+model code,aircraft model,each with a unique model code and a detailed description,,aircraft model code,
+description,aircraft model,each with a unique model code and a detailed description,,aircraft model description,
+model number,part model,"A part model represents the design model for individual parts, with a unique model number and a brief description to explain what it is.",,part model number,
+description,part model,"A part model represents the design model for individual parts, with a unique model number and a brief description to explain what it is.",,part model description,
+description,party,"Both customers and suppliers are part of a larger group called party, representing a generic subject involved in the aircraft manufacturing process.",,,
+party code,party,"To identify each party, we use the party code which we also use to refer to the party in the business communication and documentation.",,party code,

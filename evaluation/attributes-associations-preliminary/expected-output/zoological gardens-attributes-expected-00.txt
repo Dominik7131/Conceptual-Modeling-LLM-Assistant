@@ -1,0 +1,112 @@
+Class: animal
+1) animal name
+- original text: Each animal also has a name which is not unique but our staff uses it to refer to them and we also present animal names to our visitors.
+
+
+Class: species
+1) species name
+- original text: species name The species name adheres to international taxonomic standards, ensuring uniformity across scientific and conservation discourse
+
+
+2) species common name
+- original text: species common name the common name is how visitors usually refer to the species
+
+
+3) iucn status
+- original text: IUCN status IUCN status provides insight into the conservation priority of species, influencing habitat management and breeding programs.
+
+
+4) reproductive age
+- original text: the age at which the species is capable of reproducing, which helps in planning breeding programs
+
+
+5) natural breeding time
+- original text: specific time of year when the animals of that species naturally breed, which can influence how enclosures are managed and when animals are introduced for mating
+
+
+6) gestation period
+- original text: Gestation period, which is the length of pregnancy in viviparous species, is important for monitoring and providing care during this critical period.
+
+
+Class: diet
+1) diet type
+- original text: We distinguish different types of diet whether an animal is herbivorous, carnivorous, omnivorous, piscivorous, etc. This classification helps in formulating appropriate feeding strategies.
+
+
+2) nutrients
+- original text: The diet is also related to specific nutrients required to maintain health and vitality. For example, some species may require particular vitamins or minerals in higher quantities than others.
+
+
+3) feeding schedule
+- original text: For the diet, the feeding schedule is essential. It specifies the frequency and timing of feeding, which can affect the animal's metabolic rate and overall health. Some species may need multiple small feedings throughout the day, while others might suffice with less frequent larger meals.
+
+
+4) feeding technique
+- original text: The diet can also be associated with a special feeding technique because some animals, especially those with unique physiological or behavioral adaptations, require special methods of feeding that mimic their natural foraging behaviors, enhancing their psychological well-being and physical health.
+
+
+Class: oviparous species
+1) number of laid eggs
+- original text: the number of eggs typically laid at one time, affects incubation practices
+
+
+Class: enclosure
+1) enclosure size
+- original text: its size in square meters
+
+
+2) enclosure type
+- original text: type (e.g., aviary, aquarium, terrarium)
+
+
+3) vegetation
+- original text: vegetation
+
+
+Class: climate conditions
+1) temperature
+- original text: Temperature is perhaps the most critical element in an enclosure's climate conditions. Each species has a specific thermal preference based on its natural habitat, which needs to be mimicked in captivity for optimal health. Many animal species, particularly reptiles, require a range of temperatures within their enclosure to regulate their body temperature by moving between warmer and cooler areas.
+
+
+2) humidity level
+- original text: Humidity levels are vital and important aspect of climate conditions, especially for species from tropical or aquatic environments, as it affects skin health, hydration, and overall comfort.
+
+
+3) light cycles
+- original text: Ensuring that light cycles (day and night) in the climate conditions of enclosures are consistent with the natural light patterns of an animal's native habitat helps maintain normal circadian rhythms, which are crucial for feeding, sleeping, and reproductive behaviors.
+
+
+4) ultraviolet light
+- original text: Many species, particularly reptiles, require climate conditions ensuring an exposure to ultraviolet light to synthesize vitamin D3, essential for calcium metabolism. The absence of adequate UV lighting in the climate conditions can lead to health problems like metabolic bone disease.
+
+
+5) ventilation
+- original text: Proper ventilation is essential for maintaining air quality and appropriate climate conditions within an enclosure.
+
+
+Class: staff member
+1) name
+- original text: name
+
+
+2) expertise
+- original text: expertise Their expertise directly affects animal welfare.
+
+
+3) birth date
+- original text: birth date
+
+
+4) permanent address
+- original text: permanent address
+
+
+Class: conservation program
+1) country
+- original text: Conversation programs with ex-situ strategies also focus on specific countries
+
+
+2) geographic region
+- original text: Conversation programs with ex-situ strategies also focus on specific countries or geographic regions
+
+

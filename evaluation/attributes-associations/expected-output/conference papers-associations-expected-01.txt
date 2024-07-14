@@ -1,0 +1,108 @@
+Class: research paper
+1) written by
+- original text: An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors.
+- source class: research paper
+- target class: author
+
+
+2) has corresponding author
+- original text: Additionally, one of the authors may be designated as the corresponding author, highlighting their primary responsibility in communication regarding the paper.
+- source class: author
+- target class: research paper
+
+
+3) has submission
+- original text: Each research paper is linked to a submission
+- source class: research paper
+- target class: submission
+
+
+4) presented at
+- original text: The paper's presentation at a conference
+- source class: research paper
+- target class: conference
+
+
+Class: author
+1) written by
+- original text: An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors.
+- source class: research paper
+- target class: author
+
+
+2) has corresponding author
+- original text: Additionally, one of the authors may be designated as the corresponding author, highlighting their primary responsibility in communication regarding the paper.
+- source class: author
+- target class: research paper
+
+
+Class: conference
+1) submitted to
+- original text: A submission is linked to the conference it is submitted to
+- source class: submission
+- target class: conference
+
+
+2) presented at
+- original text: The paper's presentation at a conference
+- source class: research paper
+- target class: conference
+
+
+Class: submission
+1) submitted to
+- original text: A submission is linked to the conference it is submitted to
+- source class: submission
+- target class: conference
+
+
+2) reviewed by
+- original text: Furthermore, a submission is reviewed by a reviewer, a connection that is fundamental to the peer-review process and maintaining the academic integrity of the conference proceedings.
+- source class: submission
+- target class: reviewer
+
+
+3) has submission
+- original text: Each research paper is linked to a submission
+- source class: research paper
+- target class: submission
+
+
+4) reviews
+- original text: A review reviews the submission it evaluates. Only the last submission of a research paper can be evaluated.
+- source class: review
+- target class: submission
+
+
+5) is resubmission of
+- original text: Submissions can be resubmissions, linked to prior submissions they replace, showing the iterative nature of academic work.
+- source class: submission
+- target class: submission
+
+
+Class: reviewer
+1) reviewed by
+- original text: Furthermore, a submission is reviewed by a reviewer, a connection that is fundamental to the peer-review process and maintaining the academic integrity of the conference proceedings.
+- source class: submission
+- target class: reviewer
+
+
+2) writes
+- original text: A reviewer is involved in review process by the act of writing reviews.
+- source class: reviewer
+- target class: review
+
+
+Class: review
+1) writes
+- original text: A reviewer is involved in review process by the act of writing reviews.
+- source class: reviewer
+- target class: review
+
+
+2) reviews
+- original text: A review reviews the submission it evaluates. Only the last submission of a research paper can be evaluated.
+- source class: review
+- target class: submission
+
+

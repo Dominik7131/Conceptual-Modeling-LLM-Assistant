@@ -1,0 +1,110 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+activity,farmer,"an individual who engages in the activity of agriculture, growing and harvesting crops",,,*
+name,farmer,uniquely identified by a name,,name,
+name,crop,This individual is uniquely identified by a name,,,
+type,crop,Crops are classified into various types,,*,
+cultivated variety,crop,Each crop type may have a cultivated variety,,cultivated variety,
+harvest,crop,The harvest is the production that is obtained from crops,harvest,,*
+harvest date,crop,The specific date or time period when the harvest was collected,,,
+farmer,crop,Each harvest is connected to the farmer who performed the harvest,farmer,,harvested by
+field,crop,"This activity involves specific crops, and the association is key to understanding the crop variety and its cultivation requirements during the planting process. Each planting activity is performed on a particular field",field,,*
+soil type,crop,"The soil type present in the field, such as loamy, sandy, clay, or silt",,*,
+soil ph,crop,"The soil pH, indicating the acidity or alkalinity of the soil",,*,
+location,crop,The location of the field is also described,,,
+irrigation,crop,Fields may have irrigation systems,,*,
+type,machinery,"It includes mechanical tools and equipment used in farming, crucial for tasks such as plowing, seeding, spraying, and harvesting.",,*,
+sub type,machinery,"Types of machinery include tractors, planters, harvesters, and sprayers.",,*,
+manufacturing date,machinery,"The year the machinery was manufactured indicates its age and potential modernity in technology, while the model of the machinery affects its functionality and suitability for specific tasks.",,year of manufacturing,
+properties,machinery,"Various properties link machinery to specific uses, such as field preparation, planting, and harvesting.",,,-used for field preparation;used for harvesting;used for planting
+functionality,machinery,"Tractors are versatile pieces of machinery essential for multiple farming tasks, from soil preparation to crop maintenance.",,,*
+functionality,machinery,"Planters are machinery designed to plant seeds efficiently and accurately, crucial for optimal crop distribution and growth.",,,*
+functionality,machinery,Harvesters are especially interesting as they are a specialized machinery that is used for harvesting.,,,*
+attachments,machinery,"Machinery used for preparation of the field for the planting includes those machines like tractors equipped with specific attachments, used to prepare the field for planting.",,*,
+functionality,machinery,Machinery used for planting plays a pivotal role in the agricultural planting process.,,,*
+functionality,machinery,"Machinery used for harvesting includes combines, harvesters, and other equipment that is primarily utilized to collect and process crops at the end of their growing cycle.",,,*
+owner,machinery,"To reduce manual work, the farmer owns machinery.",farmer,,*
+quantity owned,machinery,A farmer can own one or more pieces of machinery.,,*,
+capacity for mechanized farming,machinery,"The machinery owned by the farmer reflects the capacity for mechanized farming, which is a significant factor in modern agricultural practices.",,*,
+effectiveness,machinery,"Owning such machinery typically enhances a farmer's ability to perform various agricultural tasks more efficiently and effectively, from soil preparation and planting to harvesting and post-harvest processing.",,*,
+planting,harvest,agricultural activity of planting crops in a specific field during a specific year,,,
+harvest,harvest,the final output of the agricultural cycle,,,
+quantity and quality,harvest,quantified and evaluated in terms of quantity and quality,,+quality;quantity,
+total quantity,harvest,"total quantity of the harvest, measured in kilograms",,quantity,
+collection date,harvest,specific date or time period when the harvest was collected,,harvest date,
+quality factors,harvest,"factors like size, ripeness, nutritional value, and absence of pests or diseases",,*,
+farmer,harvest,connected to the farmer who performed the harvest,farmer,,harvested by
+machinery,harvest,mechanical tools and equipment used in farming,machinery,,used for harvesting
+manufacture year,harvest,year the machinery was manufactured,,,
+model,harvest,model of the machinery,,,
+properties,harvest,properties link machinery to specific uses,,,used for harvesting
+harvesting machinery,harvest,machinery used for harvesting,machinery,,used for harvesting
+efficient harvesting,harvest,designed to efficiently harvest crops without causing damage,,,
+ownership,harvest,ownership of machinery,,,
+mechanize operations,harvest,ability to mechanize operations,,,
+productivity and crop management,harvest,potential for increased productivity and improved crop management,,,
+planting crops,field,of planting crops in a specific field during a specific year,planting,,performed on
+details of the planting process,field,captures the details of the planting process,,,
+field,field,performed on a particular field,planting,,performed on
+location of agricultural operations,field,location of agricultural operations,,location,
+field-specific crop management,field,facilitating field-specific crop management,,,
+areas of land,field,areas of land used for growing crops,,,
+can be surrounded by a fence,field,can be but do not have to be surrounded by a fence,,*,
+size,field,"size, typically expressed in hectares",,size,
+fundamental for planning the distribution of crops,field,fundamental for planning the distribution of crops,,,
+determining the amount of seeds needed,field,determining the amount of seeds needed,,,
+calculating the expected yield,field,calculating the expected yield,,,
+soil type,field,soil type present in the field,,soil type,
+"loamy, sandy, clay, or silt",field,"such as loamy, sandy, clay, or silt",,*,
+soil ph,field,soil pH,,soil ph,
+acidity or alkalinity,field,indicating the acidity or alkalinity of the soil,,*,
+crucial for managing soil health and fertility,field,crucial for managing soil health and fertility,,,
+specific gps coordinates or a general description,field,specific GPS coordinates or a general description,,location,
+logistical purposes,field,logistical purposes,,,
+geographical and climatic context,field,geographical and climatic context,,*,
+topography,field,topography,,topography,
+water drainage,field,water drainage,,*,
+erosion risk,field,erosion risk,,*,
+suitability of various agricultural machinery,field,suitability of various agricultural machinery,machinery,,*
+irrigation systems,field,irrigation systems,,irrigation availability,
+availability and type of irrigation,field,availability and type of irrigation,,irrigation availability,
+planning water usage,field,planning water usage,,*,
+can impact crop selection and planting schedules,field,can impact crop selection and planting schedules,,,
+properties link machinery to specific uses,field,properties link machinery to specific uses,machinery,,*
+tractors equipped with specific attachments,field,tractors equipped with specific attachments,,,
+used to prepare the field for planting,field,used to prepare the field for planting,machinery,,*
+preparatory process,field,preparatory process,,,*
+"plowing, tilling, and conditioning the soil",field,"plowing, tilling, and conditioning the soil",,,*
+create an optimal planting environment,field,create an optimal planting environment,,,
+harvesters,field,harvesters,,,*
+combine several functions,field,combine several functions,,,
+simplifies the process,field,simplifies the process,,,
+reduces the time crops spend in the field after maturing,field,reduces the time crops spend in the field after maturing,,,
+minimizing losses due to weather or pests,field,minimizing losses due to weather or pests,,,
+a farmer farms on one or more fields,field,a farmer farms on one or more fields,farmer,,farms on
+planting process,planting,The planting process is described as the agricultural activity of planting crops in a specific field during a specific year.,,,*
+details,planting,captures the details of the planting process,,,
+crops,planting,This activity involves specific crops,crop,,involves crop
+field,planting,performed on a particular field,field,,performed on
+date or period planted,planting,records the exact date or period when the crop was planted,,planting date,
+harvest,planting,results to the subsequent harvest it produces,harvest,,results in harvest
+irrigation systems,planting,fields may have irrigation systems,,*,
+availability and type of irrigation,planting,availability and type of irrigation used are vital for planning water usage,,*,
+impact on crop selection and planting schedules,planting,can impact crop selection and planting schedules based on the water needs of the crops,,,
+crop,planting,Crop is plants grown in large amounts and cultivated by farmers for profit or subsistence,crop,,involves crop
+types,planting,Crops are classified into various types,,,*
+fruits,planting,Fruits are plants cultivated for producing their seed-associated fleshy structures,fruit,,*
+vegetables,planting,Vegetables are plants cultivated for their parts consumable by humans or other animals as food,vegetable,,*
+cereals,planting,Cereals are plants cultivated for their edible grain,cereal,,*
+seed plants,planting,Seed plants are grown for oil production from seeds,seed plant,,*
+cultivated variety,planting,Each crop type may have a cultivated variety,,*,
+planters,planting,Planters are machinery designed to plant seeds efficiently and accurately,planter,,*
+machinery for field preparation,planting,Machinery used for preparation of the field for the planting,machinery,,used for field preparation
+preparatory process,planting,"This preparatory process might include plowing, tilling, and conditioning the soil",,,*
+machinery for planting,planting,Machinery used for planting plays a pivotal role in the agricultural planting process,machinery,,used for planting
+planters for efficient and accurate planting,planting,Planters are designed to plant seeds efficiently and accurately,machinery,,used for planting
+accuracy and efficiency of planters,planting,The accuracy and efficiency of planters ensure that seeds are placed at the correct depth and spacing,machinery,,used for planting
+optimal crop distribution and growth,planting,Crucial for optimal crop distribution and growth,,,
+farmer responsible for planting,planting,The farmer is primarily responsible for conducting planting,farmer,,conducts planting
+owning machinery enhances farmer's ability,planting,Owning such machinery typically enhances a farmer's ability to perform various agricultural tasks,farmer,,*
+ability to mechanize operations,planting,Indicates the ability of a farmer to mechanize operations,,,
+potential for increased productivity and improved crop management,planting,Signifies the potential for increased productivity and improved crop management,,,

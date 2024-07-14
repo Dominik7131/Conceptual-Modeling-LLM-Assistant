@@ -1,0 +1,24 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+submission,research paper,linked to a submission,submission,,has submission
+publication year,research paper,has a publication year,,publication year,
+author,research paper,written by attribute,author,,written by
+review,research paper,"a review, an evaluation or critique of a research paper",review,,*
+name,person,"Each person has a name, giving them individual identity",,name,
+email address,person,"and an email address, facilitating communication within the academic community",,email,
+written by,author,"indicated by the written by attribute, which links it to its authors",research paper,,written by
+characteristics,author,have their own distinct characteristics,,-affiliation,
+institutional affiliation,author,An author's institutional affiliation,,affiliation,
+corresponding author,author,one of the authors may be designated as the corresponding author,research paper,,has corresponding author
+year,conference,a specific year when it takes place,,year,
+location,conference,a location where it is held,,location,
+name,conference,a its name,,conference name,
+description,submission,"a submission, which represents the act of submitting the paper for consideration at a conference",submission,,
+submission date,submission,"carries a submission date, marking when it entered the review process",,submission date,
+status,submission,"The current status of the submission, such as under review, accepted, or rejected",,status,
+conference,submission,linked to the conference it is submitted to,conference,,submitted to
+prior submission,submission,"Submissions can be resubmissions, linked to prior submissions they replace",submission,,is resubmission of
+reviewer,submission,a submission is reviewed by a reviewer,reviewer,,reviewed by
+role,reviewer,"a reviewer, responsible for evaluating the quality and relevance of research paper submissions",,*,
+area of expertise,reviewer,their area of expertise,,expertise,
+review,reviewer,a reviewer is involved in review process by the act of writing reviews,review,,writes
+submission,reviewer,a submission is reviewed by a reviewer,submission,,reviewed by

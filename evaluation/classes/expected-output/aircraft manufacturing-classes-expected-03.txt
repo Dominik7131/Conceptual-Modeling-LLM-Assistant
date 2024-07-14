@@ -1,0 +1,32 @@
+Class: aircraft
+- original text: aircraft, the final manufactured product.
+
+
+Class: part
+- original text: multiple parts, each an individual component used in its construction
+
+
+Class: supplier
+- original text: Then we have the supplier, entities that provide parts for aircraft manufacturing. Suppliers play a crucial role in providing the necessary components needed to build an aircraft.
+
+
+Class: supply
+- original text: supply, a range of different parts essential for building aircraft. the supply includes specific parts, showing what components are provided for the aircraft's construction
+
+
+Class: customer
+- original text: The customer represents the clients who purchase the finished aircraft. They are essential because they are the ones who use the final product.
+
+
+Class: aircraft model
+- original text: This model represents different models of aircraft
+
+
+Class: part model
+- original text: A part model represents the design model for individual parts
+
+
+Class: party
+- original text: Both customers and suppliers are part of a larger group called party, representing a generic subject involved in the aircraft manufacturing process. This means that anyone, whether they are buying the finished aircraft or supplying parts, falls under this broad category.
+
+

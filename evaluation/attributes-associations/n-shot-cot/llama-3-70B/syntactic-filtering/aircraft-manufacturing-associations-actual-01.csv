@@ -1,0 +1,20 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+linked to,aircraft,aircraft,aircraft model,"Each aircraft is uniquely identified by a serial number, linked to a specific model, indicating the design it follows...",aircraft model,,designed as
+consists of,aircraft,aircraft,part,"...and marked with the manufacturing date. The aircraft is also defined by the parts it consists of, highlighting the composite nature of the final product.",part,,consists of
+acquired by,aircraft,aircraft,customer,"They are linked to aircraft through the purchases, which signifies the acquisition of aircraft by these clients.",customer,,purchases
+is linked to,part,part,part model,"Every part is linked to its specific model, indicating the design it follows, and is identified by a serial number and a brief description.",part model,,designed as part model
+consists of,part,aircraft,part,"The aircraft is also defined by the parts it consists of, highlighting the composite nature of the final product.",aircraft,,consists of
+includes,part,supply,part,Each supply is dedicated to the manufacturing of a specific aircraft and includes specific parts necessary for this process.,supply,,includes
+encompasses,part,supply,part,"Supplies encompass the parts required for aircraft manufacturing, provided by a supplier.",supply,,includes
+provides,part,supplier,part,Suppliers are entities that provide parts for aircraft manufacturing.,supplier,,*
+provides,supplier,supplier,part,Suppliers are entities that provide parts for aircraft manufacturing.,part,,*
+is a,supplier,supplier,party,"They are a subclass of parties, indicating their involvement in the broader aircraft manufacturing process.",party,,*
+supply,supply,supply,supply,They maintain a relationship where they supply supplies consiting of various parts necessary for the construction of aircrafts.,,,
+is dedicated to,supply,supply,aircraft,Each supply is dedicated to the manufacturing of a specific aircraft and includes specific parts necessary for this process.,aircraft,,supplied for
+includes,supply,supply,part,Each supply ... includes specific parts necessary for this process.,part,,includes
+purchases,customer,customer,aircraft,"They are linked to aircraft through the purchases, which signifies the acquisition of aircraft by these clients.",aircraft,,purchases
+has,aircraft model,aircraft model,model code,Each aircraft model is described in detail and assigned a unique model code.,,aircraft model code,
+incorporates,aircraft model,aircraft model,part model,"Furthermore, aircraft models incorporate various part models in their design, indicating the integration of different components necessary for constructing a specific aircraft model.",part model,,incorporates
+is linked to,aircraft model,aircraft,aircraft model,"Each aircraft is uniquely identified by a serial number, linked to a specific model, indicating the design it follows...",aircraft,,designed as
+is linked to,part model,part,part model,"Every part is linked to its specific model, indicating the design it follows, and is identified by a serial number and a brief description.",part,,designed as part model
+incorporates,part model,aircraft model,part model,"Furthermore, aircraft models incorporate various part models in their design, indicating the integration of different components necessary for constructing a specific aircraft model.",aircraft model,,incorporates

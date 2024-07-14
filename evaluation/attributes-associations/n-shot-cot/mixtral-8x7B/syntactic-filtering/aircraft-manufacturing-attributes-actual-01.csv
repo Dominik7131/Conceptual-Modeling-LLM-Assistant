@@ -1,0 +1,44 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+model,aircraft,"aircraft models, representing different configurations of aircraft. Each aircraft model is described in detail and assigned a unique model code.",aircraft model,,designed as
+part models,aircraft,"Further, aircraft models incorporate various part models in their design, indicating the integration of different components necessary for constructing a specific aircraft model.",part model,,*
+supplies,aircraft,Each supply is dedicated to the manufacturing of a specific aircraft and includes specific parts necessary for this process.,supply,,supplied for
+parts,aircraft,Parts represent individual components used in constructing an aircraft.,part,,consists of
+serial number,aircraft,"Aircraft signify the final manufactured product in this domain. Each aircraft is uniquely identified by a serial number, linked to a specific model, indicating the design it follows, and marked with the manufacturing date.",,aircraft serial number,
+part models,part,Part models denote the design models for individual parts used in aircraft.,part model,,designed as part model
+model number,part,These models are uniquely identified by a model number,,,*
+brief description,part,and accompanied by a brief description.,,,*
+design,part,The part model's design and specifications,,*,
+parts,part,Supplies encompass the parts required for aircraft manufacturing,supply,,includes
+supply,part,Each supply is dedicated to the manufacturing of a specific aircraft and includes specific parts necessary for this process.,supply,,includes
+parts,part,Parts represent individual components used in constructing an aircraft.,aircraft,,consists of
+linked,part,"Every part is linked to its specific model, indicating the design it follows,",part model,,designed as part model
+identified,part,and is identified by a serial number and a brief description.,,-part serial number;part description,
+linkage,part,This linkage to the specific model ensures consistency and standardization in the manufacturing process.,part model,,designed as part model
+purchases,customer,who purchase the finished aircraft,aircraft,,purchases
+name,customer,"identified by a name, which is a unique designation of each client",,customer name,
+description,aircraft model,Each aircraft model is described in detail,,aircraft model description,
+unique model code,aircraft model,and assigned a unique model code,,aircraft model code,
+part models,aircraft model,aircraft models incorporate various part models in their design,part model,,incorporates
+party,aircraft model,The notion of party is introduced to represent a generic subject involved in the aircraft manufacturing process.,party,,*
+part models,aircraft model,Part models denote the design models for individual parts used in aircraft.,part model,,incorporates
+model number,aircraft model,These models are uniquely identified by a model number,,,
+brief description,aircraft model,and accompanied by a brief description.,,,
+design and specifications,aircraft model,The part model's design and specifications play a significant role in the overall makeup of the aircraft.,,,
+serial number,aircraft model,Each aircraft is uniquely identified by a serial number,,,
+design,aircraft model,indicating the design it follows,,,
+manufacturing date,aircraft model,and marked with the manufacturing date.,,,
+parts,aircraft model,The aircraft is also defined by the parts it consists of,,,
+composite nature,aircraft model,highlighting the composite nature of the final product.,,,
+design models,part model,design models for individual parts used in aircraft,part,,designed as part model
+model number,part model,uniquely identified by a model number,,part model number,
+description,part model,accompanied by a brief description,,part model description,
+role in aircraft,part model,plays a significant role in the overall makeup of the aircraft,,*,
+linked to specific model,part model,Every part is linked to its specific model,part,,designed as part model
+serial number,part model,identified by a serial number,,,
+involvement,party,subject involved in the aircraft manufacturing process,*,,*
+party code,party,uniquely identified by a party code,,party code,
+communication and documentation purpose,party,used for business communication and documentation purposes,,,
+type,party,umbrella term encompassing various entities like customers and suppliers,,*,
+party classification,party,subclass of parties,,,*
+role in aircraft manufacturing process,party,indicating their involvement in the broader aircraft manufacturing process,,*,
+supplies,party,They supply supplies consisting of various parts necessary for the construction of aircrafts.,supply,,:supplies

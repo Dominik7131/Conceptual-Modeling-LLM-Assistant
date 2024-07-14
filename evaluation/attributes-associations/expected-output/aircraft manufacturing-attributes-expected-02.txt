@@ -1,0 +1,46 @@
+Class: aircraft
+1) manufacturing date
+- original text: The manufacturing date of an aircraft is also a crucial piece of information, often highlighted in business communications for its relevance in maintenance and value assessment.
+
+
+2) aircraft serial number
+- original text: unique serial number, a testament to its distinct identity
+
+
+Class: part
+1) part description
+- original text: its brief description
+
+
+2) part serial number
+- original text: Each part carries a unique serial number, further emphasizing its individuality within the larger structure of an aircraft,
+
+
+Class: customer
+1) customer name
+- original text: unique identity each customer holds, embodied in their name
+
+
+Class: aircraft model
+1) aircraft model code
+- original text: An aircraft model is distinguished not only by its unique model code
+
+
+2) aircraft model description
+- original text: but also by a detailed description that encapsulates its design philosophy and specifications.
+
+
+Class: part model
+1) part model number
+- original text: its unique model number
+
+
+2) part model description
+- original text: a brief description that captures its essence
+
+
+Class: party
+1) party code
+- original text: uniquely identified by a party code. This code is a pivotal aspect in business communication, serving as a distinctive identifier in documentation and interactions within the industry.
+
+

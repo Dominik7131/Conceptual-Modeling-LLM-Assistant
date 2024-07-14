@@ -1,0 +1,12 @@
+Solely based on the given context generate all attributes for the class: "{source_class}".
+
+For each attribute copy the part of the given context containing this attribute and output its name and then output this attribute in JSON object. The output should look like this:
+context: copy the part of the given context containing this attribute
+name: attribute name
+JSON object: {"originalText": "copy the part of the given context containing this attribute", "name": "attribute name"}.
+
+This is the given context:
+"{domain_description}"
+
+Output:
+context:

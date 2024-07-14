@@ -1,0 +1,23 @@
+Generated association,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches association
+is linked to,research paper,research paper,submission,"Focusing on the research papers, these are documents presenting original research findings. Each research paper is linked to a submission, which represents the act of submitting the paper for consideration at a conference.",submission,,has submission
+has,research paper,research paper,publication year,"A research paper also has several intrinsic qualities. It has a publication year, marking when the findings were officially made public.",,publication year,
+has,research paper,research paper,abstract,An abstract provides a brief summary of the paper's content.,,abstract,
+is presented at,research paper,research paper,conference,The paper's presentation at a conference is also an important aspect that we need to know about the paper.,conference,,presented at
+has,research paper,research paper,title,The title of the paper gives it a distinct identity.,,title,
+is written by,research paper,research paper,author,"An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors.",author,,written by
+is evaluated by,research paper,research paper,review,"A review, an evaluation or critique of a research paper by a reviewer, plays a pivotal role.",review,,*
+written by,author,research paper,author,"An essential aspect of a research paper is its authorship, indicated by the written by attribute, which links it to its authors.",research paper,,written by
+contributes to,author,author,research paper,"Authors, who significantly contribute to the creation of research papers, have their own distinct characteristics.",research paper,,written by
+has affiliation,author,author,institution,An author's institutional affiliation provides a professional identity and context.,,affiliation,
+is corresponding author,author,author,research paper,"Additionally, one of the authors may be designated as the corresponding author, highlighting their primary responsibility in communication regarding the paper.",research paper,,has corresponding author
+has submission,conference,conference,submission,"...a research paper is linked to a submission, which represents the act of submitting the paper for consideration at a conference.",submission,,submitted to
+has,conference,submission,conference,A submission is linked to the conference it is submitted to...,submission,,submitted to
+is linked to,submission,research paper,submission,"Each research paper is linked to a submission, which represents the act of submitting the paper for consideration at a conference.",research paper,,has submission
+is submitted to,submission,submission,conference,A submission is linked to the conference it is submitted to,conference,,submitted to
+replaces,submission,submission,submission,"Submissions can be resubmissions, linked to prior submissions they replace, showing the iterative nature of academic work.",,,is resubmission of
+is reviewed by,submission,submission,reviewer,"A submission is reviewed by a reviewer, a connection that is fundamental to the peer-review process and maintaining the academic integrity of the conference proceedings.",reviewer,,reviewed by
+has,reviewer,reviewer,area of expertise,"A reviewer, responsible for evaluating the quality and relevance of research paper submissions, brings to the table their area of expertise.",,expertise,
+writes,reviewer,reviewer,review,A reviewer is involved in review process by the act of writing reviews.,review,,writes
+reviews,reviewer,reviewer,submission,"A submission is reviewed by a reviewer, a connection that is fundamental to the peer-review process and maintaining the academic integrity of the conference proceedings.",submission,,reviewed by
+reviews,review,review,submission,"A review, an evaluation or critique of a research paper by a reviewer, plays a pivotal role. A review reviews the submission it evaluates.",submission,,reviews
+writes,review,reviewer,review,A reviewer is involved in review process by the act of writing reviews.,reviewer,,writes

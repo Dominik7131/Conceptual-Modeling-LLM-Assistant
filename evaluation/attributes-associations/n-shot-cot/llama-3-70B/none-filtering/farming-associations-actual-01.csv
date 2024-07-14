@@ -1,0 +1,32 @@
+Generated association,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches association
+has,farmer,farmer,name,"A farmer is an individual engaged in agriculture, growing and harvesting crops, and is identified uniquely by a name that is used to refer to the farmer from various documentation, statistical reporting, etc..",,name,
+owns,farmer,farmer,machinery,"Farmers own machinery, which reflects their capacity for mechanized farming, and conduct planting activities, crucial for management and accountability.",machinery,,*
+farms on,farmer,farmer,field,"They also farm on fields, undertaking not only crop cultivation but also soil preparation.",field,,farms on
+harvests,farmer,farmer,harvest,"The harvested crops are connected to the farmer responsible for the harvest and who evaluates the harvest's quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",harvest,,harvested by
+has,farmer,farmer,age,The age of a farmer in years is used mainly for statistical and reporting purposes.,,age,
+grows,crop,farmer,crop,...growing and harvesting crops...,crop,,*
+involves,crop,planting,crop,"...involving particular crops, highlighting the variety of crops and their cultivation requirements during the planting process...",planting,,involves crop
+is harvested,crop,crop,harvest,...the harvested crops are connected to the farmer responsible for the harvest...,harvest,,*
+is grown on,crop,crop,field,...Fields are areas of land used for growing crops...,field,,*
+requires,crop,crop,irrigation,...the water needs of the crops...,,*,
+requires,crop,crop,amendment,...the types of amendments needed for optimal growth...,,*,
+can be cultivated,crop,field,crop,...the types of crops that can be successfully cultivated...,field,,*
+is a,crop,crop,plant,...Crops are plants cultivated in large amounts for profit or subsistence...,,,*
+owns,machinery,farmer,machinery,"Farmers own machinery, which reflects their capacity for mechanized farming...",machinery,,*
+used for,machinery,machinery,planting,...a piece of machinery is used for planting. This links machinery like planters and some types of tractors that are specifically outfitted for or used during the planting of crops.,planting,,used for planting
+used for,machinery,machinery,harvesting,"Similarly, a piece of machinery can be used for harvesting. This is specific to machinery like combines, harvesters, and other equipment that is primarily utilized to collect and process crops at the end of their growing cycle.",harvest,,used for harvesting
+used for,machinery,machinery,field preparation,"Finally, a piece of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting.",planting,,used for field preparation
+has,machinery,machinery,manufacturing information,"The year of manufacturing and model of the machinery indicate its age and potential modernity in technology, and influencing its functionality and suitability for specific tasks.",,-year of manufacturing;model,
+results in,harvest,planting,harvest,"Each planting activity results in a harvest, establishing a critical link for tracing agricultural output back to its origins, which aids in analyzing planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.",planting,,results in harvest
+is connected to,harvest,harvest,farmer,"The harvested crops are connected to the farmer responsible for the harvest and who evaluates the harvest's quality and quantity of the harvested crop, essential for market transactions and crop performance analysis.",farmer,,harvested by
+is collected,harvest,harvest,date/period,The specific date or period when the harvest is collected is crucial for maximizing yield and quality.,,harvest date,
+is crucial for,harvest,harvest,market acceptance/consumer satisfaction,High-quality harvests are crucial for market acceptance and consumer satisfaction.,,,
+has quantity,harvest,harvest,quantity,"The total quantity of the harvest, measured in kilograms, is crucial for determining the productivity and success of the crop.",,quantity,
+farms on,field,farmer,field,"They also farm on fields, undertaking not only crop cultivation but also soil preparation.",farmer,,farms on
+is performed on,field,planting,field,"Planting activities are performed on specific fields where it occurs, indicating the location of agricultural operations and facilitating field-specific crop management, and involve particular crops, highlighting the variety of crops and their cultivation requirements during the planting process.",planting,,performed on
+has,field,field,characteristics,Fields are areas of land used for growing crops that can but does not have to be surrounded by a fence and are described by several characteristics.,,*,
+is prepared by,field,field,machinery,"...a piece of machinery, such as tractors equipped with specific attachments, are used to prepare the field for planting.",machinery,,*
+involves,planting,planting,crop,"Planting activities are performed on specific fields where it occurs, indicating the location of agricultural operations and facilitating field-specific crop management, and involve particular crops, highlighting the variety of crops and their cultivation requirements during the planting process.",crop,,involves crop
+results in,planting,planting,harvest,"Each planting activity results in a harvest, establishing a critical link for tracing agricultural output back to its origins, which aids in analyzing planting strategies, the impact of environmental conditions, and the overall productivity of agricultural practices.",harvest,,results in harvest
+performed on,planting,planting,field,"Planting activities are performed on specific fields where it occurs, indicating the location of agricultural operations and facilitating field-specific crop management...",field,,performed on
+uses,planting,planting,machinery,It is important to know that a specific piece of machinery is used for planting. This links machinery like planters and some types of tractors that are specifically outfitted for or used during the planting of crops.,machinery,,used for planting

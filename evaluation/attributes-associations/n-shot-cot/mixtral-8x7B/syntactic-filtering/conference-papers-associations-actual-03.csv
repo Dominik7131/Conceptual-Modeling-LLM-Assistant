@@ -1,0 +1,28 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+has,research paper,research paper,title,"A research paper has several defining aspects: a title, ...",,title,
+has,research paper,research paper,abstract,"A research paper has several defining aspects: a title, an abstract, ...",,abstract,
+has,research paper,research paper,publication year,"A research paper has several defining aspects: a title, an abstract, ...",,publication year,
+linked to,research paper,research paper,conference,"Each research paper is also linked to a conference where it was presented, ...",conference,,presented at
+written by,research paper,research paper,author,A research paper is written by one or more authors.,author,,written by
+of,research paper,submission,research paper,Submissions are acts of submitting a research paper for consideration at a conference.,submission,,has submission
+of,research paper,submission,research paper,"A submission of a research paper is a crucial stage in the research paper's life, as it represents the paper in the conference review process.",submission,,has submission
+is,research paper,research paper,latest submission,"Importantly, if a research paper is resubmitted, the latest submission is the one that's considered for evaluation.",submission,,*
+contributes to,author,author,research paper,Authors are individuals who significantly contribute to creating research papers.,research paper,,written by
+involved in,author,author,reviewing process,An author is a person involved in the reviewing process with a name and an email address.,,,*
+has,author,author,institutional affiliation,"Moreover, the author has an institutional affiliation, which tells us where they work or study.",,affiliation,
+has role,author,author,corresponding author,"Among the authors, there's a special role known as the corresponding author, who acts as the main contact point for a research paper.",,,*
+has,conference,conference,name,Every conference has a name,,conference name,
+has,conference,conference,location,Every conference has a location,,location,
+has,conference,conference,year,Every conference has a specific year,,year,
+linked to,conference,research paper,conference,linked to a conference where it was presented,research paper,,presented at
+connected to,conference,submission,conference,connected to the conferences to which they are submitted,submission,,submitted to
+has,submission,submission,submission date,Submissions have a submission date,,submission date,
+has,submission,submission,status,"and a status, which tells us if it's under review, accepted, or rejected.",,status,
+connected to,submission,submission,conference,They are also connected to the conferences to which they are submitted.,conference,,submitted to
+is,submission,research paper,submission,"if a research paper is resubmitted, the latest submission",,,
+responsible for,reviewer,reviewer,submission,Reviewers are responsible for evaluating the quality and relevance of submissions.,submission,,reviewed by
+is a,reviewer,reviewer,person,A reviewer is a person that has a name and email.,person,,*
+has,reviewer,reviewer,expertise area,"Moreover, the reviewer has expertise area, highlighting their specialized knowledge in which they review submissions.",,expertise,
+writes,reviewer,reviewer,review,"They write reviews, which are evaluations or critiques of research papers.",review,,writes
+writes,review,reviewer,review,"They write reviews,",reviewer,,writes
+linked to,review,review,submission,"A review is linked to the submission it evaluates,",submission,,reviews

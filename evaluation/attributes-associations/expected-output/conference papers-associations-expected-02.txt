@@ -1,0 +1,108 @@
+Class: research paper
+1) written by
+- original text: It forms the connection between a research paper and its authors, indicating who wrote the paper.
+- source class: research paper
+- target class: author
+
+
+2) has corresponding author
+- original text: one of them is designated as the corresponding author. This designation is crucial in the academic world as it specifies the primary point of contact for the research paper.
+- source class: author
+- target class: research paper
+
+
+3) has submission
+- original text: Submissions of research papers
+- source class: research paper
+- target class: submission
+
+
+4) presented at
+- original text: research papers are presented Each research paper is closely tied to a conference where it is presented, creating a link between the event and the written work
+- source class: research paper
+- target class: conference
+
+
+Class: author
+1) written by
+- original text: It forms the connection between a research paper and its authors, indicating who wrote the paper.
+- source class: research paper
+- target class: author
+
+
+2) has corresponding author
+- original text: one of them is designated as the corresponding author. This designation is crucial in the academic world as it specifies the primary point of contact for the research paper.
+- source class: author
+- target class: research paper
+
+
+Class: conference
+1) submitted to
+- original text: and a connection to the conference it's submitted to
+- source class: submission
+- target class: conference
+
+
+2) presented at
+- original text: research papers are presented Each research paper is closely tied to a conference where it is presented, creating a link between the event and the written work
+- source class: research paper
+- target class: conference
+
+
+Class: submission
+1) submitted to
+- original text: and a connection to the conference it's submitted to
+- source class: submission
+- target class: conference
+
+
+2) reviewed by
+- original text: A reviewer, responsible for evaluating the quality and relevance of research paper submissions
+- source class: submission
+- target class: reviewer
+
+
+3) has submission
+- original text: Submissions of research papers
+- source class: research paper
+- target class: submission
+
+
+4) reviews
+- original text: for submissions
+- source class: review
+- target class: submission
+
+
+5) is resubmission of
+- original text: Importantly, submissions can be resubmissions, indicating an ongoing process of refinement and re-evaluation.
+- source class: submission
+- target class: submission
+
+
+Class: reviewer
+1) reviewed by
+- original text: A reviewer, responsible for evaluating the quality and relevance of research paper submissions
+- source class: submission
+- target class: reviewer
+
+
+2) writes
+- original text: Reviewers write reviews
+- source class: reviewer
+- target class: review
+
+
+Class: review
+1) writes
+- original text: Reviewers write reviews
+- source class: reviewer
+- target class: review
+
+
+2) reviews
+- original text: for submissions
+- source class: review
+- target class: submission
+
+

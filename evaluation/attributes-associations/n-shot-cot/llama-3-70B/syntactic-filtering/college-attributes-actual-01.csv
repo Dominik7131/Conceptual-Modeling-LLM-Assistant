@@ -1,0 +1,67 @@
+Generated attribute,Source class,Generated original text,Matches class,Matches attribute,Matches relationship
+accreditation,study programme,a faculty implements at least one accredited study programme,faculty,,implements study programme
+type,study programme,"The types of study programmes are bachelor, master and doctoral.",,programme type,
+name,study programme,A study programme is characterised by the name of the study programme,,programme name,
+objectives,study programme,"and also by the type, and objectives of study in the study programme.",,programme objectives,
+profile,study programme,"In the case of a Bachelor's or Master's degree programme, it is also characterised by a description of the profile of the graduate of the study programme.",,-:bachelor profile description;:master profile description,
+standard period of study,study programme,The study programme must have a standard period of study with an average study load expressed in academic years.,,standard period of study,
+degree,study programme,The degree awarded to graduates shall also be specified for the study programme.,,awarded degree,
+subject,study programme,Subject of study shall be taught within the study programme.,subject,,taught within
+curriculum,study programme,Their sequence in time within the study programme is determined by the curriculum of the study programme.,curriculum,,has curriculum
+form of study,study programme,"For the full-time form of study, the curriculum is created within the framework of a programme of study",form of study,,*
+field of education,study programme,A study programme belongs to only one field of education,education field,,belongs to field
+guarantor,study programme,The guarantor may only be an academic staff who meets the conditions laid down in the standards for accreditation of the study programme,,,has study programme guarantor
+goal,bachelor study programme,The Bachelor's degree study programme is aimed at preparing students for the profession and for study in a Master's degree programme.,,*,
+duration,bachelor study programme,"The standard period of study, including work experience, is a minimum of three and a maximum of four years.",,:standard period of study,
+final examination,bachelor study programme,"The studies of a student in the Bachelor's degree study programme is duly completed by a state final examination, which usually includes the defense of the bachelor's thesis.",bachelor state final examination,,completed by bachelor state final examination
+type,bachelor study programme,...in the Bachelor's degree study programme...,,:programme type,
+graduate profile,bachelor study programme,...a description of the profile of the graduate of the study programme.,,bachelor profile description,
+profile of the graduate,master study programme,"Master's degree programme, it is also characterised by a description of the profile of the graduate of the study programme.",,master profile description,
+standard period of study,master study programme,The study programme must have a standard period of study with an average study load expressed in academic years.,,:standard period of study,
+aim,master study programme,"The Master's degree study programme is aimed at acquiring theoretical and practical knowledge based on the current state of scientific knowledge, research and development, at mastering their application and at developing skills for creative activity;",,*,
+focus,master study programme,"in the field of art, it is focused on demanding artistic training and the development of talent.",,*,
+preceding programme,master study programme,The Master's degree programme is a follow-up to the Bachelor's degree programme;,bachelor study programme,,*
+standard duration,master study programme,the standard duration of this programme is at least one and not more than three years.,,:standard period of study,
+completion requirements,master study programme,"The studies of a student in the Master's degree study programme are duly completed by a state final examination, which includes the defence of the diploma thesis.",master state final examination,,completed by master state final examination
+awarded degrees,master study programme,The following academic degrees are awarded to graduates of master's degree programmes:,,:awarded degree,
+subject areas,subject,basic subject areas belonging to one field of education,,,*
+subject areas,subject,core subject areas belonging to more than one field of education,,,*
+subject board,subject,subject board established in accordance with the internal regulations of the public college,,,
+form,subject,"in the form of lecture, tutorial, seminar, proseminar, course, practical training, internship, special course, laboratory class, field trip, fieldwork, individual work, or consultation",,form of teaching,
+implementation type,subject,"implemented in a full-time, distance learning, or combined form",,form of implementation,
+duration,subject,one or two semesters in the same academic year,,number of semesters,
+identification code,subject,an identification code which is unique within the college,,*,
+credits,subject,the number of assigned credits,,number of assigned credits,
+form of teaching,subject,the form of teaching,,form of teaching,
+form of assessment,subject,the form of assessment of study,,*,
+curriculum,subject,part of the curricula of one or more programmes of study,curriculum,,is part of curriculum
+type,subject,compulsory or elective for students,,,*
+group,subject,one or more groups of elective subjects in the curricula,elective subjects group,,stipulates elective subjects
+prerequisites,subject,"the registration for a given subject has as a prerequisite the completion of another subject or subjects, or simultaneous registration for another subject or subjects",subject,,-registration has completion prerequisite;registration has simultaneous registration prerequisite
+exclusions,subject,the registration for a given subject is excluded by the simultaneous registration for another subject,subject,,registration excluded by simultaneous registration
+assessment,subject,the verification of completion of the subject by the student,subject completion assessment,,assesses completion of
+assessment forms,subject,The forms of this assessment are:,,,*
+deadline,subject,by the end of the examination period of the summer semester of the academic year,,,
+examiner,subject,"an examiner, who is always an academic member of staff",,,*
+storage period,subject,at least until the end of the following academic year,,,
+assessment type,subject,"an independent assessment of the subject, or may represent a prerequisite for taking an examination in the given subject",,*,
+grade,subject,"graded as ""pass""-""fail"" or ""credited""-""not credited""",,,
+completion status,subject,"the classification ""pass"" or ""credited""",,,
+grade,subject,"graded as ""excellent"", ""very good"", ""good"", and ""fail""",,,
+completion status,subject,"the classification ""excellent"", ""very good"", and ""good""",,,
+description,subject,the description of the subject and published in electronic form,,*,
+examination form,subject,"oral, written, practical, or combined",,*,
+assessment mode,subject,"remotely, either in part or in full, using information and communication technologies",,,
+completion status,subject completion assessment,verification of completion of the subject by the student,,*,
+classification,subject completion assessment,"classification ""pass"" or ""credited""",,results grade,
+examination result,subject completion assessment,results of examination,,results grade,
+course credit,subject completion assessment,graded course credit,,,
+grade,subject completion assessment,"graded as ""excellent"", ""very good"", ""good"", and ""fail""",,results grade,
+classification,subject completion assessment,"classification ""excellent"", ""very good"", and ""good""",,results grade,
+type,examination,state examinations,,,*
+degree,examination,The studies of a student in the Bachelor's degree study programme is duly completed by a state final examination,,,
+form,examination,The forms of this assessment are: e) examination; or,,,
+period,examination,The assessment of study of a subject registered in a given unit of study may not be carried out later than by the end of the examination period of the summer semester of the academic year in which the student studied in the given unit of study.,,,
+result,examination,"The results of examination and graded course credit are graded as ""excellent"", ""very good"", ""good"", and ""fail"".",,:results grade,
+requirement,examination,An examination tests the student’s knowledge or his ability; the basic requirements for the examination are in accordance with the curriculum provided in the description of the subject and published in electronic form.,,*,
+format,examination,"The forms of examination are oral, written, practical, or combined.",,form of examination,

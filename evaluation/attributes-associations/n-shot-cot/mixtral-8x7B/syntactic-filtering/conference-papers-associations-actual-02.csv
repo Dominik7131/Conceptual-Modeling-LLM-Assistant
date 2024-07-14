@@ -1,0 +1,26 @@
+Generated relationship,Inputed class,Source class,Target class,Generated original text,Matches class,Matches attribute,Matches relationship
+presents,research paper,research paper,original research findings,"It's essentially a document presenting original research findings,",,,*
+closely tied to,research paper,research paper,conference,"Each research paper is closely tied to a conference where it is presented,",conference,,presented at
+acts as a bridge,research paper,submission,research paper,The submission acts as a bridge between the research paper and the conference.,submission,,has submission
+have significantly contributed to,research paper,authors,research paper,"From an academic's point of view, authors are individuals who have significantly contributed to the creation of a research paper.",author,,written by
+forms the connection,research paper,designation,research paper,"It forms the connection between a research paper and its authors,",,,
+responsible for evaluating,research paper,reviewer,research paper,"A reviewer, responsible for evaluating the quality and relevance of research paper submissions,",reviewer,,reviewed by
+contributes to,author,author,research paper,"authors are individuals who have significantly contributed to the creation of a research paper. It forms the connection between a research paper and its authors, indicating who wrote the paper.",research paper,,written by
+has,author,author,affiliation,"Each author has an affiliation, often an academic institution, and one of them is designated as the corresponding author.",,affiliation,
+designated as,author,author,corresponding author,This designation is crucial in the academic world as it specifies the primary point of contact for the research paper.,,,*
+parallel to,author,author,reviewer,"Parallel to authors are reviewers, a subgroup of the broader category of persons involved in the conference reviewing process.",,,
+presented at / discussed at,conference,conference,research paper,"Viewed as an event where research papers are presented and discussed, a conference is a pivotal element in academic discourse. It holds a specific year and location, signifying when and where these intellectual gatherings take place. The conference name is a unique identification of the conference in the scientific community.",research paper,,presented at
+tied to,conference,conference,research paper,"Each research paper is closely tied to a conference where it is presented, creating a link between the event and the written work.",research paper,,presented at
+associated with,conference,conference,submission,The submission acts as a bridge between the research paper and the conference.,submission,,submitted to
+connection to,conference,conference,submission,"Submissions of research papers have their own unique lifecycle, marked by a submission date, a status indicating where it stands in the review process (like under review, accepted, or rejected), and a connection to the conference it's submitted to.",submission,,submitted to
+part of,conference,conference,person,"Parallel to authors are reviewers, a subgroup of the broader category of persons involved in the conference reviewing process.",person,,*
+involved in,conference,conference,person,"Finally, the person is a general category encompassing all individuals involved in the conference reviewing process.",person,,*
+acts as a bridge,submission,submission,research paper,The submission acts as a bridge between the research paper and the conference.,research paper,,has submission
+has,submission,submission,submission date,"Submissions of research papers have their own unique lifecycle, marked by a submission date",,submission date,
+has,submission,submission,status,"Submissions of research papers have their own unique lifecycle, marked by a status indicating where it stands in the review process",,status,
+submitted to,submission,submission,conference,"Submissions of research papers have their own unique lifecycle, marked by a connection to the conference it's submitted to.",conference,,submitted to
+can be,submission,submission,resubmissions,"Importantly, submissions can be resubmissions",,,is resubmission of
+evaluates,reviewer,reviewer,research paper submission,"A reviewer is responsible for evaluating the quality and relevance of research paper submissions,",submission,,reviewed by
+writes,reviewer,reviewer,review,Reviewers write reviews for submissions.,review,,writes
+reviewers are a subgroup of,review,review,person,"Parallel to authors are reviewers, a subgroup of the broader category of persons involved in the conference reviewing process.",person,,*
+evaluation of,review,review,research paper,"The review is another crucial element, acting as an evaluation or critique of a research paper.",research paper,,*
