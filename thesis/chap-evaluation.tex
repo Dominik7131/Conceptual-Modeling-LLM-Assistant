@@ -1,7 +1,7 @@
 \chapter{Experimental evaluation}
 \label{chap:evaluation}
 
-Now we evaluate the proposed configurations from the chapter \ref{chap:framework_configuration} that we implemented in the chapter \ref{chap:protype_software_application}. First, we describe the data that we used for evaluation. Then, we evaluate our RAG approaches, the generated suggestions of domain elements, and the generated descriptions. Finally, we present results of our user-based evaluation of our prototype application. All our evaluated data can be found in the \textit{evaluation} directory\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/evaluation}}.
+Now we evaluate some of the proposed configurations from chapter \ref{chap:framework_configuration} that we implemented in chapter \ref{chap:protype_software_application}. First, we describe the data that we used for the evaluation. Then, we evaluate our RAG approaches, the generated suggestions of domain elements, and the generated class descriptions. Finally, we present results of our user-based evaluation of our prototype application. All of our evaluated data can be found in the \textit{evaluation directory}\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/343b45096eb6e833f453a2fa4f51c55eb01eb39f/evaluation}}.
 
 
 \section{Evaluation domains}
@@ -93,7 +93,7 @@ In the section \ref{sec:rag_configurations}, we introduced our semantic and synt
     \begin{tabular}{lcccc}
 
     \toprule
-         & Recall classes & Recall attributes & Recall associations & Precision \\
+       Configuration & Recall classes & Recall attributes & Recall associations & Precision \\
     \toprule
     
     \addlinespace
@@ -126,35 +126,27 @@ Running a LLM requires a lot of resources, therefore frequently using a LLM thro
 
 \subsection{Limitations}
 
-Because of our hardware limitation we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium-sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter. To compare these LLMs with currently one of the best LLM, we use \textit{ChatGPT-4o} through the OpenAI's web user interface. However, as there is a limit on how many times it can be used and as we cannot connect this LLM into our application directly, we used this LLM only for evaluation of generated classes. Also, we cannot set the LLM's temperature.
+Because of our hardware limitation we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium-sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter. To compare these LLMs with currently one of the best LLM, we use ChatGPT-4o through the OpenAI's web user interface. However, as there is a limit on how many times it can be used and as we cannot connect this LLM into our application directly, we used this LLM only for evaluation of generated classes. Also, we cannot set the LLM's temperature or even get the value of the temperature.
 
 
 \subsection{Mixtral-8x7B}
 
-\emph{Mixtral-8x7B} has the context window size of 32k tokens and it outperforms or matches \emph{ChatGPT-3.5} across many benchmarks \cite{Jiang2024}. This LLM has in total 47B parameters, which are distributed among 8 experts. To achieve faster output generation, for each generated token 2 of the 8 experts are selected. The selection of the experts can be different for each token \cite{Jiang2024}.
+Mixtral-8x7B has the context window size of 32k tokens and it outperforms or matches ChatGPT-3.5 across many benchmarks \cite{Jiang2024}. This LLM has in total 47B parameters, which are distributed among 8 experts. To achieve faster output generation, for each generated token 2 of the 8 experts are selected. The selection of the experts can be different for each token \cite{Jiang2024}.
 
 
 \subsection{Llama-3-70B}
 
-\emph{Llama-3-70B} has an 8k tokens context window size and as of writing this thesis, it is the state-of-the-art LLM at the 70B parameters scale according to its authors\footnote{\url{https://ai.meta.com/blog/meta-llama-3/}}.
+Llama-3-70B has an 8k tokens context window size and as of writing this thesis, it is the state-of-the-art LLM at the 70B parameters scale according to its authors\footnote{\url{https://ai.meta.com/blog/meta-llama-3/}}.
 
 
 \subsection{ChatGPT-4o}
 
-\emph{ChatGPT-4o} is an OpenAI's LLM that has 128k context window size according to the OpenAI's documentation\footnote{\url{https://platform.openai.com/docs/models/gpt-4o}}. OpenAI states that it is their most advanced model however, the number of parameters is not officially published.
-
-
-%\section{Limitations}
-%
-%\begin{itemize}
-%\item we used one domain modeling expert for evaluating attributes and associations, we used one student for evaluating classes, and domain elements descriptions
-%\item we did preliminary experiments on most of the configurations with one middle sized domain description and then used more domain descriptions for the most promising configurations
-%\end{itemize}
+ChatGPT-4o is an OpenAI's LLM that has 128k context window size according to the OpenAI's documentation\footnote{\url{https://platform.openai.com/docs/models/gpt-4o}}. OpenAI states that it is their most advanced model however, the number of parameters is not officially published.
 
 
 \section{Evaluation of generated domain elements}
 
-First, we describe the rules for evaluating the domain elements then we present a preliminary evaluation where we evaluate generated attributes and associations with many different configurations of prompting techniques, RAG approaches, and LLMs with the domain description \textit{zoological gardens}. Then, we select the most promising configurations and evaluate them on all our other domain descriptions.
+First, we describe the rules for evaluating the domain elements then we present a preliminary evaluation where we evaluate generated attributes and associations with many different configurations of prompting techniques, RAG approaches, and LLMs with the domain description \textit{zoological gardens}. Then, we evaluate similar configurations for generated classes but across all our domain descriptions. Finally, we select the most promising configurations and we evaluate them all together on all our domain descriptions.
 
 
 \subsection{Manual assessment of generated suggestions}
@@ -169,7 +161,7 @@ If the question \emph{Can we model $X$ also as $X'$?} can be answered positively
     \centering
     \setlength{\tabcolsep}{0.5em}
     \begin{tabular}{lccc}
-                     & \emph{Matches class}        & \emph{Matches attribute} & \emph{Matches association} \\
+             & Matches class & Matches attribute & Matches association \\
 \toprule
 \addlinespace
         $gen_c(T)$   & $name(X)$ $\vert$ * $\vert$ & \emph{N/A}  & \emph{N/A} \\
@@ -278,10 +270,66 @@ minor defect & road vehicle &  a minor defect which does not significantly affec
 \end{table}
 
 
-\subsection{Preliminary evaluation results for attributes and associations}
+\subsubsection{Precision and Recall Measures Definition}
+
+For the given domain description $T$ and its reference model $M$ $=$ $({\cal C}, {\cal P})$, let ${\cal C}'$ $=$ $gen_c(T)$ be the set of all suggested classes, ${\cal P}'$ $=$ $\bigcup_{C \in {\cal C}} gen_a(C,T)$ $\cup$ $\bigcup_{C \in {\cal C}} gen_{r1}(C,T)$ the set of all suggested properties, and $M'$ $=$ $({\cal C'}, {\cal P}')$ the suggested model.
+Let $eval_c(X')$, $eval_a(X')$, and $eval_r(X')$ denote the assessment recorded for $X'$ in columns \emph{Matches class/attribute/association}, respectively.
+We distinguish the following matching functions ${\cal C}' \cup {\cal P}'$ $\times$ ${\cal C} \cup {\cal P}$ $\rightarrow$ $\{\mathtt{True}, \mathtt{False}\}$:
+\begin{itemize}
+    \item $matches_{strict}(X',X)$ iff $X$ is a class, $X'$ is a suggested class, and $eval_c(X')$ $=$ $name(X)$ (similarly for attributes and associations),
+    \item $matches_{constr}(X',X)$ iff $eval_{c \vert a \vert r}(X')$ $=$ $name(X)$ for a suggestion $X'$.
+    \item $matches_{isa}(X',X)$ iff $matches_{constr}(X',X)$, or $eval_{a \vert r}(X')$ $=$ :$name(X)$ for a property $X$,
+    \item $matches_{list}(X',X)$ iff $matches_{isa}(X',X)$, or $eval_{c \vert a \vert r}(X')$ is a list containing $name(X)$ or :$name(X)$.
+\end{itemize}
+
+These functions allow us to distinguish different levels of strictness in determining how much the suggestions must conform to the reference model $M$.
+The variant \emph{strict} (shortcut $strict$) requires that the suggestion $X'$ exactly corresponds to $X$, including the correspondence of the suggested modeling construct to the construct actually used in $M$.
+The variant \emph{modeling construct agnostic} (shortcut $constr$) relaxes the need to use the exact modeling constructs.
+It supports situations where an attribute is suggested instead of association or vice versa and where a class is suggested as a part of attribute or association suggestion.
+The variant \emph{ISA agnostic} (shortcut $isa$) relaxes the exact match in the inheritance hierarchy where a property is suggested for a subclass or superclass of the class in $M$.
+The variant \emph{list agnostic} (shortcut $list$) relaxes the need to identify individual properties instead of an umbrella property.
+The last two variants $isa$ and $list$ add relaxations only for properties, not for classes.
+
+With these matching functions, we define different recall and precision variants.
+Recall measures to what extent $M'$ covers $M$ considering the different levels of strictness.
+For classes, it is expressed as
+
+%\[R^c_\Box(M',M) = \frac{\sum_{X \in {\cal C}}covered_\Box(M',X)}{\vert {\cal C} \vert}\]
+
+\[R^{\cal C}_\Box(M',M) = \frac{\vert \{X \in {\cal C}: (\exists X' \in M')(matches_\Box(X',X))\} \vert}{\vert {\cal C} \vert}\]
+
+\noindent which is the number of reference classes for which there exists a matching suggestion based on manual evaluation compared to the total number of reference classes.
+The strictness of the matching is given by the chosen matching function.
+Similarly, we define the recall for attributes and associations.
+
+Precision measures the correctness of $M'$.
+$M'$ is correct if each $X'$ $\in$ $M'$ is correct.
+$X'$ is correct if it matches some $X$ $\in$ $M$ or if it does not match any $X$ $\in$ $M$ but it is still meaningful compared to $T$ which is recorded in the evaluation tables with the * symbol.
+For this, we introduce the following auxiliary functions ${\cal C}' \cup {\cal P}'$ $\rightarrow$ $\{\mathtt{True}, \mathtt{False}\}$ to consider also the asterisk symbols in the evaluation:
+\begin{itemize}
+    \item $matches^*_{strict}(X')$ iff $X'$ is a suggested class, and $eval_c(X')$ $=$ * (similarly for attributes and associations)
+    \item $matches^*_{constr}(X')$ iff $eval_{c \vert a \vert r}(X')$ $=$ *
+    \item $matches^*_{isa}(X')$ iff $matches^*_{constr}(X')$, or $eval_{c \vert a \vert r}(X')$ $=$ :*
+    \item $matches^*_{list}(X')$ iff $matches^*_{isa}(X')$, or $eval_{c \vert a \vert r}(X')$ is a list with * or :*
+\end{itemize}
+
+For classes, the precision is expressed as
+
+\[P^c_\Box(M',M) = \frac{\vert \{X' \in {\cal C}': (\exists X \in C)(matches_\Box(X',X)) \lor matches^*_\Box(X') \}\vert}{\vert {\cal C'} \vert}\]
+
+\noindent which is the number of generated class suggestions that match some reference class or any meaningful element that does not exist in the reference model compared to the total number of suggested classes.
+For classes, the precision is strict in the need to match the class suggestion to a reference class.
+The precision for attributes is defined as
+
+\[P^a_\Box(M',M) = \frac{\vert \{X' \in {\cal A}': (\exists X \in {\cal P})(matches_\Box(X',X)) \lor matches^*_\Box(X') \}\vert}{\vert {\cal A'} \vert}\]
+
+\noindent and similarly for associations. For attributes and associations, the precision requires the match of a property suggestion to a reference property.
+
+
+\subsection{Preliminary evaluation for attributes and associations}
 \label{sec:preliminary_attributes_associations}
 
-The table \ref{tab:preliminary-mixtral} shows preliminary results for generating attributes and associations with \emph{Mixtral-8x7B} and the table \ref{tab:preliminary-llama} shows preliminary results for generating attributes and associations with \emph{Llama-3-70B}. For the associations, we only evaluated the scenarios where either the source class or the target class is provided but not both.
+For the preliminary evaluation we show results only for the \textit{strict} variation. The table \ref{tab:preliminary-mixtral} shows preliminary results for generating attributes and associations with the Mixtral-8x7B and the table \ref{tab:preliminary-llama} shows preliminary results for generating attributes and associations with the Llama-3-70B. For the associations, we evaluated only the scenarios where either the source class or the target class was provided but not where both the source class and the target class were provided since these tasks are very similar and should provide similar results.
 
 \begin{table}[!h]
     \scriptsize
@@ -291,7 +339,7 @@ The table \ref{tab:preliminary-mixtral} shows preliminary results for generating
     \toprule
          & & Attributes & & & Associations & \\
      \toprule
-         & Recall & Precision & $F_1$ & Recall & Precision & $F_1$ \\
+        Configuration & Recall & Precision & $F_1$ & Recall & Precision & $F_1$ \\
     \toprule
     
     \addlinespace
@@ -322,9 +370,9 @@ The table \ref{tab:preliminary-mixtral} shows preliminary results for generating
     \setlength{\tabcolsep}{0.5em}
     \begin{tabular}{lcccccc}
     \toprule
-         & & Attributes & & & Associations & \\
+        & & Attributes & & & Associations & \\
      \toprule
-         & Recall & Precision & $F_1$ & Recall & Precision & $F_1$ \\
+        Configuration & Recall & Precision & $F_1$ & Recall & Precision & $F_1$ \\
     \toprule
     
     \addlinespace
@@ -348,7 +396,7 @@ The table \ref{tab:preliminary-mixtral} shows preliminary results for generating
     \label{tab:preliminary-llama}
 \end{table}
 
-We can see that with \emph{Mixtral-8x7B} the RAG improves the $F_1$ score for attributes and associations mostly by improving the precision. However, in the case of \emph{Llama-3-70B} the RAG does not seem to have any noticeable effect probably because the \emph{Llama-3-70B} is able to find attributes and associations without the domain description filtering when working with the \textit{zoological gardens} domain description which has almost 1000 words since the baseline approach without domain description filtering already achieves a high recall and precision. %The baseline prompting technique is the most inconsistent as it has one of the worst $F_1$ scores every time except for the case with \emph{Llama-3-70B} for attributes where it achieves the best $F_1$ score.
+We can see that with the Mixtral-8x7B the RAG improves the $F_1$ score for attributes and associations mostly by improving the precision. However, in the case of the Llama-3-70B the RAG does not seem to have any noticeable effect probably because the Llama-3-70B is able to find attributes and associations without the domain description filtering when working with the \textit{zoological gardens} domain description which has almost 1000 words since the baseline approach without domain description filtering already achieves a high recall and precision. %The baseline prompting technique is the most inconsistent as it has one of the worst $F_1$ scores every time except for the case with \emph{Llama-3-70B} for attributes where it achieves the best $F_1$ score.
 
 At first, our proposed techniques do not show any significant improvement but when we look at their average $F_1$ scores in the table \ref{tab:F1_attributes_associations_average}, we see that the CoT+N-shot configuration gives consistently good results therefore, in the section \ref{sec:overall_evaluation} we focus on this prompting technique and evaluate it with all our domain descriptions.
 
@@ -359,7 +407,7 @@ At first, our proposed techniques do not show any significant improvement but wh
     \setlength{\tabcolsep}{0.5em}
     \begin{tabular}{lc}
      \toprule
-         & $F_1$ average \\
+        Configuration & $F_1$ average \\
     \toprule
     
     \addlinespace
@@ -384,9 +432,9 @@ At first, our proposed techniques do not show any significant improvement but wh
 \end{table}
 
 
-\subsection{Classes evaluation results}
+\subsection{Classes evaluation}
 
-For generating class suggestions by the generator $gen_c$ the table \ref{tab:mixtral-classes} shows results for the \emph{Mixtral-8x7B}, the table \ref{tab:llama-classes} shows results for the \emph{Llama-3-70B}, and the table \ref{tab:chatgpt-classes} shows result for the \emph{ChatGPT-4o}.
+For generated classes the table \ref{tab:mixtral-classes} shows results for the Mixtral-8x7B, the table \ref{tab:llama-classes} shows results for the Llama-3-70B. Both these tables present the results only for the \emph{strict} variation.
 
 \begin{table}[!h]
     \scriptsize
@@ -396,7 +444,7 @@ For generating class suggestions by the generator $gen_c$ the table \ref{tab:mix
     \toprule
          & & Classes & \\
      \toprule
-         & Recall & Precision & $F_1$ \\
+        Configuration & Recall & Precision & $F_1$ \\
     \toprule
     
     \addlinespace
@@ -422,7 +470,7 @@ For generating class suggestions by the generator $gen_c$ the table \ref{tab:mix
     \toprule
     & & Classes & \\
     \toprule
-         & Recall & Precision & $F_1$ \\
+        Configuration & Recall & Precision & $F_1$ \\
     \toprule
     
     \addlinespace
@@ -440,6 +488,37 @@ For generating class suggestions by the generator $gen_c$ the table \ref{tab:mix
 \end{table}
 
 
+
+
+As we can see, the CoT and CoT+N-shot variations have the worst $F_1$ scores. In these prompting techniques the LLM for each class first generates its original text and then its name while in the other evaluated prompting techniques the LLM for each class generates only its name. Therefore, it seems that generating the original text first lowers the $F_1$ score mainly by decreasing the recall. Therefore, in our application we do not generate original text for the classes. The table \ref{tab:average-classes} shows average $F_1$ scores for the Mixtral-8x7B and the Llama-3-70B combined.
+
+
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+    \begin{tabular}{lc}
+    \toprule
+        Configuration & $F_1$ average \\
+    \toprule
+    
+    \addlinespace
+         baseline   & 0.71 \\
+         CoT        & 0.59 \\
+         N-shot     & \textbf{0.72} \\
+         CoT+N-shot & 0.62 \\
+         ToT        & 0.69 \\
+    \addlinespace
+    \bottomrule
+    \addlinespace
+    \end{tabular}
+    \caption{Average $F_1$ score for Mixtral-8x7B and Llama-3-70B \emph{strict} variation}
+    \label{tab:average-classes}
+\end{table}
+
+As we can see, the N-shot prompting technique has the highest $F_1$ score but it is only slightly higher then using the baseline configuration. To compare the results with one of the best LLMs, we evaluated the three variations with the highest $F_1$ score with the ChatGPT-4o. The table \ref{tab:chatgpt-classes} shows the results.
+
+
 \begin{table}[!h]
     \scriptsize
     \centering
@@ -448,31 +527,28 @@ For generating class suggestions by the generator $gen_c$ the table \ref{tab:mix
     \toprule
     & & Classes & \\
     \toprule
-         & Recall & Precision & $F_1$ \\
+       Configuration & Recall & Precision & $F_1$ \\
     \toprule
     
     \addlinespace
-         baseline    & 0. & 0. & 0. \\
-         N-shot      & 0. & 0. & 0. \\
-         ToT         & 0. & 0. & 0. \\
+         baseline    & 0.65 & 0.94 & \textbf{0.77} \\
+         N-shot      & 0.62 & 0.99 & 0.76 \\
+         ToT         & 0.54 & 0.96 & 0.69 \\
     \addlinespace
     \bottomrule
     \addlinespace
     \end{tabular}
-    \caption{Generated classes evaluation with ChatGPT-4o strict variation only}
+    \caption{Generated classes evaluation with ChatGPT-4o \emph{strict} variation}
     \label{tab:chatgpt-classes}
 \end{table}
 
-\noindent{}TODO: Describe results \\
-
-
-%The common thing is that approaches with CoT achieve high recall but low recall which is than translated into low $F_1$ score + vysvětlení, že jediný generuje jako první original text.
+Surprisingly, the Llama-3-70B with the baseline configuration achieves the same $F_1$ score as the ChatGPT-4o with the baseline configuration. %The N-shot prompting technique achieves a similar $F_1$ score as the baseline.
 
 
 \subsection{Overall evaluation}
 \label{sec:overall_evaluation}
 
-Now we evaluate the classes, attributes, and associations together on all our domain descriptions. As discussed in the section \ref{sec:preliminary_attributes_associations}, for attributes and associations we focus only on the CoT+N-shot prompting technique (TODO: for classes we chose the N-shot prompting technique).
+Now we evaluate the classes, attributes, and associations together on all our domain descriptions. For the classes we focus only on the N-shot prompting technique as it had on average the highest $F_1$ score and for attributes and associations we focus only on the CoT+N-shot prompting technique as discussed in the section \ref{sec:preliminary_attributes_associations}. For RAG approaches, we consider only the syntactic RAG approach and the approach without filtering domain description.
 
 Figures \ref{fig:evaluation-complex-p-r-f1} and \ref{fig:evaluation-simple-f1} summarize the evaluation results with the average $F_1$ score for the analytical, eclectic, and educational domain descriptions and the average precision, recall, and $F_1$ score for the complex domain descriptions separately for classes, attributes, and associations at the four levels of strictness of the matching.
 
@@ -537,10 +613,10 @@ We evaluated generated class descriptions based on the following questions:
 \item $T_1 =$ set containing information about the given class solely based on the given domain description
 \item $T_2 =$ set containing the same information as $T_1$ except for detailed information about attributes and associations of the given class
 \item $D_1 =$ set containing information from the generated class description based on the given class and the given domain description
-\item $D_2 = D_1 \cap T_2 =$ set containing information from the generated class description but without the generated class information that were not solely based on the given class and that contained unrelated information to the given class
+\item $D_2 = D_1 \cap T_2 =$ set containing information from the generated class description but without the generated class information that were not solely based on the given class and that contained unrelated information for the given class
 \end{itemize}
 
-\noindent{}and we define the following rules:
+\noindent{}And we define the following rules:
 \begin{itemize}
 \item for Q1 if $T_1$ and $D_1$ at least almost fully overlap, we assign 1 point, if they have almost no overlap, we assign 0 points, otherwise we assign 0.5 points
 \item for Q2 if the $D_1$ mostly contains information that are related to the given class, we assign 1 point, if the $D_1$ mostly contains unrelated information to the given class, we assign 0 points, otherwise we assign 0.5 points; by related information we mean the information describing the given class but not describing its attributes and associations in detail
@@ -554,11 +630,11 @@ We evaluated generated class descriptions based on the following questions:
 
 \noindent{}and consider the following description for the class \textit{farmer}: \\
 
-\noindent{}\textit{Farmer is an individual.}
+\noindent{}\textit{Farmer is identified uniquely by a name.}
 
 \begin{itemize}
 \item $T_1$ contains the whole domain description
-\item $T_2$ contains the following information: farmer is an individual, farmer is engaged in agriculture, farmer is identified uniquely by a name
+\item $T_2$ contains the following information: farmer is an individual engaged in agriculture, farmer is identified uniquely by a name
 \item $D_1$ and $D_2$ contains the whole generated class description
 \end{itemize}
 
@@ -567,10 +643,10 @@ We evaluated generated class descriptions based on the following questions:
 \begin{itemize}
 \item 1 point for Q1 since $D_1$ and $T_1$ almost fully overlaps in other words, $D_1$ is solely based on the given domain description
 \item 1 point for Q2 since $D_1$ contains information only about the given class and it does not describe its attributes and associations or does not contain any other undesired information
-\item 0 points for Q3 since the overlap of $T_2$ and $D_2$ is very small in other words, $D_1$ is missing a lot of useful information from the domain description such as the class \textit{farmer} is engaged in agriculture and has a name
+\item 0.5 points for Q3 since the overlap of $T_2$ and $D_2$ is about a one half. In other words, $D_1$ is containing one important information that the farmer is uniquely identified by the name but it also misses one important information that the farmer is engaged in agriculture
 \end{itemize}
 
-For each question we summed up all assigned points and divided the result by the total number of classes in the reference model of the given domain description. For evaluation, we used on a simple prompt instructing the LLM to briefly describe the given class in one sentence. For the RAG we used no-filtering, semantic, and syntactic approach and we used only the \emph{zoological gardens}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/d9e00b65a376dbefe5b605bd680621f9f63f9252/manual\%20evaluation\%20domains/zoological\%20gardens/domain-description-00.txt}} domain description.
+For each question we summed up all assigned points and divided the result by the total number of classes from the reference model of the given domain description. For evaluation, we used only a simple prompt instructing the LLM to briefly describe the given class in one sentence. For the RAG we used no-filtering, semantic, and syntactic approach and we used only the \emph{zoological gardens}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/d9e00b65a376dbefe5b605bd680621f9f63f9252/manual\%20evaluation\%20domains/zoological\%20gardens/domain-description-00.txt}} domain description.
 
 \begin{table}[!h]
     \scriptsize
@@ -589,16 +665,21 @@ For each question we summed up all assigned points and divided the result by the
     \bottomrule
     \addlinespace
     \end{tabular}
-    \caption{Class descriptions evaluation with \emph{Mixtral-8x7B}}
+    \caption{Class descriptions evaluation with Mixtral-8x7B}
     \label{tab:mixtral-classes-descriptions}
 \end{table}
 
-Table \ref{tab:mixtral-classes-descriptions} shows the results. As we can see, almost all evaluated class descriptions contained information solely based on the given domain description, provided only the relevant information based on the given class and did not miss any important information. As the baseline approach without RAG achieves already a high score, the RAG does not seem to provide any significant improvement for generating class descriptions. Therefore, we did not use any other LLM to evaluate the same task.
+Table \ref{tab:mixtral-classes-descriptions} shows the results. As we can see, almost all evaluated class descriptions contained information solely based on the given domain description, provided only the relevant information based on the given class and did not miss any important information. As the baseline approach without RAG achieves already a high score, the RAG does not seem to provide any significant improvement for generating class descriptions. Therefore, we did not use any other LLM to evaluate this task.
 
 
 \subsection{Limitations}
 
 The limitations of the class descriptions evaluation are that for each RAG approach we evaluated only 15 class descriptions as the this task needs to be done manually. Also, we used only one simpler domain description that contains a little bit bellow 1000 words.
+
+
+\section{Evaluation scripts}
+
+All the test data for evaluation were automatically generated by the scripts in our repository except for the generated classes from the ChatGPT-4o since we used the OpenAI's web user interface and copied the output manually. Additionally, all the manually filled in data for generated classes, attributes, and associations were automatically evaluated by the scripts in our repository\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/backend/data-processing}}.
 
 
 \section{User-based evaluation of the application}
