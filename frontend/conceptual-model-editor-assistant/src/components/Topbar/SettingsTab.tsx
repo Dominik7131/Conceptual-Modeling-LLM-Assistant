@@ -56,7 +56,6 @@ const SettingsTab: React.FC = (): JSX.Element =>
                 <FormControlLabel value={TextFilteringVariation.SYNTACTIC} control={<Radio />} label={TextFilteringVariation.SYNTACTIC} />
             </RadioGroup>
 
-
         </Stack>
     )
 }

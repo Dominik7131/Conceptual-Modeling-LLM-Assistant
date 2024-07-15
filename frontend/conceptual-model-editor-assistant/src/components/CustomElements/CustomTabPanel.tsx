@@ -8,9 +8,9 @@ interface Props
   value: string
 }
 
-// In regular TabPanel tab switching resets all child states
+// In the regular TabPanel tab switching resets all child states
 // In this CustomTabPanel this does not happen
-// The issue and trick is in more detail described here: https://stackoverflow.com/a/72800846
+// The issue and the trick is in more details described here: https://stackoverflow.com/a/72800846
 export const CustomTabPanel: FunctionComponent<PropsWithChildren<Props>> = ({ children, value }): JSX.Element =>
 {
   const {value: contextValue} = useTabContext() || {}

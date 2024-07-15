@@ -1,9 +1,8 @@
 import { SetterOrUpdater } from "recoil"
-import { ConceptualModelSnapshot, DomainDescriptionSnapshot, ItemSnapshot, SummaryStyleSnapshot, TextFilteringVariationSnapshot } from "../definitions/snapshots"
+import { ConceptualModelSnapshot, DomainDescriptionSnapshot, SummaryStyleSnapshot, TextFilteringVariationSnapshot } from "../definitions/snapshots"
 import { SummaryConceptualModel, SummaryStyle } from "../definitions/summary"
 import { TextFilteringVariation } from "../definitions/textFilteringVariation"
-import { Field, UserChoice, UserChoiceSummary } from "../definitions/utility"
-import { Item } from "../definitions/conceptualModel"
+import { UserChoice, UserChoiceSummary } from "../definitions/utility"
 
 
 export const snapshotDomainDescription = (userChoice: UserChoice, domainDescription: string, setSnapshotDomainDescription: SetterOrUpdater<DomainDescriptionSnapshot>) =>

@@ -1,5 +1,5 @@
 import { atom } from "recoil"
-import { SUMMARY_PLAIN_TEXT_STYLE_DEFAULT, SummaryConceptualModel, SummaryStyle } from "../definitions/summary"
+import { SUMMARY_PLAIN_TEXT_STYLE_DEFAULT, SummaryConceptualModel } from "../definitions/summary"
 
 
 export const summaryTextState = atom({

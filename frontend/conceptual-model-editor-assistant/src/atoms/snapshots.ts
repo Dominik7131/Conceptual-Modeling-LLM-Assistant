@@ -1,7 +1,7 @@
 import { atom } from "recoil"
 import { Field, TEXT_FILTERING_VARIATION_DEFAULT_VALUE, UserChoiceItem, UserChoiceSingleField, UserChoiceSummary } from "../definitions/utility"
 import { DomainDescriptionSnapshot, TextFilteringVariationSnapshot, ConceptualModelSnapshot, SummaryStyleSnapshot, ItemSnapshot } from "../definitions/snapshots"
-import { EMPTY_SUMMARY_CONCEPTUAL_MODEL, SUMMARY_DESCRIPTIONS_STYLE_DEFAULT, SUMMARY_PLAIN_TEXT_STYLE_DEFAULT, SummaryStyle } from "../definitions/summary"
+import { EMPTY_SUMMARY_CONCEPTUAL_MODEL, SUMMARY_DESCRIPTIONS_STYLE_DEFAULT, SUMMARY_PLAIN_TEXT_STYLE_DEFAULT } from "../definitions/summary"
 
 
 export const domainDescriptionSnapshotsState = atom<DomainDescriptionSnapshot>({

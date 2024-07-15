@@ -1,6 +1,6 @@
 import AutoFixNormalIcon from "@mui/icons-material/AutoFixNormal"
-import { Button, CircularProgress, IconButton, Stack, Tooltip } from "@mui/material"
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil"
+import { CircularProgress, IconButton, Stack, Tooltip } from "@mui/material"
+import { useRecoilState, useRecoilValue } from "recoil"
 import useGenerateSingleField from "../../hooks/useGenerateSingleField"
 import CheckIcon from "@mui/icons-material/Check"
 import CloseIcon from "@mui/icons-material/Close"
