@@ -59,7 +59,7 @@
 | summaryType | yes     | string (`summaryPlainText`, `summaryDescriptions`) | Type of the summary to suggest. |
 | domainDescription | yes     | string | Solely based on this text the LLM generates the summary.
 | conceptualModel | yes | object | Conceptual model in JSON format preferably as specified by [this interface](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/1ae0b95bc5cd753fc5feba83c13df9b110ef9872/frontend/conceptual-model-editor-assistant/src/definitions/summary.ts#L10). |
-| style | no     | string | Type style of the summary for the `summaryPlainText`. |
+| style | no     | string | The style of the summary for the `summaryPlainText`. |
 
 <br/>
 

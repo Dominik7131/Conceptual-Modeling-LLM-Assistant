@@ -197,6 +197,15 @@ As shown by the picture it is possible to:
     - changing this option can also be used to force the assistant to generate different suggestions for attributes, associations, and single fields of domain elements
 
 
+### Other
+
+- the grey buttons in the top-left corner of the topbar can be used to hide the topbar and the sidebar
+
+<img src="images/frontend/collapse-buttons.png" alt="drawing" width="800"/>
+
+<br/>
+
+
 ### Demos
 
 - [video demonstrating the work with the domain description](https://youtu.be/1GPYFALsyrw)

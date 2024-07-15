@@ -62,12 +62,6 @@
 
 <br/>
 
-- click on the "Directory" button:
-
-    <img src="images/frontend/create-new-directory.png" alt="drawing" width="400"/>
-
-<br/>
-
 - create a new directory and click on the "Save changes" button:
 
     <img src="images/frontend/create-new-directory-2.png" alt="drawing" width="500"/>
@@ -124,7 +118,7 @@
 
 <br/>
 
-- click on the "Open in CME" button:
+- click on the "Open" button:
 
     <img src="images/frontend/open-in-cme.png" alt="drawing" width="800"/>
 
