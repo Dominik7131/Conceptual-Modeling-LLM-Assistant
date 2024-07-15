@@ -43,7 +43,7 @@ To use any of the backend scripts:
       python server.py
     - default port is 5000
     - different port can be passed via `--port` argument
-    - if you are using our frontend, then make sure that it is sending requests to the corresponding port which can be set [here](../frontend/conceptual-model-editor-assistant/src/definitions/urls.ts) in the `PORT` variable
+    - if you are using our frontend, then make sure that it is sending requests to the corresponding port which can be set [here](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/7b9048a1d991bae2651bf3fda1d43d55dc8b8eb1/frontend/conceptual-model-editor-assistant/src/definitions/urls.ts#L4-L5) in the `PORT` and the `BASE_URL` variable
     - if you encounter some error, check `logs` directory
 
 
@@ -66,9 +66,9 @@ To use any of the backend scripts:
     - update CUDA to at least version 11.7.1
     - install compatible version of [nvidia-cuda-toolkit](https://developer.nvidia.com/cuda-downloads)
 
-          make server LLAMA_CUDA=1
+          make llama-server LLAMA_CUDA=1
     - note: this takes a while
-    - if this doesn't work [here is a more detailed description](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#cuda)
+    - if this does not work, check the documentation in the [llama.cpp repository](https://github.com/ggerganov/llama.cpp)
 
 - download one of the [supported models](https://github.com/ggerganov/llama.cpp#description) in `GGUF` format
     - make sure that the LLM fits in your GPU (or GPUs) otherwise the LLM will generate the output very slowly
@@ -77,7 +77,7 @@ To use any of the backend scripts:
     - set corresponding `MODEL_PATH` variable
     - set corresponding `CHAT_TEMPLATE` variable
 
-- for more information you can check [llama.cpp server documentation](https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md)
+- for more information check the [llama.cpp server documentation](https://github.com/ggerganov/llama.cpp/blob/master/examples/server/README.md)
 
 - change directory back to the `backend` directory
 
@@ -87,7 +87,7 @@ To use any of the backend scripts:
 
       ./llm_server.sh
     - the default port is 8080 and can be changed via the `PORT` variable
-        - when changing the port make sure that the [LLM Manager](utils/llm_manager.py) works with the corresponding port
+        - when changing the port, make sure that the [LLM Manager](utils/llm_manager.py) works with the corresponding port
     - note: loading a LLM for the first time is slow
 
 

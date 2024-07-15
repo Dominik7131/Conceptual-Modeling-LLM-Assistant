@@ -1,7 +1,7 @@
 ## How to run
 
 - download some package manager such as [Node.js](https://nodejs.org/en/download/package-manager)
-- change directory into `frontend/conceptual-model-editor-assistant`
+- change directory to `frontend/conceptual-model-editor-assistant`
 
       cd frontend/conceptual-model-editor-assistant
 

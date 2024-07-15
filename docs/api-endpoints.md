@@ -8,6 +8,7 @@
 | userChoice  | yes |  string (`classes`, `attributes`, `associations1`, `associations2`) | The item types that the LLM should suggest. `associations1` means associations where the source class is provided, `associations2` means associations where both the source class and the target class is provided. |
 | domainDescription  | yes | string | Solely based on this text the LLM generates suggestions. If `domainDescription=""` then the LLM generates 5 most relevant suggestions. |
 | textFilteringVariation  | yes | string (`none`, `semantic`, `syntactic`) | Domain description filtering variation. The domain description is not filtered when `userChoice=classes`. |
+| conceptualModel  | no  | object | The user's conceptual model in JSON format as specified by [this interface](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/1ae0b95bc5cd753fc5feba83c13df9b110ef9872/frontend/conceptual-model-editor-assistant/src/definitions/summary.ts#L10) to remove the LLM suggestions that are already modeled. |
 | sourceClass  | no | string  | Name of the source class if `userChoice=attributes` or `userChoice=associations1` or `userChoice=associations2`. |
 | targetClass  | no  | string | Name of the target class if `userChoice=associations2`.  |
 
@@ -33,12 +34,14 @@
 | Parameter | Mandatory | Data type | Description |
 |-----------|-----------|-----------|-------------|
 | name      | yes       | string    | Item name.  |
-| field     | yes       | string (`originalText`, `description`, `dataType`, `sourceCardinality`, `targetCardinality`) | Item field to suggest. |
-| userChoice | yes     | string (`classes`, `attributes`, `associations1`, `associations2`) | Type of the item. |
-| domainDescription | yes     | string | Solely based on this text the LLM generates the output.
-| textFilteringVariation  | yes | string (`none`, `semantic`, `syntactic`) | Domain description filtering variation. |
-| sourceClass  | no | string  | Name of the source class when the userChoice `attribute` or `associations1` or `associations2` is provided. |
-| targetClass  | no  | string | Name of the target target class when the userChoice `associations2` is provided.  |
+| field     | yes       | string (`name`, `originalText`, `description`, `dataType`, `sourceCardinality`, `targetCardinality`) | Item field to suggest. |
+| userChoice | yes      | string (`classes`, `attributes`, `associations1`, `associations2`) | Type of the item. |
+| domainDescription     | yes     | string | Solely based on this text the LLM generates the output.
+| textFilteringVariation | yes | string (`none`, `semantic`, `syntactic`) | Domain description filtering variation. |
+| sourceClass  | no | string | Name of the source class when the userChoice `attribute` or `associations1` or `associations2` is provided. |
+| targetClass  | no  | string | Name of the target target class when the userChoice `associations2` is provided. |
+| description  | no | string | The description of the item when the field `name` is provided. |
+| originalText  | no | string | The original text of the item when the field `name` is provided. |
 
 <br/>
 
@@ -56,6 +59,7 @@
 | summaryType | yes     | string (`summaryPlainText`, `summaryDescriptions`) | Type of the summary to suggest. |
 | domainDescription | yes     | string | Solely based on this text the LLM generates the summary.
 | conceptualModel | yes | object | Conceptual model in JSON format preferably as specified by [this interface](https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/blob/1ae0b95bc5cd753fc5feba83c13df9b110ef9872/frontend/conceptual-model-editor-assistant/src/definitions/summary.ts#L10). |
+| style | no     | string | Type style of the summary for the `summaryPlainText`. |
 
 <br/>
 
@@ -111,9 +115,10 @@
 | userChoice | yes     | string (`classes`, `attributes`, `associations1`, `associations2`) | Type of the original suggestion. |
 | domainDescription | yes     | string | The domain description that was used to generate this item. | The original domain description that the field was generated from. |
 | textFilteringVariation  | yes | string (`none`, `semantic`, `syntactic`) | The filtering variation that the field was generated from. |
+| isPositive  | yes | bool | True if the user liked this suggestion otherwise False.  |
 | sourceClass  | no | string  | Name of the source class if `userChoice=attributes` or `userChoice=associations1` or `userChoice=associations2`. |
 | targetClass  | no  | string | Name of the target class if `userChoice=associations2`.  |
-| isPositive  | yes | bool | True if the user liked this suggestion otherwise False.  |
+| item  | no | object | The object with fields `description` and `originalText` that were used to generate the name suggestion. |
 
 <br/>
 
@@ -125,6 +130,7 @@
 | summary | yes | object | The summary to save. |
 | domainDescription | yes     | string | The exact domain description that was used to generate this item.
 | conceptualModel | yes | object | The exact conceptual model in JSON format used to generate this summary. |
-| isPositive  | yes | bool | True if the user liked the suggested summary otherwise False.  |
+| isPositive  | yes | bool | True if the user liked the suggested summary otherwise False. |
+| style | no    | string | The style that was used to generate the `summaryPlainText`. |
 
 <br/>

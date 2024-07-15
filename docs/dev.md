@@ -10,4 +10,4 @@ The project consists of these main components:
 ## Links
 - [the frontend development documentation](frontend-dev.md)
 - [the backend development documentation](backend-dev.md)
-- [the architecture of the project](architecture.md)
+- [the architecture of the software application](architecture.md)

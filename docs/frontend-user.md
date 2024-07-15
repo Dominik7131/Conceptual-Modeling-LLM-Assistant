@@ -2,15 +2,15 @@
 
 [Here is a tutorial on how to import and export a conceptual model into and from the Dataspecer.](frontend-import-export.md)
 
-Our frontend is a conceptual model editor extended by features of our LLM assistant. The assistant helps a human modelling expert in creating domain models.
+Our frontend is a conceptual model editor extended by features of our LLM assistant. The assistant helps a human modeling expert in creating domain models.
 
 First, we present the main features of our LLM assistant and then we provide demo links with the demonstration of how the assistant can be used.
 
 <br/>
 
-## Features of our LLM assistent
+## Features of our LLM assistant
 
-### 1) suggestions of classes, attributes and associations
+### 1) suggestions of classes, attributes, and associations
 - if a domain description is provided then the assistant's suggestions are solely based on the given domain description
     - we support only English
 - the domain description can be inserted in the text box on the topbar:
@@ -27,7 +27,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 <br/>
 
 - when the domain description is not provided, the assistant suggests anything it considers reasonable
-    - in this case it is better to start modelling by adding a class manually with the "Add new class" button:
+    - in this case, it is better to start modeling by adding a class manually with the "Add new class" button:
 
         <img src="images/frontend/add-new-class-manually.png" alt="drawing" width="900"/>
 
@@ -47,7 +47,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 <br/>
 
 - the generated suggestions are shown on the sidebar on the right side of the application
-- here is an example of 5 generated suggestions by using the "Suggest classes" button without a domain description:
+- here is an example of 3 generated suggestions by using the "Suggest classes" button without a domain description:
 
     <img src="images/frontend/suggested-classes.png" alt="drawing" width="300"/>
 
@@ -73,7 +73,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- for suggesting associations in between two classes an edge can be dragged between two nodes:
+- for suggesting associations between two classes an edge can be dragged between two nodes:
 
     <img src="images/frontend/edge-drag.png" alt="drawing" width="600"/>
 
@@ -88,7 +88,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 - note that an edge can be dragged only between the handles (the "black dots") of the nodes
 
-- when the mouse is hovered over any node, the handles display either "s" or "t":
+- when the mouse hovers over any node, the handles display either "s" or "t":
 
     <img src="images/frontend/handles.png" alt="drawing" width="400"/>
 
@@ -115,7 +115,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 - the assistant can summarize any selected part of the conceptual model
 - the selected domain elements are visually represented by the blue color
-- the easiest way to select some part of the conceptual model is by creating a selection area with the mouse by holding shift and left mouse button
+- the easiest way to select some part of the conceptual model is by creating a selection area with the mouse by holding the shift and the left mouse button
 
     <img src="images/frontend/selection.png" alt="drawing" width="900"/>
 
@@ -129,7 +129,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- for example, when this part of the conceptual model is selected (the light blue color denotes the selected classes, attributes and associations):
+- for example, when this part of the conceptual model is selected (the light blue color denotes the selected classes, attributes, and associations):
 
     <img src="images/frontend/selection-aircraft.png" alt="drawing" width="1000"/>
 
@@ -147,15 +147,15 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- note: the assistant ignores the domain description when generating the summary
+- note: the assistant ignores the domain description when generating the summary since otherwise, we had issues with the assistant sticking to the selected part of the conceptual model
 
 <br/>
 
 
 ### 3) highlighting in the domain description which parts are represented by the conceptual model
 
-- when creating conceptual model with the help of the assistant each suggested element contains also the already mentioned original text
-- when some part of the conceptual model is selected all these original texts can be highlighted in the domain description using the "Highlight original text" button on the topbar:
+- when creating a conceptual model with the help of the assistant, each suggested element contains also the already mentioned original text
+- when some part of the conceptual model is selected, all these original texts can be highlighted in the domain description using the "Highlight original text" button on the topbar:
 
     <img src="images/frontend/highlight-original-text-button.png" alt="drawing" width="900"/>
 
@@ -175,10 +175,10 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 - for example, this feature can be used to check whether the conceptual model is completely representing the given domain description
 - however, note that the assistant can make mistakes and that some part of the domain description is highlighted does not necessarily mean that it is represented by the conceptual model
-    - also the opposite thing applies: some non-highlighted parts of the domain description can already be represented by the conceptual model
+    - also, the opposite thing applies: some non-highlighted parts of the domain description can already be represented by the conceptual model
 
 - for simplicity, whenever the domain description changes the computed original text indexes are discarded so nothing will be highlighted
-    - this means that for using this feature it is necessary to work with only one domain description without editing it in the process
+    - this means that to use this feature it is necessary to work with only one domain description without editing it in the process
 
 
 ### Settings
@@ -190,10 +190,11 @@ This is how the settings tab looks like:
 <br/>
 
 As shown by the picture it is possible to:
-1) ignore domain description to temporarily work without the domain description
-2) change the strategy of how the domain description is filtered:
-    - according to our experiments, the syntactic variation works the best however, it can be changed to force the assistant to generate different suggestions for attributes and associations
-
+1) ignore the domain description to let the assistant temporarily generate suggestions without the domain description
+2) change the text style for the summary in plain text format
+3) change the strategy of how the domain description is filtered
+    - by default, the semantic strategy is selected
+    - changing this option can also be used to force the assistant to generate different suggestions for attributes, associations, and single fields of domain elements
 
 
 ### Demos

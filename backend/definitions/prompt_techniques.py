@@ -9,6 +9,7 @@ class PromptTechniques(Enum):
     N_SHOT_COT = "n-shot-cot"
 
 
+# The undefined cases use the baseline variation by default
 SELECTED_PROMPT_TECHNIQUES = {
     UserChoice.CLASSES.value: PromptTechniques.N_SHOT.value,
     UserChoice.ATTRIBUTES.value: PromptTechniques.N_SHOT_COT.value,
