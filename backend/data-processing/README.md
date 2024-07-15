@@ -1,4 +1,4 @@
-# Manual evaluation workflow of LLM suggestions
+# Manual evaluation workflow of LLM suggested domain elements
 
 - change directory to `backend`:
 

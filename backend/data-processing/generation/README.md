@@ -9,6 +9,12 @@
 
 ## [generate_suggestions.sh](generate_suggestions.sh)
 - generates classes, attributes and associations suggested by the LLM in the CSV format ready for manual evaluation
+- uses the [generate_suggestions.py](generate_suggestions.py) script
+
+<br/>
+
+## [generate_descriptions.py](generate_suggestions.sh)
+- generates class descriptions suggested by the LLM in the CSV format ready for manual evaluation
 
 <br/>
 

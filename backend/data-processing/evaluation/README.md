@@ -12,6 +12,6 @@
 - computes recall and precision of the selected strategy for the text filtering
     - note that each expected original text for each element is evaluated separately
     - if an expected original text contains `n` sentences it is splitted into `n` original texts
-    - for example the output for a domain description with 8 classes can look like this: "classes: 11/12 - 91.67%"
+    - for example, the output for a domain description with 8 classes can look like this: "classes: 11/12 - 91.67%"
         - reason: the 8 classes are represented by 12 original texts in the domain description
 - as test data it uses outputs from the script [generate_test_data.py](../generation/generate_test_data.py)
