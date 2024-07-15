@@ -1,8 +1,8 @@
-// const BASE_URL = "https://llm-backend.opendata.cz/"
+const BASE_URL = "https://llm-backend.opendata.cz/"
 
 // Development
-const PORT = 5001
-const BASE_URL = `http://localhost:${PORT}/`
+// const PORT = 5001
+// const BASE_URL = `http://localhost:${PORT}/`
 
 
 export const HEADER = { "Content-Type": "application/json" }
