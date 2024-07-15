@@ -50,7 +50,7 @@
 
 - in the dialog paste the ID of the model you want to rewrite and click on the green "Export" button
 
-    <img src="images/frontend/paste-new-model-ID.png" alt="drawing" width="800"/>
+    <img src="images/frontend/paste-new-model-ID.png" alt="drawing" width="900"/>
 
 <br/>
 
@@ -64,25 +64,25 @@
 
 - create a new directory and click on the "Save changes" button:
 
-    <img src="images/frontend/create-new-directory-2.png" alt="drawing" width="500"/>
+    <img src="images/frontend/create-new-directory-2.png" alt="drawing" width="600"/>
 
 <br/>
 
 - find your directory in the manager and click on the "plus" button:
 
-    <img src="images/frontend/add-semantic-model.png" alt="drawing" width="800"/>
+    <img src="images/frontend/add-semantic-model.png" alt="drawing" width="900"/>
 
 <br/>
 
 - click on the "Semantic model" buton
 
-    <img src="images/frontend/add-semantic-model-2.png" alt="drawing" width="300"/>
+    <img src="images/frontend/add-semantic-model-2.png" alt="drawing" width="400"/>
 
 <br/>
 
 - the new model ID was created so copy this new model ID
 
-    <img src="images/frontend/get-new-model-ID.png" alt="drawing" width="800"/>
+    <img src="images/frontend/get-new-model-ID.png" alt="drawing" width="900"/>
 
 <br/>
 
@@ -94,7 +94,7 @@
 
 - paste the new model ID and click on the green "Export" button and we are done
 
-    <img src="images/frontend/paste-new-model-ID.png" alt="drawing" width="800"/>
+    <img src="images/frontend/paste-new-model-ID.png" alt="drawing" width="900"/>
 
 
 <br/>
@@ -112,15 +112,15 @@
 
 - for example in our directory in the [Dataspecer package manager](https://tool.dataspecer.com/manager/) we can add "visual model" like this:
 
-    <img src="images/frontend/add-visual-model.png" alt="drawing" width="800"/>
+    <img src="images/frontend/add-visual-model.png" alt="drawing" width="900"/>
 
-    <img src="images/frontend/add-visual-model-2.png" alt="drawing" width="300"/>
+    <img src="images/frontend/add-visual-model-2.png" alt="drawing" width="400"/>
 
 <br/>
 
 - click on the "Open" button:
 
-    <img src="images/frontend/open-in-cme.png" alt="drawing" width="800"/>
+    <img src="images/frontend/open-in-cme.png" alt="drawing" width="900"/>
 
 <br/>
 
