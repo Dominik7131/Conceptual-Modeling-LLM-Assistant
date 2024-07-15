@@ -1,6 +1,7 @@
 import json
 import os
 
+from definitions.prompt_techniques import SELECTED_PROMPT_TECHNIQUES
 from definitions.prompt_symbols import PromptSymbols
 from utils.replacer import Replacer
 
@@ -31,12 +32,12 @@ class PromptManager:
         return system_prompt
 
     def create_prompt(self, user_choice, source_class="", target_class="", relevant_texts="", is_domain_description=True,
-                      items_count_to_suggest=5, is_chain_of_thoughts=True, conceptual_model=None, field_name="",
+                      items_count_to_suggest=5, conceptual_model=None, field_name="",
                       attribute_name="", association_name="", description="", original_text="", summary_plain_text_style=""):
 
         original_prompt = self.get_prompt(
             user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description,
-            is_chain_of_thoughts=is_chain_of_thoughts, summary_plain_text_style=summary_plain_text_style)
+            summary_plain_text_style=summary_plain_text_style)
 
         if conceptual_model is None:
             conceptual_model = {}
@@ -59,21 +60,19 @@ class PromptManager:
 
         return prompt
 
-    def get_prompt(self, user_choice, field_name="", is_domain_description=True, is_chain_of_thoughts=True, summary_plain_text_style=""):
+    def get_prompt(self, user_choice, field_name="", is_domain_description=True, summary_plain_text_style=""):
 
-        prompt_file_name = ""
+        is_generate_domain_elements = field_name == "" and user_choice in SELECTED_PROMPT_TECHNIQUES
+        if is_generate_domain_elements and is_domain_description:
+            prompt_file_name = SELECTED_PROMPT_TECHNIQUES[user_choice]
+        else:
+            prompt_file_name = "baseline"
 
         if field_name != "":
             prompt_file_name += f"-{field_name}"
 
         if is_domain_description:
             prompt_file_name += "-dd"
-        else:
-            # Disable chain of thoughts if we do not have any domain description
-            is_chain_of_thoughts = False
-
-        if is_chain_of_thoughts:
-            prompt_file_name += "-cot"
 
         if summary_plain_text_style != "":
             prompt_file_name += "-style"

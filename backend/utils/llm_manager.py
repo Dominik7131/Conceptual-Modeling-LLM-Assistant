@@ -157,7 +157,7 @@ class LLMManager:
 
         self._log_full_message()
         return
-    
+
     def _parse_classes(self, item):
 
         if self._does_class_already_exist(item):
@@ -173,17 +173,17 @@ class LLMManager:
         item = self._parse_data_type(item)
 
         return item, True
-    
+
     def _parse_data_type(self, item):
 
         if not Field.DATA_TYPE.value in item:
             return item
-        
+
         is_unknown_data_type = item[Field.DATA_TYPE.value] not in DEFINED_DATA_TYPES
         if is_unknown_data_type:
             self.logger.info("Converting unknown data type to string")
             item[Field.DATA_TYPE.value] = "string"
-        
+
         return item
 
     def _parse_associations1(self, completed_item):
@@ -249,7 +249,8 @@ class LLMManager:
                     f"Not matched:\n- given classes: {source_class}, {target_class}\n- generated classes: {source_class_generated}, {target_class_generated}\n")
 
             if not is_match or is_none:
-                completed_item[Field.NAME.value] = f"Deleted: Inputed classes are not contained in source and target classes: {completed_item['name']}"
+                completed_item[
+                    Field.NAME.value] = f"Deleted: Inputed classes are not contained in source and target classes: {completed_item['name']}"
                 is_item_ok = False
 
         return completed_item, is_item_ok
@@ -278,12 +279,12 @@ class LLMManager:
         item = self._parse_data_type(item)
 
         return item, is_item_ok
-    
+
     def _does_class_already_exist(self, completed_item):
 
         if UserChoice.CLASSES.value not in self.conceptual_model:
             return False
-        
+
         classes = self.conceptual_model[UserChoice.CLASSES.value]
 
         for clss in classes:
@@ -292,14 +293,14 @@ class LLMManager:
             if is_class_present:
                 self.logger.info(f"Class is already present: {completed_item}")
                 return True
-        
+
         return False
-    
+
     def _does_attribute_already_exist(self, completed_item):
 
         if UserChoice.ATTRIBUTES.value not in self.conceptual_model:
             return False
-        
+
         attributes = self.conceptual_model[UserChoice.ATTRIBUTES.value]
 
         for attribute in attributes:
@@ -311,7 +312,7 @@ class LLMManager:
             if is_attribute_present:
                 self.logger.info(f"Attribute is already present: {completed_item}")
                 return True
-        
+
         return False
 
     def _does_association_already_exist(self, completed_item):
@@ -319,7 +320,7 @@ class LLMManager:
         associations_string = "relationships"
         if associations_string not in self.conceptual_model:
             return False
-        
+
         associations = self.conceptual_model[associations_string]
 
         for association in associations:
@@ -340,10 +341,13 @@ class LLMManager:
             if is_association_present:
                 self.logger.info(f"Association is already present: {completed_item}")
                 return True
-        
+
         return False
 
     def _convert_names_into_standard_convention(self, completed_item):
+
+        if not isinstance(completed_item[Field.NAME.value], str):
+            return completed_item, False
 
         is_item_ok = True
         completed_item[Field.NAME.value] = ConventionConvertor.convert_string_to_standard_convention(
@@ -416,7 +420,7 @@ class LLMManager:
         if not is_item_ok:
             yield completed_item, is_item_ok
             return
-        
+
         if self.user_choice == UserChoice.CLASSES.value:
             completed_item, is_item_ok = self._parse_classes(completed_item)
 
