@@ -21,8 +21,7 @@ def check_tests(tests):
         if is_test_failed:
             are_all_tests_passing = False
             print(f"Test failed:\n- name: {name}\n- domain description: {domain_description}\n- original text: {original_text}\n- expected original text indexes: {expected_original_text_indexes}\n- actual original text indexes: {actual_original_text_indexes}\n")
-            OriginalTextFinder.show_in_domain_description(
-                actual_original_text_indexes, domain_description)
+            OriginalTextFinder.show_in_domain_description(actual_original_text_indexes, domain_description)
 
     if are_all_tests_passing:
         print("All tests are passing")

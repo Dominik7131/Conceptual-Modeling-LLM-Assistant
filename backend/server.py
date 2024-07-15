@@ -124,7 +124,7 @@ def save_suggested_item():
     prompt = prompt_manager.get_prompt(user_choice=user_choice, is_domain_description=is_domain_description)
     completed_item["prompt"] = prompt
 
-    if user_choice in (UserChoice.ATTRIBUTES, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value):
+    if user_choice not in UserChoice.CLASSES.value:
         relevant_texts = llm_assistant.get_relevant_texts(
             domain_description=domain_description, source_class=item[Field.SOURCE_CLASS.value], filtering_variation=text_filtering_variation)
         completed_item["filtered_domain_description"] = relevant_texts

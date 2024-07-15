@@ -10,7 +10,7 @@ sys.path.append(".")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
-from definitions.utility import Field, FieldUI, TextFilteringVariation, UserChoice
+from definitions.utility import Field, TextFilteringVariation, UserChoice
 from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS
 from utils.llm_assistant import LLMAssistant
 
@@ -38,8 +38,8 @@ def generate_class_descriptions(llm_assistant, test_cases, text_filtering_variat
             source_class=class_name, target_class="", user_choice=user_choice, domain_description=domain_description,
             text_filtering_variation=text_filtering_variation, field_name=Field.DESCRIPTION.value, original_text="", description="", name="")
 
-        JSON = json.loads(single_field)
-        description = JSON[Field.DESCRIPTION.value]
+        json = json.loads(single_field)
+        description = json[Field.DESCRIPTION.value]
         result.append(f"\"{class_name}\"{CSV_SEPARATOR}\"{description}\"{CSV_SEPARATOR}")
 
     return result

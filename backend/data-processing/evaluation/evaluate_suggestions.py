@@ -9,8 +9,9 @@ from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODEL
 from definitions.utility import TextFilteringVariation, UserChoice
 
 LLM = "mixtral-8x7B"
-# LLM = "llama-3-70B"
-MANUAL_EVALUATION_DIRECTORY_PATH = os.path.join("out", "classes-evaluation", "tot", LLM)
+EVALUATION_CASE = "classes-evaluation"
+PROMPTING_TECHNIQUE = "tot"
+MANUAL_EVALUATION_DIRECTORY_PATH = os.path.join("out", EVALUATION_CASE, PROMPTING_TECHNIQUE, LLM)
 
 IS_CSV = True
 SEPARATOR = ","
@@ -100,7 +101,7 @@ class SuggestionsEvaluator:
         for count in DOMAIN_DESCRIPTIONS_COUNT:
             text_index -= count
 
-            if (text_index < 0):
+            if text_index < 0:
                 return domain_model_index
 
             domain_model_index += 1
@@ -141,14 +142,11 @@ class SuggestionsEvaluator:
             source_class = test_case["class"]
 
             for output in expected_output:
-                attribute_identificator = f"{output['name']};{source_class}".replace(
-                    " ", "-").lower()
+                attribute_identificator = f"{output['name']};{source_class}".replace(" ", "-").lower()
                 self.expected_attributes.append(attribute_identificator)
 
-        self.checked_attributes_strict = [
-            False] * len(self.expected_attributes)
-        self.checked_attributes_construct = [
-            False] * len(self.expected_attributes)
+        self.checked_attributes_strict = [False] * len(self.expected_attributes)
+        self.checked_attributes_construct = [False] * len(self.expected_attributes)
         self.checked_attributes_isa = [False] * len(self.expected_attributes)
         self.checked_attributes_list = [False] * len(self.expected_attributes)
 
@@ -165,17 +163,12 @@ class SuggestionsEvaluator:
             inputed_class = test_case["class"]
 
             for output in expected_output:
-                self.expected_associations.append(
-                    f"{output['name']};{inputed_class}".replace(" ", "-").lower())
+                self.expected_associations.append(f"{output['name']};{inputed_class}".replace(" ", "-").lower())
 
-        self.checked_associations_strict = [
-            False] * len(self.expected_associations)
-        self.checked_associations_construct = [
-            False] * len(self.expected_associations)
-        self.checked_associations_isa = [
-            False] * len(self.expected_associations)
-        self.checked_associations_list = [
-            False] * len(self.expected_associations)
+        self.checked_associations_strict = [False] * len(self.expected_associations)
+        self.checked_associations_construct = [False] * len(self.expected_associations)
+        self.checked_associations_isa = [False] * len(self.expected_associations)
+        self.checked_associations_list = [False] * len(self.expected_associations)
 
     def check_suggestion(self, user_choice, matched_user_choice, matched_element, evaluated_path, source_class=""):
 
@@ -222,8 +215,7 @@ class SuggestionsEvaluator:
                 if is_isa:
                     matched_element_id = element.replace(" ", "-").lower()
                 else:
-                    matched_element_id = f"{element};{source_class}".replace(
-                        " ", "-").lower()
+                    matched_element_id = f"{element};{source_class}".replace(" ", "-").lower()
 
             for i, expected_element in enumerate(expected_elements):
 
@@ -376,20 +368,17 @@ class SuggestionsEvaluator:
                 if matched_class == "" and matched_attribute == "" and matched_association == "":
                     continue
 
-                self.compute_precision(UserChoice.CLASSES.value, text_index,
-                                       matched_class, matched_attribute, matched_association)
+                self.compute_precision(UserChoice.CLASSES.value, text_index, matched_class, matched_attribute, matched_association)
 
                 # Check if suggested class matches some expected class
-                self.check_suggestion(
-                    UserChoice.CLASSES.value, UserChoice.CLASSES.value, matched_class, evaluated_path)
+                self.check_suggestion(UserChoice.CLASSES.value, UserChoice.CLASSES.value, matched_class, evaluated_path)
 
                 # Check if suggested class matches some expected attribute
-                self.check_suggestion(
-                    UserChoice.CLASSES.value, UserChoice.ATTRIBUTES.value, matched_attribute, evaluated_path)
+                self.check_suggestion(UserChoice.CLASSES.value, UserChoice.ATTRIBUTES.value, matched_attribute, evaluated_path)
 
                 # Check if suggested class matches some expected association
-                self.check_suggestion(
-                    UserChoice.CLASSES.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, matched_association, evaluated_path)
+                self.check_suggestion(UserChoice.CLASSES.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value,
+                                      matched_association, evaluated_path)
 
     def evaluate_attributes(self, evaluated_path, text_index):
 
@@ -480,8 +469,7 @@ class SuggestionsEvaluator:
 
         self.compute_recall(UserChoice.CLASSES.value, text_index)
         self.compute_recall(UserChoice.ATTRIBUTES.value, text_index)
-        self.compute_recall(
-            UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, text_index)
+        self.compute_recall(UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, text_index)
 
     def compute_recall(self, user_choice, text_index):
 
@@ -584,8 +572,7 @@ class SuggestionsEvaluator:
         print()
 
         print("Recall: isa")
-        print(
-            f"- classes: {self.recall_classes_isa[index]}/{self.recall_classes_max[index]} - {recall_classes_isa_percentage:0.2f}")
+        print(f"- classes: {self.recall_classes_isa[index]}/{self.recall_classes_max[index]} - {recall_classes_isa_percentage:0.2f}")
         print(
             f"- attributes: {self.recall_attributes_isa[index]}/{self.recall_attributes_max[index]} - {recall_attributes_isa_percentage:0.2f}")
         print(
@@ -593,8 +580,7 @@ class SuggestionsEvaluator:
         print()
 
         print("Recall: list")
-        print(
-            f"- classes: {self.recall_classes_list[index]}/{self.recall_classes_max[index]} - {recall_classes_list_percentage:0.2f}")
+        print(f"- classes: {self.recall_classes_list[index]}/{self.recall_classes_max[index]} - {recall_classes_list_percentage:0.2f}")
         print(
             f"- attributes: {self.recall_attributes_list[index]}/{self.recall_attributes_max[index]} - {recall_attributes_list_percentage:0.2f}")
         print(
@@ -687,19 +673,16 @@ class SuggestionsEvaluator:
             header_text_name = "text-name"
             header_recall = "R-strict-classes,R-construct-classes,R-isa-classes,R-list-classes,R-strict-attributes,R-construct-attributes,R-isa-attributes,R-list-attributes,R-strict-associations,R-construct-associations,R-isa-associations,R-list-associations"
             header_precision = "P-strict-classes,P-construct-classes,P-isa-classes,P-list-classes,P-strict-attributes,P-construct-attributes,P-isa-attributes,P-list-attributes,P-strict-associations,P-construct-associations,P-isa-associations,P-list-associations"
-            print(
-                f"{header_text_name}{SEPARATOR}{header_recall}{SEPARATOR}{header_precision}")
+            print(f"{header_text_name}{SEPARATOR}{header_recall}{SEPARATOR}{header_precision}")
 
         text_index = 0
         for index, domain_model in enumerate(DOMAIN_MODELS):
             for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
                 if not is_csv:
-                    print(
-                        f"---- Results for {domain_model}-0{i + 1} ---- ")
+                    print(f"---- Results for {domain_model}-0{i + 1} ---- ")
                 else:
-                    print(
-                        f"{domain_model}-0{i + 1}{SEPARATOR}", end="")
+                    print(f"{domain_model}-0{i + 1}{SEPARATOR}", end="")
 
                 self.print_recall(text_index, is_csv)
                 self.print_precision(text_index, is_csv)
@@ -723,6 +706,7 @@ def main():
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
             file_index = i + 1
+
             classes_expected_suggestions_path = os.path.join(
                 DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.CLASSES.value}-expected-suggestions-0{file_index}.json")
             attributes_expected_suggestions_path = os.path.join(

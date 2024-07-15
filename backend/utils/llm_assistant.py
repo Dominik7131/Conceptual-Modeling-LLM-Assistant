@@ -44,8 +44,7 @@ class LLMAssistant:
         if not os.path.exists(LOG_DIRECTORY):
             os.makedirs(LOG_DIRECTORY)
 
-        logging.basicConfig(
-            level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode="w")
+        logging.basicConfig(level=logging.DEBUG, format="%(message)s", filename=LOG_FILE_PATH, filemode="w")
         self.logger = logging.getLogger(LOGGER_NAME)
 
     def _append_default_messages(self, user_choice, is_domain_description=False):
@@ -113,13 +112,11 @@ class LLMAssistant:
         if user_choice == UserChoice.CLASSES.value:
 
             if suggestion_dictionary["name"] in self.suggested_classes:
-                self.logger.info(
-                    f"Skipping duplicate class: {suggestion_dictionary['name']}")
+                self.logger.info(f"Skipping duplicate class: {suggestion_dictionary['name']}")
                 return item, True
 
             if suggestion_dictionary["name"] in CLASSES_BLACK_LIST:
-                self.logger.info(
-                    f"Skipping black-listed class: {suggestion_dictionary['name']}")
+                self.logger.info(f"Skipping black-listed class: {suggestion_dictionary['name']}")
                 return item, True
 
             self.suggested_classes.append(suggestion_dictionary["name"])
@@ -128,14 +125,13 @@ class LLMAssistant:
                 # Find occurencies of the class name in the domain description
                 item[Field.ORIGINAL_TEXT.value] = suggestion_dictionary["name"]
 
-        original_text_indexes = self._get_original_text_indexes(
-            item=item, user_choice=user_choice, domain_description=domain_description)
+        original_text_indexes = self._get_original_text_indexes(item=item, user_choice=user_choice, domain_description=domain_description)
         suggestion_dictionary[Field.ORIGINAL_TEXT_INDEXES.value] = original_text_indexes
 
         json_item = json.dumps(suggestion_dictionary)
         return json_item, False
 
-    def _get_output(self, user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest, conceptual_model):
+    def _get_output(self, user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, items_count_to_suggest, conceptual_model):
 
         max_attempts_count = 2
 
@@ -150,8 +146,7 @@ class LLMAssistant:
 
             if attempt_number > 0:
                 self.logger.info(f"Attempt: {attempt_number}")
-                prompt = self.prompt_manager.remove_last_n_lines_from_prompt(
-                    prompt, attempt_number)
+                prompt = self.prompt_manager.remove_last_n_lines_from_prompt(prompt, attempt_number)
 
             new_messages = self.messages.copy()
             new_messages.append({"role": "user", "content": prompt})
@@ -160,7 +155,8 @@ class LLMAssistant:
             self._log_sending_prompt_message(messages_prettified)
 
             items_iterator = self.output_generator.generate_stream(
-                messages=new_messages, user_choice=user_choice, source_class=source_class, target_class=target_class, conceptual_model=conceptual_model)
+                messages=new_messages, user_choice=user_choice, source_class=source_class,
+                target_class=target_class, conceptual_model=conceptual_model)
 
             if user_choice == UserChoice.CLASSES.value:
                 self.suggested_classes = []
@@ -193,8 +189,7 @@ class LLMAssistant:
         is_domain_description = domain_description != ""
 
         self.messages = []
-        self._append_default_messages(
-            user_choice=user_choice, is_domain_description=is_domain_description)
+        self._append_default_messages(user_choice=user_choice, is_domain_description=is_domain_description)
 
         if user_choice != UserChoice.CLASSES.value:
             relevant_texts = self.get_relevant_texts(
@@ -207,15 +202,9 @@ class LLMAssistant:
             self.logger.warn("No relevant texts found.")
             return self._empty_generator()
 
-        is_chain_of_thoughts = True
-
-        # For generating classes it usually works better to disable chain of thoughts
-        if user_choice == UserChoice.CLASSES.value:
-            is_chain_of_thoughts = False
-
         self.is_some_item_generated = False
 
-        return self._get_output(user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, is_chain_of_thoughts, items_count_to_suggest, conceptual_model)
+        return self._get_output(user_choice, source_class, target_class, is_domain_description, domain_description, relevant_texts, items_count_to_suggest, conceptual_model)
 
     def suggest_single_field(self, user_choice, name, description, original_text, source_class, target_class, domain_description, field_name, text_filtering_variation=TextFilteringVariation.SYNTACTIC.value):
 
@@ -270,8 +259,7 @@ class LLMAssistant:
 
         self._log_sending_prompt_message(messages_prettified)
 
-        items_iterator = self.output_generator.generate_stream(
-            messages=new_messages, user_choice=user_choice, source_class="")
+        items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class="")
 
         for item in items_iterator:
 
@@ -295,8 +283,7 @@ class LLMAssistant:
 
         self._log_sending_prompt_message(messages_prettified)
 
-        items_iterator = self.output_generator.generate_stream(
-            messages=new_messages, user_choice=user_choice, source_class="")
+        items_iterator = self.output_generator.generate_stream(messages=new_messages, user_choice=user_choice, source_class="")
 
         for item in items_iterator:
 

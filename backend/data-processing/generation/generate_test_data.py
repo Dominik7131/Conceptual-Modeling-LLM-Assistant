@@ -82,8 +82,7 @@ def create_suggestions_two_known_classes(dictionary, model, text):
         source_class = generalization["generalClass"].lower().replace("-", " ")
         target_class = generalization["specialClass"].lower().replace("-", " ")
 
-        generalizations2_out_suggestions.append(
-            {"generalClass": source_class, "specialClass": target_class})
+        generalizations2_out_suggestions.append({"generalClass": source_class, "specialClass": target_class})
 
     return associations2_out_suggestions, generalizations2_out_suggestions
 
@@ -105,15 +104,13 @@ def get_relevant_texts(dictionary, text, model, file_path):
         class_name = clss["title"].lower().replace("-", " ")
 
         if class_name not in dictionary:
-            print(
-                f"Warning: Class \"{class_name}\" not in annotated text: {file_path}")
+            print(f"Warning: Class \"{class_name}\" not in annotated text: {file_path}")
             continue
 
         indexes = dictionary[class_name]
         relevant_texts_classes = get_text_from_indexes(indexes, text)
 
-        classes_suggestions.append(
-            {"class": class_name, Field.ORIGINAL_TEXT.value: " ".join(relevant_texts_classes)})
+        classes_suggestions.append({"class": class_name, Field.ORIGINAL_TEXT.value: " ".join(relevant_texts_classes)})
 
         attributes_out = []
         attributes_out_suggestions = []
@@ -122,22 +119,19 @@ def get_relevant_texts(dictionary, text, model, file_path):
             source_class = attribute["domain"].lower().replace("-", " ")
 
             if attribute_name not in dictionary:
-                print(
-                    f"Warning: Attribute \"{attribute_name}\" not in annotated text: {file_path}")
+                print(f"Warning: Attribute \"{attribute_name}\" not in annotated text: {file_path}")
                 continue
 
             if source_class == class_name:
                 indexes = dictionary[attribute_name]
-                relevant_texts_attributes = get_text_from_indexes(
-                    indexes, text)
-                attributes_out.append(
-                    {"name": attribute_name, "relevant_texts": relevant_texts_attributes})
-
+                relevant_texts_attributes = get_text_from_indexes(indexes, text)
+                attributes_out.append({"name": attribute_name, "relevant_texts": relevant_texts_attributes})
                 attributes_out_suggestions.append(
                     {"name": attribute_name, Field.ORIGINAL_TEXT.value: " ".join(relevant_texts_attributes)})
 
         associations_out = []
         associations_out_suggestions = []
+
         for association in associations:
             association_name = association["title"].lower().replace("-", " ")
             source_class = association["domain"].lower().replace("-", " ")
@@ -148,8 +142,7 @@ def get_relevant_texts(dictionary, text, model, file_path):
                 association_name = "is staff member of academic community"
 
             if association_name not in dictionary:
-                print(
-                    f"Warning: Association \"{association_name}\" not in annotated text: {file_path}")
+                print(f"Warning: Association \"{association_name}\" not in annotated text: {file_path}")
                 continue
 
             is_source = target_class == class_name
@@ -157,8 +150,7 @@ def get_relevant_texts(dictionary, text, model, file_path):
             relevant_texts_associations = get_text_from_indexes(indexes, text)
 
             if source_class == class_name or target_class == class_name:
-                associations_out.append(
-                    {"name": association_name, "is_source": is_source, "relevant_texts": relevant_texts_associations})
+                associations_out.append({"name": association_name, "is_source": is_source, "relevant_texts": relevant_texts_associations})
                 associations_out_suggestions.append({"name": association_name, Field.SOURCE_CLASS.value: source_class,
                                                     Field.TARGET_CLASS.value: target_class, Field.ORIGINAL_TEXT.value: " ".join(relevant_texts_associations)})
 
@@ -166,12 +158,10 @@ def get_relevant_texts(dictionary, text, model, file_path):
                                        "associations": associations_out})
 
         if len(attributes_out_suggestions) > 0:
-            attributes_suggestions.append(
-                {"class": class_name, "expected_output": attributes_out_suggestions})
+            attributes_suggestions.append({"class": class_name, "expected_output": attributes_out_suggestions})
 
         if len(associations_out_suggestions) > 0:
-            associations1_suggestions.append(
-                {"class": class_name, "expected_output": associations_out_suggestions})
+            associations1_suggestions.append({"class": class_name, "expected_output": associations_out_suggestions})
 
     return result_one_known_class, result_two_known_classes, classes_suggestions, attributes_suggestions, associations1_suggestions
 
@@ -224,8 +214,8 @@ def get_tags_indexes(tags, text):
 
                 text_index += len(enclosed_tag)
                 break
-            else:
-                text_index += 1
+
+            text_index += 1
 
     return dictionary
 
@@ -262,7 +252,7 @@ def main():
     for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            file_index = i
+            file_index = i + 1
             file_name = f"domain-description-0{file_index}-annotated.txt"
             model_file_name = "domain-model.json"
             one_known_class_output_file_name = f"relevant-texts-one-known_class-0{file_index}.json"
@@ -300,8 +290,7 @@ def main():
                 text = file.read()
 
             tags = re.findall(r"<([^>]+)>", text)
-            # Remove closed tags
-            tags = list(filter(lambda x: x[0] != "/", tags))
+            tags = list(filter(lambda x: x[0] != "/", tags))  # Remove closed tags
 
             tags_indexes = get_tags_indexes(tags, text)
 
@@ -312,8 +301,7 @@ def main():
 
             relevant_texts1, relevant_texts2, classes_suggestions, attributes_suggestions, associations_suggestions = get_relevant_texts(
                 tags_indexes, text, model, file_path)
-            associations2_suggestions, _ = create_suggestions_two_known_classes(
-                tags_indexes, model, text)
+            associations2_suggestions, _ = create_suggestions_two_known_classes(tags_indexes, model, text)
 
             relevant_text_test_cases_1 = {"test_cases": relevant_texts1}
             relevant_text_test_cases_2 = {"test_cases": relevant_texts2}

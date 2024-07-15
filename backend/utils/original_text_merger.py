@@ -15,8 +15,7 @@ class OriginalTextMerger:
 
             # [(x1, x2, l1), (y1, y2, l2)]
             x1, x2, l1 = numbers[i][0], numbers[i][1], numbers[i][2]
-            y1, y2, l2 = numbers[i + 1][0], numbers[i +
-                                                    1][1],  numbers[i + 1][2]
+            y1, y2, l2 = numbers[i + 1][0], numbers[i + 1][1], numbers[i + 1][2]
 
             is_still_sorted = x1 < y1 or (x1 == y1 and x2 <= y2)
 

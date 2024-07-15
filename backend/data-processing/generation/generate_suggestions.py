@@ -121,7 +121,7 @@ def write_to_file(file, index, output):
 
     for key in output:
         # We already outputed the name
-        if key == "name" or key == "inference_indexes":
+        if key in ("name", "inference_indexes"):
             continue
 
         file.write((f"- {key}: {output[key]}\n"))
@@ -154,19 +154,19 @@ def create_classes_actual_output(llm_assistant, test_cases, user_choice, domain_
         if class_name in CLASSES_IN_EXAMPLE:
             print(f"Warning: {class_name}")
 
+        is_expected_class_name = class_name in expected_classes
+
         if is_csv_output:
-            result.append(f"\"{class_name}\"")
+
+            if is_expected_class_name:
+                # Automatically fill the "matches class" column if the generated class is some expected class
+                result.append(f"\"{class_name}\"{CSV_SEPARATOR}\"{class_name}\"{CSV_SEPARATOR}{CSV_SEPARATOR}")
+            else:
+                result.append(f"\"{class_name}\"{CSV_SEPARATOR}{CSV_SEPARATOR}{CSV_SEPARATOR}")
         else:
             result.append(f"Class: {class_name}")
 
-        if Field.ORIGINAL_TEXT.value in suggested_item:
-            original_text = suggested_item[Field.ORIGINAL_TEXT.value]
-            result.append(f"Original text: {original_text}\n\n")
-        else:
-            if not is_csv_output:
-                result.append("\n")
-
-        if class_name in expected_classes:
+        if is_expected_class_name:
             matched_classes += 1
 
     print(f"Found {matched_classes} / {total_expected_classes} classes\n")
@@ -270,8 +270,7 @@ def create_associations2_actual_output(llm_assistant, test_cases, user_choice, d
             name = suggested_item[Field.NAME.value]
             original_text = suggested_item[Field.ORIGINAL_TEXT.value]
 
-            result.append(
-                f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n")
+            result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n")
 
     return result
 
@@ -295,7 +294,7 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
                                                      domain_description, text_filtering_variation, is_csv_output)
 
     elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
-        results = create_associations2_actual_output(llm_assistant, test_cases, user_choice, text_filtering_variation, domain_description)
+        results = create_associations2_actual_output(llm_assistant, test_cases, user_choice, domain_description, text_filtering_variation)
 
     else:
         raise ValueError(f"Unexpected user choice: \"{user_choice}\".")
@@ -328,7 +327,7 @@ def main():
     for index, domain_model in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            file_index = i
+            file_index = i + 1
             test_file_name = f"{user_choice}-expected-suggestions-0{file_index}.json"
             test_file_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, test_file_name)
             expected_output_file_path = os.path.join(
@@ -350,10 +349,9 @@ def main():
 
             output_file_extension = ".csv" if is_csv_output else ".txt"
             actual_output_file_path = os.path.join(
-                OUTPUT_ACTUAL_DIRECTORY, f"{domain_model}-{user_choice}-{text_filtering_variation}-{ACTUAL_OUTPUT}-0{i + 1}{output_file_extension}")
-            domain_description_file_name = f"domain-description-0{i + 1}.txt"
-            domain_description_path = os.path.join(
-                DOMAIN_MODELING_DIRECTORY_PATH, domain_model, domain_description_file_name)
+                OUTPUT_ACTUAL_DIRECTORY, f"{domain_model}-{user_choice}-{text_filtering_variation}-{ACTUAL_OUTPUT}-0{file_index}{output_file_extension}")
+            domain_description_file_name = f"domain-description-0{file_index}.txt"
+            domain_description_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, domain_description_file_name)
 
             if not os.path.isfile(domain_description_path):
                 raise ValueError(f"Domain description not found: {domain_description_path}")

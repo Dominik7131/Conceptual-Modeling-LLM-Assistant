@@ -43,7 +43,7 @@ class LLMManager:
         self.target_class = target_class.lower()
         self.field_name = field_name
 
-        if conceptual_model == None:
+        if conceptual_model is None:
             conceptual_model = {}
 
         self.conceptual_model = conceptual_model
@@ -142,8 +142,7 @@ class LLMManager:
 
         # If the JSON object is not properly finished then insert the needed amount of closed curly brackets
         if self.opened_curly_brackets_count > 0:
-            self.logger.info(
-                f"JSON object is not properly finished: {self.item}")
+            self.logger.info(f"JSON object is not properly finished: {self.item}")
             self.item += "}" * self.opened_curly_brackets_count
 
             parsed_item_iterator = self._parse_item_streamed_output()
@@ -215,8 +214,7 @@ class LLMManager:
         if not is_source_or_target_included or is_none:
 
             if not is_source_or_target_included:
-                self.logger.info(
-                    f"{self.source_class} != {source_class_generated} and {self.target_class} != {target_class_generated}")
+                self.logger.info(f"{self.source_class} != {source_class_generated} and {self.target_class} != {target_class_generated}")
 
             self.logger.info(f"Inputed class is not source or target class: {completed_item}")
             return completed_item, False

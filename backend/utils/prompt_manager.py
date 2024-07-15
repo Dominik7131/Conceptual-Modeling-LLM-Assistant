@@ -23,8 +23,7 @@ class PromptManager:
             prompt_file_name += "-dd"
         prompt_file_name += ".txt"
 
-        prompt_file_path = os.path.join(
-            SYSTEM_PROMPT_DIRECTORY, prompt_file_name)
+        prompt_file_path = os.path.join(SYSTEM_PROMPT_DIRECTORY, prompt_file_name)
 
         with open(prompt_file_path, "r", encoding="utf-8") as file:
             system_prompt = file.read()

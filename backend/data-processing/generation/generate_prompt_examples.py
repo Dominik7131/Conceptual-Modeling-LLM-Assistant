@@ -1,10 +1,11 @@
-from definitions.domain_modelling import DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL
-from definitions.utility import Field, FieldUI, UserChoice
 import os
 import json
 import sys
 
 sys.path.append(".")
+
+from definitions.domain_modelling import DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL
+from definitions.utility import Field, FieldUI, UserChoice
 
 
 FILE_NAME = "domain-description-01-annotated.txt"
@@ -19,14 +20,13 @@ ASSOCIATIONS2_IN_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH, PROMP
                                           f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-{IN_FILE_PATH_END}")
 
 OUTPUT_FILE_END = "prompt-example.txt"
-CLASSES_OUTPUT_FILE_PATH = os.path.join(
-    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL, f"{UserChoice.CLASSES.value}-{OUTPUT_FILE_END}")
-ATTRIBUTES_OUTPUT_FILE_PATH = os.path.join(
-    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL, f"{UserChoice.ATTRIBUTES.value}-{OUTPUT_FILE_END}")
-ASSOCIATIONS1_OUTPUT_FILE_PATH = os.path.join(
-    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-{OUTPUT_FILE_END}")
-ASSOCIATIONS2_OUTPUT_FILE_PATH = os.path.join(
-    DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL, f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-{OUTPUT_FILE_END}")
+CLASSES_OUTPUT_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL, f"{UserChoice.CLASSES.value}-{OUTPUT_FILE_END}")
+ATTRIBUTES_OUTPUT_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL,
+                                           f"{UserChoice.ATTRIBUTES.value}-{OUTPUT_FILE_END}")
+ASSOCIATIONS1_OUTPUT_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL,
+                                              f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-{OUTPUT_FILE_END}")
+ASSOCIATIONS2_OUTPUT_FILE_PATH = os.path.join(DOMAIN_PROMPTING_DIRECTORY_PATH, PROMPTING_MODEL,
+                                              f"{UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value}-{OUTPUT_FILE_END}")
 
 
 def get_classes_examples(expected_suggestions):
@@ -65,8 +65,8 @@ def get_attributes_examples(expected_suggestions):
             result.append(f"context: {original_text}")
             result.append(f"{FieldUI.NAME.value}: {name}")
 
-            JSON_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\""
-            result.append("JSON object: {" + JSON_object + "}\n")
+            json_object = f"\"{Field.ORIGINAL_TEXT.value}\": \"{original_text}\", \"{Field.NAME.value}\": \"{name}\""
+            result.append("JSON object: {" + json_object + "}\n")
 
         result.append("")
 

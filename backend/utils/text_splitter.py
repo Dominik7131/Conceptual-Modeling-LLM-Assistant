@@ -35,8 +35,7 @@ class TextSplitter:
         text = re.sub(PREFIXES, "\\1<prd>", text)
         text = re.sub(WEBSITES, "<prd>\\1", text)
         text = re.sub(DIGITS + "[.]" + DIGITS, "\\1<prd>\\2", text)
-        text = re.sub(MULTIPLE_DOTS, lambda match: "<prd>" *
-                      len(match.group(0)) + "<stop>", text)
+        text = re.sub(MULTIPLE_DOTS, lambda match: "<prd>" * len(match.group(0)) + "<stop>", text)
 
         # Titles
         if "Ph.D" in text:
@@ -61,13 +60,11 @@ class TextSplitter:
             text = text.replace("Mgr.", "Mgr<prd>")
 
         text = re.sub("\s" + ALPHABETS + "[.] ", " \\1<prd> ", text)
-        text = re.sub(ACRONYMS+" "+STARTERS, "\\1<stop> \\2", text)
-        text = re.sub(ALPHABETS + "[.]" + ALPHABETS + "[.]" +
-                      ALPHABETS + "[.]", "\\1<prd>\\2<prd>\\3<prd>", text)
-        text = re.sub(ALPHABETS + "[.]" + ALPHABETS +
-                      "[.]", "\\1<prd>\\2<prd>", text)
-        text = re.sub(" "+SUFFIXES+"[.] "+STARTERS, " \\1<stop> \\2", text)
-        text = re.sub(" "+SUFFIXES+"[.]", " \\1<prd>", text)
+        text = re.sub(ACRONYMS + " " + STARTERS, "\\1<stop> \\2", text)
+        text = re.sub(ALPHABETS + "[.]" + ALPHABETS + "[.]" + ALPHABETS + "[.]", "\\1<prd>\\2<prd>\\3<prd>", text)
+        text = re.sub(ALPHABETS + "[.]" + ALPHABETS + "[.]", "\\1<prd>\\2<prd>", text)
+        text = re.sub(" " + SUFFIXES + "[.] " + STARTERS, " \\1<stop> \\2", text)
+        text = re.sub(" " + SUFFIXES + "[.]", " \\1<prd>", text)
         text = re.sub(" " + ALPHABETS + "[.]", " \\1<prd>", text)
         if "”" in text:
             text = text.replace(".”", "”.")
@@ -120,8 +117,7 @@ class TextSplitter:
 
             if is_bullet_point_processing:
                 if is_bullet_point:
-                    enhanced_chunks.append(
-                        f"{sentence[:2]}{text_before_bullet_points} {sentence[2:]}")
+                    enhanced_chunks.append(f"{sentence[:2]}{text_before_bullet_points} {sentence[2:]}")
                 else:
                     is_bullet_point_processing = False
                     enhanced_chunks.append(sentence)
@@ -130,8 +126,7 @@ class TextSplitter:
             if is_bullet_point:
                 # For each bullet point prepend text from row before these bullet points
                 text_before_bullet_points = original_chunks[index - 1]
-                enhanced_chunks.append(
-                    f"{sentence[:2]}{text_before_bullet_points} {sentence[2:]}")
+                enhanced_chunks.append(f"{sentence[:2]}{text_before_bullet_points} {sentence[2:]}")
                 is_bullet_point_processing = True
                 continue
 
@@ -140,8 +135,7 @@ class TextSplitter:
                 for pronoun in PRONOUNS_TO_DETECT:
                     if sentence.startswith(pronoun):
                         is_sentence_enhanced = True
-                        enhanced_chunks.append(
-                            f"{original_chunks[index - 1]} {sentence}")
+                        enhanced_chunks.append(f"{original_chunks[index - 1]} {sentence}")
                         break
 
             if not is_sentence_enhanced:

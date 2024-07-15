@@ -15,7 +15,7 @@ class Replacer:
         :rtype: str
         """
 
-        # Edge case that'd produce a funny regex and cause a KeyError
+        # Edge case that would produce a weird regex and cause a KeyError
         if not replacements:
             return string
 

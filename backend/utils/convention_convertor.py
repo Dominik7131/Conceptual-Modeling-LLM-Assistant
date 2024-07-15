@@ -72,20 +72,17 @@ class ConventionConvertor:
             return ""
 
         # Convert fully uppercase text into lower case
-        is_all_uppercase = all(
-            (char.isupper() or char in string.punctuation) for char in text)
+        is_all_uppercase = all((char.isupper() or char in string.punctuation) for char in text)
         if is_all_uppercase:
             text = text.lower()
 
         is_snake_case = text[0].islower() and "_" in text
         if is_snake_case:
-            result = ConventionConvertor.from_snake_case_to_standard_convention(
-                text)
+            result = ConventionConvertor.from_snake_case_to_standard_convention(text)
             return result.lower()
 
         if ConventionConvertor.is_camel_case(text):
-            result = ConventionConvertor.from_camel_case_to_standard_convention(
-                text)
+            result = ConventionConvertor.from_camel_case_to_standard_convention(text)
             return result.lower()
 
         return text.lower()

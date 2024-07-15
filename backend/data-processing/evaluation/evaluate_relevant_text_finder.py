@@ -14,6 +14,7 @@ from definitions.domain_modelling import DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_
 from definitions.utility import TextFilteringVariation, UserChoice
 from utils.text_splitter import TextSplitter
 
+
 CSV_SEPARATOR = ","
 CSV_HEADER = f"Domain description{CSV_SEPARATOR}Recall classes{CSV_SEPARATOR}Recall attributes{CSV_SEPARATOR}Recall associations{CSV_SEPARATOR}Precision"
 
@@ -80,11 +81,9 @@ def compare_texts(expected_relevant_texts, actual_relevant_texts, domain_descrip
 def get_actual_relevant_texts(filtering_variation, domain_description, source_class, text_finder=None):
 
     if filtering_variation == TextFilteringVariation.NONE.value:
-        actual_relevant_texts = TextSplitter.split_into_sentences(
-            domain_description)
+        actual_relevant_texts = TextSplitter.split_into_sentences(domain_description)
     else:
-        actual_relevant_texts = text_finder.get(
-            source_class, domain_description)
+        actual_relevant_texts = text_finder.get(source_class, domain_description)
 
     return actual_relevant_texts
 
@@ -107,8 +106,9 @@ def process_test_casses_attributes(test_case, actual_relevant_texts, all_expecte
             if text not in all_expected_relevant_texts:
                 all_expected_relevant_texts.append(text)
 
-        current_total, current_successfull_tests = compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path,
-                                                                 name=name, user_choice=UserChoice.ATTRIBUTES.value, source_class=clss, is_print_failed_tests=is_print_failed_tests)
+        current_total, current_successfull_tests = compare_texts(
+            expected_relevant_texts, actual_relevant_texts, domain_description_path, name=name,
+            user_choice=UserChoice.ATTRIBUTES.value, source_class=clss, is_print_failed_tests=is_print_failed_tests)
 
         recall_attributes[text_index] += current_successfull_tests
         recall_attributes[-1] += current_successfull_tests
@@ -141,8 +141,10 @@ def process_test_casses_associations(test_case, actual_relevant_texts, all_expec
         else:
             target_class = clss
 
-        current_total, current_successfull_tests = compare_texts(expected_relevant_texts, actual_relevant_texts, domain_description_path, name=name,
-                                                                 user_choice=UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, source_class=source_class, target_class=target_class, is_print_failed_tests=is_print_failed_tests)
+        current_total, current_successfull_tests = compare_texts(
+            expected_relevant_texts, actual_relevant_texts, domain_description_path, name=name,
+            user_choice=UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value, source_class=source_class,
+            target_class=target_class, is_print_failed_tests=is_print_failed_tests)
 
         recall_associations[text_index] += current_successfull_tests
         recall_associations[-1] += current_successfull_tests
@@ -173,7 +175,8 @@ def process_test_cases(test_cases, text_index, filtering_variation, text_finder,
             filtering_variation, domain_description, clss, text_finder)
 
         current_total, current_successfull_tests = compare_texts(
-            expected_relevant_texts, actual_relevant_texts, domain_description_path, name=clss, user_choice=UserChoice.CLASSES.value, is_print_failed_tests=is_print_failed_tests)
+            expected_relevant_texts, actual_relevant_texts, domain_description_path, name=clss,
+            user_choice=UserChoice.CLASSES.value, is_print_failed_tests=is_print_failed_tests)
 
         recall_classes[text_index] += current_successfull_tests
         recall_classes[-1] += current_successfull_tests
@@ -184,8 +187,7 @@ def process_test_cases(test_cases, text_index, filtering_variation, text_finder,
                                        domain_description_path, text_index, clss, is_print_failed_tests)
         process_test_casses_associations(test_case, actual_relevant_texts, expected_relevant_texts,
                                          domain_description_path, text_index, clss, is_print_failed_tests)
-        calculate_precision(
-            text_index, expected_relevant_texts, actual_relevant_texts)
+        calculate_precision(text_index, expected_relevant_texts, actual_relevant_texts)
 
 
 def run_test(filtering_variation, is_print_failed_tests):
@@ -213,8 +215,7 @@ def run_test(filtering_variation, is_print_failed_tests):
                 DOMAIN_MODELING_DIRECTORY_PATH, domain_model, test_file_name)
 
             if not os.path.isfile(domain_description_path):
-                raise ValueError(
-                    f"Domain description not found: {domain_description_path}")
+                raise ValueError(f"Domain description not found: {domain_description_path}")
 
             if not os.path.isfile(test_file_path):
                 raise ValueError(f"Test file not found: {test_file_path}")

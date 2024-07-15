@@ -11,8 +11,7 @@ class OriginalTextFinder:
         # E.g.: "The insurance contract shall always contain... the limit of the insurance benefit"
         # Result: ["The insurance contract shall always contain", "the limit of the insurance benefit"]
         original_text_parts = original_text.split(sep="...")
-        original_text_parts = list(
-            filter(None, original_text_parts))  # Remove empty strings
+        original_text_parts = list(filter(None, original_text_parts))  # Remove empty strings
 
         return original_text_parts
 
@@ -49,20 +48,17 @@ class OriginalTextFinder:
 
             elif not user_choice == UserChoice.CLASSES.value:
 
-                new_result = OriginalTextFinder.find_substrings(
-                    original_text_part, domain_description)
+                new_result = OriginalTextFinder.find_substrings(original_text_part, domain_description)
                 if new_result:
                     is_original_text_found = True
                     for original_text_index in new_result:
                         result.append(original_text_index)
                 else:
-                    print(
-                        f"Warning: original text not found: {original_text_part}")
+                    print(f"Warning: original text not found: {original_text_part}")
 
         # If we get a lot of original text indexes there is probably some bug in our recovery strategy
         # In that case reset the original text indexes
-        is_reset_result = not user_choice == UserChoice.CLASSES.value and len(
-            result) > 10
+        is_reset_result = not user_choice == UserChoice.CLASSES.value and len(result) > 10
         if is_reset_result:
             result = []
 
@@ -210,11 +206,9 @@ class OriginalTextFinder:
                 end_index = i + len(longest_substring)
                 break
 
-        original_text_parts = [original_text[:start_index],
-                                original_text[start_index: end_index], original_text[end_index:]]
+        original_text_parts = [original_text[:start_index], original_text[start_index: end_index], original_text[end_index:]]
 
-        result, is_everything_found = OriginalTextFinder.find_original_text_indexes(
-            original_text_parts, domain_description)
+        result, is_everything_found = OriginalTextFinder.find_original_text_indexes(original_text_parts, domain_description)
 
         return result
 
@@ -228,10 +222,8 @@ class OriginalTextFinder:
         for i in range(0, len(original_text_indexes), 2):
             original_text_index_start = original_text_indexes[i]
             original_text_index_end = original_text_indexes[i + 1]
-            print(
-                domain_description[start_at_index: original_text_index_start], end="")
-            cprint(
-                domain_description[original_text_index_start: original_text_index_end], "green", "on_black", end="")
+            print(domain_description[start_at_index: original_text_index_start], end="")
+            cprint(domain_description[original_text_index_start: original_text_index_end], "green", "on_black", end="")
             start_at_index = original_text_index_end
 
         print(domain_description[start_at_index:])

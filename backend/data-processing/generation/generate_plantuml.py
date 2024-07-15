@@ -1,10 +1,11 @@
-from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS
-from definitions.utility import UserChoice
 import os
 import csv
 import sys
 
 sys.path.append(".")
+
+from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS
+from definitions.utility import UserChoice
 
 
 DIRECTORY_PATH = os.path.join("out", "actual")
@@ -68,10 +69,8 @@ def generate_plantuml():
     for index, model_name in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            classes_path = os.path.join(
-                DIRECTORY_PATH, f"{model_name}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
-            attributes_path = os.path.join(
-                DIRECTORY_PATH, f"{model_name}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
+            classes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
+            attributes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
             associations_path = os.path.join(
                 DIRECTORY_PATH, f"{model_name}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
 
@@ -79,12 +78,10 @@ def generate_plantuml():
                 raise ValueError(f"Classes file not found: {classes_path}")
 
             if not os.path.isfile(attributes_path):
-                raise ValueError(
-                    f"Attributes file not found: {attributes_path}")
+                raise ValueError(f"Attributes file not found: {attributes_path}")
 
             if not os.path.isfile(associations_path):
-                raise ValueError(
-                    f"Associations file not found: {associations_path}")
+                raise ValueError(f"Associations file not found: {associations_path}")
 
             classes = process_classes(classes_path)
             attributes = process_attributes(attributes_path)
