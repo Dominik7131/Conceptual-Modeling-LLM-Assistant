@@ -13,8 +13,8 @@ IS_CSV = True
 SEPARATOR = ","
 SCORE_LENGTH = DOMAIN_TEXTS_COUNT + 1
 IS_SKIP_CLASS_FILES = False
-IS_SKIP_ATTRIBUTE_FILES = True
-IS_SKIP_ASSOCIATION_FILES = True
+IS_SKIP_ATTRIBUTE_FILES = False
+IS_SKIP_ASSOCIATION_FILES = False
 
 
 class SuggestionsEvaluator:
@@ -723,7 +723,7 @@ def main():
             attributes_evaluated_path = os.path.join(
                 manual_evaluation_dir_path, f"{domain_model}-{UserChoice.ATTRIBUTES.value}-{args.filtering}-actual-0{file_index}.csv")
             associations_evaluated_path = os.path.join(
-                manual_evaluation_dir_path, f"{domain_model}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value[:-1]}-{args.filtering}-actual-0{file_index}.csv")
+                manual_evaluation_dir_path, f"{domain_model}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-{args.filtering}-actual-0{file_index}.csv")
 
             is_file = evaluator.check_file(classes_evaluated_path, UserChoice.CLASSES.value)
             is_file = is_file and evaluator.check_file(attributes_evaluated_path, UserChoice.ATTRIBUTES.value)
