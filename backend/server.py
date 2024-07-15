@@ -32,7 +32,7 @@ def suggest_items():
     user_choice = body_data["userChoice"]
     domain_description = body_data["domainDescription"]
     text_filtering_variation = body_data["textFilteringVariation"]
-    conceptual_model = body_data["conceptualModel"]
+    conceptual_model = body_data.get("conceptualModel", {})
 
     return llm_assistant.suggest_items(
         source_class=source_class, target_class=target_class, user_choice=user_choice, domain_description=domain_description,
@@ -47,8 +47,8 @@ def suggest_single_field():
     target_class = body_data.get("targetClass", "")
 
     name = body_data["name"]
-    description = body_data["description"]
-    original_text = body_data["originalText"]
+    description = body_data.get("description", "")
+    original_text = body_data.get("originalText", "")
     field = body_data["field"]
     domain_description = body_data["domainDescription"]
     user_choice = body_data["userChoice"]
@@ -92,8 +92,8 @@ def merge_original_texts():
     body_data = request.get_json()
     original_text_indexes_object = body_data["originalTextIndexesObject"]
 
-    parsed_original_text_indexes_object = [
-        (item["indexes"][0], item["indexes"][1], item["label"]) for item in original_text_indexes_object]
+    parsed_original_text_indexes_object = [(item["indexes"][0], item["indexes"][1], item["label"])
+                                           for item in original_text_indexes_object]
     result = OriginalTextMerger.merge(parsed_original_text_indexes_object)
 
     return result
