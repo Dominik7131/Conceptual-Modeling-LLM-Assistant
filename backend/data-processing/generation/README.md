@@ -20,8 +20,3 @@
 
 ## [generate_plantuml.py](generate_plantuml.py)
 - generates plant UML diagram from generated classes, attributes and associations for a little bit more convenient manual evaluation of those elements
-
-<br/>
-
-## [generate_prompt_examples.py](generate_prompt_examples.py)
-- from prompting domain description and corresponding expected domain model generates examples that are used in prompts as a N-shot prompting technique
