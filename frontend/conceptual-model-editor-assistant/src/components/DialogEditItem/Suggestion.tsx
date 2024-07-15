@@ -83,10 +83,8 @@ const Suggestion: React.FC<Props> = ({ item, field, isRegeneratedText, isDisable
     {
         setIsReactionButtonClicked(true)
 
-        let itemType = ItemType.CLASS
+        const itemType = item[Field.TYPE]
         let sourceClass = ""
-
-        itemType = regeneratedItem[Field.TYPE]
 
         if (itemType === ItemType.CLASS)
         {
