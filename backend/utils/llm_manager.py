@@ -380,7 +380,7 @@ class LLMManager:
 
         try:
             # Replace invalid JSON characters
-            self.item = self.item.replace("\_", " ")
+            self.item = self.item.replace("\\_", " ")
             self.item = self.item.replace("\n", " ")
 
             completed_item = json.loads(self.item)
