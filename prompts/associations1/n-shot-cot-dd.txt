@@ -1,6 +1,6 @@
 Solely based on the given context which associations does the class: "{source_class}" have?
 
-For each association output its name and source class and target class and copy the part of the given context containing this association in JSON object like this: {"originalText": "copy the part of the given context containing this association", "name": "association name", "source": "source class name", "target": "target class name"}
+For each association copy the part of the given context containing this association and output its name and source class and target class and then output it all in JSON object like this: {"originalText": "copy the part of the given context containing this association", "name": "association name", "source": "source class name", "target": "target class name"}
 
 
 EXAMPLE START

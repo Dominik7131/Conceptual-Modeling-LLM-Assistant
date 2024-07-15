@@ -1,0 +1,12 @@
+Solely based on the given context extract all classes.
+
+For each class copy the part of the given context containing this class and output its name and then output this class in JSON object. The output should look like this:
+context: copy the part of the given context containing this class
+name: class name
+JSON object: {"originalText": "copy the part of the given context containing this attribute", "name": "class name"}.
+
+This is the given context:
+"{domain_description}"
+
+Output:
+context:

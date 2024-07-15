@@ -1,0 +1,10 @@
+Solely based on the given context extract all class names.
+
+Imagine three different experts are solving the given task. All experts will write down 1 step of their thinking, then share it with the group. Then all experts will go on to the next step, etc. If any expert realises they are wrong at any point they leave.
+
+Output each class name in JSON object like this: {"name": "class name"}.
+
+This is the given context:
+"{domain_description}"
+
+Output:
