@@ -91,7 +91,6 @@ def merge_original_texts():
 
     body_data = request.get_json()
     original_text_indexes_object = body_data["originalTextIndexesObject"]
-    # print(f"Received: {original_text_indexes_object}\n")
 
     parsed_original_text_indexes_object = [
         (item["indexes"][0], item["indexes"][1], item["label"]) for item in original_text_indexes_object]
@@ -122,9 +121,7 @@ def save_suggested_item():
     completed_item = {"domain_description": domain_description, "item": item, "is_positive": is_positive}
 
     is_domain_description = domain_description != ""
-    is_chain_of_thoughts = user_choice in (UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value)
-    prompt = prompt_manager.get_prompt(
-        user_choice=user_choice, is_chain_of_thoughts=is_chain_of_thoughts, is_domain_description=is_domain_description)
+    prompt = prompt_manager.get_prompt(user_choice=user_choice, is_domain_description=is_domain_description)
     completed_item["prompt"] = prompt
 
     if user_choice in (UserChoice.ATTRIBUTES, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value):
@@ -158,8 +155,7 @@ def save_suggested_single_field():
         completed_item[Field.ORIGINAL_TEXT.value] = item[Field.ORIGINAL_TEXT.value]
 
     is_domain_description = domain_description != ""
-    prompt = prompt_manager.get_prompt(
-        user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description, is_chain_of_thoughts=False)
+    prompt = prompt_manager.get_prompt(user_choice=user_choice, field_name=field_name, is_domain_description=is_domain_description)
     completed_item["prompt"] = prompt
 
     relevant_texts = llm_assistant.get_relevant_texts(
@@ -187,7 +183,7 @@ def save_suggested_summary():
 
     is_domain_description = domain_description != ""
     prompt = prompt_manager.get_prompt(user_choice=summary_type, is_domain_description=is_domain_description,
-                                       is_chain_of_thoughts=False, summary_plain_text_style=style)
+                                       summary_plain_text_style=style)
     completed_item["prompt"] = prompt
 
     save_item_to_storage(completed_item)
