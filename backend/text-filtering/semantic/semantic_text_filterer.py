@@ -24,7 +24,6 @@ class SemanticTextFilterer:
 
         self.model = SentenceTransformer("all-MiniLM-L6-v2")
         # self.model = SentenceTransformer("all-mpnet-base-v2") # Symmetric language model
-        # self.model = SentenceTransformer("msmarco-distilbert-base-v4") # Asymmetric language model
 
     def _enhance_chunks(self, chunks):
 
