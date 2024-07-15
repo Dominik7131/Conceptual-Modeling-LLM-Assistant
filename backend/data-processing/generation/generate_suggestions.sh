@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Generate classes
 start=$(date +%s.%N)
-python data-processing/generation/generate_suggestions.py --user_choice classes
+python data-processing/generation/generate_suggestions.py --user_choice classes --filtering none
 end_classes=$(date +%s.%N)
 
 execution_time_classes=$(echo "$end_classes - $start" | bc)
@@ -27,6 +27,7 @@ end_associations=$(date +%s.%N)
 
 execution_time_associations=$(echo "$end_associations - $start_associations" | bc)
 echo "Associations execution time: $execution_time_associations seconds"
+
 
 # Generate PlantUML diagrams for the generated results
 python data-processing/generation/generate_plantuml.py
