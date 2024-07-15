@@ -1,3 +1,4 @@
+import argparse
 import csv
 import json
 import os
@@ -8,18 +9,12 @@ sys.path.append(".")
 from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS, DOMAIN_TEXTS_COUNT
 from definitions.utility import TextFilteringVariation, UserChoice
 
-LLM = "mixtral-8x7B"
-EVALUATION_CASE = "classes-evaluation"
-PROMPTING_TECHNIQUE = "tot"
-MANUAL_EVALUATION_DIRECTORY_PATH = os.path.join("out", EVALUATION_CASE, PROMPTING_TECHNIQUE, LLM)
-
 IS_CSV = True
 SEPARATOR = ","
 SCORE_LENGTH = DOMAIN_TEXTS_COUNT + 1
 IS_SKIP_CLASS_FILES = False
-IS_SKIP_ATTRIBUTE_FILES = True
-IS_SKIP_ASSOCIATION_FILES = True
-FILTERING_VARIATION = TextFilteringVariation.SYNTACTIC.value
+IS_SKIP_ATTRIBUTE_FILES = False
+IS_SKIP_ASSOCIATION_FILES = False
 
 
 class SuggestionsEvaluator:
@@ -699,6 +694,17 @@ class SuggestionsEvaluator:
 
 def main():
 
+    parser = argparse.ArgumentParser(description="Suggestions generator")
+    parser.add_argument("--filtering", choices=[TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value,
+                        TextFilteringVariation.SEMANTIC.value], type=str, default=TextFilteringVariation.SYNTACTIC.value, help="Text filtering variation")
+    parser.add_argument("--llm", type=str, default="mixtral-8x7B", help="The large language model name")
+    parser.add_argument("--prompting_technique", type=str, default="baseline", help="The prompting technique")
+    parser.add_argument("--dir_name", type=str, default="", help="The directory name with the data to evaluate")
+
+    args = parser.parse_args()
+
+    manual_evaluation_dir_path = os.path.join("out", args.dir_name, args.prompting_technique, args.llm)
+
     evaluator = SuggestionsEvaluator()
 
     text_index = 0
@@ -715,11 +721,11 @@ def main():
                 DOMAIN_MODELING_DIRECTORY_PATH, domain_model, f"{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-expected-suggestions-0{file_index}.json")
 
             classes_evaluated_path = os.path.join(
-                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.CLASSES.value}-actual-0{file_index}.csv")
+                manual_evaluation_dir_path, f"{domain_model}-{UserChoice.CLASSES.value}-actual-0{file_index}.csv")
             attributes_evaluated_path = os.path.join(
-                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.ATTRIBUTES.value}-{FILTERING_VARIATION}-actual-0{file_index}.csv")
+                manual_evaluation_dir_path, f"{domain_model}-{UserChoice.ATTRIBUTES.value}-{args.filtering}-actual-0{file_index}.csv")
             associations_evaluated_path = os.path.join(
-                MANUAL_EVALUATION_DIRECTORY_PATH, f"{domain_model}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value[:-1]}-{FILTERING_VARIATION}-actual-0{file_index}.csv")
+                manual_evaluation_dir_path, f"{domain_model}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value[:-1]}-{args.filtering}-actual-0{file_index}.csv")
 
             is_file = evaluator.check_file(classes_evaluated_path, UserChoice.CLASSES.value)
             is_file = is_file and evaluator.check_file(attributes_evaluated_path, UserChoice.ATTRIBUTES.value)

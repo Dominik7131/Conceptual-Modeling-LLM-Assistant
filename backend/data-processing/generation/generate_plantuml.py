@@ -1,3 +1,4 @@
+import argparse
 import os
 import csv
 import sys
@@ -5,7 +6,7 @@ import sys
 sys.path.append(".")
 
 from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELS
-from definitions.utility import UserChoice
+from definitions.utility import TextFilteringVariation, UserChoice
 
 
 DIRECTORY_PATH = os.path.join("out", "actual")
@@ -64,15 +65,17 @@ def process_associations(path):
     return associations
 
 
-def generate_plantuml():
+def generate_plantuml(filteringVariation):
 
     for index, model_name in enumerate(DOMAIN_MODELS):
         for i in range(DOMAIN_DESCRIPTIONS_COUNT[index]):
 
-            classes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.CLASSES.value}-actual-0{i + 1}.csv")
-            attributes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.ATTRIBUTES.value}-actual-0{i + 1}.csv")
+            file_index = i + 1
+            classes_path = os.path.join(DIRECTORY_PATH, f"{model_name}-{UserChoice.CLASSES.value}-actual-0{file_index}.csv")
+            attributes_path = os.path.join(
+                DIRECTORY_PATH, f"{model_name}-{UserChoice.ATTRIBUTES.value}-{filteringVariation}-actual-0{file_index}.csv")
             associations_path = os.path.join(
-                DIRECTORY_PATH, f"{model_name}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-actual-0{i + 1}.csv")
+                DIRECTORY_PATH, f"{model_name}-{UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value}-{filteringVariation}-actual-0{file_index}.csv")
 
             if not os.path.isfile(classes_path):
                 raise ValueError(f"Classes file not found: {classes_path}")
@@ -123,7 +126,14 @@ def generate_plantuml():
 
 def main():
 
-    generate_plantuml()
+    # The filtering variation is used to find the generated suggestion file names
+    parser = argparse.ArgumentParser(description="Suggestions generator")
+    parser.add_argument("--filtering", choices=[TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value,
+                        TextFilteringVariation.SEMANTIC.value], type=str, default=TextFilteringVariation.SYNTACTIC.value, help="Text filtering variation")
+
+    args = parser.parse_args()
+
+    generate_plantuml(args.filtering)
 
 
 if __name__ == "__main__":

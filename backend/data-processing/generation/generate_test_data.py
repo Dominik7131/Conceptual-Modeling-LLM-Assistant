@@ -280,8 +280,7 @@ def main():
                 DOMAIN_MODELING_DIRECTORY_PATH, domain_model, associations2_suggestions_output_file_name)
 
             if not os.path.isfile(file_path):
-                raise ValueError(
-                    f"Annotated domain description not found: {file_path}")
+                raise ValueError(f"Annotated domain description not found: {file_path}")
 
             if not os.path.isfile(model_file_path):
                 raise ValueError(f"Model file not found: {file_path}")
