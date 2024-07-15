@@ -13,8 +13,8 @@ IS_CSV = True
 SEPARATOR = ","
 SCORE_LENGTH = DOMAIN_TEXTS_COUNT + 1
 IS_SKIP_CLASS_FILES = False
-IS_SKIP_ATTRIBUTE_FILES = False
-IS_SKIP_ASSOCIATION_FILES = False
+IS_SKIP_ATTRIBUTE_FILES = True
+IS_SKIP_ASSOCIATION_FILES = True
 
 
 class SuggestionsEvaluator:
@@ -697,13 +697,11 @@ def main():
     parser = argparse.ArgumentParser(description="Suggestions generator")
     parser.add_argument("--filtering", choices=[TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value,
                         TextFilteringVariation.SEMANTIC.value], type=str, default=TextFilteringVariation.SYNTACTIC.value, help="Text filtering variation")
-    parser.add_argument("--llm", type=str, default="mixtral-8x7B", help="The large language model name")
-    parser.add_argument("--prompting_technique", type=str, default="baseline", help="The prompting technique")
-    parser.add_argument("--dir_name", type=str, default="", help="The directory name with the data to evaluate")
+    parser.add_argument("--dir", type=str, default="", help="The directory name with the data to evaluate")
 
     args = parser.parse_args()
 
-    manual_evaluation_dir_path = os.path.join("out", args.dir_name, args.prompting_technique, args.llm)
+    manual_evaluation_dir_path = os.path.join("out", args.dir)
 
     evaluator = SuggestionsEvaluator()
 
