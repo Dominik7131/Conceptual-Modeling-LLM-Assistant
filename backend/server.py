@@ -62,6 +62,9 @@ def suggest_single_field():
         source_class=source_class, target_class=target_class, domain_description=domain_description,
         field_name=field, text_filtering_variation=text_filtering_variation)
 
+    if not single_field:
+        single_field = ""
+
     return single_field
 
 
@@ -124,7 +127,7 @@ def save_suggested_item():
         user_choice=user_choice, is_chain_of_thoughts=is_chain_of_thoughts, is_domain_description=is_domain_description)
     completed_item["prompt"] = prompt
 
-    if user_choice in (UserChoice.ATTRIBUTES,  UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value):
+    if user_choice in (UserChoice.ATTRIBUTES, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value):
         relevant_texts = llm_assistant.get_relevant_texts(
             domain_description=domain_description, source_class=item[Field.SOURCE_CLASS.value], filtering_variation=text_filtering_variation)
         completed_item["filtered_domain_description"] = relevant_texts
@@ -145,9 +148,14 @@ def save_suggested_single_field():
     domain_description = body_data["domainDescription"]
     is_positive = body_data["isPositive"]
     text_filtering_variation = body_data["textFilteringVariation"]
+    item = body_data.get("item", {})
 
     completed_item = {"domain_description": domain_description, "field_name": field_name,
                       "field_text": field_text, "is_positive": is_positive}
+
+    if field_name == Field.NAME.value:
+        completed_item[Field.DESCRIPTION.value] = item[Field.DESCRIPTION.value]
+        completed_item[Field.ORIGINAL_TEXT.value] = item[Field.ORIGINAL_TEXT.value]
 
     is_domain_description = domain_description != ""
     prompt = prompt_manager.get_prompt(
@@ -172,12 +180,14 @@ def save_suggested_summary():
     conceptual_model = body_data["conceptualModel"]
     summary = body_data["summary"]
     is_positive = body_data["isPositive"]
+    style = body_data.get("style", "")
 
     completed_item = {"domain_description": domain_description, "summary": summary,
-                      "is_positive": is_positive, "conceptual_model": conceptual_model}
+                      "style": style, "is_positive": is_positive, "conceptual_model": conceptual_model}
 
     is_domain_description = domain_description != ""
-    prompt = prompt_manager.get_prompt(user_choice=summary_type, is_domain_description=is_domain_description, is_chain_of_thoughts=False)
+    prompt = prompt_manager.get_prompt(user_choice=summary_type, is_domain_description=is_domain_description,
+                                       is_chain_of_thoughts=False, summary_plain_text_style=style)
     completed_item["prompt"] = prompt
 
     save_item_to_storage(completed_item)
