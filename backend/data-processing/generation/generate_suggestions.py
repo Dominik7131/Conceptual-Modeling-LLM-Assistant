@@ -348,8 +348,14 @@ def main():
                 os.makedirs(OUTPUT_ACTUAL_DIRECTORY)
 
             output_file_extension = ".csv" if is_csv_output else ".txt"
+
+            if user_choice == UserChoice.CLASSES.value:
+                text_filtering_name = "-"
+            else:
+                text_filtering_name = f"-{text_filtering_variation}-"
+
             actual_output_file_path = os.path.join(
-                OUTPUT_ACTUAL_DIRECTORY, f"{domain_model}-{user_choice}-{text_filtering_variation}-{ACTUAL_OUTPUT}-0{file_index}{output_file_extension}")
+                OUTPUT_ACTUAL_DIRECTORY, f"{domain_model}-{user_choice}{text_filtering_name}{ACTUAL_OUTPUT}-0{file_index}{output_file_extension}")
             domain_description_file_name = f"domain-description-0{file_index}.txt"
             domain_description_path = os.path.join(DOMAIN_MODELING_DIRECTORY_PATH, domain_model, domain_description_file_name)
 
