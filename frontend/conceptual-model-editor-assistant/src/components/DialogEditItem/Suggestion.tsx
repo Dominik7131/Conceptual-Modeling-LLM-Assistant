@@ -88,11 +88,11 @@ const Suggestion: React.FC<Props> = ({ item, field, isRegeneratedText, isDisable
 
         if (itemType === ItemType.CLASS)
         {
-            sourceClass = regeneratedItem[Field.NAME]
+            sourceClass = item[Field.NAME]
         }
         else
         {
-            sourceClass = (regeneratedItem as Attribute)[Field.SOURCE_CLASS]
+            sourceClass = (item as Attribute)[Field.SOURCE_CLASS]
         }
 
         saveSingleFieldSuggestion(field, regeneratedItem[field as keyof Item] as string, itemType, sourceClass, isPositive)
