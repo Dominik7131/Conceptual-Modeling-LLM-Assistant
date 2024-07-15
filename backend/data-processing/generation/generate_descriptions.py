@@ -10,7 +10,7 @@ sys.path.append(".")
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
 sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
-from definitions.utility import Field, TextFilteringVariation, UserChoice
+from definitions.utility import Field, FieldUI, TextFilteringVariation, UserChoice
 from definitions.domain_modelling import DOMAIN_DESCRIPTIONS_COUNT, DOMAIN_MODELING_DIRECTORY_PATH, DOMAIN_MODELS
 from utils.llm_assistant import LLMAssistant
 
