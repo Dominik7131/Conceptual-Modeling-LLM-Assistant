@@ -100,9 +100,6 @@ def generate_expected_output(test_file_path, output_file_path, user_choice):
     elif user_choice == UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value:
         expected_output = create_associations1_expected_output(test_cases)
 
-    elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
-        expected_output = create_associations1_expected_output(test_cases)
-
     else:
         raise ValueError(f"Unexpected user choice: \"{user_choice}\".")
 
@@ -201,7 +198,7 @@ def create_attributes_actual_output(llm_assistant, test_cases, user_choice, doma
             if is_csv_output:
                 original_text = original_text.replace('"', "'")
                 result.append(
-                    f"\"{name}\"{CSV_SEPARATOR}\"{source_class}\"{CSV_SEPARATOR}\"{original_text}\"")
+                    f"\"{name}\"{CSV_SEPARATOR}\"{source_class}\"{CSV_SEPARATOR}\"{original_text}\"{CSV_SEPARATOR}{CSV_SEPARATOR}{CSV_SEPARATOR}")
             else:
                 result.append(
                     f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n")
@@ -244,33 +241,10 @@ def create_associations1_actual_output(llm_assistant, test_cases, user_choice, d
             if is_csv_output:
                 original_text = original_text.replace('"', "'")
                 result.append(
-                    f"\"{name}\"{CSV_SEPARATOR}\"{inputed_class}\"{CSV_SEPARATOR}\"{source_class}\"{CSV_SEPARATOR}\"{target_class}\"{CSV_SEPARATOR}\"{original_text}\"")
+                    f"\"{name}\"{CSV_SEPARATOR}\"{inputed_class}\"{CSV_SEPARATOR}\"{source_class}\"{CSV_SEPARATOR}\"{target_class}\"{CSV_SEPARATOR}\"{original_text}\"{CSV_SEPARATOR}{CSV_SEPARATOR}{CSV_SEPARATOR}")
             else:
                 result.append(
                     f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n- {FieldUI.SOURCE_CLASS.value}: {source_class}\n- {FieldUI.TARGET_CLASS.value}: {target_class}\n\n")
-
-    return result
-
-
-def create_associations2_actual_output(llm_assistant, test_cases, user_choice, domain_description, text_filtering_variation):
-
-    result = []
-    for test_case in test_cases:
-        source_class = test_case[Field.SOURCE_CLASS.value]
-        target_class = test_case[Field.TARGET_CLASS.value]
-
-        result.append(
-            f"Source class: {source_class}, Target class: {target_class}")
-        iterator = llm_assistant.suggest_items(source_class=source_class, target_class=target_class, user_choice=user_choice,
-                                               domain_description=domain_description, text_filtering_variation=text_filtering_variation)
-
-        for index, suggested_item in enumerate(iterator):
-            suggested_item = json.loads(suggested_item)
-
-            name = suggested_item[Field.NAME.value]
-            original_text = suggested_item[Field.ORIGINAL_TEXT.value]
-
-            result.append(f"{index + 1}) {name}\n- {FieldUI.ORIGINAL_TEXT.value}: {original_text}\n\n")
 
     return result
 
@@ -293,9 +267,6 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
         results = create_associations1_actual_output(llm_assistant, test_cases, user_choice,
                                                      domain_description, text_filtering_variation, is_csv_output)
 
-    elif user_choice == UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value:
-        results = create_associations2_actual_output(llm_assistant, test_cases, user_choice, domain_description, text_filtering_variation)
-
     else:
         raise ValueError(f"Unexpected user choice: \"{user_choice}\".")
 
@@ -307,8 +278,8 @@ def generate_actual_output(llm_assistant, domain_description, test_file_path, ac
 def main():
 
     parser = argparse.ArgumentParser(description="Suggestions generator")
-    parser.add_argument("--user_choice", choices=[UserChoice.CLASSES.value, UserChoice.ATTRIBUTES.value, UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value,
-                        UserChoice.ASSOCIATIONS_TWO_KNOWN_CLASSES.value], type=str, default=UserChoice.CLASSES.value, help="Elements to generate")
+    parser.add_argument("--user_choice", choices=[UserChoice.CLASSES.value, UserChoice.ATTRIBUTES.value,
+                        UserChoice.ASSOCIATIONS_ONE_KNOWN_CLASS.value], type=str, default=UserChoice.CLASSES.value, help="Elements to generate")
     parser.add_argument("--output_format", choices=["txt", "csv"], type=str, default="csv", help="Output file format")
     parser.add_argument("--filtering", choices=[TextFilteringVariation.NONE.value, TextFilteringVariation.SYNTACTIC.value,
                         TextFilteringVariation.SEMANTIC.value], type=str, default=TextFilteringVariation.SYNTACTIC.value, help="Text filtering variation")
