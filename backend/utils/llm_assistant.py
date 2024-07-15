@@ -1,9 +1,15 @@
-from semantic_text_filterer import SemanticTextFilterer
-from syntactic_text_filterer import SyntacticTextFilterer
 import os
 import logging
 import json
 import sys
+
+TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
+
+sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
+sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
+
+from semantic_text_filterer import SemanticTextFilterer
+from syntactic_text_filterer import SyntacticTextFilterer
 
 from utils.original_text_finder import OriginalTextFinder
 from definitions.logging import LOG_DIRECTORY, LOG_FILE_PATH, LOGGER_NAME
@@ -11,11 +17,6 @@ from utils.text_utility import TextUtility
 from definitions.utility import CLASSES_BLACK_LIST, Field, TextFilteringVariation, UserChoice
 from utils.llm_manager import LLMManager
 from utils.prompt_manager import PromptManager
-
-TEXT_FILTERING_DIRECTORY_NAME = "text-filtering"
-
-sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "syntactic"))
-sys.path.append(os.path.join(TEXT_FILTERING_DIRECTORY_NAME, "semantic"))
 
 
 ITEMS_COUNT = 5
@@ -50,8 +51,7 @@ class LLMAssistant:
     def _append_default_messages(self, user_choice, is_domain_description=False):
 
         if IS_SYSTEM_MSG:
-            system_prompt = self.prompt_manager.create_system_prompt(
-                user_choice, is_domain_description)
+            system_prompt = self.prompt_manager.create_system_prompt(user_choice, is_domain_description)
         else:
             system_prompt = ""
 
@@ -146,7 +146,7 @@ class LLMAssistant:
             prompt = self.prompt_manager.create_prompt(
                 user_choice=user_choice, source_class=source_class, target_class=target_class,
                 is_domain_description=is_domain_description, items_count_to_suggest=items_count_to_suggest,
-                relevant_texts=relevant_texts, is_chain_of_thoughts=is_chain_of_thoughts)
+                relevant_texts=relevant_texts)
 
             if attempt_number > 0:
                 self.logger.info(f"Attempt: {attempt_number}")
@@ -230,8 +230,7 @@ class LLMAssistant:
         prompt = self.prompt_manager.create_prompt(
             user_choice=user_choice, source_class=source_class, target_class=target_class,
             attribute_name=name, association_name=name, description=description, original_text=original_text,
-            relevant_texts=relevant_texts, field_name=field_name,
-            is_chain_of_thoughts=False, is_domain_description=is_domain_description)
+            relevant_texts=relevant_texts, field_name=field_name, is_domain_description=is_domain_description)
 
         self.messages = []
         new_messages = self.messages.copy()
@@ -262,7 +261,7 @@ class LLMAssistant:
         is_domain_description = domain_description != ""
         prompt = self.prompt_manager.create_prompt(
             user_choice=user_choice, conceptual_model=conceptual_model, relevant_texts=domain_description,
-            is_chain_of_thoughts=False, is_domain_description=is_domain_description, summary_plain_text_style=style)
+            is_domain_description=is_domain_description, summary_plain_text_style=style)
 
         self.messages = []
         new_messages = self.messages.copy()
@@ -287,7 +286,7 @@ class LLMAssistant:
 
         is_domain_description = domain_description != ""
         prompt = self.prompt_manager.create_prompt(user_choice=user_choice, conceptual_model=conceptual_model,
-                                                   relevant_texts=domain_description, is_chain_of_thoughts=False, is_domain_description=is_domain_description)
+                                                   relevant_texts=domain_description, is_domain_description=is_domain_description)
 
         self.messages = []
         new_messages = self.messages.copy()
@@ -303,3 +302,5 @@ class LLMAssistant:
 
             json_item = json.dumps(item)
             return json_item
+
+        return self._empty_generator()
