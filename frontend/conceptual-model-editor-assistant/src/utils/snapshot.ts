@@ -1,6 +1,6 @@
 import { SetterOrUpdater } from "recoil"
-import { ConceptualModelSnapshot, DomainDescriptionSnapshot, TextFilteringVariationSnapshot } from "../definitions/snapshots"
-import { SummaryConceptualModel } from "../definitions/summary"
+import { ConceptualModelSnapshot, DomainDescriptionSnapshot, SummaryStyleSnapshot, TextFilteringVariationSnapshot } from "../definitions/snapshots"
+import { SummaryConceptualModel, SummaryStyle } from "../definitions/summary"
 import { TextFilteringVariation } from "../definitions/textFilteringVariation"
 import { UserChoice, UserChoiceSummary } from "../definitions/utility"
 
@@ -23,6 +23,12 @@ export const snapshotTextFilteringVariation = (userChoice: UserChoice, textFilte
 }
 
 
+export const snapshotSummaryStyle = (userChoice: UserChoice, summaryStyle: SummaryStyle, setSummaryStyle: SetterOrUpdater<SummaryStyleSnapshot>) =>
+{
+    setSummaryStyle((previousSummaryStyle: SummaryStyleSnapshot) => ({ ...previousSummaryStyle, [userChoice]: summaryStyle }))
+}
+
+
 export const getSnapshotDomainDescription = (userChoice: UserChoice, snapshot: DomainDescriptionSnapshot): string =>
 {
     return snapshot[userChoice]
@@ -40,6 +46,12 @@ export const getSnapshotConceptualModel = (userChoice: UserChoiceSummary, snapsh
 
 
 export const getSnapshotTextFilteringVariation = (userChoice: UserChoice, snapshot: TextFilteringVariationSnapshot): TextFilteringVariation =>
+{
+    return snapshot[userChoice]
+}
+
+
+export const getSnapshotSummaryStyle = (userChoice: UserChoiceSummary, snapshot: SummaryStyleSnapshot): SummaryStyle =>
 {
     return snapshot[userChoice]
 }

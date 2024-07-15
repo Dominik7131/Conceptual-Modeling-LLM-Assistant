@@ -1,14 +1,14 @@
 import { useRecoilValue, useSetRecoilState } from "recoil"
 import { selectedNodesState, selectedEdgesState } from "../atoms/conceptualModel"
 import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms/domainDescription"
-import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../atoms/snapshots"
+import { domainDescriptionSnapshotsState, conceptualModelSnapshotState, summaryStyleSnapshotState } from "../atoms/snapshots"
 import { topbarTabValueState } from "../atoms/topbar"
 import { SummarySuggestionBody } from "../definitions/fetch"
-import { FORCE_NO_DOMAIN_DESCRIPTION, SummaryPlainTextStyle } from "../definitions/summary"
+import { FORCE_NO_DOMAIN_DESCRIPTION, SummaryStyle } from "../definitions/summary"
 import { TopbarTab } from "../definitions/tabs"
 import { NOTHING_SELECTED_MSG, UserChoiceSummary } from "../definitions/utility"
 import { convertConceptualModelToObjectSummary } from "../utils/serialization"
-import { snapshotDomainDescription, snapshotConceptualModel } from "../utils/snapshot"
+import { snapshotDomainDescription, snapshotConceptualModel, snapshotSummaryStyle } from "../utils/snapshot"
 
 
 const useSummaryButtonClick = () =>
@@ -22,9 +22,10 @@ const useSummaryButtonClick = () =>
     const isIgnoreDomainDescription = useRecoilValue(isIgnoreDomainDescriptionState)
     const setDomainDescriptionSnapshot = useSetRecoilState(domainDescriptionSnapshotsState)
     const setConceptualModelSnapshot = useSetRecoilState(conceptualModelSnapshotState)
+    const setSummaryStyleSnapshot = useSetRecoilState(summaryStyleSnapshotState)
 
 
-    const onButtonClick = (userChoice: UserChoiceSummary, summaryStyle: SummaryPlainTextStyle = SummaryPlainTextStyle.NOT_SPECIFIED): string =>
+    const onButtonClick = (userChoice: UserChoiceSummary, summaryStyle: SummaryStyle = SummaryStyle.NOT_SPECIFIED): string =>
     {
         if (selectedNodes.length === 0 && selectedEdges.length === 0)
         {
@@ -43,6 +44,8 @@ const useSummaryButtonClick = () =>
 
         const conceptualModel = convertConceptualModelToObjectSummary(selectedNodes, selectedEdges)
         snapshotConceptualModel(userChoice, conceptualModel, setConceptualModelSnapshot)
+
+        snapshotSummaryStyle(userChoice, summaryStyle, setSummaryStyleSnapshot)
 
         if (userChoice === UserChoiceSummary.SUMMARY_PLAIN_TEXT)
         {

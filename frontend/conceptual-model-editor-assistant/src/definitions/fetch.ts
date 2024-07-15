@@ -1,7 +1,7 @@
 import { Item } from "./conceptualModel"
 import { ConceptualModelJson } from "./conceptualModelJSON"
 import { OriginalTextIndexesItem } from "./originalTextIndexes"
-import { SummaryConceptualModel, SummaryPlainTextStyle } from "./summary"
+import { SummaryConceptualModel, SummaryStyle } from "./summary"
 import { TextFilteringVariation } from "./textFilteringVariation"
 import { UserChoiceItem, UserChoiceSummary } from "./utility"
 
@@ -36,7 +36,7 @@ export interface SummarySuggestionBody
   summaryType: UserChoiceSummary
   domainDescription: string
   conceptualModel: SummaryConceptualModel
-  style: SummaryPlainTextStyle
+  style: SummaryStyle
 }
 
 
@@ -74,5 +74,6 @@ export interface SummaryUserEvaluationBody
   domainDescription: string
   conceptualModel: SummaryConceptualModel
   isPositive: boolean
+  style: SummaryStyle
   summary: SummaryConceptualModel | string
 }

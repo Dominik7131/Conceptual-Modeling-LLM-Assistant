@@ -3,7 +3,7 @@ import { useRecoilState } from "recoil"
 import { isIgnoreDomainDescriptionState } from "../../atoms/domainDescription"
 import { textFilteringVariationState } from "../../atoms/textFiltering"
 import { TextFilteringVariation } from "../../definitions/textFilteringVariation"
-import { SummaryPlainTextStyle } from "../../definitions/summary"
+import { SummaryStyle } from "../../definitions/summary"
 import { summaryPlainTextStyleState } from "../../atoms/summary"
 
 
@@ -22,7 +22,7 @@ const SettingsTab: React.FC = (): JSX.Element =>
 
     const handleSummaryStyleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     {
-        const newSummaryStyle = event.target.value as SummaryPlainTextStyle
+        const newSummaryStyle = event.target.value as SummaryStyle
         setSummaryStyle(newSummaryStyle)
     }
 
@@ -41,10 +41,10 @@ const SettingsTab: React.FC = (): JSX.Element =>
 
             <FormLabel> Summary plain text style </FormLabel>
             <RadioGroup row onChange={ handleSummaryStyleChange } value={ summaryStyle }>
-                <FormControlLabel value={SummaryPlainTextStyle.NOT_SPECIFIED} control={<Radio />} label={"not specified"} />
-                <FormControlLabel value={SummaryPlainTextStyle.ANALYTICAL} control={<Radio />} label={SummaryPlainTextStyle.ANALYTICAL} />
-                <FormControlLabel value={SummaryPlainTextStyle.EDUCATIONAL} control={<Radio />} label={SummaryPlainTextStyle.EDUCATIONAL} />
-                <FormControlLabel value={SummaryPlainTextStyle.FUNNY_STORY} control={<Radio />} label={SummaryPlainTextStyle.FUNNY_STORY} />
+                <FormControlLabel value={SummaryStyle.NOT_SPECIFIED} control={<Radio />} label={"not specified"} />
+                <FormControlLabel value={SummaryStyle.ANALYTICAL} control={<Radio />} label={SummaryStyle.ANALYTICAL} />
+                <FormControlLabel value={SummaryStyle.EDUCATIONAL} control={<Radio />} label={SummaryStyle.EDUCATIONAL} />
+                <FormControlLabel value={SummaryStyle.FUNNY_STORY} control={<Radio />} label={SummaryStyle.FUNNY_STORY} />
             </RadioGroup>
 
             <Divider sx={{ marginY: "30px" }}></Divider>

@@ -1,4 +1,4 @@
-import { SummaryConceptualModel } from "./summary"
+import { SummaryConceptualModel, SummaryStyle } from "./summary"
 import { TextFilteringVariation } from "./textFilteringVariation"
 import { UserChoiceItem, UserChoiceSingleField, UserChoiceSummary } from "./utility"
 
@@ -29,4 +29,11 @@ export interface ConceptualModelSnapshot
 {
   [UserChoiceSummary.SUMMARY_PLAIN_TEXT]: SummaryConceptualModel
   [UserChoiceSummary.SUMMARY_DESCRIPTIONS]: SummaryConceptualModel
+}
+
+
+export interface SummaryStyleSnapshot
+{
+  [UserChoiceSummary.SUMMARY_PLAIN_TEXT]: SummaryStyle
+  [UserChoiceSummary.SUMMARY_DESCRIPTIONS]: SummaryStyle
 }

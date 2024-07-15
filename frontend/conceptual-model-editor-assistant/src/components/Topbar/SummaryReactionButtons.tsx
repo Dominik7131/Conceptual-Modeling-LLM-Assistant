@@ -2,7 +2,7 @@ import { Button, Stack, Tooltip } from "@mui/material"
 import ThumbUpIcon from "@mui/icons-material/ThumbUp"
 import ThumbDownIcon from "@mui/icons-material/ThumbDown"
 import { useRecoilValue } from "recoil"
-import { domainDescriptionSnapshotsState, conceptualModelSnapshotState } from "../../atoms/snapshots"
+import { domainDescriptionSnapshotsState, conceptualModelSnapshotState, summaryStyleSnapshotState } from "../../atoms/snapshots"
 import { SummaryConceptualModel } from "../../definitions/summary"
 import { TOOLTIP_ENTER_DELAY_MS, TOOLTIP_LEAVE_DELAY_MS, UserChoiceSummary } from "../../definitions/utility"
 import { handleSaveSuggestionSummary } from "../../utils/summary"
@@ -20,6 +20,7 @@ const SummaryReactionButtons: React.FC<Props> = ({ userChoice, summary }): JSX.E
     const [isReactionButtonClicked, setIsReactionButtonClicked] = useState(false)
     const domainDescriptionSnapshot = useRecoilValue(domainDescriptionSnapshotsState)
     const conceptualModelSnapshot = useRecoilValue(conceptualModelSnapshotState)
+    const summaryStyleSnapshot = useRecoilValue(summaryStyleSnapshotState)
 
     const reactionIconsColor = "inherit"
     const reactionIconsSize = "20px"
@@ -28,7 +29,7 @@ const SummaryReactionButtons: React.FC<Props> = ({ userChoice, summary }): JSX.E
 
     const handleSaveSuggestion = (isPositiveReaction: boolean) =>
     {
-        handleSaveSuggestionSummary(userChoice, isPositiveReaction, domainDescriptionSnapshot, conceptualModelSnapshot, summary)
+        handleSaveSuggestionSummary(userChoice, isPositiveReaction, domainDescriptionSnapshot, conceptualModelSnapshot, summaryStyleSnapshot, summary)
         setIsReactionButtonClicked(true)
     }
 

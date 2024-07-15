@@ -4,7 +4,7 @@ export const EMPTY_SUMMARY_CONCEPTUAL_MODEL = {
   classes: [], associations: [], generalizations: []
 }
 
-export const enum SummaryPlainTextStyle
+export const enum SummaryStyle
 {
   NOT_SPECIFIED = "",
   EDUCATIONAL = "educational",
@@ -12,6 +12,8 @@ export const enum SummaryPlainTextStyle
   FUNNY_STORY = "funny story",
 }
 
+export const SUMMARY_PLAIN_TEXT_STYLE_DEFAULT = SummaryStyle.NOT_SPECIFIED
+export const SUMMARY_DESCRIPTIONS_STYLE_DEFAULT = SummaryStyle.NOT_SPECIFIED
 
 export interface SummaryConceptualModel
 {
