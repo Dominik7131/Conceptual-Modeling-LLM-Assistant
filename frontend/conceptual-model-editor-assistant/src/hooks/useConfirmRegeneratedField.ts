@@ -5,7 +5,7 @@ import { getSnapshotDomainDescription, getSnapshotTextFilteringVariation } from 
 import { onClearRegeneratedItem } from "../utils/editItem"
 import { SingleFieldUserEvaluationBody } from "../definitions/fetch"
 import { regeneratedOriginalTextIndexesState } from "../atoms/originalTextIndexes"
-import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots"
+import { domainDescriptionSnapshotsState, itemSnapshotState, textFilteringVariationSnapshotsState } from "../atoms/snapshots"
 import { editedSuggestedItemState, regeneratedItemState } from "../atoms/suggestions"
 import { Item } from "../definitions/conceptualModel"
 import { ItemType, UserChoiceSingleField, Field } from "../definitions/utility"
@@ -15,6 +15,7 @@ const useConfirmRegeneratedField = () =>
 {
     const domainDescriptionSnapshot = useRecoilValue(domainDescriptionSnapshotsState)
     const textFilteringVariationSnapshot = useRecoilValue(textFilteringVariationSnapshotsState)
+    const itemSnapshot = useRecoilValue(itemSnapshotState)
 
     const setEditedItem = useSetRecoilState(editedSuggestedItemState)
     const [regeneratedItem, setRegeneratedItem] = useRecoilState(regeneratedItemState)
@@ -37,8 +38,9 @@ const useConfirmRegeneratedField = () =>
         const userChoice = itemTypeToUserChoice(itemType)
 
         const bodyData: SingleFieldUserEvaluationBody = {
-            domainDescription: currentDomainDescription, fieldName: fieldName, fieldText: fieldText,
-            userChoice: userChoice, sourceClass: sourceClass, isPositive: isPositive, textFilteringVariation: currentFilteringVariation
+            domainDescription: currentDomainDescription, fieldName: fieldName, fieldText: fieldText, userChoice: userChoice,
+            sourceClass: sourceClass, isPositive: isPositive, textFilteringVariation: currentFilteringVariation,
+            item: itemSnapshot
         }
         const bodyDataJSON = JSON.stringify(bodyData)
     

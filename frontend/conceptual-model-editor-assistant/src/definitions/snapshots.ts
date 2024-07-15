@@ -1,6 +1,6 @@
 import { SummaryConceptualModel, SummaryStyle } from "./summary"
 import { TextFilteringVariation } from "./textFilteringVariation"
-import { UserChoiceItem, UserChoiceSingleField, UserChoiceSummary } from "./utility"
+import { Field, UserChoiceItem, UserChoiceSingleField, UserChoiceSummary } from "./utility"
 
 
 export interface DomainDescriptionSnapshot
@@ -36,4 +36,12 @@ export interface SummaryStyleSnapshot
 {
   [UserChoiceSummary.SUMMARY_PLAIN_TEXT]: SummaryStyle
   [UserChoiceSummary.SUMMARY_DESCRIPTIONS]: SummaryStyle
+}
+
+
+export interface ItemSnapshot
+{
+  [Field.NAME]: string
+  [Field.DESCRIPTION]: string
+  [Field.ORIGINAL_TEXT]: string
 }

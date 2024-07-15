@@ -1,6 +1,7 @@
 import { Item } from "./conceptualModel"
 import { ConceptualModelJson } from "./conceptualModelJSON"
 import { OriginalTextIndexesItem } from "./originalTextIndexes"
+import { ItemSnapshot } from "./snapshots"
 import { SummaryConceptualModel, SummaryStyle } from "./summary"
 import { TextFilteringVariation } from "./textFilteringVariation"
 import { UserChoiceItem, UserChoiceSummary } from "./utility"
@@ -65,6 +66,7 @@ export interface SingleFieldUserEvaluationBody
   sourceClass: string
   isPositive: boolean
   textFilteringVariation: TextFilteringVariation
+  item: ItemSnapshot
 }
 
 

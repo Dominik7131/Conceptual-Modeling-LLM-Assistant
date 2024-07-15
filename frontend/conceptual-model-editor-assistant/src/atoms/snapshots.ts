@@ -1,6 +1,6 @@
 import { atom } from "recoil"
-import { TEXT_FILTERING_VARIATION_DEFAULT_VALUE, UserChoiceItem, UserChoiceSingleField, UserChoiceSummary } from "../definitions/utility"
-import { DomainDescriptionSnapshot, TextFilteringVariationSnapshot, ConceptualModelSnapshot, SummaryStyleSnapshot } from "../definitions/snapshots"
+import { Field, TEXT_FILTERING_VARIATION_DEFAULT_VALUE, UserChoiceItem, UserChoiceSingleField, UserChoiceSummary } from "../definitions/utility"
+import { DomainDescriptionSnapshot, TextFilteringVariationSnapshot, ConceptualModelSnapshot, SummaryStyleSnapshot, ItemSnapshot } from "../definitions/snapshots"
 import { EMPTY_SUMMARY_CONCEPTUAL_MODEL, SUMMARY_DESCRIPTIONS_STYLE_DEFAULT, SUMMARY_PLAIN_TEXT_STYLE_DEFAULT, SummaryStyle } from "../definitions/summary"
 
 
@@ -31,4 +31,10 @@ export const conceptualModelSnapshotState = atom<ConceptualModelSnapshot>({
 export const summaryStyleSnapshotState = atom<SummaryStyleSnapshot>({
     key: "summaryStyleSnapshotState",
     default: { [UserChoiceSummary.SUMMARY_PLAIN_TEXT]: SUMMARY_PLAIN_TEXT_STYLE_DEFAULT, [UserChoiceSummary.SUMMARY_DESCRIPTIONS]: SUMMARY_DESCRIPTIONS_STYLE_DEFAULT },
+})
+
+
+export const itemSnapshotState = atom<ItemSnapshot>({
+    key: "itemSnapshotState",
+    default: { [Field.NAME]: "", [Field.DESCRIPTION]: "", [Field.ORIGINAL_TEXT]: ""},
 })

@@ -6,10 +6,11 @@ import { SingleFieldSuggestionBody } from "../definitions/fetch"
 import { editDialogErrorMsgState } from "../atoms/dialogs"
 import { domainDescriptionState, isIgnoreDomainDescriptionState } from "../atoms/domainDescription"
 import { regeneratedOriginalTextIndexesState } from "../atoms/originalTextIndexes"
-import { domainDescriptionSnapshotsState, textFilteringVariationSnapshotsState } from "../atoms/snapshots"
+import { domainDescriptionSnapshotsState, itemSnapshotState, textFilteringVariationSnapshotsState } from "../atoms/snapshots"
 import { regeneratedItemState, fieldToLoadState } from "../atoms/suggestions"
 import { textFilteringVariationState } from "../atoms/textFiltering"
 import { itemTypeToUserChoice } from "../utils/utility"
+import { ItemSnapshot } from "../definitions/snapshots"
 
 
 const useGenerateSingleField = () =>
@@ -21,6 +22,7 @@ const useGenerateSingleField = () =>
     const setRegeneratedItem = useSetRecoilState(regeneratedItemState)
     const setSnapshotDomainDescription = useSetRecoilState(domainDescriptionSnapshotsState)
     const setSnapshotTextFilteringVariation = useSetRecoilState(textFilteringVariationSnapshotsState)
+    const setSnapshotItem = useSetRecoilState(itemSnapshotState)
     const setRegeneratedOriginalTextIndexes = useSetRecoilState(regeneratedOriginalTextIndexesState)
 
     const setFieldToLoad = useSetRecoilState(fieldToLoadState)
@@ -40,6 +42,13 @@ const useGenerateSingleField = () =>
 
         snapshotDomainDescription(UserChoiceSingleField.SINGLE_FIELD, currentDomainDescription, setSnapshotDomainDescription)
         snapshotTextFilteringVariation(UserChoiceSingleField.SINGLE_FIELD, textFilteringVariation, setSnapshotTextFilteringVariation)
+
+        if (Field.NAME === field)
+        {
+            const item : ItemSnapshot = { [Field.NAME]: name, [Field.DESCRIPTION]: description, [Field.ORIGINAL_TEXT]: originalText }
+            setSnapshotItem(item)
+        }
+
     
         const userChoice = itemTypeToUserChoice(itemType)
     
