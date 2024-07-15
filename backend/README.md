@@ -21,7 +21,7 @@ To use any of the backend scripts:
 
           [virtual-environment-name]\Scripts\activate
 
-- install these Python packages:
+- install the following Python packages:
     - `flask`, `flask-cors`, `openai`, `ufal.morphodita`, [pytorch with CUDA](https://pytorch.org/get-started/locally/), `sentence-transformers`, `termcolor`
 
 <br/>
