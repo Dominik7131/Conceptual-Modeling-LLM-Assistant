@@ -1,21 +1,48 @@
 \chapter{Framework configurations}
 \label{chap:framework_configuration}
 
-Now we propose some configurations of the generic framework from the previous chapter. This includes configuring the meta-template for the generators, defining the prompting techniques, and defining the techniques for domain description pre-processing that the generators will use.
+In this chapter, we propose some configurations of the generic framework from the previous chapter. This includes configuring the meta-template for the generators, defining the prompting techniques, and defining the techniques for domain description pre-processing that the generators will use.
 
 
-\section{Input data name}
+\section{Meta-template configurations}
 
-For the \emph{text to model generators} and for the \emph{original text generator} we refer to the inputted domain description generally as the \textit{context}. However, a more descriptive name, such as \textit{domain description} could be used.
-For the \emph{name generator} we refer to the inputted description and to the inputted original text as the \textit{domain element description} and the \textit{domain element original text} where the \textit{domain element} is \textit{class} for $gen_{cn}$, \textit{attribute} for $gen_{an}$, and \textit{association} for $gen_{rn}$. Finally, for the \emph{summary generators} we refer to the input data as the \textit{domain model}.
+\subsection{Input data name}
+
+The table \ref{tab:input_data_name} shows our configurations. For the \emph{text to model generators} and for the \emph{original text generator}, we refer to the inputted domain description generally as the \textit{context}. However, a more descriptive name, such as \textit{domain description} can be used. For the \emph{summary generators}, we use the term \textit{conceptual model} to refer to the input data since they contain some classes, attributes, and associations, but also the term \emph{domain model} can be used.
+Finally, for the \emph{name generators}, we simply refer to the input data as the \textit{description} and \textit{original text}.
+
+\begin{table}[!h]
+    \scriptsize
+    \centering
+    \setlength{\tabcolsep}{0.5em}
+\begin{tabular}{@{}l>{\raggedright\arraybackslash}p{0.3\textwidth}>{\raggedright\arraybackslash}p{0.5\textwidth}@{}}
+   generators & input data name \\
+    \toprule
+    \addlinespace
+    
+\emph{text to model generators} & context \\
+\addlinespace
+
+\emph{summary generators} & conceptual model \\
+\addlinespace
+
+\emph{name generators} & description and original text \\
+\addlinespace
+
+	\bottomrule
+	\addlinespace
+	\end{tabular}
+	\caption{The proposed configurations of the \emph{input data name} part of the meta-template}
+	\label{tab:input_data_name}
+\end{table}
 
 
-\section{Structured data format}
+\subsection{Structured data format}
 
 The structured data can be inserted into the prompt in many different formats such as JSON, XML, and YAML. We use only the JSON format, as it is one of the most popular formats for data interchange on the Internet that each LLM should be very familiar with, since most of the training data for LLMs usually come from the Internet \cite{Zhao2023}.
 
 
-\section{Output specification}
+\subsection{Output specification}
 
 For automatic output parsing, the \emph{output specification} part instructs the LLM to output the result in JSON format. To get JSON output from the LLM either a concrete JSON instance can be provided as an example or a JSON schema can be used to define the desired JSON format. For example, when the goal is to get a class description in JSON format from the LLM, the \emph{output specification} instruction containing an instance of JSON format can look the following way: \\
 
@@ -24,7 +51,7 @@ For automatic output parsing, the \emph{output specification} part instructs the
 \null \quad ``description'': ``description of the class'' \\
 \}} \\
 
-\noindent{}or the \emph{output specification} instruction containing an JSON schema can look like this: \\
+\noindent{}or the \emph{output specification} instruction containing an JSON schema can look the following way: \\
 
 \noindent{}\textit{Output the description in JSON format based on this JSON schema: \\
 \{ \\
@@ -41,36 +68,42 @@ For automatic output parsing, the \emph{output specification} part instructs the
 \}} \\
 
 
-Since it usually takes a few seconds for the LLM to generate the output, the application response time can be improved by parsing the outputted JSON objects one by one instead of waiting for the whole output and then parsing the complete JSON object. This can be done by instructing the LLM to output one isolated JSON object for each outputted domain element, and as soon as the LLM generates some proper domain element in a JSON format it can be parsed and displayed to the user. To achieve this, we use in the \emph{output specification} instruction an instance of the corresponding JSON output. For example, when generating classes, the \emph{output specification} instruction can look like this: \\
+\subsubsection{Faster response time}
+
+Since it usually takes a few seconds for the LLMs to generate the complete output, instead of waiting for the whole output so the final JSON object can be parsed, the application response time can be improved by instructing the LLM to output separate JSON objects one by one so every time we need to wait only for one smaller JSON object to be generated. This can be done by instructing the LLM to for each outputted domain element output one JSON object, and as soon as the LLM generates some proper domain element in a JSON format, it can be parsed and displayed to the user. To achieve this, we use in the \emph{output specification} an instance of the corresponding JSON output. For example, when generating classes, the \emph{output specification} instruction can look the following way: \\
 
 \noindent{}\textit{Output each class in JSON object like this: \{``class'': ``class name''\}.} \\
 
-\noindent{}As a result, when the suggested classes are \textit{employee} and \textit{department} instead of getting the output in the following single object: \\
+\noindent{}As a result, when the suggested classes are for example \textit{employee} and \textit{department}, instead of getting the whole output in the following single object: \\
 
 \noindent{}\textit{\{``classes'': [\{``name'': ``employee''\}, \{``name'': ``department''\}]\}} \\
 
-\noindent{each class is outputted in a separate object:} \\
+\noindent{each class is outputted in the following separate objects:} \\
 
 \noindent{}\textit{\{``class'': ``employee''\} \\
-\{``class'': ``department''\}}
+\{``class'': ``department''\}} \\
+
+\noindent{}Which means that these classes can be now parsed one by one.
 
 
-\section{Output order}
+\subsubsection{Output order}
 \label{sec:output_order}
 
-When the modeling experts model the domain elements solely based on a given domain description, they typically proceed in the following two steps: (1) they find the context for the given domain element and (2) from the found context they extract the specific information such as the name of the domain element. For example, consider the following simple domain description: \\
+When humans model the domain elements solely based on a given domain description, they typically proceed in the following two steps: (1) they find the context for the given domain element and (2) from the found context they extract the specific information such as the name of the domain element. For example, consider the following simple domain description: \\
 
 \noindent{}\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.} \\
 
-\noindent{}When the task is to find associations for the class \textit{department}, usually the first step is to identify the context for this class. This context can be the first sentence of the domain description: \textit{``In this company, every employee works in some department''}. Subsequently, this context is identified and the association ``\textit{works in}'' between the classes \textit{employee} and \textit{department} can be found.
+\noindent{}When the task is to find associations for the class \textit{department}, usually the first step is to identify the context for this class. This context can be the first sentence of the domain description: \textit{In this company, every employee works in some department}. Subsequently, this context is identified and the association \textit{works in} with the source class \textit{employee} and the target class \textit{department} can be found.
 
-To mimic this approach, we configure the \emph{output specification} in the following way. For generators of classes, attributes, and associations for each domain element that the LLM finds, we first let the LLM to generate its original text and then its other fields such as the name. For example, the \emph{output specification} instruction for generating attributes can look like this: \\
+To mimic this approach, the \emph{output specification} can be configured the following way. For the \emph{domain element generators} for each domain element that the LLM finds, we first let the LLM to generate its original text and then its other fields such as the name. For example, the \emph{output specification} instruction for generating attributes can look like this: \\
 
 \noindent{}\textit{Output each attribute in JSON object like this: \\
-\{``originalText'': ``copy the part of the given context containing \\ this attribute'', ``name'': ``attribute name''\}.}
+\{``originalText'': ``copy the part of the given context containing \\ this attribute'', ``name'': ``attribute name''\}.} \\
+
+\noindent{}As we can see, for each attribute first the original text and then the name is generated.
 
 
-\section{Main control instruction}
+\subsection{Main control instruction}
 
 The \emph{main control instructions} aim to define the general task for each generator, such as \textit{extract all class names} for the class generator. Additionally, they can contain placeholders such as \textit{\{source\_class\}} when the task is class specific, so the user's selected class can be inserted into the prompt. It should not matter if this instruction is in the form of a question or in the form of an imperative since they both semantically are the same and the LLMs are trained on data both of the mentioned forms. For example, the following \emph{main control instructions} should lead to the same LLM output:
 
@@ -121,7 +154,7 @@ $gen_{sd}$ & generate descriptions only for the given classes, attributes and as
 \end{table}
 
 
-\section{Modeling procedure}
+\subsection{Modeling procedure}
 
 For generators of classes, attributes, and associations, we implemented the following approaches:
 
@@ -136,7 +169,7 @@ For generators of classes, attributes, and associations, we implemented the foll
 
 
 
-\subsection{Chain of thoughts}
+\subsubsection{Chain of thoughts}
 
 We experiment with the CoT prompting technique to generate classes, attributes, and associations. First, we need to come up with reasoning steps that the LLM can generate before outputting each domain element. Some possible reasoning steps can be generated by the LLM by adding the ``\textit{Let's think step by step}'' phrase into the prompts for generating classes, attributes, and associations as discussed in the section \ref{sec:chain_of_thoughts}. Figure \ref{fig:cot-think-step-by-step} shows one of the possible reasoning steps when using ChatGPT-4o to generate attributes with the simple domain description from the section \ref{sec:simple_domain_description_example}.
 
@@ -201,7 +234,7 @@ JSON object: \{``originalText'': ``copy the part of the given context containing
 \end{table}
 
 
-\subsection{N-shot prompting}
+\subsubsection{N-shot prompting}
 
 We use examples based on the domain description and its domain model that is shown in the figure \ref{fig:prompting-domain}.
 
@@ -243,7 +276,7 @@ For $gen_{r1}$ and ${gen_{r2}}$, we proceed similarly, but for ${gen_{r1}}$ we p
 Furthermore, concrete examples can be used to specify the output text format. For example, when the LLM is not provided with a specific name format for the corresponding domain elements, the outputted names can sometimes be in a snake case convention and some other time in a camel case convention. But when the provided examples contain a consistent naming format, the LLM usually outputs the provided format consistently. Similarly, the N-shot prompting technique lets us specify the naming style. For example, when no naming style is provided for attributes, they can contain some unwanted words such as starting with the word ``\textit{has}'' which is more common for association names.
 
 
-\subsection{CoT + N-shot prompting}
+\subsubsection{CoT + N-shot prompting}
 
 Our combination of the CoT and the N-shot prompting technique contains the same \emph{modeling procedure} as shown in the table \ref{tab:cot-prompt-templates} for the CoT only approach. However, the \emph{output specification} contains only the instance of the expected JSON object, and the intermediate steps are demonstrated in the \emph{example context specification} where the $N$ examples are provided. For example, the labeled example for the attribute \textit{role} of the class \textit{employee} looks like this: \\
 
@@ -260,7 +293,7 @@ Our combination of the CoT and the N-shot prompting technique contains the same 
 \textit{JSON object: \{``originalText'': ``make sure the departments they manage are productive'', ``name'': ``manages'', ``source'': ``manager'', ``target'': ``department''\}}
 
 
-\subsection{Tree of thoughts}
+\subsubsection{Tree of thoughts}
 
 Even though our defined generators do not solve the typical complex tasks that the ToT is usually used for, we experiment with this prompting technique for generating classes in the single prompt fashion as discussed in the section \ref{sec:tree_of_thoughts}. We use the mentioned single-prompt phrase in the \emph{modeling procedure} but we slightly edited it to fit our meta-template structure: \\
 
@@ -268,75 +301,53 @@ Even though our defined generators do not solve the typical complex tasks that t
 
 \noindent{}The bold text highlights the changes we made to the original phrase of the ToT prompting technique. Also, we removed the last sentence from the original phrase which is the following: \textit{The question is}. For example, the following is an LLM generated output with the LLM \emph{Llama-3-70B} for \textit{aircraft manufacturing}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/d9e00b65a376dbefe5b605bd680621f9f63f9252/manual\%20evaluation\%20domains/aircraft\%20manufacturing/domain-description-02.txt}} domain description: \\
 
-\noindent{}\textit{Expert 1:
-My first step is to identify the main entities mentioned in the context. Based on the text, I think the following classes can be extracted:
-\{``name'': ``Party''\} \\
-\{``name'': ``Customer''\} \\
-\{``name'': ``Supplier''\} \\
-\{``name'': ``Aircraft''\} \\
-\{``name'': ``Part''\} \\
-\{``name'': ``AircraftModel''\} \\
-\{``name'': ``PartModel''\} \\
-\{``name'': ``Supply''\} \\~\\
-Expert 2:
-I agree with Expert 1, but I also think we can extract another class:
-\{``name'': ``Purchase''\} \\~\\
-Expert 3:
-I'm not sure about ``Purchase'' yet, but I think we can also extract:
-\{``name'': ``DesignModel''\} \\~\\
-(All experts proceed to the next step) \\~\\
-Expert 1: \\
-My next step is to analyze the relationships between the entities. Based on the text, I think we can confirm the following classes: \\
-\{``name'': ``Party''\} \\
-\{``name'': ``Customer''\} \\
-\{``name'': ``Supplier''\} \\
-\{``name'': ``Aircraft''\} \\
-\{``name'': ``Part''\} \\
-\{``name'': ``AircraftModel''\} \\
-\{``name'': ``PartModel''\} \\
-\{``name'': ``Supply''\} \\~\\
-Expert 2: \\
-I still think ``Purchase'' is a valid class, but I also agree with Expert 1's analysis. Additionally, I think we can extract: \\
-\{``name'': ``SerialNumber''\} \\~\\
-Expert 3: \\
-I'm starting to think that ``DesignModel'' might not be a separate class, but rather an attribute of ``PartModel''. However, I do agree with the other experts' analysis. \\~\\
-(All experts proceed to the next step) \\~\\
-Expert 1: \\
-My next step is to review the text again and see if we've missed any classes. I think we've got a good list so far: \\
-\{``name'': ``Party''\} \\
-\{``name'': ``Customer''\} \\
-\{``name'': ``Supplier''\} \\
-\{``name'': ``Aircraft''\} \\
-\{``name'': ``Part''\} \\
-\{``name'': ``AircraftModel''\} \\
-\{``name'': ``PartModel''\} \\
-\{``name'': ``Supply''\} \\
-\{``name'': ``SerialNumber''\} \\~\\
-Expert 2: \\
-I still think ``Purchase'' is a valid class, but I'm starting to doubt it. I agree with Expert 1's review. \\~\\
-Expert 3: \\
-I'm out. I was wrong about ``DesignModel'' being a separate class. \\
-(Expert 3 leaves the group) \\~\\
-Expert 1: \\
-My final step is to review the list one more time. I think we've got a good list of classes: \\
-\{``name'': ``Party''\} \\
-\{``name'': ``Customer''\} \\
-\{``name'': ``Supplier''\} \\
-\{``name'': ``Aircraft''\} \\
-\{``name'': ``Part''\} \\
-\{``name'': ``AircraftModel''\} \\
-\{``name'': ``PartModel''\} \\
-\{``name'': ``Supply''\} \\
-\{``name'': ``SerialNumber''\} \\~\\
-Expert 2: \\
-I agree with Expert 1's final list. I was wrong about ``Purchase'' being a separate class.} \\
+
+\begin{figure}[!h]
+    \centering
+\begin{lstlisting}[
+  basicstyle=\ttfamily\scriptsize,
+  breaklines=true,
+  keywordstyle=\ttfamily
+]
+01 Expert 1:
+02 My first step is to identify the main entities mentioned in the context. Based on the text, I think the following classes can be extracted:
+03 {"name": "Party"}
+04 {"name": "Customer"}
+05 {"name": "Supplier"}
+
+...
+
+06 Expert 2:
+07 I agree with Expert 1, but I also think we can extract another class:
+08 {"name": "Purchase"}
+
+09 Expert 3:
+10 I am not sure about "Purchase" yet, but I think we can also extract:
+11 {"name": "DesignModel"}
+
+...
+
+12 Expert 2:
+13 I still think "Purchase" is a valid class, but I am starting to doubt it. I agree with review of Expert 1.
+
+14 Expert 3:
+15 I am out. I was wrong about "DesignModel" being a separate class.
+
+...
+
+\end{lstlisting}
+    \caption{\centering Prompt meta-template for the generators}
+    \label{fig:meta-templates}
+\end{figure}
+
+
 
 As we can see, first, the LLM created a preliminary list of classes and then it reasoned about the classes it was not certain about. In one of the steps, the class \textit{DesignModel} was removed as the LLM thought that it is rather an attribute of the class \textit{PartModel} which is a valid reasoning. \\
 
 We do not experiment with any iterative prompting technique as this would significantly increase the response time of our application as discussed in the section \ref{sec:iterative_prompting}.
 
 
-\section{Domain description pre-processing}
+\section{Domain description pre-processing configurations}
 
 \subsection{Motivation}
 

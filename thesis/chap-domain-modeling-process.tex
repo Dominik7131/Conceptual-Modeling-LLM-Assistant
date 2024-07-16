@@ -1,15 +1,16 @@
-\chapter{Domain modeling process analysis}
-\label{chap:domain_modeling_process_analysis}
+\chapter{Domain modeling process}
+\label{chap:domain_modeling_process}
+
+In this chapter, we introduce the minimalist but necessary formalization of the domain modeling process and its steps that can be automated.
+
+
+\section{Formalization}
 
 In our thesis, we consider a domain modeling process starting with a domain description $T$ acquired from stakeholders and knowledge sources such as internal documentation, manuals, or state law. $T$ can be a well-curated text, but it may also encompass varied interpretations articulated by different stakeholders at various levels of detail. A modeling expert translates $T$ into a domain model $M$ in a sequence of steps.
 
-A domain model $M = (\mathcal{C}, \mathcal{P})$ consists of a set of classes $\mathcal{C}$ and properties $\mathcal{P}$.
+A domain model $M = (\mathcal{C}, \mathcal{P})$ consists of a set of classes $\mathcal{C}$ and properties $\mathcal{P}$. A class $C \in \mathcal{C}$ has its $name(C)$ that identifies $C$ in $M$ and briefly characterizes the semantics of $C$. The class $C$ also has a $description(C)$ that describes the semantics of $C$. A property $P \in \mathcal{P}$ also has $name(P)$ and $description(P)$ used for the same purposes. It also has a $cardinality(P)$ that refers to the specification of the number of instances of one domain element that can or must be associated with each instance of some class. And it also has a source class, such that $source(P) \in \mathcal{C}$ and it can have a target class such that $target(P) \in \mathcal{C}$. $P$ is a binary association if $target(P)$ is defined otherwise, $P$ is an attribute. If $P$ is an attribute, then it also has $dataType(P)$ which defines the data type of $P$.
 
-A class $C \in \mathcal{C}$ has its $name(C)$ that identifies $C$ in $M$ and briefly characterizes the semantics of $C$. The class $C$ also has a $description(C)$ that describes the semantics of $C$.
-
-A property $P \in \mathcal{P}$ has also $name(P)$ and $description(P)$ used for the same purposes. It has a $cardinality(P)$ that refers to the specification of the number of instances of one domain element that can or must be associated with each instance of some class. It also has a source class, such that $source(P) \in \mathcal{C}$ and it can have a target class such that $target(P) \in \mathcal{C}$. $P$ is a binary association if $target(P)$ is defined otherwise, $P$ is an attribute. If $P$ is an attribute, then it also has $dataType(P)$ which defines the data type of $P$.
-
-These basic modeling constructs are prevalent in real conceptual models \cite{Keet2015}, so their automation could have a significant impact. We distinguish the following steps.
+These basic modeling constructs are prevalent in real domain models \cite{Keet2015}, so their automation could have a significant impact. We distinguish the following steps.
 
 
 \section{Steps}
@@ -39,7 +40,7 @@ These basic modeling constructs are prevalent in real conceptual models \cite{Ke
 \section{Example}
 \label{sec:simple_domain_description_example}
 
-Consider the following domain description: ``\textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.}'' Figure \ref{fig:simple-employee-domain-model} shows how a corresponding domain model can look like. It contains the class \textit{employee} with the attribute \textit{ID} and the association \textit{works in} between the classes \textit{employee} and \textit{department}.
+Consider the following domain description: \textit{In this company, every employee works in some department. Each employee is uniquely identified by his ID.} Figure \ref{fig:simple-employee-domain-model} shows how a corresponding domain model can look like. It contains the class \textit{employee} with the attribute \textit{ID}, and the association \textit{works in} with the source class \textit{employee} and the target class \textit{department}.
 
 \begin{figure}[!h]
     \centering
@@ -51,10 +52,10 @@ Consider the following domain description: ``\textit{In this company, every empl
 To create the described domain model when starting from an empty domain model, the following steps can be executed:
 
 \begin{enumerate}
-\item design a class: for the concept ``\textit{In this company, every employee works in some department}'' create the class $C$ such that \textit{employee} = $name(C)$
-\item design a class: for the concept ``\textit{every employee works in some department}'' create the class $C$ such that \textit{department} = $name(C)$
-\item design an attribute: for the class \textit{employee} and the concept ``\textit{Each employee is uniquely identified by his ID}'' create the attribute $P$ such that \textit{ID} = $name(P)$ and \textit{employee} = $source(P)$
-\item design an association: for a class \textit{employee} and the concept ``\textit{every employee works in some department}'' create the association $P$ such that \textit{works in} = $name(P)$, \textit{employee} = $source(P)$ and \textit{department} = $target(P)$
+\item design a class: for the concept \textit{In this company, every employee works in some department} create the class $C$ such that \textit{employee} = $name(C)$
+\item design a class: for the concept \textit{every employee works in some department} create the class $C$ such that \textit{department} = $name(C)$
+\item design an attribute: for the class \textit{employee} and the concept \textit{Each employee is uniquely identified by his ID} create the attribute $P$ such that \textit{ID} = $name(P)$ and \textit{employee} = $source(P)$
+\item design an association: for a class \textit{employee} and the concept \textit{every employee works in some department} create the association $P$ such that \textit{works in} = $name(P)$, \textit{employee} = $source(P)$ and \textit{department} = $target(P)$
 \end{enumerate}
 
-For providing more information for this domain model, the other mentioned steps can be used to define descriptions of the modeled elements, to define data types of the modeled attributes, and to define cardinalities of the modeled attributes and associations.
+For providing more information about this domain model, the other steps mentioned in the section \ref{sec:modeling_steps} can be used to define descriptions of the modeled elements, to define data types of the modeled attributes, and to define cardinalities of the modeled attributes and associations.

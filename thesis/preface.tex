@@ -4,18 +4,18 @@
 
 \section*{Motivation}
 
-Domain modeling is fundamental both in data and software engineering. Domain modeling techniques, such as conceptual modeling techniques, where a domain model is expressed as an ER or UML class diagram, or ontology engineering techniques, which define a domain model as a domain ontology, are well established both in academia and industry \cite{Verdonck2018}. However, creating these domain models manually takes a non-trivial amount of time and requires trained experts. Therefore, various modeling automation techniques have been proposed \cite{Sonbol2022}. Recently, researchers began to evaluate different approaches to using large language models (LLMs) as possible automation solutions \cite{Chen2023,Saeedizade2024}.
+Domain modeling is fundamental in both data and software engineering. Domain modeling techniques, such as conceptual modeling techniques, where a domain model is expressed as an ER or UML class diagram, or ontology engineering techniques, which define a domain model as a domain ontology, are well established both in academia and industry \cite{Verdonck2018}. However, creating these domain models manually takes a non-trivial amount of time and requires trained experts. Therefore, various modeling automation techniques have been proposed \cite{Sonbol2022}. Recently, researchers began to evaluate different approaches to using large language models (LLMs) as possible automation solutions \cite{Chen2023,Saeedizade2024}.
 
 
-\section*{Solution approach discussion}
+\section*{Discussion of solution approaches}
 
-Currently, fully automated domain modeling with LLMs works only for simple domain descriptions with a small number of domain elements \cite{Camara2023}. This is true even when advanced prompting techniques are applied \cite{Chen2023,Saeedizade2024}. To mitigate this issue, the user can be introduced into the domain modeling process \cite{Camara2023} and the LLM can be used as an assistant. For example, \citet{Camara2023} experimented with domain modeling in a conversational dialogue fashion with ChatGPT-3.5. First, the LLM generated some preliminary domain model and then the authors created follow-up instructions to edit their domain models. However, since the LLM executed directly each authors' instruction, this frequently led to back-and-forth communication as the authors tried correcting the mistakes made by the LLM in the previous steps. Additionally, there was no option to manually model any parts of the domain model to help the LLM model the parts with which it struggled. For a detailed description of related work, see chapter \ref{chap:related_work}.
+Currently, fully automated domain modeling with LLMs works only for simple domain descriptions with a small number of domain elements \cite{Camara2023}. This is true even when advanced prompting techniques are applied \cite{Chen2023,Saeedizade2024}. Therefore, it makes sense to introduce the user into the domain modeling process \cite{Camara2023} and use LLM as an assistant. For example, \citet{Camara2023} experimented with domain modeling in a conversational dialogue fashion with ChatGPT-3.5. First, the LLM generated some preliminary domain model and then the authors created follow-up instructions to edit their domain models. However, since the LLM executed directly each authors' instruction, this frequently led to back-and-forth communication as the authors tried correcting the mistakes made by the LLM in the previous steps. Additionally, there was no option to manually model any parts of the domain model to help the LLM model the parts with which it struggled. For a detailed description of related work, see chapter \ref{chap:related_work}.
 
 
 \section*{Using LLM as an assistant}
 \label{section:llm_as_an_assistant}
 
-Recently, many applications started using the LLM as an assistant. Here is a list of some of those applications with a brief description of the assistant usage.
+Recently, many applications started using the LLM as an assistant. Below is a list of some of those applications with a brief description of the assistant usage.
 
 \begin{itemize}
 \item \textit{Grammarly}\footnote{\url{https://app.grammarly.com/}}: assistant for writing
@@ -23,7 +23,7 @@ Recently, many applications started using the LLM as an assistant. Here is a lis
 \item \textit{Notion AI}\footnote{\url{https://www.notion.so/help/guides/category/ai}}: assistant for taking notes
 \end{itemize}
 
-These applications have the following features in common. First, the LLM usually only provides suggestions to the users. These suggestions can usually be accepted or rejected or, in some cases, a new suggestion can be regenerated. The reason for this behaviour is that the LLMs still make a lot of errors, so direct application of their output is usually not desired. Typically, these applications explicitly warn their users that the generated output can provide false, biased, and outdated information. Furthermore, if these errors are not removed by the users, these errors can accumulate over time and can lead to even worse output performance. Second, suggestions are usually in a form such that users can quickly decide if they want to use them. For example, in \textit{Grammarly}, the spell-checking feature represents each suggestion as an underlined text that contains a reason why it was underlined and a suggested correction. In \textit{GitHub Copilot}, especially in the hands of an experienced developer, it is usually easy to decide if a suggested piece of code or a suggested code documentation is appropriate based on the surrounding context. And finally, in \textit{Notion AI}, suggested notes are usually easy to evaluate as they are typically clearly structured.
+These applications have the following features in common. First, the LLM usually only provides suggestions to the users. These suggestions can usually be accepted or rejected, or in some cases a new suggestion can be regenerated. The reason for this behaviour is that the LLMs still make a lot of errors, so direct application of their output is usually not desired. Typically, these applications explicitly warn their users that the generated output can provide false, biased, and outdated information. Furthermore, if these errors are not removed by the users, these errors can accumulate over time and can lead to even worse output quality. Second, suggestions are usually in a form such that users can quickly decide if they want to use them. For example, in \textit{Grammarly}, the spell-checking feature represents each suggestion as an underlined text that contains a reason why it was underlined and a suggested correction. In \textit{GitHub Copilot}, especially in the hands of an experienced developer, it is usually easy to decide if a suggested piece of code or a suggested code documentation is appropriate based on the surrounding context. And finally, in \textit{Notion AI}, suggested notes are usually easy to evaluate, as they are typically clearly structured.
 
 
 \section*{Areas with a lack of research}
@@ -44,26 +44,24 @@ The domain modeling process typically follows a systematic approach. First, the 
 
 This thesis aims to help with the second step and address the mentioned areas with a lack of research by creating a tool for domain modeling where the LLM assistant cooperates with a human modeling expert. The modeling expert provides an unstructured domain description as input into the domain modeling process, and the assistant generates suggestions solely based on this domain description.
 
-To improve the performance of the LLM, we divide the domain modeling process into a set of simpler steps and we employ the retrieval-augmented generation technique to provide only the relevant parts of the domain description based on the given task to the LLM. This assistant always generates output in the form of suggestions, as the LLMs still frequently make errors. To help users decide if they want to apply the generated suggestions, we highlight each suggested domain element in the given domain description. Finally, we experimentally evaluate our approach with real-life domain descriptions.
-
-This LLM assistant is mainly intended to help users create their domain models faster and to help them better document their domain models. This assistant should be:
+To improve the performance of the LLM, we divide the domain modeling process into a set of simpler steps and we employ the retrieval-augmented generation technique to provide only the relevant parts of the domain description based on the given task to the LLM. This assistant always generates output in the form of suggestions, as LLMs still frequently make errors. To help users decide if they want to apply generated domain element suggestions, we highlight them in the given domain description. Finally, we experimentally evaluate our approach across various domain descriptions, including some real-life domain descriptions. The LLM assistant should be:
 
 \begin{enumerate}
-\item intuitive to use
 \item suggesting mostly appropriate classes, attributes, and associations
 \item suggesting mostly appropriate descriptions of classes, attributes, and associations
 \item able to summarize a selected part of a domain model
 \item able to highlight in the given domain description the parts that the user already modeled
 \item able to generate corresponding suggestions in a few seconds
+\item intuitive to use
 \end{enumerate}
 
 
 \section*{Outline}
 
 Chapter \ref{chap:background} provides an overview of the basic technologies that we will be using.
-Chapter \ref{chap:domain_modeling_process_analysis} introduces the minimalist but necessary formalization of the domain modeling process and its steps that can be automated.
+Chapter \ref{chap:domain_modeling_process} introduces the minimalist but necessary formalization of the domain modeling process and its steps that can be automated.
 Chapter \ref{chap:framework} describes a generic theoretical framework for building LLM-based domain modeling assistants.
 Chapter \ref{chap:framework_configuration} shows some possible configurations of the framework.
 Chapter \ref{chap:protype_software_application} implements the framework with some of the proposed configurations.
-Chapter \ref{chap:evaluation} presents the experimental evaluation of our framework implementation.
+Chapter \ref{chap:evaluation} presents the experimental evaluation of some of the framework configurations.
 Chapter \ref{chap:development_documentation} contains the development documentation and chapter \ref{chap:user_documentation} contains the user documentation. Chapter \ref{chap:related_work} gives an overview of the related work, and chapter \ref{chap:conclusion} concludes our work and suggests possible future work.

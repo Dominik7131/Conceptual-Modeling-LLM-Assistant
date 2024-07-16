@@ -1,106 +1,106 @@
 \chapter{LLM-based modeling assistant framework}
 \label{chap:framework}
 
-Let us now define a formal LLM-based modeling assistant framework consisting of different types of generators that can be implemented with a different prompting techniques and domain description pre-processing techniques. Furthermore, we define the requirements for these generators and we define their basic meta-structure.
+In this chapter, we define a formal LLM-based modeling assistant framework consisting of different types of generators that can be implemented with different prompting techniques and domain description pre-processing techniques. Furthermore, we define the requirements and the basic meta-structure for these generators.
 
 
 \section{Approach}
 
-We propose solving the automation of the domain modeling steps from the chapter \ref{chap:domain_modeling_process_analysis} as the text generation problems similarly to \citet{Chen2023}, where the authors consider a domain description $T$ with an underlying ground truth model $M$, and approach the problem of model generation as the problem of defining a text generator $f$ with $M' = f(T)$, where $M'$ is the generated model similar to $M$. The generator $f$ is an LLM-based operator defined by a predesigned prompt that instructs an LLM to return a structured textual representation of $M'$ for the input $T$. Based on the generator $f$, we define more fine-grained text generation problems solved by the \emph{text to model generators} that can be used in combination with the \emph{auxiliary generators}.
+We propose solving the automation of the domain modeling steps from the section \ref{sec:modeling_steps} as text generation problems similar to \citet{Chen2023}, where the authors consider a domain description $T$ with an underlying ground truth model $M$, and approach the problem of model generation as the problem of defining a text generator $f$ with $M' = f(T)$, where $M'$ is the generated model similar to $M$. The generator $f$ is an LLM-based operator defined by a predesigned prompt that instructs an LLM to return a structured textual representation of $M'$ for the input $T$. Based on the generator $f$, we define more fine-grained text generation problems solved by the \emph{text to model generators} that can be used in combination with the \emph{auxiliary generators}.
 
 
-\section{Definitions of text to model generators}
+\section{Text to model generators}
 
-The following generators solely based on the given domain description suggest some part of the domain model.
+These generators solely based on the given domain description suggest some part of the domain model. We divide these generators into the following categories.
 
 
-\subsection{Domain elements}
+\subsection{Domain element generators}
 
 The domain element generators are used to generate suggestions for classes, attributes, and associations solely based on the given domain description. Subsequently, these suggestions can be used to \emph{design a class}, \emph{design an attribute for a class}, and \emph{design an association for a class} as described in the domain modeling steps section \ref{sec:modeling_steps}.
 
 \begin{description}
 \item [Class generator] $gen_c$ that for $T$ suggests classes $\{C_1, \ldots, C_n\}$ each with a suggested $name(C_i)$.
 
-\item [Attribute generator] $gen_a$ that for $T$ and some class $C$ suggests attributes $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$, suggested $name(P_i)$, and original text $orig(Pi)$ that is part of $T$ on which base $gen_a$ suggested $P_i$.
+\item [Attribute generator] $gen_a$ that for $T$ and $name(C)$ of a class $C$ suggests attributes $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$, suggested $name(P_i)$, and original text $orig(P_i)$ that is part of $T$ on which base $gen_a$ suggested $P_i$.
 
-\item [Association generator 1] $gen_{r1}$ that for $T$ and a class $C$ suggests associations $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$ (or $target(Pi) = C$), suggested $name(Pi)$, and with the original text $orig(P_i)$ that is part of $T$ on which base $gen_{r1}$ suggested $P_i$. It also suggests the other class $D$, with $target(Pi)= D$ (or $source(Pi) = D$), and suggested $name(D)$.
+\item [Association generator 1] $gen_{r1}$ that for $T$ and $name(C)$ of a class $C$ suggests associations $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$ (or $target(P_i) = C$), suggested $name(P_i)$, and with the original text $orig(P_i)$ that is part of $T$ on which base $gen_{r1}$ suggested $P_i$. It also suggests the other class $D$, with $target(P_i)= D$ (or $source(P_i) = D$), and suggested $name(D)$.
 
-\item [Association generator 2] $gen_{r2}$ that for $T$ and a source class $C$ and target class $D$ suggests associations $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$ and with $target(P_i) = D$, suggested $name(Pi)$, and with the original text $orig(P_i)$ that is part of $T$ on which base $gen_{r2}$ suggested $P_i$.
+\item [Association generator 2] $gen_{r2}$ that for $T$, $name(C)$ of a source class $C$, and $name(D)$ of a target class $D$ suggests associations $\{P_1, \ldots, P_n\}$, each with $source(P_i) = C$, and $target(P_i) = D$, suggested $name(P_i)$, and with the original text $orig(P_i)$ that is part of $T$ on which base $gen_{r2}$ suggested $P_i$.
 \end{description}
 
 
-\subsection{Descriptions}
+\subsection{Description generators}
 
 The description generators aim to suggest description for a given class, attribute, and association solely based on the given domain description. Subsequently, these suggestions can be used to \emph{design a description for a class}, \emph{design a description for an attribute}, and \emph{design a description for an association} as described in the domain modeling steps section \ref{sec:modeling_steps}.
 
 \begin{description}
-\item [Class description generator] $gen_{cd}$ that for $T$ and the $name(C)$ of a class $C$ suggests $description(C)$.
+\item [Class description generator] $gen_{cd}$ that for given $T$ and the $name(C)$ of a class $C$ suggests $description(C)$.
 
-\item [Attribute description generator] $gen_{ad}$ that for $T$ and the $name(P)$ of an attribute $P$ suggests $description(P)$.
+\item [Attribute description generator] $gen_{ad}$ that for given $T$, the $name(P)$, and the $name(source(P))$ of an attribute $P$ suggests $description(P)$.
 
-\item [Association description generator] $gen_{rd}$ that for $T$ and the $name(P)$ of an association $P$ suggests $description(P)$.
+\item [Association description generator] $gen_{rd}$ that for given $T$, the $name(P)$, the $name(source(P))$, and the $name(target(P))$ of an association $P$ suggests $description(P)$.
 \end{description}
 
 
-\subsection{Data types}
+\subsection{Data type generators}
 
-The data type generator is used to suggest the data type of a given attribute solely based on the given domain description. Subsequently, this suggestion can be used to \emph{design a data type for an attribute} as described in the domain modeling steps section \ref{sec:modeling_steps}.
+The data type generator is used to suggest the data type for a given attribute solely based on the given domain description. Subsequently, this suggestion can be used to \emph{design a data type for an attribute} as described in the domain modeling steps section \ref{sec:modeling_steps}.
 
 \begin{description}
-\item [Attribute data type generator] $gen_{at}$ that for $T$ and the $name(P)$ of an attribute $P$ suggests $dataType(P)$.
+\item [Attribute data type generator] $gen_{at}$ that for given $T$, the $name(P)$, and the $name(source(P))$ of an attribute $P$ suggests $dataType(P)$.
 \end{description}
 
 
-\subsection{Cardinalities}
+\subsection{Cardinality generators}
 
-The cardinality generators aim to suggest cardinalities for a given attribute and association solely based on the given domain description. Subsequently, these suggestions can be used to \emph{design a cardinality for an attribute}, and \emph{design a cardinality for an association} as described in the domain modeling steps section \ref{sec:modeling_steps}.
+The cardinality generators aim to suggest cardinalities for a given attribute and association solely based on the given domain description. Subsequently, these suggestions can be used to \emph{design a cardinality for an attribute} and \emph{design a cardinality for an association} as described in the domain modeling steps section \ref{sec:modeling_steps}.
 
 \begin{description}
-\item [Attribute cardinality generator] $gen_{ac}$ that for $T$ and the $name(P)$ of an attribute $P$ suggests $cardinality(P)$.
+\item [Attribute cardinality generator] $gen_{ac}$ that for given $T$, the $name(P)$, and the $name(source(P))$ of an attribute $P$ suggests $cardinality(P)$.
 
-\item [Association cardinality generator] $gen_{rc}$ that for $T$ and the $name(P)$ of an association $P$ suggests $cardinality(P)$.
+\item [Association cardinality generator] $gen_{rc}$ that for given $T$, the $name(P)$, the $name(source(P))$, and the $name(target(P))$ of an association $P$ suggests $cardinality(P)$.
 \end{description}
 
 
-\section{Definitions of auxiliary generators}
+\section{Auxiliary generators}
 
-These generators try to support the domain modeling process, for example, by helping to design domain elements and by helping to decide about the next modeling step.
+These generators help with the domain modeling process, for example, by helping to design domain elements and by helping to decide about which next modeling step to use. We divide these generators into the following categories.
 
 
-\subsection{Original texts}
+\subsection{Original text generators}
 
-When designing a class, an attribute, or an association, the original text generator can be used to suggest a more suitable original text for the corresponding domain element solely based on the given domain description.
+When designing a class, an attribute, or an association, the original text generator can be used to suggest a new original text solely based on the given domain description. The original text contains exact parts of the domain description based on which the corresponding domain element can be suggested by the corresponding domain element generator. For example, for the simple domain description \textit{In this company, every employee works in some department} and for the association \textit{works in} with the source class \textit{employee} and the target class \textit{department}, the original text can be \textit{employee works in some department} as this text captures the association in the domain description.
 
 \begin{description}
-\item [Class original text generator] $gen_{co}$ that for $T$ and the $name(C)$ of a class $C$ suggests $orig(C)$.
+\item [Class original text generator] $gen_{co}$ that for given $T$ and the $name(C)$ of a class $C$ suggests $orig(C)$.
 
-\item [Attribute original text generator] $gen_{ao}$ that for $T$ and the $name(P)$ of an attribute $P$ suggests $orig(P)$.
+\item [Attribute original text generator] $gen_{ao}$ that for given $T$, the $name(P)$, and the $name(source(P))$ of an attribute $P$ suggests $orig(P)$.
 
-\item [Association original text generator] $gen_{ro}$ that for $T$ and the $name(P)$ of an association $P$ suggests $orig(P)$.
+\item [Association original text generator] $gen_{ro}$ that for given $T$, the $name(P)$, the $name(source(P))$, and the $name(target(P))$ of an association $P$ suggests $orig(P)$.
 \end{description}
 
 
-\subsection{Names}
+\subsection{Name generators}
 
-When designing a class, an attribute, or an association, the name generator can be used to suggest a more suitable name for the corresponding domain element solely based on its description and its original text.
+When designing a class, an attribute, or an association, the name generator can be used to suggest a new name for the corresponding domain element.
 
 \begin{description}
-\item [Class name generator] $gen_{cn}$ that for $T$, the $description(C)$ and the $orig(C)$ of a class $C$ suggests  $name(C)$.
+\item [Class name generator] $gen_{cn}$ that for given $T$, the $description(C)$, and the $orig(C)$ of a class $C$ suggests  $name(C)$.
 
-\item [Attribute name generator] $gen_{an}$ that for $T$,  a $description(P)$ and an $orig(P)$ of an attribute $P$ suggests $name(P)$.
+\item [Attribute name generator] $gen_{an}$ that for given $T$, the $description(P)$, the $orig(P)$, and the $name(source(P))$ of an attribute $P$ suggests $name(P)$.
 
-\item [Association name generator] $gen_{rn}$ that for $T$, the $description(P)$ and the $orig(P)$ of an association $P$ suggests $name(P)$.
+\item [Association name generator] $gen_{rn}$ that for given $T$, the $description(P)$, the $orig(P)$, the $name(source(P))$, and the $name(target(P))$ of an association $P$ suggests $name(P)$.
 \end{description}
 
 
-\subsection{Summaries}
+\subsection{Summary generators}
 
 The summary generators are used to generate a description of the selected part of the domain model. These generators can be used, for example, to better understand the semantics of the given domain model, which can help to decide which next modeling step is needed to model the given domain description.
 
 \begin{description}
-\item [Summary plain text generator] $gen_{sp}$ that for a given domain model $M$, and a given style format generates an unstructured domain description $T$ in the given style format.
+\item [Summary plain text generator] $gen_{sp}$ that for given style format, names, descriptions, and original texts of classes, attributes, and associations generates an unstructured domain description in the given style format.
 
-\item [Summary descriptions generator] $gen_{sd}$ that for a given domain model $M = (\mathcal{C}, \mathcal{P})$ generates a domain description $T$ in form of a list that contains an item for every class $C \in \mathcal{C}$ and for every attribute or association $P \in\mathcal{P}$.
+\item [Summary descriptions generator] $gen_{sd}$ that for given names, descriptions, and original texts of classes, attributes, and associations generates a domain description in form of a list that contains an item for each given class, attribute, and association.
 \end{description}
 
 
@@ -143,12 +143,12 @@ A generator template is constructed by replacing the placeholders in the meta-te
 
 \subsection{Input data name}
 
-The \emph{input data name} (line 01) provides the name to refer to the data that will be inputted into the prompt, such as the \textit{domain model} for generating summaries based on the given domain model to let the LLM know solely based on which data it should work. When examples are provided, the example input is referenced by the same name, and then it is referenced again before the example input data are provided (line 05 and line 06) and the same is done at the end of the prompt (line 09 and line 10).
+The \emph{input data name} (line 01) provides the names to refer to the data that will be inputted into the prompt, such as the \textit{conceptual model} for generating summaries based on the given conceptual model to let the LLM know solely based on which data it should work with. When examples are provided, the example input is referenced by the same name, and then it is referenced again before the example input data are provided (lines 05 and 06) and the same is done at the end of the prompt (lines 09 and 10) to make the prompt consistent.
 
 
 \subsection{Main control instruction}
 
-The \emph{main control instruction} (line 01) summarizes the given task, which is, for example, to suggest classes or attributes or associations for a given class $C$ solely based on the given domain description. We place this instruction at the start of the prompt and then in some cases we repeat it at the end of the prompt as the LLM usually puts the most emphasis on the information at the start of the prompt and at the end of the prompt, which we discussed in the section \ref{prompt_general_tips}.
+The \emph{main control instruction} (line 01) summarizes the given task, which is, for example, to suggest attributes for a given class solely based on the given domain description. We place this instruction at the start of the prompt, and then in some cases we repeat it at the end of the prompt to emphasize the importance of this instruction.
 
 
 \subsection{Modeling procedure}
@@ -163,9 +163,9 @@ The \textit{output specification} (line 03) defines the required output format s
 
 \subsection{Example specification}
 
-Lines 04-08 represent optional examples. They are all separated from the other instructions with the \texttt{EXAMPLE START} and the \texttt{EXAMPLE END} delimiters. Here, an N-shot prompt design strategy can be implemented, where the prompts contain one or more expected output samples based on concrete sample contexts. Each example starts with the \emph{example main control instruction} (line 05) which is the same as the \emph{main control instruction} but with a concrete class $C$ (and in some cases also with a class $D$) if the task is class-specific. The \emph{example context specification} (line 06) is the concrete context specification for the example and the \emph{example output} (line 07) is the expected output for the given context. The \emph{example output} must correspond to the structure of the \emph{output specification} to make the prompt coherent.
+Lines 04-08 represent optional examples. They are all separated from the other instructions with the \texttt{EXAMPLE START} and the \texttt{EXAMPLE END} delimiters. Here, an N-shot prompt design strategy can be implemented, where the prompts contain one or more examples. Each example starts with the \emph{example main control instruction} (line 05), which is the same as the \emph{main control instruction} but with a concrete class $C$ (and in some cases also with a class $D$) if the task is class-specific. The \emph{example context specification} (line 06) is the concrete context specification for the example and the \emph{example output} (line 07) is the expected output for the given context. The \emph{example output} must correspond to the structure of the \emph{output specification} to make the prompt consistent.
 
 
 \subsection{Context specification}
 
-The context is specified at the end of the meta-template in the \emph{context specification} (line 10). This context is in most cases the domain description $T$ except for the \emph{summary generators} where the context is some part of the user's domain model. To improve LLM performance, various text processing and filtering techniques, such as RAG, can be implemented here.
+The context is specified at the end of the meta-template in the \emph{context specification} (line 10). In most cases, the domain description $T$ is inserted here. Various text processing and filtering techniques, such as RAG, can be implemented here to improve the performance of LLM.
