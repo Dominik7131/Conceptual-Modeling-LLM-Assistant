@@ -119,18 +119,23 @@ Based on these generic requirements, we propose the prompt meta-template shown i
     \centering
 \begin{lstlisting}[
   basicstyle=\ttfamily\scriptsize,
-  breaklines=true
+  breaklines=true,
+  keywordstyle=\ttfamily,
+  stringstyle=\ttfamily,
+  showstringspaces=false,
+  upquote=true,
+  stringstyle=
 ]
-01 Solely based on the given {input data name} {main control instruction}
+01 {main control instruction}
 02 {modeling procedure}
 03 {output specification}
 04 EXAMPLE START
-05 Solely based on the given {input data name} {example main control instruction}
-06 This is the given {input data name}: {example context specification}
+05 {example main control instruction}
+06 {example context specification}
 07 Output: {example output}
 08 EXAMPLE END
-09 Solely based on the given {input data name} {main control instruction}
-10 This is the given {input data name}: {context specification}
+09 {main control instruction}
+10 {context specification}
 11 Output:
 \end{lstlisting}
     \caption{\centering Prompt meta-template for the generators}
@@ -141,14 +146,14 @@ Based on these generic requirements, we propose the prompt meta-template shown i
 A generator template is constructed by replacing the placeholders in the meta-template with generator-specific instructions. The meta-template has the following structure.
 
 
-\subsection{Input data name}
+%\subsection{Input data name}
 
-The \emph{input data name} (line 01) provides the names to refer to the data that will be inputted into the prompt, such as the \textit{conceptual model} for generating summaries based on the given conceptual model to let the LLM know solely based on which data it should work with. When examples are provided, the example input is referenced by the same name, and then it is referenced again before the example input data are provided (lines 05 and 06) and the same is done at the end of the prompt (lines 09 and 10) to make the prompt consistent.
+%The \emph{input data name} (line 01) provides the names to refer to the data that will be inputted into the prompt, such as the \textit{conceptual model} for generating summaries based on the given conceptual model to let the LLM know solely based on which data it should work with. When examples are provided, the example input is referenced by the same name, and then it is referenced again before the example input data are provided (lines 05 and 06) and the same is done at the end of the prompt (lines 09 and 10) to make the prompt consistent.
 
 
 \subsection{Main control instruction}
 
-The \emph{main control instruction} (line 01) summarizes the given task, which is, for example, to suggest attributes for a given class solely based on the given domain description. We place this instruction at the start of the prompt, and then in some cases we repeat it at the end of the prompt to emphasize the importance of this instruction.
+The \emph{main control instruction} (line 01) summarizes the given task, can provide placeholders for some input data, and can reference some input data that are later on provided at the \emph{context specification} (line 10). For example, for the \emph{attribute generator} the \emph{main control instruction} can state to solely based on the given domain description and the given source class to generate attributes. The source class can be provided in form of a placeholder by the \emph{main control instruction} and the domain description can be provided in form of a placeholder in the \emph{context specification}. If examples are provided (lines 04 -- 08), the \emph{main control instruction} can be repeated at the end of the prompt (line 09) to emphasize its importance.
 
 
 \subsection{Modeling procedure}
@@ -163,9 +168,9 @@ The \textit{output specification} (line 03) defines the required output format s
 
 \subsection{Example specification}
 
-Lines 04-08 represent optional examples. They are all separated from the other instructions with the \texttt{EXAMPLE START} and the \texttt{EXAMPLE END} delimiters. Here, an N-shot prompt design strategy can be implemented, where the prompts contain one or more examples. Each example starts with the \emph{example main control instruction} (line 05), which is the same as the \emph{main control instruction} but with a concrete class $C$ (and in some cases also with a class $D$) if the task is class-specific. The \emph{example context specification} (line 06) is the concrete context specification for the example and the \emph{example output} (line 07) is the expected output for the given context. The \emph{example output} must correspond to the structure of the \emph{output specification} to make the prompt consistent.
+Lines 04 -- 08 represent optional examples. They are all separated from the other instructions with the \texttt{EXAMPLE START} and the \texttt{EXAMPLE END} delimiters. Here, an N-shot prompt design strategy can be implemented, where the prompts contain one or more examples. Each example starts with the \emph{example main control instruction} (line 05), which is the same as the \emph{main control instruction} but with a concrete class $C$ (and in some cases also with a class $D$) if the task is class-specific. The \emph{example context specification} (line 06) is the concrete context specification for the example and the \emph{example output} (line 07) is the expected output for the given context. The \emph{example output} must correspond to the structure of the \emph{output specification} to make the prompt consistent.
 
 
 \subsection{Context specification}
 
-The context is specified at the end of the meta-template in the \emph{context specification} (line 10). In most cases, the domain description $T$ is inserted here. Various text processing and filtering techniques, such as RAG, can be implemented here to improve the performance of LLM.
+The context is specified at the end of the meta-template in the \emph{context specification} (line 10). It first states the input data name which for consistency must be the same as the input data name stated by the \emph{main control instruction}. Then it contains placeholder for the corresponding input data. The input data are in most cases the domain description $T$ therefore, various text processing and filtering techniques, such as RAG, can be implemented here to improve the performance of LLM.
