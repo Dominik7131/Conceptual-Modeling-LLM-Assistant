@@ -1,4 +1,4 @@
-Solely based on the given description and original text generate the name of the attribute of the class "{source_class}" and output this name in this JSON object: {"name": ""}.
+Solely based on the given description and original text generate the name of the attribute of the class "{source_class}". Output this name in this JSON object: {"name": ""}.
 
 This is the given description:
 "{description}"

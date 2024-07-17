@@ -1,4 +1,4 @@
-Solely based on the given class description and class original text generate a class name and output this name in this JSON object: {"name": ""}. In the name do not use the "class" keyword.
+Solely based on the given class description and class original text generate a class name. Output this name in this JSON object: {"name": ""}. In the name do not use the "class" keyword.
 
 This is the given description:
 "{description}"
