@@ -1,0 +1,14 @@
+Solely based on the given context which associations are explicitly between the source class "{source_class}" and the target class "{target_class}"?
+
+For each association copy the part of the given context containing this association and output its name, source class, target class and then output this association in JSON object. The output should look like this:
+context: copy the part of the given context containing this association
+name: association name
+source class: {source_class}
+target class: {target_class}
+{"originalText": "copy the part of the given context containing this association", "name": "association name", "source": "{source_class}", "target": "{target_class}"}
+
+This is the given context:
+"{domain_description}"
+
+Output:
+context:

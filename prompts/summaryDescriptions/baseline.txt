@@ -1,4 +1,4 @@
-Solely based on the given conceptual model generate descriptions only for the given classes, attributes and associations in JSON like this:
+Solely based on the given conceptual model generate descriptions only for the given classes, attributes and associations. Output the whole result in JSON like this:
 {"classes": [{"name": "", "description": "", "attributes": [{"name": "", "description": ""}]}], "associations": [{"name": "", "source": "", "target": "", "description": ""}]}
 
 These are the given classes, attributes and associations:
