@@ -153,7 +153,7 @@ A generator template is constructed by replacing the placeholders in the meta-te
 
 \subsection{Main control instruction}
 
-The \emph{main control instruction} (line 01) summarizes the given task, can provide placeholders for some input data, and can reference some input data that are later on provided at the \emph{context specification} (line 10). For example, for the \emph{attribute generator} the \emph{main control instruction} can state to solely based on the given domain description and the given source class to generate attributes. The source class can be provided in form of a placeholder by the \emph{main control instruction} and the domain description can be provided in form of a placeholder in the \emph{context specification}. If examples are provided (lines 04 -- 08), the \emph{main control instruction} can be repeated at the end of the prompt (line 09) to emphasize its importance.
+The \emph{main control instruction} (line 01) summarizes the given task, can provide placeholders for some input data, and can reference some input data that are later on provided at the \emph{context specification} (line 10). For example, for the \emph{attribute generator}, the \emph{main control instruction} can state to solely based on the given domain description and the given source class to generate attributes. The source class can be provided in the form of a placeholder by the \emph{main control instruction} and the domain description can be provided in the form of a placeholder in the \emph{context specification}. If examples are provided (lines 04 -- 08), the \emph{main control instruction} can be repeated at the end of the prompt (line 09) to emphasize its importance.
 
 
 \subsection{Modeling procedure}
@@ -173,4 +173,4 @@ Lines 04 -- 08 represent optional examples. They are all separated from the othe
 
 \subsection{Context specification}
 
-The context is specified at the end of the meta-template in the \emph{context specification} (line 10). It first states the input data name which for consistency must be the same as the input data name stated by the \emph{main control instruction}. Then it contains placeholder for the corresponding input data. The input data are in most cases the domain description $T$ therefore, various text processing and filtering techniques, such as RAG, can be implemented here to improve the performance of LLM.
+The context is specified at the end of the meta-template in the \emph{context specification} (line 10). It first states the input data name which for consistency must be the same as the input data name stated by the \emph{main control instruction}. Then it contains a placeholder for the corresponding input data. The input data are in most cases the domain description $T$ therefore, various text processing and filtering techniques, such as RAG, can be implemented here to improve the performance of LLM.

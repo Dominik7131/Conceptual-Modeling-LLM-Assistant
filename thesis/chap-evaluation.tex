@@ -1,7 +1,7 @@
 \chapter{Experimental evaluation}
 \label{chap:evaluation}
 
-In this chapter, we evaluate some of the proposed configurations from chapter \ref{chap:framework_configuration}. First, we describe the data that we used for the evaluation. Then, we evaluate our RAG approaches, the generated suggestions of domain elements, and the generated class descriptions. Finally, we present results of our user-based evaluation of our prototype application.
+In this chapter, we evaluate some of the proposed configurations from chapter \ref{chap:framework_configuration}. First, we describe the data that we used for the evaluation. Then, we evaluate our RAG approaches, the generated suggestions of domain elements, and the generated class descriptions. Finally, we present the results of our user-based evaluation of our prototype application.
 
 
 \section{Evaluation domains}
@@ -93,7 +93,7 @@ For our semantic approach, we use the \textit{SentenceTransformers}\footnote{\ur
 
 \subsection{Results}
 
-The table \ref{tab:filtering-results} contains the measured results. As expected, the no-filtering approach gets the highest possible recall but also gets the lowest precision.
+Table \ref{tab:filtering-results} contains the measured results. As expected, the no-filtering approach gets the highest possible recall but also gets the lowest precision.
 
 \begin{table}[!h]
     \scriptsize
@@ -124,7 +124,7 @@ The syntactic approach has the highest precision but the lowest recall. The synt
 
 The semantic approach almost matches the recall of the no-filtering approach but it has a higher precision. The semantic naive pronouns approach slightly increases the recall while maintaining the same precision.
 
-Overall, when recall is the most important then the no-filtering approach or the semantic approach can be used. Therefore, in our application the semantic approach is selected as the default setting. On the other hand, when precision is the most important i.e. we want to reduce the domain description as much as possible and we do not care about losing some relevant parts, then the syntactic approach is the most suitable.
+Overall, when recall is the most important then the no-filtering approach or the semantic approach can be used. Therefore, in our application, the semantic approach is selected as the default setting. On the other hand, when precision is the most important i.e. we want to reduce the domain description as much as possible and we do not care about losing some relevant parts, then the syntactic approach is the most suitable.
 
 
 \section{Selected LLMs}
@@ -134,7 +134,7 @@ Running a LLM requires a lot of resources, therefore frequently using a LLM thro
 
 \subsection{Limitations}
 
-Because of our hardware limitation, we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium-sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter. To compare these LLMs with currently one of the best LLM, we use ChatGPT-4o through the OpenAI's web user interface. However, as we cannot connect this LLM into our application for free, we used this LLM only for evaluation of generated classes. Also, for ChatGPT-4o we cannot set the temperature or even get the value of the temperature.
+Because of our hardware limitation, we use Mixtral-8x7B\footnote{\url{https://huggingface.co/TheBloke/Mixtral-8x7B-Instruct-v0.1-GGUF/blob/main/mixtral-8x7b-instruct-v0.1.Q5_K_M.gguf}} (medium-sized LLM) \cite{Jiang2024} and Llama-3-70B\footnote{\url{https://huggingface.co/bartowski/Meta-Llama-3-70B-Instruct-GGUF/blob/main/Meta-Llama-3-70B-Instruct-Q5_K_M.gguf}} (relatively large-size LLM) both in quantized variation where on average they have 5 bits per parameter. To compare these LLMs with currently one of the best LLMs, we use ChatGPT-4o through the OpenAI's web user interface. However, as we cannot connect this LLM to our application for free, we used this LLM only for the evaluation of generated classes. Also, for ChatGPT-4o we cannot set the temperature or even get the value of the temperature.
 
 
 \subsection{Mixtral-8x7B}
@@ -154,12 +154,12 @@ ChatGPT-4o is an OpenAI's LLM that has 128k context window size according to the
 
 \section{Evaluation of generated domain elements}
 
-First, we describe the rules and measurement for evaluating the domain elements then we present a preliminary evaluation where we evaluate generated attributes and associations with many different configurations but with only the domain description \textit{zoological gardens}. Then, we evaluate similar configurations for generated classes but across all our domain descriptions. Finally, we select the most successful configurations and we evaluate them all together on all our domain descriptions.
+First, we describe the rules and measurement for evaluating the domain elements then we present a preliminary evaluation where we evaluate generated attributes and associations with many different configurations but with only the domain description \textit{zoological gardens} since the manual evaluation of attributes and associations takes a lot of time. Then, we evaluate similar configurations for generated classes but across all our domain descriptions. Finally, we select the most successful configurations and we evaluate them all together on all our domain descriptions.
 
 
 \subsection{Manual assessment of generated suggestions}
 
-Each generated suggestion was manually assessed by a human evaluator who recorded the assessment in the evaluation tables in columns \emph{Matches class}, \emph{Matches attribute}, and \emph{Matches association}.
+Each generated suggestion was manually assessed by one human evaluator who recorded the assessment in the evaluation tables in columns \emph{Matches class}, \emph{Matches attribute}, and \emph{Matches association}.
 \emph{Semantic correspondence} between a suggested $X'$ and a reference $X$ $\in$ $M$ is essential for the evaluation.
 %The evaluator decides based on the metadata provided about $X'$ and $X$.
 If the question \emph{Can we model $X$ also as $X'$?} can be answered positively, $X'$ \emph{semantically corresponds to} $X$. To limit subjectivity, we carried out the manual evaluation according to the rules summarized in table \ref{tab:manual-assessment-of-suggestions}.
@@ -197,7 +197,7 @@ If $X'$ does not correspond to any class in $M$, but the evaluator considers it 
 This scenario can arise especially in more complex domains where not all concepts in the domain description are modeled, or a concept can be modeled with an attribute instead of an association and a class.
 If $X'$ does not correspond to any single class in $M'$, but its $name(X')$ corresponds to a list of classes $X_1$, $\ldots$, $X_n$ $\in$ $M$, their names are concatenated to $+name(X_1)$;$\ldots$;$name(X_n)$ which we record in \emph{Matches classes}. This corresponds to scenarios where domain models are more coarse-grained.
 
-The table \ref{tab:class-rules} shows examples of usage of these class rules with the \textit{registry of road vehicles} domain. For simplicity, let the reference domain model contain only the following classes:
+Table \ref{tab:class-rules} shows examples of usage of these class rules with the \textit{registry of road vehicles} domain. For simplicity, let the reference domain model contain only the following classes:
 
 \begin{itemize}
 \item \textit{road vehicle}
@@ -249,7 +249,7 @@ Last but not least, it might happen that $X'$ corresponds to $X$ only when the c
 In that case, we write a colon(:) followed by $name(X)$ to \emph{Matches attribute} or \emph{Matches class}.
 We write a colon followed by an asterisk (:*) if $X'$ makes sense, but should be modeled for a subclass or superclass of $C$.
 
-The table \ref{tab:attribute-rules} shows examples of attribute rules. In the first row, the attribute \textit{type} is in the reference domain model however, instead of the source class \textit{vehicle} it has in the reference model the source class \textit{road vehicle}. The class \textit{vehicle} is a subclass of the class \textit{road vehicle} therefore, in the \textit{Matches attribute} column is the \textit{:} prefix. In the second row, the generated attribute \textit{minor defect} is modeled in the reference model as the association \textit{has road vehicle defect} and the class \textit{minor defect} therefore, the \textit{Matches class} and \textit{Matches association} columns contain these records.
+Table \ref{tab:attribute-rules} shows examples of attribute rules. In the first row, the attribute \textit{type} is in the reference domain model however, instead of the source class \textit{vehicle} it has in the reference model the source class \textit{road vehicle}. The class \textit{vehicle} is a subclass of the class \textit{road vehicle} therefore, in the \textit{Matches attribute} column is the \textit{:} prefix. In the second row, the generated attribute \textit{minor defect} is modeled in the reference model as the association \textit{has road vehicle defect} and the class \textit{minor defect} therefore, the \textit{Matches class} and \textit{Matches association} columns contain these records.
 
 
 \begin{table}[!h]
@@ -291,7 +291,7 @@ We distinguish the following matching functions ${\cal C}' \cup {\cal P}'$ $\tim
 These functions allow us to distinguish different levels of strictness in determining how much the suggestions must conform to the reference model $M$.
 The variant \emph{strict} (shortcut $strict$) requires that the suggestion $X'$ exactly corresponds to $X$, including the correspondence of the suggested modeling construct to the construct actually used in $M$.
 The variant \emph{modeling construct agnostic} (shortcut $constr$) relaxes the need to use the exact modeling constructs.
-It supports situations where an attribute is suggested instead of association or vice versa and where a class is suggested as a part of attribute or association suggestion.
+It supports situations where an attribute is suggested instead of an association or vice versa and where a class is suggested as a part of an attribute or an association suggestion.
 The variant \emph{ISA agnostic} (shortcut $isa$) relaxes the exact match in the inheritance hierarchy where a property is suggested for a subclass or superclass of the class in $M$.
 The variant \emph{list agnostic} (shortcut $list$) relaxes the need to identify individual properties instead of an umbrella property.
 The last two variants $isa$ and $list$ add relaxations only for properties, not for classes.
@@ -347,7 +347,7 @@ Finally, for the $F_1$ score measurement, we use the classical $F_1$ score defin
 \subsection{Preliminary evaluation for attributes and associations}
 \label{sec:preliminary_attributes_associations}
 
-For the preliminary evaluation, we show results only for the \textit{strict} variation. The table \ref{tab:preliminary-mixtral} shows preliminary results for generated attributes and associations with the Mixtral-8x7B and the table \ref{tab:preliminary-llama} shows preliminary results for generated attributes and associations with the Llama-3-70B. For the associations, we evaluated only the scenarios where either the source class or the target class is provided but not where both the source class and the target class is provided since these tasks are very similar and should provide similar results.
+For the preliminary evaluation, we show results only for the \textit{strict} variation. Table \ref{tab:preliminary-mixtral} shows preliminary results for generated attributes and associations with the Mixtral-8x7B and table \ref{tab:preliminary-llama} shows preliminary results for generated attributes and associations with the Llama-3-70B. For the associations, we evaluated only the scenarios where either the source class or the target class is provided but not where both the source class and the target class are provided since these tasks are very similar and should provide similar results.
 
 \begin{table}[!h]
     \scriptsize
@@ -452,7 +452,7 @@ At first, our proposed techniques do not show any significant improvement but wh
 
 \subsection{Classes evaluation}
 
-For generated classes the table \ref{tab:mixtral-classes} shows results for Mixtral-8x7B and the table \ref{tab:llama-classes} shows results for Llama-3-70B. Both these tables present the results only for the \emph{strict} variation.
+For generated classes, table \ref{tab:mixtral-classes} shows results for Mixtral-8x7B and table \ref{tab:llama-classes} shows results for Llama-3-70B. Both these tables present the results only for the \emph{strict} variation.
 
 \begin{table}[!h]
     \scriptsize
@@ -507,7 +507,6 @@ For generated classes the table \ref{tab:mixtral-classes} shows results for Mixt
 
 
 
-
 As we can see, the CoT and the CoT+N-shot variations have the worst $F_1$ scores. In these prompting techniques, the LLM for each class first generates its original text and then its name while in the other evaluated prompting techniques the LLM for each class generates only its name. Therefore, it seems that generating the original text first lowers the $F_1$ score mainly by decreasing the recall. Therefore, in our application, we do not generate original text for the classes. The table \ref{tab:average-classes} shows average $F_1$ scores for Mixtral-8x7B and Llama-3-70B combined.
 
 
@@ -534,7 +533,7 @@ As we can see, the CoT and the CoT+N-shot variations have the worst $F_1$ scores
     \label{tab:average-classes}
 \end{table}
 
-As we can see, the N-shot prompting technique has the highest $F_1$ score but it is only slightly better then using the baseline configuration. To compare the results with one of the best LLMs, we evaluated the three best variations with the highest $F_1$ score with the ChatGPT-4o. The table \ref{tab:chatgpt-classes} shows the results.
+As we can see, the N-shot prompting technique has the highest $F_1$ score but it is only slightly better than using the baseline configuration. To compare the results with one of the best LLMs, we evaluated the three best variations with the highest $F_1$ score with the ChatGPT-4o. The table \ref{tab:chatgpt-classes} shows the results.
 
 
 \begin{table}[!h]
@@ -566,7 +565,7 @@ Surprisingly, the Llama-3-70B with the baseline configuration achieves the same 
 \subsection{Overall evaluation}
 \label{sec:overall_evaluation}
 
-Now we evaluate the classes, attributes, and associations together on all our domain descriptions. For the classes, we focus only on the N-shot prompting technique since it had on average the highest $F_1$ score with Mixtral-8x7B and Llama-3-70B. For attributes and associations, we focus only on the CoT+N-shot prompting technique as discussed in the section \ref{sec:preliminary_attributes_associations}. For RAG approaches, we consider only the syntactic RAG approach and the approach without filtering domain description for simplicity.
+Now we evaluate the classes, attributes, and associations together on all our domain descriptions. For the classes, we focus only on the N-shot prompting technique since it had on average the highest $F_1$ score with Mixtral-8x7B and Llama-3-70B. For attributes and associations, we focus only on the CoT+N-shot prompting technique as discussed in the section \ref{sec:preliminary_attributes_associations}. For RAG approaches, we consider only the syntactic RAG approach and the approach without filtering domain descriptions for simplicity.
 
 Figures \ref{fig:evaluation-complex-p-r-f1} and \ref{fig:evaluation-simple-f1} summarize the evaluation results with the average $F_1$ score for the analytical, eclectic, and educational domain descriptions and the average precision, recall, and $F_1$ score for the complex domain descriptions separately for classes, attributes, and associations at the four levels of strictness of the matching.
 
@@ -601,7 +600,7 @@ The average precision for classes on complex domains is the same with and withou
 Introducing RAG improves the performance of both models.
 For Mixtral-8x7B, RAG significantly improves the $F_1$ scores for attributes and associations across all domains, making its performance almost comparable to Llama-3-70B without RAG and even slightly better for complex domains.
 This suggests that RAG can compensate for the smaller size of the Mixtral-8x7B model when identifying properties modeled as attributes or associations.
-This finding is crucial for implementing the generators, since using a large LLM like Llama-3-70B in the generators is very resource-consuming.
+This finding is crucial for implementing the generators since using a large LLM like Llama-3-70B in the generators is very resource-consuming.
 Even a simple RAG technique makes less demanding LLM comparable to the larger one for the implementation of the generators.
 For Llama-3-70B, the improvement with RAG is less pronounced but still noticeable, particularly for complex domains.
 For classes, the impact of RAG is minimal, because the class generator always works with the entire domain description.
@@ -625,13 +624,13 @@ We evaluated generated class descriptions based on the following questions:
 \item [Q3:] Is the generated description not missing any useful information?
 \end{enumerate}
 
-\noindent{}To limit subjectivity of the evaluation, we define the following sets:
+\noindent{}To limit the subjectivity of the evaluation, we define the following sets:
 
 \begin{itemize}
 \item $T_1 =$ set containing all information about the given class from the given domain description
 \item $T_2 =$ set containing the same information as $T_1$ except for detailed information about attributes and associations of the given class
-\item $D_1 =$ set containing information from the generated class description based on the given class and the given domain description
-\item $D_2 = D_1 \cap T_2 =$ set containing information from the generated class description but without the generated class information that were not solely based on the given class and that contained unrelated information for the given class
+\item $D_1 =$ set containing information from the generated class description for the given class and the given domain description
+\item $D_2 = D_1 \cap T_2 =$ set containing information from the generated class description but without the information that do not come from the given domain description and without the information that contain unrelated information for the given class
 \end{itemize}
 
 \noindent{}And we define the following rules:
@@ -659,12 +658,12 @@ We evaluated generated class descriptions based on the following questions:
 \noindent{}As a result we would assign:
 
 \begin{itemize}
-\item 1 point for Q1 since $D_1$ and $T_1$ almost fully overlaps in other words, $D_1$ is solely based on the given domain description
+\item 1 point for Q1 since $D_1$ and $T_1$ almost fully overlap in other words, $D_1$ is solely based on the given domain description
 \item 1 point for Q2 since $D_1$ contains information only about the given class and it does not describe its attributes and associations or does not contain any other undesired information
-\item 0.5 points for Q3 since the overlap of $T_2$ and $D_2$ is about a one half. In other words, $D_1$ is containing one important information that the farmer is uniquely identified by the name but it also misses one important information that the farmer is engaged in agriculture
+\item 0.5 points for Q3 since the overlap of $T_2$ and $D_2$ is about a one half. In other words, $D_1$ contains one important information that the farmer is uniquely identified by the name but it also misses one important information that the farmer is engaged in agriculture
 \end{itemize}
 
-For evaluation, we used only a simple prompt instructing the LLM to briefly describe the given class in one sentence. For the LLM we used only Mixtral-8x7B. For the RAG we used no-filtering, semantic, and syntactic approach and we used only the \emph{zoological gardens}\footnote{\url{https://github.com/dataspecer/domain-modeling-benchmark/blob/d9e00b65a376dbefe5b605bd680621f9f63f9252/manual\%20evaluation\%20domains/zoological\%20gardens/domain-description-00.txt}} domain description. The evaluation was done only by one human evaluator. For each question we summed up all assigned points and divided the result by the total number of classes from the reference model of the given domain description.
+For evaluation, we used only a simple prompt instructing the LLM to briefly describe the given class in one sentence. For the LLM we used only Mixtral-8x7B. For the RAG we used no-filtering, semantic, and syntactic approach and we used only the \emph{zoological gardens} domain description. For each question, we summed up all assigned points and divided the result by the total number of classes from the reference model of the given domain description. The evaluation was manually done by one human evaluator.
 
 \begin{table}[!h]
     \scriptsize
@@ -687,17 +686,17 @@ For evaluation, we used only a simple prompt instructing the LLM to briefly desc
     \label{tab:mixtral-classes-descriptions}
 \end{table}
 
-Table \ref{tab:mixtral-classes-descriptions} shows the results. As we can see, almost all evaluated class descriptions contained information solely based on the given domain description, provided only the relevant information based on the given class and did not miss any important information. The baseline approach without RAG achieves already a high score which is probably the reason why RAG does not seem to provide any significant improvement for generated class descriptions.
+Table \ref{tab:mixtral-classes-descriptions} shows the results. The results indicate that almost all evaluated class descriptions contained information solely based on the given domain description, provided only the relevant information based on the given class, and did not miss any important information. The baseline approach without RAG achieves already a high score which is probably the reason why RAG does not seem to provide any significant improvement for generated class descriptions in this case.
 
 
 \subsection{Limitations}
 
-The limitations of the evaluation of the generated class descriptions are that for each RAG approach we evaluated only 14 generated class descriptions as the this task needs to be done manually. Also, we used only one domain description that contains a little bit bellow 1000 words.
+The limitations of the class descriptions evaluation are that for each selected RAG approach, we evaluated only 14 generated class descriptions since the manual evaluation takes a lot of time. Also, we used only one domain description that contains a little bit bellow 1000 words. Therefore, further evaluation with more domain descriptions is needed.
 
 
 \section{Evaluation scripts}
 
-All the test data for evaluation were automatically generated by the scripts in our repository except for the generated classes from the ChatGPT-4o since we used the OpenAI's web user interface and copied the output manually. Additionally, all the manually filled in data for generated classes, attributes, and associations were automatically evaluated by a script in our repository\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/backend/data-processing}}. This script also reports anomalies encountered during the evaluation. For example, each manually filled in domain element that is not automatically found in the reference domain model, is reported.
+All the test data for evaluation were automatically generated by the scripts in our repository except for the generated classes from the ChatGPT-4o since we used OpenAI's web user interface and copied the output manually. Additionally, all the manually filled in data for generated classes, attributes, and associations were automatically evaluated by a script in our repository\footnote{\url{https://github.com/Dominik7131/Conceptual-Modeling-LLM-Assistant/tree/master/backend/data-processing}}. This script also reports anomalies encountered during the evaluation. For example, a warning is shown for each manually filled in domain element that is not automatically found in the reference domain model.
 
 
 \section{User-based evaluation of the application}
@@ -706,9 +705,9 @@ In addition to the measurements of the performance of the generators, we also ev
 
 We prepared two domain descriptions, a summary of the main features of the prototype, and three 2-minute video tutorials. We instructed real users to model the two domains and then asked them to assign a number between 0 (fully disagree) and 4 (fully agree) to express their agreement with seven different claims about using our prototype tool.
 They also classified themselves as teachers, students, modeling experts, database experts, programmers, or managers (multiple options were allowed).
-We received responses from 19 users. During the evaluation Mixtral-8x7B was used only with the syntactic RAG approach.
+We received responses from 19 users. During the evaluation, Mixtral-8x7B was used only with the syntactic RAG approach.
 
-Figure \ref{fig:user-based-evaluation} shows for each user type their average rating. of users the number of responses that picked this type and the average marks received for that type. The last line shows the average of all users.
+Figure \ref{fig:user-based-evaluation} shows for each user type their average rating. The last line shows the average rating for all users.
 
 \begin{figure}[!h]
     %\centering
@@ -728,4 +727,4 @@ C7: The highlighting original text feature helped me to make sure that I complet
 As we can see, the users agree that using the automated assistant is better than pure manual modeling (C1) and found it intuitive (C2).
 The suggestions provided by the tool are subjectively good but not always appropriate (C3, C4), which is also supported by our measurements presented in the previous part, and manual modeling is still necessary (C6). The highlighting original text feature slightly helped the users to decide if they have modeled the domain descriptions (C7).
 Despite these imperfections, users claimed that the prototype made them more productive (C5).
-We can find the weakest support in the manager category, but we were able to get only one response in this category, so a further evaluation is necessary.
+We can find the weakest support in the manager category, but we were able to get only one response in this category, so further evaluation is necessary.

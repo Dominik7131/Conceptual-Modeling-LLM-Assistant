@@ -17,7 +17,7 @@ In our frontend web application, the LLM assistant provides the following servic
 
 \subsection{Suggesting domain elements}
 
-When a domain description is provided, the \emph{domain element generators} can be used by the assistant to suggest classes, attributes for a given class or association for a given class or for given source class and target class. 
+When a domain description is provided, the \emph{domain element generators} can be used by the assistant to suggest classes, attributes for a given class, or associations for a given class or for a given source class and a target class. 
 
 
 \subsubsection{Context highlighting}
@@ -60,9 +60,9 @@ We extend the mentioned highlighting of suggested domain elements in the domain 
 
 \noindent{} \textit{A person is identified by an ID card or by a driving license.} \\
 
-\noindent{} When the LLM suggests the attribute \textit{ID card} its original text can contain also the \textit{driving license} that can be also modeled as an separate attribute.
+\noindent{} When the LLM suggests the attribute \textit{ID card} its original text can contain also the \textit{driving license} that can be also modeled as a separate attribute.
 
-Also, some not highlighted parts of the domain description can also be already covered by the user's domain model for example, if these parts were modeled manually by the user. However, in this case the \emph{original text generator} can be used to generate the corresponding original text.
+Also, some not highlighted parts of the domain description can also be already covered by the user's domain model for example, if these parts were modeled manually by the user. However, in this case, the \emph{original text generator} can be used to generate the corresponding original text.
 
 
 \subsection{Summarizing domain model}
@@ -70,7 +70,7 @@ Also, some not highlighted parts of the domain description can also be already c
 
 For a selected part of the user's domain model, the assistant is able to generate a summary for each class, attribute, and association using the \emph{summary generators}.
 
-The summary plain text generator outputs a paragraph describing the selected part of the domain model in a given style. The summary style can be changed in the settings. The available styles are \textit{analytical}, \textit{educational} and \textit{funny story}. Before the summary is generated, the selected style is inserted into the corresponding prompt template in the \emph{modeling procedure}. The summary descriptions generator outputs a list where each selected domain element corresponds to one described item in the list. In both cases, the LLM does not receive the user's domain description as this led to many situations where the LLM did not stick to the selected domain elements.
+The summary plain text generator outputs a paragraph describing the selected part of the domain model in a given style. The summary style can be changed in the settings. The available styles are \textit{analytical}, \textit{educational}, and \textit{funny story}. Before the summary is generated, the selected style is inserted into the corresponding prompt template in the \emph{modeling procedure}. The summary descriptions generator outputs a list where each selected domain element corresponds to one described item in the list. In both cases, the LLM does not receive the user's domain description as this led to many situations where the LLM did not stick to the selected domain elements.
 
 
 \section{LLM parameters}
@@ -91,7 +91,7 @@ When LLM generates any JSON object, we always automatically remove those objects
 
 For each generated suggestion users can optionally evaluate them by clicking either on the \emph{like} button or the \emph{dislike} button. The corresponding evaluated suggestion is then sent to the backend and saved there with all the parameters that were used to generate this suggestion. To remember these parameters, the frontend remembers for each suggestion the parameters that were used for generating this suggestion.
 
-We use these user's reactions for two main reasons. The first reason is that we can use these data as feedback. For example, we can automatically detect if some set of parameters repeatedly ended up with too many negative reactions. After that, we can analyze the issue and fix it. The second reason is that we can use these data for fine-tuning some LLM to further improve its performance for our specific tasks.
+We use these user's reactions for two main reasons. The first reason is that we can use these data as feedback. For example, we can automatically detect if some set of parameters repeatedly ends up with too many negative reactions. After that, we can analyze the issue and fix it. The second reason is that we can use these data for fine-tuning some LLM to further improve its performance for our specific tasks.
 
 The downside of our approach is that it does not collect much user data. One possible solution is to save each user action such as saving each suggestion that the user added into his domain model. However, this approach has a lot of disadvantages. For example, if the user adds some suggestion and then later on removes it, we need to save this removal action too as it can mean that the original suggestion turned out to be unwanted. This means that the saved data would need to be post-processed to remove these pairs of data. A similar issue arises when a user adds some suggestion but then later on edits it. Because of this complexity, we decided to use the explicit \emph{like} and \emph{dislike} buttons.
 
@@ -111,7 +111,7 @@ As a result, we consider each sentence of the domain description as one chunk si
 
 \subsubsection{Lack of context}
 
-As mentioned, chunks in the form of isolated sentences can be miss-classified if not enough context is provided. This mostly happens when some sentence contains pronouns that refer to some other sentences. For example, consider the class named \textit{book} and the following domain description: \\
+As mentioned, chunks in the form of isolated sentences can be miss-classified if not enough context is provided. This mostly happens when some sentences contain pronouns that refer to some other sentences. For example, consider the class named \textit{book} and the following domain description: \\
 
 \noindent{}\textit{The book contains a lot of pages. It is very heavy.} \\
 
@@ -135,7 +135,7 @@ However, other issues can arise, such as when the subject is not expressed it ca
 
 \noindent{}\textit{Researchers presented their findings. Highlighting significant advancements in the field.} \\
 
-\noindent{}The second sentence has unexpressed subject therefore, the previous sentence is needed to understand its meaning. In these cases either in our application the RAG can be temporarily disabled in the settings or before the domain description is inserted, it can be first manually pre-processed to remove the problematic constructs. For example, the second sentence from the example can be edited into: \textit{The researchers highlighted significant advancements in the field} where \textit{The researchers} is the added subject.
+\noindent{}The second sentence has an unexpressed subject therefore, the previous sentence is needed to understand its meaning. In these cases either in our application the RAG can be temporarily disabled in the settings or before the domain description is inserted, it can be first manually pre-processed to remove the problematic constructs. For example, the second sentence from the example can be edited into \textit{The researchers highlighted significant advancements in the field} where \textit{The researchers} is the added subject.
 
 
 \subsubsection{Top k search}

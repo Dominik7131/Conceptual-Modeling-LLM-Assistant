@@ -1,14 +1,13 @@
 \chapter{Conclusion}
 \label{chap:conclusion}
 
-In this thesis, we presented an approach to designing conceptual modeling assistants based on Large Language Models (LLMs) that help human modeling experts mainly discover classes, their attributes, and binary associations in the given textual domain description.
+In this thesis, we presented an approach to designing domain modeling assistants based on large language models (LLMs) that help human modeling experts mainly discover classes, their attributes, and binary associations in the given textual domain description.
 Compared with recent pioneering work that utilizes LLMs for domain modeling automation, we proposed a generic framework that mainly contains class, attribute, and association generators that focuses on assisting human modelers during the modeling process instead of suggesting the whole domain model.
-We defined the generators as prompt templates that can be configured in different and comparable ways.
-On the other hand, we did not focus on more complex ontological constructs such as the most recent \cite{Saeedizade2024}.
-We presented concrete baseline configurations of the generic generators and demonstrated their practical applicability.
-We also introduced a methodology for detailed experimental evaluation of the performance of the generators.
-The precision, recall and F1 scores measured on various real-life domain descriptions written in different styles and with different levels of complexity showed that even our baseline configuration is applicable for practical modeling.
-We further supported this conclusion through our user-based evaluation using the prototype tool that showed a high level of acceptance among real users with different specializations and levels of seniority.
+We defined the generators as prompt templates that can be configured in different ways.
+We presented specific configurations of the generic generators and demonstrated their practical applicability.
+We also introduced a methodology for detailed experimental evaluation of the performance of the class, attribute, and association generators.
+The precision, recall, and F1 scores measured on various real-life domain descriptions written in different styles and with different levels of complexity showed that some of our configurations are applicable for practical modeling.
+We further supported this conclusion through our user-based evaluation using the prototype tool that showed a high level of acceptance among real users with different specializations.
 Our work can be further extended with more advanced generator configurations and future LLMs.
 Our experimental evaluation methodology can be used to measure and compare these advanced configurations.
 
@@ -18,7 +17,7 @@ Our experimental evaluation methodology can be used to measure and compare these
 
 \subsection{Selecting ontology design patterns}
 
-There exist many ontology design patterns\footnote{\url{http://ontologydesignpatterns.org/wiki/Main_Page}} for domain modeling that the users could select before they start with the domain modeling process. However, further research is needed to evaluate the capability of the LLMs to adhere to the selected ontology design patterns. Additionally, it is needed to measure the impact of the use of ontology design patterns on the output quality of the LLMs. 
+There exist many ontology design patterns\footnote{\url{http://ontologydesignpatterns.org/wiki/Main_Page}} for domain modeling that the users could select before they start with the domain modeling process. However, further research is needed to evaluate the capabilities of the LLMs to adhere to the selected ontology design patterns. Additionally, it is needed to measure the impact of the use of ontology design patterns on the output quality of the LLMs. 
 
 
 \subsection{Starting from a smaller domain model}
@@ -28,12 +27,12 @@ Currently, the domain modeling process in our application starts from an empty d
 
 \subsection{Commands for domain modeling}
 
-To make the domain modeling process faster, the user could input commands in a natural language. These commands could be for example translated by the LLM into the domain modeling steps that we defined in the section \ref{modeling_steps}.
+To make the domain modeling process faster, the user could input commands in a natural language. These commands could be for example translated by the LLM into the domain modeling steps that we defined in the section \ref{sec:modeling_steps}.
 
 
-\subsection{Modeling highlighted part of the domain description}
+%\subsection{Modeling highlighted part of the domain description}
 
-Currently, the whole inserted user's domain description is always processed by our application. To process only some part of the domain description the user has to insert only some part of his domain description. To make this process more user-friendly, only the selected part of the domain description could be processed. This could improve the LLM performance as our application would process only a subset of the original domain description.
+%Currently, the whole inserted user's domain description is always processed by our application. To process only some part of the domain description the user has to insert only some part of his domain description. To make this process more user-friendly, only the selected part of the domain description could be processed. This could improve the LLM performance as our application would process only a subset of the original domain description.
 
 
 \subsection{Removing already modeled suggestions}
@@ -63,14 +62,9 @@ Another possible solution is to insert the user's domain model into the prompt a
 %\noindent{}TODO: na jaké hlavní problémy jsem narazil a proč některé zvýrazněné prvky v popisu domény ve skutečnosti nemusí být namodelovány a naopak viz poznámky
 
 
-\subsection{Updating old domain models}
+%\subsection{Summary as a form of documentation}
 
-Currently, our application focuses only on creating a domain model from a given domain description. However, the domain description usually changes over time because of new requirements. To help the user quickly update his old domain model a new set of features could be introduced. For example, the old and the new domain description could be inserted to let the assistant suggest changes for updating the old domain model.
-
-
-\subsection{Summary as a form of documentation}
-
-Currently, the ``summary descriptions'' feature generates a description for each selected domain element as discussed in the section \ref{summarising_domain_model}. This feature could be extended to help the users document their domain model by adding the \textit{accept}, \textit{reject}, and \textit{re-generate} suggestion button to each domain element description so the users could quickly create a description for each selected domain element.
+%Currently, the ``summary descriptions'' feature generates a description for each selected domain element as discussed in the section \ref{summarising_domain_model}. This feature could be extended to help the users document their domain model by adding the \textit{accept}, \textit{reject}, and \textit{regenerate} suggestion button to each domain element description so the users could quickly create a description for each selected domain element.
 
 
 \subsection{RAG models combination}
@@ -78,14 +72,11 @@ Currently, the ``summary descriptions'' feature generates a description for each
 To improve the performance of our RAG approaches, the syntactic and semantic RAG approaches could be combined. For example, first, the semantic approach could filter the domain description and then the syntactic approach could filter the rest of the text or vice versa. A possible improvement is to let each RAG approach assign some similarity score to each pair: source class and a domain description chunk. Finally, these scores could be combined and used to determine which domain description chunks are relevant for the given source class.
 
 
-%\subsection{Experimenting with other configurations}
+\subsection{Additional suggested domain elements interaction}
 
-%The application can be further improved by discovering more powerful configurations. For example, other
+Currently, when a class, attribute, or association is suggested by our LLM assistant, this suggestion can be either fully accepted, manually edited, or ignored. Another option could be added such as letting users use the LLM assistant to expand too generic suggestions into more detailed suggestions or too detailed suggestions could be converted by the LLM assistant into a more generic suggestion.
 
-%\noindent{}TODO: Možnost experimentovat s dalšími jazykovými modely pro sémantický a syntaktický RAG, lze použít coref model pro řešení problému se zájmeny, atd. + možná začít tím, že jsme udělali framework, který lze na několika místech vylepšovat \\
 
-%\noindent{}TODO: is-a asociace a možná jestli mě napadne ještě nějaké další dělení (to mi připomnělo, že bych na začátku mohl ukázat, proč není dobré si nechávat vygenerovat atributy a asociace dohromady jako "property", neboli ukážu screenshoty, kde ChatGPT-4o nebude schopen najít triviální asociace) \\
+\subsection{Updating old domain models}
 
-%\noindent{}TODO: Divide a expand tlačítka pro návrhy
-
-% Possible iterative technique for generating classes: we could generate multiple lists of class suggestions with multiple prompts. Then we could apply some operation to these lists such as intersection or unification. Or for example, we could remove only those classes that appeared in only one list.
+Currently, our application focuses only on creating a domain model from a given domain description. However, the domain description usually changes over time because of new requirements. To help the users quickly update their old domain model a new set of features could be introduced. For example, the old and the new domain description could be inserted to let the assistant suggest changes for updating the old domain model.
