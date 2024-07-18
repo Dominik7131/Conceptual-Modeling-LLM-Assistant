@@ -108,7 +108,7 @@ Now we describe the \emph{LLM assistant server} architecture shown on the pictur
 
 \subsubsection{Prompt processing}
 
-The \textit{LLMAssistant} uses an instance of the \textit{PromptManager} class from \textit{utils/prompt\_manager.py} to find the corresponding prompt template.
+The \textit{LLMAssistant} uses an instance of the \textit{PromptManager} class from \textit{utils/prompt\_manager.py} to find the corresponding prompt template with the corresponding prompt technique selected in the \textit{definitions/prompt\_techniques.py}.
 Then the class \textit{Replacer} from \textit{utils/replacer.py} replaces the prompt symbols defined inside \textit{definitions/prompt\_symbols.py} with the corresponding parameters sent from the frontend. Before the domain description is inserted it can be firstly filtered by either our semantic or syntactic RAG approach. First, the domain description is split into chunks by the class \textit{TextSplitter} from \textit{utils/text\_splitter.py}. The semantic algorithm uses an instance of the class \textit{SemanticTextFilterer} from \textit{text-filterer/semantic\_text\_filterer.py} it uses a language model from \textit{SentenceTransformers}\footnote{\url{https://sbert.net/}} library. The syntactic algorithm uses an instance of the class \textit{SyntacticTextFilterer} from \textit{text-filterer/syntactic\_text\_filterer.py}. It uses a language model from \textit{MorphoDiTa}\footnote{\url{https://pypi.org/project/ufal.morphodita/}} library. When all symbols in the prompt are filled in the prompt is ready to be sent to the LLM server.
 
 

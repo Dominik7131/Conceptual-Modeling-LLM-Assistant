@@ -1,14 +1,12 @@
 \chapter{Prototype software application}
 \label{chap:protype_software_application}
 
-To empirically validate the feasibility of our proposed methodology, we developed a prototype application that implements the framework with our proposed configurations from the previous chapter. In this chapter first, we briefly present our application and then we describe the implementation details of our LLM-based assistant and of our RAG approaches.
+To empirically validate the feasibility of our proposed methodology, we developed a prototype application that implements the framework with our proposed configurations from the previous chapter. In this chapter first, we briefly describe our application with its implementation details and then we describe the implementation details of our RAG approaches.
 
 
 \section{Assistant features}
 
-The frontend web application contains a text area for inserting a domain description and a modeling canvas where the users create the domain models using classical manual modeling features and the suggestion features highlighted by the \textit{magic wand} icon.
-
-Our LLM-based assistant provides the following services:
+In our frontend web application, the LLM assistant provides the following services:
 
 \begin{enumerate}
 \item suggesting domain elements
@@ -19,22 +17,13 @@ Our LLM-based assistant provides the following services:
 
 \subsection{Suggesting domain elements}
 
-When a domain description is provided, the assistant generates suggestions solely based on the provided text. Otherwise, the assistant does not adhere to any text. Our assistant can suggest classes, for a selected class the assistant provides functionality to suggest its attributes and associations. Also, for a selected source class and a selected target class, the assistant can suggest their associations. Figure \ref{fig:assistant-features} demonstrates some of these features.
-
-\begin{figure}[!h]
-    \centering
-    \includegraphics[scale=0.22]{img/assistant-features.png}
-    \caption{\centering Screenshots of the main functionalities of the prototype application}
-    \label{fig:assistant-features}
-\end{figure}
-
-Screenshot 1 shows the text area for the domain description and the action buttons. The highlighted button \textit{Suggest classes} calls the \emph{class generator} with the inserted domain description. Screenshot 2 shows the list of suggested classes. The user can use the highlighted \textit{+} buttons to insert suggested classes into the modeling canvas. The other buttons are used for \textit{liking} and \textit{disliking} the corresponding suggestion, for editing before inserting the suggested class into the canvas, and highlighting the suggestion in the original domain description. For the selected class and the inserted domain description, the user can ask for attribute and association suggestions implemented by the \emph{attribute generator} and the \emph{association generator 1}. Screenshot 3 shows the attribute suggestions and screenshot 4 shows the association suggestions. For the suggested attributes and association, the tool also shows the original text returned by the \emph{attribute generator} and the \emph{association generators}.
+When a domain description is provided, the \emph{domain element generators} can be used by the assistant to suggest classes, attributes for a given class or association for a given class or for given source class and target class. 
 
 
 \subsubsection{Context highlighting}
 \label{sec:context_highlighting}
 
-As mentioned, for each suggested attribute and association, we highlight its original text in the domain description. Additionally, for each class, we highlight its name. This requires matching the LLM-generated original text with the domain description. The matching is easy as long as the original text syntactically exactly matches some part of the domain description.
+For each suggested attribute and association, we highlight its original text in the domain description. Additionally, for each class, we highlight its name. This requires matching the LLM-generated original text with the domain description. The matching is easy as long as the original text syntactically exactly matches some part of the domain description.
 
 However, we encountered some common issues with this approach. For example, sometimes the LLM changes some letters when generating the original text. For instance, when the domain description contains the word \textit{motorized} with the \textit{z} letter the LLM can generate the word \textit{motorised} with the \textit{s} letter instead.
 
@@ -100,7 +89,7 @@ When LLM generates any JSON object, we always automatically remove those objects
 
 \section{Saving users data}
 
-For each generated suggestion users can optionally click on the \textit{like} button or the \textit{dislike} button. The corresponding evaluated suggestion is sent to the backend and saved there with all the parameters that were used to generate this suggestion. To remember these parameters, the frontend remembers for each suggestion the parameters that were used for generating this suggestion.
+For each generated suggestion users can optionally evaluate them by clicking either on the \emph{like} button or the \emph{dislike} button. The corresponding evaluated suggestion is then sent to the backend and saved there with all the parameters that were used to generate this suggestion. To remember these parameters, the frontend remembers for each suggestion the parameters that were used for generating this suggestion.
 
 We use these user's reactions for two main reasons. The first reason is that we can use these data as feedback. For example, we can automatically detect if some set of parameters repeatedly ended up with too many negative reactions. After that, we can analyze the issue and fix it. The second reason is that we can use these data for fine-tuning some LLM to further improve its performance for our specific tasks.
 
@@ -156,3 +145,4 @@ In traditional RAG systems in the retrieval phase, a fixed number $k$ of the mos
 
 Additionally, to improve performance for retrieving chunks that contain information about the given class, instead of embedding only the given class with the embedding model, we embed the following sentence: \textit{Info about \{source\_class\}}, where the placeholder \textit{\{source\_class\}} is replaced with the given class name.
 
+% For the syntactic RAG for better consistency the words are converted into lemmas separately. Reason: the same word can be converted into different lemma based on the given context. Issue: Can the opposite problem happen with our approach? I.e. two slightly different words are not converted into the same lemma because they do not have the right context around?
