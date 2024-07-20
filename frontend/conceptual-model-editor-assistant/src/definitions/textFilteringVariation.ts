@@ -4,3 +4,5 @@ export const enum TextFilteringVariation
   SYNTACTIC = "syntactic",
   SEMANTIC = "semantic",
 }
+
+export const TEXT_FILTERING_VARIATION_DEFAULT_VALUE = TextFilteringVariation.SYNTACTIC
