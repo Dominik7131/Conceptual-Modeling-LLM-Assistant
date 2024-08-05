@@ -17,7 +17,12 @@ class OriginalTextMerger:
             x1, x2, l1 = numbers[i][0], numbers[i][1], numbers[i][2]
             y1, y2, l2 = numbers[i + 1][0], numbers[i + 1][1], numbers[i + 1][2]
 
-            is_still_sorted = x1 < y1 or (x1 == y1 and x2 <= y2)
+            if x2 < x1:
+                fixed_tuple = (x2, x1, l1)
+                numbers[i] = fixed_tuple
+                x1, x2 = numbers[i][1], numbers[i][0]
+
+            is_still_sorted = (x1 < y1 or (x1 == y1 and x2 <= y2))
 
             if not is_still_sorted:
                 # E.g.: Input: [(2, 4, "l1"), (2, 6, "l2"), (2, 8, "l3")]
