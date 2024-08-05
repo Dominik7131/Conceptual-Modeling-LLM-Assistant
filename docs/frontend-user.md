@@ -11,7 +11,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 ## Features of our LLM assistant
 
 ### 1) suggestions of classes, attributes, and associations
-- if a domain description is provided then the assistant's suggestions are solely based on the given domain description
+- if a domain description is provided, then the assistant's suggestions are solely based on the given domain description
     - we support only English
 - the domain description can be inserted in the text box on the topbar:
 
@@ -19,7 +19,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- for trying out the application, one of the following domain descriptions can be chosen:
+- for trying out the application, one of the following domain descriptions can be used:
 
     - [data catalog](https://github.com/dataspecer/domain-modeling-benchmark/blob/main/front-end%20evaluation%20domains/data%20catalog/domain-description-01.txt)
     - [gaming](https://github.com/dataspecer/domain-modeling-benchmark/blob/main/front-end%20evaluation%20domains/gaming/domain-description-01.txt)
@@ -40,7 +40,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 <br/>
 
 - to have attributes and associations suggested by the assistant, first create a class
-- then, hover the mouse over this class, click on the three dots on the right side, and select either the "Suggest attributes" or "Suggest associations" button accordingly
+- then hover the mouse over this class, click on the three dots on the right side, and select either the "Suggest attributes" or "Suggest associations" button accordingly
 
     <img src="images/frontend/suggest-attributes.png" alt="drawing" width="400"/>
 
@@ -59,7 +59,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- when editing an attribute it can be changed into an association and vice versa:
+- when editing an attribute it can be changed into an association, and vice versa:
 
     <img src="images/frontend/change-to-association.png" alt="drawing" width="1000"/>
 
@@ -73,7 +73,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 
 <br/>
 
-- for suggesting associations between two classes an edge can be dragged between two nodes:
+- for suggesting associations between two classes, an edge can be dragged between two nodes:
 
     <img src="images/frontend/edge-drag.png" alt="drawing" width="600"/>
 
@@ -177,7 +177,7 @@ First, we present the main features of our LLM assistant and then we provide dem
 - however, note that the assistant can make mistakes and that some part of the domain description is highlighted does not necessarily mean that it is represented by the conceptual model
     - also, the opposite thing applies: some non-highlighted parts of the domain description can already be represented by the conceptual model
 
-- for simplicity, whenever the domain description changes the computed original text indexes are discarded so nothing will be highlighted
+- for simplicity, whenever the domain description changes, the computed original text indexes are discarded so nothing will be highlighted
     - this means that to use this feature it is necessary to work with only one domain description without editing it in the process
 
 
@@ -189,7 +189,7 @@ This is how the settings tab looks like:
 
 <br/>
 
-As shown by the picture it is possible to:
+As shown in the picture, it is possible to:
 1) ignore the domain description to let the assistant temporarily generate suggestions without the domain description
 2) change the text style for the summary in plain text format
 3) change the strategy of how the domain description is filtered
