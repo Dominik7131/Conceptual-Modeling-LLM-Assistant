@@ -91,13 +91,14 @@ const useFetchSummaryDescriptions = () =>
             {
                 associations = parsedData["associations"]
             }
-            else
-            {
-                console.error("Received unknown object: ", parsedData)
-            }
 
             for (let index = 0; index < classes.length; index++)
             {
+                if (!classes[index].hasOwnProperty("attributes"))
+                {
+                    classes[index]["attributes"] = []
+                }
+
                 setSummaryDescriptions(previousSummary => ({
                     ...previousSummary,
                     classes: [...previousSummary.classes, classes[index]],
