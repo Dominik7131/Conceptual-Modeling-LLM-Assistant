@@ -4,6 +4,7 @@ import os
 import time
 from flask import Flask, request
 from flask_cors import CORS
+import timeout_decorator
 
 from definitions.utility import Field, UserChoice
 from utils.llm_assistant import LLMAssistant
@@ -26,6 +27,12 @@ app.config["CORS_HEADERS"] = "Content-Type"
 def suggest_items():
 
     body_data = request.get_json()
+    return suggest_items_with_timeout(body_data)
+
+
+@timeout_decorator.timeout(15)
+def suggest_items_with_timeout(body_data):
+
     source_class = body_data.get("sourceClass", "")
     target_class = body_data.get("targetClass", "")
 
@@ -41,6 +48,13 @@ def suggest_items():
 
 @app.route("/suggest/single_field", methods=["POST"])
 def suggest_single_field():
+
+    body_data = request.get_json()
+    return suggest_single_field_with_timeout(body_data)
+
+
+@timeout_decorator.timeout(10)
+def suggest_single_field_with_timeout(body_data):
 
     body_data = request.get_json()
     source_class = body_data.get("sourceClass", "")
@@ -70,6 +84,13 @@ def suggest_single_field():
 
 @app.route("/suggest/summary", methods=["POST"])
 def suggest_summary():
+
+    body_data = request.get_json()
+    return suggest_summary_with_timeout(body_data)
+
+
+@timeout_decorator.timeout(20)
+def suggest_summary_with_timeout(body_data):
 
     body_data = request.get_json()
     summary_type = body_data["summaryType"]
